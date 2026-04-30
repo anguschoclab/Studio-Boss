@@ -2,12 +2,12 @@ import { useGameStore } from '@/store/gameStore';
 import { NewsEventType } from '@/engine/types';
 import { Badge } from '@/components/ui/badge';
 import { useState } from 'react';
-import {
-  Trophy,
-  AlertTriangle,
-  TrendingUp,
+import { 
+  Trophy, 
+  AlertTriangle, 
+  TrendingUp, 
   Search,
-  History
+  History,
 } from 'lucide-react';
 
 const eventTypeConfig: Record<NewsEventType, { icon: React.ElementType, color: string, label: string }> = {
@@ -16,9 +16,6 @@ const eventTypeConfig: Record<NewsEventType, { icon: React.ElementType, color: s
   RELEASE: { icon: TrendingUp, color: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20', label: 'Release' },
   STUDIO_EVENT: { icon: History, color: 'text-blue-400 bg-blue-400/10 border-blue-400/20', label: 'Studio' },
   RIVAL: { icon: History, color: 'text-red-400 bg-red-400/10 border-red-400/20', label: 'Rival' },
-  MILESTONE: { icon: Trophy, color: 'text-purple-400 bg-purple-400/10 border-purple-400/20', label: 'Milestone' },
-  SCANDAL: { icon: AlertTriangle, color: 'text-orange-500 bg-orange-500/10 border-orange-500/20', label: 'Scandal' },
-  LEGAL: { icon: AlertTriangle, color: 'text-slate-400 bg-slate-400/10 border-slate-400/20', label: 'Legal' },
 };
 
 export const NewsFeed = () => {
@@ -30,40 +27,42 @@ export const NewsFeed = () => {
     : history.filter(h => h.type === filter);
 
   return (
-    <div className="flex flex-col h-full bg-slate-950/40 border-l border-slate-800/50 backdrop-blur-xl">
+    <div className="flex flex-col h-full bg-black/40 border-l border-white/5 backdrop-blur-3xl">
       {/* Header & Filter */}
-      <div className="p-4 border-b border-slate-800/50 space-y-4">
+      <div className="p-8 border-b border-white/5 space-y-6">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <History className="h-4 w-4 text-blue-400" />
-            <h3 className="font-display text-xs font-black uppercase tracking-widest text-slate-200">Industry History</h3>
+          <div className="flex items-center gap-4">
+            <History className="h-4 w-4 text-primary" strokeWidth={3} />
+            <h3 className="font-display text-xs font-black uppercase tracking-[0.4em] text-foreground italic leading-none">INDUSTRY_HISTORY</h3>
           </div>
-          <Badge variant="outline" className="text-[9px] font-black border-slate-700 bg-slate-800/50 text-slate-400">
-            {history.length} Events
+          <Badge variant="outline" className="text-[9px] font-black border-white/10 bg-white/5 text-muted-foreground/60 rounded-md italic">
+            {history.length} EVENTS
           </Badge>
         </div>
 
-        {/* Switched from horizontal scroll to flex wrap for better mobile reflow. */}
+        {/* The Pixel Perfectionist: Switched from overflow-x-auto to flex wrap to prevent horizontal scrolling. */}
         <div className="flex flex-wrap gap-2 pb-2">
           <button 
-            onClick={() => setFilter('ALL')}
+            type="button"
             aria-pressed={filter === 'ALL'}
-            className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-tighter transition-all border ${
-              filter === 'ALL' ? 'bg-white text-black border-white' : 'bg-slate-900 text-slate-400 border-slate-800'
+            onClick={() => setFilter('ALL')}
+            className={`rounded-md text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 border italic focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none p-3 ${
+              filter === 'ALL' ? 'bg-primary text-black border-primary shadow-[0_0_15px_rgba(var(--primary),0.2)]' : 'bg-white/[0.02] text-muted-foreground/40 border-white/5 hover:border-white/20'
             }`}
           >
-            All
+            ALL
           </button>
           {(Object.keys(eventTypeConfig) as NewsEventType[]).map(type => (
             <button 
               key={type}
-              onClick={() => setFilter(type)}
+              type="button"
               aria-pressed={filter === type}
-              className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-tighter transition-all border flex items-center gap-1.5 whitespace-nowrap ${
-                filter === type ? 'bg-blue-600 text-white border-blue-500' : 'bg-slate-900 text-slate-400 border-slate-800'
+              onClick={() => setFilter(type)}
+              className={`rounded-md text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 border flex items-center gap-2 italic whitespace-nowrap focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none p-3 ${
+                filter === type ? 'bg-primary text-black border-primary shadow-[0_0_15px_rgba(var(--primary),0.2)]' : 'bg-white/[0.02] text-muted-foreground/40 border-white/5 hover:border-white/20'
               }`}
             >
-              {eventTypeConfig[type].label}
+              {type}
             </button>
           ))}
         </div>
@@ -74,33 +73,26 @@ export const NewsFeed = () => {
         {filteredHistory.map((item, idx) => {
           const config = eventTypeConfig[item.type];
           return (
-            <div key={item.id} className="relative pl-6 group">
+            <div key={item.id} className="relative pl-10 group">
               {/* Vertical line connector */}
               {idx !== filteredHistory.length - 1 && (
-                <div className="absolute left-[7px] top-4 bottom-[-24px] w-[2px] bg-slate-800 pointer-events-none group-hover:bg-slate-700 transition-colors" />
+                <div className="absolute left-[7px] top-4 bottom-[-24px] w-[2px] bg-white/5 pointer-events-none group-hover:bg-primary/20 transition-colors" />
               )}
               
               {/* Timeline Dot/Icon */}
-              <div className={`absolute left-0 top-1 w-4 h-4 rounded-full border bg-slate-950 z-10 flex items-center justify-center transition-all group-hover:scale-110 ${config.color}`}>
-                <config.icon className="h-2 w-2" />
+              <div className={`absolute left-0 top-1 w-4 h-4 rounded-md border border-white/10 bg-black z-10 flex items-center justify-center transition-all group-hover:scale-110 group-hover:border-primary/40 ${config.color}`}>
+                <config.icon className="h-2 w-2" strokeWidth={3} />
               </div>
 
-              <div className="space-y-1">
-                <div className="flex items-center justify-between mb-1">
-                   <span className="text-[9px] font-mono font-black text-slate-500 uppercase">Week {item.week}</span>
-                   <div className="flex gap-2 items-center">
-                    {item.publication && (
-                      <span className="text-[7px] font-black text-blue-400/60 uppercase tracking-widest border border-blue-400/20 px-1.5 py-0.5 rounded italic">
-                        {item.publication}
-                      </span>
-                    )}
-                    {item.impact && (
-                      <span className="text-[9px] font-black text-emerald-400 tracking-tighter">{item.impact}</span>
-                    )}
-                   </div>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                   <span className="text-[9px] font-black text-muted-foreground/20 uppercase tracking-[0.2em] italic">WEEK {item.week}</span>
+                   {item.impact && (
+                     <span className="text-[9px] font-black text-primary tracking-[0.1em] italic">{item.impact.toUpperCase()}</span>
+                   )}
                 </div>
-                <h4 className="text-xs font-bold text-slate-100 group-hover:text-blue-400 transition-colors leading-tight">{item.headline}</h4>
-                <p className="text-[10px] text-slate-400 leading-relaxed font-medium line-clamp-2 group-hover:line-clamp-none transition-all duration-300">{item.description}</p>
+                <h4 className="text-xs font-black text-foreground group-hover:text-primary transition-all duration-700 leading-none uppercase italic tracking-tight">{item.headline}</h4>
+                <p className="text-[10px] text-muted-foreground/60 leading-relaxed font-black uppercase tracking-wider italic line-clamp-2 group-hover:line-clamp-none transition-all duration-700">{item.description}</p>
               </div>
             </div>
           );

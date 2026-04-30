@@ -27,11 +27,8 @@ export const ReviewSystem = {
 
   calculateMetaScore(project: Project, talent: Talent[], rng: RandomGenerator): number {
     // Base: project.quality (using momentum or a derived quality metric if available, 
-    // but the spec says project.quality. Looking at types, project has 'momentum').
-    // Let's assume project.quality exists or use momentum as proxy.
-    // Wait, project.types.ts doesn't have 'quality' but 'momentum'. 
-    // I will use (project as any).quality || project.momentum || 50 as base.
-    const baseQuality = (project as any).quality || project.momentum || 50;
+    // Base: project.quality is formally defined in ProjectBase.
+    const baseQuality = project.quality || project.momentum || 50;
     let score = baseQuality;
 
     // Director Modifier: Find the director in the talent array. Add (director.prestige - 50) / 5 to the base score.

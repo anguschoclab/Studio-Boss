@@ -19,7 +19,7 @@ export function getRelationship(
   state: GameState
 ): TalentRelationship | null {
   const key = getRelationshipKey(talentAId, talentBId);
-  return (state as any).relationships?.relationships?.[key] as TalentRelationship || null;
+  return state.relationships?.relationships?.[key] || null;
 }
 
 export function haveWorkedTogether(
@@ -38,7 +38,7 @@ export function haveWorkedTogether(
   const projectsDict = state.entities.projects || {};
   for (const pid of Object.keys(projectsDict)) {
     const project = projectsDict[pid];
-    const talentIds = (project as any).attachedTalentIds || [];
+    const talentIds = project.attachedTalentIds || [];
     if (talentIds.includes(talentAId) && talentIds.includes(talentBId)) return true;
   }
 
@@ -65,7 +65,7 @@ export function haveCompeted(
   for (const pid of Object.keys(projectsDict)) {
     const project = projectsDict[pid];
     if (!awardedProjectIds.includes(project.id)) continue;
-    const talentIds = (project as any).attachedTalentIds || [];
+    const talentIds = project.attachedTalentIds || [];
     if (talentIds.includes(talentAId) && talentIds.includes(talentBId)) return true;
   }
 
@@ -128,8 +128,8 @@ export function checkNaturalFormation(
   }
 
   if (compatibility > 40 && rng.next() < 0.05) {
-    const existingRelationships = (state as any).relationships?.relationships || {};
-    const existingRomance = Object.values(existingRelationships).some((r: any) =>
+    const existingRelationships = state.relationships?.relationships || {};
+    const existingRomance = Object.values(existingRelationships).some((r) =>
       (r.talentAId === talentA.id || r.talentBId === talentA.id ||
        r.talentAId === talentB.id || r.talentBId === talentB.id) &&
       r.type === 'romantic' && r.strength > 50
@@ -173,7 +173,8 @@ export function formRelationship(
     const talentB = state.entities.talents?.[talentBId];
     const powerCoupleRating = calculatePowerCoupleRating(talentA, talentB);
 
-    (relationship as any).romanceData = {
+    const romanceRel = relationship as import('../../types/relationship.types').RomanticRelationship;
+    romanceRel.romanceData = {
       isMarried: false,
       isSecret: rng.next() < 0.3,
       stability: 50 + rng.rangeInt(-20, 20),

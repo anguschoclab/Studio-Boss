@@ -2,7 +2,6 @@ import React from 'react';
 import { LucideIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { tokens } from '@/lib/tokens';
 import { Badge } from '@/components/ui/badge';
 import { cardHover } from '@/lib/animations';
 
@@ -41,34 +40,34 @@ interface ContentCardProps {
 }
 
 const variantStyles: Record<CardVariant, string> = {
-  default: 'bg-card/40 border-white/10',
-  interactive: 'bg-card/40 border-white/10 hover:border-white/20 hover:bg-card/60 cursor-pointer',
-  active: 'bg-primary/15 border-primary/30 shadow-[0_0_15px_hsl(var(--primary)/0.15)]',
-  glass: 'bg-card/60 backdrop-blur-xl border-white/5',
-  subtle: 'bg-white/5 border-transparent',
+  default: 'bg-white/[0.01] border-white/5 shadow-2xl',
+  interactive: 'bg-white/[0.01] border-white/5 hover:border-primary/40 hover:bg-white/[0.04] cursor-pointer shadow-2xl hover:shadow-[0_0_80px_rgba(0,0,0,0.8)]',
+  active: 'bg-primary/5 border-primary/40 shadow-[0_0_60px_rgba(var(--primary),0.2)]',
+  glass: 'bg-black/90 backdrop-blur-3xl border-white/10 shadow-[0_40px_100px_rgba(0,0,0,0.8)]',
+  subtle: 'bg-white/[0.01] border-transparent',
 };
 
 const sizeStyles: Record<CardSize, { container: string; content: string }> = {
   sm: {
-    container: 'p-3',
+    container: 'p-8',
     content: '',
   },
   md: {
-    container: 'p-4',
+    container: 'p-12',
     content: '',
   },
   lg: {
-    container: 'p-6',
+    container: 'p-20',
     content: '',
   },
 };
 
 const iconColorStyles = {
-  primary: 'bg-primary/10 text-primary',
-  secondary: 'bg-secondary/10 text-secondary',
-  success: 'bg-emerald-500/10 text-emerald-400',
-  warning: 'bg-amber-500/10 text-amber-400',
-  destructive: 'bg-red-500/10 text-red-400',
+  primary: 'bg-primary/5 text-primary border-primary/20 shadow-[0_0_30px_rgba(var(--primary),0.2)]',
+  secondary: 'bg-secondary/5 text-secondary border-secondary/20 shadow-[0_0_30px_rgba(var(--secondary),0.2)]',
+  success: 'bg-emerald-500/5 text-emerald-500 border-emerald-500/20 shadow-[0_0_30px_rgba(16,185,129,0.2)]',
+  warning: 'bg-amber-500/5 text-amber-500 border-amber-500/20 shadow-[0_0_30px_rgba(251,191,36,0.2)]',
+  destructive: 'bg-rose-500/5 text-rose-500 border-rose-500/20 shadow-[0_0_30px_rgba(244,63,94,0.2)]',
 };
 
 /**
@@ -104,9 +103,8 @@ export const ContentCard: React.FC<ContentCardProps> = ({
       onClick={isInteractive ? onClick : undefined}
       {...(isInteractive && { type: "button" })}
       className={cn(
-        'rounded-xl border overflow-hidden',
+        'rounded-none border overflow-hidden transition-all duration-1000',
         isInteractive && 'w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
-        tokens.transition.normal,
         variantStyles[variant],
         sizeStyles[size].container,
         disabled && 'opacity-50 pointer-events-none',
@@ -120,49 +118,49 @@ export const ContentCard: React.FC<ContentCardProps> = ({
     >
       {/* Header */}
       {(header || title || Icon || badge) && (
-        <div className="flex items-start justify-between gap-3 mb-4">
+        <div className="flex items-start justify-between gap-10 mb-12">
           {header ? (
             <div className="flex-1">{header}</div>
           ) : (
-            <div className="flex items-center gap-3 flex-1 min-w-0">
+            <div className="flex items-center gap-10 flex-1 min-w-0">
               {Icon && (
                 <div
                   className={cn(
-                    'w-10 h-10 rounded-lg flex items-center justify-center shrink-0',
+                    'w-16 h-16 rounded-none border flex items-center justify-center shrink-0 transition-all duration-1000 group-hover:scale-110 group-hover:rotate-6',
                     iconColorStyles[iconColor]
                   )}
                 >
-                  <Icon className="w-5 h-5" />
+                  <Icon className="w-8 h-8" strokeWidth={2} />
                 </div>
               )}
               <div className="flex-1 min-w-0">
                 {title && (
-                  <h4 className="font-bold text-sm text-foreground truncate">
-                    {title}
+                  <h4 className="font-display font-black text-3xl text-foreground truncate uppercase italic tracking-tighter leading-none mb-3 drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]">
+                    {title.toUpperCase()}
                   </h4>
                 )}
                 {subtitle && (
-                  <p className="text-xs text-muted-foreground truncate">
-                    {subtitle}
+                  <p className="text-[11px] font-black uppercase text-muted-foreground/30 italic tracking-[0.4em] truncate">
+                    {subtitle.toUpperCase()}
                   </p>
                 )}
               </div>
             </div>
           )}
           {badge && (
-            <Badge variant={badgeVariant} className="text-[9px] shrink-0">
-              {badge}
-            </Badge>
+            <div className="px-6 py-2 bg-white/5 border border-white/10 text-[9px] font-black tracking-[0.3em] uppercase italic rounded-none shrink-0 h-fit transition-all duration-1000 hover:bg-primary/20 hover:border-primary/40 hover:text-primary shadow-2xl">
+              {badge.toUpperCase()}
+            </div>
           )}
         </div>
       )}
 
       {/* Content */}
-      <div className={sizeStyles[size].content}>{children}</div>
+      <div className={cn(sizeStyles[size].content, 'relative')}>{children}</div>
 
       {/* Footer */}
       {footer && (
-        <div className="mt-4 pt-4 border-t border-white/5">{footer}</div>
+        <div className="mt-12 pt-12 border-t border-white/5">{footer}</div>
       )}
     </CardWrapper>
   );
@@ -205,7 +203,9 @@ export const InfoCard: React.FC<{
     title={title}
     className={className}
   >
-    <p className="text-sm text-muted-foreground">{description}</p>
+    <p className="text-[11px] font-black uppercase text-muted-foreground/30 italic tracking-[0.3em] leading-loose">
+      {description.toUpperCase()}
+    </p>
   </ContentCard>
 );
 
@@ -220,21 +220,23 @@ export const StatRow: React.FC<{
   className?: string;
 }> = ({ label, value, trend, trendValue, className }) => {
   const trendColors = {
-    up: 'text-emerald-400',
-    down: 'text-red-400',
-    neutral: 'text-muted-foreground',
+    up: 'text-emerald-500 bg-emerald-500/5 border-emerald-500/20',
+    down: 'text-rose-500 bg-rose-500/5 border-rose-500/20',
+    neutral: 'text-muted-foreground/20 bg-white/5 border-white/10',
   };
 
   return (
-    <div className={cn('flex items-center justify-between py-2', className)}>
-      <span className="text-sm text-muted-foreground">{label}</span>
-      <div className="flex items-center gap-2">
-        <span className="font-mono font-bold text-sm">{value}</span>
+    <div className={cn('flex items-center justify-between py-6 group border-b border-white/[0.05] last:border-0 hover:bg-white/[0.01] px-4 -mx-4 transition-all duration-700', className)}>
+      <span className="text-[11px] font-black text-muted-foreground/30 uppercase tracking-[0.5em] italic group-hover:text-primary transition-colors duration-700">
+        {label.toUpperCase()}
+      </span>
+      <div className="flex items-center gap-8">
+        <span className="font-display font-black text-2xl tracking-tighter italic text-foreground leading-none drop-shadow-[0_0_20px_rgba(255,255,255,0.1)] group-hover:translate-x-1 transition-transform duration-700">
+          {value}
+        </span>
         {trend && (
-          <span className={cn('text-xs', trendColors[trend])}>
-            {trend === 'up' && '↑'}
-            {trend === 'down' && '↓'}
-            {trend === 'neutral' && '→'}
+          <span className={cn('text-[10px] font-black uppercase italic tracking-[0.2em] px-3 py-1.5 rounded-none border shadow-2xl transition-all duration-700 group-hover:scale-110', trendColors[trend])}>
+            <span className="mr-2 text-sm">{trend === 'up' ? '▲' : trend === 'down' ? '▼' : '—'}</span>
             {trendValue}
           </span>
         )}
@@ -244,3 +246,4 @@ export const StatRow: React.FC<{
 };
 
 export default ContentCard;
+Card;

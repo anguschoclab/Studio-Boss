@@ -6,7 +6,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Star, Zap, DollarSign, Building2, TrendingUp } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 export const BreakoutBiddingWarModal: React.FC = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
@@ -40,10 +39,10 @@ export const BreakoutBiddingWarModal: React.FC = () => {
 
   return (
     <Dialog open onOpenChange={() => resolveCurrentModal()}>
-      <DialogContent className="max-w-md border border-primary/40 bg-background">
+      <DialogContent className="max-w-md bg-card/90 backdrop-blur-2xl border border-white/10">
         <DialogHeader>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 rounded-lg bg-primary/10">
+            <div className="p-2 rounded-none bg-primary/10">
               <Star className="h-5 w-5 text-primary" />
             </div>
             <div>
@@ -56,9 +55,9 @@ export const BreakoutBiddingWarModal: React.FC = () => {
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="p-4 rounded-xl bg-primary/5 border border-primary/20">
+          <div className="p-4 rounded-none bg-primary/5 border border-primary/20">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-primary/10">
+              <div className="p-2 rounded-none bg-primary/10">
                 <Zap className="h-5 w-5 text-primary" />
               </div>
               <div>
@@ -82,12 +81,12 @@ export const BreakoutBiddingWarModal: React.FC = () => {
           )}
 
           <div className="grid grid-cols-2 gap-3">
-            <div className="p-3 rounded-lg bg-card/40 border border-border/40 text-center">
+            <div className="p-3 rounded-none bg-card/40 border border-border/40 text-center">
               <DollarSign className="h-4 w-4 text-muted-foreground mx-auto mb-1" />
               <p className="text-[10px] text-muted-foreground uppercase font-bold">Market Rate</p>
               <p className="text-sm font-black">{formatMoney(currentFee)}</p>
             </div>
-            <div className="p-3 rounded-lg bg-primary/10 border border-primary/20 text-center">
+            <div className="p-3 rounded-none bg-primary/10 border border-primary/20 text-center">
               <TrendingUp className="h-4 w-4 text-primary mx-auto mb-1" />
               <p className="text-[10px] text-muted-foreground uppercase font-bold">Sign at Premium</p>
               <p className="text-sm font-black text-primary">{formatMoney(premiumFee)}</p>

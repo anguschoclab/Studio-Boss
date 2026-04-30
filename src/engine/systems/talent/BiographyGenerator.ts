@@ -1,4 +1,4 @@
-import { GameState, StateImpact, Talent } from '../../types';
+import { GameState, StateImpact, Talent, CareerTrajectory, TalentPersonality } from '../../types';
 import { RandomGenerator } from '../../utils/rng';
 import { TalentRelationship } from '../../types/relationship.types';
 import { BreakoutStar } from '../../types/discovery.types';
@@ -20,9 +20,9 @@ interface BioSection {
  * Generate TV recommendations section
  */
 function generateTVRecommendationsSection(talent: Talent, state: GameState): string | null {
-  const tvRecommendations = (state as any).tvRecommendations?.recommendations || {};
+  const tvRecommendations = state.tvRecommendations?.recommendations || {};
   const talentRecommendations = Object.values(tvRecommendations)
-    .filter((r: any) => r.talentId === talent.id && r.expiresWeek > state.week && !r.accepted) as TVShowRecommendation[];
+    .filter((r) => r.talentId === talent.id && r.expiresWeek > state.week && !r.accepted);
 
   if (talentRecommendations.length === 0) return null;
 
@@ -109,6 +109,7 @@ function generateCareerSummary(talent: Talent, state: GameState): string {
   // Star meter/prestige
   const starMeter = talent.starMeter || 50;
   const prestige = talent.prestige || 50;
+  void prestige;
 
   if (starMeter > 80) {
     parts.push(`Currently at the peak of their fame with a Star Meter of ${starMeter}, they are one of the most sought-after talents in the industry.`);
@@ -119,10 +120,10 @@ function generateCareerSummary(talent: Talent, state: GameState): string {
   }
 
   // Breakout status
-  const isBreakout = (talent as any).isBreakout;
+  const isBreakout = talent.isBreakout;
   if (isBreakout) {
-    const breakouts = Object.values((state as any).relationships?.discovery?.breakoutStars || {})
-      .filter((b: any) => b.talentId === talent.id) as BreakoutStar[];
+    const breakouts = Object.values(state.relationships.discovery?.breakoutStars || {})
+      .filter((b) => b.talentId === talent.id);
 
     if (breakouts.length > 0) {
       const breakout = breakouts[0];
@@ -131,9 +132,9 @@ function generateCareerSummary(talent: Talent, state: GameState): string {
   }
 
   // Awards
-  const awards = (talent as any).awards || [];
+  const awards = talent.awards || [];
   if (awards.length > 0) {
-    const majorWins = awards.filter((a: any) => a.status === 'won').length;
+    const majorWins = awards.filter((a) => a.status === 'won').length;
     if (majorWins > 0) {
       parts.push(`An acclaimed talent with ${majorWins} major award${majorWins > 1 ? 's' : ''} to their name.`);
     }
@@ -141,13 +142,15 @@ function generateCareerSummary(talent: Talent, state: GameState): string {
 
   // Career trajectory
   if (talent.careerTrajectory) {
-    const trajectoryDescriptions: Record<string, string> = {
+    const trajectoryDescriptions: Record<CareerTrajectory, string> = {
       'rising': 'Their career is on a clear upward trajectory.',
+      'peak': 'Currently at the absolute height of their power and influence.',
       'plateau': 'They have maintained consistent success over the years.',
       'declining': 'Recently facing career challenges but with potential for a comeback.',
+      'resurgent': 'Experiencing a significant return to form after a quiet period.',
       'comeback': 'In the midst of an impressive career resurgence.',
     };
-    parts.push(trajectoryDescriptions[talent.careerTrajectory] || '');
+    parts.push(trajectoryDescriptions[talent.careerTrajectory]);
   }
 
   return parts.filter(p => p).join(' ');
@@ -157,8 +160,8 @@ function generateCareerSummary(talent: Talent, state: GameState): string {
  * Generate relationships section
  */
 function generateRelationshipsSection(talent: Talent, state: GameState): string | null {
-  const relationships = Object.values((state as any).relationships?.relationships || {})
-    .filter((r: any) => r.talentAId === talent.id || r.talentBId === talent.id) as TalentRelationship[];
+  const relationships = Object.values(state.relationships.relationships || {})
+    .filter((r) => r.talentAId === talent.id || r.talentBId === talent.id);
 
   if (relationships.length === 0) return null;
 
@@ -210,10 +213,10 @@ function generateRelationshipsSection(talent: Talent, state: GameState): string 
   }
 
   // Clique membership
-  const memberCliqueMap = (state as any).relationships?.cliques?.memberCliqueMap || {};
+  const memberCliqueMap = state.relationships.cliques?.memberCliqueMap || {};
   const cliqueIds = memberCliqueMap[talent.id] || [];
   if (cliqueIds.length > 0) {
-    const cliques = (state as any).relationships?.cliques?.cliques || {};
+    const cliques = state.relationships.cliques?.cliques || {};
     const cliqueNames = cliqueIds
       .map((id: string) => (cliques[id] as Clique)?.name)
       .filter(Boolean);
@@ -264,10 +267,10 @@ function generateRecentEventsSection(talent: Talent, state: GameState): string |
   const parts: string[] = [];
 
   // Breakout star status
-  const isBreakout = (talent as any).isBreakout;
+  const isBreakout = talent.isBreakout;
   if (isBreakout) {
-    const breakouts = Object.values((state as any).relationships?.discovery?.breakoutStars || {})
-      .filter((b: any) => b.talentId === talent.id && (b as BreakoutStar).hypeWeeksRemaining > 0) as BreakoutStar[];
+    const breakouts = Object.values(state.relationships.discovery?.breakoutStars || {})
+      .filter((b) => b.talentId === talent.id && b.hypeWeeksRemaining > 0);
 
     if (breakouts.length > 0) {
       parts.push(`Currently experiencing breakout star status with intense media attention.`);
@@ -276,14 +279,14 @@ function generateRecentEventsSection(talent: Talent, state: GameState): string |
 
   // Recent scandal
   const scandals = Object.values(state.industry?.scandals || {})
-    .filter((s: any) => s.talentId === talent.id && (s as any).weeksRemaining > 0);
+    .filter((s) => s.talentId === talent.id && s.weeksRemaining > 0);
 
   if (scandals.length > 0) {
     parts.push(`Recently navigated through personal challenges that captured public attention.`);
   }
 
   // Medical leave
-  if ((talent as any).onMedicalLeave) {
+  if (talent.onMedicalLeave) {
     parts.push(`Currently taking time away from the spotlight for personal health.`);
   }
 
@@ -297,11 +300,17 @@ function generatePersonalitySection(talent: Talent): string {
   const personality = talent.personality;
   if (!personality) return '';
 
-  const descriptions: Record<string, string> = {
+  const descriptions: Partial<Record<TalentPersonality, string>> = {
     'charismatic': 'Known for their magnetic screen presence and ability to light up any set.',
     'difficult': 'Their intense dedication to craft sometimes creates on-set tension, but yields powerful results.',
     'perfectionist': 'A meticulous artist who demands excellence from themselves and their collaborators.',
     'collaborative': 'Prized for their team-first attitude and ability to elevate everyone around them.',
+    'method': 'A dedicated practitioner of method acting, staying in character throughout production.',
+    'pragmatic': 'Known for a professional, no-nonsense approach to the business of acting.',
+    'artistic': 'Driven by creative vision and artistic integrity over commercial concerns.',
+    'commercial': 'A reliable box-office draw with a keen sense for market appeal.',
+    'loyal': 'Valued for their long-standing industry relationships and loyalty to collaborators.',
+    'ambitious': 'Consistently pushing for bigger roles and greater industry influence.',
   };
 
   return descriptions[personality] || '';
@@ -350,23 +359,23 @@ export function tickBiographyGenerator(
  */
 function shouldUpdateBio(talent: Talent, state: GameState): boolean {
   // Update if breakout just happened
-  if ((talent as any).isBreakout) return true;
+  if (talent.isBreakout) return true;
 
   // Update if relationship status changed recently
-  const relationships = Object.values((state as any).relationships?.relationships || {})
-    .filter((r: any) => (r.talentAId === talent.id || r.talentBId === talent.id) && r.formedWeek > state.week - 4);
+  const relationships = Object.values(state.relationships?.relationships || {})
+    .filter((r) => (r.talentAId === talent.id || r.talentBId === talent.id) && r.formedWeek > state.week - 4);
+
   if (relationships.length > 0) return true;
 
   // Update if clique membership changed
-  const memberCliqueMap = (state as any).relationships?.cliques?.memberCliqueMap || {};
-  const recentCliqueActivity = Object.values((state as any).relationships?.cliques?.cliques || {})
-    .some((c: any) => c.memberIds?.includes(talent.id) && c.formedWeek > state.week - 4);
+  const recentCliqueActivity = Object.values(state.relationships?.cliques?.cliques || {})
+    .some((c) => c.memberIds?.includes(talent.id) && c.formedWeek > state.week - 4);
   if (recentCliqueActivity) return true;
 
   // Update if major award won recently
   // Update if scandal active
   const activeScandal = Object.values(state.industry?.scandals || {})
-    .some((s: any) => s.talentId === talent.id && (s as any).weeksRemaining > 0);
+    .some((s) => s.talentId === talent.id && s.weeksRemaining > 0);
   if (activeScandal) return true;
 
   return false;
@@ -378,7 +387,7 @@ function shouldUpdateBio(talent: Talent, state: GameState): boolean {
 export function generateEventBioUpdate(
   talent: Talent,
   eventType: 'breakout' | 'relationship' | 'clique' | 'award' | 'scandal',
-  eventData: any,
+  eventData: { type?: string; status?: string; partnerName?: string; cliqueName?: string },
   state: GameState
 ): string {
   const currentBio = talent.bio || '';

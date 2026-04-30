@@ -1,17 +1,20 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { useGameStore } from "../../store/gameStore";
-import * as saveLoad from "@/persistence/saveLoad";
-import { createMockGameState, createMockTalent, createMockProject } from "../utils/mockFactories";
+import * as saveLoad from "../../persistence/saveLoad";
+import { Talent, Project, GameState } from "../../engine/types";
 
 // Mock saveLoad
-vi.mock("@/persistence/saveLoad", () => ({
+vi.mock("../../persistence/saveLoad", () => ({
   saveGame: vi.fn(),
   loadGame: vi.fn(async (slot) => {
-    if (slot === 1) {
-      const state = createMockGameState();
-      state.studio.name = "Loaded Studio";
-      return state;
-    }
+    if (slot === 1) return { 
+      week: 1, 
+      finance: { cash: 1000000, ledger: [] },
+      news: { headlines: [] },
+      studio: { name: "Loaded Studio", archetype: 'major', prestige: 50, internal: { projects: {}, contracts: [] } }, 
+      industry: { talentPool: {}, rivals: [], newsHistory: [] },
+      market: { buyers: [], opportunities: [] }
+    } as unknown as GameState;
     return null;
   }),
   getSaveSlots: vi.fn(async () => [{ id: 1, name: 'Slot 1', date: '2026-03-31', week: 1, studio: 'Studio' }]),
@@ -37,13 +40,14 @@ describe("gameStore", () => {
 
   it("advances week", async () => {
     await useGameStore.getState().newGame("My Studio", "major");
-    const state = useGameStore.getState().gameState;
-    if (!state) throw new Error("Game state not initialized");
+    const state = useGameStore.getState().gameState!;
+    // Ensure the necessary structures are present
+    state.studio.internal.contracts = [];
+    state.entities.talents = {};
+
     useGameStore.setState({ gameState: state });
 
-    const summary = await useGameStore.getState().doAdvanceWeek();
-    expect(summary).not.toBeNull();
-    if (!summary) throw new Error("Summary not generated");
+    const summary = useGameStore.getState().doAdvanceWeek();
     expect(summary.fromWeek).toBe(1);
     expect(useGameStore.getState().gameState?.week).toBe(2);
   });
@@ -56,8 +60,7 @@ describe("gameStore", () => {
       genre: "Comedy",
       budgetTier: "low",
       targetAudience: "General",
-      flavor: "Funny",
-      attachedTalentIds: []
+      flavor: "Funny"
     });
 
     const state = useGameStore.getState().gameState;
@@ -74,24 +77,29 @@ describe("gameStore", () => {
 
   it("signs a contract if sufficient funds", async () => {
     await useGameStore.getState().newGame("My Studio", "major");
-    const state = useGameStore.getState().gameState;
-    if (!state) throw new Error("Game state not initialized");
+    const state = useGameStore.getState().gameState!;
     state.finance.cash = 1000000;
-
-    const talent = createMockTalent({ id: "t1", name: "Star", role: "actor", roles: ["actor"], fee: 100000 });
-    const project = createMockProject({ id: "p1", title: "Test", state: "development" });
-
-    state.entities.talents = { "t1": talent };
-    state.entities.projects = { "p1": project };
+    state.entities.talents = {
+      "t1": { 
+          id: "t1", name: "Star", roles: ["actor"], prestige: 85, draw: 80, fee: 100000, 
+          agencyId: 'a1'
+      } as any
+    };
+    state.entities.projects = {
+      "p1": { 
+        id: "p1", title: "Test", format: "film", genre: "Action", budgetTier: "low", budget: 500000, weeklyCost: 10000,
+        state: "development", weeksInPhase: 0, productionWeeks: 10, developmentWeeks: 10,
+        revenue: 0, weeklyRevenue: 0, releaseWeek: null 
+      } as any
+    };
     useGameStore.setState({ gameState: state });
 
     useGameStore.getState().signContract("t1", "p1");
 
-    const newState = useGameStore.getState().gameState;
-    if (!newState) throw new Error("Game state not initialized");
-    const contracts = Object.values(newState.entities.contracts);
+    const newState = useGameStore.getState().gameState!;
     expect(newState.finance.cash).toBe(900000); // 1M - 100k fee
-    expect(contracts).toHaveLength(1);
-    expect(contracts[0].talentId).toBe("t1");
+    const newContracts = Object.values(newState.entities.contracts || {});
+    expect(newContracts).toHaveLength(1);
+    expect(newContracts[0].talentId).toBe("t1");
   });
 });

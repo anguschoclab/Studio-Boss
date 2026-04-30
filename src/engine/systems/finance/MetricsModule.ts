@@ -16,7 +16,13 @@ export function calculateStudioNetWorth(state: GameState): number {
 
   for (const key in state.entities.projects) {
     const p = state.entities.projects[key];
-    if (p.state !== 'released' && p.state !== 'archived') {
+    if (p.state === 'released') {
+      // Released projects add their catalog value if owned by studio
+      if (p.ipRights?.rightsOwner === 'studio') {
+        netWorth += (p.ipRights.catalogValue || 0);
+      }
+    } else if (p.state !== 'archived') {
+      // Ongoing projects add 30% of budget as work-in-progress asset
       netWorth += p.budget * 0.3;
     }
   }

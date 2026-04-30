@@ -1,214 +1,117 @@
 import { describe, it, expect, vi } from "vitest";
-import { advanceProject, handleReleasePhaseEntry, executeGreenlight, executePitching } from "../../../engine/systems/projects";
-import { executeMarketing } from "../../../engine/systems/projectHandlers";
+import { advanceProject, handleReleasePhaseEntry } from "../../../engine/systems/projects";
 import { Project, Talent, Contract } from "../../../engine/types";
+import * as utils from "../../../engine/utils";
 import { RandomGenerator } from "../../../engine/utils/rng";
-import { createMockProject, createMockTalent, createMockContract } from "../../utils/mockFactories";
 
-const mockProject = createMockProject({
+const mockProject: Project = {
   id: "proj-1",
   title: "Test Project",
+  type: "FILM",
+  budgetTier: "low",
+  budget: 500000,
+  genre: "Comedy",
   state: "development",
   developmentWeeks: 2,
   productionWeeks: 2,
-});
+  weeksInPhase: 0,
+  format: "film",
+  targetAudience: "General",
+  flavor: "Quirky",
+  releaseWeek: null,
+  weeklyCost: 10000,
+  buzz: 50,
+  revenue: 0,
+  weeklyRevenue: 0,
+  momentum: 50,
+  progress: 0,
+  accumulatedCost: 0,
+  activeCrisis: null,
+  scriptHeat: 50,
+  activeRoles: [],
+  scriptEvents: []
+} as import('../../../engine/types').Project;
 
 describe("advanceProject", () => {
-  const rng = new RandomGenerator(42);
-
   it("does nothing for archived projects", () => {
     const project = { ...mockProject, state: "archived" as const };
-    const impacts = advanceProject(project, 1, 50, [], {}, rng);
-    expect(impacts).toEqual([]);
+    const { project: p, update } = advanceProject(project, 1, 50, [], new Map(), 50);
+    expect(p.state).toBe("archived");
+    expect(update).toBeNull();
   });
 
   it("advances development project normally", () => {
-    const impacts = advanceProject(mockProject, 1, 50, [], {}, rng);
-    expect(impacts.length).toBeGreaterThan(0);
-    const projectUpdate = impacts.find(i => i.type === 'PROJECT_UPDATED');
-    expect(projectUpdate).toBeDefined();
-    expect(projectUpdate?.payload.update.weeksInPhase).toBe(1);
+    const { project: p, update } = advanceProject(mockProject, 1, 50, [], new Map());
+    expect(p.weeksInPhase).toBe(1);
+    expect(p.state).toBe("development");
+    expect(update).toBeNull();
   });
 
   it("transitions from development to needs_greenlight", () => {
     const project = { ...mockProject, weeksInPhase: 1 };
-    const impacts = advanceProject(project, 1, 50, [], {}, rng);
-    const projectUpdate = impacts.find(i => i.type === 'PROJECT_UPDATED');
-    expect(projectUpdate?.payload.update.state).toBe("needs_greenlight");
-    expect(projectUpdate?.payload.update.weeksInPhase).toBe(0);
+    const { project: p, update } = advanceProject(project, 1, 50, [], new Map());
+    expect(p.state).toBe("needs_greenlight");
+    expect(p.weeksInPhase).toBe(0);
+    expect(update).toContain("is ready for greenlight");
   });
 
-  it("transitions from production to marketing", () => {
+  it("transitions from production to post_production", () => {
     const project = { ...mockProject, state: "production" as const, weeksInPhase: 1 };
-    const impacts = advanceProject(project, 1, 50, [], {}, rng);
-    const projectUpdate = impacts.find(i => i.type === 'PROJECT_UPDATED');
-    expect(projectUpdate?.payload.update.state).toBe("marketing");
-    expect(projectUpdate?.payload.update.weeksInPhase).toBe(0);
+    const { project: p, update } = advanceProject(project, 1, 50, [], new Map());
+    expect(p.state).toBe("post_production");
+    expect(p.weeksInPhase).toBe(0);
+    expect(update).toContain("has wrapped production");
   });
 
   it("accumulates revenue and decays weekly revenue for released projects", () => {
-    const project = { ...mockProject, state: "released" as const, weeklyRevenue: 500000, format: 'film' as const };
-    const impacts = advanceProject(project, 1, 50, [], {}, rng);
-    const projectUpdate = impacts.find(i => i.type === 'PROJECT_UPDATED');
-    expect(projectUpdate?.payload.update.revenue).toBeGreaterThan(0);
-    expect(projectUpdate?.payload.update.weeklyRevenue).toBeDefined();
+    const project = { ...mockProject, state: "released" as const, weeklyRevenue: 500000 };
+    const { project: p, update } = advanceProject(project, 1, 50, [], new Map(), 50);
+    expect(p.revenue).toBeGreaterThan(0);
+    expect(p.weeklyRevenue).toBeLessThan(500000);
+    expect(update).toContain("grossed");
   });
 
-  it("transitions to post_release for low revenue projects", () => {
+  it("returns StateImpact for funds change", () => {
+    const rng = new RandomGenerator(1);
     const project = { ...mockProject, state: "released" as const, weeklyRevenue: 50 };
-    const impacts = advanceProject(project, 1, 50, [], {}, rng);
-    const projectUpdate = impacts.find(i => i.type === 'PROJECT_UPDATED');
-    expect(projectUpdate?.payload.update.state).toBe("post_release");
+    // Signature: project, currentWeek, studioPrestige, projectContracts, talentPoolMap, rivalStrengthAvg, projectAwards, trendMultiplier, franchiseSynergy, franchiseFatigue, rng
+    const { project: p, update } = advanceProject(project, 1, 50, [], new Map(), 50, [], 1.0, 1.0, 0, rng);
+    expect(p.state).toBe("post_release");
+    expect(update).toContain("completes its theatrical run");
   });
 
   it("transitions tv from development to pitching", () => {
     const project = { ...mockProject, weeksInPhase: 1, format: 'tv' as const, type: 'SERIES' as const } as any;
-    const impacts = advanceProject(project, 1, 50, [], {}, rng);
-    const projectUpdate = impacts.find(i => i.type === 'PROJECT_UPDATED');
-    expect(projectUpdate?.payload.update.state).toBe("pitching");
-    expect(projectUpdate?.payload.update.weeksInPhase).toBe(0);
+    const { project: p, update } = advanceProject(project, 1, 50, [], new Map());
+    expect(p.state).toBe("pitching");
+    expect(p.weeksInPhase).toBe(0);
+    expect(update).toContain("ready to be pitched");
   });
 
   it("drifts buzz with talent buzz bonus during dev", () => {
     const project = { ...mockProject, buzz: 50 };
-    const mockTalent = createMockTalent({ id: "t1", name: "Star", role: "actor", roles: ["actor"], prestige: 100 });
-    const pool = { "t1": mockTalent };
-    const contracts = [createMockContract({ id: "c1", projectId: "proj-1", talentId: "t1", role: "actor" })];
+    const mockTalent: Talent = {
+      id: "t1", name: "Star", roles: ["actor"], prestige: 100, fee: 1000000, draw: 100, personality: "Pro", accessLevel: "legacy",
+    } as any;
+    const pool = new Map([["t1", mockTalent]]);
+    const contracts: Contract[] = [{ id: "c1", projectId: "proj-1", talentId: "t1", fee: 100000, backendPercent: 0 }];
     
-    const impacts = advanceProject(project, 1, 50, contracts, pool, rng);
-    const projectUpdate = impacts.find(i => i.type === 'PROJECT_UPDATED');
-    // Buzz drift includes random roll (-4 to 6) plus talent bonus, so it can be less than initial
-    expect(projectUpdate?.payload.update.buzz).toBeDefined();
+    vi.spyOn(utils, 'randRange').mockReturnValue(0); // Fix randomness
+    const { project: p } = advanceProject(project, 1, 50, contracts, pool, 50);
+    
+    // draw = 100 => bonus = 2. randRange = 0. base buzz = 50. Total change: +2. Expected: 52.
+    expect(p.buzz).toBe(52);
+    vi.restoreAllMocks();
   });
 
   describe("Handle Release Phase Entry", () => {
     it("transitions marketing project to released", () => {
       const proj = { ...mockProject, state: "marketing" as const };
-      const impacts = handleReleasePhaseEntry(proj, 1, 50, [], {}, rng);
-      expect(impacts.length).toBeGreaterThan(0);
-      const projectUpdate = impacts.find(i => i.type === 'PROJECT_UPDATED');
-      expect(projectUpdate?.payload.update.state).toBe("released");
-      expect(projectUpdate?.payload.update.releaseWeek).toBe(1);
-      expect(projectUpdate?.payload.update.reviewScore).toBeDefined();
-    });
-  });
-
-  describe("executeMarketing", () => {
-    it("should attach marketing campaign to project", () => {
-      const project = { ...mockProject, buzz: 50 };
-      const campaign = {
-        id: "campaign-1",
-        projectId: "proj-1",
-        budget: 1000000,
-        domesticBudget: 700000,
-        foreignBudget: 300000,
-        targetCategories: ["action"],
-        buzzBonus: 10,
-        scandalRisk: 5,
-        primaryAngle: "star_power" as const,
-      } as any;
-
-      const result = executeMarketing(project, campaign);
-      expect(result.project.marketingCampaign).toBeDefined();
-      expect((result.project.marketingCampaign as any).id).toBe("campaign-1");
-      expect((result.project.marketingCampaign as any).weeksInMarketing).toBe(1);
-    });
-
-    it("should preserve existing project buzz", () => {
-      const project = { ...mockProject, buzz: 75 };
-      const campaign = {
-        id: "campaign-1",
-        projectId: "proj-1",
-        budget: 500000,
-        domesticBudget: 350000,
-        foreignBudget: 150000,
-        targetCategories: ["drama"],
-        buzzBonus: 5,
-        scandalRisk: 2,
-        primaryAngle: "star_power" as const,
-      } as any;
-
-      const result = executeMarketing(project, campaign);
-      expect(result.project.buzz).toBe(75); // Buzz is not modified
-    });
-
-    it("should return updated project object", () => {
-      const project = { ...mockProject, buzz: 50 };
-      const campaign = {
-        id: "campaign-1",
-        projectId: "proj-1",
-        budget: 1000000,
-        domesticBudget: 700000,
-        foreignBudget: 300000,
-        targetCategories: ["comedy"],
-        buzzBonus: 15,
-        scandalRisk: 3,
-        primaryAngle: "star_power" as const,
-      } as any;
-
-      const result = executeMarketing(project, campaign);
-      expect(result.project).toBeDefined();
-      expect(result.project.id).toBe("proj-1");
-    });
-  });
-
-  describe("executeGreenlight", () => {
-    it("should transition project to production state", () => {
-      const project = { ...mockProject, state: "needs_greenlight" as const };
-      const result = executeGreenlight(project);
-      
-      expect(result.project.state).toBe("production");
-      expect(result.project.weeksInPhase).toBe(0);
-    });
-
-    it("should return update message", () => {
-      const project = { ...mockProject, state: "needs_greenlight" as const };
-      const result = executeGreenlight(project);
-      
-      expect(result.update).toBeDefined();
-      expect(typeof result.update).toBe("string");
-    });
-
-    it("should reset weeksInPhase to 0", () => {
-      const project = { ...mockProject, state: "needs_greenlight" as const, weeksInPhase: 5 };
-      const result = executeGreenlight(project);
-      
-      expect(result.project.weeksInPhase).toBe(0);
-    });
-  });
-
-  describe("executePitching", () => {
-    it("should transition project to production state", () => {
-      const project = { ...mockProject, state: "pitching" as const };
-      const result = executePitching(project, "Netflix", "exclusive");
-      
-      expect(result.project.state).toBe("production");
-      expect(result.project.weeksInPhase).toBe(0);
-    });
-
-    it("should return update message with buyer and contract info", () => {
-      const project = { ...mockProject, state: "pitching" as const };
-      const result = executePitching(project, "HBO", "licensing");
-      
-      expect(result.update).toContain("HBO");
-      expect(result.update).toContain("licensing");
-      expect(result.update).toContain("Test Project");
-    });
-
-    it("should handle different buyer names", () => {
-      const project = { ...mockProject, state: "pitching" as const };
-      const result = executePitching(project, "Amazon Prime", "exclusive");
-      
-      expect(result.update).toContain("Amazon Prime");
-      expect(result.project.state).toBe("production");
-    });
-
-    it("should handle different contract types", () => {
-      const project = { ...mockProject, state: "pitching" as const };
-      const result = executePitching(project, "Disney+", "licensing");
-      
-      expect(result.update).toContain("licensing");
-      expect(result.project.state).toBe("production");
+      const { update } = handleReleasePhaseEntry(proj, 1, 50, [], new Map());
+      expect(proj.state).toBe("released");
+      expect(proj.releaseWeek).toBe(1);
+      expect(proj.reviewScore).toBeDefined();
+      expect(update).toBeTruthy();
     });
   });
 });

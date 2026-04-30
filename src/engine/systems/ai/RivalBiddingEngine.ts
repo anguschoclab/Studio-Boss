@@ -35,6 +35,10 @@ export function generateFestivalBid(
 
   if (rival.currentMotivation === 'AWARD_CHASE' && reviewScore > 75) {
     interest *= 1.4;
+    // 🎭 The Method Actor Tuning: Award chasers will bid irrationally high for critical darlings (reviewScore > 85), treating them as must-haves for their Oscar campaigns.
+    if (reviewScore > 85) {
+      interest *= 1.8;
+    }
   }
 
   if (rival.currentMotivation === 'MARKET_DISRUPTION') {

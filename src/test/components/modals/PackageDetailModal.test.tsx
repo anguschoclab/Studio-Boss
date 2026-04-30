@@ -152,7 +152,7 @@ describe('PackageDetailModal', () => {
 
     render(<PackageDetailModal packageId="pkg-1" />);
 
-    expect(screen.getByText('Test Actor')).toBeInTheDocument();
+    expect(screen.getByText('TEST ACTOR')).toBeInTheDocument();
     expect(screen.getByText(/Tier 1/)).toBeInTheDocument();
   });
 

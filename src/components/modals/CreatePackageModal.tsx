@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Package, Building2, Users } from 'lucide-react';
-import type { Agency, Talent, Opportunity, BudgetTierKey, ProjectFormat } from '@/engine/types';
+import type { Agency, Talent } from '@/engine/types';
 
 interface CreatePackageModalProps {
   agencies?: Agency[];
@@ -47,9 +47,9 @@ export const CreatePackageModal = ({ agencies: propAgencies, talents: propTalent
 
   return (
     <Dialog open={true} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl bg-card/90 backdrop-blur-2xl border border-white/10">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="font-display font-black text-xl tracking-tight uppercase flex items-center gap-2">
             <Package className="h-5 w-5" />
             Create Talent Package
           </DialogTitle>
@@ -100,14 +100,14 @@ export const CreatePackageModal = ({ agencies: propAgencies, talents: propTalent
               <Users className="h-4 w-4" />
               Select Talent (max 5)
             </Label>
-            <div className="max-h-64 overflow-y-auto border rounded-md p-3 space-y-2">
+            <div className="max-h-64 overflow-y-auto border rounded-none p-3 space-y-2">
               {talentList.length === 0 ? (
                 <p className="text-sm text-muted-foreground">No available talent with contracts</p>
               ) : (
                 talentList.map(talent => (
                   <div
                     key={talent.id}
-                    className="flex items-center justify-between p-3 m-2 rounded-lg shadow-sm hover:shadow-md hover:bg-muted cursor-pointer transition-all"
+                    className="flex items-center justify-between p-3 m-2 rounded-none shadow-sm hover:shadow-md hover:bg-muted cursor-pointer transition-all"
                     role="button"
                     tabIndex={0}
                     onKeyDown={(e) => {

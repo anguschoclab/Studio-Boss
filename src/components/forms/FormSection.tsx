@@ -45,7 +45,7 @@ export const FormSection: React.FC<FormSectionProps> = ({
       >
         <div className="flex items-center gap-3">
           {Icon && (
-            <div className={cn('p-2 rounded-lg bg-primary/10', tokens.border.default)}>
+            <div className={cn('p-2 rounded-none bg-primary/10', tokens.border.default)}>
               <Icon className="h-4 w-4 text-primary" />
             </div>
           )}

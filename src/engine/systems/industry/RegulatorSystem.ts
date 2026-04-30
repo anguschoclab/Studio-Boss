@@ -1,128 +1,88 @@
-import { GameState, StateImpact } from '../../types';
-import { RandomGenerator } from '../../utils/rng';
+import { GameState } from '@/engine/types';
+import { rand } from '../../utils';
 
 /**
- * IndustryRegulator - Anti-Trust & Economic Replenishment
+ * Studio Boss - Regulator System (Anti-Trust)
+ * Assesses whether a merger or acquisition should be blocked.
  */
 export class RegulatorSystem {
-  static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
-    const impacts: StateImpact[] = [];
+  /**
+   * Calculates the current market share of a studio.
+   * Market share is a weighted average of prestige and subscriber counts.
+   */
+  static getMarketShare(state: GameState, studioId: string | 'player'): number {
+    const ALL_RIVALS = Object.values(state.entities.rivals);
+    const playerStudioId = state.studio.id;
+    const isTargetPlayer = studioId === 'player' || studioId === playerStudioId;
+
+    const totalPrestige = ALL_RIVALS.reduce((acc, r) => acc + r.prestige, state.studio.prestige);
+    const studioPrestige = isTargetPlayer 
+      ? state.studio.prestige 
+      : state.entities.rivals[studioId]?.prestige || 0;
+
+    const totalSubs = state.market.buyers
+      .filter(b => b.archetype === 'streamer')
+      .reduce((acc, b) => acc + ((b as any).subscribers || 0), 0);
     
-    // 1. Calculate Trailing 4-Week Revenue for all studios
-    const calculateTrailingRevenue = (history: any[]) => {
-      return (history || []).slice(0, 4).reduce((sum, h) => sum + (h.revenue?.theatrical || 0) + (h.revenue?.streaming || 0), 0);
-    };
+    const studioSubs = state.market.buyers
+      .filter(b => b.archetype === 'streamer' && b.ownerId === (isTargetPlayer ? playerStudioId : studioId))
+      .reduce((acc, b) => acc + ((b as any).subscribers || 0), 0);
 
-    const rivalsList = Object.values(state.entities.rivals || {});
+    const prestigeShare = (studioPrestige / totalPrestige) * 100;
+    const subShare = totalSubs > 0 ? (studioSubs / totalSubs) * 100 : 0;
 
-    const studios = [
-      { 
-        id: 'player', 
-        name: state.studio.name, 
-        revenue: calculateTrailingRevenue(state.finance.weeklyHistory), 
-        type: state.studio.archetype 
-      },
-      ...rivalsList.map(r => ({ 
-        id: r.id, 
-        name: r.name, 
-        revenue: calculateTrailingRevenue(r.weeklyHistory || []), 
-        type: r.archetype 
-      }))
-    ];
+    // Weighted share: 60% prestige, 40% audience reach
+    return (prestigeShare * 0.6) + (subShare * 0.4);
+  }
 
-    const totalIndustryRevenue = studios.reduce((sum, s) => sum + s.revenue, 1);
-    const threshold = 0.40; 
+  /**
+   * Evaluates if a merger between an acquirer and a target should be blocked.
+   * Returns true if the merger is BLOCKED.
+   */
+  static isBlocked(state: GameState, acquirerId: string | 'player', targetId: string): { blocked: boolean; sharePreview: number; reason?: string } {
+    const currentShare = this.getMarketShare(state, acquirerId);
+    const targetShare = this.getMarketShare(state, targetId);
+    const combinedShare = currentShare + targetShare;
 
-    studios.forEach(s => {
-      const share = s.revenue / totalIndustryRevenue;
-      if (share > threshold && s.type === 'major' && totalIndustryRevenue > 50_000_000) {
-        const fine = 25_000_000; 
+    // Regulators become concerned at > 25% share, and aggressively block at > 35%.
+    let blockChance = 0;
+    if (combinedShare > 35) {
+      blockChance = 0.9; // 90% chance of blockage
+    } else if (combinedShare > 25) {
+      blockChance = 0.4 + (combinedShare - 25) * 0.05; // Sliding scale
+    }
 
-        impacts.push({
-          type: 'FINANCE_TRANSACTION',
-          payload: {
-            amount: -fine,
-            category: 'EXPENSE',
-            description: `Anti-Trust Fine: ${s.name} Market Share (${Math.round(share * 100)}%)`,
-            week: state.week,
-            targetId: s.id // Route to the specific studio
-          }
-        });
+    if (rand() < blockChance) {
+      return { 
+        blocked: true, 
+        sharePreview: combinedShare, 
+        reason: combinedShare > 35 ? 'Severe Concentration of Media Power' : 'Competition Concerns' 
+      };
+    }
 
-        impacts.push({
-          type: 'NEWS_ADDED',
-          payload: {
-            id: rng.uuid('NWS'),
-            headline: `Federal Trade Commission Fines ${s.name}`,
-            description: `Cited for market dominance (${Math.round(share * 100)}%), ${s.name} has been issued a $25M penalty.`,
-            category: 'market',
-            publication: 'Financial Journal',
-            week: state.week
-          }
-        });
-      }
-    });
+    return { blocked: false, sharePreview: combinedShare };
+  }
+
+  /**
+   * Weekly Tick: Evaluates market conditions and potential anti-trust warnings.
+   */
+  static tick(state: GameState, rng: any): import('../../types/state.types').StateImpact[] {
+    const impacts: import('../../types/state.types').StateImpact[] = [];
+    const playerShare = this.getMarketShare(state, 'player');
+
+    // If player is too powerful, regulators issue a headline
+    if (playerShare > 30 && rng.next() < 0.05) { // 5% chance if > 30% share
+      impacts.push({
+        type: 'HEADLINE_POSTED',
+        payload: {
+          id: `HL-${state.week}-REG`,
+          week: state.week,
+          category: 'industry',
+          text: `REGULATORY WATCH: Regulators express concern over ${state.studio.name}'s growing market dominance.`
+        }
+      });
+    }
 
     return impacts;
-  }
-
-  /**
-   * 🌌 PHASE 2: Consolidation Check.
-   * prevents M&A that would result in >40% market share.
-   */
-  static isBlocked(
-    state: GameState, 
-    acquirerId: string, 
-    targetId: string, 
-    rng: RandomGenerator
-  ): { blocked: boolean; reason?: string } {
-    const calculateTrailingRevenue = (history: any[]) => {
-      return (history || []).slice(0, 4).reduce((sum, h) => sum + (h.revenue?.theatrical || 0) + (h.revenue?.streaming || 0), 0);
-    };
-
-    const rivalsList = Object.values(state.entities.rivals || {});
-
-    const totalRev = calculateTrailingRevenue(state.finance.weeklyHistory) + 
-                   rivalsList.reduce((sum, r) => sum + calculateTrailingRevenue(r.weeklyHistory || []), 0);
-    
-    let acquirerRev = 0;
-    if (acquirerId === 'player') {
-      acquirerRev = calculateTrailingRevenue(state.finance.weeklyHistory);
-    } else {
-      const acquirer = state.entities.rivals[acquirerId];
-      acquirerRev = calculateTrailingRevenue(acquirer?.weeklyHistory || []);
-    }
-    
-    // Check if acquirer current share > 40% (Consolidation Barrier)
-    if (acquirerRev > totalRev * 0.40 && totalRev > 100_000_000) {
-      return { blocked: true, reason: 'Market Dominance Threshold' };
-    }
-
-    // Regulatory Random Audit (5% chance of block)
-    if (rng.next() < 0.05) {
-      return { blocked: true, reason: 'Ongoing Anti-Trust Investigation' };
-    }
-
-    return { blocked: false };
-  }
-
-  /**
-   * Calculate market share for a specific studio.
-   */
-  static getMarketShare(state: GameState, studioId: string): number {
-    const calculateTrailingRevenue = (history: any[]) => {
-      return (history || []).slice(0, 4).reduce((sum, h) => sum + (h.revenue?.theatrical || 0) + (h.revenue?.streaming || 0), 0);
-    };
-
-    const rivalsList = Object.values(state.entities.rivals || {});
-
-    const studios = [
-      { id: 'player', revenue: calculateTrailingRevenue(state.finance.weeklyHistory) },
-      ...rivalsList.map(r => ({ id: r.id, revenue: calculateTrailingRevenue(r.weeklyHistory || []) }))
-    ];
-
-    const totalIndustryRevenue = studios.reduce((sum, s) => sum + s.revenue, 1);
-    const target = studios.find(s => s.id === studioId);
-    return (target?.revenue || 0) / (totalIndustryRevenue || 1);
   }
 }

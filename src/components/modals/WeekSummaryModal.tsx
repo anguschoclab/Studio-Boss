@@ -5,8 +5,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useState } from 'react';
-import { Headline } from '@/engine/types';
+import { Headline, NarrativeEvent } from '@/engine/types';
 import { NewsStoryModal } from './NewsStoryModal';
+import { cn } from '@/lib/utils';
+import { ArrowRight, TrendingUp, DollarSign, Activity, Newspaper, AlertTriangle, Trophy, MessageSquare } from 'lucide-react';
 
 export const WeekSummaryModal = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
@@ -15,9 +17,14 @@ export const WeekSummaryModal = () => {
 
   if (!activeModal || activeModal.type !== 'SUMMARY') return null;
 
-  const weekSummary = activeModal.payload as any;
-  const { toWeek, cashBefore, cashAfter, totalRevenue, totalCosts, projectUpdates, newHeadlines, events } = weekSummary;
+  const weekSummary = activeModal.payload;
+  const { toWeek, cashBefore, cashAfter, totalRevenue, totalCosts, projectUpdates, newHeadlines, events, narrativeEvents, isQuietWeek } = weekSummary;
   const netDelta = cashAfter - cashBefore;
+
+  // Categorize narrative events
+  const crises = narrativeEvents?.filter((e: NarrativeEvent) => e.type === 'crisis') || [];
+  const positiveUpdates = narrativeEvents?.filter((e: NarrativeEvent) => e.isPositive) || [];
+  const generalChatter = narrativeEvents?.filter((e: NarrativeEvent) => e.type === 'general' && !e.isPositive) || [];
 
   const isYearEnd = (toWeek - 1) % 52 === 0 && toWeek > 1;
   const currentSnapshot = isYearEnd ? snapshots[snapshots.length - 1] : null;
@@ -35,132 +42,229 @@ export const WeekSummaryModal = () => {
     <>
       <Dialog open={true} onOpenChange={() => resolveCurrentModal()}>
         <DialogContent 
-          className="max-w-md border-border/50 bg-background/95 backdrop-blur-xl shadow-2xl"
+          className="max-w-xl bg-black/95 backdrop-blur-3xl border border-white/10 shadow-[0_0_100px_rgba(0,0,0,0.9)] p-0 rounded-none overflow-hidden"
           onPointerDownOutside={(e) => e.preventDefault()}
         >
-          <DialogHeader>
-            <DialogTitle className={`font-display text-2xl font-black tracking-tight bg-clip-text text-transparent ${isYearEnd ? 'bg-gradient-to-r from-amber-400 to-yellow-600' : 'bg-gradient-to-r from-primary to-primary/70'}`}>
-              {isYearEnd ? 'Yearly Studio Report' : `Week ${toWeek} Report`}
-            </DialogTitle>
-          </DialogHeader>
-
-          <div className="space-y-4">
-            {/* Yearly Highlight */}
-            {isYearEnd && (
-              <div className="p-4 rounded-xl bg-primary/5 border border-primary/20 shadow-inner animate-in zoom-in-95 duration-500 relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-50" />
-                <div className="relative z-10 flex justify-between items-end">
-                  <div>
-                    <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest mb-1">Annual Net Results</p>
-                    <p className={`text-2xl font-display font-black tracking-tighter ${yearlyDelta >= 0 ? 'text-success drop-shadow-[0_0_8px_rgba(34,197,94,0.3)]' : 'text-destructive drop-shadow-[0_0_8px_rgba(239,68,68,0.3)]'}`}>
-                      {yearlyDelta >= 0 ? '+' : ''}{formatMoney(yearlyDelta)}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest mb-1">Year Completed</p>
-                    <p className="text-2xl font-display font-black text-foreground drop-shadow-sm">{Math.floor((toWeek - 2) / 52) + 1}</p>
-                  </div>
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-primary/40 to-primary" />
+          
+          <div className="p-12 space-y-10">
+            <DialogHeader>
+              <div className="flex items-center justify-between">
+                <DialogTitle className={cn(
+                  "font-display text-4xl font-black tracking-tighter uppercase italic",
+                  isYearEnd ? 'text-amber-500 drop-shadow-[0_0_20px_rgba(245,158,11,0.4)]' : 'text-primary drop-shadow-[0_0_20px_rgba(var(--primary),0.4)]'
+                )}>
+                  {isYearEnd ? 'ANNUAL_FISCAL_REPORT' : `CYCLE_W${toWeek}_REPORT`}
+                </DialogTitle>
+                <div className="px-4 py-2 bg-white/5 border border-white/10 text-[10px] font-black tracking-[0.4em] uppercase italic text-muted-foreground/40">
+                  {isYearEnd ? 'YEAR_COMPLETED' : 'UPLINK_STABLE'}
                 </div>
               </div>
-            )}
-            {/* Financial Summary */}
-            <div className="space-y-2">
-              <h4 className="text-[10px] font-display uppercase tracking-widest text-primary font-black">💰 Financials</h4>
-              <div className="grid grid-cols-3 gap-3">
-                <div className="p-2.5 rounded-lg border border-border/40 bg-card/40 backdrop-blur-sm text-center shadow-sm">
-                  <p className="text-[10px] text-muted-foreground">Revenue</p>
-                  <p className="text-sm font-semibold text-success">+{formatMoney(totalRevenue)}</p>
+            </DialogHeader>
+
+            <div className="space-y-10">
+              {/* Yearly Highlight */}
+              {isYearEnd && ( yearlyDelta !== 0 ) && (
+                <div className="p-8 rounded-none bg-amber-500/5 border border-amber-500/20 shadow-2xl relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 via-transparent to-transparent opacity-50" />
+                  <div className="relative z-10 flex justify-between items-end">
+                    <div>
+                      <p className="text-[11px] text-amber-500/40 uppercase font-black tracking-[0.4em] mb-4 italic">ANNUAL_NET_YIELD</p>
+                      <p className={cn(
+                        "text-5xl font-display font-black tracking-tighter italic",
+                        yearlyDelta >= 0 ? 'text-emerald-500 drop-shadow-[0_0_30px_rgba(16,185,129,0.3)]' : 'text-rose-500 drop-shadow-[0_0_30px_rgba(244,63,94,0.3)]'
+                      )}>
+                        {yearlyDelta >= 0 ? '+' : ''}{formatMoney(yearlyDelta).toUpperCase()}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[11px] text-amber-500/40 uppercase font-black tracking-[0.4em] mb-4 italic">FISCAL_YEAR</p>
+                      <p className="text-5xl font-display font-black text-foreground italic drop-shadow-2xl">{Math.floor((toWeek - 2) / 52) + 1}</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="p-2.5 rounded-lg border border-border/40 bg-card/40 backdrop-blur-sm text-center shadow-sm">
-                  <p className="text-[10px] text-muted-foreground">Costs</p>
-                  <p className="text-sm font-semibold text-destructive">-{formatMoney(totalCosts)}</p>
-                </div>
-                <div className="p-2.5 rounded-lg border border-border/40 bg-card/40 backdrop-blur-sm text-center shadow-sm">
-                  <p className="text-[10px] text-muted-foreground">Net</p>
-                  <p className={`text-sm font-semibold ${displayNetDelta >= 0 ? 'text-success' : 'text-destructive'}`}>
-                    {displayNetDelta >= 0 ? '+' : ''}{formatMoney(displayNetDelta)}
+              )}
+
+              {/* Quiet Week Notice */}
+              {isQuietWeek && (
+                <div className="p-8 rounded-none bg-white/[0.01] border border-white/5 shadow-2xl relative overflow-hidden">
+                  <div className="flex items-center gap-4 mb-4">
+                    <MessageSquare className="h-5 w-5 text-muted-foreground/40" />
+                    <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 italic">WEEKLY_BRIEFING</h4>
+                  </div>
+                  <p className="text-sm text-muted-foreground/60 italic leading-relaxed">
+                    Production continues on schedule. No major news. Your CFO notes that cash reserves look healthy.
                   </p>
                 </div>
+              )}
+
+              {/* The Hits - Positive Updates */}
+              {(positiveUpdates.length > 0 || projectUpdates.some((u: string) => u.includes('(+)')) || netDelta > 0) && (
+                <div className="space-y-6">
+                  <div className="flex items-center gap-4">
+                    <Trophy className="h-4 w-4 text-emerald-500" />
+                    <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-emerald-500 italic">THE_HITS</h4>
+                    <div className="h-px bg-emerald-500/20 flex-1" />
+                  </div>
+                  <div className="space-y-3">
+                    {netDelta > 0 && (
+                      <div className="p-4 rounded-none border border-emerald-500/20 bg-emerald-500/5 flex items-center gap-4">
+                        <div className="w-1 h-1 bg-emerald-500 shrink-0 rotate-45" />
+                        <div className="flex-1 text-sm font-medium text-emerald-500 italic">
+                          Net cash flow positive: +{formatMoney(netDelta).toUpperCase()}
+                        </div>
+                      </div>
+                    )}
+                    {projectUpdates.filter((u: string) => u.includes('(+)')).map((u: string, i: number) => (
+                      <div key={i} className="p-4 rounded-none border border-emerald-500/20 bg-emerald-500/5 flex items-center gap-4">
+                        <div className="w-1 h-1 bg-emerald-500 shrink-0 rotate-45" />
+                        <div className="flex-1 text-sm font-medium text-emerald-500 italic">
+                          {u.split('(+')[0]}<span className="ml-2"> (+{u.split('(+')[1]}</span>
+                        </div>
+                      </div>
+                    ))}
+                    {positiveUpdates.map((e: NarrativeEvent, i: number) => (
+                      <div key={i} className="p-4 rounded-none border border-emerald-500/20 bg-emerald-500/5 flex items-center gap-4">
+                        <div className="w-1 h-1 bg-emerald-500 shrink-0 rotate-45" />
+                        <div className="flex-1 text-sm font-medium text-emerald-500 italic">{e.title}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Problems - Crises and Issues */}
+              {(crises.length > 0 || projectUpdates.some((u: string) => u.includes('(-)')) || netDelta < -500_000) && (
+                <div className="space-y-6">
+                  <div className="flex items-center gap-4">
+                    <AlertTriangle className="h-4 w-4 text-amber-500" />
+                    <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-amber-500 italic">REQUIRES_ATTENTION</h4>
+                    <div className="h-px bg-amber-500/20 flex-1" />
+                  </div>
+                  <div className="space-y-3">
+                    {netDelta < -500_000 && (
+                      <div className="p-4 rounded-none border border-amber-500/20 bg-amber-500/5 flex items-center gap-4">
+                        <div className="w-1 h-1 bg-amber-500 shrink-0 rotate-45" />
+                        <div className="flex-1 text-sm font-medium text-amber-500 italic">
+                          Significant cash burn: {formatMoney(netDelta).toUpperCase()}
+                        </div>
+                      </div>
+                    )}
+                    {crises.map((e: NarrativeEvent, i: number) => (
+                      <div key={i} className="p-4 rounded-none border border-amber-500/30 bg-amber-500/10 flex items-center gap-4">
+                        <div className="w-1 h-1 bg-amber-500 shrink-0 rotate-45" />
+                        <div className="flex-1 text-sm font-medium text-amber-500 italic">{e.title}</div>
+                      </div>
+                    ))}
+                    {projectUpdates.filter((u: string) => u.includes('(-)')).map((u: string, i: number) => (
+                      <div key={i} className="p-4 rounded-none border border-amber-500/20 bg-amber-500/5 flex items-center gap-4">
+                        <div className="w-1 h-1 bg-amber-500 shrink-0 rotate-45" />
+                        <div className="flex-1 text-sm font-medium text-amber-500 italic">
+                          {u.split('(-)')[0]}<span className="ml-2"> (-{u.split('(-)')[1]}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Staff Chatter - Narrative Events */}
+              {generalChatter.length > 0 && (
+                <div className="space-y-6">
+                  <div className="flex items-center gap-4">
+                    <MessageSquare className="h-4 w-4 text-secondary" />
+                    <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-secondary italic">STAFF_CHATTER</h4>
+                    <div className="h-px bg-secondary/20 flex-1" />
+                  </div>
+                  <div className="space-y-3">
+                    {generalChatter.map((e: NarrativeEvent, i: number) => (
+                      <div key={i} className="p-4 rounded-none border border-white/5 bg-white/[0.01] flex items-center gap-4 hover:border-white/10 transition-colors">
+                        <div className="w-1 h-1 bg-secondary shrink-0 rotate-45" />
+                        <div className="flex-1 text-sm font-medium text-foreground/70 italic">{e.title}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Financial Summary */}
+              <div className="space-y-6">
+                <div className="flex items-center gap-4">
+                  <DollarSign className="h-4 w-4 text-primary" />
+                  <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-primary italic">FINANCIAL_SUMMARY</h4>
+                  <div className="h-px bg-primary/20 flex-1" />
+                </div>
+                
+                <div className="grid grid-cols-3 gap-6">
+                  <div className="p-6 rounded-none border border-white/5 bg-white/[0.02] backdrop-blur-3xl shadow-2xl">
+                    <p className="text-[10px] text-muted-foreground/30 font-black uppercase tracking-[0.2em] mb-3 italic">GROSS_REVENUE</p>
+                    <p className="text-2xl font-display font-black text-emerald-500 italic tracking-tighter">+{formatMoney(totalRevenue).toUpperCase()}</p>
+                  </div>
+                  <div className="p-6 rounded-none border border-white/5 bg-white/[0.02] backdrop-blur-3xl shadow-2xl">
+                    <p className="text-[10px] text-muted-foreground/30 font-black uppercase tracking-[0.2em] mb-3 italic">OPERATING_COSTS</p>
+                    <p className="text-2xl font-display font-black text-rose-500 italic tracking-tighter">-{formatMoney(totalCosts).toUpperCase()}</p>
+                  </div>
+                  <div className="p-6 rounded-none border border-white/5 bg-white/[0.02] backdrop-blur-3xl shadow-2xl">
+                    <p className="text-[10px] text-muted-foreground/30 font-black uppercase tracking-[0.2em] mb-3 italic">NET_CASH_FLOW</p>
+                    <p className={cn(
+                      "text-2xl font-display font-black italic tracking-tighter",
+                      displayNetDelta >= 0 ? 'text-emerald-500' : 'text-rose-500'
+                    )}>
+                      {displayNetDelta >= 0 ? '+' : ''}{formatMoney(displayNetDelta).toUpperCase()}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-center gap-8 py-4 bg-black/40 border-y border-white/5">
+                   <div className="flex items-center gap-4">
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/20 italic">OPENING_CASH:</span>
+                      <span className="text-sm font-black text-muted-foreground/40 italic">{formatMoney(cashBefore).toUpperCase()}</span>
+                   </div>
+                   <ArrowRight className="h-4 w-4 text-white/5" />
+                   <div className="flex items-center gap-4">
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40 italic">CLOSING_CASH:</span>
+                      <span className={cn(
+                        "text-xl font-black italic",
+                        displayCashAfter < 0 ? 'text-rose-500' : 'text-primary'
+                      )}>{formatMoney(displayCashAfter).toUpperCase()}</span>
+                   </div>
+                </div>
               </div>
-              <p className="text-xs text-muted-foreground text-center">
-                Cash: {formatMoney(cashBefore)} → <span className={displayCashAfter < 0 ? 'text-destructive' : 'text-primary'}>{formatMoney(displayCashAfter)}</span>
-              </p>
+
+
+              {/* Headlines */}
+              {newHeadlines.length > 0 && (
+                <div className="space-y-6">
+                  <div className="flex items-center gap-4">
+                    <Newspaper className="h-4 w-4 text-muted-foreground/40" />
+                    <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 italic">THE_TRADES_SUMMARY</h4>
+                    <div className="h-px bg-white/5 flex-1" />
+                  </div>
+                  <div className="grid grid-cols-1 gap-3">
+                    {newHeadlines.map((h: Headline) => (
+                      <button
+                        key={h.id}
+                        onClick={() => setSelectedHeadline(h)}
+                        className="w-full text-left text-[11px] font-black text-muted-foreground/30 hover:text-primary transition-all duration-700 p-5 rounded-none bg-black border border-white/5 hover:border-primary/40 group flex items-center gap-6 italic"
+                      >
+                        <div className="w-2 h-2 bg-white/10 group-hover:bg-primary group-hover:rotate-90 transition-all duration-700 shrink-0" />
+                        <span className="tracking-tight uppercase">{h.text}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-
-            {/* Project Updates */}
-            {projectUpdates.length > 0 && (
-              <>
-                <Separator />
-                <div className="space-y-2">
-                  <h4 className="text-[10px] font-display uppercase tracking-widest text-secondary font-black">🎬 Project Updates</h4>
-                  {projectUpdates.map((u: string, i: number) => {
-                    const hasPositiveTrend = u.includes('(+');
-                    const hasNegativeTrend = u.includes('(-');
-                    
-                    if (hasPositiveTrend) {
-                      const parts = u.split('(+');
-                      return (
-                        <p key={i} className="text-sm text-foreground">
-                          • {parts[0]}
-                          <span className="text-emerald-400 font-bold">(+{parts[1]}</span>
-                        </p>
-                      );
-                    }
-                    
-                    if (hasNegativeTrend) {
-                      const parts = u.split('(-');
-                      return (
-                        <p key={i} className="text-sm text-foreground">
-                          • {parts[0]}
-                          <span className="text-destructive font-bold">(-{parts[1]}</span>
-                        </p>
-                      );
-                    }
-
-                    return <p key={i} className="text-sm text-foreground">• {u}</p>;
-                  })}
-                </div>
-              </>
-            )}
-
-            {/* Events - More descriptive */}
-            {events.length > 0 && (
-              <>
-                <Separator />
-                <div className="space-y-2">
-                  <h4 className="text-[10px] font-display uppercase tracking-widest text-primary font-black">⚡ Events</h4>
-                  {events.map((e: string, i: number) => (
-                    <div key={i} className="text-sm text-foreground p-2 rounded-lg bg-muted/20 border border-border/30 hover:bg-muted/40 transition-colors">
-                      {e}
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
-
-            {/* Headlines - Now clickable */}
-            {newHeadlines.length > 0 && (
-              <>
-                <Separator />
-                <div className="space-y-2">
-                  <h4 className="text-[10px] font-display uppercase tracking-widest text-muted-foreground font-black">📰 The Trades</h4>
-                  {newHeadlines.map((h: Headline) => (
-                    <button
-                      key={h.id}
-                      onClick={() => setSelectedHeadline(h)}
-                      className="w-full text-left text-xs text-muted-foreground hover:text-primary transition-colors p-2 rounded-lg hover:bg-primary/5 border border-transparent hover:border-primary/20 group flex items-start gap-2"
-                    >
-                      <span className="text-primary/40 group-hover:text-primary transition-colors">—</span>
-                      <span className="group-hover:underline decoration-primary/30">{h.text}</span>
-                    </button>
-                  ))}
-                </div>
-              </>
-            )}
           </div>
 
-          <DialogFooter>
-            <Button onClick={resolveCurrentModal} className="w-full font-display font-bold tracking-wide transition-all hover:shadow-[0_0_15px_rgba(234,179,8,0.4)] hover:-translate-y-0.5">Continue →</Button>
+          <DialogFooter className="bg-black/80 border-t border-white/5 p-8">
+            <button 
+              onClick={resolveCurrentModal} 
+              className="w-full h-16 bg-primary text-black font-display font-black uppercase tracking-[0.5em] italic text-xs hover:shadow-[0_0_80px_rgba(var(--primary),0.5)] hover:scale-[1.02] active:scale-95 transition-all duration-700 group relative overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+              CONFIRM_REPORT_AND_CONTINUE
+            </button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

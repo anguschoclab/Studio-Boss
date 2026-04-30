@@ -65,6 +65,23 @@
           "{{platform}} pulled the plug on {{project}} after {{pct}} of viewers turned it off in the first five minutes. It's a {{genre}} disaster class from start to *forced* finish."
         ]
       }
+    },
+    "Critic": {
+      "Acclaimed": [
+        "A tour de force that reaffirms the director's status at the top of the A-list.",
+        "Exquisitely crafted and deepy resonant, {{project}} is the gold standard for the genre.",
+        "{{project}} is a landmark achievement in contemporary cinema and a lock for awards consideration."
+      ],
+      "Mixed": [
+        "{{project}} is a handsomely produced but ultimately hollow exercise in genre play.",
+        "Strong performances can't quite save {{project}} from its own narrative weight.",
+        "A middle-of-the-road effort for {{project}} that will satisfy enthusiasts but likely miss the broader zeitgeist."
+      ],
+      "Panned": [
+        "A disastrous miscalculation that squanders its high-profile talent and budget.",
+        "{{project}} fails to find a pulse, despite the heavy lifting by its technical team.",
+        "Critics are questioning the commercial viability of {{project}} after this critical drubbing."
+      ]
     }
   },
   "Greenlight": {
@@ -175,6 +192,16 @@
         "Greed is good? {{actor}} and {{target}} are joining forces to take over the world."
       ]
     },
+    "Award": {
+      "Acclaimed": [
+        "The awards circuit is buzzing about {{project}}. Truly magnificent.",
+        "A historic night for {{project}}, securing top honors at the {{body}} awards."
+      ],
+      "Panned": [
+        "{{project}} was snubbed by major categories this year.",
+        "A quiet ceremony for {{project}} that failed to capture any major wins."
+      ]
+    },
     "Rumor": {
       "Trade": [
         "Whispers suggest {{actor}} is looking to acquire a major indie IP.",
@@ -223,6 +250,13 @@
         "Regulators announce new content distribution guidelines.",
         "Major studio lot fire disrupts production schedules city-wide.",
         "Virtual Reality pioneer announces a 'cinema killer' platform."
+      ]
+    },
+    "Trend": {
+      "Standard": [
+        "Audiences are increasingly drawn to {{genre}} stories this season.",
+        "The latest box office data shows a significant surge in {{genre}} interest.",
+        "Cultural shifts are making {{genre}} films the talk of the town."
       ]
     }
   },

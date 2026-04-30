@@ -1,4 +1,4 @@
-import { Award, Talent } from '@/engine/types';
+import { Award, Talent, TalentTier } from '@/engine/types';
 type TalentProfile = Talent;
 import { isCannesEquivalentFestival, isSundanceEquivalentFestival, isMajorCategoryNomination, isSupportingCategoryNomination } from './awards';
 
@@ -31,39 +31,38 @@ export function applyAwardBoostsToTalent(
 
   // Specific multiplicative bonus for massive individual achievements
   const individualCategoryMultiplier = isMajorCategory ? 1.8 : isSupportingCategory ? 1.4 : 1.0;
-  // The Prestige Chaser: We need to significantly scale up these boosts for elite individual achievements to reflect the true value of an FYC campaign.
   const finalMultiplier = multiplier * individualCategoryMultiplier;
 
   if (award.status === 'won') {
     if (isPrestige || isCannesEquivalent) {
       if (isMajorCategory) {
-        prestigeBoost += 60 * finalMultiplier;
-        egoBoost += 100 * finalMultiplier; // Extreme permanent ego bump for major prestigious awards
-        drawBoost += 30 * finalMultiplier;
-        feeMultiplier += 8.0 * finalMultiplier; // 800% fee bump for Best Director/Actor at Cannes
-      } else {
         prestigeBoost += 45 * finalMultiplier;
-        egoBoost += 80 * finalMultiplier; // Massive permanent ego bump for prestigious awards
+        egoBoost += 75 * finalMultiplier; // Extreme permanent ego bump for major prestigious awards
         drawBoost += 20 * finalMultiplier;
-        feeMultiplier += 6.0 * finalMultiplier; // 600% fee bump
+        feeMultiplier += 5.0 * finalMultiplier; // 500% fee bump for Best Director/Actor at Cannes
+      } else {
+        prestigeBoost += 35 * finalMultiplier;
+        egoBoost += 60 * finalMultiplier; // Massive permanent ego bump for prestigious awards
+        drawBoost += 15 * finalMultiplier;
+        feeMultiplier += 4.0 * finalMultiplier; // 400% fee bump
       }
     } else if (isSundanceEquivalent) {
       if (isMajorCategory) {
-        prestigeBoost += 30 * finalMultiplier;
-        egoBoost += 70 * finalMultiplier;
-        drawBoost += 50 * finalMultiplier;
-        feeMultiplier += 5.0 * finalMultiplier; // 500% fee bump for Sundance breakouts
-      } else {
         prestigeBoost += 20 * finalMultiplier;
         egoBoost += 50 * finalMultiplier;
-        drawBoost += 45 * finalMultiplier; // Massive commercial draw bump for indie hits
-        feeMultiplier += 3.5 * finalMultiplier; // 350% fee bump
+        drawBoost += 40 * finalMultiplier;
+        feeMultiplier += 3.0 * finalMultiplier;
+      } else {
+        prestigeBoost += 15 * finalMultiplier;
+        egoBoost += 40 * finalMultiplier;
+        drawBoost += 35 * finalMultiplier; // Massive commercial draw bump for indie hits
+        feeMultiplier += 2.5 * finalMultiplier; // 250% fee bump
       }
     } else {
-      prestigeBoost += 15 * finalMultiplier;
-      egoBoost += 30 * finalMultiplier;
-      drawBoost += 12 * finalMultiplier;
-      feeMultiplier += 2.0 * finalMultiplier; // 200% fee bump for standard wins
+      prestigeBoost += 10 * finalMultiplier;
+      egoBoost += 20 * finalMultiplier;
+      drawBoost += 8 * finalMultiplier;
+      feeMultiplier += 1.0 * finalMultiplier; // 100% fee bump for standard wins
     }
   } else {
     // nominated
@@ -91,4 +90,48 @@ export function applyAwardBoostsToTalent(
     prestigeBoost,
     drawBoost
   };
+}
+
+/**
+ * Pure function to determine a talent's industry tier based on absolute prestige
+ * and relative standing.
+ */
+export function calculateTalentTier(prestige: number): TalentTier {
+  if (prestige >= 90) return 'A_LIST';
+  if (prestige >= 70) return 'B_LIST';
+  if (prestige >= 50) return 'C_LIST';
+  if (prestige >= 30) return 'RISING_STAR';
+  return 'NEWCOMER';
+}
+
+/**
+ * Logic to calculate the "Star Meter" (0-100) based on recent momentum.
+ * Star Meter = (Prestige * 0.7) + (RecentSuccess * 0.3)
+ */
+export function calculateStarMeter(talent: Talent, globalAveragePrestige: number): number {
+  const momentum = talent.momentum || 50;
+  const prestige = talent.prestige;
+  
+  // High prestige + high momentum = Star Meter peak
+  const rawMeter = (prestige * 0.6) + (momentum * 0.4);
+  
+  // Normalize against global average to ensure it doesn't inflate too much
+  const ratio = prestige / globalAveragePrestige;
+  const adjustedMeter = rawMeter * (0.8 + (ratio * 0.2));
+  
+  return Math.min(100, Math.max(1, Math.floor(adjustedMeter)));
+}
+
+/**
+ * Calculates the prestige shift for a failure or success.
+ */
+export function calculatePrestigeShift(
+  current: number,
+  success: boolean,
+  volatility: number = 50
+): number {
+  const baseShift = success ? 2 : -3;
+  const volMult = 1 + (volatility / 100);
+  
+  return Math.floor(baseShift * volMult);
 }

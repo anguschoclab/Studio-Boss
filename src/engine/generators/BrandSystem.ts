@@ -1,9 +1,11 @@
-import { RandomGenerator } from '../utils/rng';
-import { pick } from '../utils';
+import { pick, rand } from '../utils';
 import { 
   CONGLOMERATE_PREFIXES, 
   PREFIXES, 
+  SUFFIXES, 
   NETWORK_SUFFIXES, 
+  STREAMER_SUFFIXES, 
+  PREMIUM_SUFFIXES 
 } from '../data/names.data';
 
 export type BrandIdentity = {
@@ -18,15 +20,16 @@ export type BrandIdentity = {
 export class BrandSystem {
   /**
    * Generates a new brand identity.
-   * 50% chance of being a Conglomerate.
+   * 50% chance of being a Conglomerate (uses strong, corporate prefixes).
+   * 50% chance of being Legacy (uses more traditional/artistic prefixes).
    */
-  static generateIdentity(existing: Set<string>, rng: RandomGenerator): BrandIdentity {
+  static generateIdentity(existing: Set<string>): BrandIdentity {
     let core: string;
-    const isConglomerate = rng.next() > 0.5;
+    const isConglomerate = rand() > 0.5;
     let attempts = 0;
 
     do {
-      core = isConglomerate ? pick(CONGLOMERATE_PREFIXES, rng) : pick(PREFIXES, rng);
+      core = isConglomerate ? pick(CONGLOMERATE_PREFIXES) : pick(PREFIXES);
       attempts++;
     } while (existing.has(core) && attempts < 50);
 
@@ -36,23 +39,22 @@ export class BrandSystem {
   /**
    * Generates a studio name based on a brand identity.
    */
-  static getStudioName(identity: BrandIdentity, rng: RandomGenerator): string {
-    const suffixes = ['Pictures', 'Studios', 'Entertainment', 'Films', 'Media', 'Productions'];
-    const suffix = pick(suffixes, rng);
+  static getStudioName(identity: BrandIdentity): string {
+    const suffix = pick(['Pictures', 'Studios', 'Entertainment', 'Films', 'Media', 'Productions']);
     return `${identity.core} ${suffix}`;
   }
 
   /**
    * Generates a streaming platform name based on a brand identity.
    */
-  static getStreamingName(identity: BrandIdentity, rng: RandomGenerator): string {
+  static getStreamingName(identity: BrandIdentity): string {
     if (identity.isConglomerate) {
-      const suffixes = ['+', 'Plus', 'Max', 'Go', 'Play', 'Hub'];
-      const suffix = pick(suffixes, rng);
+      // Conglomerates usually use brand-plus naming (Apex+)
+      const suffix = pick(['+', 'Plus', 'Max', 'Go', 'Play', 'Hub']);
       return `${identity.core}${suffix}`;
     } else {
-      const suffixes = ['Cinema', 'Select', 'Direct', 'Watch', 'Premier', 'On Demand'];
-      const suffix = pick(suffixes, rng);
+      // Legacy brands often use more traditional names or "On Demand"
+      const suffix = pick(['Cinema', 'Select', 'Direct', 'Watch', 'Premier', 'On Demand']);
       return `${identity.core} ${suffix}`;
     }
   }
@@ -60,16 +62,16 @@ export class BrandSystem {
   /**
    * Generates a network name based on a brand identity.
    */
-  static getNetworkName(identity: BrandIdentity, rng: RandomGenerator): string {
-    const suffix = pick([...NETWORK_SUFFIXES], rng);
+  static getNetworkName(identity: BrandIdentity): string {
+    const suffix = pick(NETWORK_SUFFIXES);
     return `${identity.core} ${suffix}`;
   }
 
   /**
-   * Generates a standalone "Legacy" name.
+   * Generates a standalone "Legacy" name that doesn't follow a conglomerate pattern.
    */
-  static generateLegacyStandalone(existing: Set<string>, rng: RandomGenerator): string {
-    const identity = this.generateIdentity(existing, rng as any);
-    return this.getStudioName(identity, rng);
+  static generateLegacyStandalone(existing: Set<string>): string {
+    const identity = this.generateIdentity(existing);
+    return this.getStudioName(identity);
   }
 }

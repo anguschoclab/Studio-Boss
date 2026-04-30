@@ -1,7 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ProjectDetailModal } from '@/components/modals/ProjectDetailModal';
-import { TooltipProvider } from '@/components/ui/tooltip';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { Project } from '@/engine/types';
@@ -12,7 +11,7 @@ class MockResizeObserver {
   unobserve() {}
   disconnect() {}
 }
-global.ResizeObserver = MockResizeObserver;
+window.ResizeObserver = MockResizeObserver;
 
 vi.mock('@/store/gameStore');
 vi.mock('@/store/uiStore');
@@ -24,8 +23,6 @@ describe('ProjectDetailModal', () => {
   const mockLockMarketingCampaign = vi.fn();
   const mockRenewProject = vi.fn();
   const mockExploitFranchise = vi.fn();
-  const mockSubmitToFestival = vi.fn();
-  const mockLaunchAwardsCampaign = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -38,27 +35,22 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          entities: {
-            projects: {},
-            talents: {},
-            contracts: {},
-            rivals: {}
-          },
           studio: {
-            activeCampaigns: {},
-            prestige: 50,
-            reputation: 50
+            internal: {
+              projects: {},
+              contracts: [],
+            }
+          },
+          industry: {
+            talentPool: {},
           },
           finance: { cash: 100_000_000 },
-          deals: { activeDeals: [] }
         },
         signContract: mockSignContract,
         greenlightProject: mockGreenlightProject,
         lockMarketingCampaign: mockLockMarketingCampaign,
         renewProject: mockRenewProject,
         exploitFranchise: mockExploitFranchise,
-        submitToFestival: mockSubmitToFestival,
-        launchAwardsCampaign: mockLaunchAwardsCampaign,
       };
       return selector(state);
     });
@@ -92,7 +84,7 @@ describe('ProjectDetailModal', () => {
   } as Project);
 
   it('renders nothing when no project is selected', () => {
-    render(<TooltipProvider><ProjectDetailModal /></TooltipProvider>);
+    render(<ProjectDetailModal />);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
@@ -107,21 +99,24 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          entities: {
-            projects: { [mockProject.id]: mockProject },
-            talents: {},
-            contracts: {},
-            rivals: {}
+          studio: {
+            internal: {
+              projects: { [mockProject.id]: mockProject },
+              contracts: [],
+            }
           },
-          studio: { activeCampaigns: {} },
+          industry: {
+            talentPool: {},
+          },
           finance: { cash: 100_000_000 },
-          deals: { activeDeals: [] }
         },
+        signContract: mockSignContract,
       };
       return selector(state);
     });
 
-    render(<TooltipProvider><ProjectDetailModal /></TooltipProvider>);
+    render(<ProjectDetailModal />);
+
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     expect(screen.getByText(mockProject.title)).toBeInTheDocument();
   });
@@ -137,27 +132,30 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          entities: {
-            projects: { [mockProject.id]: mockProject },
-            talents: {},
-            contracts: {},
-            rivals: {}
+          studio: {
+            internal: {
+              projects: { [mockProject.id]: mockProject },
+              contracts: [],
+            }
           },
-          studio: { activeCampaigns: {} },
+          industry: {
+            talentPool: {},
+          },
           finance: { cash: 100_000_000 },
-          deals: { activeDeals: [] }
         },
         greenlightProject: mockGreenlightProject,
       };
       return selector(state);
     });
 
-    render(<TooltipProvider><ProjectDetailModal /></TooltipProvider>);
+    render(<ProjectDetailModal />);
+
     const approveBtn = screen.getByText('Execute Authorization & Release Budgets');
     expect(approveBtn).toBeInTheDocument();
 
     fireEvent.click(approveBtn);
     expect(mockGreenlightProject).toHaveBeenCalledWith('P1');
+    expect(mockSelectProject).toHaveBeenCalledWith(null);
   });
 
   it('shows marketing configuration and handles lock campaign', () => {
@@ -171,27 +169,30 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          entities: {
-            projects: { [mockProject.id]: mockProject },
-            talents: {},
-            contracts: {},
-            rivals: {}
+          studio: {
+            internal: {
+              projects: { [mockProject.id]: mockProject },
+              contracts: [],
+            }
           },
-          studio: { activeCampaigns: {} },
+          industry: {
+            talentPool: {},
+          },
           finance: { cash: 100_000_000 },
-          deals: { activeDeals: [] }
         },
         lockMarketingCampaign: mockLockMarketingCampaign,
       };
       return selector(state);
     });
 
-    render(<TooltipProvider><ProjectDetailModal /></TooltipProvider>);
+    render(<ProjectDetailModal />);
+
     const lockBtn = screen.getByText('Authorize Global Release & Dedicate Reserves');
     expect(lockBtn).toBeInTheDocument();
 
     fireEvent.click(lockBtn);
     expect(mockLockMarketingCampaign).toHaveBeenCalledWith('P1', 'none');
+    expect(mockSelectProject).toHaveBeenCalledWith(null);
   });
 
   it('shows renew button for tv project and handles renewal', () => {
@@ -217,26 +218,29 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          entities: {
-            projects: { [mockProject.id]: mockProject },
-            talents: {},
-            contracts: {},
-            rivals: {}
+          studio: {
+            internal: {
+              projects: { [mockProject.id]: mockProject },
+              contracts: [],
+            }
           },
-          studio: { activeCampaigns: {} },
+          industry: {
+            talentPool: {},
+          },
           finance: { cash: 100_000_000 },
-          deals: { activeDeals: [] }
         },
         renewProject: mockRenewProject,
       };
       return selector(state);
     });
 
-    render(<TooltipProvider><ProjectDetailModal /></TooltipProvider>);
+    render(<ProjectDetailModal />);
+
     const renewBtn = screen.getByText('Order Next Season (Production)');
     expect(renewBtn).toBeInTheDocument();
 
     fireEvent.click(renewBtn);
     expect(mockRenewProject).toHaveBeenCalledWith('P1');
+    expect(mockSelectProject).toHaveBeenCalledWith(null);
   });
 });

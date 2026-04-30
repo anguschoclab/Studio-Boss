@@ -3,7 +3,7 @@ import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
 import { getFilmStats, getTvStats, getUnscriptedStats } from '@/engine/systems/stats';
-import { RandomGenerator } from '@/engine/utils/rng';
+import { randRange, generateId } from '@/engine/utils';
 import { applyImpacts } from '@/engine/core/impactReducer';
 
 export interface CreateProjectParams {
@@ -36,8 +36,7 @@ function getProjectStats(params: CreateProjectParams, tier: typeof BUDGET_TIERS[
 function prepareTalentAndContracts(
     state: GameState,
     attachedTalentIds: string[] | undefined,
-    projectId: string,
-    rng: RandomGenerator
+    projectId: string
 ) {
     const ids = attachedTalentIds || [];
     const talentPool = state.entities.talents;
@@ -51,12 +50,11 @@ function prepareTalentAndContracts(
             attachedTalent.push(t);
             talentFees += t.fee || 0;
             newContracts.push({
-                id: rng.uuid('CON'),
+                id: generateId('CNT'),
                 talentId: t.id,
                 projectId,
                 fee: t.fee,
                 backendPercent: t.prestige > 80 ? 10 : 0,
-                role: t.role as any // Default to their base type
             });
         }
     }
@@ -64,16 +62,16 @@ function prepareTalentAndContracts(
     return { attachedTalent, talentFees, newContracts };
 }
 
-export function buildProjectAndContracts(state: GameState, params: CreateProjectParams, rng: RandomGenerator): { project: Project; newContracts: Contract[]; talentFees: number } {
+export function buildProjectAndContracts(state: GameState, params: CreateProjectParams): { project: Project; newContracts: Contract[]; talentFees: number } {
     const tier = BUDGET_TIERS[params.budgetTier];
     const stats = getProjectStats(params, tier);
     const { budget, weeklyCost, developmentWeeks, productionWeeks, renewable } = stats;
 
-    const projectId = rng.uuid('PRJ');
-    const { talentFees, newContracts } = prepareTalentAndContracts(state, params.attachedTalentIds, projectId, rng);
+    const projectId = generateId('PRJ');
+    const { talentFees, newContracts } = prepareTalentAndContracts(state, params.attachedTalentIds, projectId);
 
     const totalBudget = budget + talentFees;
-    const initialBuzz = Math.floor(rng.range(30, 70)) + (params.initialBuzzBonus || 0);
+    const initialBuzz = Math.floor(randRange(30, 70)) + (params.initialBuzzBonus || 0);
 
     const projectBase = {
         id: projectId,
@@ -100,10 +98,7 @@ export function buildProjectAndContracts(state: GameState, params: CreateProject
         contentFlags: [],
         franchiseId: params.franchiseId,
         parentProjectId: params.parentProjectId,
-        isSpinoff: params.isSpinoff,
-        isRecasting: false,
-        turnaroundStartWeek: undefined,
-        estimatedWindow: { startWeek: state.week + 1, endWeek: state.week + 1 + developmentWeeks + productionWeeks }
+        isSpinoff: params.isSpinoff
     };
 
     if (params.format === 'film') {

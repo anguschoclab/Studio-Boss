@@ -20,6 +20,7 @@ describe('TV Awards Filtering & Taxonomy', () => {
     revenue: 0,
     buzz: 50,
     weeksInPhase: 5,
+    reviewScore: criticScore,
     awardsProfile: {
       criticScore,
       prestigeScore: criticScore,
@@ -48,40 +49,33 @@ describe('TV Awards Filtering & Taxonomy', () => {
     return state;
   };
 
-  it('should award Best Drama Series to the highest-scoring TV project', () => {
+  it('should award Best Series at Primetime Emmys to a high-scoring TV project', () => {
     const dramaShow = createTvProject('drama_1', 'prestige_drama', 95, 'Drama');
     const sitcomShow = createTvProject('sitcom_1', 'sitcom', 80, 'Comedy');
 
     const impacts = runAwardsCeremony(
       baseState({ drama_1: dramaShow, sitcom_1: sitcomShow }),
-      37, 2026, rng
+      37, 2026
     );
 
-    // Awards are stored in INDUSTRY_UPDATE impacts as flattened keys
-    const awardEntries = impacts
-      .flatMap(i => Object.values(i.payload || {}));
-      
-    const dramaAward = awardEntries.find((a: any) => a.category === 'Best Drama Series');
+    expect(impacts.newAwards).toBeDefined();
+    const bestSeries = impacts.newAwards?.find((a: any) => a.category === 'Best Series');
 
-    expect(dramaAward).toBeDefined();
-    expect(dramaAward?.projectId).toBeTruthy();
+    expect(bestSeries).toBeDefined();
+    expect(bestSeries?.projectId).toBeTruthy();
   });
 
-  it('should award Best Comedy Series to the highest-scoring TV project', () => {
+  it('should award Best Series to the highest-scoring TV project at Emmys', () => {
     const sitcomShow = createTvProject('sitcom_1', 'sitcom', 95);
 
     const impacts = runAwardsCeremony(
       baseState({ sitcom_1: sitcomShow }),
-      37, 2026, rng
+      37, 2026
     );
 
-    const awardEntries = impacts
-      .filter(i => i.type === 'INDUSTRY_UPDATE')
-      .flatMap(i => Object.values(i.payload || {}));
-      
-    const comedyAward = awardEntries.find((a: any) => a.category === 'Best Comedy Series');
+    const bestSeries = impacts.newAwards?.find((a: any) => a.category === 'Best Series');
 
-    expect(comedyAward).toBeDefined();
-    expect(comedyAward?.projectId).toBe('sitcom_1');
+    expect(bestSeries).toBeDefined();
+    expect(bestSeries?.projectId).toBe('sitcom_1');
   });
 });

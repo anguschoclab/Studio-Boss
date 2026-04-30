@@ -6,17 +6,13 @@ import { cn } from '@/lib/utils';
 import { useGameStore } from '@/store/gameStore';
 import { selectStudioHealthMetrics } from '@/store/selectors';
 
-interface StudioHealthMetrics {
-  metric: string;
-  score: number; // 0-100
-  fullMark?: number;
-}
+import { StudioHealthMetric } from '@/store/chartSelectors';
 
 interface StudioHealthRadarProps {
-  metrics?: StudioHealthMetrics[];
+  metrics?: StudioHealthMetric[];
   className?: string;
   showComparison?: boolean;
-  previousMetrics?: StudioHealthMetrics[];
+  previousMetrics?: StudioHealthMetric[];
 }
 
 export const StudioHealthRadar: React.FC<StudioHealthRadarProps> = ({
@@ -77,11 +73,11 @@ export const StudioHealthRadar: React.FC<StudioHealthRadarProps> = ({
       {showComparison && (
         <div className="flex items-center justify-center gap-4 mt-2 text-[10px]">
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded-full bg-blue-500" />
+            <div className="w-3 h-3 rounded-none bg-blue-500" />
             <span>Current</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded-full bg-slate-400" />
+            <div className="w-3 h-3 rounded-none bg-slate-400" />
             <span>Previous</span>
           </div>
         </div>

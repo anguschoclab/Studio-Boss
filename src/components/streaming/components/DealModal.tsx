@@ -1,7 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Buyer, Project, ProjectContractType } from '@/engine/types';
-import { RandomGenerator } from '@/engine/utils/rng';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { 
@@ -33,9 +32,14 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
   const [isPitching, setIsPitching] = useState(false);
   const [dealResult, setDealResult] = useState<{ success: boolean; message: string } | null>(null);
 
+  const isMountedRef = useRef(true);
+  useEffect(() => {
+    return () => { isMountedRef.current = false; };
+  }, []);
+
   const eligibleProjects = useMemo(() => {
     if (!gameState) return [];
-    return Object.values(gameState?.entities.projects || {}).filter(
+    return Object.values(gameState.studio.internal.projects).filter(
       (p: Project) => p.state === 'development' || p.state === 'production' || p.state === 'needs_greenlight'
     );
   }, [gameState]);
@@ -47,23 +51,26 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
 
   const fitScore = useMemo(() => {
     if (!selectedProjectObj || !gameState) return 0;
-    const rng = new RandomGenerator(gameState.gameSeed + gameState.week);
-    return calculateFitScore(selectedProjectObj, buyer, gameState.week, gameState.entities.projects, rng);
+    return calculateFitScore(selectedProjectObj, buyer, gameState.week, Object.values(gameState.studio.internal.projects));
   }, [selectedProjectObj, buyer, gameState]);
 
   const handlePitch = async () => {
     if (!selectedProject) return;
     setIsPitching(true);
-    
+
     // Artificial delay for "Negotiation" feel
     await new Promise(resolve => setTimeout(resolve, 800));
-    
+
+    if (!isMountedRef.current) return;
+
     const success = await pitchProject(selectedProject, buyer.id, contractType);
-    
+
+    if (!isMountedRef.current) return;
+
     setDealResult({
       success,
-      message: success 
-        ? `${buyer.name} has greenlit "${selectedProjectObj?.title}" on a ${contractType} deal!` 
+      message: success
+        ? `${buyer.name} has greenlit "${selectedProjectObj?.title}" on a ${contractType} deal!`
         : `${buyer.name} passed on the pitch. The project's current fit score (${Math.round(fitScore)}) didn't meet their executive mandate.`
     });
     setIsPitching(false);
@@ -71,12 +78,12 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-xl bg-card border-border shadow-2xl overflow-hidden p-0 text-left">
+      <DialogContent className="max-w-xl bg-card border-border shadow-2xl overflow-hidden p-0">
         <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-primary via-violet-500 to-primary/20" />
         
         <div className="p-6 space-y-6">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shadow-inner text-left">
+            <div className="w-12 h-12 rounded-none bg-primary/10 border border-primary/20 flex items-center justify-center shadow-inner">
                <Handshake className="w-6 h-6 text-primary" />
             </div>
             <div>
@@ -87,7 +94,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
 
           {dealResult ? (
             <div className={cn(
-               "p-6 rounded-2xl border animate-in zoom-in-95 duration-300",
+               "p-6 rounded-none border animate-in zoom-in-95 duration-300",
                dealResult.success ? "bg-emerald-500/10 border-emerald-500/20" : "bg-rose-500/10 border-rose-500/20"
             )}>
               <div className="flex items-start gap-4">
@@ -115,11 +122,11 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
                    </h4>
                    <div className="space-y-2 max-h-[240px] overflow-y-auto pr-1">
                       {eligibleProjects.map(p => (
-                        <button aria-pressed={selectedProject === p.id}
+                        <button
                           key={p.id}
                           onClick={() => setSelectedProject(p.id)}
                           className={cn(
-                            "w-full text-left p-3 rounded-xl border transition-all relative overflow-hidden group",
+                            "w-full text-left p-3 rounded-none border transition-all relative overflow-hidden group",
                             selectedProject === p.id ? "bg-primary/10 border-primary/40" : "bg-white/5 border-white/5 hover:border-white/10"
                           )}
                         >
@@ -132,8 +139,8 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
                 </div>
 
                 {/* Analysis Column */}
-                <div className="space-y-4 text-left">
-                   <div className="glass-panel p-5 rounded-2xl border border-white/5 bg-black/20 space-y-4">
+                <div className="space-y-4">
+                   <div className="glass-panel p-5 rounded-none border border-white/5 bg-black/20 space-y-4">
                       <div className="flex items-center justify-between">
                          <TooltipWrapper tooltip="Algorithmic alignment score between your project's genre/talent and the platform's current executive mandate." side="top">
                            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground cursor-help">Strategic Fit</span>
@@ -142,7 +149,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
                            {Math.round(fitScore)}%
                          </span>
                       </div>
-                      <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
+                      <div className="h-1.5 rounded-none bg-white/5 overflow-hidden">
                         <div 
                           className={cn("h-full transition-all duration-700", fitScore >= 70 ? 'bg-emerald-500' : fitScore >= 50 ? 'bg-primary' : 'bg-rose-500')} 
                           style={{ width: `${fitScore}%` }}
@@ -160,10 +167,10 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
                       <div className="flex gap-2">
                         {(['standard', 'deficit', 'upfront'] as ProjectContractType[]).map(t => (
                           <TooltipWrapper key={t} tooltip={DEAL_TYPE_TOOLTIPS[t]} side="bottom">
-                            <button aria-pressed={contractType === t}
+                            <button
                               onClick={() => setContractType(t)}
                               className={cn(
-                                "flex-1 h-11 p-2 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all",
+                                "flex-1 h-9 rounded-none border text-[9px] font-black uppercase tracking-widest transition-all",
                                 contractType === t ? "bg-primary text-black border-primary shadow-lg" : "bg-white/5 border-white/5 text-muted-foreground hover:bg-white/10"
                               )}
                             >
@@ -184,7 +191,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
                    tooltip="Officially present the content package to the executive board for greenlight review"
                    className="flex-1 h-12 bg-primary text-black hover:bg-primary/90 font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-primary/10 relative overflow-hidden"
                  >
-                   {isPitching ? <div className="flex items-center gap-2"><div className="w-3 h-3 border-2 border-black/30 border-t-black rounded-full animate-spin" /> Reviewing Package...</div> : 'Send Official Pitch'}
+                   {isPitching ? <div className="flex items-center gap-2"><div className="w-3 h-3 border-2 border-black/30 border-t-black rounded-none animate-spin" /> Reviewing Package...</div> : 'Send Official Pitch'}
                  </Button>
               </div>
             </>

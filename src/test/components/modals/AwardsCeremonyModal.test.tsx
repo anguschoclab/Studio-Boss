@@ -43,6 +43,14 @@ describe('AwardsCeremonyModal', () => {
         'proj-1': { title: 'The Great Movie' },
         'proj-2': { title: 'Another Great Movie' },
       }
+    },
+    studio: {
+      internal: {
+        projects: {
+          'proj-1': { title: 'The Great Movie' },
+          'proj-2': { title: 'Another Great Movie' },
+        }
+      }
     }
   } as any;
 

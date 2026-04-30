@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { StatCard } from '@/components/shared/StatCard';
+import { KPIStatCard } from '@/components/shared/KPIStatCard';
 import { formatMoney } from '@/engine/utils';
 import { 
   Building2, 
@@ -19,7 +19,8 @@ import {
   TrendingUp,
   DollarSign,
   Activity,
-  AlertTriangle
+  AlertTriangle,
+  Monitor
 } from 'lucide-react';
 import { m, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -42,12 +43,8 @@ export const IndustryPage: React.FC = () => {
 
   const rivalsList = Object.values(rivals) as any[];
 
-  // Calculate Genre Fatigue (Sample logic: comparing popularity vs saturation)
-  // In a real scenario, we'd pull this from the fatigueEngine state if we persist it
   const marketFatigue = useMemo(() => {
-    if (!state) {
-      return {};
-    }
+    if (!state) return {};
     const saturation: Record<string, number> = {};
     [
       ...Object.values(state.entities.projects),
@@ -79,52 +76,52 @@ export const IndustryPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 pb-12">
-      <header className="flex flex-col gap-2">
-        <div className="flex items-center gap-3">
-          <Globe2 className="w-8 h-8 text-primary animate-pulse" />
-          <h1 className="text-4xl font-black tracking-tighter uppercase font-display bg-gradient-to-r from-foreground to-foreground/50 bg-clip-text text-transparent">
-            Industry Intelligence Hub
-          </h1>
+    <div className="space-y-12 pb-16 animate-in fade-in duration-700">
+      <header className="flex flex-col gap-3 border-b border-white/5 pb-8">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+             <Globe2 className="w-6 h-6 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-5xl font-display font-black tracking-tighter uppercase italic leading-none mb-1">
+              Industry Intelligence
+            </h1>
+            <p className="text-[10px] font-black uppercase text-muted-foreground/40 tracking-[0.25em]">
+              Real-time Analysis • Competitor Profiles • Market Saturation • Agency Leverage
+            </p>
+          </div>
         </div>
-        <p className="text-muted-foreground font-medium tracking-tight">
-          Real-time analysis of competitor motivations, agency leverage, and market saturation.
-        </p>
       </header>
 
       {/* Market Overview Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard
-          title="Market Sentiment"
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <KPIStatCard
+          label="Market Sentiment"
           value={`${state.finance.marketState?.sentiment || 50}%`}
-          subtitle={state.finance.marketState?.cycle || 'STABLE'}
+          subValue={state.finance.marketState?.cycle || 'STABLE'}
           icon={Activity}
-          color={(state.finance.marketState?.sentiment || 50) > 60 ? 'success' : (state.finance.marketState?.sentiment || 50) < 40 ? 'warning' : 'info'}
-          size="sm"
+          trend={(state.finance.marketState?.sentiment || 50) > 50 ? 'up' : 'down'}
+          variant="secondary"
         />
-        <StatCard
-          title="Active Rivals"
+        <KPIStatCard
+          label="Active Rivals"
           value={rivalsList.length}
-          subtitle="Competing studios"
+          subValue="Competing Entities"
           icon={Building2}
-          color="destructive"
-          size="sm"
+          variant="destructive"
         />
-        <StatCard
-          title="Genre Diversity"
+        <KPIStatCard
+          label="Genre Diversity"
           value={Object.keys(genrePopularity).length}
-          subtitle="Tracked categories"
+          subValue="Tracked Sectors"
           icon={BarChart3}
-          color="secondary"
-          size="sm"
         />
-        <StatCard
-          title="Agencies"
+        <KPIStatCard
+          label="Agency Influence"
           value={agencies.length}
-          subtitle="Active representatives"
+          subValue="Strategic Partners"
           icon={Users}
-          color="primary"
-          size="sm"
+          variant="secondary"
         />
       </div>
 
@@ -132,65 +129,65 @@ export const IndustryPage: React.FC = () => {
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="grid grid-cols-1 lg:grid-cols-12 gap-6"
+        className="grid grid-cols-1 lg:grid-cols-12 gap-10"
       >
         {/* Left Column: Rival Motivations & Power */}
-        <div className="lg:col-span-8 space-y-6">
-          <m.section variants={itemVariants} className="space-y-4">
-            <div className="flex items-center gap-2 px-1">
+        <div className="lg:col-span-8 space-y-10">
+          <m.section variants={itemVariants} className="space-y-6">
+            <div className="flex items-center gap-3">
               <Target className="w-5 h-5 text-destructive" />
-              <h2 className="text-xl font-bold font-display uppercase tracking-widest text-foreground/90">Competitor Strategic Profiles</h2>
+              <h2 className="text-xl font-display font-black uppercase tracking-widest text-foreground italic">Strategic Competitor Profiles</h2>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {rivalsList.map(rival => (
-                <Card key={rival.id} className="bg-card/40 backdrop-blur-sm border-border/50 hover:border-destructive/30 transition-all group overflow-hidden relative">
-                  <div className="absolute top-0 right-0 p-2 opacity-5 scale-150 group-hover:opacity-10 transition-opacity">
-                    <Building2 className="w-16 h-16" />
+                <Card key={rival.id} className="glass-card border-white/5 hover:border-destructive/30 transition-all group overflow-hidden relative bg-white/[0.01]">
+                  <div className="absolute top-0 right-0 p-4 opacity-5 scale-150 group-hover:opacity-10 transition-opacity">
+                    <Building2 className="w-24 h-24" />
                   </div>
                   
-                  <CardHeader className="pb-2">
+                  <CardHeader className="pb-4">
                     <div className="flex justify-between items-start">
                       <div>
-                        <CardTitle className="text-lg font-black tracking-tight group-hover:text-destructive transition-colors">
+                        <CardTitle className="text-2xl font-display font-black tracking-tighter uppercase italic group-hover:text-destructive transition-colors">
                           {rival.name}
                         </CardTitle>
-                        <CardDescription className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">
-                          Archetype: {rival.archetype}
+                        <CardDescription className="text-[9px] uppercase font-black tracking-[0.2em] text-muted-foreground/40">
+                          {rival.archetype} Archetype
                         </CardDescription>
                       </div>
-                      <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/20 font-mono text-[10px]">
-                        POWER {rival.strength}%
-                      </Badge>
+                      <div className="px-3 py-1 bg-destructive/10 border border-destructive/20 rounded-none">
+                         <span className="text-[10px] font-display font-black text-destructive uppercase tracking-widest">
+                           POWER {rival.strength}%
+                         </span>
+                      </div>
                     </div>
                   </CardHeader>
                   
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-6">
                     {/* Motivation Block */}
-                    <div className="bg-background/50 rounded-lg p-3 border border-border/40 space-y-2">
-                      <div className="flex items-center gap-2 mb-1">
+                    <div className="bg-black/40 p-4 border border-white/5 space-y-3">
+                      <div className="flex items-center gap-2">
                         <Brain className="w-3.5 h-3.5 text-primary" />
-                        <span className="text-[10px] font-black uppercase tracking-wider text-primary">Current Motivation</span>
+                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/60">Current Vector</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-sm font-bold text-foreground capitalize italic">
-                          "{rival.currentMotivation?.replace('_', ' ') || 'None'}"
+                        <span className="text-lg font-display font-black text-foreground uppercase italic tracking-tight">
+                          {rival.currentMotivation?.replace('_', ' ') || 'NONE'}
                         </span>
-                        <TooltipWrapper tooltip="This studio's primary strategic focus this week. Affects bidding aggression and talent selection." side="left">
-                          <Badge className="text-[9px] h-5 bg-primary/20 text-primary border-none">ACTIVE</Badge>
-                        </TooltipWrapper>
+                        <Badge className="bg-primary text-black font-black text-[8px] tracking-widest px-2 h-5 rounded-none">OPERATIONAL</Badge>
                       </div>
                     </div>
 
                     {/* Stats */}
-                    <div className="grid grid-cols-2 gap-4 text-[11px] font-bold uppercase tracking-tight text-muted-foreground/80">
-                      <div className="flex flex-col gap-1">
-                        <span className="opacity-50">Cash Reserves</span>
-                        <span className="text-foreground font-mono">{formatMoney(rival.cash)}</span>
+                    <div className="grid grid-cols-2 gap-6">
+                      <div className="space-y-1">
+                        <span className="text-[8px] uppercase font-black tracking-[0.25em] text-muted-foreground/30">Liquid Reserves</span>
+                        <div className="text-sm font-display font-black text-foreground tracking-tight italic">{formatMoney(rival.cash)}</div>
                       </div>
-                      <div className="flex flex-col gap-1">
-                        <span className="opacity-50">Active Slates</span>
-                        <span className="text-foreground">{Object.keys(rival.projects || {}).length} Projects</span>
+                      <div className="space-y-1 text-right">
+                        <span className="text-[8px] uppercase font-black tracking-[0.25em] text-muted-foreground/30">Active Slates</span>
+                        <div className="text-sm font-display font-black text-foreground tracking-tight italic">{Object.keys(rival.projects || {}).length} PROJECTS</div>
                       </div>
                     </div>
                   </CardContent>
@@ -200,44 +197,44 @@ export const IndustryPage: React.FC = () => {
           </m.section>
 
           {/* Market Sentiment / Fatigue Section */}
-          <m.section variants={itemVariants} className="space-y-4">
-             <div className="flex items-center gap-2 px-1">
+          <m.section variants={itemVariants} className="space-y-6">
+             <div className="flex items-center gap-3">
               <TrendingDown className="w-5 h-5 text-amber-500" />
-              <h2 className="text-xl font-bold font-display uppercase tracking-widest text-foreground/90">Market Saturation & Fatigue</h2>
+              <h2 className="text-xl font-display font-black uppercase tracking-widest text-foreground italic">Market Saturation Metrics</h2>
             </div>
             
-            <Card className="bg-card/40 backdrop-blur-sm border-border/50">
-              <CardContent className="pt-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <Card className="glass-card border-white/5 bg-white/[0.01]">
+              <CardContent className="p-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                   {Object.entries(genrePopularity).slice(0, 6).map(([genre, pop]) => {
                     const saturation = marketFatigue[genre.toUpperCase()] || 0;
                     const fatigue = Math.min(100, (saturation / 10) * 100);
                     
                     return (
-                      <div key={genre} className="space-y-2">
+                      <div key={genre} className="space-y-3">
                         <div className="flex justify-between items-end">
-                          <span className="text-xs font-black uppercase tracking-widest text-foreground/80">{genre}</span>
+                          <span className="text-[10px] font-black uppercase tracking-[0.25em] text-foreground/60">{genre}</span>
                           <span className={cn(
-                            "text-[10px] font-mono font-bold px-2 py-0.5 rounded",
-                            fatigue > 70 ? "bg-destructive/20 text-destructive" : "bg-primary/20 text-primary"
+                            "text-[8px] font-black px-2 py-0.5 uppercase tracking-widest",
+                            fatigue > 70 ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"
                           )}>
-                            {fatigue > 70 ? 'CRITICAL FATIGUE' : 'STABLE'}
+                            {fatigue > 70 ? 'CRITICAL FATIGUE' : 'OPTIMAL'}
                           </span>
                         </div>
-                        <div className="relative h-2 bg-muted/30 rounded-full overflow-hidden">
+                        <div className="relative h-1.5 bg-white/5 overflow-hidden">
                            <m.div 
-                              initial={{ width: 0 }}
-                              animate={{ width: `${fatigue}%` }}
-                              transition={{ duration: 1.5, ease: "easeOut" }}
-                              className={cn(
-                                "h-full rounded-full shadow-[0_0_8px_rgba(var(--primary),0.2)]",
-                                fatigue > 70 ? "bg-destructive" : "bg-primary"
-                              )}
+                               initial={{ width: 0 }}
+                               animate={{ width: `${fatigue}%` }}
+                               transition={{ duration: 1.5, ease: "easeOut" }}
+                               className={cn(
+                                 "h-full shadow-[0_0_8px_rgba(var(--primary),0.2)]",
+                                 fatigue > 70 ? "bg-destructive" : "bg-primary"
+                               )}
                            />
                         </div>
-                        <div className="flex justify-between text-[9px] font-bold text-muted-foreground/60">
-                           <span>Popularity: {pop as React.ReactNode}%</span>
-                           <span>Active Industry Projects: {saturation}</span>
+                        <div className="flex justify-between text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/30">
+                           <span>Sentiment: {pop as React.ReactNode}%</span>
+                           <span>Market Load: {saturation} Units</span>
                         </div>
                       </div>
                     );
@@ -249,53 +246,57 @@ export const IndustryPage: React.FC = () => {
         </div>
 
         {/* Right Column: Agency Standing */}
-        <div className="lg:col-span-4 space-y-6">
-          <m.section variants={itemVariants} className="space-y-4">
-            <div className="flex items-center gap-2 px-1">
+        <div className="lg:col-span-4 space-y-10">
+          <m.section variants={itemVariants} className="space-y-6">
+            <div className="flex items-center gap-3">
               <Zap className="w-5 h-5 text-primary" />
-              <h2 className="text-xl font-bold font-display uppercase tracking-widest text-foreground/90">Agency Power Rankings</h2>
+              <h2 className="text-xl font-display font-black uppercase tracking-widest text-foreground italic">Agency Power</h2>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
               {agencies.sort((a, b) => b.leverage - a.leverage).map((agency, i) => {
                 const agencyAgents = agents.filter(ag => ag.agencyId === agency.id);
                 
                 return (
-                  <Card key={agency.id} className="bg-background/40 border-border/50 hover:bg-background/60 transition-colors group">
-                    <CardContent className="p-4 flex flex-col gap-3">
+                  <Card key={agency.id} className="glass-card border-white/5 bg-white/[0.01] hover:bg-white/[0.03] transition-colors group">
+                    <CardContent className="p-5 flex flex-col gap-4">
                       <div className="flex justify-between items-start">
-                        <div className="flex gap-3 items-center">
-                          <span className="text-lg font-black font-mono opacity-20 group-hover:opacity-40 transition-opacity">
-                            #0{i + 1}
+                        <div className="flex gap-4 items-center">
+                          <span className="text-2xl font-display font-black opacity-10 group-hover:opacity-20 transition-opacity italic">
+                            {String(i + 1).padStart(2, '0')}
                           </span>
                           <div>
-                            <h4 className="font-bold text-sm tracking-tight">{agency.name}</h4>
-                            <span className="text-[9px] uppercase font-black text-muted-foreground tracking-widest">
-                               {agency.archetype}
+                            <h4 className="font-display font-black text-base tracking-tighter uppercase italic leading-none">{agency.name}</h4>
+                            <span className="text-[8px] uppercase font-black text-muted-foreground/40 tracking-[0.2em]">
+                               {agency.archetype} Entity
                             </span>
                           </div>
                         </div>
-                        <Badge variant="secondary" className="text-[10px] font-mono">
-                          LEV {agency.leverage}
-                        </Badge>
+                        <div className="px-2 py-0.5 bg-white/5 border border-white/10">
+                           <span className="text-[9px] font-display font-black uppercase tracking-widest">
+                             LEV {agency.leverage}
+                           </span>
+                        </div>
                       </div>
 
-                      <div className="space-y-1.5">
-                         <div className="flex justify-between text-[10px] uppercase font-bold text-muted-foreground/80">
-                            <span>Negotiation Leverage</span>
+                      <div className="space-y-2">
+                         <div className="flex justify-between text-[8px] uppercase font-black tracking-[0.2em] text-muted-foreground/40">
+                            <span>Strategic Leverage</span>
                             <span>{agency.leverage}%</span>
                          </div>
-                         <Progress value={agency.leverage} className="h-1 bg-muted/30" />
+                         <div className="h-1 w-full bg-white/5 overflow-hidden">
+                            <div className="h-full bg-primary" style={{ width: `${agency.leverage}%` }} />
+                         </div>
                       </div>
 
-                      <div className="flex items-center gap-4 text-[10px] font-black text-muted-foreground opacity-70">
-                        <div className="flex items-center gap-1">
-                           <Users className="w-3 h-3" />
-                           {agencyAgents.length} Agents
+                      <div className="flex items-center gap-6 text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
+                        <div className="flex items-center gap-2">
+                           <Users className="w-3 h-3 text-secondary" />
+                           {agencyAgents.length} OPERATIVES
                         </div>
-                        <div className="flex items-center gap-1 capitalize">
-                           <BarChart3 className="w-3 h-3" />
-                           {agency.culture} Culture
+                        <div className="flex items-center gap-2">
+                           <Monitor className="w-3 h-3 text-secondary" />
+                           {agency.culture}
                         </div>
                       </div>
                     </CardContent>
@@ -312,36 +313,31 @@ export const IndustryPage: React.FC = () => {
 
           {/* Quick Industry Summary */}
           <m.section variants={itemVariants}>
-            <Card className="bg-primary/5 border-primary/20 overflow-hidden relative">
-              <div className="absolute top-0 right-0 p-4 opacity-10">
-                 <ShieldAlert className="w-12 h-12 text-primary" />
+            <Card className="bg-primary/5 border-primary/20 overflow-hidden relative rounded-none">
+              <div className="absolute top-0 right-0 p-6 opacity-10">
+                 <ShieldAlert className="w-16 h-16 text-primary" />
               </div>
-              <CardHeader className="pb-2">
-                 <CardTitle className="text-sm font-black uppercase tracking-widest text-primary">Market Pulse</CardTitle>
+              <CardHeader className="pb-4">
+                 <CardTitle className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Strategic Pulse</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
                  <div className="flex flex-col">
-                    <span className="text-2xl font-black font-mono text-foreground">
+                    <span className="text-4xl font-display font-black text-foreground tracking-tighter italic leading-none mb-1">
                        {state.finance.marketState?.sentiment || 50}%
                     </span>
-                    <span className="text-[10px] uppercase font-bold text-muted-foreground">Market Sentiment</span>
+                    <span className="text-[8px] uppercase font-black text-muted-foreground/40 tracking-[0.2em]">Global Sentiment Index</span>
                  </div>
                  <div className="flex flex-col">
-                    <span className="text-xl font-bold text-primary uppercase">
+                    <span className="text-2xl font-display font-black text-primary uppercase tracking-tighter italic leading-none mb-1">
                        {state.finance.marketState?.cycle || 'STABLE'}
                     </span>
-                    <span className="text-[10px] uppercase font-bold text-muted-foreground">Economic Cycle</span>
+                    <span className="text-[8px] uppercase font-black text-muted-foreground/40 tracking-[0.2em]">Macroeconomic Phase</span>
                  </div>
-                 <p className="text-[11px] text-muted-foreground/80 italic border-l-2 border-primary/30 pl-2">
-                    Industry insiders suggest major M&A activity is cooling off as interest rates stabilize.
+                 <p className="text-[10px] text-muted-foreground/60 italic border-l-2 border-primary/30 pl-4 py-1 leading-relaxed">
+                    Intelligence suggests institutional M&A activity is cooling as macro conditions stabilize.
                  </p>
               </CardContent>
             </Card>
-          </m.section>
-
-          {/* Competitor Comparison */}
-          <m.section variants={itemVariants}>
-            <CompetitorComparison />
           </m.section>
         </div>
       </m.div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn, formatCompactCurrency } from '@/lib/utils';
 import { Building2, Calendar, Target, AlertTriangle } from 'lucide-react';
 import { Section } from '@/components/layout/Section';
 import { Card } from '@/components/ui/card';
@@ -34,12 +34,6 @@ export const RivalReleaseTracker: React.FC<RivalReleaseTrackerProps> = ({
   const sameWeekConflicts = releases.filter(r => 
     yourReleases.some(y => y.week === r.releaseDate)
   );
-
-  const formatCurrency = (value: number) => {
-    if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
-    if (value >= 1000) return `$${(value / 1000).toFixed(1)}K`;
-    return `$${value}`;
-  };
 
   const getThreatBadge = (level: string) => {
     switch (level) {
@@ -79,7 +73,7 @@ export const RivalReleaseTracker: React.FC<RivalReleaseTrackerProps> = ({
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Conflict Warning */}
       {sameWeekConflicts.length > 0 && (
-        <div className="bg-amber-500/10 border border-amber-500/50 rounded-lg p-4 flex items-center gap-3">
+        <div className="bg-amber-500/10 border border-amber-500/50 rounded-none p-4 flex items-center gap-3">
           <AlertTriangle className="h-5 w-5 text-amber-500" />
           <div>
             <p className="font-medium text-amber-500">Release Date Conflicts Detected</p>
@@ -94,7 +88,7 @@ export const RivalReleaseTracker: React.FC<RivalReleaseTrackerProps> = ({
       <div className="grid grid-cols-3 gap-4">
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-red-500/10">
+            <div className="p-2 rounded-none bg-red-500/10">
               <Target className="h-5 w-5 text-red-500" />
             </div>
             <div>
@@ -106,7 +100,7 @@ export const RivalReleaseTracker: React.FC<RivalReleaseTrackerProps> = ({
 
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-amber-500/10">
+            <div className="p-2 rounded-none bg-amber-500/10">
               <Calendar className="h-5 w-5 text-amber-500" />
             </div>
             <div>
@@ -118,7 +112,7 @@ export const RivalReleaseTracker: React.FC<RivalReleaseTrackerProps> = ({
 
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-500/10">
+            <div className="p-2 rounded-none bg-blue-500/10">
               <Building2 className="h-5 w-5 text-blue-500" />
             </div>
             <div>
@@ -138,7 +132,7 @@ export const RivalReleaseTracker: React.FC<RivalReleaseTrackerProps> = ({
         icon={Calendar}
       >
         {sortedWeeks.length === 0 ? (
-          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-xl')}>
+          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-none')}>
             <Building2 className="h-10 w-10 mx-auto mb-3 opacity-20" />
             <p className={cn('text-sm', tokens.text.caption)}>
               No upcoming rival releases detected
@@ -190,7 +184,7 @@ export const RivalReleaseTracker: React.FC<RivalReleaseTrackerProps> = ({
                         <div className="flex items-center gap-3">
                           {getThreatBadge(release.threatLevel)}
                           <span className={cn('text-[10px]', tokens.text.caption)}>
-                            Est. {formatCurrency(release.projectedOpening)} opening
+                            Est. {formatCompactCurrency(release.projectedOpening)} opening
                           </span>
                         </div>
                       </div>

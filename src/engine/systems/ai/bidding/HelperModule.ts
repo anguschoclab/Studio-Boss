@@ -11,9 +11,7 @@ export function calculateLiveCounterBid(
   opportunity: Opportunity,
   playerBid: number,
   rival: RivalStudio,
-  rng: RandomGenerator,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _week: number
+  rng: RandomGenerator
 ): StateImpact | null {
   if (rival.cash < playerBid * 2 || rival.prestige < 60) return null;
 

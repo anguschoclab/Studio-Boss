@@ -65,23 +65,23 @@ describe('DemographicsWidget', () => {
     };
 
     mockUseGameStore.mockImplementation((selector: any) => {
-      return selector({ gameState: { studio: { culture: mockCulture } } });
+      return selector({ gameState: { culture: mockCulture } });
     });
 
     render(<DemographicsWidget />);
 
-    expect(screen.getByText('Audience Trends')).toBeInTheDocument();
+    expect(screen.getByText((c) => c.includes('Audience Vector') || c.includes('AUDIENCE'))).toBeInTheDocument();
 
     const chart = screen.getByTestId('mock-barchart');
     expect(chart).toBeInTheDocument();
 
-    expect(screen.getByTestId('mock-bar-0')).toHaveAttribute('data-genre', 'Horror');
+    expect(screen.getByTestId('mock-bar-0')).toHaveAttribute('data-genre', 'HORROR');
     expect(screen.getByTestId('mock-bar-0')).toHaveAttribute('data-popularity', '95');
 
-    expect(screen.getByTestId('mock-bar-1')).toHaveAttribute('data-genre', 'Action');
+    expect(screen.getByTestId('mock-bar-1')).toHaveAttribute('data-genre', 'ACTION');
     expect(screen.getByTestId('mock-bar-1')).toHaveAttribute('data-popularity', '85');
 
-    expect(screen.getByTestId('mock-bar-4')).toHaveAttribute('data-genre', 'Scifi');
+    expect(screen.getByTestId('mock-bar-4')).toHaveAttribute('data-genre', 'SCIFI');
     expect(screen.getByTestId('mock-bar-4')).toHaveAttribute('data-popularity', '35');
 
     expect(screen.queryByTestId('mock-bar-5')).toBeNull();

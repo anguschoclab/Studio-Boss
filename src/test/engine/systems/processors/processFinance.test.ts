@@ -10,18 +10,11 @@ describe('tickFinance', () => {
     week: 5,
     gameSeed: 1,
     tickCount: 0,
+    projects: { active: [] },
     game: { currentWeek: 5 },
-    entities: {
-      projects: {},
-      talents: {},
-      contracts: {},
-      rivals: {}
-    },
     finance: {
       cash: 50_000_000,
-      ledger: [],
-      weeklyHistory: [],
-      marketState: { baseRate: 0.05, savingsYield: 0.02, debtRate: 0.1, loanRate: 0.08, rateHistory: [], sentiment: 50, cycle: 'STABLE' }
+      ledger: []
     },
     news: { headlines: [] },
     ip: { vault: [], franchises: {} },
@@ -29,14 +22,15 @@ describe('tickFinance', () => {
       name: 'Test Studio',
       archetype: 'major',
       prestige: 50,
-      ownedPlatforms: [],
       internal: {
-        projectHistory: [],
+        projects: {}, 
+        contracts: [],
       }
     },
     market: {
       opportunities: [],
-      buyers: []
+      buyers: [],
+      activeMarketEvents: []
     },
     industry: {
       rivals: [],
@@ -45,11 +39,11 @@ describe('tickFinance', () => {
       agents: [],
       talentPool: {} as Record<string, Talent>,
       newsHistory: [],
+      rumors: []
     },
     culture: {
       genrePopularity: {}
     },
-    deals: { activeDeals: [], pendingOffers: [], expiredDeals: [] },
     history: [],
     eventHistory: []
   } as unknown as GameState);
@@ -65,10 +59,9 @@ describe('tickFinance', () => {
     expect(fundsImpact).toBeDefined();
     expect(ledgerImpact).toBeDefined();
     
-    // Net profit should be negative (overhead + interest cost for major studio with no projects)
-    // Updated expectation due to higher baseRent and levelScale in ExpenseProcessor.ts
-    expect(fundsImpact?.payload.amount).toBe(-6460769);
+    // Net profit should be negative (500k overhead)
+    expect(fundsImpact?.payload.amount).toBe(-500000);
     expect(ledgerImpact?.payload.report.week).toBe(5);
-    expect(ledgerImpact?.payload.report.netProfit).toBe(-6460769);
+    expect(ledgerImpact?.payload.report.netProfit).toBe(-500000);
   });
 });

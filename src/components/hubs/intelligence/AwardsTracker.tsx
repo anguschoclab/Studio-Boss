@@ -72,7 +72,7 @@ export const AwardsTracker: React.FC<AwardsTrackerProps> = ({
       <Card className={cn('p-6', tokens.border.default)}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="p-3 rounded-lg bg-amber-500/10">
+            <div className="p-3 rounded-none bg-amber-500/10">
               <Trophy className="h-6 w-6 text-amber-500" />
             </div>
             <div>
@@ -143,9 +143,9 @@ export const AwardsTracker: React.FC<AwardsTrackerProps> = ({
                     <span className={tokens.text.caption}>Win Probability</span>
                     <span className="font-medium">{nom.odds}%</span>
                   </div>
-                  <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-muted rounded-none overflow-hidden">
                     <div
-                      className={cn('h-full rounded-full', getStatusColor(nom.status))}
+                      className={cn('h-full rounded-none', getStatusColor(nom.status))}
                       style={{ width: `${nom.odds}%` }}
                     />
                   </div>
@@ -169,7 +169,7 @@ export const AwardsTracker: React.FC<AwardsTrackerProps> = ({
         icon={Film}
       >
         {projects.length === 0 ? (
-          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-xl')}>
+          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-none')}>
             <Trophy className="h-10 w-10 mx-auto mb-3 opacity-20" />
             <p className={cn('text-sm', tokens.text.caption)}>
               No awards submissions yet

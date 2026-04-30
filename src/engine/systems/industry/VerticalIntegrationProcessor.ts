@@ -30,7 +30,7 @@ export function tickVerticalIntegration(state: GameState, rng: RandomGenerator):
           description: `Platform P&L: ${platform.name}`,
         }
       });
-    } else if (platform.ownerId) {
+    } else {
       // Rival owner
       const rival = state.entities.rivals[platform.ownerId];
       if (rival) {

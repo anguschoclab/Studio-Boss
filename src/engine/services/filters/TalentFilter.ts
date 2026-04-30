@@ -23,8 +23,8 @@ import { TalentAgentInteractionEngine } from '../../systems/talent/talentAgentIn
  * Talent Filter
  * Handles talent lifecycle, morale, agent relationships, and various talent systems
  */
-export class TalentFilter implements WeekFilter {
-  name = 'TalentFilter';
+export const TalentFilter: WeekFilter = {
+  name: 'TalentFilter',
 
   execute(state: GameState, context: TickContext): void {
     // Core talent systems

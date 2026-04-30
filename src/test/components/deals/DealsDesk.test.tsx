@@ -29,7 +29,7 @@ describe('DealsDesk', () => {
       const state = {
         gameState: {
           week: 1,
-          entities: { projects: {}, talents: {}, contracts: {}, rivals: {} },
+          studio: { internal: { projects: {}, contracts: [] } },
           market: { buyers: [] }
         }
       };
@@ -37,9 +37,9 @@ describe('DealsDesk', () => {
     });
 
     render(<DealsDesk />);
-    expect(screen.getByText('Deals Desk & Distribution')).toBeInTheDocument();
-    expect(screen.getByText(/0 Network Partners/i)).toBeInTheDocument();
-    expect(screen.getByText('No Active Pitch Slate')).toBeInTheDocument();
+    expect(screen.getByText('DEALS DESK & DISTRIBUTION')).toBeInTheDocument();
+    expect(screen.getByText(/0 NETWORK/i)).toBeInTheDocument();
+    expect(screen.getByText('NO ACTIVE PITCH SLATE')).toBeInTheDocument();
   });
 
   it('renders buyers with mandates', () => {
@@ -47,7 +47,7 @@ describe('DealsDesk', () => {
       const state = {
         gameState: {
           week: 1,
-          entities: { projects: {}, talents: {}, contracts: {}, rivals: {} },
+          studio: { internal: { projects: {}, contracts: [] } },
           market: {
             buyers: [
               generateMockBuyer('b1', 'Netflix', 'streamer', { type: 'prestige', activeUntilWeek: 10 }),
@@ -66,7 +66,7 @@ describe('DealsDesk', () => {
 
     expect(screen.getByText('HBO')).toBeInTheDocument();
     expect(screen.getByText('premium')).toBeInTheDocument();
-    expect(screen.getByText('Open Slate')).toBeInTheDocument();
+    expect(screen.getByText('OPEN SLATE')).toBeInTheDocument();
   });
 
   it('renders active pitching slate projects', () => {
@@ -79,10 +79,17 @@ describe('DealsDesk', () => {
               'p1': generateMockProject('Pitch', 'pitching', 'Action', 'high'),
               'p2': generateMockProject('Dev', 'development', 'Drama', 'low'),
               'p3': generateMockProject('Prod', 'production', 'Comedy', 'mid')
-            },
-            talents: {},
-            contracts: [],
-            rivals: {}
+            }
+          },
+          studio: {
+            internal: {
+              projects: {
+                'p1': generateMockProject('Pitch', 'pitching', 'Action', 'high'),
+                'p2': generateMockProject('Dev', 'development', 'Drama', 'low'),
+                'p3': generateMockProject('Prod', 'production', 'Comedy', 'mid')
+              },
+              contracts: []
+            }
           },
           market: { buyers: [] }
         }
@@ -108,10 +115,15 @@ describe('DealsDesk', () => {
           entities: {
             projects: {
               'p1': { id: 'p1', title: 'Fit Project', state: 'pitching', genre: 'Action', budgetTier: 'high', budget: 1000000 } as Project
-            },
-            talents: {},
-            contracts: [],
-            rivals: {}
+            }
+          },
+          studio: {
+            internal: {
+              projects: {
+                'p1': { id: 'p1', title: 'Fit Project', state: 'pitching', genre: 'Action', budgetTier: 'high', budget: 1000000 } as Project
+              },
+              contracts: []
+            }
           },
           market: {
             buyers: [
@@ -124,7 +136,7 @@ describe('DealsDesk', () => {
     });
 
     render(<DealsDesk />);
-    expect(screen.getByText('Acquisition Fit Analysis')).toBeInTheDocument();
+    expect(screen.getByText('ACQUISITION FIT ANALYSIS', { exact: false })).toBeInTheDocument();
     expect(screen.getAllByText('Fit Project').length).toBeGreaterThan(0);
     expect(screen.getByText('85%')).toBeInTheDocument();
   });

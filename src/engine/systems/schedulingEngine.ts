@@ -1,17 +1,30 @@
 import { Project, Contract, Talent, TalentPact, GameState, StateImpact } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
 
-export class SchedulingEngine {
-  static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
+export const SchedulingEngine = {
+  tick(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
-    const projects = Object.values(state.entities.projects) as Project[];
+    const projects = Object.values(state.entities.projects);
     const contractsList = Object.values(state.entities.contracts || {});
     const talentPool = state.entities.talents;
+
+    // ⚡ Bolt: Pre-group contracts by projectId to avoid O(Projects * Contracts) evaluation complexity
+    // In the SchedulingEngine.tick function, pre-grouping the contracts list by projectId into a Record or Map
+    // before iterating over projects reduces conflict evaluation complexity from O(Projects * Contracts) to O(Projects + Contracts).
+    const contractsByProject: Record<string, Contract[]> = {};
+    for (const contract of contractsList) {
+      if (!contractsByProject[contract.projectId]) {
+        contractsByProject[contract.projectId] = [];
+      }
+      contractsByProject[contract.projectId].push(contract);
+    }
 
     projects.forEach(project => {
       if (project.state !== 'production') return;
 
-      const { hasConflict, conflicts } = this.evaluateSchedulingConflicts(project, contractsList, talentPool, state.week);
+      const projectContracts = contractsByProject[project.id];
+      if (!projectContracts) return;
+      const { hasConflict, conflicts } = this.evaluateSchedulingConflicts(project, projectContracts, talentPool, state.week);
       
       if (hasConflict) {
         impacts.push({
@@ -37,20 +50,20 @@ export class SchedulingEngine {
     });
 
     return impacts;
-  }
+  },
 
-  static evaluateSchedulingConflicts(
+  evaluateSchedulingConflicts(
     project: Project,
-    contracts: Contract[],
+    projectContracts: Contract[], // ⚡ Bolt: Now expects pre-filtered contracts to prevent O(N) filtering per project
     talentPool: Record<string, Talent>,
     currentWeek: number
   ): { hasConflict: boolean; conflicts: string[] } {
     const conflicts: string[] = [];
     
-    // Check all contracts for this project
-    const projectContracts = contracts.filter(c => c.projectId === project.id);
-
     for (const contract of projectContracts) {
+      // Safety check in case unfiltered contracts are passed
+      if (contract.projectId !== project.id) continue;
+
       const talent = talentPool[contract.talentId];
       if (!talent || !talent.commitments) continue;
 
@@ -67,14 +80,14 @@ export class SchedulingEngine {
       }
     }
     return { hasConflict: conflicts.length > 0, conflicts };
-  }
+  },
 
-  static processPacts(pacts: TalentPact[]): TalentPact[] {
-    return (pacts || []).map(p => ({ ...p, weeksRemaining: (p as any).weeksRemaining - 1 })).filter(p => (p as any).weeksRemaining > 0);
-  }
+  processPacts(pacts: TalentPact[]): TalentPact[] {
+    return (pacts || []).map(p => ({ ...p, weeksRemaining: p.weeksRemaining - 1 })).filter(p => p.weeksRemaining > 0);
+  },
 
-  static updateTalentFatigue(talent: Talent, isWorking: boolean): number {
+  updateTalentFatigue(talent: Talent, isWorking: boolean): number {
     const f = talent.fatigue || 0;
     return isWorking ? Math.min(100, f + 5) : Math.max(0, f - 10);
   }
-}
+};

@@ -1,5 +1,6 @@
 import { Talent, Project, Contract, StateImpact } from '@/engine/types';
 import { TalentUpdate } from '@/engine/types/state.types';
+import { type TalentId, type ProjectId, type ContractId } from '@/engine/types/shared.types';
 
 /**
  * Talent Morale & Behavioral Psychology System
@@ -10,12 +11,12 @@ import { TalentUpdate } from '@/engine/types/state.types';
  * - Scandals significantly tank mood.
  * - Working with "Conflict" talent (Ego clashes) reduces mood.
  */
-export class TalentMoraleSystem {
+export const TalentMoraleSystem = {
   /**
    * Calculates the production speed multiplier based on the moods of attached talent.
    * If any major talent (Actor/Director) has very low mood (< 30), production slows down.
    */
-  static getProductionSpeedMultiplier(talent: Talent[]): number {
+  getProductionSpeedMultiplier(talent: Talent[]): number {
     if (talent.length === 0) return 1.0;
 
     const lowMoraleTalent = talent.filter(t => t.psychology.mood < 30);
@@ -25,13 +26,13 @@ export class TalentMoraleSystem {
     }
 
     return 1.0;
-  }
+  },
 
   /**
    * Calculates a quality multiplier for the final review score.
    * Low trust/morale leads to "onset friction" and a lower ceiling.
    */
-  static getQualityMultiplier(talent: Talent[]): number {
+  getQualityMultiplier(talent: Talent[]): number {
     if (talent.length === 0) return 1.0;
 
     const avgMood = talent.reduce((acc, t) => acc + t.psychology.mood, 0) / talent.length;
@@ -41,23 +42,23 @@ export class TalentMoraleSystem {
     if (avgMood > 85) return 1.1;
     
     return 1.0;
-  }
+  },
 
   /**
    * Updates talent psychology based on the current week's events.
    */
-  static processWeeklyMorale(
-    talentDict: Record<string, Talent>,
-    projectsDict: Record<string, Project>,
-    contractsDict: Record<string, Contract>
+  processWeeklyMorale(
+    talentDict: Record<TalentId, Talent>,
+    projectsDict: Record<ProjectId, Project>,
+    contractsDict: Record<ContractId, Contract>
   ): TalentUpdate[] {
     const updates: TalentUpdate[] = [];
 
     // Pre-compute O(1) lookups to avoid O(N*M) nested filtering
-    const contractsByTalent = new Map<string, Contract[]>();
+    const contractsByTalent = new Map<TalentId, Contract[]>();
     for (const key in contractsDict) {
       if (!Object.prototype.hasOwnProperty.call(contractsDict, key)) continue;
-      const c = contractsDict[key];
+      const c = contractsDict[key as ContractId];
       const arr = contractsByTalent.get(c.talentId);
       if (arr) {
         arr.push(c);
@@ -70,7 +71,7 @@ export class TalentMoraleSystem {
     // ⚡ The Framerate Fanatic: Direct iteration over dictionaries avoids Array allocations
     for (const talentId in talentDict) {
       if (!Object.prototype.hasOwnProperty.call(talentDict, talentId)) continue;
-      const t = talentDict[talentId];
+      const t = talentDict[talentId as TalentId];
       let moodChange = 0;
       
       // 1. Natural drift toward 50
@@ -106,4 +107,4 @@ export class TalentMoraleSystem {
 
     return updates;
   }
-}
+};

@@ -49,7 +49,7 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({
       {
         id: 'new-project',
         icon: Plus,
-        label: 'New Project',
+        label: 'INITIATE_PROJECT',
         shortcut: '⌘N',
         action: () => openCreateProject(),
         variant: 'primary',
@@ -57,8 +57,9 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({
       {
         id: 'advance-week',
         icon: Clock,
-        label: 'Advance Week',
+        label: 'ADVANCE_CYCLE',
         action: () => { doAdvanceWeek(); },
+        variant: 'secondary',
       },
     ];
 
@@ -67,7 +68,7 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({
         {
           id: 'studio-marketing',
           icon: Settings,
-          label: 'Marketing',
+          label: 'MARKETING_INTEL',
           action: () => { setActiveHub('hq', 'marketing'); },
         },
       ],
@@ -75,7 +76,7 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({
         {
           id: 'pipeline-view',
           icon: Film,
-          label: 'Slate',
+          label: 'PRODUCTION_SLATE',
           action: () => { setActiveHub('production', 'slate'); },
         },
       ],
@@ -83,7 +84,7 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({
         {
           id: 'discover-talent',
           icon: Users,
-          label: 'Marketplace',
+          label: 'TALENT_ACQUISITION',
           action: () => { setActiveHub('talent', 'marketplace'); },
         },
       ],
@@ -91,7 +92,7 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({
         {
           id: 'market-analysis',
           icon: TrendingUp,
-          label: 'Market Trends',
+          label: 'MARKET_ANALYSIS',
           action: () => { setActiveHub('intelligence', 'market'); },
         },
       ],
@@ -105,7 +106,7 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({
   return (
     <div
       className={cn(
-        'fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2',
+        'fixed bottom-12 right-12 z-40 flex flex-col items-end gap-4',
         className
       )}
     >
@@ -113,50 +114,52 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({
       <AnimatePresence>
         {isExpanded && (
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ ...transitions.spring }}
-            className="flex flex-col gap-2 mb-2"
+            className="flex flex-col gap-3 mb-4"
           >
             {actions.map((action, index) => {
               const Icon = action.icon;
               return (
                 <motion.button
                   key={action.id}
-                  initial={{ opacity: 0, x: 20 }}
+                  initial={{ opacity: 0, x: 40 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
+                  transition={{ delay: index * 0.05, duration: 0.5 }}
                   onClick={() => {
                     action.action();
                     setIsExpanded(false);
                   }}
                   className={cn(
-                    'flex items-center gap-3 px-4 py-3 rounded-xl',
-                    'bg-card/90 backdrop-blur-xl border border-white/10 shadow-lg',
-                    'hover:border-white/20 hover:bg-card',
-                    'group relative',
+                    'flex items-center gap-6 px-8 py-4 rounded-none',
+                    'bg-black/90 backdrop-blur-3xl border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)]',
+                    'hover:border-primary/40 hover:bg-black group relative overflow-hidden',
                     tokens.transition.normal
                   )}
                 >
                   <div
                     className={cn(
-                      'w-8 h-8 rounded-lg flex items-center justify-center',
-                      action.variant === 'primary' && 'bg-primary/20 text-primary',
-                      action.variant === 'secondary' && 'bg-secondary/20 text-secondary',
-                      (!action.variant || action.variant === 'default') && 'bg-white/10'
+                      'w-10 h-10 rounded-none flex items-center justify-center transition-all duration-700',
+                      action.variant === 'primary' && 'bg-primary text-black shadow-[0_0_20px_rgba(var(--primary),0.4)]',
+                      action.variant === 'secondary' && 'bg-secondary text-black shadow-[0_0_20px_rgba(var(--secondary),0.4)]',
+                      (!action.variant || action.variant === 'default') && 'bg-white/5 text-foreground/40 group-hover:text-primary group-hover:bg-primary/10'
                     )}
                   >
-                    <Icon className="w-4 h-4" />
+                    <Icon className="w-5 h-5" strokeWidth={3} />
                   </div>
-                  <span className="text-sm font-medium whitespace-nowrap">
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] italic whitespace-nowrap group-hover:translate-x-2 transition-transform duration-700">
                     {action.label}
                   </span>
                   {action.shortcut && (
-                    <kbd className="ml-2 px-1.5 py-0.5 bg-muted rounded text-[10px] text-muted-foreground">
+                    <kbd className="ml-4 px-2 py-1 bg-white/5 border border-white/10 rounded-none text-[8px] font-black tracking-tighter text-muted-foreground/30 group-hover:text-primary transition-colors">
                       {action.shortcut}
                     </kbd>
                   )}
+                  
+                  {/* Hover accent */}
+                  <div className="absolute bottom-0 left-0 h-0.5 bg-primary w-0 group-hover:w-full transition-all duration-700" />
                 </motion.button>
               );
             })}
@@ -168,24 +171,26 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({
       <motion.button
         onClick={() => setIsExpanded(!isExpanded)}
         className={cn(
-          'flex items-center gap-2 px-4 py-3 rounded-full',
-          'bg-primary text-primary-foreground shadow-lg',
-          'hover:shadow-xl hover:shadow-primary/20',
-          'active:scale-95',
-          tokens.transition.normal
+          'flex items-center gap-4 px-10 py-5 rounded-none',
+          'bg-primary text-black shadow-[0_0_50px_rgba(var(--primary),0.3)]',
+          'hover:shadow-[0_0_80px_rgba(var(--primary),0.5)] transition-all duration-700',
+          'active:scale-95 group relative overflow-hidden'
         )}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
       >
-        <Zap className="w-4 h-4" />
-        <span className="text-sm font-semibold">
-          {isExpanded ? 'Close' : 'Quick Actions'}
+        <Zap className={cn("w-5 h-5 transition-transform duration-700", isExpanded && "rotate-180")} strokeWidth={3} />
+        <span className="text-xs font-black uppercase tracking-[0.4em] italic">
+          {isExpanded ? 'CLOSE_MODULE' : 'QUICK_COMMAND'}
         </span>
         {isExpanded ? (
-          <ChevronDown className="w-4 h-4" />
+          <ChevronDown className="w-5 h-5" strokeWidth={3} />
         ) : (
-          <ChevronUp className="w-4 h-4" />
+          <ChevronUp className="w-5 h-5" strokeWidth={3} />
         )}
+        
+        {/* Glow effect overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
       </motion.button>
     </div>
   );

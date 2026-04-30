@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import type { ProjectContractType } from '@/engine/types';
 import { calculateFitScore } from '@/engine/systems/buyers';
-import { RandomGenerator } from '@/engine/utils/rng';
 
 export const PitchProjectModal = () => {
   const { showPitchProject, closePitchProject, pitchingProjectId } = useUIStore();
@@ -17,9 +16,19 @@ export const PitchProjectModal = () => {
   const [selectedContract, setSelectedContract] = useState<ProjectContractType>('upfront');
   const [feedback, setFeedback] = useState<string | null>(null);
 
+  const isMountedRef = useRef(true);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
   if (!gameState || !pitchingProjectId) return null;
 
-  const project = gameState?.entities?.projects[pitchingProjectId];
+  const project = gameState.studio.internal.projects[pitchingProjectId];
   if (!project) return null;
 
   const handlePitch = async () => {
@@ -28,9 +37,11 @@ export const PitchProjectModal = () => {
 
     const success = await pitchProject(project.id, selectedBuyerId, selectedContract);
 
+    if (!isMountedRef.current) return;
     if (success) {
       setFeedback('Pitch Successful! Project picked up.');
-      setTimeout(() => {
+      timeoutRef.current = setTimeout(() => {
+        if (!isMountedRef.current) return;
         setFeedback(null);
         setSelectedBuyerId('');
         closePitchProject();
@@ -48,9 +59,9 @@ export const PitchProjectModal = () => {
 
   return (
     <Dialog open={showPitchProject} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl bg-card/90 backdrop-blur-2xl border border-white/10">
         <DialogHeader>
-          <DialogTitle>Pitch Project: {project.title}</DialogTitle>
+          <DialogTitle className="font-display font-black text-xl tracking-tight uppercase">Pitch Project: {project.title}</DialogTitle>
           <DialogDescription>
             Select a network or streamer to pitch this series to, and propose a contract structure.
           </DialogDescription>
@@ -61,8 +72,7 @@ export const PitchProjectModal = () => {
             <h4 className="font-semibold text-sm text-muted-foreground uppercase">1. Select Buyer</h4>
             <div className="space-y-2">
               {gameState.market.buyers.map(buyer => {
-                const rng = new RandomGenerator(gameState.gameSeed + gameState.week);
-                const fitScore = calculateFitScore(project, buyer, gameState.week, gameState.entities.projects, rng);
+                const fitScore = calculateFitScore(project, buyer);
                 return (
                   <button
                     key={buyer.id}

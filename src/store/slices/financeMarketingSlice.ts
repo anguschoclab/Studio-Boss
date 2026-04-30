@@ -2,12 +2,13 @@ import { StateCreator } from 'zustand';
 import { GameStore } from '../gameStore';
 import { handleReleasePhaseEntry } from '@/engine/systems/projects';
 import { executeMarketing } from '@/engine/systems/projectHandlers';
-import { Contract, Project, Talent } from '@/engine/types';
+import { Contract, Project, Talent, NewsId } from '@/engine/types';
+import { type ProjectId, type TalentId } from '@/engine/types/shared.types';
 import { RandomGenerator } from '@/engine/utils/rng';
 
 export interface FinanceMarketingSlice {
-  launchReleaseMarketing: (projectId: string, budget: number, domesticPct: number, angle: string) => void;
-  executeMarketingEvent: (eventName: 'superbowl_ad' | 'viral_campaign' | 'press_tour', cost: number, projectId: string) => void;
+  launchReleaseMarketing: (projectId: ProjectId, budget: number, domesticPct: number, angle: string) => void;
+  executeMarketingEvent: (eventName: 'superbowl_ad' | 'viral_campaign' | 'press_tour', cost: number, projectId: ProjectId) => void;
 }
 
 export const createFinanceMarketingSlice: StateCreator<GameStore, [], [], FinanceMarketingSlice> = (set) => ({
@@ -50,10 +51,10 @@ export const createFinanceMarketingSlice: StateCreator<GameStore, [], [], Financ
       const newsImpact = result.find(r => r.type === 'NEWS_ADDED');
       if (newsImpact && newsImpact.payload) {
         headlines.unshift({
-          id: rng.uuid('NWS'),
+          id: rng.uuid('NWS') as NewsId,
           week: state.week,
           category: 'general' as const,
-          text: newsImpact.payload.text || newsImpact.payload.description || ''
+          text: (newsImpact.payload as any).text || (newsImpact.payload as any).description || ''
         });
       }
 

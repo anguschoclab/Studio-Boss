@@ -11,27 +11,27 @@ export const DistributionBadge: React.FC<DistributionBadgeProps> = ({ status, cl
 
   const config = {
     theatrical: {
-      label: 'Theatrical',
+      label: 'THEATRICAL',
       icon: Film,
-      color: 'bg-amber-500/20 text-amber-500 border-amber-500/30',
+      color: 'bg-amber-400/10 text-amber-400 border-amber-400/20',
     },
     streaming: {
-      label: 'Streaming',
+      label: 'STREAMING',
       icon: Monitor,
-      color: 'bg-indigo-500/20 text-indigo-500 border-indigo-500/30',
+      color: 'bg-primary/10 text-primary border-primary/20',
     },
     syndicated: {
-      label: 'Syndicated',
+      label: 'SYNDICATED',
       icon: Tv,
-      color: 'bg-emerald-500/20 text-emerald-500 border-emerald-500/30',
+      color: 'bg-emerald-400/10 text-emerald-400 border-emerald-400/20',
     },
   };
 
   const { label, icon: Icon, color } = config[status];
 
   return (
-    <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] font-bold tracking-wider uppercase ${color} ${className}`}>
-      <Icon size={12} />
+    <div className={`flex items-center gap-2 px-3 py-1 rounded-none border text-[9px] font-black tracking-[0.2em] uppercase italic ${color} ${className}`}>
+      <Icon size={10} strokeWidth={3} />
       <span>{label}</span>
     </div>
   );

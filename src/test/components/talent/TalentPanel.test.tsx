@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { TalentPanel } from '@/components/talent/TalentPanel';
-import { TooltipProvider } from '@/components/ui/tooltip';
 import { useGameStore } from '@/store/gameStore';
 
 vi.mock('@/store/gameStore');
@@ -13,8 +12,8 @@ describe('TalentPanel', () => {
       const state = {
         gameState: {
           week: 1,
-          entities: {
-            talents: {
+          industry: {
+            talentPool: {
               't1': {
                 id: 't1',
                 name: 'Tom Hanks',
@@ -42,20 +41,10 @@ describe('TalentPanel', () => {
                 psychology: { ego: 40, mood: 75, scandalRisk: 5, synergyAffinities: [], synergyConflicts: [] }
               }
             },
-            projects: {},
-            contracts: {},
-            rivals: {}
-          },
-          industry: {
             agencies: [
               { id: 'a1', name: 'CAA' },
               { id: 'a2', name: 'WME' }
             ]
-          },
-          deals: {
-            activeDeals: [],
-            pendingOffers: [],
-            expiredDeals: []
           }
         }
       };
@@ -64,14 +53,14 @@ describe('TalentPanel', () => {
   });
 
   it('renders talent roster', () => {
-    render(<TooltipProvider><TalentPanel /></TooltipProvider>);
+    render(<TalentPanel />);
     expect(screen.getByText('Talent Roster')).toBeInTheDocument();
     expect(screen.getByText('Tom Hanks')).toBeInTheDocument();
     expect(screen.getByText('Steven Spielberg')).toBeInTheDocument();
   });
 
   it('filters talent by role', () => {
-    render(<TooltipProvider><TalentPanel /></TooltipProvider>);
+    render(<TalentPanel />);
 
     // Initial state: both should be visible
     expect(screen.getByText('Tom Hanks')).toBeInTheDocument();
@@ -86,7 +75,7 @@ describe('TalentPanel', () => {
   });
 
   it('shows empty state when no talent matches filter', () => {
-    render(<TooltipProvider><TalentPanel /></TooltipProvider>);
+    render(<TalentPanel />);
 
     const writerButton = screen.getAllByText((content, element) => element?.textContent?.toLowerCase() === 'writer').find(el => el.tagName === 'BUTTON');
     if (writerButton) fireEvent.click(writerButton);

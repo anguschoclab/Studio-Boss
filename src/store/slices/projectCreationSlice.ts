@@ -3,10 +3,11 @@ import { GameStore } from '../gameStore';
 import { CreateProjectParams, buildProjectAndContracts, applyStateImpact } from '../storeUtils';
 import { RandomGenerator } from '@/engine/utils/rng';
 import { Project, GameState, SeriesProject } from '@/engine/types';
+import { type ProjectId } from '@/engine/types/shared.types';
 
 export interface ProjectCreationSlice {
   createProject: (params: CreateProjectParams) => void;
-  renewProject: (id: string) => void;
+  renewProject: (id: ProjectId) => void;
 }
 
 export const createProjectCreationSlice: StateCreator<GameStore, [], [], ProjectCreationSlice> = (set) => ({
@@ -30,7 +31,7 @@ export const createProjectCreationSlice: StateCreator<GameStore, [], [], Project
           entities: {
             ...stateWithFees.entities,
             projects: { ...stateWithFees.entities.projects, [project.id]: project },
-            contracts
+            contracts: { ...stateWithFees.entities.contracts, ...newContracts.reduce((acc, c) => ({ ...acc, [c.id]: c }), {}) }
           },
           rngState: rng.getState()
         }
@@ -43,7 +44,7 @@ export const createProjectCreationSlice: StateCreator<GameStore, [], [], Project
       const state = s.gameState;
       if (!state) return s;
 
-      const p = state.entities.projects[id];
+      const p = state.entities.projects[id as ProjectId];
       if (!p) return s;
 
       if (p.type === 'SERIES') {

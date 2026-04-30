@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn, formatCompactCurrency } from '@/lib/utils';
 import { MapPin, DollarSign, CheckCircle2, AlertTriangle, Plane, Building2 } from 'lucide-react';
 import { Section } from '@/components/layout/Section';
 import { Card } from '@/components/ui/card';
@@ -38,12 +38,6 @@ export const LocationScoutPanel: React.FC<LocationScoutPanelProps> = ({
 }) => {
   const availableLocations = locations.filter(l => !selectedLocations.includes(l.id));
   const bookedLocations = locations.filter(l => selectedLocations.includes(l.id));
-
-  const formatCurrency = (value: number) => {
-    if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
-    if (value >= 1000) return `$${(value / 1000).toFixed(1)}K`;
-    return `$${value}`;
-  };
 
   const getCostBadge = (tier: string) => {
     const colors: Record<string, string> = {
@@ -99,7 +93,7 @@ export const LocationScoutPanel: React.FC<LocationScoutPanelProps> = ({
         </div>
         <div className="text-right">
           {getCostBadge(location.costTier)}
-          <p className="text-lg font-bold mt-1">{formatCurrency(location.baseCost)}</p>
+          <p className="text-lg font-bold mt-1">{formatCompactCurrency(location.baseCost)}</p>
           <p className={cn('text-[10px]', tokens.text.caption)}>base cost</p>
         </div>
       </div>
@@ -172,7 +166,7 @@ export const LocationScoutPanel: React.FC<LocationScoutPanelProps> = ({
       <div className="grid grid-cols-2 gap-4">
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10">
+            <div className="p-2 rounded-none bg-primary/10">
               <MapPin className="h-5 w-5 text-primary" />
             </div>
             <div>
@@ -184,7 +178,7 @@ export const LocationScoutPanel: React.FC<LocationScoutPanelProps> = ({
 
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-emerald-500/10">
+            <div className="p-2 rounded-none bg-emerald-500/10">
               <DollarSign className="h-5 w-5 text-emerald-500" />
             </div>
             <div>
@@ -215,7 +209,7 @@ export const LocationScoutPanel: React.FC<LocationScoutPanelProps> = ({
         icon={MapPin}
       >
         {availableLocations.length === 0 ? (
-          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-xl')}>
+          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-none')}>
             <MapPin className="h-10 w-10 mx-auto mb-3 opacity-20" />
             <p className={cn('text-sm', tokens.text.caption)}>
               No locations currently available

@@ -7,9 +7,9 @@ import { Badge } from '@/components/ui/badge';
 import { Package, DollarSign, Star, Users, Calendar, Building2, TrendingUp } from 'lucide-react';
 import { TalentNameLink } from '@/components/shared/TalentNameLink';
 import { formatMoney } from '@/engine/utils';
-import type { Opportunity, Talent } from '@/engine/types';
+import type { Talent } from '@/engine/types';
 
-interface PackageDetailModalProps {
+interface PackageDetailPayload {
   packageId?: string;
 }
 
@@ -19,8 +19,10 @@ export const PackageDetailModal = ({ packageId: propPackageId }: PackageDetailMo
   
   const [bidAmount, setBidAmount] = useState<number>(0);
 
-  const packageId = propPackageId || (activeModal?.payload as any)?.packageId;
-  const packageData = gameState?.market?.opportunities?.find(o => o.id === packageId);
+  const payload = activeModal?.payload as PackageDetailPayload | null;
+  const packageId = (propPackageId || payload?.packageId) as string | undefined;
+  const opportunities = gameState?.market?.opportunities || [];
+  const packageData = packageId ? opportunities.find(o => String(o.id) === packageId) : undefined;
   const packageTalents = (packageData?.attachedTalentIds || [])
     .map(id => gameState?.entities.talents?.[id])
     .filter(Boolean) as Talent[];
@@ -41,9 +43,9 @@ export const PackageDetailModal = ({ packageId: propPackageId }: PackageDetailMo
 
   return (
     <Dialog open={true} onOpenChange={handleClose}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-card/90 backdrop-blur-2xl border border-white/10">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="font-display font-black text-xl tracking-tight uppercase flex items-center gap-2">
             <Package className="h-5 w-5" />
             {packageData.title}
           </DialogTitle>
@@ -125,7 +127,7 @@ export const PackageDetailModal = ({ packageId: propPackageId }: PackageDetailMo
                   type="number"
                   value={bidAmount}
                   onChange={(e) => setBidAmount(Number(e.target.value))}
-                  className="flex-1 px-3 py-2 border rounded-md"
+                  className="flex-1 px-3 py-2 border rounded-none"
                   placeholder="Enter bid amount"
                   min={0}
                   step={100000}
@@ -145,7 +147,7 @@ export const PackageDetailModal = ({ packageId: propPackageId }: PackageDetailMo
             <div className="space-y-2">
               <label className="text-sm font-medium">Bid Terms</label>
               <textarea
-                className="w-full px-3 py-2 border rounded-md"
+                className="w-full px-3 py-2 border rounded-none"
                 rows={3}
                 placeholder="Enter any special terms or conditions..."
               />

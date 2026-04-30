@@ -5,12 +5,12 @@ import { RandomGenerator } from '../../utils/rng';
  * Calculates rival studio revenue using the same model as the player.
  * Ensures fair comparison in market share calculations.
  */
-export class RivalRevenueCalculator {
+export const RivalRevenueCalculator = {
   /**
    * Calculate weekly revenue for a rival studio.
    * Uses the same RevenueProcessor logic as the player.
    */
-  static calculateWeeklyRevenue(
+  calculateWeeklyRevenue(
     rival: RivalStudio,
     currentWeek: number,
     rng: RandomGenerator,
@@ -21,28 +21,18 @@ export class RivalRevenueCalculator {
     merch: number;
     total: number;
   } {
-    // Use unified storage if state is provided, otherwise fall back to backward compatibility
-    let projects: Project[];
-    projects = [];
-    if (state && state.entities.projects) {
-      const allProjects = state.entities.projects;
-      for (const id in allProjects) {
-        if (Object.prototype.hasOwnProperty.call(allProjects, id)) {
-          const p = allProjects[id];
-          if (p.ownerId === rival.id && p.state === 'released') {
-            projects.push(p);
-          }
-        }
-      }
-    } else {
-      // Backward compatibility for projects field
-      const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
-      for (const id in rivalProjects) {
-        if (Object.prototype.hasOwnProperty.call(rivalProjects, id)) {
-          const p = rivalProjects[id];
-          if (p.state === 'released') {
-            projects.push(p as Project);
-          }
+    if (!state) {
+      // In strict architecture, state is required for rival revenue calculation
+      return { boxOffice: 0, streaming: 0, merch: 0, total: 0 };
+    }
+
+    const projects: Project[] = [];
+    const allProjects = state.entities.projects;
+    for (const id in allProjects) {
+      if (Object.prototype.hasOwnProperty.call(allProjects, id)) {
+        const p = allProjects[id];
+        if (p.ownerId === rival.id && p.state === 'released') {
+          projects.push(p);
         }
       }
     }
@@ -55,7 +45,7 @@ export class RivalRevenueCalculator {
     let streaming = 0;
     let merch = 0;
     
-    projects.forEach((p: any) => {
+    projects.forEach((p) => {
       if (p.distributionStatus === 'theatrical') {
         // Use same decay model as player
         const weeklyGross = this.calculateTheatricalRevenue(p, currentWeek);
@@ -74,12 +64,12 @@ export class RivalRevenueCalculator {
       merch,
       total: boxOffice + streaming + merch
     };
-  }
+  },
   
   /**
    * Calculate annual revenue totals for a rival.
    */
-  static calculateAnnualRevenue(
+  calculateAnnualRevenue(
     rival: RivalStudio,
     currentWeek: number
   ): {
@@ -95,12 +85,12 @@ export class RivalRevenueCalculator {
     const annualRevenue = yearHistory.reduce((sum, h) => sum + h.revenue, 0);
     
     return { boxOfficeTotal, annualRevenue };
-  }
+  },
   
   /**
    * Theatrical revenue using same decay model as RevenueProcessor.
    */
-  private static calculateTheatricalRevenue(project: Project, currentWeek: number): number {
+  calculateTheatricalRevenue(project: Project, currentWeek: number): number {
     const weeksSinceRelease = currentWeek - (project.releaseWeek || 0);
     if (weeksSinceRelease < 0) return 0;
     
@@ -121,12 +111,12 @@ export class RivalRevenueCalculator {
     }
     
     return Math.max(0, Math.round(weeklyGross));
-  }
+  },
   
   /**
    * Streaming revenue using same model as RevenueProcessor.
    */
-  private static calculateStreamingRevenue(project: Project): number {
+  calculateStreamingRevenue(project: Project): number {
     // Use the same formula as RevenueProcessor.calculateStreamingRevenue
     // Since we don't have the Buyer object, we estimate
     const quality = project.reviewScore || 50;
@@ -137,20 +127,20 @@ export class RivalRevenueCalculator {
     // Rating premium
     const ratingPremium = this.getRatingStreamingPremium(project.rating);
     return Math.round(baseRevenue * (1 + ratingPremium));
-  }
+  },
   
-  private static getRatingStreamingPremium(rating?: string): number {
+  getRatingStreamingPremium(rating?: string): number {
     if (!rating) return 0;
     const r = rating.toUpperCase();
     if (r === 'TV-MA' || r === 'NC-17' || r === 'UNRATED') return 0.15;
     if (r === 'R') return 0.10;
     return 0;
-  }
+  },
   
   /**
    * Merchandise revenue using same formula as RevenueProcessor.
    */
-  private static calculateMerchRevenue(project: Project): number {
+  calculateMerchRevenue(project: Project): number {
     const hype = project.buzz || 0;
     if (hype < 70) return 0;
     
@@ -166,9 +156,9 @@ export class RivalRevenueCalculator {
     const merchMultiplier = this.getRatingMerchMultiplier(rating);
     
     return Math.round(baseRevenue * merchMultiplier);
-  }
+  },
   
-  private static getRatingMerchMultiplier(rating: string): number {
+  getRatingMerchMultiplier(rating: string): number {
     const r = rating.toUpperCase();
     if (r === 'UNRATED') return 0;
     if (r === 'G' || r === 'PG') return 1.3;
@@ -177,4 +167,4 @@ export class RivalRevenueCalculator {
     if (r === 'NC-17') return 0.3;
     return 1.0;
   }
-}
+};

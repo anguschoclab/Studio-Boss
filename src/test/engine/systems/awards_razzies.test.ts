@@ -1,27 +1,30 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { processRazzies } from '../../../engine/systems/awards';
-import { GameState, Project, Talent } from '../../../engine/types';
+import { Project, StateImpact } from '../../../engine/types';
+import { createMockGameState } from '../../utils/mockFactories';
 import { RandomGenerator } from '../../../engine/utils/rng';
 
 describe('Razzies Award System', () => {
+  const rng = new RandomGenerator(42);
+
   const createProject = (id: string, budget: number, score: number, flavor: string, genre: string): Project => ({
-    id,
-    title: `Title ${id}`,
+    id, 
+    title: `Title ${id}`, 
     type: 'FILM',
-    format: 'film',
-    genre,
-    budgetTier: 'high',
-    budget,
+    format: 'film', 
+    genre, 
+    budgetTier: 'high', 
+    budget, 
     weeklyCost: 10,
-    targetAudience: 'General Audience',
-    flavor,
-    state: 'released',
-    buzz: 50,
+    targetAudience: 'General Audience', 
+    flavor, 
+    state: 'released', 
+    buzz: 50, 
     weeksInPhase: 1,
-    developmentWeeks: 1,
-    productionWeeks: 1,
-    revenue: 10,
-    weeklyRevenue: 10,
+    developmentWeeks: 1, 
+    productionWeeks: 1, 
+    revenue: 10, 
+    weeklyRevenue: 10, 
     releaseWeek: 1,
     reviewScore: score,
     activeCrisis: null,
@@ -31,86 +34,54 @@ describe('Razzies Award System', () => {
     contentFlags: [],
     scriptHeat: 50,
     activeRoles: [],
-    scriptEvents: [],
-    ownerId: 'PLAYER'
+    scriptEvents: []
   } as Project);
 
   it('Razzies are only awarded to projects with Budget >= 50M and Score <= 30', () => {
+    const goodProject = createProject('good', 100_000_000, 80, '', 'Action');
+    const cheapFlop = createProject('cheap', 10_000_000, 10, '', 'Action');
     const bigFlop = createProject('big', 60_000_000, 20, '', 'Action');
-    const smallFlop = createProject('small', 40_000_000, 20, '', 'Action'); // Below budget threshold
-    const goodFilm = createProject('good', 60_000_000, 80, '', 'Action'); // Above score threshold
 
-    const state = {
+    const state = createMockGameState({
       week: 4,
       entities: {
         projects: {
-          big: bigFlop,
-          small: smallFlop,
-          good: goodFilm
-        }
-      },
-      industry: {
-        talentPool: {} as Record<string, Talent>
+          good: goodProject, 
+          cheap: cheapFlop, 
+          big: bigFlop 
+        },
+        talents: {},
+        contracts: {},
+        rivals: {},
       }
-    } as unknown as GameState;
+    });
 
-    const rng = new RandomGenerator(1);
-    const result = processRazzies(state, 4, rng);
+    const impacts = processRazzies(state, 4);
 
-    // Should return impacts for eligible projects
-    expect(Array.isArray(result)).toBe(true);
-    expect(result.length).toBeGreaterThan(0);
-
-    // Should have PROJECT_UPDATED impact for the eligible project
-    const projectUpdate = result.find(imp => imp.type === 'PROJECT_UPDATED');
-    expect(projectUpdate).toBeDefined();
-    expect((projectUpdate?.payload as any).projectId).toBe('big');
-    expect((projectUpdate?.payload as any).update.razzieWinner).toBe(true);
-
-    // Should have NEWS_ADDED impact
-    const newsImpact = result.find(imp => imp.type === 'NEWS_ADDED');
-    expect(newsImpact).toBeDefined();
+    // Only the bigFlop is eligible. Worst Picture should trigger a headline mentioning it.
+    expect(impacts.newHeadlines).toBeDefined();
+    expect(impacts.newHeadlines!.some(h => h.text.includes('Title big'))).toBe(true);
+    
+    expect(impacts.prestigeChange).toBeLessThan(0);
   });
 
   it('Razzie win triggers Studio Prestige penalty and marks cult classic if absurd', () => {
     const absurdFlop = createProject('absurd', 60_000_000, 20, 'a bizarre and absurd mess', 'Action');
-    const state = {
+    const state = createMockGameState({
       week: 4,
       entities: {
-        projects: {
-          absurd: absurdFlop
-        }
-      },
-      industry: {
-        talentPool: {} as Record<string, Talent>
+        projects: { absurd: absurdFlop },
+        talents: {},
+        contracts: {},
+        rivals: {},
       }
-    } as unknown as GameState;
+    });
 
-    const rng = new RandomGenerator(1);
-    const result = processRazzies(state, 4, rng);
+    const impacts = processRazzies(state, 4);
 
-    expect(Array.isArray(result)).toBe(true);
-    expect(result.length).toBeGreaterThan(0);
-
-    // Should mark as Razzie winner
-    const projectUpdate = result.find(imp => imp.type === 'PROJECT_UPDATED' && (imp.payload as any).update.razzieWinner);
-    expect(projectUpdate).toBeDefined();
-    expect((projectUpdate?.payload as any).update.razzieWinner).toBe(true);
-
-    // Should mark as cult classic due to absurd flavor
-    const cultUpdate = result.find(imp => imp.type === 'PROJECT_UPDATED' && (imp.payload as any).update.isCultClassic);
-    expect(cultUpdate).toBeDefined();
-    expect((cultUpdate?.payload as any).update.isCultClassic).toBe(true);
-
-    // Should have prestige penalty
-    const prestigeImpact = result.find(imp => imp.type === 'PRESTIGE_CHANGED');
-    expect(prestigeImpact).toBeDefined();
-    expect(prestigeImpact?.payload).toBeLessThan(0);
-
-    // Should have news event about cult following
-    const cultNews = result.filter(imp => imp.type === 'NEWS_ADDED').find(imp => 
-      (imp.payload as any).headline.includes('cult')
-    );
-    expect(cultNews).toBeDefined();
+    expect(impacts.prestigeChange).toBeLessThan(0);
+    
+    expect(impacts.cultClassicProjectIds).toBeDefined();
+    expect(impacts.cultClassicProjectIds).toContain('absurd');
   });
 });

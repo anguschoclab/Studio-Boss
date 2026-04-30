@@ -8,7 +8,7 @@ export function tickPilots(state: GameState, rng: RandomGenerator): StateImpact[
   const impacts: StateImpact[] = [];
   for (const key in state.entities.projects) {
     const project = state.entities.projects[key];
-    if (project.type !== 'SERIES' || (project as any).stage !== 'pilot') continue;
+    if (project.type !== 'SERIES' || project.stage !== 'pilot') continue;
 
     const weeksInPilot = (project.weeksInPhase || 0) + 1;
 
@@ -24,7 +24,7 @@ export function tickPilots(state: GameState, rng: RandomGenerator): StateImpact[
         }
       });
     } else {
-      const quality = ((project as any).scriptHeat ?? 50) * 0.5 + (project.momentum ?? 50) * 0.5;
+      const quality = (project.scriptHeat ?? 50) * 0.5 + (project.momentum ?? 50) * 0.5;
       const graduated = quality >= 40 || rng.next() < 0.3;
 
       if (graduated) {

@@ -38,7 +38,7 @@ const MarketingPanel = () => {
     projectTitle: p.title,
     totalBuzz: p.buzz || 0,
     trend: (p.momentum || 50) > 55 ? 'rising' as const : (p.momentum || 50) < 45 ? 'falling' as const : 'stable' as const,
-    sources: [] as any[],
+    sources: [] as { type: 'social' | 'press' | 'awards' | 'talent' | 'controversy' | 'viral'; value: number; description: string }[],
     audienceSentiment: (p.buzz || 0) > 60 ? 'positive' as const : (p.buzz || 0) > 30 ? 'mixed' as const : 'negative' as const,
     pressCoverage: Math.round((p.buzz || 0) * 0.3),
   })), [activeProjects]);
@@ -53,23 +53,23 @@ const MarketingPanel = () => {
     : activeProjects[0];
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar space-y-6 pb-4">
+    <div className="h-full overflow-y-auto custom-scrollbar space-y-10 pb-20 pr-6 animate-in fade-in duration-700">
       <BuzzMeter
         projects={projectBuzzData}
         studioBuzz={studioBuzz}
         industryRank={Math.max(1, Math.round(10 - (gameState?.studio?.prestige || 50) / 10))}
       />
       {activeProjects.length > 0 && (
-        <div>
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-xs font-black uppercase tracking-wider text-muted-foreground">Select Project</span>
+        <div className="pt-10 border-t border-white/5">
+          <div className="flex items-center gap-6 mb-8">
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">SELECT_PROJECT_MODULE</span>
             <select
-              className="text-xs bg-card/60 border border-border rounded px-2 py-1"
+              className="text-[10px] font-black uppercase tracking-widest italic bg-black/40 border border-white/10 rounded-none px-6 py-2 focus:outline-none focus:border-primary/40 transition-all duration-700"
               value={selectedProjectId || activeProjects[0]?.id || ''}
               onChange={e => setSelectedProjectId(e.target.value)}
             >
               {activeProjects.map(p => (
-                <option key={p.id} value={p.id}>{p.title}</option>
+                <option key={p.id} value={p.id}>{p.title.toUpperCase()}</option>
               ))}
             </select>
           </div>
@@ -84,16 +84,16 @@ const MarketingPanel = () => {
 
 const NewsPanel = () => {
   return (
-    <div className="h-full flex flex-col">
-      <div className="flex items-center gap-2 mb-4">
-        <Newspaper className="h-5 w-5 text-primary" />
-        <h3 className="text-sm font-black uppercase tracking-wider">Industry News Feed</h3>
-        <Badge variant="outline" className="text-[9px] bg-primary/10 border-primary/20 text-primary">
-          Live Wire
+    <div className="h-full flex flex-col animate-in fade-in duration-700">
+      <div className="flex items-center gap-4 mb-8">
+        <Newspaper className="h-5 w-5 text-primary" strokeWidth={3} />
+        <h3 className="text-sm font-black uppercase tracking-[0.3em] italic">INDUSTRY_INTELLIGENCE_FEED</h3>
+        <Badge className="text-[9px] bg-primary text-black px-4 py-1 rounded-none font-black uppercase italic tracking-widest border-none shadow-[0_0_15px_rgba(var(--primary),0.2)]">
+          LIVE_WIRE
         </Badge>
       </div>
-      <div className="flex-1 bg-black/20 rounded-xl border border-white/5 overflow-hidden">
-        <React.Suspense fallback={<div className="p-8 text-center">Loading news...</div>}>
+      <div className="flex-1 bg-white/[0.01] rounded-none border border-white/5 overflow-hidden backdrop-blur-3xl shadow-2xl">
+        <React.Suspense fallback={<div className="p-20 text-center font-display font-black text-muted-foreground/10 uppercase tracking-[0.5em] italic animate-pulse">INITIALIZING_FEED...</div>}>
           <NewsFeed />
         </React.Suspense>
       </div>
@@ -143,35 +143,35 @@ export const StudioHQ: React.FC = () => {
   const tabs = [
     { 
       id: 'overview', 
-      label: 'Overview', 
+      label: 'OVERVIEW', 
       icon: <LayoutDashboard className="h-3.5 w-3.5" />,
       badge: badgeCounts.overview,
       description: 'Studio pulse and key metrics'
     },
     { 
       id: 'operations', 
-      label: 'Operations', 
+      label: 'OPERATIONS', 
       icon: <AlertTriangle className="h-3.5 w-3.5" />,
       badge: badgeCounts.operations,
       description: 'Alerts and actionable items'
     },
     { 
       id: 'strategy', 
-      label: 'Strategy', 
+      label: 'STRATEGY', 
       icon: <Target className="h-3.5 w-3.5" />,
       badge: badgeCounts.strategy,
       description: 'Long-term goals and milestones'
     },
     { 
       id: 'news', 
-      label: 'News', 
+      label: 'NEWS', 
       icon: <Newspaper className="h-3.5 w-3.5" />,
       badge: badgeCounts.news,
       description: 'Industry intelligence feed'
     },
     {
       id: 'marketing',
-      label: 'Marketing',
+      label: 'MARKETING',
       icon: <Megaphone className="h-3.5 w-3.5" />,
       badge: badgeCounts.marketing,
       description: 'Campaign management and buzz tracking'
@@ -182,33 +182,33 @@ export const StudioHQ: React.FC = () => {
     switch (activeSubTab) {
       case 'overview':
         return {
-          icon: <LayoutDashboard className="h-6 w-6 text-primary" />,
-          title: gameState.studio?.name || 'Studio HQ',
-          subtitle: 'Executive dashboard and studio pulse'
+          icon: <LayoutDashboard className="h-8 w-8 text-primary" />,
+          title: (gameState.studio?.name || 'STUDIO_HQ').toUpperCase(),
+          subtitle: 'EXECUTIVE DASHBOARD AND STUDIO PULSE'
         };
       case 'operations':
         return {
-          icon: <AlertTriangle className="h-6 w-6 text-amber-500" />,
-          title: 'Operations Center',
-          subtitle: 'Alerts, crises, and action items'
+          icon: <AlertTriangle className="h-8 w-8 text-amber-500" />,
+          title: 'OPERATIONS CENTER',
+          subtitle: 'ALERTS, CRISES, AND ACTION ITEMS'
         };
       case 'strategy':
         return {
-          icon: <Target className="h-6 w-6 text-secondary" />,
-          title: 'Strategic Planning',
-          subtitle: 'Goals, milestones, and recommendations'
+          icon: <Target className="h-8 w-8 text-secondary" />,
+          title: 'STRATEGIC PLANNING',
+          subtitle: 'GOALS, MILESTONES, AND RECOMMENDATIONS'
         };
       case 'news':
         return {
-          icon: <Newspaper className="h-6 w-6 text-primary" />,
-          title: 'Industry News',
-          subtitle: 'Global entertainment intelligence'
+          icon: <Newspaper className="h-8 w-8 text-primary" />,
+          title: 'INDUSTRY NEWS',
+          subtitle: 'GLOBAL ENTERTAINMENT INTELLIGENCE'
         };
       case 'marketing':
         return {
-          icon: <Megaphone className="h-6 w-6 text-primary" />,
-          title: 'Marketing War Room',
-          subtitle: 'Campaign management, buzz, and audience targeting'
+          icon: <Megaphone className="h-8 w-8 text-primary" />,
+          title: 'MARKETING WAR ROOM',
+          subtitle: 'CAMPAIGN MANAGEMENT, BUZZ, AND AUDIENCE TARGETING'
         };
       default:
         return { icon: null, title: '', subtitle: '' };
@@ -219,45 +219,46 @@ export const StudioHQ: React.FC = () => {
   
   return (
     <m.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="h-full flex flex-col"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="h-full flex flex-col animate-in fade-in slide-in-from-bottom-8 duration-1000"
     >
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-6 mb-6">
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shadow-[0_0_20px_hsl(var(--primary)/0.3)]">
+      {/* Executive Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 bg-white/[0.02] p-10 rounded-none border border-white/5 backdrop-blur-3xl shadow-2xl relative overflow-hidden mb-10">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[120px] -mr-32 -mt-32" />
+        <div className="flex items-center gap-8 relative z-10">
+          <div className="w-16 h-16 rounded-none bg-primary/5 border border-primary/20 flex items-center justify-center shadow-2xl">
             {header.icon}
           </div>
           <div>
-            <h2 className="text-3xl font-display font-black tracking-tighter uppercase">
+            <h2 className="text-5xl font-display font-black tracking-tighter uppercase italic leading-none mb-3 drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]">
               {header.title}
             </h2>
-            <p className="text-[11px] font-black uppercase text-muted-foreground/60 tracking-[0.2em] mt-1">
+            <p className="text-[10px] font-black uppercase text-muted-foreground/30 tracking-[0.4em] italic">
               {header.subtitle}
             </p>
           </div>
         </div>
         
-        <div className="flex flex-wrap gap-3">
-          <div className="px-4 py-2 bg-card/60 backdrop-blur-xl rounded-lg border border-white/10">
-            <span className="text-[9px] uppercase font-black text-muted-foreground/80 tracking-wider">Cash</span>
+        <div className="flex flex-wrap gap-4 relative z-10">
+          <div className="px-6 py-4 bg-black/40 backdrop-blur-3xl rounded-none border border-white/10 shadow-2xl group hover:border-primary/20 transition-all duration-700">
+            <span className="text-[9px] uppercase font-black text-muted-foreground/20 tracking-[0.2em] italic mb-1 block">LIQUID_CAPITAL</span>
             <p className={cn(
-              "text-sm font-display font-black font-mono",
-              gameState.finance?.cash && gameState.finance.cash < 0 ? "text-destructive" : "text-emerald-400"
+              "text-lg font-display font-black italic tracking-tight leading-none",
+              gameState.finance?.cash && gameState.finance.cash < 0 ? "text-red-500" : "text-primary"
             )}>
               {formatMoney(gameState.finance?.cash || 0)}
             </p>
           </div>
-          <div className="px-4 py-2 bg-card/60 backdrop-blur-xl rounded-lg border border-white/10">
-            <span className="text-[9px] uppercase font-black text-muted-foreground/80 tracking-wider">Prestige</span>
-            <p className="text-sm font-display font-black text-secondary">
+          <div className="px-6 py-4 bg-black/40 backdrop-blur-3xl rounded-none border border-white/10 shadow-2xl group hover:border-secondary/20 transition-all duration-700">
+            <span className="text-[9px] uppercase font-black text-muted-foreground/20 tracking-[0.2em] italic mb-1 block">STUDIO_PRESTIGE</span>
+            <p className="text-lg font-display font-black text-secondary italic tracking-tight leading-none">
               {gameState.studio?.prestige || 0}
             </p>
           </div>
-          <div className="px-4 py-2 bg-card/60 backdrop-blur-xl rounded-lg border border-white/10">
-            <span className="text-[9px] uppercase font-black text-muted-foreground/80 tracking-wider">Projects</span>
-            <p className="text-sm font-display font-black">
+          <div className="px-6 py-4 bg-black/40 backdrop-blur-3xl rounded-none border border-white/10 shadow-2xl group hover:border-white/20 transition-all duration-700">
+            <span className="text-[9px] uppercase font-black text-muted-foreground/20 tracking-[0.2em] italic mb-1 block">ACTIVE_SLATES</span>
+            <p className="text-lg font-display font-black text-foreground italic tracking-tight leading-none">
               {projects.filter(p => p.state !== 'released' && p.state !== 'archived').length}
             </p>
           </div>
@@ -265,7 +266,7 @@ export const StudioHQ: React.FC = () => {
       </div>
       
       {/* Sub Navigation */}
-      <div className="mb-6">
+      <div className="mb-10">
         <SubNav 
           tabs={tabs}
           activeTab={activeSubTab}
@@ -274,9 +275,9 @@ export const StudioHQ: React.FC = () => {
         />
       </div>
       
-      {/* Content */}
+      {/* Content Area */}
       <div className="flex-1 min-h-0 overflow-hidden">
-        <React.Suspense fallback={<div className="flex items-center justify-center h-64">Loading...</div>}>
+        <React.Suspense fallback={<div className="flex items-center justify-center h-64 font-display font-black text-muted-foreground/10 uppercase tracking-[0.5em] italic animate-pulse">INITIALIZING_MODULE...</div>}>
           {activeSubTab === 'overview' && <ExecutiveDashboard />}
           {activeSubTab === 'operations' && <CrisisTriageDashboard />}
           {activeSubTab === 'strategy' && <StrategyPanel />}

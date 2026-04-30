@@ -5,10 +5,11 @@ import { generateSpinoffProposal } from '@/engine/systems/ip/spinoffFactory';
 import { calculateFranchiseFatigue } from '@/engine/systems/ip/fatigueEngine';
 import { RandomGenerator } from '@/engine/utils/rng';
 import { Project, GameState, StateImpact } from '@/engine/types';
+import { type ProjectId, type AssetId, type StudioId, type ContractId } from '@/engine/types/shared.types';
 
 export interface ProjectIPSlice {
-  exploitFranchise: (projectId: string) => void;
-  acquireAndRebootIP: (ipAssetId: string) => void;
+  exploitFranchise: (projectId: ProjectId) => void;
+  acquireAndRebootIP: (ipAssetId: AssetId) => void;
 }
 
 export const createProjectIPSlice: StateCreator<GameStore, [], [], ProjectIPSlice> = (set, get) => ({
@@ -87,7 +88,7 @@ export const createProjectIPSlice: StateCreator<GameStore, [], [], ProjectIPSlic
         {
           type: 'NEWS_ADDED' as const,
           payload: {
-            id: rng.uuid('NWS'),
+            id: rng.uuid('NWS') as any, // Cast until rng.uuid is hardened
             headline: `STUDIO ACQUIRES "${asset.title}" RIGHTS`,
             description: `Major industry shift as rights for the classic property return to production slate.`
           }
@@ -109,7 +110,7 @@ export const createProjectIPSlice: StateCreator<GameStore, [], [], ProjectIPSlic
           entities: {
             ...intermediateState.entities,
             projects: { ...intermediateState.entities.projects, [project.id]: project },
-            contracts
+            contracts: { ...intermediateState.entities.contracts, ...newContracts.reduce((acc, c) => ({ ...acc, [c.id]: c }), {}) }
           },
           rngState: rng.getState()
         }

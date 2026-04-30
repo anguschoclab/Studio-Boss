@@ -9,8 +9,9 @@ function getAgencyArchetype(agency: Agency) {
   return AGENCY_ARCHETYPES[key] || AGENCY_ARCHETYPES.boutique;
 }
 
-export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpact[] {
+export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpact {
   const impacts: StateImpact[] = [];
+  const uiNotifications: string[] = [];
 
   state.industry.agencies.forEach(agency => {
     const archetype = getAgencyArchetype(agency);
@@ -29,8 +30,9 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
         let rival = rivalsObj[rivalKey];
 
         if (agency.currentMotivation === 'VOLUME_RETAIL') {
-           const vulnerableRivals = rivalKeys.filter(k => rivalsObj[k].prestige < 50);
-           if (vulnerableRivals.length > 0 && rng.next() < 0.7) {
+           // 🎭 The Method Actor Tuning: Agencies are ruthless. They heavily target vulnerable studios (prestige < 40) for poaching, smelling blood in the water.
+           const vulnerableRivals = rivalKeys.filter(k => rivalsObj[k].prestige < 40);
+           if (vulnerableRivals.length > 0 && rng.next() < 0.9) {
              rivalKey = pick(vulnerableRivals, rng);
              rival = rivalsObj[rivalKey];
            }
@@ -44,10 +46,18 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
               description: `Industry whispers suggest ${agency.name} is making aggressive overtures to talent currently under contract at ${rival.name}.`,
             }
           });
+
+          // Add to narrative events for weekly summary
+          uiNotifications.push(`AGENCY: ${agency.name} is poaching talent from ${rival.name}`);
         }
       }
     }
   });
+
+  // Add uiNotifications to the first impact
+  if (uiNotifications.length > 0 && impacts.length > 0) {
+    impacts[0].uiNotifications = uiNotifications;
+  }
 
   return impacts;
 }

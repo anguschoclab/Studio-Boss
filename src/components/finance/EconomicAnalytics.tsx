@@ -13,7 +13,7 @@ interface EconomicAnalyticsProps {
 export const EconomicAnalytics = ({ financeHistory, latestFinanceSnapshot, prestige }: EconomicAnalyticsProps) => {
   return (
     <div className="grid grid-cols-3 gap-6 h-[250px]">
-      <Card className="col-span-1 border-border/40 bg-card/40 backdrop-blur-md shadow-sm">
+      <Card className="col-span-1 glass-card">
         <CardHeader className="pb-2 border-b border-border/20">
           <CardTitle className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
             Revenue Mix (Last 12w)
@@ -24,7 +24,7 @@ export const EconomicAnalytics = ({ financeHistory, latestFinanceSnapshot, prest
         </CardContent>
       </Card>
 
-      <Card className="col-span-1 border-border/40 bg-card/40 backdrop-blur-md shadow-sm">
+      <Card className="col-span-1 glass-card">
         <CardHeader className="pb-2 border-b border-border/20">
           <CardTitle className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
             Weekly P&L Breakdown
@@ -35,7 +35,7 @@ export const EconomicAnalytics = ({ financeHistory, latestFinanceSnapshot, prest
         </CardContent>
       </Card>
 
-      <Card className="col-span-1 border-border/40 bg-card/40 backdrop-blur-md shadow-sm">
+      <Card className="col-span-1 glass-card">
         <CardHeader className="pb-2 border-b border-border/20">
           <CardTitle className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
             Studio Efficiency

@@ -45,8 +45,16 @@ export const PieChart: React.FC<PieChartProps> = ({
   }
 
   const defaultColors = [
-    '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', 
-    '#ec4899', '#06b6d4', '#84cc16', '#f97316', '#6366f1'
+    'hsl(var(--primary))',   // Theatrical
+    'hsl(var(--secondary))', // Streaming
+    '#a78bfa',               // Merchandise (fixed per Design Bible 5.2)
+    '#34d399',               // Passive (fixed per Design Bible 5.2)
+    'hsl(var(--destructive))',
+    'hsl(var(--success))',
+    'hsl(var(--warning))',
+    'hsl(var(--accent))',
+    'hsl(var(--muted))',
+    'hsl(var(--foreground))'
   ];
 
   const total = data.reduce((sum, item) => sum + item.value, 0);

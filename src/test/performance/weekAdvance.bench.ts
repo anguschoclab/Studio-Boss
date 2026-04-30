@@ -73,7 +73,6 @@ function createMockState(projectCount: number, contractsPerProject: number): Gam
 const PROJECT_COUNT = 100;
 const CONTRACTS_PER_PROJECT = 50;
 const state = createMockState(PROJECT_COUNT, CONTRACTS_PER_PROJECT);
-const rng = new RandomGenerator(42);
 
 describe('advanceWeek Performance', () => {
   bench(`advanceWeek with ${PROJECT_COUNT} projects and ${PROJECT_COUNT * CONTRACTS_PER_PROJECT} total contracts`, () => {

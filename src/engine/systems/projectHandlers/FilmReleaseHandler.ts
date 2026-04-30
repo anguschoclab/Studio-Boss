@@ -23,7 +23,7 @@ export function handleFilmReleaseEntry(
     if (t) attachedTalent.push(t);
   }
   
-  const result = calculateOpeningWeekend(p, attachedTalent, studioPrestige, rng, franchiseSynergy, franchiseFatigue);
+  const result = calculateOpeningWeekend(p, attachedTalent, studioPrestige, franchiseSynergy, franchiseFatigue, currentWeek);
   const projectUpdate: Partial<Project> = {
     ...result.project,
     state: 'released',
@@ -48,7 +48,7 @@ export function handleFilmReleasedPhase(
   projectContracts: Contract[],
   talentPool: Record<string, Talent>,
   rivalStrengthAvg: number,
-  projectAwards: any[],
+  projectAwards: import('@/engine/types').Award[],
   rng: RandomGenerator,
   trendMultiplier: number = 1.0,
   franchiseSynergy: number = 1.0,
@@ -56,7 +56,7 @@ export function handleFilmReleasedPhase(
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
   const currentRevenue = p.revenue + p.weeklyRevenue;
-  const newWeeklyRevenue = simulateWeeklyBoxOffice(p, p.weeksInPhase, p.reviewScore || 50, p.weeklyRevenue, rivalStrengthAvg, trendMultiplier, franchiseSynergy, franchiseFatigue);
+  const newWeeklyRevenue = simulateWeeklyBoxOffice(p, p.weeksInPhase, p.reviewScore || 50, p.weeklyRevenue, rivalStrengthAvg, trendMultiplier, franchiseSynergy);
   
   if (newWeeklyRevenue < 100_000 || p.weeksInPhase > 12) {
     const attachedTalent: Talent[] = [];

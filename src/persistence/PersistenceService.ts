@@ -8,8 +8,8 @@
 
 class PersistenceService {
   private worker: Worker | null = null;
-  private pendingResolves: Map<string, { resolve: (data: any) => void; slotId: string | number }> = new Map();
-  private lastRequestId = 0;
+  private pendingPromises: Map<number, { resolve: (data: any) => void; reject: (err: Error) => void }> = new Map();
+  private requestCounter = 0;
 
   constructor() {
     this.initWorker();
@@ -17,53 +17,44 @@ class PersistenceService {
 
   private initWorker() {
     if (typeof window !== 'undefined' && 'Worker' in window) {
+      // Vite handles ?worker imports
       this.worker = new Worker(new URL('./saveWorker.ts', import.meta.url), {
         type: 'module',
       });
 
       this.worker.onmessage = (e: MessageEvent) => {
-        const { type, slotId, requestId, state, message } = e.data;
+        const { type, requestId, state, message } = e.data;
+
+        const pending = this.pendingPromises.get(requestId);
+        if (!pending) return;
+        this.pendingPromises.delete(requestId);
 
         if (type === 'SAVE_SUCCESS') {
-          this.resolvePromise(requestId, true);
+          pending.resolve(true);
         } else if (type === 'LOAD_SUCCESS') {
-          this.resolvePromise(requestId, state);
+          pending.resolve(state);
         } else if (type === 'ERROR') {
-          console.error(`[PersistenceService] Worker error: ${message} (req: ${requestId})`);
-          this.resolvePromise(requestId, null);
+          console.error(`[PersistenceService] Worker error (requestId: ${requestId}): ${message}`);
+          pending.reject(new Error(message));
         }
       };
     }
   }
 
-  private resolvePromise(requestId: string, result: any) {
-    const entry = this.pendingResolves.get(requestId);
-    if (entry) {
-      entry.resolve(result);
-      this.pendingResolves.delete(requestId);
-    }
-  }
-
-  private generateRequestId(): string {
-    return `req_${++this.lastRequestId}_${Date.now()}`;
-  }
-
   /**
-   * Save the current game state.
-   * Note: The store should ideally debounce/throttle this.
+   * Save the current game state to a named slot (.sb file).
    */
   async save(slotId: string | number, state: any): Promise<boolean> {
     if (!this.worker) return false;
 
-    const requestId = this.generateRequestId();
-
-    return new Promise((resolve) => {
-      this.pendingResolves.set(requestId, { resolve, slotId });
+    const requestId = ++this.requestCounter;
+    return new Promise((resolve, reject) => {
+      this.pendingPromises.set(requestId, { resolve, reject });
       this.worker?.postMessage({
         type: 'SAVE_GAME',
         slotId,
+        state,
         requestId,
-        state
       });
     });
   }
@@ -74,36 +65,21 @@ class PersistenceService {
   async load(slotId: string | number): Promise<any | null> {
     if (!this.worker) return null;
 
-    const requestId = this.generateRequestId();
-
-    return new Promise((resolve) => {
-      this.pendingResolves.set(requestId, { resolve, slotId });
+    const requestId = ++this.requestCounter;
+    return new Promise((resolve, reject) => {
+      this.pendingPromises.set(requestId, { resolve, reject });
       this.worker?.postMessage({
         type: 'LOAD_GAME',
         slotId,
-        requestId
+        requestId,
       });
     });
   }
 
   /**
-   * Checks if a save slot exists.
-   * Note: In Electron, this is handled via IPC in saveLoad.ts
-   * This method is only used for web version (OPFS)
+   * Checks if a save slot exists (TBD: OPFS list files)
    */
   async exists(slotId: string | number): Promise<boolean> {
-    // Check if running in Electron - use IPC instead
-    if (typeof window !== 'undefined' && 'electronAPI' in window && window.electronAPI) {
-      try {
-        const saves = await window.electronAPI.listSaves();
-        return saves.includes(Number(slotId));
-      } catch (e) {
-        console.error('Failed to check save existence via IPC:', e);
-        return false;
-      }
-    }
-    
-    // Fallback to OPFS for web version
     try {
       const root = await navigator.storage.getDirectory();
       await root.getFileHandle(`slot_${slotId}.sb`);

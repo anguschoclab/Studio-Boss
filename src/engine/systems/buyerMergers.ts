@@ -1,16 +1,38 @@
-import { pick } from '../utils';
 import { Buyer, StreamerPlatform, GameState } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
-import { RandomGenerator } from '../utils/rng';
-import { updateBuyers } from './buyers';
-import { mergeImpacts } from '../utils/impactUtils';
-import { BardResolver } from './bardResolver';
+import { pick, rand, generateId, randRange } from '../utils';
+
+const MERGER_HEADLINES = [
+  (a: string, b: string) => `BREAKING: ${a} acquires ${b} in landmark media deal!`,
+  (a: string, b: string) => `Industry shocked as ${a} announces hostile takeover of ${b}.`,
+  (a: string, b: string) => `${a} and ${b} announce merger — regulators concerned.`,
+  (a: string, b: string) => `${a} absorbs ${b} in a bid for streaming dominance.`,
+  (a: string, b: string) => `Consolidation continues: ${a} swallows ${b} whole.`,
+];
+
+const VULNERABILITY_HEADLINES = [
+  (name: string) => `${name} reportedly exploring strategic options amid subscriber losses.`,
+  (name: string) => `Analysts downgrade ${name} — acquisition target rumors swirl.`,
+  (name: string) => `${name} cash reserves dwindling — sale imminent?`,
+];
+
+const STREAMER_GROWTH_EVENTS = [
+  (name: string) => `${name} reports record subscriber growth this quarter.`,
+  (name: string) => `${name} announces ambitious content spending increase.`,
+  (name: string) => `${name} poaches top executive from rival platform.`,
+];
+
+const STREAMER_DECLINE_EVENTS = [
+  (name: string) => `${name} faces backlash over sudden price hike.`,
+  (name: string) => `${name} loses exclusive rights to major franchise.`,
+  (name: string) => `Subscriber exodus hits ${name} after controversial content purge.`,
+];
 
 /**
  * Simulate weekly buyer/platform dynamics — financial health and M&A activity.
  * Subscriber fluctuations are handled by platformEngine.ts.
  */
-export function advanceBuyers(state: GameState, rng: RandomGenerator): StateImpact {
+export function advanceBuyers(state: GameState): StateImpact {
   const impact: StateImpact = {
     buyerUpdates: [],
     newHeadlines: [],
@@ -26,8 +48,6 @@ export function advanceBuyers(state: GameState, rng: RandomGenerator): StateImpa
     const currentCash = buyer.cash ?? 50_000_000;
     const currentStrength = buyer.strength ?? 60;
 
-    let performance = 0;
-
     if (buyer.archetype === 'streamer') {
       const streamer = buyer as StreamerPlatform;
       // Financials based on existing subscribers (updated in platformEngine)
@@ -37,27 +57,21 @@ export function advanceBuyers(state: GameState, rng: RandomGenerator): StateImpa
 
       update.cash = newCash;
       // Strength drifts based on financial performance
-      performance = (revenue - costs) / 1_000_000;
+      const performance = (revenue - costs) / 1_000_000;
       update.strength = Math.max(10, Math.min(100, currentStrength + performance));
 
-      if (rng.next() < 0.02) {
+      if (rand() < 0.02) {
         impact.newHeadlines!.push({
-          id: rng.uuid('NWS'),
+          id: generateId('HL'),
           week: currWeek,
           category: 'market',
-          text: BardResolver.resolve({
-            domain: 'Market',
-            subDomain: 'StreamerEvent',
-            intensity: performance > 0 ? 80 : 20,
-            context: { actor: buyer.name },
-            rng
-          })
+          text: pick(performance > 0 ? STREAMER_GROWTH_EVENTS : STREAMER_DECLINE_EVENTS)(buyer.name),
         });
       }
     } else {
-      const cashDelta = Math.floor(rng.range(-2_000_000, 5_000_000));
+      const cashDelta = randRange(-2_000_000, 5_000_000);
       update.cash = currentCash + cashDelta;
-      update.strength = Math.max(10, Math.min(100, currentStrength + Math.floor(rng.range(-2, 2))));
+      update.strength = Math.max(10, Math.min(100, currentStrength + randRange(-2, 2)));
     }
 
     // Vulnerability Check
@@ -68,16 +82,10 @@ export function advanceBuyers(state: GameState, rng: RandomGenerator): StateImpa
       if (!buyer.isAcquirable) {
         update.isAcquirable = true;
         impact.newHeadlines!.push({
-          id: rng.uuid('NWS'),
+          id: generateId('HL'),
           week: currWeek,
           category: 'market',
-          text: BardResolver.resolve({
-            domain: 'Industry',
-            subDomain: 'Vulnerability',
-            intensity: 10,
-            context: { actor: buyer.name },
-            rng
-          })
+          text: pick(VULNERABILITY_HEADLINES)(buyer.name),
         });
       }
     } else {
@@ -88,13 +96,13 @@ export function advanceBuyers(state: GameState, rng: RandomGenerator): StateImpa
   }
 
   // M&A Execution
-  if (rng.next() < 0.08) {
+  if (rand() < 0.08) { 
     const vulnerable = activeBuyers.filter(b => b.isAcquirable);
     const strong = activeBuyers.filter(b => !b.isAcquirable && (b.strength ?? 60) > 70);
 
     if (vulnerable.length > 0 && strong.length > 0) {
-      const acquirer = pick(strong, rng);
-      const target = pick(vulnerable, rng);
+      const acquirer = pick(strong);
+      const target = pick(vulnerable);
 
       if (acquirer.id !== target.id) {
         const maHistory = [...(target.maHistory || [])];
@@ -122,22 +130,14 @@ export function advanceBuyers(state: GameState, rng: RandomGenerator): StateImpa
         });
 
         impact.newHeadlines!.push({
-          id: rng.uuid('NWS'),
+          id: generateId('HL'),
           week: currWeek,
           category: 'market',
-          text: BardResolver.resolve({
-            domain: 'Industry',
-            subDomain: 'Merger',
-            intensity: 90,
-            context: { actor: acquirer.name, target: target.name },
-            rng
-          })
+          text: pick(MERGER_HEADLINES)(acquirer.name, target.name),
         });
       }
     }
   }
 
-  const mandateImpact = updateBuyers(activeBuyers, currWeek, rng);
-  
-  return mergeImpacts(impact, mandateImpact);
+  return impact;
 }

@@ -20,7 +20,7 @@ export const ProjectCampaignsTab: React.FC<ProjectCampaignsTabProps> = ({
 }) => (
   <TabsContent value="campaigns" className="mt-0 space-y-6">
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div className="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl space-y-6">
+      <div className="bg-black/40 border border-white/5 p-6 rounded-none space-y-6">
         <div className="flex items-center gap-3">
           <Trophy className="w-5 h-5 text-amber-500" />
           <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Awards & Festivals Pipeline</span>
@@ -28,10 +28,10 @@ export const ProjectCampaignsTab: React.FC<ProjectCampaignsTabProps> = ({
 
         <div className="space-y-4">
           <Select onValueChange={(v) => onSubmitToFestival(v as AwardBody)}>
-            <SelectTrigger className="h-12 bg-slate-950 border-slate-800 text-xs font-black uppercase tracking-widest">
+            <SelectTrigger className="h-12 bg-black border-white/5 text-xs font-black uppercase tracking-widest">
               <SelectValue placeholder="Festival Submission..." />
             </SelectTrigger>
-            <SelectContent className="bg-slate-950 border-slate-800 text-slate-200">
+            <SelectContent className="bg-black border-white/5 text-slate-200">
               {FESTIVALS.map(f => (
                 <SelectItem key={f.body} value={f.body} className="font-bold flex items-center">
                   {f.name} <span className="ml-2 text-emerald-400">({formatMoney(f.cost)})</span>
@@ -42,7 +42,7 @@ export const ProjectCampaignsTab: React.FC<ProjectCampaignsTabProps> = ({
 
           <p className="text-[9px] font-black uppercase text-slate-500 tracking-widest">Active FYC Campaign</p>
           {activeCampaign ? (
-            <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
+            <div className="p-4 rounded-none bg-amber-500/10 border border-amber-500/30">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-xs font-black text-amber-500 uppercase italic">Active Outreach</span>
                 <Badge className="bg-amber-500 text-black font-black">+{activeCampaign.buzzBonus} BUZZ</Badge>
@@ -61,7 +61,7 @@ export const ProjectCampaignsTab: React.FC<ProjectCampaignsTabProps> = ({
                 <Button
                   key={tier.k}
                   variant="outline"
-                  className="h-14 flex flex-col items-center justify-center border-slate-800 hover:border-amber-500/50 bg-black/40 group"
+                  className="h-14 flex flex-col items-center justify-center border-white/5 hover:border-amber-500/50 bg-black/40 group"
                   onClick={() => onLaunchAwardsCampaign(tier.k as 'Grassroots' | 'Trade' | 'Blitz')}
                   disabled={cash < tier.c}
                 >
@@ -74,25 +74,25 @@ export const ProjectCampaignsTab: React.FC<ProjectCampaignsTabProps> = ({
         </div>
       </div>
 
-      <div className="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl space-y-6 flex flex-col justify-between">
+      <div className="bg-black/40 border border-white/5 p-6 rounded-none space-y-6 flex flex-col justify-between">
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <div className="flex items-center gap-3">
             <Package className="w-5 h-5 text-violet-400" />
             <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">IP Vault & Catalog Properties</span>
           </div>
           <div className="space-y-4">
-            <div className="flex justify-between items-center p-3 rounded-xl bg-black/40 border border-white/5">
+            <div className="flex justify-between items-center p-3 rounded-none bg-black/40 border border-white/5">
               <span className="text-xs font-bold text-slate-400">Governance</span>
               <Badge variant="outline" className="text-[10px] font-black uppercase border-slate-700 bg-slate-800">Internal Development</Badge>
             </div>
-            <div className="flex justify-between items-center p-3 rounded-xl bg-black/40 border border-white/5">
+            <div className="flex justify-between items-center p-3 rounded-none bg-black/40 border border-white/5">
               <span className="text-xs font-bold text-slate-400">Franchise Asset ID</span>
               <span className="text-xs font-mono text-slate-500 uppercase">{project.franchiseId || 'New/Standalone'}</span>
             </div>
           </div>
         </div>
 
-        <div className="pt-4 border-t border-slate-800/50 flex justify-between items-end">
+        <div className="pt-4 border-t border-white/5/50 flex justify-between items-end">
           <div className="space-y-1">
             <span className="text-[9px] font-black uppercase text-slate-500 tracking-widest">Library Residual Valuation</span>
             <div className="text-2xl font-black text-emerald-400 font-mono tracking-tighter tabular-nums">{formatMoney(project.budget * 0.15)}</div>

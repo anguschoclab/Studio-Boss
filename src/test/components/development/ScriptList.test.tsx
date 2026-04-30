@@ -82,6 +82,6 @@ describe('ScriptList', () => {
     const { container } = render(<ScriptList scripts={scripts as any} />);
     
     // Progress bar should exist
-    expect(container.querySelector('.h-full.rounded-full')).toBeInTheDocument();
+    expect(container.querySelector('.h-full')).toBeInTheDocument();
   });
 });

@@ -9,7 +9,7 @@ import { determineSyndicationTier } from './syndicationEngine';
  * Orchestrates synergy evaluation and cultural decay for the entire studio vault.
  * Uses archetype properties to adjust IP behavior if archetype is provided.
  */
-export function tickIPVault(state: GameState, archetype?: any): StateImpact[] {
+export function tickIPVault(state: GameState, archetype?: import('../../data/aiArchetypes').StudioArchetype): StateImpact[] {
   const impacts: StateImpact[] = [];
   const activeProjects = Object.values(state.entities.projects);
 
@@ -44,7 +44,7 @@ export function tickIPVault(state: GameState, archetype?: any): StateImpact[] {
     }
 
     if (Object.keys(genreFocusBonus).length > 0) {
-      const sourceProject = state.studio.internal.projectHistory.find(p => p.id === updatedAsset.originalProjectId);
+      const sourceProject = Object.values(state.entities.projects).find(p => p.id === updatedAsset.originalProjectId);
       if (sourceProject && sourceProject.genre) {
         const genreBonus = genreFocusBonus[sourceProject.genre.toLowerCase()] || 0;
         if (genreBonus > 0) {
@@ -64,7 +64,7 @@ export function tickIPVault(state: GameState, archetype?: any): StateImpact[] {
     }
 
     if (updatedAsset.totalEpisodes > 0) {
-      const sourceProject = state.studio.internal.projectHistory.find(p => p.id === updatedAsset.originalProjectId);
+      const sourceProject = Object.values(state.entities.projects).find(p => p.id === updatedAsset.originalProjectId);
       const genre = sourceProject?.genre || 'DRAMA';
       
       const newTier = determineSyndicationTier(updatedAsset.totalEpisodes, genre);
@@ -88,13 +88,8 @@ export function tickIPVault(state: GameState, archetype?: any): StateImpact[] {
   });
 
   const genreSaturation: Record<string, number> = {};
-  [
-    ...Object.values(state.entities.projects),
-    ...Object.values(state.entities.rivals).flatMap(r => {
-      const rivalProjects = ('projects' in r && r.projects) ? (r as any).projects : {};
-      return Object.values(rivalProjects);
-    })
-  ].forEach((p: any) => {
+  const projects = Object.values(state.entities.projects);
+  projects.forEach((p) => {
     if (p.genre) {
       const g = p.genre.toUpperCase();
       genreSaturation[g] = (genreSaturation[g] || 0) + 1;
@@ -102,9 +97,9 @@ export function tickIPVault(state: GameState, archetype?: any): StateImpact[] {
   });
 
   Object.values(state.ip.franchises).forEach(franchise => {
-    const firstAssetId = franchise.assetIds[0];
+    const firstAssetId = (franchise.assetIds || [])[0];
     const firstAsset = state.ip.vault.find(a => a.id === firstAssetId);
-    const sourceProject = firstAsset?.originalProjectId ? (state.entities.projects[firstAsset.originalProjectId] || state.studio.internal.projectHistory.find(p => p.id === firstAsset.originalProjectId)) : undefined;
+    const sourceProject = firstAsset?.originalProjectId ? state.entities.projects[firstAsset.originalProjectId] : undefined;
     
     const genre = sourceProject?.genre || 'Action';
     const saturation = genreSaturation[genre.toUpperCase()] || 0;

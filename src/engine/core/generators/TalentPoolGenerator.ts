@@ -1,4 +1,5 @@
 import { Talent } from '@/engine/types';
+import { type TalentId, type AgencyId, type AgentId, type FamilyId } from '@/engine/types/shared.types';
 import { generateFamilies, generateTalentPool } from '../../generators/talent';
 import { generateAgencies, generateAgents } from '../../generators/agencies';
 import { RandomGenerator } from '../../utils/rng';
@@ -15,12 +16,12 @@ export function generateTalentPoolWithRelationships(
   rng: RandomGenerator,
   options: TalentPoolGeneratorOptions = {}
 ): {
-  talentPool: Record<string, Talent>;
+  talentPool: Record<TalentId, Talent>;
   talentPoolArray: Talent[];
-  agencies: any[];
-  agents: any[];
-  families: any[];
-  talentAgentRelationships: Record<string, any>;
+  agencies: import('../../types/talent.types').Agency[];
+  agents: import('../../types/talent.types').Agent[];
+  families: import('../../types/talent.types').Family[];
+  talentAgentRelationships: Record<string, import('./talentAgentInteractions').TalentAgentRelationship>;
 } {
   const {
     talentCount = 500,
@@ -39,19 +40,19 @@ export function generateTalentPoolWithRelationships(
 
   const talentPoolArray = generateTalentPool(rng, talentCount);
   const talentPool = talentPoolArray.reduce((acc, t) => {
-    acc[t.id] = t;
+    acc[t.id as TalentId] = t;
     return acc;
-  }, {} as Record<string, Talent>);
+  }, {} as Record<TalentId, Talent>);
 
   // Initialize talent-agent relationships
-  const talentAgentRelationships: Record<string, any> = {};
+  const talentAgentRelationships: Record<string, import('./talentAgentInteractions').TalentAgentRelationship> = {};
 
   for (const [talentId, talent] of Object.entries(talentPool)) {
     if (talent.agentId) {
       const agent = agentsMap.get(talent.agentId);
       if (agent && talent.personality) {
         const agentPersonality = agent.personality || derivePersonalityFromAgent(agent);
-        const agency = agenciesMap.get(agent.agencyId);
+        const agency = agenciesMap.get(agent.agencyId || '');
         
         const relationship = TalentAgentInteractionEngine.createRelationship(
           talentId,
@@ -75,8 +76,8 @@ export function generateTalentPoolWithRelationships(
   };
 }
 
-function derivePersonalityFromAgent(agent: any): any {
-  const tacticMap: Record<string, any> = {
+function derivePersonalityFromAgent(agent: import('../../types/talent.types').Agent): import('./talentAgentInteractions').AgentPersonality {
+  const tacticMap: Record<string, import('./talentAgentInteractions').AgentPersonality> = {
     'SHARK': 'shark',
     'DIPLOMAT': 'diplomat',
     'VOLUME': 'volume',

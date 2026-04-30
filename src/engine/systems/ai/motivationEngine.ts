@@ -6,26 +6,36 @@ import { RandomGenerator } from '../../utils/rng';
  * Each function returns a weight (0-100) based on the current context.
  */
 const MotivationScores: Record<StudioMotivation, (rival: RivalStudio, state: GameState) => number> = {
-  // 🎭 Method Actor Tuning: Adjusted motivation scores to create more emergent and realistic studio behavior.
-  CASH_CRUNCH: (rival) => (rival.cash < 1000000 ? 100 : 0),
-  AWARD_CHASE: (rival) => (rival.prestige < 60 && rival.cash > 5000000 ? 95 : (rival.prestige > 80 ? 85 : 30)) + (rival.motivationProfile.prestige > 70 ? 20 : 0),
+  // 🎭 The Method Actor Tuning: Studio motivations emerge dynamically from their material conditions.
+  // Desperate studios with low cash heavily index towards CASH_CRUNCH.
+  CASH_CRUNCH: (rival) => {
+    if (rival.cash < 5000000) return 100;
+    if (rival.cash < 10000000) return 60;
+    return 0;
+  },
+  // 🎭 The Method Actor Tuning: Wealthy or highly prestigious studios chase awards, but so do aggressive upstarts looking for credibility.
+  AWARD_CHASE: (rival) => {
+    let score = rival.prestige > 75 ? 85 : 30;
+    if (rival.prestige < 40 && rival.motivationProfile.aggression > 60) score += 40; // Desperate for credibility
+    if (rival.cash > 15000000 && rival.prestige > 70) score += 40; // Rich studios pivot to awards
+    return score;
+  },
+  // 🎭 The Method Actor Tuning: Cash-rich studios aggressively focus on building franchises to secure long-term revenue.
   FRANCHISE_BUILDING: (rival) => {
-    let score = rival.cash > 4000000 && rival.projectCount < 2 ? 120 : (rival.projectCount > 4 ? 80 : 40);
-    // 🎭 The Method Actor Tuning: Prioritize franchise potential by adding 20 to the score when the rival studio cash reserves are low.
-    if (rival.cash < 5000000) {
-      score += 20;
-    }
+    let score = Object.keys(rival.projects).length > 3 ? 60 : 20;
+    if (rival.cash > 10000000) score += 40; // Got cash, want IP
+    if (rival.cash > 20000000) score += 30; // Extreme cash makes them hoard IP
     return score;
   },
+  // 🎭 The Method Actor Tuning: Highly aggressive studios naturally lean towards market disruption, especially if they have cash to burn.
   MARKET_DISRUPTION: (rival) => {
-    let score = (rival.motivationProfile.aggression > 75 && rival.cash > 2000000 ? 85 : 15) + (rival.motivationProfile.aggression > 80 && rival.cash > 10000000 ? 40 : 0);
-    // 🎭 The Method Actor Tuning: Substantial score boost for mega-studios to simulate aggressive market leaders starving out smaller competitors.
-    if (rival.cash > 50000000 && rival.prestige > 70) {
-      score += 40;
-    }
+    let score = rival.motivationProfile.aggression > 70 ? 75 : 10;
+    if (rival.cash > 15000000) score += 20; // Enough cash to cause trouble
+    if (rival.prestige > 75 && rival.motivationProfile.aggression > 70) score += 40; // Prestige bullies
     return score;
   },
-  STABILITY: (rival) => (rival.cash >= 1000000 && rival.cash <= 3000000 ? 60 : 10),
+  // 🎭 The Method Actor Tuning: Stability is the fallback for wealthy, low-aggression studios.
+  STABILITY: (rival) => (rival.cash > 5000000 && rival.motivationProfile.aggression < 50 ? 80 : 20),
 };
 
 /**
@@ -48,7 +58,7 @@ export function calculateRivalMotivation(rival: RivalStudio, state: GameState, r
     // Add profile bias
     const baseScore = scorer(rival, state);
     const profileKey = profileMap[motivation as StudioMotivation];
-    const bias = (rival.motivationProfile as any)[profileKey] || 0;
+    const bias = Number(rival.motivationProfile[profileKey as keyof typeof rival.motivationProfile]) || 0;
     
     // Add small stochastic variance for strategy shifts
     const variance = rng.range(-5, 5);
@@ -67,12 +77,72 @@ export function calculateRivalMotivation(rival: RivalStudio, state: GameState, r
  * Weekly tick to update AI mindsets across the industry.
  */
 export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact[] {
-  const rivalsList = Object.values(state.entities.rivals || {});
-  return rivalsList.map(rival => ({
-    type: 'RIVAL_UPDATED',
-    payload: {
-      rivalId: rival.id,
-      update: { currentMotivation: calculateRivalMotivation(rival, state, rng) }
+  const impacts: StateImpact[] = [];
+
+  Object.values(state.entities.rivals || {}).forEach(rival => {
+    let newMotivation: StudioMotivation = calculateRivalMotivation(rival, state, rng);
+
+    // Fix 3: Prestige decay — rivals that haven't won an award in 2+ years drift toward AWARD_CHASE
+    const lastAwardWin = (rival as Record<string, unknown>).lastAwardWin as number | undefined;
+    const weeksSinceLastAward = lastAwardWin
+      ? (state.week - lastAwardWin)
+      : 999;
+
+    // 🎭 The Method Actor Tuning: Prestige studios panic and pivot to chasing awards much faster (1 year vs 2 years) if they are starved.
+    const awardStarvedThreshold = rival.prestige > 75 ? 52 : 104;
+
+    if (weeksSinceLastAward > awardStarvedThreshold && newMotivation !== 'AWARD_CHASE' && rng.next() < 0.15) {
+      // 15% chance per week to switch to AWARD_CHASE if award-starved
+      newMotivation = 'AWARD_CHASE';
     }
-  }));
+
+    impacts.push({
+      type: 'RIVAL_UPDATED',
+      payload: {
+        rivalId: rival.id,
+        update: { currentMotivation: newMotivation }
+      }
+    });
+
+    // CASH_CRUNCH rivals seek emergency financing when nearly broke
+    if (newMotivation === 'CASH_CRUNCH' && rival.cash < 2_000_000 && rng.next() < 0.12) {
+      const loanAmount = rng.range(5_000_000, 15_000_000);
+      impacts.push({
+        type: 'RIVAL_UPDATED',
+        payload: { rivalId: rival.id, update: { cash: rival.cash + loanAmount } }
+      });
+      impacts.push({
+        type: 'NEWS_ADDED',
+        payload: {
+          headline: `${rival.name} SECURES EMERGENCY FINANCING`,
+          description: `${rival.name} draws on a credit facility to stabilise operations amid cash pressure.`,
+        }
+      } as import('@/engine/types').StateImpact);
+    }
+
+    // Fix 2: FRANCHISE_BUILDING rivals track IP syndication potential
+    if (rival.currentMotivation === 'FRANCHISE_BUILDING') {
+      const releasedProjects = Object.values(state.entities.projects || {})
+        .filter(p => p.ownerId === rival.id && p.state === 'released');
+
+      const syndicationEligible = releasedProjects.filter(p => {
+        // TV projects with enough aired episodes qualify for syndication
+        return p.format === 'tv' && (p as import('@/engine/types').SeriesProject).tvDetails?.episodesAired !== undefined && (p as import('@/engine/types').SeriesProject).tvDetails!.episodesAired >= 65;
+      });
+
+      if (syndicationEligible.length > 0) {
+        // Generate passive income for rival from syndicated IP
+        const syndicationRevenue = syndicationEligible.length * 200000; // $200k per show per week
+        impacts.push({
+          type: 'RIVAL_UPDATED',
+          payload: {
+            rivalId: rival.id,
+            update: { cash: rival.cash + syndicationRevenue }
+          }
+        });
+      }
+    }
+  });
+
+  return impacts;
 }

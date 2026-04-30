@@ -2,9 +2,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Zap, TrendingUp, Users, Newspaper, Award } from 'lucide-react';
 import { Section } from '@/components/layout/Section';
-import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { tokens } from '@/lib/tokens';
 
 interface BuzzSource {
   type: 'social' | 'press' | 'awards' | 'talent' | 'controversy' | 'viral';
@@ -65,57 +63,60 @@ export const BuzzMeter: React.FC<BuzzMeterProps> = ({
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Studio Buzz Summary */}
-      <Card className={cn('p-6', tokens.border.default)}>
-        <div className="flex items-center justify-between mb-4">
+      {/* Studio Buzz Index */}
+      <div className={cn('p-10 rounded-none border border-white/5 bg-white/[0.01] backdrop-blur-3xl shadow-2xl relative overflow-hidden group')}>
+        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl -mr-16 -mt-16 group-hover:opacity-100 opacity-50 transition-opacity" />
+        
+        <div className="flex items-center justify-between mb-10 relative z-10">
           <div>
-            <h3 className="font-bold text-lg">Studio Buzz Index</h3>
-            <p className={cn('text-sm', tokens.text.caption)}>
-              Industry rank: #{industryRank}
+            <h3 className="text-xl font-display font-black uppercase italic tracking-tight text-foreground leading-none mb-3">STUDIO_BUZZ_INDEX</h3>
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/30 italic">
+              INDUSTRY_RANK: #{industryRank}
             </p>
           </div>
           <div className="text-right">
-            <div className="flex items-center gap-2">
-              <Zap className="h-6 w-6 text-amber-500" />
-              <span className="text-4xl font-bold">{studioBuzz}</span>
+            <div className="flex items-center gap-4">
+              <Zap className="h-8 w-8 text-primary drop-shadow-[0_0_15px_rgba(var(--primary),0.4)]" strokeWidth={3} />
+              <span className="text-6xl font-display font-black italic tracking-tighter text-primary drop-shadow-[0_0_30px_rgba(var(--primary),0.2)]">{studioBuzz}</span>
             </div>
-            <p className={cn('text-xs', tokens.text.caption)}>/100</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/10 italic">OUT_OF_100</p>
           </div>
         </div>
 
-        <div className="h-3 bg-muted rounded-full overflow-hidden mb-4">
+        <div className="h-2 bg-black/40 rounded-none overflow-hidden mb-10 border border-white/5 relative">
           <div
-            className={cn('h-full rounded-full', getBuzzColor(studioBuzz))}
+            className={cn('h-full bg-primary shadow-[0_0_20px_rgba(var(--primary),0.3)] transition-all duration-1000')}
             style={{ width: `${studioBuzz}%` }}
           />
         </div>
 
-        <div className="grid grid-cols-3 gap-4 text-center">
-          <div>
-            <p className="text-2xl font-bold text-red-500">{hotProjects.length}</p>
-            <p className={cn('text-[10px]', tokens.text.caption)}>Hot Projects</p>
+        <div className="grid grid-cols-3 gap-10 text-center relative z-10">
+          <div className="p-4 bg-white/[0.02] border border-white/5 rounded-none">
+            <p className="text-3xl font-display font-black text-red-500 italic tracking-tighter mb-1">{hotProjects.length}</p>
+            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">HOT_PROJECTS</p>
           </div>
-          <div>
-            <p className="text-2xl font-bold text-emerald-500">{trendingUp.length}</p>
-            <p className={cn('text-[10px]', tokens.text.caption)}>Trending Up</p>
+          <div className="p-4 bg-white/[0.02] border border-white/5 rounded-none">
+            <p className="text-3xl font-display font-black text-emerald-500 italic tracking-tighter mb-1">{trendingUp.length}</p>
+            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">TRENDING_UP</p>
           </div>
-          <div>
-            <p className="text-2xl font-bold text-red-500">{trendingDown.length}</p>
-            <p className={cn('text-[10px]', tokens.text.caption)}>Trending Down</p>
+          <div className="p-4 bg-white/[0.02] border border-white/5 rounded-none">
+            <p className="text-3xl font-display font-black text-red-500 italic tracking-tighter mb-1">{trendingDown.length}</p>
+            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">TRENDING_DOWN</p>
           </div>
         </div>
-      </Card>
+      </div>
 
       {/* Project Buzz Rankings */}
       <Section
-        title="Project Buzz Rankings"
-        subtitle="Public awareness and anticipation levels"
+        title="PROJECT_BUZZ_RANKINGS"
+        subtitle="PUBLIC AWARENESS AND ANTICIPATION LEVELS"
         icon={Zap}
       >
         {projects.length === 0 ? (
-          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-xl')}>
-            <Zap className="h-10 w-10 mx-auto mb-3 opacity-20" />
-            <p className={cn('text-sm', tokens.text.caption)}>
-              No active projects generating buzz
+          <div className="text-center py-20 bg-white/[0.01] border-2 border-dashed border-white/5 rounded-none">
+            <Zap className="h-12 w-12 mx-auto mb-6 opacity-5" strokeWidth={1} />
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/20 italic">
+              NO_ACTIVE_PROJECTS_GENERATING_BUZZ
             </p>
           </div>
         ) : (
@@ -123,59 +124,61 @@ export const BuzzMeter: React.FC<BuzzMeterProps> = ({
             {projects
               .sort((a, b) => b.totalBuzz - a.totalBuzz)
               .map((project, index) => (
-              <Card
+              <div
                 key={project.projectId}
-                className={cn('p-4', tokens.border.default)}
+                className="p-8 bg-white/[0.01] border border-white/5 rounded-none hover:border-primary/40 transition-all duration-700 shadow-xl relative overflow-hidden group/item"
               >
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl font-bold text-muted-foreground">
-                      #{index + 1}
+                <div className="flex items-center justify-between mb-6 relative z-10">
+                  <div className="flex items-center gap-6">
+                    <span className="text-4xl font-display font-black text-muted-foreground/5 italic group-hover/item:text-primary/10 transition-colors">
+                      #{String(index + 1).padStart(2, '0')}
                     </span>
                     <div>
-                      <h4 className="font-bold text-sm">{project.projectTitle}</h4>
-                      <div className="flex items-center gap-2 mt-1">
-                        {getTrendIcon(project.trend)}
+                      <h4 className="text-lg font-black uppercase italic tracking-tight text-foreground leading-none mb-3 group-hover/item:text-primary transition-colors">{project.projectTitle}</h4>
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2">
+                          {getTrendIcon(project.trend)}
+                        </div>
                         <Badge 
-                          variant={project.audienceSentiment === 'positive' ? 'default' : 'secondary'}
-                          className="text-[9px]"
+                          variant="outline"
+                          className="text-[8px] font-black uppercase tracking-widest border-primary/20 text-primary rounded-none italic bg-primary/5"
                         >
-                          {project.audienceSentiment} sentiment
+                          {project.audienceSentiment} SENTIMENT
                         </Badge>
-                        <span className={cn('text-[10px]', tokens.text.caption)}>
-                          {project.pressCoverage} press mentions
+                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/30 italic">
+                          {project.pressCoverage} PRESS_MENTIONS
                         </span>
                       </div>
                     </div>
                   </div>
                   <div className="text-right">
                     <p className={cn(
-                      'text-2xl font-bold',
+                      'text-4xl font-display font-black italic tracking-tighter drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]',
                       project.totalBuzz >= 70 ? 'text-red-500' :
-                      project.totalBuzz >= 50 ? 'text-amber-500' : 'text-muted-foreground'
+                      project.totalBuzz >= 50 ? 'text-primary' : 'text-muted-foreground/40'
                     )}>
                       {project.totalBuzz}
                     </p>
-                    <p className={cn('text-[10px]', tokens.text.caption)}>Buzz Score</p>
+                    <p className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/10 italic">BUZZ_SCORE</p>
                   </div>
                 </div>
 
-                <div className="h-2 bg-muted rounded-full overflow-hidden mb-3">
+                <div className="h-1 bg-black/40 rounded-none overflow-hidden mb-6 border border-white/5">
                   <div
-                    className={cn('h-full rounded-full', getBuzzColor(project.totalBuzz))}
+                    className={cn('h-full shadow-[0_0_10px_rgba(0,0,0,0.5)] transition-all duration-1000', getBuzzColor(project.totalBuzz))}
                     style={{ width: `${project.totalBuzz}%` }}
                   />
                 </div>
 
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-3 relative z-10">
                   {project.sources.map((source, idx) => (
-                    <Badge key={idx} variant="outline" className="text-[9px]">
+                    <Badge key={idx} variant="outline" className="text-[8px] font-black uppercase tracking-widest border-white/5 bg-white/[0.02] text-muted-foreground/40 rounded-none italic py-1 px-3">
                       {getSourceIcon(source.type)}
-                      <span className="ml-1">{source.type}: +{source.value}</span>
+                      <span className="ml-2">{source.type.toUpperCase()}: +{source.value}</span>
                     </Badge>
                   ))}
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         )}

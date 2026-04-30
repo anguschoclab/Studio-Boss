@@ -1,10 +1,11 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { useEffect, useCallback } from 'react';
 import { useUIStore } from '@/store/uiStore';
 
 /**
  * Keyboard shortcut definitions
  */
-export const KEYBOARD_SHORTCUTS = {
+const KEYBOARD_SHORTCUTS = {
   // Navigation
   'cmd+1': { action: 'hub', target: 'hq', description: 'Go to Studio HQ' },
   'cmd+2': { action: 'hub', target: 'production', description: 'Go to Production' },
@@ -35,7 +36,7 @@ type ShortcutKey = keyof typeof KEYBOARD_SHORTCUTS;
  * - Quick actions (Cmd+Shift+A)
  * - Create project (Cmd+N)
  */
-export function useKeyboardShortcuts() {
+function useKeyboardShortcuts() {
   const { 
     setActiveHub, 
     openCreateProject, 
@@ -64,7 +65,7 @@ export function useKeyboardShortcuts() {
     switch (config.action) {
       case 'hub':
         if (config.target) {
-          setActiveHub(config.target as any);
+          setActiveHub(config.target as Parameters<typeof setActiveHub>[0]);
         }
         break;
         
@@ -97,9 +98,10 @@ export function useKeyboardShortcuts() {
 /**
  * Component wrapper that enables keyboard shortcuts
  */
-export const KeyboardShortcuts: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const KeyboardShortcuts: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   useKeyboardShortcuts();
   return <>{children}</>;
 };
 
+export { KEYBOARD_SHORTCUTS, useKeyboardShortcuts, KeyboardShortcuts };
 export default useKeyboardShortcuts;

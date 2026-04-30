@@ -1,66 +1,38 @@
-import { pick } from '../utils';
 import { GenreTrend, GameState } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
-import { RandomGenerator } from '../utils/rng';
-import { BardResolver } from './bardResolver';
+import { secureRandom } from '../utils';
+
 
 export const ALL_GENRES = [
   'Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi', 'Thriller', 'Romance', 'Animation', 'Documentary', 'Fantasy'
 ];
 
-export function initializeTrends(rng: RandomGenerator): GenreTrend[] {
+export function initializeTrends(): GenreTrend[] {
   // Pick 3 random genres to be the starting trends
-  const shuffled = [...ALL_GENRES];
-  // Fisher-Yates shuffle with rng
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(rng.next() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  
+  const shuffled = [...ALL_GENRES].sort(() => 0.5 - secureRandom());
   return [
     {
       genre: shuffled[0],
       heat: 80,
-      direction: 'hot',
-      weeksRemaining: 12,
-      description: BardResolver.resolve({
-        domain: 'Market',
-        subDomain: 'Trend',
-        intensity: 80,
-        context: { genre: shuffled[0] },
-        rng
-      })
+      direction: 'rising',
+      weeksRemaining: 12
     },
     {
       genre: shuffled[1],
       heat: 50,
       direction: 'stable',
-      weeksRemaining: 24,
-      description: BardResolver.resolve({
-        domain: 'Market',
-        subDomain: 'Trend',
-        intensity: 50,
-        context: { genre: shuffled[1] },
-        rng
-      })
+      weeksRemaining: 24
     },
     {
       genre: shuffled[2],
       heat: 20,
       direction: 'cooling',
-      weeksRemaining: 6,
-      description: BardResolver.resolve({
-        domain: 'Market',
-        subDomain: 'Trend',
-        intensity: 20,
-        context: { genre: shuffled[2] },
-        rng
-      })
+      weeksRemaining: 6
     }
   ];
 }
 
-export function advanceTrends(trends: GenreTrend[], rng: RandomGenerator): StateImpact[] {
+export function advanceTrends(trends: GenreTrend[]): StateImpact[] {
   let updated = (trends || []).map(t => {
     let newHeat = t.heat;
     if (t.direction === 'rising') newHeat = Math.min(100, newHeat + 5);
@@ -83,23 +55,16 @@ export function advanceTrends(trends: GenreTrend[], rng: RandomGenerator): State
   updated = updated.filter(t => t.weeksRemaining > 0 && t.heat > 0);
   
   // Randomly spawn new trends if we are low
-  if (updated.length < 5 && rng.next() < 0.1) {
+  if (updated.length < 5 && secureRandom() < 0.1) {
     const activeGenres = new Set(updated.map(t => t.genre));
     const available = ALL_GENRES.filter(g => !activeGenres.has(g));
     if (available.length > 0) {
-      const newGenre = rng.pick(available);
+      const newGenre = available[Math.floor(secureRandom() * available.length)];
       updated.push({
         genre: newGenre,
         heat: 30,
         direction: 'rising',
-        weeksRemaining: 16 + Math.floor(rng.next() * 12),
-        description: BardResolver.resolve({
-          domain: 'Market',
-          subDomain: 'Trend',
-          intensity: 30,
-          context: { genre: newGenre },
-          rng
-        })
+        weeksRemaining: 16 + Math.floor(secureRandom() * 12)
       });
     }
   }

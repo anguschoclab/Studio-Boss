@@ -42,7 +42,7 @@ export const MoraleDashboard: React.FC<MoraleDashboardProps> = ({ moraleData }) 
       <div className="grid grid-cols-3 gap-4">
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10">
+            <div className="p-2 rounded-none bg-primary/10">
               <Smile className="h-5 w-5 text-primary" />
             </div>
             <div>
@@ -54,7 +54,7 @@ export const MoraleDashboard: React.FC<MoraleDashboardProps> = ({ moraleData }) 
 
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-amber-500/10">
+            <div className="p-2 rounded-none bg-amber-500/10">
               <AlertTriangle className="h-5 w-5 text-amber-500" />
             </div>
             <div>
@@ -66,7 +66,7 @@ export const MoraleDashboard: React.FC<MoraleDashboardProps> = ({ moraleData }) 
 
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-emerald-500/10">
+            <div className="p-2 rounded-none bg-emerald-500/10">
               <Users className="h-5 w-5 text-emerald-500" />
             </div>
             <div>
@@ -140,9 +140,9 @@ export const MoraleDashboard: React.FC<MoraleDashboardProps> = ({ moraleData }) 
                   {talent.morale}%
                 </span>
               </div>
-              <div className="h-2 bg-muted rounded-full overflow-hidden">
+              <div className="h-2 bg-muted rounded-none overflow-hidden">
                 <div
-                  className={cn('h-full rounded-full', getMoraleColor(talent.morale))}
+                  className={cn('h-full rounded-none', getMoraleColor(talent.morale))}
                   style={{ width: `${talent.morale}%` }}
                 />
               </div>
