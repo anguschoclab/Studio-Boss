@@ -8,9 +8,7 @@ export const SchedulingEngine = {
     const contractsList = Object.values(state.entities.contracts || {});
     const talentPool = state.entities.talents;
 
-    // ⚡ Bolt: Pre-group contracts by projectId to avoid O(Projects * Contracts) evaluation complexity
-    // In the SchedulingEngine.tick function, pre-grouping the contracts list by projectId into a Record or Map
-    // before iterating over projects reduces conflict evaluation complexity from O(Projects * Contracts) to O(Projects + Contracts).
+    // ⚡ Bolt: Pre-group contracts by projectId to avoid O(N) filter in O(M) loop (O(N*M) total)
     const contractsByProject: Record<string, Contract[]> = {};
     for (const contract of contractsList) {
       if (!contractsByProject[contract.projectId]) {
@@ -22,8 +20,7 @@ export const SchedulingEngine = {
     projects.forEach(project => {
       if (project.state !== 'production') return;
 
-      const projectContracts = contractsByProject[project.id];
-      if (!projectContracts) return;
+      const projectContracts = contractsByProject[project.id] || [];
       const { hasConflict, conflicts } = this.evaluateSchedulingConflicts(project, projectContracts, talentPool, state.week);
       
       if (hasConflict) {
@@ -54,7 +51,7 @@ export const SchedulingEngine = {
 
   evaluateSchedulingConflicts(
     project: Project,
-    projectContracts: Contract[], // ⚡ Bolt: Now expects pre-filtered contracts to prevent O(N) filtering per project
+    projectContracts: Contract[],
     talentPool: Record<string, Talent>,
     currentWeek: number
   ): { hasConflict: boolean; conflicts: string[] } {
