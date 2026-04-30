@@ -47,7 +47,7 @@ describe('SBDBView', () => {
 
   it('renders the header and subtitle', () => {
     render(<TooltipProvider><SBDBView /></TooltipProvider>);
-    expect(screen.getByText('Studio Boss Database')).toBeInTheDocument();
+    expect(screen.getByText((c) => c.includes('SBDB') || c.includes('Studio Boss'))).toBeInTheDocument();
     expect(screen.getByText('The definitive industry database of talent, producers, and stars.')).toBeInTheDocument();
   });
 

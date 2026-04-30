@@ -58,6 +58,9 @@ export const SchedulingEngine = {
     const conflicts: string[] = [];
     
     for (const contract of projectContracts) {
+      // Safety check in case unfiltered contracts are passed
+      if (contract.projectId !== project.id) continue;
+
       const talent = talentPool[contract.talentId];
       if (!talent || !talent.commitments) continue;
 

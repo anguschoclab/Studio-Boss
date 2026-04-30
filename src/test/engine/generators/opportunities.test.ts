@@ -6,7 +6,7 @@ describe('Opportunity Generator', () => {
     const opp = generateOpportunity();
 
     expect(opp).toBeDefined();
-    expect(opp.id).toContain('opp-');
+    expect(opp.id).toContain('OPP-');
     expect(opp.title).toBeTypeOf('string');
     expect(['script', 'package', 'pitch', 'rights']).toContain(opp.type);
     expect(['open_spec', 'agency_package', 'writer_sample', 'heat_list', 'passion_project']).toContain(opp.origin);

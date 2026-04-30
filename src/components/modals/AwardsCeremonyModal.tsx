@@ -3,7 +3,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
-import { Trophy, Star, Award as AwardIcon, Sparkles, ChevronRight } from 'lucide-react';
+import { Trophy, Star, Sparkles, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const AwardsCeremonyModal = () => {
@@ -13,9 +13,18 @@ export const AwardsCeremonyModal = () => {
   const [phase, setPhase] = useState<'nominees' | 'reveal'>('nominees');
   const [currentAwardIdx, setCurrentAwardIdx] = useState(0);
 
-  if (!gameState || !activeModal || activeModal.type !== 'AWARDS') return null;
+  const awards = (activeModal?.type === 'AWARDS' ? activeModal.payload?.awards : null) ?? [];
 
-  const { awards, body, year } = activeModal.payload;
+  useEffect(() => {
+    if (activeModal?.type === 'AWARDS' && awards.length === 0) {
+      resolveCurrentModal();
+    }
+  }, [activeModal, awards.length, resolveCurrentModal]);
+
+  if (!gameState || !activeModal || activeModal.type !== 'AWARDS') return null;
+  if (awards.length === 0) return null;
+  
+  const { body, year } = activeModal.payload;
   const currentAward = awards[currentAwardIdx];
 
   const handleNext = () => {
@@ -31,7 +40,7 @@ export const AwardsCeremonyModal = () => {
   };
 
   const getProjectTitle = (id: string) => {
-    return gameState.studio.internal.projects[id]?.title || "Unknown Project";
+    return gameState.entities?.projects[id]?.title || "Unknown Project";
   };
 
   return (
@@ -65,7 +74,7 @@ export const AwardsCeremonyModal = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-                {awards.map((award: any, i: number) => (
+                {awards.map((award: { id: string; category: string; targetName: string; isPrestige?: boolean }, i: number) => (
                   <motion.div 
                     key={award.id}
                     initial={{ opacity: 0, x: -10 }}

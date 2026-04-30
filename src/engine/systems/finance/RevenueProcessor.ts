@@ -21,23 +21,18 @@ export class RevenueProcessor {
 
     const grossRevenue = baseFeePerUnit * shareUnits * (quality / 100);
 
-    // Apply revenue sharing based on project age and quality
-    const weeksSinceRelease = (project as any).releaseWeek ? (project as any).currentWeek - (project as any).releaseWeek : 0;
-    const isBackCatalog = weeksSinceRelease > 52; // 1 year = back-catalog
-    const isPremium = quality >= 70 && !isBackCatalog;
-
-    // Studio share: 60% for premium, 50% for back-catalog
-    const studioShare = isPremium ? 0.6 : 0.5;
-    const netRevenue = grossRevenue * studioShare;
-
-    return Math.round(netRevenue);
+    return Math.round(grossRevenue);
   }
 
   /**
    * Calculates box office decay for a project in a given week.
    */
-  static calculateTheatricalDecay(currentRevenue: number, decayRate: number): number {
-    return Math.round(currentRevenue * decayRate);
+  static calculateTheatricalDecay(currentRevenue: number, decayRate: number, isCultClassic?: boolean): number {
+    const decayed = Math.round(currentRevenue * decayRate);
+    if (isCultClassic) {
+      return Math.max(decayed * 2, 50000);
+    }
+    return decayed;
   }
 
   /**

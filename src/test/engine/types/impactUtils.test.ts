@@ -8,8 +8,8 @@ describe('Impact Reducer (Target A1)', () => {
 
   beforeEach(() => {
     mockState = createMockGameState({
-        cash: 1000000,
-        studioName: 'Alpha Studios'
+        finance: { cash: 1000000, ledger: [], weeklyHistory: [], marketState: { baseRate: 0.05, savingsYield: 0.02, debtRate: 0.08, loanRate: 0.06, rateHistory: [] } },
+        studio: { id: 'PLR-1', name: 'Alpha Studios', archetype: 'major', prestige: 50, internal: { projectHistory: [] } }
     });
     // Manually add a project for testing PROJECT_UPDATED
     mockState.entities.projects['p1'] = { 

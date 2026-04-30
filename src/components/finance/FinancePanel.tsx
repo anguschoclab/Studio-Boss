@@ -1,19 +1,15 @@
 import { calculateWeeklyCosts, calculateWeeklyRevenue, calculateStudioNetWorth, generateCashflowForecast, calculateProjectROI } from '@/engine/systems/finance';
 import { LoanModal } from '@/components/finance/LoanModal';
 import { useShallow } from 'zustand/react/shallow';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ComposedChart, Line, CartesianGrid } from 'recharts';
-import { Badge } from '@/components/ui/badge';
 import { YearInReviewChart } from '@/components/finance/YearInReviewChart';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { History, LayoutDashboard, ReceiptText, TrendingUp, Package, Coins, ShieldCheck, ArrowRightLeft, Banknote } from 'lucide-react';
-import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 import { RevenueStreamChart } from '@/components/finance/RevenueStreamChart';
 import { ProfitWaterfallChart } from '@/components/finance/ProfitWaterfallChart';
 import { CashEfficiencyGauge } from '@/components/finance/CashEfficiencyGauge';
-import { DistributionBadge } from '@/components/shared/DistributionBadge';
 import { MarketRatesWidget } from '@/components/finance/MarketRatesWidget';
 import { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
@@ -21,14 +17,13 @@ import { formatMoney } from '@/engine/utils';
 import { KPIStatCard } from '@/components/shared/KPIStatCard';
 import { CausalityTooltip } from '@/components/shared/CausalityTooltip';
 import { cn } from '@/lib/utils';
-import { EmptyState } from '@/components/shared/EmptyState';
 
 export const FinancePanel = () => {
   const gameState = useGameStore(s => s.gameState);
 
   const cash = useGameStore(s => s.gameState?.finance?.cash ?? 0);
   const financeHistory = useGameStore(useShallow(s => s.gameState?.finance?.weeklyHistory ?? []));
-  const projectsMemo = useGameStore(useShallow(s => Object.values(s.gameState?.studio.internal.projects || {})));
+  const projectsMemo = useGameStore(useShallow(s => Object.values(s.gameState?.entities?.projects || {})));
 
   const weeklyCosts = useMemo(() => calculateWeeklyCosts(projectsMemo), [projectsMemo]);
   const weeklyRevenue = useMemo(() => calculateWeeklyRevenue(projectsMemo), [projectsMemo]);
@@ -81,7 +76,7 @@ export const FinancePanel = () => {
         projRevenue: last.histRevenue,
         projCosts: last.histCosts,
         isForecast: true,
-      } as any);
+      } as unknown as { week: number; projCash?: number; projRevenue?: number; projCosts?: number; histCash?: number; histRevenue?: number; histCosts?: number; isForecast?: boolean });
     }
 
     return [...history, ...projected];
@@ -359,7 +354,7 @@ export const FinancePanel = () => {
                     <div className="space-y-4">
                       <h4 className="font-display font-black text-2xl tracking-tighter uppercase italic group-hover:text-primary transition-all duration-700 truncate max-w-[180px] leading-none drop-shadow-[0_0_10px_rgba(255,255,255,0.05)]">{p.title}</h4>
                       <div className="text-[9px] font-black tracking-[0.3em] text-muted-foreground/20 uppercase border border-white/5 bg-white/[0.01] px-3 py-1.5 rounded-none h-fit w-fit italic group-hover:text-muted-foreground/60 transition-all duration-700">
-                        {p.distributionStatus.toUpperCase()}
+                        {(p.distributionStatus ?? '').toUpperCase()}
                       </div>
                     </div>
                     <div className={cn("text-[9px] font-black tracking-[0.4em] uppercase h-8 px-5 flex items-center border border-transparent rounded-none italic shadow-lg", isProfitable ? "bg-emerald-400/10 text-emerald-400 border-emerald-400/20" : "bg-red-400/10 text-red-400 border-red-400/20")}>

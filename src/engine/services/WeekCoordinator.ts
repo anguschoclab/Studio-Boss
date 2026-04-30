@@ -34,10 +34,7 @@ import { tickStudioIdentity } from '../systems/StudioIdentitySystem';
 import { checkAchievements } from '../systems/AchievementsSystem';
 
 // New Game Systems
-import { tickReleaseStrategy } from '../systems/ReleaseStrategySystem';
 import { tickPostProduction } from '../systems/PostProductionSystem';
-import { tickStudioIdentity } from '../systems/StudioIdentitySystem';
-import { checkAchievements } from '../systems/AchievementsSystem';
 import { tickMorale } from '../systems/talent/MoraleTick';
 
 // Talent Lifecycle Systems
@@ -60,7 +57,6 @@ import { runAwardsCeremony } from '../systems/awards/CeremonyRunner';
 import { processRazzies } from '../systems/awards/RazzieProcessor';
 import { tickPilots } from '../systems/television/pilotEvaluator';
 import { runUpfronts } from '../systems/television/upfrontsEngine';
-import { tickPostProduction } from '../systems/PostProductionSystem';
 
 // AI Competition Systems
 import { tickTalentCompetition } from '../systems/ai/bidding/CompetitionModule';
@@ -70,6 +66,7 @@ import { runFestivalMarket } from '../systems/festivals/festivalAuctionEngine';
 import { tickIPVault } from '../systems/ip/IPVaultManager';
 import { advanceIPRights } from '../systems/ipRetention';
 import { updateFranchiseHub } from '../systems/ip/franchiseCoordinator';
+import { AnnualScans } from './filters/AnnualScans';
 
 // Market Systems
 import { advanceRumors } from '../systems/rumors';
@@ -257,6 +254,7 @@ export class WeekCoordinator {
   private static runIPFilter(state: GameState, context: TickContext) {
     context.impacts.push(...tickIPVault(state));
     context.impacts.push(advanceIPRights(Object.values(state.entities.projects), context.week));
+    AnnualScans.execute(state, context);
   }
 
   private static runAIFilter(state: GameState, context: TickContext) {

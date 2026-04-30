@@ -8,10 +8,9 @@ import {
   TrendingUp, 
   Search,
   History,
-  Filter
 } from 'lucide-react';
 
-const eventTypeConfig: Record<NewsEventType, { icon: any, color: string, label: string }> = {
+const eventTypeConfig: Record<NewsEventType, { icon: React.ElementType, color: string, label: string }> = {
   AWARD: { icon: Trophy, color: 'text-amber-500 bg-amber-500/10 border-amber-500/20', label: 'Awards' },
   CRISIS: { icon: AlertTriangle, color: 'text-destructive bg-destructive/10 border-destructive/20', label: 'Crises' },
   RELEASE: { icon: TrendingUp, color: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20', label: 'Release' },
@@ -36,15 +35,18 @@ export const NewsFeed = () => {
             <History className="h-4 w-4 text-primary" strokeWidth={3} />
             <h3 className="font-display text-xs font-black uppercase tracking-[0.4em] text-foreground italic leading-none">INDUSTRY_HISTORY</h3>
           </div>
-          <Badge variant="outline" className="text-[9px] font-black border-white/10 bg-white/5 text-muted-foreground/60 rounded-none italic">
+          <Badge variant="outline" className="text-[9px] font-black border-white/10 bg-white/5 text-muted-foreground/60 rounded-md italic">
             {history.length} EVENTS
           </Badge>
         </div>
 
-        <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar no-scrollbar">
+        {/* The Pixel Perfectionist: Switched from overflow-x-auto to flex wrap to prevent horizontal scrolling. */}
+        <div className="flex flex-wrap gap-2 pb-2">
           <button 
+            type="button"
+            aria-pressed={filter === 'ALL'}
             onClick={() => setFilter('ALL')}
-            className={`px-4 py-2 rounded-none text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 border italic ${
+            className={`rounded-md text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 border italic focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none p-3 ${
               filter === 'ALL' ? 'bg-primary text-black border-primary shadow-[0_0_15px_rgba(var(--primary),0.2)]' : 'bg-white/[0.02] text-muted-foreground/40 border-white/5 hover:border-white/20'
             }`}
           >
@@ -53,8 +55,10 @@ export const NewsFeed = () => {
           {(Object.keys(eventTypeConfig) as NewsEventType[]).map(type => (
             <button 
               key={type}
+              type="button"
+              aria-pressed={filter === type}
               onClick={() => setFilter(type)}
-              className={`px-4 py-2 rounded-none text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 border flex items-center gap-2 italic whitespace-nowrap ${
+              className={`rounded-md text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 border flex items-center gap-2 italic whitespace-nowrap focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none p-3 ${
                 filter === type ? 'bg-primary text-black border-primary shadow-[0_0_15px_rgba(var(--primary),0.2)]' : 'bg-white/[0.02] text-muted-foreground/40 border-white/5 hover:border-white/20'
               }`}
             >
@@ -76,7 +80,7 @@ export const NewsFeed = () => {
               )}
               
               {/* Timeline Dot/Icon */}
-              <div className={`absolute left-0 top-1 w-4 h-4 rounded-none border border-white/10 bg-black z-10 flex items-center justify-center transition-all group-hover:scale-110 group-hover:border-primary/40 ${config.color}`}>
+              <div className={`absolute left-0 top-1 w-4 h-4 rounded-md border border-white/10 bg-black z-10 flex items-center justify-center transition-all group-hover:scale-110 group-hover:border-primary/40 ${config.color}`}>
                 <config.icon className="h-2 w-2" strokeWidth={3} />
               </div>
 

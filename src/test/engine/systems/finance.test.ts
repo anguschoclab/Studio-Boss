@@ -1,11 +1,11 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { 
   calculateProjectROI, 
   calculateStudioNetWorth, 
   generateWeeklyFinancialReport 
 } from "../../../engine/systems/finance";
 import { tickFinance } from "../../../engine/systems/finance/financeTick";
-import { Project, GameState } from "../../../engine/types";
+import { Project } from "../../../engine/types";
 import { RandomGenerator } from "../../../engine/utils/rng";
 import { createMockGameState } from "../../mockFactory";
 
@@ -17,14 +17,24 @@ const mockProjectDev: import('../../../engine/types').Project = {
   type: 'FILM', scriptHeat: 50, activeRoles: [], scriptEvents: []
 } as import('../../../engine/types').FilmProject;
 
-const mockProjectProd: import('../../../engine/types').Project = { ...mockProjectDev, id: "proj-2", state: "production", weeklyCost: 20000 } as any;
-const mockProjectReleased: import('../../../engine/types').Project = { ...mockProjectDev, id: "proj-3", state: "released", weeklyCost: 0, weeklyRevenue: 100000 } as any;
+const mockProjectProd: import('../../../engine/types').Project = { ...mockProjectDev, id: "proj-2", state: "production", weeklyCost: 20000 } as unknown as import('../../../engine/types').Project;
+const mockProjectReleased: import('../../../engine/types').Project = { ...mockProjectDev, id: "proj-3", state: "released", weeklyCost: 0, weeklyRevenue: 100000 } as unknown as import('../../../engine/types').Project;
 
 describe("Finance System", () => {
   describe("calculateProjectROI", () => {
     it("returns correct ROI for a standard project", () => {
-      const proj = { ...mockProjectReleased, budget: 1000000, revenue: 2000000 } as any;
+      const proj = { ...mockProjectReleased, budget: 1000000, revenue: 2000000 } as unknown as import('../../../engine/types').Project;
       expect(calculateProjectROI(proj)).toBe(2.0);
+    });
+
+    it("handles extreme edge case: negative budget gracefully", () => {
+      const proj: Project = {
+        ...mockProjectReleased,
+        budget: -1000000,
+        revenue: 2000000,
+        marketingBudget: 0
+      } as unknown as Project;
+      expect(calculateProjectROI(proj)).toBe(-2.0);
     });
   });
 
@@ -37,7 +47,7 @@ describe("Finance System", () => {
     });
 
     it("adds 100% of catalogValue if rightsOwner is 'studio'", () => {
-       const p1: Project = { ...mockProjectReleased, budget: 400000, ipRights: { rightsOwner: 'studio', catalogValue: 200000 } } as any;
+       const p1: Project = { ...mockProjectReleased, budget: 400000, ipRights: { rightsOwner: 'studio', catalogValue: 200000 } } as unknown as Project;
        const state = createMockGameState({
          finance: { ...createMockGameState().finance, cash: 500000 },
          studio: {
@@ -80,8 +90,8 @@ describe("Finance System", () => {
         // ExpenseProcessor.calculateStudioBurn(level 1 (default mock), 2 active) = (500k * 1) + (2 * 75k) = 650k
         expect(report.expenses.overhead).toBe(650000);
         expect(report.expenses.production).toBe(20000); // Only mockProjectProd is in production
-        expect(report.revenue.boxOffice).toBe(45000); // 100k * 0.45 decay = 45k
-        expect(report.netProfit).toBe(45000 - 670000); // 45k rev - (650k overhead + 20k prod)
+        expect(report.revenue.boxOffice).toBe(35000); // 100k * 0.35 decay = 35k
+        expect(report.netProfit).toBe(35000 - 670000); // 35k rev - (650k overhead + 20k prod)
         expect(report.startingCash).toBe(1000000);
     });
   });
@@ -112,10 +122,10 @@ describe("Finance System", () => {
          const impacts = tickFinance(state, rng);
          const impact = impacts.find(i => i.type === 'FUNDS_CHANGED');
          
-         // Revenue: 200k * 0.45 (decay) = 90k
+         // Revenue: 200k * 0.35 (decay) = 70k
          // Expenses: 20k (prod) + [500k + (1 * 75k)] (overhead) = 595k
-         // Net: 90k - 595k = -505k
-         expect(impact?.payload.amount).toBe(-505000);
+         // Net: 70k - 595k = -525k
+         expect(impact?.payload.amount).toBe(-525000);
       });
   });
 });

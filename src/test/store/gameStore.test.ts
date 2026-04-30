@@ -44,12 +44,7 @@ describe("gameStore", () => {
     // Ensure the necessary structures are present
     state.studio.internal.contracts = [];
     state.entities.talents = {};
-    if (!state.industry.rivals) {
-      state.industry.rivals = [];
-    }
-    if (!state.relationships) {
-      state.relationships = { discovery: {} };
-    }
+
     useGameStore.setState({ gameState: state });
 
     const summary = useGameStore.getState().doAdvanceWeek();
@@ -103,7 +98,8 @@ describe("gameStore", () => {
 
     const newState = useGameStore.getState().gameState!;
     expect(newState.finance.cash).toBe(900000); // 1M - 100k fee
-    expect(newState.studio.internal.contracts).toHaveLength(1);
-    expect(newState.studio.internal.contracts[0].talentId).toBe("t1");
+    const newContracts = Object.values(newState.entities.contracts || {});
+    expect(newContracts).toHaveLength(1);
+    expect(newContracts[0].talentId).toBe("t1");
   });
 });

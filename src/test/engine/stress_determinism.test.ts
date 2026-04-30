@@ -1,4 +1,4 @@
-import { expect, test, describe } from "bun:test";
+import { expect, test, describe } from "vitest";
 import { initializeGame } from "../../engine/core/gameInit";
 import { WeekCoordinator } from "../../engine/services/WeekCoordinator";
 

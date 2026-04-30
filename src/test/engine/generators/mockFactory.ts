@@ -36,10 +36,8 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
       archetype: 'major',
       prestige: 50,
       internal: {
-        projects: {},
-        contracts: [],
+        projectHistory: [],
         firstLookDeals: [],
-        projectHistory: []
       }
     },
     market: {
@@ -52,7 +50,6 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
       families: [],
       agencies: [],
       agents: [],
-      rivals: [],
       awards: [],
       newsHistory: [],
       rumors: [],
@@ -60,9 +57,6 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
     },
     culture: {
       genrePopularity: {}
-    },
-    relationships: {
-      discovery: {}
     },
     history: [],
     eventHistory: []

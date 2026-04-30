@@ -6,9 +6,9 @@ import { cn } from '@/lib/utils';
 
 export const MADashboard: React.FC = () => {
   const state = useGameStore(s => s.gameState);
-  if (!state) return null;
   
   const industryData = useMemo(() => {
+    if (!state) return { allStudios: [], mnaEvents: [], marketStress: 0 };
     const rivals = Object.values(state.entities?.rivals || {});
     const playerShare = RegulatorSystem.getMarketShare(state, 'player');
     
@@ -32,6 +32,8 @@ export const MADashboard: React.FC = () => {
 
     return { allStudios, mnaEvents };
   }, [state]);
+
+  if (!state) return null;
 
   return (
     <div className="p-0 space-y-12 animate-in fade-in duration-700">
@@ -133,7 +135,7 @@ export const MADashboard: React.FC = () => {
               </div>
             ) : (
               <div className="space-y-10 relative before:absolute before:left-[3px] before:top-2 before:bottom-2 before:w-[1px] before:bg-white/5">
-                {industryData.mnaEvents.map((event, i) => (
+                {industryData.mnaEvents.map((event) => (
                   <div key={event.id} className="relative pl-10 group">
                     <div className="absolute left-0 top-1.5 w-2 h-2 bg-secondary group-hover:shadow-[0_0_15px_rgba(var(--secondary),0.6)] transition-all" />
                     <div className="text-[9px] font-display font-black text-muted-foreground/40 uppercase tracking-[0.2em] mb-2">

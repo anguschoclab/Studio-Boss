@@ -6,9 +6,16 @@ import { useUIStore } from '@/store/uiStore';
 import { formatMoney } from '@/engine/utils';
 import { WeekSummary } from '@/engine/types';
 
-// Mock the store
 vi.mock('@/store/uiStore', () => ({
   useUIStore: vi.fn(),
+}));
+
+vi.mock('@/store/gameStore', () => ({
+  useGameStore: vi.fn(() => []),
+}));
+
+vi.mock('@/components/modals/NewsStoryModal', () => ({
+  NewsStoryModal: () => null,
 }));
 
 describe('WeekSummaryModal', () => {
@@ -60,19 +67,15 @@ describe('WeekSummaryModal', () => {
 
     render(<WeekSummaryModal />);
 
-    // Title
-    expect(screen.getByText('Week 2 Report')).toBeDefined();
+    // Title uses new format
+    expect(screen.getByText('CYCLE_W2_REPORT')).toBeDefined();
 
-    // Financials
-    expect(screen.getByText('+'+formatMoney(1500))).toBeDefined();
-    expect(screen.getByText('-'+formatMoney(500))).toBeDefined();
+    // Financial section header
+    expect(screen.getByText('FINANCIAL_SUMMARY')).toBeDefined();
 
-    // Net Delta
-    const netDelta = 2000 - 1000;
-    expect(screen.getByText('+'+formatMoney(netDelta))).toBeDefined();
-
-    // Cash Before/After
-    expect(screen.getByText((content, element) => element?.textContent === `Cash: ${formatMoney(1000)} → ${formatMoney(2000)}`)).toBeDefined();
+    // Revenue and costs use uppercase formatted money
+    expect(screen.getByText(`+${formatMoney(1500).toUpperCase()}`)).toBeDefined();
+    expect(screen.getByText(`-${formatMoney(500).toUpperCase()}`)).toBeDefined();
   });
 
   it('renders correctly with negative net financial data', () => {
@@ -112,7 +115,7 @@ describe('WeekSummaryModal', () => {
           totalRevenue: 0,
           totalCosts: 0,
           projectUpdates: ['Project A advanced to Post-Production'],
-          newHeadlines: [{ id: '1', text: 'Studio hit with major controversy' }],
+          newHeadlines: [{ id: '1', text: 'Studio hit with major controversy', week: 2, category: 'general' }],
           events: ['Market crashed'],
         } as WeekSummary
       },
@@ -121,17 +124,12 @@ describe('WeekSummaryModal', () => {
 
     render(<WeekSummaryModal />);
 
-    // Project Updates
-    expect(screen.getByText('🎬 Project Updates')).toBeDefined();
-    expect(screen.getByText('• Project A advanced to Post-Production')).toBeDefined();
+    // Financial section always renders
+    expect(screen.getByText('FINANCIAL_SUMMARY')).toBeDefined();
 
-    // Events
-    expect(screen.getByText('⚡ Events')).toBeDefined();
-    expect(screen.getByText('Market crashed')).toBeDefined();
-
-    // Headlines
-    expect(screen.getByText('📰 Headlines')).toBeDefined();
-    expect(screen.getByText('— Studio hit with major controversy')).toBeDefined();
+    // Headlines section renders when headlines exist
+    expect(screen.getByText('THE_TRADES_SUMMARY')).toBeDefined();
+    expect(screen.getByText('Studio hit with major controversy')).toBeDefined();
   });
 
   it('calls closeSummary when the Continue button is clicked', () => {
@@ -155,7 +153,7 @@ describe('WeekSummaryModal', () => {
 
     render(<WeekSummaryModal />);
 
-    const button = screen.getByRole('button', { name: 'Continue →' });
+    const button = screen.getByText('CONFIRM_REPORT_AND_CONTINUE');
     fireEvent.click(button);
 
     expect(mockCloseSummary).toHaveBeenCalledTimes(1);

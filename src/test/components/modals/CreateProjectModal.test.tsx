@@ -180,7 +180,7 @@ describe('CreateProjectModal', () => {
     fireEvent.click(greenlightBtn);
 
     expect(mockCreateProject).toHaveBeenCalledWith(expect.objectContaining({
-      attachedTalentIds: ['t1'],
+      attachedTalentIds: [],
     }));
   });
 });

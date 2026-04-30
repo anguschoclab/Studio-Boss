@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { NewsImpact } from '@/engine/types';
+import { NewsImpact, Agency } from '@/engine/types';
 import { tickAgencies, evaluatePackageOffer } from '@/engine/systems/ai/AgentBrain';
 import { RandomGenerator } from '@/engine/utils/rng';
 import { createMockGameState, createMockTalent, createMockRival } from '../../generators/mockFactory';
@@ -13,12 +13,13 @@ describe('Agent Brain (Target C2)', () => {
         id: 'a1',
         name: 'Shark Agency',
         archetype: 'powerhouse',
+        tier: 'A_TIER',
         culture: 'shark',
         prestige: 90,
         leverage: 80,
         currentMotivation: 'THE_SHARK',
         motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 }
-      };
+      } as any;
 
       const mockRival = createMockRival({ id: 'r1', name: 'Rival Studio' });
       const state = createMockGameState();

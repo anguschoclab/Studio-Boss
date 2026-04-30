@@ -87,7 +87,11 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
     const weeksSinceLastAward = lastAwardWin
       ? (state.week - lastAwardWin)
       : 999;
-    if (weeksSinceLastAward > 104 && newMotivation !== 'AWARD_CHASE' && rng.next() < 0.15) {
+
+    // 🎭 The Method Actor Tuning: Prestige studios panic and pivot to chasing awards much faster (1 year vs 2 years) if they are starved.
+    const awardStarvedThreshold = rival.prestige > 75 ? 52 : 104;
+
+    if (weeksSinceLastAward > awardStarvedThreshold && newMotivation !== 'AWARD_CHASE' && rng.next() < 0.15) {
       // 15% chance per week to switch to AWARD_CHASE if award-starved
       newMotivation = 'AWARD_CHASE';
     }

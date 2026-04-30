@@ -22,7 +22,7 @@ describe('UnifiedModal', () => {
       </UnifiedModal>
     );
     
-    expect(screen.getByText('Test Modal')).toBeInTheDocument();
+    expect(screen.getByText('TEST MODAL')).toBeInTheDocument();
     expect(screen.getByTestId('modal-content')).toBeInTheDocument();
   });
 
@@ -38,7 +38,7 @@ describe('UnifiedModal', () => {
       </UnifiedModal>
     );
     
-    expect(screen.getByText('This is the subtitle')).toBeInTheDocument();
+    expect(screen.getByText('THIS IS THE SUBTITLE')).toBeInTheDocument();
   });
 
   it('renders with icon', () => {

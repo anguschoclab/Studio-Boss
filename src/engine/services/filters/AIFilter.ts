@@ -4,7 +4,7 @@ import { TickContext, WeekFilter } from './types';
 // System Imports
 import { tickAIMinds } from '../../systems/ai/motivationEngine';
 import { tickAgencies } from '../../systems/ai/AgentBrain';
-import { tickAuctions, tickTalentCompetition } from '../../systems/ai/biddingEngine';
+import { tickAuctions, tickTalentCompetition } from '../../systems/ai/bidding';
 
 /**
  * AI Filter

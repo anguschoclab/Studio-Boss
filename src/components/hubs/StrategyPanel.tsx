@@ -1,9 +1,7 @@
 import { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
-import { Card, CardContent } from '@/components/ui/card';
 import { Award, Target, TrendingUp, ChevronRight, Zap, Trophy, ShieldCheck } from 'lucide-react';
 import { selectReleasedProjects } from '@/store/selectors';
-import { cn } from '@/lib/utils';
 
 export const StrategyPanel: React.FC = () => {
   const gameState = useGameStore(s => s.gameState);

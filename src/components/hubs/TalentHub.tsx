@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore, TalentSubTab } from '@/store/uiStore';
 import { SubNav } from '@/components/navigation/SubNav';
-import { Badge } from '@/components/ui/badge';
 import {
   Users,
   Search,
@@ -16,8 +15,7 @@ import {
   Briefcase,
   AlertTriangle,
   Zap,
-  Target,
-  ArrowRight
+  Target
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Talent, TalentRole, Opportunity } from '@/engine/types';
@@ -118,7 +116,7 @@ const RosterPanel = () => {
                 }
               }}
               onClick={() => selectTalent(talent.id)}
-              className="group p-8 bg-white/[0.01] border border-white/5 rounded-none hover:border-primary/40 hover:bg-white/[0.03] transition-all duration-700 cursor-pointer shadow-xl relative overflow-hidden"
+              className="group p-8 bg-white/[0.01] border border-white/5 rounded-none hover:border-primary/40 hover:bg-white/[0.03] transition-all duration-700 cursor-pointer shadow-xl relative overflow-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none"
             >
               <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-20 transition-opacity">
                  <Zap className="w-12 h-12 text-primary" strokeWidth={1} />
@@ -223,7 +221,7 @@ const MarketplacePanel = () => {
                   return (
                     <div 
                       key={opp.id}
-                      className="p-10 bg-white/[0.01] border border-white/5 rounded-none hover:border-primary/40 hover:bg-white/[0.03] transition-all duration-700 cursor-pointer shadow-2xl relative overflow-hidden group"
+                      className="p-10 bg-white/[0.01] border border-white/5 rounded-none hover:border-primary/40 hover:bg-white/[0.03] transition-all duration-700 cursor-pointer shadow-2xl relative overflow-hidden group focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none"
                       role="button"
                       tabIndex={0}
                       onKeyDown={(e) => {

@@ -52,13 +52,6 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         gameState: {
           ...state,
           finance: { ...state.finance, cash: newCash },
-          studio: {
-            ...state.studio,
-            internal: {
-              ...state.studio.internal,
-              contracts: [...(state.studio.internal.contracts || []), contract]
-            }
-          },
           entities: {
             ...state.entities,
             contracts: { ...state.entities.contracts, [contract.id]: contract }

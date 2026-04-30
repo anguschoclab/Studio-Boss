@@ -9,9 +9,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Target, TrendingUp, Users, Sparkles, DollarSign, X } from 'lucide-react';
+import { Target, TrendingUp, Sparkles, DollarSign, X } from 'lucide-react';
 import { calculateAudienceIndex } from '@/engine/systems/demographics';
 import { formatCurrency } from '@/lib/utils';
 import { cn } from '@/lib/utils';

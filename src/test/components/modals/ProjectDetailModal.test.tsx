@@ -150,7 +150,7 @@ describe('ProjectDetailModal', () => {
 
     render(<ProjectDetailModal />);
 
-    const approveBtn = screen.getByText('Authorize Production');
+    const approveBtn = screen.getByText('Execute Authorization & Release Budgets');
     expect(approveBtn).toBeInTheDocument();
 
     fireEvent.click(approveBtn);
@@ -187,7 +187,7 @@ describe('ProjectDetailModal', () => {
 
     render(<ProjectDetailModal />);
 
-    const lockBtn = screen.getByText('Lock Campaign & Commit Capital');
+    const lockBtn = screen.getByText('Authorize Global Release & Dedicate Reserves');
     expect(lockBtn).toBeInTheDocument();
 
     fireEvent.click(lockBtn);
@@ -236,7 +236,7 @@ describe('ProjectDetailModal', () => {
 
     render(<ProjectDetailModal />);
 
-    const renewBtn = screen.getByText('Order Season 2');
+    const renewBtn = screen.getByText('Order Next Season (Production)');
     expect(renewBtn).toBeInTheDocument();
 
     fireEvent.click(renewBtn);

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { processRazzies } from '../../../engine/systems/awards';
-import { Project, NewsImpact, PrestigeImpact, ProjectUpdateImpact } from '../../../engine/types';
-import { createMockGameState } from '../../mockFactory';
+import { Project, StateImpact } from '../../../engine/types';
+import { createMockGameState } from '../../utils/mockFactories';
 import { RandomGenerator } from '../../../engine/utils/rng';
 
 describe('Razzies Award System', () => {
@@ -56,14 +56,13 @@ describe('Razzies Award System', () => {
       }
     });
 
-    const impacts = processRazzies(state, 4, rng);
+    const impacts = processRazzies(state, 4);
 
     // Only the bigFlop is eligible. Worst Picture should trigger a headline mentioning it.
-    const newsImpact = impacts.find(i => i.type === 'NEWS_ADDED') as NewsImpact;
-    expect(newsImpact.payload.headline).toContain('Title big');
+    expect(impacts.newHeadlines).toBeDefined();
+    expect(impacts.newHeadlines!.some(h => h.text.includes('Title big'))).toBe(true);
     
-    const prestigeImpact = impacts.find(i => i.type === 'PRESTIGE_CHANGED') as PrestigeImpact;
-    expect(prestigeImpact.payload).toBeLessThan(0);
+    expect(impacts.prestigeChange).toBeLessThan(0);
   });
 
   it('Razzie win triggers Studio Prestige penalty and marks cult classic if absurd', () => {
@@ -78,12 +77,11 @@ describe('Razzies Award System', () => {
       }
     });
 
-    const impacts = processRazzies(state, 4, rng);
+    const impacts = processRazzies(state, 4);
 
-    const prestigeImpact = impacts.find(i => i.type === 'PRESTIGE_CHANGED') as PrestigeImpact;
-    expect(prestigeImpact.payload).toBeLessThan(0);
+    expect(impacts.prestigeChange).toBeLessThan(0);
     
-    const projectImpact = impacts.find(i => i.type === 'PROJECT_UPDATED' && i.payload.update.isCultClassic) as ProjectUpdateImpact;
-    expect(projectImpact.payload.projectId).toBe('absurd');
+    expect(impacts.cultClassicProjectIds).toBeDefined();
+    expect(impacts.cultClassicProjectIds).toContain('absurd');
   });
 });

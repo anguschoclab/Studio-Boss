@@ -1,16 +1,11 @@
 import { useState, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
-import { useUIStore } from '@/store/uiStore';
-import { Project, Talent, TalentRole } from '@/engine/types';
+import { Project, TalentRole } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { TalentAvatar } from '@/components/talent/TalentAvatar';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Users, Clapperboard, PenTool, Megaphone, Film, CheckCircle2, Info } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Users, Clapperboard, PenTool, CheckCircle2, Info } from 'lucide-react';
 import { useTalentMap } from '@/hooks/useTalentMap';
 
 type AttachmentPhase = 'producers_writers' | 'cast_directors';
@@ -19,7 +14,7 @@ const PHASE_CONFIG: Record<AttachmentPhase, {
   title: string; 
   description: string; 
   roles: TalentRole[];
-  icon: any;
+  icon: React.ElementType;
 }> = {
   producers_writers: {
     title: 'Attach Producers & Writers',
@@ -35,95 +30,7 @@ const PHASE_CONFIG: Record<AttachmentPhase, {
   }
 };
 
-export const AttachTalentModal = () => {
-  const gameState = useGameStore(s => s.gameState);
-  const updateProject = useGameStore(s => s.updateProject);
-  const { selectedProjectId, selectProject } = useUIStore();
-  
-  const [selectedTalent, setSelectedTalent] = useState<string[]>([]);
-  const [phase, setPhase] = useState<AttachmentPhase>('producers_writers');
-
-  const project = useMemo(() => {
-    if (!selectedProjectId || !gameState) return null;
-    return gameState.studio.internal.projects[selectedProjectId];
-  }, [selectedProjectId, gameState]);
-  
-  // Only show for projects in development or production that could use talent
-  const shouldShow = project && (project.state === 'development' || project.state === 'production' || project.state === 'needs_greenlight');
-  
-  const talentPool = useMemo(() => Object.values(gameState?.industry?.talentPool || {}), [gameState?.industry?.talentPool]);
-  const contracts = useMemo(() => gameState?.studio.internal.contracts || [], [gameState?.studio.internal.contracts]);
-  
-  // Get already attached talent for this project
-  const attachedTalentIds = useMemo(() => {
-    if (!project) return new Set<string>();
-    return new Set(contracts.filter(c => c.projectId === project.id).map(c => c.talentId));
-  }, [contracts, project]);
-
-  const phaseConfig = PHASE_CONFIG[phase];
-  
-  const availableTalent = useMemo(() => {
-    return talentPool
-      .filter(t => 
-        phaseConfig.roles.some(r => t.roles.includes(r)) &&
-        !attachedTalentIds.has(t.id)
-      )
-      .sort((a, b) => b.prestige - a.prestige);
-  }, [talentPool, phaseConfig.roles, attachedTalentIds]);
-
-  const talentMap = useTalentMap(talentPool);
-  
-  const totalFees = selectedTalent.reduce((sum, id) => {
-    const t = talentMap.get(id);
-    return sum + (t?.fee || 0);
-  }, 0);
-
-  if (!shouldShow || !project) return null;
-
-  const handleAttach = () => {
-    // In a full implementation, this would create contracts
-    // For now we attach via the existing system
-    selectedTalent.forEach(talentId => {
-      const t = talentMap.get(talentId);
-      if (!t) return;
-      // Add contract
-      const newContract = {
-        id: `contract-${crypto.randomUUID()}`,
-        talentId,
-        projectId: project.id,
-        fee: t.fee,
-        backendPercent: 0,
-      };
-      // We'll update via store
-      gameState && useGameStore.setState((s) => {
-        if (!s.gameState) return s;
-        return {
-          gameState: {
-            ...s.gameState,
-            studio: {
-              ...s.gameState.studio,
-              internal: {
-                ...s.gameState.studio.internal,
-                contracts: [...s.gameState.studio.internal.contracts, newContract]
-              }
-            },
-            finance: {
-              ...s.gameState.finance,
-              cash: s.gameState.finance.cash - t.fee
-            }
-          }
-        };
-      });
-    });
-    
-    setSelectedTalent([]);
-  };
-
-  const PhaseIcon = phaseConfig.icon;
-
-  // This is rendered inside the ProjectDetailModal, not as a standalone
-  return null;
-};
+// Modals for AttachTalentModal removed since it returns null and causes unused var lint errors.
 
 /**
  * Inline talent attachment panel to embed in ProjectDetailModal

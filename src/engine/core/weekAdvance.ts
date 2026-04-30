@@ -5,6 +5,11 @@ import { WeekCoordinator } from '../services/WeekCoordinator';
 let lastAdvancedStateRef: GameState | null = null;
 let lastResultRef: { newState: GameState; summary: WeekSummary } | null = null;
 
+export function resetAdvanceWeekCache(): void {
+  lastAdvancedStateRef = null;
+  lastResultRef = null;
+}
+
 /**
  * Standard Engine Orchestrator.
  * Delegates all simulation logic to the WeekCoordinator pipeline.

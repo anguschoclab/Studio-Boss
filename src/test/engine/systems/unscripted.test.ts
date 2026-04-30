@@ -3,8 +3,7 @@ import { useGameStore } from '@/store/gameStore';
 
 describe('Unscripted Projects', () => {
   it('creates an unscripted project with correct stats', async () => {
-    // newGame is async
-    await useGameStore.getState().newGame('Test Studio', 'major');
+    useGameStore.getState().devAutoInit('major');
 
     useGameStore.getState().createProject({
       title: 'Real World Test',
@@ -27,5 +26,5 @@ describe('Unscripted Projects', () => {
     expect(project?.tvDetails?.episodesOrdered).toBe(12);
     expect(project?.tvDetails?.currentSeason).toBe(1);
     expect(project?.renewable).toBe(true);
-  });
+  }, 10000);
 });

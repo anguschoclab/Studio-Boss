@@ -7,47 +7,48 @@ describe('Production Engine (Target A2) - Symmetry', () => {
   const rng = new RandomGenerator(555);
   const mockState = {
     week: 1,
-    studio: {
-      name: 'Player Studio',
-      internal: {
-        projects: {
-          'player-p1': { 
-            id: 'player-p1', 
-            type: 'FILM', 
-            state: 'production', 
-            weeksInPhase: 5, 
-            productionWeeks: 20,
-            progress: 25,
-            scriptHeat: 50,
-            activeRoles: [],
-            scriptEvents: []
-          }
+    gameSeed: 1,
+    tickCount: 0,
+    game: { currentWeek: 1 },
+    studio: { id: 'PLR-1', name: 'Player Studio', archetype: 'major', prestige: 50, internal: { projectHistory: [] } },
+    entities: {
+      projects: {
+        'player-p1': { 
+          id: 'player-p1', 
+          type: 'FILM', 
+          state: 'production', 
+          weeksInPhase: 5, 
+          productionWeeks: 20,
+          progress: 25,
+          scriptHeat: 50,
+          activeRoles: [],
+          scriptEvents: []
         },
-        contracts: []
-      }
-    },
-    industry: {
-      rivals: [
-        {
-          id: 'rival-s1',
-          name: 'Rival Studio',
-          projects: {
-            'rival-p1': { 
-              id: 'rival-p1', 
-              type: 'FILM', 
-              state: 'production', 
-              weeksInPhase: 5, 
-              productionWeeks: 20,
-              progress: 25,
-              scriptHeat: 50,
-              activeRoles: [],
-              scriptEvents: []
-            }
-          }
+        'rival-p1': { 
+          id: 'rival-p1', 
+          type: 'FILM', 
+          state: 'production', 
+          weeksInPhase: 5, 
+          productionWeeks: 20,
+          progress: 25,
+          scriptHeat: 50,
+          activeRoles: [],
+          scriptEvents: []
         }
-      ],
-      talentPool: {}
-    }
+      },
+      talents: {},
+      contracts: {},
+      rivals: {}
+    },
+    finance: { cash: 1_000_000, ledger: [], weeklyHistory: [], marketState: { baseRate: 0.05, savingsYield: 0.02, debtRate: 0.08, loanRate: 0.06, rateHistory: [] } },
+    news: { headlines: [] },
+    ip: { vault: [], franchises: {} },
+    market: { opportunities: [], buyers: [] },
+    industry: { families: [], agencies: [], agents: [], rivals: [], awards: [], newsHistory: [], rumors: [], scandals: [] },
+    culture: { genrePopularity: {} },
+    relationships: { discovery: {} },
+    history: [],
+    eventHistory: []
   } as unknown as GameState;
 
   it('should return PROJECT_UPDATED impacts for Player and Rival', () => {
