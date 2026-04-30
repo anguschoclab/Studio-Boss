@@ -105,5 +105,13 @@ export default tseslint.config(
                 }
             ]
         }
+    },
+    {
+        /* RELAXED STANDARDS FOR TESTS */
+        files: ["src/test/**/*.{ts,tsx}"],
+        rules: {
+            "@typescript-eslint/no-explicit-any": "off",
+            "@typescript-eslint/no-unused-vars": "warn"
+        }
     }
 );
