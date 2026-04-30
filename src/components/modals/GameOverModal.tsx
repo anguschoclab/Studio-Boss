@@ -1,10 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { formatMoney } from '@/engine/utils';
-import { Skull, Trophy, BarChart3, RefreshCw, Star, Terminal, ArrowRight, AlertTriangle } from 'lucide-react';
+import { Skull, Trophy, BarChart3, RefreshCw, Star, Terminal, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 // ---------------------------------------------------------------------------
