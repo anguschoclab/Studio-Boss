@@ -74,10 +74,10 @@ export const CrisisModal = () => {
         </DialogHeader>
 
         <div className="flex flex-col gap-4 py-6 relative z-10">
-          {crisisDef.options.map((option: any, idx: number) => (
+          {crisisDef.options.map((option: { text: string; effectDescription: string }, idx: number) => (
             <div key={idx} className="group relative">
               <Button
-                variant={getOptionVariant(option.text) as any}
+                variant={getOptionVariant(option.text) as "default" | "destructive" | "outline"}
                 className={`w-full h-auto py-4 flex flex-col items-start gap-1 text-left transition-all hover:scale-[1.02] active:scale-[0.98] ${
                   option.text.toLowerCase().includes('pay') ? 'bg-amber-500 hover:bg-amber-600 text-black' : ''
                 }`}

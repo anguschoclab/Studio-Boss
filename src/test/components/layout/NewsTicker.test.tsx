@@ -7,16 +7,16 @@ vi.mock('../../../../src/store/gameStore');
 
 describe('NewsTicker', () => {
   it('returns default fallback state if there are no headlines', () => {
-    vi.spyOn(gameStore, 'useGameStore').mockImplementation((selector: any) => 
-      selector({ news: { headlines: [] } })
+    vi.spyOn(gameStore, 'useGameStore').mockImplementation((selector: unknown) =>
+      (selector as (state: unknown) => unknown)({ news: { headlines: [] } })
     );
     render(<NewsTicker />);
     expect(screen.getAllByText((c) => c.includes('ESTABLISHING_UPLINK') || c.includes('THE_TRADES') || c.includes('UPLINK')).length).toBeGreaterThan(0);
   });
 
   it('displays active news items from the store (doubled for marquee)', () => {
-    vi.spyOn(gameStore, 'useGameStore').mockImplementation((selector: any) => 
-      selector({ 
+    vi.spyOn(gameStore, 'useGameStore').mockImplementation((selector: unknown) =>
+      (selector as (state: unknown) => unknown)({
         news: { 
           headlines: [
             { id: '1', text: 'Local Studio Boss saves the day!', date: 'Week 1', category: 'GENERAL' }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useUIStore } from '@/store/uiStore';
-import { Trophy, Star, X } from 'lucide-react';
+import { Trophy, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 

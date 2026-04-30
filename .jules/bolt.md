@@ -16,3 +16,6 @@
 ## 2026-05-18 - Replacing Object.values().filter() in Game Ticks
 **Learning:** Using chained `Object.values().filter()` during every engine tick loop allocates intermediate arrays which are quickly discarded, causing unneeded O(N) memory allocation and subsequent garbage collection pauses.
 **Action:** Replace `Object.values(state.entities.projects)` with `for...in` loops when iterating over high-frequency state records in the simulation loop.
+## 2026-05-18 - Avoid O(N*M) nested array allocation in filters
+**Learning:** Creating a Set using `Object.values().map()` inside an Array `.filter()` operation on high-frequency State Records causes massive O(N*M) complexity and GC pressure because the Set is re-allocated for every entity.
+**Action:** Extract Set creation (like `ownedBy`) outside the loops and use `for...in` iteration for collections to eliminate intermediate array overhead and nested complexity.
