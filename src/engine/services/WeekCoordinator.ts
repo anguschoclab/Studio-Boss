@@ -132,11 +132,12 @@ export class WeekCoordinator {
     let nextState = applyImpacts(state, context.impacts);
 
     // 3.5 Check for franchise breakouts on newly released projects
-    const releasedProjects = Object.values(nextState.entities.projects).filter(
-      p => p.state === 'released' && (p.releaseWeek === context.week || p.releaseWeek === context.week - 1) && !p.franchiseId
-    );
-    for (const p of releasedProjects) {
-      nextState = updateFranchiseHub(nextState, p);
+    // ⚡ The Framerate Fanatic: Replaced Object.values().filter() with a direct for...in loop
+    for (const id in nextState.entities.projects) {
+      const p = nextState.entities.projects[id];
+      if (p.state === 'released' && (p.releaseWeek === context.week || p.releaseWeek === context.week - 1) && !p.franchiseId) {
+        nextState = updateFranchiseHub(nextState, p);
+      }
     }
 
     const finalizedState: GameState = {
@@ -191,15 +192,19 @@ export class WeekCoordinator {
     context.impacts.push(...tickReleaseStrategy(state));
 
     // 1a. Crisis auto-trigger for active production projects
-    Object.values(state.entities.projects).forEach(project => {
+    // ⚡ The Framerate Fanatic: Replaced Object.values() with a direct for...in loop
+    for (const id in state.entities.projects) {
+      const project = state.entities.projects[id];
       if (project.state === 'production') {
         const crisis = checkAndTriggerCrisis(project);
         if (crisis) context.impacts.push(crisis);
       }
-    });
+    }
 
     // 2. Script Evolution Tick (Only for Studio Projects in Development)
-    Object.values(state.entities.projects).forEach(project => {
+    // ⚡ The Framerate Fanatic: Replaced Object.values() with a direct for...in loop
+    for (const id in state.entities.projects) {
+      const project = state.entities.projects[id];
       if (project.state === 'development') {
         const result = tickScriptDevelopment(project, context.rng);
         if (result.project !== project) {
@@ -213,7 +218,7 @@ export class WeekCoordinator {
           if (result.impact) context.impacts.push(result.impact);
         }
       }
-    });
+    }
 
     context.impacts.push(...tickTelevision(state, context.rng));
 
@@ -305,7 +310,10 @@ export class WeekCoordinator {
     // Rival weekly revenue + overhead drain. Opening-weekend gross already bakes
     // in macro heat, so here we only apply inflation to overhead.
     const inflation = getBudgetInflation(context.week);
-    Object.values(state.entities.rivals || {}).forEach(rival => {
+    // ⚡ The Framerate Fanatic: Replaced Object.values() with a direct for...in loop
+    const rivalsMap = state.entities.rivals || {};
+    for (const id in rivalsMap) {
+      const rival = rivalsMap[id];
       const revenue = RivalRevenueCalculator.calculateWeeklyRevenue(rival, context.week, context.rng, state);
       const archetypeMult = rival.archetype === 'major' ? 2.2 : rival.archetype === 'mid-tier' ? 1.0 : 0.4;
       const overhead = 80_000 * archetypeMult * inflation;
@@ -321,7 +329,7 @@ export class WeekCoordinator {
           }
         });
       }
-    });
+    }
   }
 
   private static buildSummary(before: GameState, after: GameState, context: TickContext): WeekSummary {

@@ -13,3 +13,6 @@
 ## 2026-04-25 - Replace redundant Array filter in O(N) loops with pre-computed lookup Records
 **Learning:** Evaluating `contracts.filter(c => c.projectId === project.id)` inside a loop over projects creates O(Projects * Contracts) complexity.
 **Action:** Pre-group contracts by `projectId` into a `Record<string, Contract[]>` before the loop to achieve O(Projects + Contracts) complexity. Measured ~25x improvement in `SchedulingEngine.tick` (from ~50ms to ~2ms for 500 projects and 5000 contracts).
+## 2026-05-18 - Optimize WeekCoordinator Array Allocations
+**Learning:** `WeekCoordinator.ts` was performing multiple `Object.values()` calls on the global `projects` and `rivals` dictionaries in every tick. Given the high frequency of this orchestration file, these intermediate array allocations caused compounding garbage collection spikes during core loops.
+**Action:** Replaced sequential `Object.values().forEach()` and `Object.values().filter()` operations across `runProductionFilter`, `runIPFilter`, `runAIFilter`, and `runFinanceFilter` with direct `for...in` loops. By interacting with the record's keys directly, O(N) memory allocations were entirely eliminated in these hot paths, reducing GC load and overall tick duration.
