@@ -481,7 +481,7 @@ function spawnShingles(state: GameState, rng: RandomGenerator, impacts: StateImp
     const s = shingles[id];
     if (s.baseStudioId) {
       activeTotal++;
-      if ((s as any).medium === 'TV') activeTV++;
+      if (s.medium === 'TV') activeTV++;
     }
   }
 
