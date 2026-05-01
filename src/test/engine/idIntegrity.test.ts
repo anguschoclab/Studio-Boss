@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { GameState } from '@/engine/types/studio.types';
 import { initializeGame } from '@/engine/core/gameInit';
-import { RandomGenerator } from '@/engine/utils/rng';
 
 /**
  * 🌌 ID INTEGRITY SUITE
@@ -15,48 +14,6 @@ describe('ID Integrity Standards', () => {
     state = initializeGame('test-studio', 'mid-tier', SEED);
   });
 
-  const PREFIX_MAP: Record<string, string> = {
-    // Core Studios
-    'state.studio.id': 'PLR',
-    'state.entities.rivals.*.id': 'RIV',
-    
-    // Talent Layer
-    'state.entities.talents.*.id': 'TAL',
-    'state.industry.families.*.id': 'FAM',
-    'state.industry.agencies.*.id': 'AGY',
-    'state.industry.agents.*.id': 'AGT',
-    
-    // Project Layer
-    'state.entities.projects.*.id': 'PRJ',
-    'state.entities.contracts.*.id': 'CNT',
-    'state.deals.activeDeals.*.id': 'PCT',
-    
-    // Market & Industry
-    'state.market.opportunities.*.id': 'OPP',
-    'state.market.buyers.*.id': 'BUY',
-    'state.industry.awards.*.id': 'AWD',
-    'state.industry.scandals.*.id': 'SND',
-    
-    // Data Templates
-    'state.industry.activeMergers.*.id': 'NWS', // Headline based
-    'state.industry.newsHistory.*.id': 'NWS',
-  };
-
-  const validateID = (id: string, expectedPrefix: string, path: string) => {
-    it(`should have valid ${expectedPrefix}- prefix for ${path}`, () => {
-      expect(id).toBeDefined();
-      expect(typeof id).toBe('string');
-      
-      const parts = id.split('-');
-      expect(parts[0]).toBe(expectedPrefix);
-      
-      // Check for UUID length and format (8-4-4-4-12 = 36 chars)
-      // Note: rng.uuid might return shorter or different but it should be standard
-      const uuidPart = id.slice(expectedPrefix.length + 1);
-      // We expect at least some entropy
-      expect(uuidPart.length).toBeGreaterThan(8);
-    });
-  };
 
   describe('Core Entities', () => {
     it('player studio should have PLR- prefix', () => {

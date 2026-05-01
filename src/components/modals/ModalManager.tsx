@@ -39,7 +39,8 @@ export const ModalManager: React.FC = () => {
           case 'FESTIVAL_MARKET':
             return <FestivalMarketModal key={activeModal.id} />;
           case 'CREATE_PACKAGE':
-            return <CreatePackageModal key={activeModal.id} {...(activeModal.payload as any)} />;
+            // @ts-expect-error - dynamic payload injection
+            return <CreatePackageModal key={activeModal.id} {...activeModal.payload} />;
           case 'PACKAGE_DETAIL':
             return <PackageDetailModal key={activeModal.id} />;
           case 'DIRECTORS_CUT_AVAILABLE':
