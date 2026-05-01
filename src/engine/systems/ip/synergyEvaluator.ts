@@ -28,7 +28,7 @@ export function calculateSynergyGains(
   
   // 1. Film -> TV "The Halo Effect" (2026 Perspective)
   // Releasing a theatrical film provides a massive viewership spike to related TV catalog and active series.
-  const hasActiveTheatricalRun = franchise.activeProjectIds.some(id => id?.includes('film')); // Simplified check for demonstration
+  const hasActiveTheatricalRun = franchise.activeProjectIds.some(id => id.includes('film')); // Simplified check for demonstration
   
   if (projectType === 'SERIES') {
     if (hasActiveTheatricalRun) {
@@ -37,7 +37,7 @@ export function calculateSynergyGains(
     }
     
     // Total catalog bonus
-    const filmAssetCount = relatedVaultAssets.filter(a => a.id?.includes('film')).length;
+    const filmAssetCount = relatedVaultAssets.filter(a => a.id.includes('film')).length;
     if (filmAssetCount >= 3) {
       gains.revenueMultiplier += 0.15; // Long-term "Cinematic Universe" prestige bonus for the TV show
     }
@@ -59,7 +59,7 @@ export function calculateSynergyGains(
 
   // 3. Multi-Format Bonus
   // Brands that span ALL media types receive a "Cultural Ubiquity" multiplier.
-  const hasFilm = relatedVaultAssets.some(a => a.id?.includes('film'));
+  const hasFilm = relatedVaultAssets.some(a => a.id.includes('film'));
   const hasTV = relatedVaultAssets.some(a => a.syndicationStatus === 'SYNDICATED');
   
   if (hasFilm && hasTV) {
@@ -70,18 +70,20 @@ export function calculateSynergyGains(
 }
 
 /**
- * Phase 7: Vault Synergy Detection.
- * Scans active projects to identify which vault assets are currently being 'Rebooted' or 'Expanded'.
- * This sets the 'isSynergyActive' flag on IPAssets, which freezes their cultural decay.
+ * Evaluates the total synergy multiplier for the entire IP vault.
+ * Returns the modified vault assets to be processed by the manager.
  */
-export function evaluateVaultSynergy(
-  activeProjects: import('../../types').Project[],
-  vault: IPAsset[]
-): IPAsset[] {
-  const activeOriginalProjectIds = new Set(activeProjects.map(p => p.originalProjectId).filter(Boolean));
+export function evaluateVaultSynergy(activeProjects: any[], vault: IPAsset[]): IPAsset[] {
+  if (!vault || vault.length < 2) return vault || [];
+  
+  // Calculate synergy based on franchise density
+  const franchiseGroups = new Set(vault.map(v => v.franchiseId).filter(Boolean));
+  
+  // Base 1.0 + 5% per unique franchise + 1% per unique asset
+  const multiplier = 1.0 + (franchiseGroups.size * 0.05) + (vault.length * 0.01);
   
   return vault.map(asset => ({
     ...asset,
-    isSynergyActive: activeOriginalProjectIds.has(asset.originalProjectId)
+    baseValue: Math.floor(asset.baseValue * multiplier)
   }));
 }

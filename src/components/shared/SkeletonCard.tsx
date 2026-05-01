@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 const SkeletonPulse: React.FC<{ className?: string }> = ({ className }) => (
   <div
     className={cn(
-      'animate-pulse bg-muted/50 rounded',
+      'animate-pulse bg-white/[0.03] rounded-none',
       className
     )}
   />
@@ -39,22 +39,22 @@ const sizeConfig = {
     gap: 'space-y-2',
   },
   md: {
-    container: 'p-5',
-    header: 'h-5 w-1/3 mb-4',
+    container: 'p-8',
+    header: 'h-5 w-1/3 mb-6',
     image: 'w-12 h-12',
-    imageTop: 'h-40 mb-4',
+    imageTop: 'h-40 mb-6',
     row: 'h-3.5',
     rowWidth: ['w-full', 'w-3/4', 'w-1/2'],
-    gap: 'space-y-3',
+    gap: 'space-y-4',
   },
   lg: {
-    container: 'p-6',
-    header: 'h-6 w-1/4 mb-5',
+    container: 'p-12',
+    header: 'h-6 w-1/4 mb-8',
     image: 'w-16 h-16',
-    imageTop: 'h-48 mb-5',
+    imageTop: 'h-48 mb-8',
     row: 'h-4',
     rowWidth: ['w-full', 'w-4/5', 'w-3/5', 'w-1/2'],
-    gap: 'space-y-4',
+    gap: 'space-y-6',
   },
 };
 
@@ -71,14 +71,14 @@ export const SkeletonCard: React.FC<SkeletonCardProps> = ({
   return (
     <div
       className={cn(
-        'bg-card/40 border border-white/5 rounded-xl overflow-hidden',
+        'glass-card border-white/5 rounded-none overflow-hidden',
         config.container,
         className
       )}
     >
       {/* Top image */}
       {hasImage && imagePosition === 'top' && (
-        <SkeletonPulse className={cn('rounded-lg', config.imageTop)} />
+        <SkeletonPulse className={cn('rounded-none', config.imageTop)} />
       )}
 
       {/* Header */}
@@ -87,10 +87,10 @@ export const SkeletonCard: React.FC<SkeletonCardProps> = ({
       )}
 
       {/* Content layout */}
-      <div className={cn('flex', imagePosition === 'left' && hasImage && 'gap-4')}>
+      <div className={cn('flex', imagePosition === 'left' && hasImage && 'gap-6')}>
         {/* Left image */}
         {hasImage && imagePosition === 'left' && (
-          <SkeletonPulse className={cn('rounded-lg shrink-0', config.image)} />
+          <SkeletonPulse className={cn('rounded-none shrink-0 border border-white/5', config.image)} />
         )}
 
         {/* Text rows */}
@@ -119,25 +119,25 @@ export const SkeletonStat: React.FC<{
 }> = ({ size = 'md', className }) => {
   const sizes = {
     sm: 'p-4',
-    md: 'p-5',
-    lg: 'p-6',
+    md: 'p-8',
+    lg: 'p-12',
   };
 
   return (
     <div
       className={cn(
-        'bg-card/40 border border-white/5 rounded-xl overflow-hidden',
+        'glass-card border-white/5 rounded-none overflow-hidden',
         sizes[size],
         className
       )}
     >
       <div className="flex items-start justify-between">
-        <div className="flex-1 space-y-3">
+        <div className="flex-1 space-y-4">
           {/* Title */}
           <SkeletonPulse className="h-3 w-20" />
           {/* Value */}
           <SkeletonPulse className={cn(
-            'h-8',
+            'h-10',
             size === 'sm' ? 'w-16' : size === 'md' ? 'w-24' : 'w-32'
           )} />
           {/* Subtitle */}
@@ -145,8 +145,8 @@ export const SkeletonStat: React.FC<{
         </div>
         {/* Icon placeholder */}
         <SkeletonPulse className={cn(
-          'rounded-lg shrink-0',
-          size === 'sm' ? 'w-8 h-8' : size === 'md' ? 'w-10 h-10' : 'w-12 h-12'
+          'rounded-none shrink-0 border border-white/5',
+          size === 'sm' ? 'w-8 h-8' : size === 'md' ? 'w-12 h-12' : 'w-16 h-16'
         )} />
       </div>
     </div>
@@ -165,16 +165,16 @@ export const SkeletonListItem: React.FC<{
   lines?: number;
   className?: string;
 }> = ({ hasAvatar = true, hasMeta = true, lines = 2, className }) => (
-  <div className={cn('flex items-center gap-3 p-3', className)}>
+  <div className={cn('flex items-center gap-4 p-4', className)}>
     {hasAvatar && (
-      <SkeletonPulse className="w-10 h-10 rounded-full shrink-0" />
+      <SkeletonPulse className="w-12 h-12 rounded-none shrink-0 border border-white/5" />
     )}
-    <div className="flex-1 space-y-2">
+    <div className="flex-1 space-y-3">
       {Array.from({ length: lines }).map((_, i) => (
         <SkeletonPulse
           key={i}
           className={cn(
-            'h-3',
+            'h-3.5',
             i === 0 ? 'w-3/4' : i === 1 && hasMeta ? 'w-1/2' : 'w-1/3'
           )}
         />
@@ -192,7 +192,7 @@ export const SkeletonList: React.FC<{
   hasMeta?: boolean;
   className?: string;
 }> = ({ count = 5, hasAvatar = true, hasMeta = true, className }) => (
-  <div className={cn('space-y-1', className)}>
+  <div className={cn('space-y-2', className)}>
     {Array.from({ length: count }).map((_, i) => (
       <SkeletonListItem
         key={i}
@@ -229,7 +229,7 @@ export const SkeletonCardGrid: React.FC<{
   };
 
   return (
-    <div className={cn('grid gap-4', gridCols[columns], className)}>
+    <div className={cn('grid gap-6', gridCols[columns], className)}>
       {Array.from({ length: count }).map((_, i) => (
         <SkeletonCard
           key={i}
@@ -250,14 +250,14 @@ export const SkeletonPage: React.FC<{
   contentCards?: number;
   className?: string;
 }> = ({ headerRows = 2, contentCards = 4, className }) => (
-  <div className={cn('space-y-6 animate-in fade-in duration-500', className)}>
+  <div className={cn('space-y-12 animate-in fade-in duration-1000', className)}>
     {/* Header section */}
-    <div className="space-y-3 pb-6 border-b border-white/5">
+    <div className="space-y-6 pb-12 border-b border-white/5">
       {Array.from({ length: headerRows }).map((_, i) => (
         <SkeletonPulse
           key={i}
           className={cn(
-            'h-8',
+            'h-14',
             i === 0 ? 'w-1/3' : 'w-1/4'
           )}
         />
@@ -265,7 +265,7 @@ export const SkeletonPage: React.FC<{
     </div>
 
     {/* Sub-nav placeholder */}
-    <SkeletonPulse className="h-10 w-full max-w-md rounded-lg" />
+    <SkeletonPulse className="h-12 w-full max-w-md rounded-none border border-white/5" />
 
     {/* Content cards */}
     <SkeletonCardGrid count={contentCards} columns={2} />

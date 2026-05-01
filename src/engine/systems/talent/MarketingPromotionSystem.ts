@@ -38,7 +38,7 @@ function generateTalkShowAppearance(
   project?: Project
 ): TalkShowAppearance | null {
   // Check if talent is available (not on medical leave, etc)
-  if ((talent as any).status === 'MEDICAL_LEAVE') return null;
+  if (talent.onMedicalLeave) return null;
 
   const showTypes: TalkShowType[] = [
     'late_night', 'morning_show', 'podcast', 'variety', 'comedy_central', 'serious_interview'
@@ -327,7 +327,7 @@ export function tickMarketingPromotionSystem(
             talentId: talent.id,
             photoshoot,
           },
-        } as any);
+        });
 
         // Apply boosts when published
         if (photoshoot.publicationWeek === state.week) {
@@ -392,7 +392,7 @@ export function tickMarketingPromotionSystem(
   // 3. Press tours for upcoming releases
   const upcomingReleases = Object.values(state.entities.projects || {})
     .filter(p => {
-      const releaseWeek = (p as any).releaseWeek;
+      const releaseWeek = p.releaseWeek;
       return releaseWeek && releaseWeek - state.week >= 2 && releaseWeek - state.week <= 6;
     });
 
@@ -447,10 +447,10 @@ export function tickMarketingPromotionSystem(
 /**
  * Get active press tours for a project
  */
-export function getActivePressTours(projectId: string, state: GameState): any[] {
-  const marketing = (state as any).relationships?.marketingPromotions || {};
+export function getActivePressTours(projectId: string, state: GameState): import('../../types/marketing.types').PressTour[] {
+  const marketing = state.relationships?.marketingPromotions || {};
   return Object.values(marketing.activePressTours || {})
-    .filter((t: any) => t.projectId === projectId);
+    .filter((t) => t.projectId === projectId);
 }
 
 /**
@@ -460,9 +460,9 @@ export function calculateMarketingBuzz(
   projectId: string,
   state: GameState
 ): { buzzScore: number; viralMoments: number } {
-  const marketing = (state as any).relationships?.marketingPromotions || {};
+  const marketing = state.relationships?.marketingPromotions || {};
 
-  const appearances = Object.values(marketing.talkShowAppearances || {}) as TalkShowAppearance[];
+  const appearances = Object.values(marketing.talkShowAppearances || {});
   const relevantAppearances = appearances.filter(a => a.projectId === projectId);
 
   const viralMoments = relevantAppearances.filter(a => a.viralMoment).length;

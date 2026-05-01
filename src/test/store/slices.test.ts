@@ -1,10 +1,11 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useGameStore } from '@/store/gameStore';
-import { createMockProject } from '../utils/mockFactories';
+import { initializeGame } from '@/engine/core/gameInit';
 
 describe('Store Slice Isolation', () => {
-  beforeEach(async () => {
-    await useGameStore.getState().newGame('Test Studio', 'major');
+  beforeEach(() => {
+    const gameState = initializeGame('Test Studio', 'major', 42);
+    useGameStore.setState({ gameState, finance: gameState.finance as any, news: gameState.news });
   });
 
   describe('Finance Slice Isolation', () => {
@@ -15,13 +16,11 @@ describe('Store Slice Isolation', () => {
       const initialProjects = { ...initialState.gameState.entities.projects };
       const initialCash = initialState.gameState.finance.cash;
       
-      // Action
       useGameStore.getState().addFunds(5000);
       
       const newState = useGameStore.getState();
       if (!newState.gameState) throw new Error('Game missing after action');
       
-      // Verification
       expect(newState.gameState.finance.cash).toBe(initialCash + 5000);
       expect(newState.gameState.entities.projects).toStrictEqual(initialProjects); // Deep equality check
     });
@@ -30,17 +29,15 @@ describe('Store Slice Isolation', () => {
   describe('Project Slice Isolation', () => {
     it('should manage UUIDs internally and access by O(1) dictionary key', () => {
       const state = useGameStore.getState();
-      state.addProject(createMockProject({ id: 'p_O1', title: 'O1 Project', state: 'development' }));
+      state.addProject({ id: 'p_O1', title: 'O1 Project', state: 'development' });
       const newState = useGameStore.getState();
       expect(newState.gameState?.entities.projects['p_O1']).toBeDefined();
       expect(Object.keys(newState.gameState?.entities.projects || {}).includes('p_O1')).toBe(true);
     });
     it('should advance a specific project status immutably', () => {
-      // Add mock projects
-      useGameStore.getState().addProject(createMockProject({ id: 'p1', state: 'development', title: 'P1' }));
-      useGameStore.getState().addProject(createMockProject({ id: 'p2', state: 'production', title: 'P2' }));
+      useGameStore.getState().addProject({ id: 'p1', state: 'development', title: 'P1' });
+      useGameStore.getState().addProject({ id: 'p2', state: 'production', title: 'P2' });
       
-      // Action
       useGameStore.getState().advanceProjectPhase('p1', 'production');
       
       const newState = useGameStore.getState();
@@ -49,9 +46,8 @@ describe('Store Slice Isolation', () => {
       const p1 = newState.gameState.entities.projects['p1'];
       const p2 = newState.gameState.entities.projects['p2'];
       
-      // Verification
       expect(p1?.state).toBe('production');
-      expect(p2?.state).toBe('production'); // Ensure adjacent objects were not mutated
+      expect(p2?.state).toBe('production');
     });
   });
 });

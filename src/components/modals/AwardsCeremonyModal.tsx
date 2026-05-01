@@ -1,18 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { Trophy, Star, Sparkles, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-interface AwardsPayload {
-  awards: import('@/engine/types').Award[];
-  body?: string;
-  year?: number;
-}
-
-type Award = import('@/engine/types').Award;
 
 export const AwardsCeremonyModal = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
@@ -21,23 +13,19 @@ export const AwardsCeremonyModal = () => {
   const [phase, setPhase] = useState<'nominees' | 'reveal'>('nominees');
   const [currentAwardIdx, setCurrentAwardIdx] = useState(0);
 
+  const awards = (activeModal?.type === 'AWARDS' ? activeModal.payload?.awards : null) ?? [];
+
+  useEffect(() => {
+    if (activeModal?.type === 'AWARDS' && awards.length === 0) {
+      resolveCurrentModal();
+    }
+  }, [activeModal, awards.length, resolveCurrentModal]);
+
   if (!gameState || !activeModal || activeModal.type !== 'AWARDS') return null;
-
-  const payload = activeModal.payload as unknown as AwardsPayload;
-  const { awards = [], body = 'Annual Industry Awards', year = 2026 } = payload || {};
+  if (awards.length === 0) return null;
   
-  // Safety guard for empty awards
-  if (awards.length === 0) {
-    // If the modal was triggered but has no awards, resolve it immediately to avoid a crash
-    resolveCurrentModal();
-    return null;
-  }
-
+  const { body, year } = activeModal.payload;
   const currentAward = awards[currentAwardIdx];
-  if (!currentAward) {
-    resolveCurrentModal();
-    return null;
-  }
 
   const handleNext = () => {
     if (currentAwardIdx < awards.length - 1) {
@@ -52,13 +40,13 @@ export const AwardsCeremonyModal = () => {
   };
 
   const getProjectTitle = (id: string) => {
-     return gameState?.entities?.projects[id]?.title || "Unknown Project";
+    return gameState.entities?.projects[id]?.title || "Unknown Project";
   };
 
   return (
     <Dialog open={true} onOpenChange={() => {}}>
-      <DialogContent 
-        className="max-w-4xl bg-stone-950 border-stone-800 shadow-[0_0_100px_rgba(212,175,55,0.15)] overflow-hidden p-0"
+      <DialogContent
+        className="max-w-4xl bg-card/90 backdrop-blur-2xl border border-white/10 shadow-[0_0_100px_rgba(var(--primary),0.15)] overflow-hidden p-0"
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
@@ -78,7 +66,7 @@ export const AwardsCeremonyModal = () => {
                   {[1, 2, 3].map(i => <Star key={i} className="h-4 w-4 text-amber-500 animate-pulse" fill="currentColor" />)}
                 </div>
                 <h2 className="text-4xl font-serif font-black tracking-widest text-amber-500 uppercase">
-                  {body}
+                  {body || 'Annual Industry Awards'}
                 </h2>
                 <p className="text-stone-400 font-medium tracking-[0.2em] uppercase text-sm">
                   Class of {year} • Official Nominees
@@ -86,13 +74,13 @@ export const AwardsCeremonyModal = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-                {awards.map((award: Award, i: number) => (
+                {awards.map((award: { id: string; category: string; targetName: string; isPrestige?: boolean }, i: number) => (
                   <motion.div 
-                    key={award.id || i}
+                    key={award.id}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.1 }}
-                    className="bg-stone-900/50 border border-stone-800 p-4 rounded-xl flex flex-col gap-1 hover:border-amber-500/50 transition-colors"
+                    className="bg-stone-900/50 border border-stone-800 p-4 rounded-none flex flex-col gap-1 hover:border-amber-500/50 transition-colors"
                   >
                     <span className="text-xs font-black text-amber-500/60 uppercase tracking-tighter">{award.category}</span>
                     <span className="text-lg font-bold text-white leading-tight">{getProjectTitle(award.projectId)}</span>
@@ -102,7 +90,7 @@ export const AwardsCeremonyModal = () => {
 
               <Button 
                 onClick={() => setPhase('reveal')}
-                className="bg-amber-600 hover:bg-amber-500 text-black font-black uppercase tracking-widest px-12 py-6 h-auto text-lg rounded-full shadow-[0_0_30px_rgba(212,175,55,0.3)] transition-all hover:scale-105 active:scale-95"
+                className="bg-amber-600 hover:bg-amber-500 text-black font-black uppercase tracking-widest px-12 py-6 h-auto text-lg rounded-none shadow-[0_0_30px_rgba(212,175,55,0.3)] transition-all hover:scale-105 active:scale-95"
               >
                 Enter the Ballroom
               </Button>
@@ -139,7 +127,7 @@ export const AwardsCeremonyModal = () => {
                   transition={{ delay: 1.5, duration: 1 }}
                   className="space-y-4"
                 >
-                  <div className="inline-block p-1 rounded-sm bg-stone-800 text-amber-500 text-[10px] font-black uppercase tracking-widest px-3 mb-2">And the winner is...</div>
+                  <div className="inline-block p-1 rounded-none bg-stone-800 text-amber-500 text-[10px] font-black uppercase tracking-widest px-3 mb-2">And the winner is...</div>
                   
                   <motion.div
                     initial={{ scale: 0.8 }}

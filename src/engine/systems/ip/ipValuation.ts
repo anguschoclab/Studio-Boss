@@ -1,5 +1,5 @@
-import { Project, IPAsset, SeriesProject } from '../../types';
-import { clamp } from '../../utils';
+import { Project, IPAsset } from '../../types';
+import { randRange, clamp } from '../../utils';
 import { determineSyndicationTier, getSyndicationImpact } from './syndicationEngine';
 
 /**
@@ -7,12 +7,7 @@ import { determineSyndicationTier, getSyndicationImpact } from './syndicationEng
  * A project's success (revenue/awards) is converted into a persistent IPAsset.
  */
 export function calculateInitialIPValue(project: Project): IPAsset {
-  // 1. Determine Tier based on Industrial Performance
-  let tier: IPAsset['tier'] = 'ORIGINAL';
-  if (project.revenue > 500000000) tier = 'BLOCKBUSTER';
-  if (project.isCultClassic) tier = 'CULT_CLASSIC';
-  
-  // 2. Base value: roughly 20% of total revenue as catalog potential
+  // Base value: roughly 20% of total revenue as catalog potential
   let baseValue = project.revenue * 0.2;
   
   // Prestige/Awards bonus: 50% spike
@@ -20,30 +15,35 @@ export function calculateInitialIPValue(project: Project): IPAsset {
     baseValue *= 1.5;
   }
 
-  // Genre Multipliers: Franchise friendly genres get higher multipliers
+  // Genre Multiplier: Franchise friendly genres get higher multipliers
   let merchandisingMultiplier = 1.0;
   const genre = project.genre.toUpperCase();
-  if (['SCI-FI', 'ANIMATION', 'SUPERHERO'].includes(genre)) merchandisingMultiplier = 2.5;
-  else if (['HORROR', 'FANTASY'].includes(genre)) merchandisingMultiplier = 1.8;
+  if (genre === 'SCI-FI' || genre === 'ANIMATION' || genre === 'SUPERHERO') {
+    merchandisingMultiplier = 2.5;
+  } else if (genre === 'HORROR' || genre === 'FANTASY') {
+    merchandisingMultiplier = 1.8;
+  }
 
-  // Syndication Tiering
-  const episodes = (project as SeriesProject).tvDetails?.episodesAired || 0;
+  // Syndication Tiering: Delegate to the logic engine
+  const episodes = (project as any).tvDetails?.episodesAired || 0;
   const syndicationTier = determineSyndicationTier(episodes, project.genre);
+  const syndicationStatus = (syndicationTier !== 'NONE') ? 'SYNDICATED' : 'NONE';
+
+  // Rights Expiry: 10 years (520 weeks) by default
+  const rightsExpirationWeek = (project.releaseWeek || 0) + 520;
 
   return {
     id: `ip-${project.id}`,
     originalProjectId: project.id,
     franchiseId: project.franchiseId, 
     title: project.title,
-    tier,
-    quality: project.reviewScore || 50,
     baseValue: Math.floor(baseValue),
-    decayRate: 1.0, 
+    decayRate: 1.0, // Cultural peak at launch
     merchandisingMultiplier,
-    syndicationStatus: (syndicationTier !== 'NONE') ? 'SYNDICATED' : 'NONE',
+    syndicationStatus,
     syndicationTier,
     totalEpisodes: episodes,
-    rightsExpirationWeek: (project.releaseWeek || 0) + 520,
+    rightsExpirationWeek,
     rightsOwner: 'STUDIO'
   };
 }
@@ -53,22 +53,11 @@ export function calculateInitialIPValue(project: Project): IPAsset {
  * This decreases total merchant revenue.
  */
 export function applyIPDecay(asset: IPAsset): IPAsset {
-  // 1. Synergy Check (Reboot/Spinoff active)
-  if (asset.isSynergyActive) {
-    // Synergy freezes decay and adds a small "Anniversary/Hype" recovery
-    return {
-      ...asset,
-      decayRate: clamp(asset.decayRate + 0.002, 0.05, 1.0)
-    };
-  }
-
-  // 2. Tiered Decay Logic
-  let baseDecay = 0.01; // 1% default
-  if (asset.tier === 'BLOCKBUSTER') baseDecay = 0.005; // Slower decay
-  if (asset.tier === 'LEGACY') baseDecay = 0.002; // Very slow
-  if (asset.tier === 'CULT_CLASSIC') baseDecay = 0.008; // Slightly better than original
-
+  const baseDecay = 0.01; // 1% weekly drop by default
   const impact = getSyndicationImpact(asset.syndicationTier);
+
+  // Syndication halts or slows decay: 
+  // Gold (1.0) = 0% decay, Silver (0.9) = 0.1% decay, Bronze (0.5) = 0.5% decay
   const effectiveDecay = baseDecay * (1 - impact.decayShield);
 
   return {
@@ -78,24 +67,27 @@ export function applyIPDecay(asset: IPAsset): IPAsset {
 }
 
 /**
- * The Cult Classic Engine:
- * Automated Scanner: Week 1 of every year, scan all projects in history.
- * Criteria: weeksReleased > 260 && reviewScore > 75 && ROI < 1.1.
+ * Detects if a project should become a "Cult Classic" during the annual scan.
+ * Based on profit ratio, awards, and genre niche.
  */
 export function detectCultClassic(project: Project, currentWeek: number): boolean {
-  if (project.isCultClassic) return true;
-  if (!project.releaseWeek) return false;
+  // A project must be at least 1 year old to be considered a cult classic
+  const age = currentWeek - (project.releaseWeek || 0);
+  if (age < 52) return false;
 
-  const weeksReleased = currentWeek - project.releaseWeek;
-  if (weeksReleased < 260) return false;
+  const isNicheGenre = ['SCI-FI', 'HORROR', 'FANTASY', 'CULT'].includes(project.genre.toUpperCase());
+  const boxOfficeSuccess = project.revenue > (project.budget * 1.5);
+  const awardWinner = project.awardsProfile && project.awardsProfile.prestigeScore > 60;
 
-  const quality = project.reviewScore || 0;
-  if (quality < 75) return false;
+  // Logic: Niche genre + Moderate success + Aging = Chance of Cult Classic
+  if (isNicheGenre && boxOfficeSuccess && age > 104) {
+    return true;
+  }
 
-  const totalCost = project.budget + (project.marketingBudget || 0);
-  const roi = totalCost > 0 ? project.revenue / totalCost : 0;
-  
-  if (roi > 1.1) return false; // Must be a "flop" or "break-even" to qualify for cult status
+  // Purely prestige based cult classic
+  if (awardWinner && age > 156) {
+    return true;
+  }
 
-  return true;
+  return false;
 }

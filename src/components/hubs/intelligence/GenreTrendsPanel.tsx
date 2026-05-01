@@ -113,9 +113,9 @@ export const GenreTrendsPanel: React.FC<GenreTrendsPanelProps> = ({
           <span className={tokens.text.caption}>Market Heat</span>
           <span className="font-medium">{trend.heat}/100</span>
         </div>
-        <div className="h-2 bg-muted rounded-full overflow-hidden">
+        <div className="h-2 bg-muted rounded-none overflow-hidden">
           <div
-            className={cn('h-full rounded-full', getDirectionColor(trend.direction))}
+            className={cn('h-full rounded-none', getDirectionColor(trend.direction))}
             style={{ width: `${trend.heat}%` }}
           />
         </div>
@@ -175,7 +175,7 @@ export const GenreTrendsPanel: React.FC<GenreTrendsPanelProps> = ({
       )}
 
       {trends.length === 0 && (
-        <div className={cn('text-center py-12', tokens.border.default, 'border-dashed rounded-xl')}>
+        <div className={cn('text-center py-12', tokens.border.default, 'border-dashed rounded-none')}>
           <TrendingUp className="h-12 w-12 mx-auto mb-4 opacity-20" />
           <p className={tokens.text.label}>No Market Data Available</p>
           <p className={cn('text-sm mt-2', tokens.text.caption)}>

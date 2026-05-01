@@ -25,11 +25,18 @@ export function applyProjectResults(
   let prestigeChange = 0;
   let feeMultiplier = 1.0;
 
-  if (ROI > 4.0) { drawChange = 12; prestigeChange = 6; feeMultiplier = 1.6; }
-  else if (ROI > 2.0) { drawChange = 6; prestigeChange = 3; feeMultiplier = 1.3; }
-  else if (ROI > 1.0) { drawChange = 2; prestigeChange = 1; feeMultiplier = 1.1; }
-  else if (ROI < 0.4) { drawChange = -12; prestigeChange = -6; feeMultiplier = 0.75; }
-  else if (ROI < 0.8) { drawChange = -6; prestigeChange = -3; feeMultiplier = 0.85; }
+  // Breakout-friendly curve: blockbuster ROI unlocks significant prestige gains so marquee talent
+  // can realistically climb into the 80-99 band across a 50-year career. Real A-listers
+  // (Spielberg, Scorsese, Sheridan) routinely hit 90+. Higher budgets mean each hit carries
+  // more cultural weight — scale prestige bumps by log of project budget.
+  const budgetFactor = Math.log10(Math.max(10_000_000, project.budget)) / 7.2; // ~1.0 at $60M, ~1.15 at $150M
+  if (ROI > 6.0) { drawChange = 14; prestigeChange = 10; feeMultiplier = 1.8; }
+  else if (ROI > 4.0) { drawChange = 12; prestigeChange = 7; feeMultiplier = 1.6; }
+  else if (ROI > 2.0) { drawChange = 6; prestigeChange = 4; feeMultiplier = 1.3; }
+  else if (ROI > 1.0) { drawChange = 2; prestigeChange = 2; feeMultiplier = 1.1; }
+  else if (ROI < 0.4) { drawChange = -10; prestigeChange = -4; feeMultiplier = 0.75; }
+  else if (ROI < 0.8) { drawChange = -4; prestigeChange = -2; feeMultiplier = 0.85; }
+  prestigeChange = Math.round(prestigeChange * budgetFactor * 10) / 10;
 
   const updatedTalent: Talent[] = [];
 

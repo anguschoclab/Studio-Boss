@@ -17,41 +17,69 @@ export type CharacterArchetype =
 
 export interface ScriptEvent {
   week: number;
-  type: 'ROLE_MERGE' | 'ROLE_SPLIT' | 'ARCHETYPE_CHANGE' | 'PLOT_TWIST_ADDED' | 'DIALOGUE_POLISH';
+  type: 'ROLE_MERGE' | 'ROLE_SPLIT' | 'ARCHETYPE_CHANGE' | 'PLOT_TWIST_ADDED' | 'DIALOGUE_POLISH' | 'PLOT_POINT';
   description: string;
   qualityImpact: number;
   heatGain: number;
 }
 
-export interface ScriptMetrics {
-  structure: number;        // 0-100: Narrative coherence, pacing, act structure
-  dialogue: number;         // 0-100: Character voice, subtext, memorable lines
-  originality: number;      // 0-100: Fresh concepts, avoiding clichés
-  pacing: number;           // 0-100: Rhythm, tension building, scene economy
-  emotionalImpact: number;  // 0-100: Audience engagement, stakes, payoff
-  commercialViability: number; // 0-100: Market appeal, four-quadrant potential
-  overallScore: number;     // 0-100: Weighted average of above metrics
-  trend: 'improving' | 'stable' | 'declining';
-  lastCalculatedWeek: number; // Track when metrics were calculated
+export interface StreamingViewershipEntry {
+  week: number;
+  viewers: number;
+  hoursWatched: number;
+  retention: number;
+  completionRate?: number;
 }
 
-export type MarketingAngle = 
-  | 'SELL_THE_SPECTACLE' 
-  | 'SELL_THE_STORY' 
-  | 'SELL_THE_STARS' 
-  | 'FAMILY_ADVENTURE' 
+export interface StreamingViewershipHistory {
+  platformId: string;
+  platformName: string;
+  startWeek: number;
+  totalHoursWatched: number;
+  peakViewers: number;
+  completionRate: number;
+  entries: StreamingViewershipEntry[];
+}
+
+export interface ScriptMetrics {
+  score: number;
+  structure: number;
+  dialogue: number;
+  originality: number;
+  pacing: number;
+  emotionalImpact: number;
+  commercialViability: number;
+  trend: 'improving' | 'stable' | 'declining';
+  lastCalculatedWeek: number;
+}
+
+export type MarketingAngle =
+  | 'SELL_THE_SPECTACLE'
+  | 'SELL_THE_STORY'
+  | 'SELL_THE_STARS'
+  | 'FAMILY_ADVENTURE'
   | 'AWARDS_PUSH'
   | 'GRASSROOTS'
   | 'GLOBAL_BLITZ'
-  | 'CONTROVERSY';
+  | 'CONTROVERSY'
+  | 'SELL_THE_SCARES'
+  | 'SELL_THE_ROMANCE'
+  | 'SELL_THE_WORLD_MYTHOLOGY'
+  | 'SELL_THE_TRUE_STORY_HOOK'
+  | 'SELL_THE_MUSIC'
+  | 'BROAD_FOUR_QUADRANT_MARKETING';
+
+export type ReleaseStrategy = 'theatrical' | 'streaming' | 'platform_exclusive' | 'limited_prestige';
 
 export interface MarketingCampaign {
   domesticBudget: number;
   foreignBudget: number;
   primaryAngle: MarketingAngle;
+  secondaryAngle?: MarketingAngle;
+  releaseStrategy?: ReleaseStrategy;
   efficiencyMultiplier?: number; // Calculated at release (e.g., 0.5 = bomb, 1.5 = viral hit)
   weeksInMarketing?: number; // For decay calculation
-  feedbackText?: string; 
+  feedbackText?: string;
 }
 
 export interface BoxOfficeResult {
@@ -62,87 +90,269 @@ export interface BoxOfficeResult {
   multiplier: number;
 }
 
-export interface StreamingViewershipEntry {
-  week: number;
-  hoursWatched: number;      // Total hours watched that week
-  uniqueViewers: number;      // Unique viewers that week
-  completionRate: number;    // % of viewers who finished
-  dropoffRate: number;        // % drop from previous week
-  platform: string;          // Platform ID (Netflix, etc.)
-}
+export type ProjectStatus = 'development' | 'needs_greenlight' | 'pitching' | 'production' | 'post_production' | 'marketing' | 'released' | 'post_release' | 'archived';
+export type ProjectFormat = 'film' | 'tv' | 'unscripted';
+export type BudgetTierKey = 'low' | 'mid' | 'high' | 'blockbuster';
 
-export interface StreamingViewershipHistory {
-  platform: string;
-  entries: StreamingViewershipEntry[];
-  totalHoursWatched: number;
-  peakViewers: number;
-  peakWeek: number;
-  averageCompletionRate: number;
-}
+export type TvFormatKey =
+  | 'sitcom'
+  | 'procedural'
+  | 'prestige_drama'
+  | 'limited_series'
+  | 'animated_comedy'
+  | 'animated_prestige'
+  | 'daytime_soap'
+  | 'late_night_talk'
+  | 'sketch_comedy'
+  | 'sci_fi_epic'
+  | 'teen_drama'
+  | 'fantasy_epic'
+  | 'anthology_series'
+  | 'telenovela'
+  | 'historical_drama'
+  | 'medical_procedural'
+  | 'superhero_serial'
+  | 'espionage_thriller'
+  | 'mockumentary'
+  | 'neo_western'
+  | 'legal_drama'
+  | 'sports_drama'
+  | 'mystery_box'
+  | 'cyberpunk_dystopia'
+  | 'musical_dramedy'
+  | 'dark_academia'
+  | 'political_thriller'
+  | 'satirical_comedy'
+  | 'family_drama'
+  | 'vampire_romance'
+  | 'true_crime_dramatization'
+  | 'retro_sitcom'
+  | 'military_action'
+  | 'workplace_comedy'
+  | 'zombie_apocalypse'
+  | 'erotic_thriller'
+  | 'cooking_showdown'
+  | 'docudrama'
+  | 'space_opera'
+  | 'paranormal_romance'
+  | 'sports_comedy'
+  | 'supernatural_teen_drama'
+  | 'heist_thriller'
+  | 'post_apocalyptic_survival'
+  | 'musical_competition'
+  | 'sketch_show_revival'
+  | 'sci_fi_anthology'
+  | 'true_crime_miniseries'
+  | 'superhero_teamup'
+  | 'dark_comedy_thriller'
+  | 'historical_fiction_epic'
+  | 'music_industry_drama'
+  | 'sports_docudrama'
+  | 'cyberpunk_anime'
+  | 'cozy_mystery'
+  | 'satirical_news'
+  | 'prestige_limited_series'
+  | 'binge_thriller'
+  | 'adult_animation'
+  | 'franchise_spinoff'
+  | 'prestige_horror_anthology'
+  | 'international_thriller'
+  | 'gritty_reboot'
+  | 'high_concept_comedy'
+  | 'tech_dystopia'
+  | 'prestige_biopic'
+  | 'fantasy_prequel'
+  | 'interactive_special'
+  | 'micro_series'
+  | 'foreign_language_hit'
+  | 'live_event_series'
+  | 'nostalgia_reunion'
+  | 'docu_comedy'
+  | 'sci_fi_noir'
+  | 'holiday_miniseries'
+  | 'vr_immersive_show'
+  | 'sports_soap_opera'
+  | 'teen_mystery'
+  | 'scifi_procedural'
+  | 'spy_comedy'
+  | 'sports_anime'
+  | 'historical_romance'
+  | 'political_satire'
+  | 'superhero_parody'
+  | 'gothic_horror'
+  | 'musical_soap'
+  | 'true_crime_spoof'
+  | 'action_comedy'
+  | 'workplace_thriller'
+  | 'teen_supernatural_comedy'
+  | 'western_procedural'
+  | 'space_western'
+  | 'k_drama_adaptation'
+  | 'live_action_anime'
+  | 'neo_noir_procedural'
+  | 'multiverse_anthology'
+  | 'standup_comedy_series'
+  | 'cyberpunk_satire'
+  | 'steampunk_fantasy'
+  | 'post_apocalyptic_soap'
+  | 'supernatural_procedural'
+  | 'historical_heist'
+  | 'mecha_anime'
+  | 'vampire_sitcom'
+  | 'retro_sci_fi'
+  | 'fantasy_workplace_comedy'
+  | 'time_travel_romance'
+  | 'trashy_dating_island'
+  | 'true_crime_docuseries'
+  | 'superhero_origin'
+  | 'high_fantasy_epic'
+  | 'teen_mystery_box'
+  | 'workplace_mockumentary'
+  | 'satirical_news_show'
+  | 'historical_romance';
 
-export type ProjectStatus = 'development' | 'needs_greenlight' | 'pitching' | 'production' | 'marketing' | 'released' | 'post_release' | 'archived' | 'turnaround' | 'pilot' | 'shopping';
-export type ProjectFormat = 'film' | 'tv' | 'unscripted' | 'animation';
-export type BudgetTierKey = 'indie' | 'low' | 'mid' | 'high' | 'blockbuster';
-
-export type TvFormatKey = string;
-
-export type UnscriptedFormatKey = string;
-
+export type UnscriptedFormatKey =
+  | 'competition'
+  | 'docuseries'
+  | 'reality_ensemble'
+  | 'game_show'
+  | 'lifestyle'
+  | 'dating_island'
+  | 'true_crime_doc'
+  | 'hidden_camera'
+  | 'travel_food'
+  | 'talent_competition'
+  | 'home_renovation'
+  | 'survival_challenge'
+  | 'pawn_shop_doc'
+  | 'celebrity_reality'
+  | 'paranormal_investigation'
+  | 'business_pitch'
+  | 'cooking_battle'
+  | 'cult_expose_doc'
+  | 'social_experiment'
+  | 'baking_championship'
+  | 'dating_experiment'
+  | 'sports_docuseries'
+  | 'nature_doc'
+  | 'wedding_reality'
+  | 'true_con_doc'
+  | 'luxury_real_estate'
+  | 'child_pageant'
+  | 'polygamy_doc'
+  | 'plastic_surgery'
+  | 'hoarder_cleanup'
+  | 'tattoo_competition'
+  | 'gold_mining'
+  | 'extreme_cheapskates'
+  | 'pawn_shop_doc'
+  | 'celebrity_reality'
+  | 'paranormal_investigation'
+  | 'business_pitch'
+  | 'cooking_battle'
+  | 'cult_expose_doc'
+  | 'social_experiment'
+  | 'baking_championship'
+  | 'dating_experiment'
+  | 'sports_docuseries'
+  | 'nature_doc'
+  | 'wedding_reality'
+  | 'true_con_doc'
+  | 'luxury_real_estate'
+  | 'child_pageant'
+  | 'polygamy_doc'
+  | 'plastic_surgery'
+  | 'hoarder_cleanup'
+  | 'tattoo_competition'
+  | 'gold_mining'
+  | 'extreme_cheapskates'
+  | 'bounty_hunter'
+  | 'vintage_restoration'
+  | 'celebrity_rehab'
+  | 'extreme_fitness'
+  | 'dating_in_the_dark'
+  | 'treasure_hunting'
+  | 'influencer_house'
+  | 'survival_island'
+  | 'pet_rescue'
+  | 'baking_disasters'
+  | 'tiny_house_hunters'
+  | 'flea_market_flip'
+  | 'celebrity_dating'
+  | 'extreme_survival_coop'
+  | 'luxury_yacht_crew'
+  | 'true_crime_cold_case'
+  | 'tech_startup_doc'
+  | 'amateur_baking_disasters'
+  | 'paranormal_reality'
+  | 'high_stakes_poker'
+  | 'fashion_design_competition'
+  | 'travel_adventure_race'
+  | 'trashy_dating_island'
+  | 'true_crime_docuseries'
+  | 'reality_real_estate'
+  | 'survival_betrayal'
+  | 'celebrity_escape_room'
+  | 'social_media_experiment'
+  | 'extreme_baking_wars'
+  | 'poly_dating_experiment'
+  | 'cult_survivor_doc'
+  | 'influencer_survival'
+  | 'celebrity_boxing_league'
+  | 'cult_exposé_doc'
+  | 'wildlife_rescue'
+  | 'standup_special_event'
+  | 'ghost_hunting_extreme'
+  | 'undercover_boss_parody'
+  | 'survival_dating'
+  | 'crypto_scam_investigation'
+  | 'celebrity_house_flip'
+  | 'toddler_beauty_pageant_reunion'
+  | 'doomsday_preppers_elite'
+  | 'extreme_cooking'
+  | 'dating_competition'
+  | 'celebrity_survival_challenge'
+  | 'poly_dating_drama'
+  | 'billionaire_lifestyle'
+  | 'startup_pitch_wars'
+  | 'prank_show_escalation'
+  | 'makeover_intervention_extreme'
+  | 'hidden_treasure_race'
+  | 'celebrity_ghost_hunting'
+  | 'true_crime_live_investigation'
+  | 'reality_courtroom'
+  | 'extreme_cheap_travel_show'
+  | 'sports_wives_drama'
+  | 'tattoo_coverup_disasters'
+  | 'influencer_boxing_league'
+  | 'virtual_reality_dating'
+  | 'extreme_job_swap'
+  | 'celebrity_farm_survival'
+  | 'niche_hobby_competition'
+  | 'paranormal_renovation'
+  | 'extreme_pet_makeover'
+  | 'rich_kids_survival'
+  | 'crypto_millionaire_matchmaker'
+  | 'ai_dating_experiment'
+  | 'zombie_survival_reality'
+  | 'toddler_chef_competition'
+  | 'underground_fight_club_doc'
+  | 'space_tourism_reality'
+  | 'extreme_couponing_wars'
+  | 'extreme_makeover_cult'
+  | 'crypto_scam_expose'
+  | 'child_star_documentary'
+  | 'billionaire_yacht_crew';
 
 export type ReleaseModelKey = 'weekly' | 'binge' | 'split';
 export type ProjectContractType = 'upfront' | 'deficit' | 'standard';
 export type MandateType = 'sci-fi' | 'comedy' | 'drama' | 'budget_freeze' | 'broad_appeal' | 'prestige';
 
-export type RatingMarket = 'us' | 'uk' | 'europe' | 'china' | 'india' | 'latam' | 'middleeast' | 'apac';
-
-export type FilmRating = 'G' | 'PG' | 'PG-13' | 'R' | 'NC-17' | 'Unrated';
-export type TvRating = 'TV-Y' | 'TV-G' | 'TV-PG' | 'TV-14' | 'TV-MA';
-export type ProjectRating = FilmRating | TvRating;
-
-export type RatingCutType = 'theatrical' | 'directors_cut' | 'unrated' | 'sanitized';
-
-export type ContentFlag = 'violence' | 'profanity' | 'nudity' | 'gore' | 'political'
-  | 'sexual_content' | 'drug_use' | 'lgbtq_themes' | 'religious' | 'supernatural' | 'gambling';
-
-export interface RegionalRating {
-  market: RatingMarket;
-  rating: ProjectRating;
-  isBanned: boolean;
-  restrictionLevel: 'none' | 'minor' | 'major' | 'banned';
-}
-
-export interface RatingCut {
-  type: RatingCutType;
-  rating: ProjectRating;
-  contentFlags: ContentFlag[];
-  buzzCost: number;
-  revenueMultiplier: number;
-}
-
-export interface RatingEconomics {
-  theaterAccessPct: number;
-  audienceReachMultiplier: number;
-  merchMultiplier: number;
-  awardsPrestigeBonus: number;
-  streamingPremium: number;
-}
+export type ProjectRating = 'G' | 'PG' | 'PG-13' | 'R' | 'NC-17' | 'Unrated';
+export type ContentFlag = 'violence' | 'profanity' | 'nudity' | 'gore' | 'political';
 
 export type DemographicGroup = 'gen-z' | 'millennial' | 'gen-x' | 'boomer';
 export type AudienceQuadrant = 'male_under_25' | 'female_under_25' | 'male_over_25' | 'female_over_25' | 'four_quadrant';
-
-export interface Review {
-  criticName: string;
-  score: number;
-  text: string;
-}
-
-export interface CriticConsensus {
-  metaScore: number;       // 0-100
-  audienceScore: number;   // 0-100
-  reviews: Review[];
-  status: 'Acclaimed' | 'Mixed' | 'Panned';
-  isCultPotential: boolean;
-}
 
 export interface AwardsProfile {
   criticScore: number;
@@ -205,17 +415,7 @@ export type AwardCategory =
   | 'Golden Lion'
   | 'Golden Bear'
   | 'Audience Award'
-  | 'Best Narrative Feature'
-  | 'Best Drama Series'
-  | 'Best Comedy Series'
-  | 'Best Limited Series'
-  | 'Best TV Movie'
-  | 'Best Actor (Drama)'
-  | 'Best Actress (Drama)'
-  | 'Best Actor (Comedy)'
-  | 'Best Actress (Comedy)'
-  | 'Best Supporting Actor (TV)'
-  | 'Best Supporting Actress (TV)';
+  | 'Best Narrative Feature';
 
 export type AwardStatus = 'won' | 'nominated';
 
@@ -273,22 +473,26 @@ export interface ProjectBase {
   progress: number; // 0-100
   accumulatedCost: number;
   awardsProfile?: AwardsProfile;
-  reception?: CriticConsensus; 
   parentProjectId?: string;
   isSpinoff?: boolean;
   isGlobalIcon?: boolean;
   razzieWinner?: boolean;
   franchiseId?: string;
-  originalProjectId?: string; // Links to the vault asset it's rebooting/spinning off
   // Release simulation fields
   reviewScore?: number;
   boxOfficeRank?: number;
-  acquisitionCost?: number; // 🌌 PHASE 2: Price paid in auction/market
   // Marketing fields
   marketingBudget?: number;
   marketingLevel?: 'none' | 'basic' | 'blockbuster';
   marketingDomesticSplit?: number;
+  marketingDomesticSplitValue?: number;
   marketingAngle?: string;
+  marketingStats?: {
+    weeksActive: number;
+    totalSpend: number;
+    buzzGained: number;
+    viralHits: number;
+  };
   // IP Rights
   ipRights?: IPRights;
   // Common Sprint H / I additions
@@ -301,32 +505,22 @@ export interface ProjectBase {
   isAcquired?: boolean;
   distributionStatus?: 'theatrical' | 'streaming' | 'syndicated';
   buyerId?: string;
-  // Phase 2: Dynamic Scheduling & Pipeline Management
-  isRecasting?: boolean;
-  turnaroundStartWeek?: number;
-  estimatedWindow?: { startWeek: number; endWeek: number };
-  // Ratings System
-  activeCut?: RatingCutType;
-  availableCuts?: RatingCut[];
-  regionalRatings?: RegionalRating[];
-  directorsCutNotified?: boolean;
-  // Phase 2: Deal & Revenue Mechanics
-  dealModel?: 'cost_plus' | 'deficit_financing' | 'self_distributed' | 'independent';
-  backendPoints?: number;       // 0-100, % of net backend revenue to player
-  isPrimetimeAnchor?: boolean;  // triggers international format rights on season 2+ renewal
-  stage?: 'pilot' | 'series' | 'shopping'; // sub-state for TV projects
-  shoppingExpiresWeek?: number; // week when 'shopping' status lapses
-  streamingViewership?: StreamingViewershipHistory[]; // NEW FIELD for Phase 6
-  // Unified Storage: Owner tracking
-  ownerId: string; // 'player' or rival studio ID
-  archetypeId?: string; // Links to StudioArchetype for archetype-driven behavior
+  ownerId?: string;
+  nielsenProfile?: import('../systems/television/nielsenSystem').NielsenProfile;
+  // Post-production phase
+  postProductionWeeksRemaining?: number;
+  // Release strategy (set during marketing phase)
+  releaseStrategy?: ReleaseStrategy;
+  // Morale tracking for on-set talent
+  morale?: number; // 0-100
+  // Loan tracking
+  loanId?: string;
 }
 
 export interface ScriptedProject extends ProjectBase {
   scriptHeat: number; // 0-100: Influences evolution events
   activeRoles: CharacterArchetype[];
   scriptEvents: ScriptEvent[];
-  scriptMetrics?: ScriptMetrics;
 }
 
 export interface UnscriptedProject extends ProjectBase {
@@ -342,7 +536,6 @@ export interface SeriesProject extends ScriptedProject {
   tvFormat?: TvFormatKey;
   tvDetails: TVSeasonDetails;
   releaseModel?: ReleaseModelKey;
-  nielsenProfile?: import('../systems/television/nielsenSystem').NielsenProfile;
 }
 
 export type Project = FilmProject | SeriesProject | (UnscriptedProject & { type: 'SERIES' });
@@ -381,7 +574,6 @@ export interface GenreTrend {
   heat: number; // 0-100
   direction: TrendDirection;
   weeksRemaining: number;
-  description?: string;
 }
 
 export type FestivalSubmissionStatus = 'submitted' | 'selected' | 'rejected' | 'won' | 'special_mention';

@@ -32,9 +32,9 @@ interface RadarChartProps {
 export const RadarChart: React.FC<RadarChartProps> = ({
   data,
   height = 250,
-  color = '#3b82f6',
+  color = 'hsl(var(--secondary))',
   secondaryData,
-  secondaryColor = '#10b981',
+  secondaryColor = 'hsl(var(--success))',
   showTooltip = true,
   showLegend = false,
   className,
@@ -60,15 +60,15 @@ export const RadarChart: React.FC<RadarChartProps> = ({
     <div className={cn('w-full', className)} style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
         <ReRadarChart data={chartData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-          <PolarGrid stroke="#e5e7eb" />
-          <PolarAngleAxis 
-            dataKey="metric" 
-            tick={{ fontSize: 10, fill: '#6b7280' }}
+          <PolarGrid stroke="hsl(var(--border))" />
+          <PolarAngleAxis
+            dataKey="metric"
+            tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
           />
-          <PolarRadiusAxis 
-            angle={90} 
+          <PolarRadiusAxis
+            angle={90}
             domain={[0, 'auto']}
-            tick={{ fontSize: 8, fill: '#9ca3af' }}
+            tick={{ fontSize: 8, fill: 'hsl(var(--muted-foreground))' }}
             tickCount={5}
           />
           <Radar
@@ -93,11 +93,11 @@ export const RadarChart: React.FC<RadarChartProps> = ({
             <Tooltip
               formatter={(value: number, name: string) => [valueFormatter(value), name]}
               contentStyle={{
-                backgroundColor: '#1f2937',
-                border: 'none',
+                backgroundColor: 'hsl(var(--card))',
+                border: '1px solid hsl(var(--border))',
                 borderRadius: '6px',
                 fontSize: '12px',
-                color: '#fff',
+                color: 'inherit',
               }}
             />
           )}

@@ -328,7 +328,7 @@ export function tickTVRecommendationSystem(
 
   for (const talent of talents) {
     // Only generate for active talents (not retired, not on medical leave)
-    if ((talent as any).retired || (talent as any).onMedicalLeave) {
+    if (talent.retired || talent.onMedicalLeave) {
       continue;
     }
 
@@ -347,7 +347,7 @@ export function tickTVRecommendationSystem(
             recommendation,
             notification: `TV Opportunity: ${talent.name} recommended for ${recommendation.roleType} role in ${recommendation.genre} series`,
           },
-        } as any);
+        });
       }
     }
   }
@@ -361,10 +361,10 @@ export function tickTVRecommendationSystem(
 export function getTVRecommendationsForTalent(
   talentId: string,
   state: GameState
-): TVShowRecommendation[] {
-  const recommendations = (state as any).tvRecommendations?.recommendations || {};
+): import('../../types/tv-recommendations.types').TVShowRecommendation[] {
+  const recommendations = state.tvRecommendations?.recommendations || {};
   return Object.values(recommendations)
-    .filter((r: any) => r.talentId === talentId && r.expiresWeek > state.week) as TVShowRecommendation[];
+    .filter((r) => r.talentId === talentId && r.expiresWeek > state.week);
 }
 
 /**
@@ -377,8 +377,8 @@ export function acceptTVRecommendation(
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
 
-  const recommendations = (state as any).tvRecommendations?.recommendations || {};
-  const recommendation = recommendations[recommendationId] as TVShowRecommendation | undefined;
+  const recommendations = state.tvRecommendations?.recommendations || {};
+  const recommendation = recommendations[recommendationId];
 
   if (!recommendation) {
     return impacts;
@@ -392,7 +392,7 @@ export function acceptTVRecommendation(
       talentId: recommendation.talentId,
       notification: `${recommendation.talentId} accepted TV role recommendation`,
     },
-  } as any);
+  });
 
   // This would typically trigger project creation or contract signing
   // For now, we just mark it as accepted

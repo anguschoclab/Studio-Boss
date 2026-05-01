@@ -1,14 +1,50 @@
-import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { RouterProvider, createRouter, createRoute, createRootRoute, Outlet } from "@tanstack/react-router";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { KeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
+import TitleScreen from "./pages/TitleScreen";
+import NewGame from "./pages/NewGame";
+import Dashboard from "./pages/Dashboard";
+import NotFound from "./pages/NotFound";
 
-// Import the generated route tree
-import { routeTree } from "./routeTree.gen";
+const queryClient = new QueryClient();
 
-// Create the router instance
+import { GlobalThemeProvider } from "./components/Theme/GlobalThemeProvider";
+
+const rootRoute = createRootRoute({
+  component: () => (
+    <GlobalThemeProvider>
+      <Outlet />
+      <Toaster />
+      <Sonner />
+    </GlobalThemeProvider>
+  ),
+  notFoundComponent: () => <NotFound />
+});
+
+const indexRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/',
+  component: TitleScreen,
+});
+
+const newGameRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/new-game',
+  component: NewGame,
+});
+
+const dashboardRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/dashboard',
+  component: Dashboard,
+});
+
+const routeTree = rootRoute.addChildren([indexRoute, newGameRoute, dashboardRoute]);
+
 const router = createRouter({ routeTree });
 
-// Register the router instance for type safety
 declare module '@tanstack/react-router' {
   interface Register {
     router: typeof router
@@ -16,11 +52,11 @@ declare module '@tanstack/react-router' {
 }
 
 const App = () => (
-  <KeyboardShortcuts>
+  <QueryClientProvider client={queryClient}>
     <TooltipProvider delayDuration={300}>
       <RouterProvider router={router} />
     </TooltipProvider>
-  </KeyboardShortcuts>
+  </QueryClientProvider>
 );
 
 export default App;

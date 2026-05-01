@@ -1,14 +1,5 @@
-import { Contract, Project, Talent, GameState } from '@/engine/types';
-import { RandomGenerator } from './utils/rng';
+import { Contract } from '@/engine/types';
 // Shared utilities for the engine layer — no React imports
-
-export function getProjects(state: GameState): Project[] {
-  return Object.values(state.entities.projects || {});
-}
-
-export function getTalents(state: GameState): Talent[] {
-  return Object.values(state.entities.talents || {});
-}
 
 export function formatMoney(amount: number): string {
   if (Number.isNaN(amount)) return "$NaN";
@@ -33,10 +24,68 @@ export function getWeekDisplay(week: number): { displayWeek: number; year: numbe
   };
 }
 
+/**
+ * A seedable, deterministic random number generator (Mulberry32).
+ */
+let currentRandomSource = () => {
+  const array = new Uint32Array(1);
+  crypto.getRandomValues(array);
+  return array[0] / (0xffffffff + 1);
+};
+
+export function setDeterministicSeed(seed: number) {
+  let s = seed;
+  currentRandomSource = () => {
+    let t = (s += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/**
+ * The primary random function for the engine.
+ * Defaults to non-deterministic unless setDeterministicSeed is called.
+ */
+export function rand(): number {
+  return currentRandomSource();
+}
+
+/**
+ * Centralized, deterministic ID generation for engine entities.
+ * Uses the active PRNG to ensure bit-identical results when seeded.
+ */
+export function generateId(prefix: string = ''): string {
+  // Simple deterministic UUID-like string based on our rand() source
+  const hex = '0123456789abcdef';
+  let id = '';
+  for (let i = 0; i < 32; i++) {
+    const r = Math.floor(rand() * 16);
+    if (i === 8 || i === 12 || i === 16 || i === 20) id += '-';
+    id += hex[r];
+  }
+  return prefix ? `${prefix}-${id}` : id;
+}
+
+/**
+ * Legacy secureRandom — avoided in core simulation for determinism.
+ */
+export function secureRandom(): number {
+  return rand(); // Redirect to our seedable source for unified determinism
+}
+
+export function pick<T>(arr: T[]): T {
+  if (arr.length === 0) return undefined as T;
+  return arr[Math.floor(rand() * arr.length)];
+}
+
+export function randRange(min: number, max: number): number {
+  return min + rand() * (max - min);
+}
+
 export function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
-
 
 export function groupContractsByProject(contracts: Contract[]): Map<string, Contract[]> {
   const map = new Map<string, Contract[]>();
@@ -54,21 +103,9 @@ export function groupContractsByProject(contracts: Contract[]): Map<string, Cont
  * Useful for resolving headlines, scandals, and rumors from data pools.
  */
 export function fillTemplate(template: string, vars: Record<string, string | number>): string {
+  // Regex matches ${key} (captures key in p2) or {key} (captures key in p4)
   return template.replace(/(\$\{([^}]+)\})|(\{([^}]+)\})/g, (match, p1, p2, p3, p4) => {
     const key = p2 || p4;
     return vars[key] !== undefined ? String(vars[key]) : match;
   });
-}
-
-export function pick<T>(arr: T[], rng?: RandomGenerator): T {
-  if (rng) return rng.pick(arr);
-  // 🌌 Enforcement: No non-deterministic fallbacks allowed in core engine.
-  // Returning first element as a safe but deterministic fallback.
-  return arr[0];
-}
-
-export function randRange(min: number, max: number, rng?: RandomGenerator): number {
-  if (rng) return rng.rangeInt(min, max);
-  // 🌌 Enforcement: Return min instead of Math.random()
-  return min;
 }

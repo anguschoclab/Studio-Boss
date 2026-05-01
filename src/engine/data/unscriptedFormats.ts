@@ -15,8 +15,8 @@ interface UnscriptedFormatData {
 }
 
 export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatData> = {
-  'USF-43d3c07f-53dd-c40f-c5dd-8c6b939b': {
-    key: 'USF-43d3c07f-53dd-c40f-c5dd-8c6b939b',
+  competition: {
+    key: 'competition',
     name: 'Competition Reality',
     defaultEpisodes: 10,
     minEpisodes: 6,
@@ -28,8 +28,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.6,
     revenueDecayWeekly: 0.85,
   },
-  'USF-48a00125-5154-ba24-4ab4-c91480a2': {
-    key: 'USF-48a00125-5154-ba24-4ab4-c91480a2',
+  docuseries: {
+    key: 'docuseries',
     name: 'Docuseries',
     defaultEpisodes: 6,
     minEpisodes: 2,
@@ -41,8 +41,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.5,
     revenueDecayWeekly: 0.8,
   },
-  'USF-c53cddac-c5db-4ff5-90ee-58c2a532': {
-    key: 'USF-c53cddac-c5db-4ff5-90ee-58c2a532',
+  reality_ensemble: {
+    key: 'reality_ensemble',
     name: 'Ensemble Reality / Housewives',
     defaultEpisodes: 12,
     minEpisodes: 8,
@@ -54,8 +54,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.55,
     revenueDecayWeekly: 0.9,
   },
-  'USF-9797a13c-f27d-aefc-11e8-7cd7ec5c': {
-    key: 'USF-9797a13c-f27d-aefc-11e8-7cd7ec5c',
+  game_show: {
+    key: 'game_show',
     name: 'Game Show / Quiz',
     defaultEpisodes: 20,
     minEpisodes: 10,
@@ -67,8 +67,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.4,
     revenueDecayWeekly: 0.95, // Consistent syndication
   },
-  'USF-22aabad8-6359-691d-4ca3-f517411b': {
-    key: 'USF-22aabad8-6359-691d-4ca3-f517411b',
+  lifestyle: {
+    key: 'lifestyle',
     name: 'Lifestyle / Makeover / Food',
     defaultEpisodes: 13,
     minEpisodes: 6,
@@ -80,8 +80,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.45,
     revenueDecayWeekly: 0.9,
   },
-  'USF-daa7d189-075a-adc7-7f0d-7700c4e7': {
-    key: 'USF-daa7d189-075a-adc7-7f0d-7700c4e7',
+  dating_island: {
+    key: 'dating_island',
     name: 'Trashy Dating Island',
     defaultEpisodes: 10,
     minEpisodes: 6,
@@ -93,8 +93,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.6,
     revenueDecayWeekly: 0.95,
   },
-  'USF-d22654ac-142b-5759-6291-7ea95667': {
-    key: 'USF-d22654ac-142b-5759-6291-7ea95667',
+  true_crime_doc: {
+    key: 'true_crime_doc',
     name: 'True Crime Docuseries',
     defaultEpisodes: 6,
     minEpisodes: 2,
@@ -106,8 +106,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.4,
     revenueDecayWeekly: 0.85,
   },
-  'USF-e1b9e510-7907-e2da-42ab-07015a02': {
-    key: 'USF-e1b9e510-7907-e2da-42ab-07015a02',
+  hidden_camera: {
+    key: 'hidden_camera',
     name: 'Hidden Camera Pranks',
     defaultEpisodes: 12,
     minEpisodes: 6,
@@ -119,8 +119,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.5,
     revenueDecayWeekly: 0.9,
   },
-  'USF-fd0bf421-58dd-0a20-e803-a45551fb': {
-    key: 'USF-fd0bf421-58dd-0a20-e803-a45551fb',
+  travel_food: {
+    key: 'travel_food',
     name: 'Travel & Food',
     defaultEpisodes: 15,
     minEpisodes: 8,
@@ -132,8 +132,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.45,
     revenueDecayWeekly: 0.92,
   },
-  'USF-50e167f2-8fe8-7f70-bdfa-d9bf14ff': {
-    key: 'USF-50e167f2-8fe8-7f70-bdfa-d9bf14ff',
+  talent_competition: {
+    key: 'talent_competition',
     name: 'Talent Competition',
     defaultEpisodes: 12,
     minEpisodes: 8,
@@ -145,8 +145,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.55,
     revenueDecayWeekly: 0.88,
   },
-  'USF-8246534a-a00d-9461-62b3-a7477190': {
-    key: 'USF-8246534a-a00d-9461-62b3-a7477190',
+  home_renovation: {
+    key: 'home_renovation',
     name: 'Home Renovation',
     defaultEpisodes: 10,
     minEpisodes: 6,
@@ -158,8 +158,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.5,
     revenueDecayWeekly: 0.91,
   },
-  'USF-50066227-37dd-42fe-f9fa-3552d3b7': {
-    key: 'USF-50066227-37dd-42fe-f9fa-3552d3b7',
+  survival_challenge: {
+    key: 'survival_challenge',
     name: 'Survival Challenge',
     defaultEpisodes: 14,
     minEpisodes: 8,
@@ -171,8 +171,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.65,
     revenueDecayWeekly: 0.9,
   },
-  'USF-c75667be-983d-859f-cf68-3607172a': {
-    key: 'USF-c75667be-983d-859f-cf68-3607172a',
+  pawn_shop_doc: {
+    key: 'pawn_shop_doc',
     name: 'Pawn Shop / Auction Doc',
     defaultEpisodes: 20,
     minEpisodes: 10,
@@ -184,8 +184,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.35,
     revenueDecayWeekly: 0.96,
   },
-  'USF-9651e62a-3ecd-1c80-59aa-20f263ed': {
-    key: 'USF-9651e62a-3ecd-1c80-59aa-20f263ed',
+  celebrity_reality: {
+    key: 'celebrity_reality',
     name: 'Celebrity Reality',
     defaultEpisodes: 10,
     minEpisodes: 6,
@@ -197,8 +197,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.5,
     revenueDecayWeekly: 0.89,
   },
-  'USF-7c193667-f493-5700-32ca-97893f13': {
-    key: 'USF-7c193667-f493-5700-32ca-97893f13',
+  paranormal_investigation: {
+    key: 'paranormal_investigation',
     name: 'Paranormal Investigation',
     defaultEpisodes: 12,
     minEpisodes: 6,
@@ -210,8 +210,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.4,
     revenueDecayWeekly: 0.93,
   },
-  'USF-465cd66a-de29-3507-4988-a69ec1d5': {
-    key: 'USF-465cd66a-de29-3507-4988-a69ec1d5',
+  business_pitch: {
+    key: 'business_pitch',
     name: 'Business Pitch Reality',
     defaultEpisodes: 16,
     minEpisodes: 10,
@@ -223,8 +223,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.5,
     revenueDecayWeekly: 0.95,
   },
-  'USF-9bf8a72f-65f4-ddc9-8cc6-0fa6f8ef': {
-    key: 'USF-9bf8a72f-65f4-ddc9-8cc6-0fa6f8ef',
+  cooking_battle: {
+    key: 'cooking_battle',
     name: 'Cutthroat Cooking Battle',
     defaultEpisodes: 13,
     minEpisodes: 8,
@@ -236,8 +236,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.55,
     revenueDecayWeekly: 0.9,
   },
-  'USF-45407068-5e63-77d2-8333-826dec65': {
-    key: 'USF-45407068-5e63-77d2-8333-826dec65',
+  cult_expose_doc: {
+    key: 'cult_expose_doc',
     name: 'Cult Exposé Docuseries',
     defaultEpisodes: 4,
     minEpisodes: 2,
@@ -249,8 +249,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.3, // Huge spike, fast drop
     revenueDecayWeekly: 0.75,
   },
-  'USF-5de22f03-c473-e9f9-7b3b-74639bd6': {
-    key: 'USF-5de22f03-c473-e9f9-7b3b-74639bd6',
+  social_experiment: {
+    key: 'social_experiment',
     name: 'Isolating Social Experiment',
     defaultEpisodes: 10,
     minEpisodes: 8,
@@ -262,8 +262,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.45,
     revenueDecayWeekly: 0.88,
   },
-  'USF-103b8329-a985-f91a-9d7f-71b84150': {
-    key: 'USF-103b8329-a985-f91a-9d7f-71b84150',
+  baking_championship: {
+    key: 'baking_championship',
     name: 'Wholesome Baking Championship',
     defaultEpisodes: 10,
     minEpisodes: 8,
@@ -275,8 +275,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.6,
     revenueDecayWeekly: 0.92,
   },
-  'USF-9f031fb5-fd69-ab10-1cd5-e88fcac5': {
-    key: 'USF-9f031fb5-fd69-ab10-1cd5-e88fcac5',
+  dating_experiment: {
+    key: 'dating_experiment',
     name: 'Blind Dating Experiment',
     defaultEpisodes: 12,
     minEpisodes: 10,
@@ -288,8 +288,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.65,
     revenueDecayWeekly: 0.94,
   },
-  'USF-3e841f73-2194-ac92-1646-37d3130f': {
-    key: 'USF-3e841f73-2194-ac92-1646-37d3130f',
+  sports_docuseries: {
+    key: 'sports_docuseries',
     name: 'Behind-the-Scenes Sports Doc',
     defaultEpisodes: 8,
     minEpisodes: 6,
@@ -301,8 +301,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.4,
     revenueDecayWeekly: 0.85,
   },
-  'USF-c609ac9a-0006-dd98-6c4e-7d1aaf8f': {
-    key: 'USF-c609ac9a-0006-dd98-6c4e-7d1aaf8f',
+  nature_doc: {
+    key: 'nature_doc',
     name: 'Prestige Nature Docuseries',
     defaultEpisodes: 6,
     minEpisodes: 4,
@@ -314,8 +314,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.35,
     revenueDecayWeekly: 0.95, // Long tail educational value
   },
-  'USF-050b1f34-09bc-fdac-f936-00ba6af6': {
-    key: 'USF-050b1f34-09bc-fdac-f936-00ba6af6',
+  wedding_reality: {
+    key: 'wedding_reality',
     name: 'Say Yes to the Wedding Reality',
     defaultEpisodes: 15,
     minEpisodes: 10,
@@ -327,8 +327,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.5,
     revenueDecayWeekly: 0.91,
   },
-  'USF-95cfaa39-4fa0-4044-8107-fcd826b9': {
-    key: 'USF-95cfaa39-4fa0-4044-8107-fcd826b9',
+  true_con_doc: {
+    key: 'true_con_doc',
     name: 'Con Artist Exposé',
     defaultEpisodes: 3,
     minEpisodes: 2,
@@ -340,8 +340,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.25, // Massive viral potential, disappears next week
     revenueDecayWeekly: 0.7,
   },
-  'USF-6572a5f9-d119-ffa1-be76-8126b56e': {
-    key: 'USF-6572a5f9-d119-ffa1-be76-8126b56e',
+  luxury_real_estate: {
+    key: 'luxury_real_estate',
     name: 'Luxury Real Estate Drama',
     defaultEpisodes: 10,
     minEpisodes: 8,
@@ -353,8 +353,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.55,
     revenueDecayWeekly: 0.92,
   },
-  'USF-69978567-bf8a-8b3f-5452-b07d1332': {
-    key: 'USF-69978567-bf8a-8b3f-5452-b07d1332',
+  child_pageant: {
+    key: 'child_pageant',
     name: 'Child Pageant Reality',
     defaultEpisodes: 12,
     minEpisodes: 6,
@@ -366,8 +366,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.5,
     revenueDecayWeekly: 0.9,
   },
-  'USF-559ad50d-6099-0964-3093-d9d952e8': {
-    key: 'USF-559ad50d-6099-0964-3093-d9d952e8',
+  polygamy_doc: {
+    key: 'polygamy_doc',
     name: 'Polygamy Family Doc',
     defaultEpisodes: 10,
     minEpisodes: 6,
@@ -379,8 +379,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.45,
     revenueDecayWeekly: 0.88,
   },
-  'USF-06c05aef-10e1-eb70-e18a-1850a326': {
-    key: 'USF-06c05aef-10e1-eb70-e18a-1850a326',
+  plastic_surgery: {
+    key: 'plastic_surgery',
     name: 'Extreme Plastic Surgery',
     defaultEpisodes: 12,
     minEpisodes: 8,
@@ -392,8 +392,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.5,
     revenueDecayWeekly: 0.91,
   },
-  'USF-0bb66a02-f0b4-fa03-1220-e0aab43a': {
-    key: 'USF-0bb66a02-f0b4-fa03-1220-e0aab43a',
+  hoarder_cleanup: {
+    key: 'hoarder_cleanup',
     name: 'Hoarder Cleanup Intervention',
     defaultEpisodes: 15,
     minEpisodes: 10,
@@ -405,8 +405,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.4,
     revenueDecayWeekly: 0.93,
   },
-  'USF-5c48f093-dc61-a119-fb67-22ed4bf2': {
-    key: 'USF-5c48f093-dc61-a119-fb67-22ed4bf2',
+  tattoo_competition: {
+    key: 'tattoo_competition',
     name: 'Ink & Tattoo Competition',
     defaultEpisodes: 13,
     minEpisodes: 8,
@@ -418,8 +418,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.55,
     revenueDecayWeekly: 0.9,
   },
-  'USF-e8190ae3-3725-ffec-4404-d2a4f922': {
-    key: 'USF-e8190ae3-3725-ffec-4404-d2a4f922',
+  gold_mining: {
+    key: 'gold_mining',
     name: 'Extreme Gold Mining',
     defaultEpisodes: 16,
     minEpisodes: 10,
@@ -431,8 +431,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.5,
     revenueDecayWeekly: 0.94,
   },
-  'USF-d54e94ee-721a-7cb8-106b-2050e8e5': {
-    key: 'USF-d54e94ee-721a-7cb8-106b-2050e8e5',
+  extreme_cheapskates: {
+    key: 'extreme_cheapskates',
     name: 'Extreme Cheapskates',
     defaultEpisodes: 10,
     minEpisodes: 6,
@@ -444,8 +444,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.4,
     revenueDecayWeekly: 0.95,
   },
-  'USF-a40d50e4-5d13-dc4b-09e9-7fda852d': {
-    key: 'USF-a40d50e4-5d13-dc4b-09e9-7fda852d',
+  bounty_hunter: {
+    key: 'bounty_hunter',
     name: 'Rogue Bounty Hunter',
     defaultEpisodes: 14,
     minEpisodes: 8,
@@ -457,8 +457,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.45,
     revenueDecayWeekly: 0.92,
   },
-  'USF-1491f6b2-179e-4078-2e5a-06560d22': {
-    key: 'USF-1491f6b2-179e-4078-2e5a-06560d22',
+  vintage_restoration: {
+    key: 'vintage_restoration',
     name: 'Vintage Car Restoration',
     defaultEpisodes: 20,
     minEpisodes: 12,
@@ -470,8 +470,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.5,
     revenueDecayWeekly: 0.95,
   },
-  'USF-c2697e69-cce9-55e1-b188-04280833': {
-    key: 'USF-c2697e69-cce9-55e1-b188-04280833',
+  extreme_fitness: {
+    key: 'extreme_fitness',
     name: 'Extreme Fitness Challenge',
     defaultEpisodes: 12,
     minEpisodes: 8,
@@ -483,8 +483,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.6,
     revenueDecayWeekly: 0.9,
   },
-  'USF-e05ee46c-4ea7-cdce-fb0d-a59466e0': {
-    key: 'USF-e05ee46c-4ea7-cdce-fb0d-a59466e0',
+  dating_in_the_dark: {
+    key: 'dating_in_the_dark',
     name: 'Dating in the Dark',
     defaultEpisodes: 8,
     minEpisodes: 6,
@@ -496,8 +496,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.65,
     revenueDecayWeekly: 0.94,
   },
-  'USF-21058841-ed4b-d1c9-1995-77ea6cc3': {
-    key: 'USF-21058841-ed4b-d1c9-1995-77ea6cc3',
+  treasure_hunting: {
+    key: 'treasure_hunting',
     name: 'Dangerous Treasure Hunting',
     defaultEpisodes: 15,
     minEpisodes: 10,
@@ -509,8 +509,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.5,
     revenueDecayWeekly: 0.93,
   },
-  'USF-29a417b3-1c2a-8afe-3099-c39b249e': {
-    key: 'USF-29a417b3-1c2a-8afe-3099-c39b249e',
+  survival_island: {
+    key: 'survival_island',
     name: 'Naked Survival Island',
     defaultEpisodes: 14,
     minEpisodes: 10,
@@ -522,8 +522,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.55,
     revenueDecayWeekly: 0.91,
   },
-  'USF-012f44a7-a895-07f0-b46f-c45748a9': {
-    key: 'USF-012f44a7-a895-07f0-b46f-c45748a9',
+  pet_rescue: {
+    key: 'pet_rescue',
     name: 'Heartwarming Pet Rescue',
     defaultEpisodes: 20,
     minEpisodes: 12,
@@ -535,8 +535,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.45,
     revenueDecayWeekly: 0.96,
   },
-  'USF-8af04dda-20a5-8778-9df0-d2564a2d': {
-    key: 'USF-8af04dda-20a5-8778-9df0-d2564a2d',
+  baking_disasters: {
+    key: 'baking_disasters',
     name: 'Hilarious Baking Disasters',
     defaultEpisodes: 10,
     minEpisodes: 6,
@@ -548,8 +548,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.5,
     revenueDecayWeekly: 0.94,
   },
-  'USF-e4cd62a4-3d4c-80f4-74a8-5571895e': {
-    key: 'USF-e4cd62a4-3d4c-80f4-74a8-5571895e',
+  tiny_house_hunters: {
+    key: 'tiny_house_hunters',
     name: 'Tiny House Hunters',
     defaultEpisodes: 18,
     minEpisodes: 10,
@@ -561,8 +561,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.4,
     revenueDecayWeekly: 0.95,
   },
-  'USF-3af4ed44-8d9c-ba93-e912-8fdf230e': {
-    key: 'USF-3af4ed44-8d9c-ba93-e912-8fdf230e',
+  flea_market_flip: {
+    key: 'flea_market_flip',
     name: 'Flea Market Flip & Sell',
     defaultEpisodes: 22,
     minEpisodes: 12,
@@ -574,8 +574,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.45,
     revenueDecayWeekly: 0.96,
   },
-  'USF-2df8dff4-4dab-076e-d2d6-d87177df': {
-    key: 'USF-2df8dff4-4dab-076e-d2d6-d87177df',
+  celebrity_dating: {
+    key: 'celebrity_dating',
     name: 'Celebrity Dating Show',
     defaultEpisodes: 10,
     minEpisodes: 6,
@@ -587,8 +587,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.55,
     revenueDecayWeekly: 0.90,
   },
-  'USF-403d4f29-31d6-084f-a274-de082adb': {
-    key: 'USF-403d4f29-31d6-084f-a274-de082adb',
+  extreme_survival_coop: {
+    key: 'extreme_survival_coop',
     name: 'Extreme Survival Co-op',
     defaultEpisodes: 12,
     minEpisodes: 8,
@@ -600,8 +600,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.50,
     revenueDecayWeekly: 0.85,
   },
-  'USF-737c9451-3d2e-c1a1-e982-6b1f4bc0': {
-    key: 'USF-737c9451-3d2e-c1a1-e982-6b1f4bc0',
+  luxury_yacht_crew: {
+    key: 'luxury_yacht_crew',
     name: 'Luxury Yacht Crew Drama',
     defaultEpisodes: 14,
     minEpisodes: 10,
@@ -613,8 +613,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.60,
     revenueDecayWeekly: 0.92,
   },
-  'USF-7fe93bb0-cdc7-be10-f21e-150b0637': {
-    key: 'USF-7fe93bb0-cdc7-be10-f21e-150b0637',
+  true_crime_cold_case: {
+    key: 'true_crime_cold_case',
     name: 'True Crime Cold Case',
     defaultEpisodes: 6,
     minEpisodes: 4,
@@ -626,8 +626,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.40,
     revenueDecayWeekly: 0.82,
   },
-  'USF-624be257-9011-3c81-5b89-75a75bca': {
-    key: 'USF-624be257-9011-3c81-5b89-75a75bca',
+  tech_startup_doc: {
+    key: 'tech_startup_doc',
     name: 'Tech Startup Docuseries',
     defaultEpisodes: 8,
     minEpisodes: 6,
@@ -639,8 +639,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.45,
     revenueDecayWeekly: 0.85,
   },
-  'USF-4c1aa860-6b14-6595-e27b-b60303a3': {
-    key: 'USF-4c1aa860-6b14-6595-e27b-b60303a3',
+  amateur_baking_disasters: {
+    key: 'amateur_baking_disasters',
     name: 'Amateur Baking Disasters',
     defaultEpisodes: 10,
     minEpisodes: 8,
@@ -652,8 +652,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.55,
     revenueDecayWeekly: 0.94,
   },
-  'USF-80aacbaa-de15-3b5d-a697-b7cad875': {
-    key: 'USF-80aacbaa-de15-3b5d-a697-b7cad875',
+  paranormal_reality: {
+    key: 'paranormal_reality',
     name: 'Paranormal Reality',
     defaultEpisodes: 12,
     minEpisodes: 8,
@@ -665,8 +665,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.45,
     revenueDecayWeekly: 0.90,
   },
-  'USF-1f91150e-c306-cf53-8053-e53a17ef': {
-    key: 'USF-1f91150e-c306-cf53-8053-e53a17ef',
+  fashion_design_competition: {
+    key: 'fashion_design_competition',
     name: 'Fashion Design Competition',
     defaultEpisodes: 12,
     minEpisodes: 8,
@@ -678,8 +678,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.50,
     revenueDecayWeekly: 0.92,
   },
-  'USF-832ac67a-aed8-6abd-f1a6-13f90250': {
-    key: 'USF-832ac67a-aed8-6abd-f1a6-13f90250',
+  travel_adventure_race: {
+    key: 'travel_adventure_race',
     name: 'Global Adventure Race',
     defaultEpisodes: 12,
     minEpisodes: 10,
@@ -691,8 +691,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.45,
     revenueDecayWeekly: 0.88,
   },
-  'USF-25188cb8-70bb-615e-6d3c-daa1ec74': {
-    key: 'USF-25188cb8-70bb-615e-6d3c-daa1ec74',
+  trashy_dating_island: {
+    key: 'trashy_dating_island',
     name: 'Trashy Dating Island',
     defaultEpisodes: 12,
     minEpisodes: 8,
@@ -704,8 +704,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.5,
     revenueDecayWeekly: 0.8,
   },
-  'USF-4cd0f127-7e3e-2f6a-e2e4-b0675975': {
-    key: 'USF-4cd0f127-7e3e-2f6a-e2e4-b0675975',
+  true_crime_docuseries: {
+    key: 'true_crime_docuseries',
     name: 'True Crime Docuseries',
     defaultEpisodes: 6,
     minEpisodes: 3,
@@ -717,8 +717,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.75,
     revenueDecayWeekly: 0.9,
   },
-  'USF-85e0e162-7a68-4757-8e72-adf6d1c2': {
-    key: 'USF-85e0e162-7a68-4757-8e72-adf6d1c2',
+  reality_real_estate: {
+    key: 'reality_real_estate',
     name: 'Cutthroat Real Estate Reality',
     defaultEpisodes: 10,
     minEpisodes: 8,
@@ -730,8 +730,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.6,
     revenueDecayWeekly: 0.85,
   },
-  'USF-309dc467-48f1-2eff-58c2-e71f5166': {
-    key: 'USF-309dc467-48f1-2eff-58c2-e71f5166',
+  survival_betrayal: {
+    key: 'survival_betrayal',
     name: 'Survival & Betrayal Game',
     defaultEpisodes: 13,
     minEpisodes: 10,
@@ -743,8 +743,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.7,
     revenueDecayWeekly: 0.9,
   },
-  'USF-03c3c546-002a-9a3d-a96d-3df86ed8': {
-    key: 'USF-03c3c546-002a-9a3d-a96d-3df86ed8',
+  celebrity_escape_room: {
+    key: 'celebrity_escape_room',
     name: 'Celebrity Escape Room Challenge',
     defaultEpisodes: 8,
     minEpisodes: 6,
@@ -756,8 +756,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.6,
     revenueDecayWeekly: 0.85,
   },
-  'USF-e371e555-8b58-810c-e4cd-e6b40e3a': {
-    key: 'USF-e371e555-8b58-810c-e4cd-e6b40e3a',
+  social_media_experiment: {
+    key: 'social_media_experiment',
     name: 'Social Media Isolation Experiment',
     defaultEpisodes: 10,
     minEpisodes: 8,
@@ -769,8 +769,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.65,
     revenueDecayWeekly: 0.8,
   },
-  'USF-1340e9a8-e285-650b-80f8-d1c066e9': {
-    key: 'USF-1340e9a8-e285-650b-80f8-d1c066e9',
+  extreme_baking_wars: {
+    key: 'extreme_baking_wars',
     name: 'Extreme Baking Wars',
     defaultEpisodes: 10,
     minEpisodes: 6,
@@ -782,8 +782,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.55,
     revenueDecayWeekly: 0.8,
   },
-  'USF-3c68668c-79dd-7173-bad4-c1d6c927': {
-    key: 'USF-3c68668c-79dd-7173-bad4-c1d6c927',
+  poly_dating_experiment: {
+    key: 'poly_dating_experiment',
     name: 'Polyamorous Dating Experiment',
     defaultEpisodes: 10,
     minEpisodes: 8,
@@ -795,8 +795,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.6,
     revenueDecayWeekly: 0.85,
   },
-  'USF-4b733f64-97e9-f30a-dd53-79bb9445': {
-    key: 'USF-4b733f64-97e9-f30a-dd53-79bb9445',
+  cult_survivor_doc: {
+    key: 'cult_survivor_doc',
     name: 'Cult Survivor Exposé',
     defaultEpisodes: 4,
     minEpisodes: 3,
@@ -808,8 +808,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.8,
     revenueDecayWeekly: 0.95,
   },
-  'USF-a2a94577-6fa2-168c-a432-cca67a65': {
-    key: 'USF-a2a94577-6fa2-168c-a432-cca67a65',
+  influencer_survival: {
+    key: 'influencer_survival',
     name: 'Influencer Wilderness Survival',
     defaultEpisodes: 8,
     minEpisodes: 6,
@@ -821,8 +821,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.55,
     revenueDecayWeekly: 0.8,
   },
-  'USF-ecbf1081-660a-f165-d443-a5bd8173': {
-    key: 'USF-ecbf1081-660a-f165-d443-a5bd8173',
+  celebrity_boxing_league: {
+    key: 'celebrity_boxing_league',
     name: 'Celebrity Boxing League',
     defaultEpisodes: 6,
     minEpisodes: 4,
@@ -834,8 +834,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.5,
     revenueDecayWeekly: 0.75,
   },
-  'USF-46aa5e67-96d1-fb7f-265d-a25214a6': {
-    key: 'USF-46aa5e67-96d1-fb7f-265d-a25214a6',
+  cult_exposé_doc: {
+    key: 'cult_exposé_doc',
     name: 'Cult Exposé Docuseries',
     defaultEpisodes: 6,
     minEpisodes: 3,
@@ -847,8 +847,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.65,
     revenueDecayWeekly: 0.88,
   },
-  'USF-29fc0966-a3ee-bc12-f20d-cef244b1': {
-    key: 'USF-29fc0966-a3ee-bc12-f20d-cef244b1',
+  wildlife_rescue: {
+    key: 'wildlife_rescue',
     name: 'Exotic Wildlife Rescue',
     defaultEpisodes: 10,
     minEpisodes: 6,
@@ -860,8 +860,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.45,
     revenueDecayWeekly: 0.85,
   },
-  'USF-bbf471b1-ee34-dafd-b73b-e5414ba7': {
-    key: 'USF-bbf471b1-ee34-dafd-b73b-e5414ba7',
+  standup_special_event: {
+    key: 'standup_special_event',
     name: 'Live Stand-up Comedy Event',
     defaultEpisodes: 1,
     minEpisodes: 1,
@@ -873,8 +873,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.9,
     revenueDecayWeekly: 0.95,
   },
-  'USF-f1e0839e-7bf1-e41c-344d-191755fb': {
-    key: 'USF-f1e0839e-7bf1-e41c-344d-191755fb',
+  ghost_hunting_extreme: {
+    key: 'ghost_hunting_extreme',
     name: 'Extreme Ghost Hunting',
     defaultEpisodes: 8,
     minEpisodes: 6,
@@ -886,8 +886,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.6,
     revenueDecayWeekly: 0.8,
   },
-  'USF-cb34c6e8-9655-2987-d818-341856bb': {
-    key: 'USF-cb34c6e8-9655-2987-d818-341856bb',
+  undercover_boss_parody: {
+    key: 'undercover_boss_parody',
     name: 'Satirical Undercover Boss',
     defaultEpisodes: 10,
     minEpisodes: 6,
@@ -899,8 +899,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.5,
     revenueDecayWeekly: 0.85,
   },
-  'USF-0c9c56b8-024f-f459-7bb2-4d1ce0f3': {
-    key: 'USF-0c9c56b8-024f-f459-7bb2-4d1ce0f3',
+  survival_dating: {
+    key: 'survival_dating',
     name: 'Naked Wilderness Dating',
     defaultEpisodes: 12,
     minEpisodes: 8,
@@ -912,8 +912,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.75,
     revenueDecayWeekly: 0.92,
   },
-  'USF-187994ab-1f67-d24f-8ea6-1f214fc5': {
-    key: 'USF-187994ab-1f67-d24f-8ea6-1f214fc5',
+  crypto_scam_investigation: {
+    key: 'crypto_scam_investigation',
     name: 'Crypto Scam Investigation',
     defaultEpisodes: 4,
     minEpisodes: 2,
@@ -925,8 +925,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.85,
     revenueDecayWeekly: 0.95,
   },
-  'USF-52de8643-b2b2-3dd4-8c71-9dc3f31e': {
-    key: 'USF-52de8643-b2b2-3dd4-8c71-9dc3f31e',
+  celebrity_house_flip: {
+    key: 'celebrity_house_flip',
     name: 'Celebrity High-Stakes House Flip',
     defaultEpisodes: 8,
     minEpisodes: 6,
@@ -938,8 +938,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.55,
     revenueDecayWeekly: 0.88,
   },
-  'USF-749e8823-e53b-75d7-7ec9-1dc03b6c': {
-    key: 'USF-749e8823-e53b-75d7-7ec9-1dc03b6c',
+  toddler_beauty_pageant_reunion: {
+    key: 'toddler_beauty_pageant_reunion',
     name: 'Toddler Pageant Reunion',
     defaultEpisodes: 3,
     minEpisodes: 1,
@@ -951,8 +951,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.7,
     revenueDecayWeekly: 0.9,
   },
-  'USF-c54466cf-5595-9bdb-6a7b-6493562d': {
-    key: 'USF-c54466cf-5595-9bdb-6a7b-6493562d',
+  doomsday_preppers_elite: {
+    key: 'doomsday_preppers_elite',
     name: 'Billionaire Doomsday Preppers',
     defaultEpisodes: 8,
     minEpisodes: 6,
@@ -964,8 +964,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.6,
     revenueDecayWeekly: 0.85,
   },
-  'USF-530ac596-03c4-4e3b-a5a1-b6aaa1de': {
-    key: 'USF-530ac596-03c4-4e3b-a5a1-b6aaa1de',
+  extreme_cooking: {
+    key: 'extreme_cooking',
     name: 'Extreme Cooking Challenge',
     defaultEpisodes: 10,
     minEpisodes: 6,
@@ -977,8 +977,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.55,
     revenueDecayWeekly: 0.9,
   },
-  'USF-931c08c2-3709-a00d-3aef-828fdfd3': {
-    key: 'USF-931c08c2-3709-a00d-3aef-828fdfd3',
+  dating_competition: {
+    key: 'dating_competition',
     name: 'Cutthroat Dating Competition',
     defaultEpisodes: 12,
     minEpisodes: 8,
@@ -990,8 +990,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.65,
     revenueDecayWeekly: 0.92,
   },
-  'USF-401ace3a-30ce-ec34-13c5-b6af79a9': {
-    key: 'USF-401ace3a-30ce-ec34-13c5-b6af79a9',
+  celebrity_survival_challenge: {
+    key: 'celebrity_survival_challenge',
     name: 'Celebrity Wilderness Survival',
     defaultEpisodes: 8,
     minEpisodes: 6,
@@ -1003,8 +1003,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.55,
     revenueDecayWeekly: 0.85,
   },
-  'USF-5c7ad721-2b33-e09b-d48f-681fd73f': {
-    key: 'USF-5c7ad721-2b33-e09b-d48f-681fd73f',
+  poly_dating_drama: {
+    key: 'poly_dating_drama',
     name: 'Poly Dating Drama',
     defaultEpisodes: 10,
     minEpisodes: 8,
@@ -1016,8 +1016,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.6,
     revenueDecayWeekly: 0.88,
   },
-  'USF-4f7e9096-94ad-7c57-7c04-02695556': {
-    key: 'USF-4f7e9096-94ad-7c57-7c04-02695556',
+  billionaire_lifestyle: {
+    key: 'billionaire_lifestyle',
     name: 'Billionaire Lifestyle Voyeur',
     defaultEpisodes: 10,
     minEpisodes: 6,
@@ -1029,8 +1029,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.5,
     revenueDecayWeekly: 0.9,
   },
-  'USF-343dd99c-5dc8-0e2b-c2c0-667d56b4': {
-    key: 'USF-343dd99c-5dc8-0e2b-c2c0-667d56b4',
+  startup_pitch_wars: {
+    key: 'startup_pitch_wars',
     name: 'Cutthroat Startup Pitch Wars',
     defaultEpisodes: 12,
     minEpisodes: 8,
@@ -1042,8 +1042,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.45,
     revenueDecayWeekly: 0.92,
   },
-  'USF-bd08ac1e-b94c-48ef-58dd-e76f4144': {
-    key: 'USF-bd08ac1e-b94c-48ef-58dd-e76f4144',
+  prank_show_escalation: {
+    key: 'prank_show_escalation',
     name: 'Hidden Camera Prank Escalation',
     defaultEpisodes: 15,
     minEpisodes: 10,
@@ -1055,8 +1055,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.5,
     revenueDecayWeekly: 0.88,
   },
-  'USF-40c054e1-d621-108d-2a11-9bc08731': {
-    key: 'USF-40c054e1-d621-108d-2a11-9bc08731',
+  makeover_intervention_extreme: {
+    key: 'makeover_intervention_extreme',
     name: 'Extreme Makeover Intervention',
     defaultEpisodes: 12,
     minEpisodes: 8,
@@ -1068,8 +1068,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.4,
     revenueDecayWeekly: 0.94,
   },
-  'USF-9ce12b70-bb65-b74e-0abc-2b7acf89': {
-    key: 'USF-9ce12b70-bb65-b74e-0abc-2b7acf89',
+  hidden_treasure_race: {
+    key: 'hidden_treasure_race',
     name: 'Hidden Treasure Race',
     defaultEpisodes: 10,
     minEpisodes: 6,
@@ -1081,8 +1081,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.6,
     revenueDecayWeekly: 0.85,
   },
-  'USF-db6f256d-7657-3fc8-a639-0c5de875': {
-    key: 'USF-db6f256d-7657-3fc8-a639-0c5de875',
+  celebrity_ghost_hunting: {
+    key: 'celebrity_ghost_hunting',
     name: 'Celebrity Ghost Hunting',
     defaultEpisodes: 8,
     minEpisodes: 6,
@@ -1094,8 +1094,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.55,
     revenueDecayWeekly: 0.85,
   },
-  'USF-b8888d29-4bb3-ef52-aeae-a7220a93': {
-    key: 'USF-b8888d29-4bb3-ef52-aeae-a7220a93',
+  true_crime_live_investigation: {
+    key: 'true_crime_live_investigation',
     name: 'True Crime Live Investigation',
     defaultEpisodes: 6,
     minEpisodes: 4,
@@ -1107,8 +1107,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.4,
     revenueDecayWeekly: 0.8,
   },
-  'USF-ebad5b9c-37bb-a426-afb9-192e8136': {
-    key: 'USF-ebad5b9c-37bb-a426-afb9-192e8136',
+  reality_courtroom: {
+    key: 'reality_courtroom',
     name: 'Reality Courtroom',
     defaultEpisodes: 40,
     minEpisodes: 20,
@@ -1120,8 +1120,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.3,
     revenueDecayWeekly: 0.98,
   },
-  'USF-49ab27b1-e478-465d-5d48-f3fb2a5c': {
-    key: 'USF-49ab27b1-e478-465d-5d48-f3fb2a5c',
+  extreme_cheap_travel_show: {
+    key: 'extreme_cheap_travel_show',
     name: 'Extreme Cheap Travel',
     defaultEpisodes: 12,
     minEpisodes: 8,
@@ -1133,8 +1133,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.45,
     revenueDecayWeekly: 0.9,
   },
-  'USF-ea86167b-5584-cecf-f7eb-1fddba61': {
-    key: 'USF-ea86167b-5584-cecf-f7eb-1fddba61',
+  sports_wives_drama: {
+    key: 'sports_wives_drama',
     name: 'Sports Wives Drama',
     defaultEpisodes: 14,
     minEpisodes: 10,
@@ -1146,8 +1146,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.6,
     revenueDecayWeekly: 0.92,
   },
-  'USF-6b9fe837-c014-594c-6b53-dc1f5774': {
-    key: 'USF-6b9fe837-c014-594c-6b53-dc1f5774',
+  tattoo_coverup_disasters: {
+    key: 'tattoo_coverup_disasters',
     name: 'Tattoo Cover-up Disasters',
     defaultEpisodes: 15,
     minEpisodes: 10,
@@ -1159,8 +1159,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.5,
     revenueDecayWeekly: 0.95,
   },
-  'USF-cdf8f0b7-7b29-96bf-4550-458ecff2': {
-    key: 'USF-cdf8f0b7-7b29-96bf-4550-458ecff2',
+  influencer_boxing_league: {
+    key: 'influencer_boxing_league',
     name: 'Influencer Boxing League',
     defaultEpisodes: 4,
     minEpisodes: 1,
@@ -1172,8 +1172,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.3,
     revenueDecayWeekly: 0.6,
   },
-  'USF-9af6041d-2ada-1327-c406-ffb8e208': {
-    key: 'USF-9af6041d-2ada-1327-c406-ffb8e208',
+  virtual_reality_dating: {
+    key: 'virtual_reality_dating',
     name: 'Virtual Reality Dating',
     defaultEpisodes: 10,
     minEpisodes: 8,
@@ -1185,8 +1185,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.5,
     revenueDecayWeekly: 0.8,
   },
-  'USF-47c1e9a8-a011-e4e3-864e-6e8828cd': {
-    key: 'USF-47c1e9a8-a011-e4e3-864e-6e8828cd',
+  extreme_job_swap: {
+    key: 'extreme_job_swap',
     name: 'Extreme Job Swap',
     defaultEpisodes: 8,
     minEpisodes: 6,
@@ -1198,8 +1198,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.6,
     revenueDecayWeekly: 0.85,
   },
-  'USF-2426fc3a-6cc0-e0a7-3c1e-1cfcd726': {
-    key: 'USF-2426fc3a-6cc0-e0a7-3c1e-1cfcd726',
+  celebrity_farm_survival: {
+    key: 'celebrity_farm_survival',
     name: 'Celebrity Farm Survival',
     defaultEpisodes: 12,
     minEpisodes: 10,
@@ -1211,8 +1211,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.7,
     revenueDecayWeekly: 0.9,
   },
-  'USF-977a2e34-06d1-c334-5463-537e62d5': {
-    key: 'USF-977a2e34-06d1-c334-5463-537e62d5',
+  niche_hobby_competition: {
+    key: 'niche_hobby_competition',
     name: 'Niche Hobby Competition',
     defaultEpisodes: 10,
     minEpisodes: 6,
@@ -1224,8 +1224,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.65,
     revenueDecayWeekly: 0.85,
   },
-  'USF-4bcfd3ec-8986-e47c-a05a-2c163930': {
-    key: 'USF-4bcfd3ec-8986-e47c-a05a-2c163930',
+  paranormal_renovation: {
+    key: 'paranormal_renovation',
     name: 'Haunted House Flippers',
     defaultEpisodes: 10,
     minEpisodes: 6,
@@ -1237,8 +1237,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.45,
     revenueDecayWeekly: 0.9,
   },
-  'USF-d50f47c2-596c-f4af-de4b-3c1735db': {
-    key: 'USF-d50f47c2-596c-f4af-de4b-3c1735db',
+  extreme_pet_makeover: {
+    key: 'extreme_pet_makeover',
     name: 'Extreme Pet Makeover',
     defaultEpisodes: 15,
     minEpisodes: 10,
@@ -1250,8 +1250,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.5,
     revenueDecayWeekly: 0.95,
   },
-  'USF-45204860-f70b-1b2e-a6cd-2cd594a0': {
-    key: 'USF-45204860-f70b-1b2e-a6cd-2cd594a0',
+  rich_kids_survival: {
+    key: 'rich_kids_survival',
     name: 'Rich Kids Survival Challenge',
     defaultEpisodes: 10,
     minEpisodes: 8,
@@ -1263,8 +1263,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.65,
     revenueDecayWeekly: 0.88,
   },
-  'USF-0a6f7275-b494-6415-e3b0-c648ad6a': {
-    key: 'USF-0a6f7275-b494-6415-e3b0-c648ad6a',
+  crypto_millionaire_matchmaker: {
+    key: 'crypto_millionaire_matchmaker',
     name: 'Crypto Millionaire Matchmaker',
     defaultEpisodes: 12,
     minEpisodes: 8,
@@ -1276,8 +1276,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.7,
     revenueDecayWeekly: 0.9,
   },
-  'USF-a1dd26aa-a88f-97be-0328-822b4374': {
-    key: 'USF-a1dd26aa-a88f-97be-0328-822b4374',
+  ai_dating_experiment: {
+    key: 'ai_dating_experiment',
     name: 'AI Matchmaker Dating Experiment',
     defaultEpisodes: 10,
     minEpisodes: 6,
@@ -1289,8 +1289,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.6,
     revenueDecayWeekly: 0.85,
   },
-  'USF-f92e898b-89e8-f672-f5c4-df3e2f52': {
-    key: 'USF-f92e898b-89e8-f672-f5c4-df3e2f52',
+  zombie_survival_reality: {
+    key: 'zombie_survival_reality',
     name: 'Zombie Apocalypse Simulator',
     defaultEpisodes: 10,
     minEpisodes: 6,
@@ -1302,8 +1302,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.75,
     revenueDecayWeekly: 0.85,
   },
-  'USF-937a5263-d177-20ba-1bde-be9471aa': {
-    key: 'USF-937a5263-d177-20ba-1bde-be9471aa',
+  toddler_chef_competition: {
+    key: 'toddler_chef_competition',
     name: 'Cutthroat Toddler Chefs',
     defaultEpisodes: 10,
     minEpisodes: 6,
@@ -1315,8 +1315,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.6,
     revenueDecayWeekly: 0.92,
   },
-  'USF-c3798113-11ca-5003-c7b5-68e671d0': {
-    key: 'USF-c3798113-11ca-5003-c7b5-68e671d0',
+  underground_fight_club_doc: {
+    key: 'underground_fight_club_doc',
     name: 'Underground Fight Club Exposé',
     defaultEpisodes: 6,
     minEpisodes: 4,
@@ -1328,8 +1328,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.8,
     revenueDecayWeekly: 0.8,
   },
-  'USF-b3595514-2169-3c92-e78b-2284e1dc': {
-    key: 'USF-b3595514-2169-3c92-e78b-2284e1dc',
+  space_tourism_reality: {
+    key: 'space_tourism_reality',
     name: 'Amateur Space Tourism Prep',
     defaultEpisodes: 8,
     minEpisodes: 4,
@@ -1341,8 +1341,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.7,
     revenueDecayWeekly: 0.9,
   },
-  'USF-05cfe2f9-4e47-c9d8-40ef-5b496619': {
-    key: 'USF-05cfe2f9-4e47-c9d8-40ef-5b496619',
+  extreme_couponing_wars: {
+    key: 'extreme_couponing_wars',
     name: 'Extreme Couponing Bloodbath',
     defaultEpisodes: 16,
     minEpisodes: 10,
@@ -1354,8 +1354,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.4,
     revenueDecayWeekly: 0.98,
   },
-  'USF-f26f67cf-caf3-0ba4-0a10-7dd08c8b': {
-    key: 'USF-f26f67cf-caf3-0ba4-0a10-7dd08c8b',
+  extreme_makeover_cult: {
+    key: 'extreme_makeover_cult',
     name: 'Extreme Makeover: Cult Edition',
     defaultEpisodes: 6,
     minEpisodes: 4,
@@ -1367,8 +1367,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.7,
     revenueDecayWeekly: 0.9,
   },
-  'USF-ea4863f6-b432-1f72-1239-4c26e52d': {
-    key: 'USF-ea4863f6-b432-1f72-1239-4c26e52d',
+  crypto_scam_expose: {
+    key: 'crypto_scam_expose',
     name: 'Crypto Scam Exposé',
     defaultEpisodes: 4,
     minEpisodes: 2,
@@ -1380,8 +1380,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.8,
     revenueDecayWeekly: 0.95,
   },
-  'USF-509a4929-e602-455f-7089-c1640917': {
-    key: 'USF-509a4929-e602-455f-7089-c1640917',
+  child_star_documentary: {
+    key: 'child_star_documentary',
     name: 'Fallen Child Star Doc',
     defaultEpisodes: 4,
     minEpisodes: 2,
@@ -1393,8 +1393,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.75,
     revenueDecayWeekly: 0.9,
   },
-  'USF-b60b3d9e-0ae1-914f-895f-caf8f942': {
-    key: 'USF-b60b3d9e-0ae1-914f-895f-caf8f942',
+  high_stakes_poker: {
+    key: 'high_stakes_poker',
     name: 'High Stakes Underground Poker',
     defaultEpisodes: 16,
     minEpisodes: 10,
@@ -1406,8 +1406,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.4,
     revenueDecayWeekly: 0.75,
   },
-  'USF-dcaeb121-cc49-85a3-c66c-bf56570b': {
-    key: 'USF-dcaeb121-cc49-85a3-c66c-bf56570b',
+  influencer_house: {
+    key: 'influencer_house',
     name: 'Influencer Content House',
     defaultEpisodes: 20,
     minEpisodes: 12,
@@ -1419,8 +1419,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.3,
     revenueDecayWeekly: 0.7,
   },
-  'USF-e5532c01-b55f-70f5-2201-28d17e75': {
-    key: 'USF-e5532c01-b55f-70f5-2201-28d17e75',
+  billionaire_yacht_crew: {
+    key: 'billionaire_yacht_crew',
     name: 'Billionaire Yacht Crew',
     defaultEpisodes: 14,
     minEpisodes: 10,
@@ -1432,8 +1432,8 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.55,
     revenueDecayWeekly: 0.85,
   },
-  'USF-b67cdc7a-fb89-61c7-7d58-6dd38828': {
-    key: 'USF-b67cdc7a-fb89-61c7-7d58-6dd38828',
+  celebrity_rehab: {
+    key: 'celebrity_rehab',
     name: 'Celebrity Rehab Reality',
     defaultEpisodes: 10,
     minEpisodes: 6,
@@ -1445,148 +1445,4 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     revenueDecayBinge: 0.55,
     revenueDecayWeekly: 0.92,
   },
-
-  'USF-1b078b5a-4819-a61d-ccea-079321f9': {
-    key: 'USF-1b078b5a-4819-a61d-ccea-079321f9',
-    name: 'Historical Reenactment Docuseries',
-    defaultEpisodes: 6,
-    minEpisodes: 3,
-    maxEpisodes: 10,
-    productionCostMultiplier: 0.8,
-    developmentWeeksModifier: 1.2,
-    productionWeeksPerEpisode: 1.3,
-    renewable: false,
-    revenueDecayBinge: 0.6,
-    revenueDecayWeekly: 0.85,
-  },
-  'USF-431c88da-2ae8-758b-9e8a-95dabe6b': {
-    key: 'USF-431c88da-2ae8-758b-9e8a-95dabe6b',
-    name: 'Celebrity Cooking Disasters',
-    defaultEpisodes: 10,
-    minEpisodes: 6,
-    maxEpisodes: 14,
-    productionCostMultiplier: 0.5,
-    developmentWeeksModifier: 0.6,
-    productionWeeksPerEpisode: 0.6,
-    renewable: true,
-    revenueDecayBinge: 0.5,
-    revenueDecayWeekly: 0.9,
-  },
-  'USF-0557fc1e-d67b-6f19-a4e8-ebd61a56': {
-    key: 'USF-0557fc1e-d67b-6f19-a4e8-ebd61a56',
-    name: 'High School Sports Doc',
-    defaultEpisodes: 8,
-    minEpisodes: 6,
-    maxEpisodes: 12,
-    productionCostMultiplier: 0.3,
-    developmentWeeksModifier: 0.7,
-    productionWeeksPerEpisode: 0.8,
-    renewable: true,
-    revenueDecayBinge: 0.45,
-    revenueDecayWeekly: 0.88,
-  },
-  'USF-50f05ebe-d1d6-21a5-7bd5-3b7dac7f': {
-    key: 'USF-50f05ebe-d1d6-21a5-7bd5-3b7dac7f',
-    name: 'Extreme Body Modifications',
-    defaultEpisodes: 12,
-    minEpisodes: 8,
-    maxEpisodes: 20,
-    productionCostMultiplier: 0.4,
-    developmentWeeksModifier: 0.5,
-    productionWeeksPerEpisode: 0.6,
-    renewable: true,
-    revenueDecayBinge: 0.55,
-    revenueDecayWeekly: 0.92,
-  },
-  'USF-315d64a4-c692-2040-2bee-d18c1b49': {
-    key: 'USF-315d64a4-c692-2040-2bee-d18c1b49',
-    name: 'Polygraph Interrogation Reality',
-    defaultEpisodes: 16,
-    minEpisodes: 10,
-    maxEpisodes: 24,
-    productionCostMultiplier: 0.2,
-    developmentWeeksModifier: 0.3,
-    productionWeeksPerEpisode: 0.2,
-    renewable: true,
-    revenueDecayBinge: 0.4,
-    revenueDecayWeekly: 0.95,
-  },
-  'USF-1e63466c-6284-839b-e59d-9589c4e5': {
-    key: 'USF-1e63466c-6284-839b-e59d-9589c4e5',
-    name: 'Rich Pets of Instagram',
-    defaultEpisodes: 12,
-    minEpisodes: 8,
-    maxEpisodes: 16,
-    productionCostMultiplier: 0.35,
-    developmentWeeksModifier: 0.4,
-    productionWeeksPerEpisode: 0.5,
-    renewable: true,
-    revenueDecayBinge: 0.5,
-    revenueDecayWeekly: 0.9,
-  },
-  'USF-f2105ef1-9a52-b6bb-703b-2a28afd8': {
-    key: 'USF-f2105ef1-9a52-b6bb-703b-2a28afd8',
-    name: 'Celebrity Survival Island',
-    defaultEpisodes: 10,
-    minEpisodes: 6,
-    maxEpisodes: 14,
-    productionCostMultiplier: 1.5,
-    developmentWeeksModifier: 0.9,
-    productionWeeksPerEpisode: 1.1,
-    renewable: true,
-    revenueDecayBinge: 0.65,
-    revenueDecayWeekly: 0.85,
-  },
-  'USF-4311db81-753d-cf9f-9439-64cfd952': {
-    key: 'USF-4311db81-753d-cf9f-9439-64cfd952',
-    name: 'Art Forgery Exposé',
-    defaultEpisodes: 4,
-    minEpisodes: 2,
-    maxEpisodes: 6,
-    productionCostMultiplier: 0.6,
-    developmentWeeksModifier: 1.5,
-    productionWeeksPerEpisode: 1.0,
-    renewable: false,
-    revenueDecayBinge: 0.75,
-    revenueDecayWeekly: 0.88,
-  },
-  'USF-813a94cb-fbfe-e5a9-2b0c-6e063485': {
-    key: 'USF-813a94cb-fbfe-e5a9-2b0c-6e063485',
-    name: 'Underground Street Racing',
-    defaultEpisodes: 8,
-    minEpisodes: 6,
-    maxEpisodes: 12,
-    productionCostMultiplier: 0.7,
-    developmentWeeksModifier: 0.8,
-    productionWeeksPerEpisode: 0.9,
-    renewable: true,
-    revenueDecayBinge: 0.6,
-    revenueDecayWeekly: 0.85,
-  },
-  'USF-84657b1a-f112-0d6b-0d26-9a65c168': {
-    key: 'USF-84657b1a-f112-0d6b-0d26-9a65c168',
-    name: 'Extreme Zen Decluttering',
-    defaultEpisodes: 12,
-    minEpisodes: 8,
-    maxEpisodes: 20,
-    productionCostMultiplier: 0.25,
-    developmentWeeksModifier: 0.4,
-    productionWeeksPerEpisode: 0.4,
-    renewable: true,
-    revenueDecayBinge: 0.4,
-    revenueDecayWeekly: 0.95,
-  },
-  talk_show: {
-    key: 'talk_show',
-    name: 'Daytime / Late Night Talk',
-    defaultEpisodes: 50,
-    minEpisodes: 20,
-    maxEpisodes: 100,
-    productionCostMultiplier: 0.15,
-    developmentWeeksModifier: 0.2,
-    productionWeeksPerEpisode: 0.1,
-    renewable: true,
-    revenueDecayBinge: 0.2,
-    revenueDecayWeekly: 0.98,
-  }
 };

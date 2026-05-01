@@ -12,6 +12,14 @@ import {
   TVSeasonDetails,
   CriticConsensus,
   AwardsProfile,
+  FilmProject,
+  SeriesProject,
+  StreamerPlatform,
+  PremiumPlatform,
+  NetworkPlatform,
+  ProjectBase,
+  ProjectType,
+  ScriptMetrics,
 } from '@/engine/types';
 
 export const createMockTalent = (overrides: Partial<Talent> = {}): Talent => ({
@@ -36,6 +44,8 @@ export const createMockTalent = (overrides: Partial<Talent> = {}): Talent => ({
   motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
   currentMotivation: 'NONE',
   motivationImpulse: 'NONE',
+  isBreakout: false,
+  onMedicalLeave: false,
   ...overrides
 });
 
@@ -44,63 +54,77 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
   const type = overrides.type || 'FILM';
   const title = overrides.title || 'Mock Project';
   
-  const base: any = {
+  const commonReception: CriticConsensus = {
+    metaScore: 0,
+    audienceScore: 0,
+    reviews: [],
+    status: 'Mixed',
+    isCultPotential: false
+  };
+
+  const commonAwardsProfile: AwardsProfile = {
+    criticScore: 0,
+    audienceScore: 0,
+    prestigeScore: 0,
+    craftScore: 0,
+    culturalHeat: 0,
+    campaignStrength: 0,
+    controversyRisk: 0,
+    festivalBuzz: 0,
+    academyAppeal: 0,
+    guildAppeal: 0,
+    populistAppeal: 0,
+    indieCredibility: 0,
+    industryNarrativeScore: 0
+  };
+
+  const baseProperties: ProjectBase = {
     id,
     title,
-    type,
-    format: type === 'SERIES' ? 'tv' : 'film',
-    genre: 'Drama',
-    budgetTier: 'mid',
-    budget: 10000000,
-    weeklyCost: 250000,
-    targetAudience: 'General',
-    flavor: 'A mock project.',
-    state: 'development',
-    buzz: 50,
-    weeksInPhase: 0,
-    developmentWeeks: 10,
-    productionWeeks: 20,
-    revenue: 0,
-    weeklyRevenue: 0,
-    releaseWeek: null,
-    activeCrisis: null,
-    momentum: 50,
-    progress: 0,
-    accumulatedCost: 0,
-    scriptHeat: 50,
-    activeRoles: [],
-    scriptEvents: [],
-    marketingBudget: 0,
-    marketingLevel: 'none',
-    awards: [],
-    reception: {
-      metaScore: 0,
-      audienceScore: 0,
-      reviews: [],
-      status: 'Mixed',
-      isCultPotential: false
-    } as CriticConsensus,
-    awardsProfile: {
-      criticScore: 0,
-      audienceScore: 0,
-      prestigeScore: 0,
-      craftScore: 0,
-      culturalHeat: 0,
-      campaignStrength: 0,
-      controversyRisk: 0,
-      festivalBuzz: 0,
-      academyAppeal: 0,
-      guildAppeal: 0,
-      populistAppeal: 0,
-      indieCredibility: 0,
-      industryNarrativeScore: 0
-    } as AwardsProfile,
+    type: (type as ProjectType), // Discriminated later
+    format: 'film', // Default, overwritten by subtypes
+    genre: overrides.genre || 'Drama',
+    budgetTier: overrides.budgetTier || 'mid',
+    budget: overrides.budget || 10000000,
+    weeklyCost: overrides.weeklyCost || 250000,
+    targetAudience: overrides.targetAudience || 'General',
+    flavor: overrides.flavor || 'A mock project.',
+    state: overrides.state || 'development',
+    buzz: overrides.buzz || 50,
+    weeksInPhase: overrides.weeksInPhase || 0,
+    developmentWeeks: overrides.developmentWeeks || 10,
+    productionWeeks: overrides.productionWeeks || 20,
+    revenue: overrides.revenue || 0,
+    weeklyRevenue: overrides.weeklyRevenue || 0,
+    releaseWeek: overrides.releaseWeek !== undefined ? overrides.releaseWeek : null,
+    activeCrisis: overrides.activeCrisis !== undefined ? overrides.activeCrisis : null,
+    momentum: overrides.momentum || 50,
+    quality: overrides.quality || 50,
+    scriptHeat: overrides.scriptHeat || 50,
+    progress: overrides.progress || 0,
+    accumulatedCost: overrides.accumulatedCost || 0,
+    ownerId: overrides.ownerId || 'player',
+    reviewScore: overrides.reviewScore || 50,
+    buzz: overrides.buzz || 50,
+    genre: overrides.genre || 'Drama',
+    budgetTier: overrides.budgetTier || 'mid',
+    budget: overrides.budget || 10000000,
+    targetAudience: overrides.targetAudience || 'General',
+    state: overrides.state || 'development',
+    awards: overrides.awards || [],
+    reception: overrides.reception || commonReception,
+    awardsProfile: overrides.awardsProfile || commonAwardsProfile,
     ...overrides
   };
 
   if (type === 'SERIES') {
-    return {
-      ...base,
+    const seriesOverrides = overrides as Partial<SeriesProject>;
+    const series: SeriesProject = {
+      ...baseProperties,
+      type: 'SERIES',
+      format: seriesOverrides.format || 'tv',
+      activeRoles: seriesOverrides.activeRoles || [],
+      scriptEvents: seriesOverrides.scriptEvents || [],
       tvDetails: {
         currentSeason: 1,
         episodesOrdered: 10,
@@ -108,18 +132,29 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
         episodesAired: 0,
         averageRating: 0,
         status: 'IN_DEVELOPMENT',
-        ...((overrides as any).tvDetails || {})
-      } as TVSeasonDetails
-    } as SeriesProject;
+        ...seriesOverrides.tvDetails
+      }
+    };
+    return series;
   }
 
-  return base as FilmProject;
+  const filmOverrides = overrides as Partial<FilmProject>;
+  const film: FilmProject = {
+    ...baseProperties,
+    type: 'FILM',
+    format: 'film',
+    activeRoles: filmOverrides.activeRoles || [],
+    scriptEvents: filmOverrides.scriptEvents || [],
+  };
+  return film;
 };
 
 export const createMockGameState = (overrides: Partial<GameState> = {}): GameState => ({
   week: 1,
   gameSeed: 42,
   tickCount: 0,
+  rngState: 12345,
+  game: { currentWeek: 1 },
   entities: {
     projects: {},
     talents: {},
@@ -135,6 +170,7 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
   news: { headlines: [] },
   ip: { vault: [], franchises: {} },
   studio: {
+    id: 'player-studio',
     name: 'Test Studio',
     archetype: 'major',
     prestige: 50,
@@ -142,13 +178,7 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
     internal: {
         projectHistory: [],
     },
-    culture: { 
-      prestigeVsCommercial: 0,
-      talentFriendlyVsControlling: 0,
-      nicheVsBroad: 50,
-      filmFirstVsTvFirst: 0,
-      genrePopularity: { 'Drama': 50, 'Comedy': 50, 'Action': 50, 'Sci-Fi': 50, 'Horror': 50, 'Romance': 50 }
-    },
+    snapshotHistory: [],
     activeCampaigns: {},
   },
   market: { opportunities: [], buyers: [] },
@@ -161,10 +191,14 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
     scandals: []
   },
   deals: { activeDeals: [], pendingOffers: [], expiredDeals: [] },
+  talentAgentRelationships: {},
+  relationships: {
+    relationships: {}
+  },
   history: [],
   eventHistory: [],
   ...overrides
-} as GameState);
+});
 
 export const createMockContract = (overrides: Partial<Contract> = {}): Contract => ({
   id: 'mock-contract',
@@ -173,6 +207,7 @@ export const createMockContract = (overrides: Partial<Contract> = {}): Contract 
   role: 'actor',
   fee: 500000,
   backendPercent: 0,
+  ownerId: 'player',
   ...overrides
 });
 
@@ -190,6 +225,7 @@ export const createMockIPAsset = (overrides: Partial<IPAsset> = {}): IPAsset => 
   totalEpisodes: 0,
   rightsExpirationWeek: 100,
   rightsOwner: 'STUDIO',
+  ownerId: 'player',
   ...overrides
 });
 
@@ -236,8 +272,9 @@ export const createMockRival = (overrides: Partial<RivalStudio> = {}): RivalStud
   recentActivity: 'None',
   projectCount: 0,
   strategy: 'acquirer',
-  projects: {},
-  contracts: {},
+  projectIds: [],
+  contractIds: [],
+  ipAssetIds: [],
   motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
   currentMotivation: 'STABILITY',
   ...overrides
@@ -245,36 +282,46 @@ export const createMockRival = (overrides: Partial<RivalStudio> = {}): RivalStud
 
 export const createMockBuyer = (overrides: Partial<Buyer> = {}): Buyer => {
   const archetype = overrides.archetype || 'streamer';
-  const base: any = {
+  const baseDefaults = {
     id: 'mock-buyer',
     name: 'Mock Buyer',
     archetype,
     foundedWeek: 1,
     marketShare: 0.1,
     reach: 50,
-    ...overrides
   };
 
   if (archetype === 'streamer') {
-    return {
-      ...base,
-      subscribers: 1000000,
-      churnRate: 0.05,
-      contentLibraryQuality: 50,
-      marketingSpend: 10000,
-      subscriberHistory: [],
-      activeLicenses: []
-    } as Buyer;
+    const streamerOverrides = overrides as Partial<StreamerPlatform>;
+    const streamer: StreamerPlatform = {
+      ...baseDefaults,
+      archetype: 'streamer',
+      subscribers: streamerOverrides.subscribers || 1000000,
+      churnRate: streamerOverrides.churnRate || 0.05,
+      contentLibraryQuality: streamerOverrides.contentLibraryQuality || 50,
+      marketingSpend: streamerOverrides.marketingSpend || 10000,
+      subscriberHistory: streamerOverrides.subscriberHistory || [],
+      activeLicenses: streamerOverrides.activeLicenses || [],
+    };
+    return streamer;
   }
 
   if (archetype === 'premium') {
-    return {
-      ...base,
-      prestigeBonus: 20
-    } as Buyer;
+    const premiumOverrides = overrides as Partial<PremiumPlatform>;
+    const premium: PremiumPlatform = {
+      ...baseDefaults,
+      archetype: 'premium',
+      prestigeBonus: premiumOverrides.prestigeBonus || 20,
+    };
+    return premium;
   }
 
-  return base as Buyer;
+  const networkOverrides = overrides as Partial<NetworkPlatform>;
+  const network: NetworkPlatform = {
+    ...baseDefaults,
+    archetype: 'network',
+  };
+  return network;
 };
 
 export const createMockMarketState = (overrides: Partial<MarketState> = {}): MarketState => ({
@@ -287,3 +334,4 @@ export const createMockMarketState = (overrides: Partial<MarketState> = {}): Mar
   cycle: 'STABLE',
   ...overrides
 });
+

@@ -1,146 +1,443 @@
-import { GameState, StateImpact } from '@/engine/types';
-import { applySingleImpact as applySingleImpactHandler } from './impactHandlers';
+import { GameState, StateImpact, NewsEvent, Project, RivalStudio, Talent, Buyer } from '@/engine/types';
+import { generateId } from '../utils';
 
 /**
  * Pure function to apply a single StateImpact to the GameState.
- * Delegates to the handler registry in impactHandlers/index.ts
  */
 function applySingleImpact(state: GameState, impact: StateImpact): GameState {
-  let newState = applySingleImpactHandler(state, impact);
-  newState = processRootLevelFields(newState, impact);
-  return newState;
-}
+  switch (impact.type) {
+    case 'FUNDS_CHANGED': {
+      const { amount } = impact.payload;
+      return {
+        ...state,
+        finance: {
+          ...state.finance,
+          cash: state.finance.cash + amount
+        }
+      };
+    }
 
-/**
- * Internal helper to process root-level field impacts
- * These are convenience fields that map to typed impacts
- */
-function processRootLevelFields(state: GameState, impact: StateImpact): GameState {
-  let newState = state;
-  
-  if (impact.cashChange !== undefined) {
-    newState = applySingleImpact(newState, { type: 'FUNDS_CHANGED', payload: { amount: impact.cashChange } });
-  }
-  if (impact.prestigeChange !== undefined) {
-    newState = applySingleImpact(newState, { type: 'PRESTIGE_CHANGED', payload: { amount: impact.prestigeChange } });
-  }
-  if (impact.projectUpdates) {
-    impact.projectUpdates.forEach(u => {
-      newState = applySingleImpact(newState, { type: 'PROJECT_UPDATED', payload: u });
-    });
-  }
-  if (impact.rivalUpdates) {
-    impact.rivalUpdates.forEach(u => {
-      newState = applySingleImpact(newState, { type: 'RIVAL_UPDATED', payload: u });
-    });
-  }
-  if (impact.newHeadlines) {
-    impact.newHeadlines.forEach(h => {
-      newState = applySingleImpact(newState, { 
-        type: 'NEWS_ADDED', 
-        payload: { id: h.id, headline: h.text, description: '', category: h.category, publication: h.publication } 
-      });
-    });
-  }
-  if (impact.newsEvents) {
-    impact.newsEvents.forEach(e => {
-      newState = applySingleImpact(newState, { 
-        type: 'NEWS_ADDED', 
-        payload: { id: e.id, headline: e.headline, description: e.description, publication: e.publication } 
-      });
-    });
-  }
-  if (impact.newAwards) {
-    impact.newAwards.forEach(award => {
-      newState = applySingleImpact(newState, { type: 'AWARD_WON', payload: { projectId: award.projectId, award } });
-    });
-  }
-  if (impact.cultClassicProjectIds) {
-    impact.cultClassicProjectIds.forEach(id => {
-      const projects = { ...newState.entities.projects };
-      const project = projects[id];
+    case 'LEDGER_UPDATED': {
+      const { report } = impact.payload;
+      return {
+        ...state,
+        finance: {
+          ...state.finance,
+          ledger: [report, ...state.finance.ledger].slice(0, 100)
+        }
+      };
+    }
+
+    case 'FINANCE_SNAPSHOT_ADDED': {
+      const { snapshot } = impact.payload;
+      return {
+        ...state,
+        finance: {
+          ...state.finance,
+          weeklyHistory: [snapshot, ...state.finance.weeklyHistory].slice(0, 52)
+        }
+      };
+    }
+
+    case 'SYNC_M_A_FUNDS': {
+      const { amount } = impact.payload;
+      return {
+        ...state,
+        finance: {
+          ...state.finance,
+          cash: state.finance.cash + amount
+        }
+      };
+    }
+
+    case 'FUNDS_DEDUCTED': {
+      const { amount } = impact.payload;
+      return {
+        ...state,
+        finance: {
+          ...state.finance,
+          cash: state.finance.cash - amount
+        }
+      };
+    }
+
+    case 'PROJECT_UPDATED': {
+      const { projectId, update } = impact.payload;
+      const projects = { ...state.entities.projects };
+      const project = projects[projectId];
       if (project) {
-        projects[id] = { ...project, isCultClassic: true };
+        projects[projectId] = { ...project, ...update } as Project;
       }
-      newState = { ...newState, entities: { ...newState.entities, projects } };
-    });
-  }
-  if (impact.razzieWinnerTalents) {
-    impact.razzieWinnerTalents.forEach(id => {
-      const talents = { ...newState.entities.talents };
-      const talent = talents[id];
-      if (talent) {
-        talents[id] = { ...talent, razzieWinner: true };
-      }
-      newState = { ...newState, entities: { ...newState.entities, talents } };
-    });
-  }
-  if (impact.newProjects) {
-    newState = {
-      ...newState,
-      entities: {
-        ...newState.entities,
-        projects: { ...newState.entities.projects, ...Object.fromEntries(impact.newProjects.map(p => [p.id, p])) }
-      }
-    };
-  }
-  if (impact.newContracts) {
-    newState = {
-      ...newState,
-      entities: {
-        ...newState.entities,
-        contracts: { ...newState.entities.contracts, ...Object.fromEntries(impact.newContracts.map(c => [c.id, c])) }
-      }
-    };
-  }
-  if (impact.newScandals) {
-    impact.newScandals.forEach(scandal => {
-      newState = applySingleImpact(newState, { type: 'SCANDAL_ADDED', payload: { scandal } });
-    });
-  }
-  if (impact.newTalents) {
-    const talents = { ...newState.entities.talents };
-    impact.newTalents.forEach(t => {
-      talents[t.id] = t;
-    });
-    newState = { ...newState, entities: { ...newState.entities, talents } };
-  }
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+          projects
+        }
+      };
+    }
 
-  return newState;
+    case 'PROJECT_CREATED': {
+      const { project } = impact.payload;
+      const projects = { ...state.entities.projects };
+      projects[project.id] = project;
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+          projects
+        }
+      };
+    }
+
+    case 'INDUSTRY_UPDATE': {
+      const { update, mergedRivalId, acquirerId, rival, bankruptRivalId } = impact.payload as any;
+      let newState = { ...state };
+
+      if (update) {
+        for (const key in update) {
+          // Dotted paths (e.g. "ip.vault") let DistressCascade rewrite nested arrays
+          // without needing per-field impact types for every asset mutation.
+          if (key.includes('.')) {
+            const parts = key.split('.');
+            let cur: any = newState;
+            for (let i = 0; i < parts.length - 1; i++) {
+              const p = parts[i];
+              if (p === '__proto__' || p === 'constructor' || p === 'prototype') { cur = null; break; }
+              cur[p] = Array.isArray(cur[p]) ? [...cur[p]] : { ...(cur[p] || {}) };
+              cur = cur[p];
+            }
+            if (cur) {
+              const last = parts[parts.length - 1];
+              if (last !== '__proto__' && last !== 'constructor' && last !== 'prototype') {
+                cur[last] = update[key];
+              }
+            }
+          } else if (update[key] !== undefined && typeof update[key] === 'object') {
+            (newState as any)[key] = { ...(newState as any)[key], ...update[key] };
+          } else {
+            (newState as any)[key] = update[key];
+          }
+        }
+      }
+
+      if (mergedRivalId && acquirerId) {
+        const rivals = { ...newState.entities.rivals };
+        delete rivals[mergedRivalId];
+        newState = { ...newState, entities: { ...newState.entities, rivals } };
+      }
+
+      // New rival insertion (indie/disruptor spawn, divestiture spinoff)
+      if (rival && rival.rivalId && rival.update) {
+        const rivals = { ...newState.entities.rivals };
+        rivals[rival.rivalId] = { ...(rivals[rival.rivalId] || {}), ...rival.update } as RivalStudio;
+        newState = { ...newState, entities: { ...newState.entities, rivals } };
+      }
+
+      // Hard bankruptcy: remove rival from active pool entirely
+      if (bankruptRivalId) {
+        const rivals = { ...newState.entities.rivals };
+        delete rivals[bankruptRivalId];
+        newState = { ...newState, entities: { ...newState.entities, rivals } };
+      }
+
+      return newState;
+    }
+
+    case 'NEWS_ADDED': {
+      const { headline, description } = impact.payload;
+      const newsEvent: NewsEvent = {
+        id: generateId('NWS'),
+        week: state.week,
+        type: 'STUDIO_EVENT',
+        headline: headline,
+        description: description,
+      };
+      return {
+        ...state,
+        industry: {
+          ...state.industry,
+          newsHistory: [newsEvent, ...state.industry.newsHistory].slice(0, 100)
+        }
+      };
+    }
+
+    case 'PROJECT_REMOVED': {
+      const { projectId } = impact.payload;
+      const projects = { ...state.entities.projects };
+      delete projects[projectId];
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+          projects
+        }
+      };
+    }
+
+    case 'PRESTIGE_CHANGED': {
+      const { amount } = impact.payload;
+      return {
+        ...state,
+        studio: {
+          ...state.studio,
+          prestige: Math.max(0, state.studio.prestige + amount)
+        }
+      };
+    }
+
+    case 'TALENT_UPDATED': {
+      const { talentId, update } = impact.payload;
+      const talents = { ...state.entities.talents };
+      const talent = talents[talentId];
+      if (talent) {
+        talents[talentId] = { ...talent, ...update } as Talent;
+      }
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+          talents
+        }
+      };
+    }
+
+    case 'BUYER_UPDATED': {
+      const { buyerId, update } = impact.payload;
+      const buyers = state.market.buyers.map(b => 
+        b.id === buyerId ? { ...b, ...update } as Buyer : b
+      );
+      return {
+        ...state,
+        market: {
+          ...state.market,
+          buyers
+        }
+      };
+    }
+
+    case 'RIVAL_UPDATED': {
+      const { rivalId, update } = impact.payload;
+      const rivals = { ...state.entities.rivals };
+      const rival = rivals[rivalId];
+      if (rival) {
+        rivals[rivalId] = { ...rival, ...update } as RivalStudio;
+      }
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+          rivals
+        }
+      };
+    }
+
+    case 'OPPORTUNITY_UPDATED': {
+      const { opportunityId, rivalId, bid } = impact.payload;
+      const opportunities = state.market.opportunities.map(o => {
+        if (o.id === opportunityId) {
+          return {
+            ...o,
+            bids: {
+              ...(o.bids || {}),
+              [rivalId]: bid
+            }
+          };
+        }
+        return o;
+      });
+      return {
+        ...state,
+        market: {
+          ...state.market,
+          opportunities
+        }
+      };
+    }
+
+    case 'TRENDS_UPDATED': {
+      const { trends } = impact.payload;
+      return {
+        ...state,
+        market: {
+          ...state.market,
+          trends: trends
+        }
+      };
+    }
+
+    case 'SCANDAL_ADDED': {
+      const { scandal } = impact.payload;
+      return {
+        ...state,
+        industry: {
+          ...state.industry,
+          scandals: [...(state.industry.scandals || []), scandal]
+        }
+      };
+    }
+
+    case 'SCANDAL_REMOVED': {
+      const { scandalId } = impact.payload;
+      return {
+        ...state,
+        industry: {
+          ...state.industry,
+          scandals: (state.industry.scandals || []).filter(s => s.id !== scandalId)
+        }
+      };
+    }
+
+    case 'MARKET_EVENT_UPDATED': {
+      const { events, marketState } = impact.payload;
+      return {
+        ...state,
+        market: {
+          ...state.market,
+          activeMarketEvents: events || state.market.activeMarketEvents
+        },
+        finance: {
+          ...state.finance,
+          marketState: marketState || state.finance.marketState
+        }
+      };
+    }
+
+    case 'FINANCE_TRANSACTION': {
+      const { amount } = impact.payload;
+      return applySingleImpact(state, { type: 'FUNDS_CHANGED', payload: { amount } });
+    }
+
+    case 'SHINGLE_CREATED': {
+      const { shingle } = impact.payload as any;
+      const existing = (state.entities as any).shingles || {};
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+          shingles: { ...existing, [shingle.id]: shingle }
+        } as any
+      };
+    }
+
+    case 'SHINGLE_UPDATED': {
+      const { shingleId, update } = impact.payload as any;
+      const existing = (state.entities as any).shingles || {};
+      const cur = existing[shingleId];
+      if (!cur) return state;
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+          shingles: { ...existing, [shingleId]: { ...cur, ...update } }
+        } as any
+      };
+    }
+
+    case 'SHINGLE_DISSOLVED': {
+      const { shingleId } = impact.payload as any;
+      const existing = { ...((state.entities as any).shingles || {}) };
+      delete existing[shingleId];
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+          shingles: existing
+        } as any
+      };
+    }
+
+    case 'FRANCHISE_UPDATED': {
+      const { franchiseId, update } = impact.payload as any;
+      const franchises = { ...state.ip.franchises };
+      const existing = franchises[franchiseId];
+      if (existing) {
+        franchises[franchiseId] = { ...existing, ...update };
+      } else if (update && update.id) {
+        franchises[franchiseId] = update;
+      }
+      return { ...state, ip: { ...state.ip, franchises } };
+    }
+
+    case 'SYSTEM_TICK': {
+      const { week, tickCount } = impact.payload;
+      return {
+        ...state,
+        week: week ?? state.week,
+        tickCount: tickCount ?? state.tickCount
+      };
+    }
+
+    default: {
+      // Handle the "base" case for merged impacts (Recursive application)
+      let newState = state;
+      if (impact.cashChange !== undefined) {
+          newState = applySingleImpact(newState, { type: 'FUNDS_CHANGED', payload: { amount: impact.cashChange } });
+      }
+      if (impact.prestigeChange !== undefined) {
+          newState = applySingleImpact(newState, { type: 'PRESTIGE_CHANGED', payload: { amount: impact.prestigeChange } });
+      }
+      if (impact.projectUpdates) {
+          impact.projectUpdates.forEach(u => {
+              newState = applySingleImpact(newState, { type: 'PROJECT_UPDATED', payload: u });
+          });
+      }
+      if (impact.rivalUpdates) {
+          impact.rivalUpdates.forEach(u => {
+              newState = applySingleImpact(newState, { type: 'RIVAL_UPDATED', payload: u });
+          });
+      }
+      if (impact.newHeadlines) {
+          impact.newHeadlines.forEach(h => {
+              newState = applySingleImpact(newState, { type: 'NEWS_ADDED', payload: { headline: h.text, description: '' } });
+          });
+      }
+      if (impact.newsEvents) {
+          impact.newsEvents.forEach(e => {
+              newState = applySingleImpact(newState, { type: 'NEWS_ADDED', payload: { headline: e.headline, description: e.description } });
+          });
+      }
+      if (impact.newAwards) {
+          impact.newAwards.forEach(award => {
+              const projects = { ...newState.entities.projects };
+              const project = projects[award.projectId];
+              if (project) {
+                  projects[award.projectId] = { 
+                      ...project, 
+                      awards: [...(project.awards || []), award] 
+                  } as Project;
+              }
+              newState = { ...newState, entities: { ...newState.entities, projects } };
+          });
+      }
+      if (impact.cultClassicProjectIds) {
+          impact.cultClassicProjectIds.forEach(id => {
+              const projects = { ...newState.entities.projects };
+              const project = projects[id];
+              if (project) {
+                  projects[id] = { ...project, isCultClassic: true } as Project;
+              }
+              newState = { ...newState, entities: { ...newState.entities, projects } };
+          });
+      }
+      if (impact.razzieWinnerTalents) {
+          impact.razzieWinnerTalents.forEach(id => {
+              const talents = { ...newState.entities.talents };
+              const talent = talents[id];
+              if (talent) {
+                  talents[id] = { ...talent, razzieWinner: true } as Talent;
+              }
+              newState = { ...newState, entities: { ...newState.entities, talents } };
+          });
+      }
+      return newState;
+    }
+  }
 }
 
 /**
  * Pure reducer that processes an array of impacts without mutating original state.
  */
 export function applyImpacts(state: GameState, impacts: StateImpact[]): GameState {
-  let newState = impacts.reduce((currentState, impact) => applySingleImpact(currentState, impact), state);
-
-  // Process all new IP assets efficiently in one pass
-  const allNewIPs = impacts.flatMap(i => i.newIPAssets || []);
-  if (allNewIPs.length > 0) {
-    // Keep only the latest version of each IP asset
-    const latestNewIPsMap = new Map();
-    for (const asset of allNewIPs) {
-      latestNewIPsMap.set(asset.id, asset);
-    }
-
-    const newAssetIds = new Set(latestNewIPsMap.keys());
-    const latestNewIPs = Array.from(latestNewIPsMap.values());
-
-    // O(N) single-pass filter instead of using the spread operator
-    const vault = [];
-    const currentVault = newState.ip.vault || [];
-    for (let i = 0; i < currentVault.length; i++) {
-      if (!newAssetIds.has(currentVault[i].id)) {
-        vault.push(currentVault[i]);
-      }
-    }
-    for (let i = 0; i < latestNewIPs.length; i++) {
-      vault.push(latestNewIPs[i]);
-    }
-
-    newState = { ...newState, ip: { ...newState.ip, vault } };
-  }
-
-  return newState;
+  return impacts.reduce((currentState, impact) => applySingleImpact(currentState, impact), state);
 }

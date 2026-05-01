@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { PieChart } from '@/components/charts/PieChart';
 import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
-import { cn } from '@/lib/utils';
+import { cn, formatCompactCurrency } from '@/lib/utils';
 import { useGameStore } from '@/store/gameStore';
 import { selectRevenueBreakdown } from '@/store/selectors';
 
@@ -24,7 +24,17 @@ export const RevenueBreakdown: React.FC<RevenueBreakdownProps> = ({
   className,
 }) => {
   const gameState = useGameStore(s => s.gameState);
-  const sources = externalSources || selectRevenueBreakdown(gameState);
+  const sources = useMemo(() => {
+    const rawSources = externalSources || selectRevenueBreakdown(gameState);
+    return rawSources.map(s => {
+      // Standardize to the local RevenueSource interface
+      const name = 'name' in s ? String(s.name) : 'source' in s ? String(s.source) : 'Unknown';
+      const value = s.value;
+      const color = 'color' in s ? String(s.color) : undefined;
+      return { name, value, color };
+    });
+  }, [externalSources, gameState]);
+
   const totalRevenue = externalTotal || sources.reduce((sum, s) => sum + s.value, 0);
   const defaultColors = [
     '#3b82f6', // Theatrical
@@ -42,12 +52,6 @@ export const RevenueBreakdown: React.FC<RevenueBreakdownProps> = ({
     color: s.color || defaultColors[i % defaultColors.length],
   }));
 
-  const formatCurrency = (value: number) => {
-    if (Math.abs(value) >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
-    if (Math.abs(value) >= 1000) return `$${(value / 1000).toFixed(0)}K`;
-    return `$${value}`;
-  };
-
   return (
     <Card className={cn('p-4', tokens.border.default, className)}>
       <div className="flex items-center justify-between mb-2">
@@ -59,7 +63,7 @@ export const RevenueBreakdown: React.FC<RevenueBreakdownProps> = ({
         </div>
         <div className="text-right">
           <p className="text-xl font-bold text-emerald-500">
-            {formatCurrency(totalRevenue)}
+            {formatCompactCurrency(totalRevenue)}
           </p>
           <p className={cn('text-[10px]', tokens.text.caption)}>Total</p>
         </div>
@@ -72,7 +76,7 @@ export const RevenueBreakdown: React.FC<RevenueBreakdownProps> = ({
         outerRadius={70}
         showTooltip={true}
         showLegend={false}
-        valueFormatter={formatCurrency}
+        valueFormatter={formatCompactCurrency}
       />
 
       {/* Custom legend */}
@@ -82,7 +86,7 @@ export const RevenueBreakdown: React.FC<RevenueBreakdownProps> = ({
           return (
             <div key={item.name} className="flex items-center gap-2 text-[10px]">
               <div 
-                className="w-3 h-3 rounded-full flex-shrink-0" 
+                className="w-3 h-3 rounded-none flex-shrink-0" 
                 style={{ backgroundColor: item.color }}
               />
               <span className="truncate">{item.name}</span>

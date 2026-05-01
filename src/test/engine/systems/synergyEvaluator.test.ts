@@ -22,8 +22,6 @@ describe('Synergy Evaluator', () => {
     id,
     originalProjectId: 'p1',
     title: 'Asset',
-    tier: 'ORIGINAL',
-    quality: 70,
     baseValue: 1000000,
     decayRate: 0.01,
     merchandisingMultiplier: 1.0,

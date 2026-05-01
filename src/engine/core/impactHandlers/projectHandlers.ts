@@ -61,8 +61,16 @@ export function handlePilotGraduated(state: GameState, impact: StateImpact): Gam
   const projects = { ...state.entities.projects };
   const project = projects[projectId];
   if (project) {
-    const { stage: _stage, ...rest } = project as any;
-    projects[projectId] = { ...rest, state: nextState ?? 'production', weeksInPhase: 0 };
+    // Remove stage and update state for graduating pilots
+    const updatedProject = { ...project };
+    if ('stage' in updatedProject) {
+      delete (updatedProject as any).stage; // stage is pilot-specific, but not in strict Project result
+    }
+    projects[projectId] = { 
+      ...updatedProject, 
+      state: nextState ?? 'production', 
+      weeksInPhase: 0 
+    };
   }
   return {
     ...state,

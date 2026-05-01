@@ -1,9 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { persistenceService } from '@/persistence/PersistenceService';
+import { GameState } from '@/engine/types';
 
 // Mock Worker
 class MockWorker {
-    onmessage: ((e: any) => void) | null = null;
+    onmessage: ((e: { data: any }) => void) | null = null;
     postMessage = vi.fn((data) => {
         console.log(`[MockWorker] Received: ${data.type} (req: ${data.requestId})`);
         // Simulate background worker delay
@@ -40,23 +41,18 @@ describe('Persistence Layer Race Hardening', () => {
         vi.clearAllMocks();
 
         const mock = new MockWorker();
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        persistenceService.worker = mock;
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore - reset resolves
-        persistenceService.pendingResolves.clear();
+        (persistenceService as any).worker = mock;
+        // reset pending promises
+        (persistenceService as any).pendingPromises.clear();
 
-        // ⚡ Manually attach the message handling logic since initWorker likely skipped it in Node
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        mock.onmessage = (e: any) => {
+        // Manually attach the message handling logic since initWorker likely skipped it in Node
+        mock.onmessage = (e: { data: any }) => {
             const { requestId, state, type } = e.data;
-            let result = state;
-            if (type === 'SAVE_SUCCESS') result = true;
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore - reaching into private method for test purposes
-            persistenceService.resolvePromise(requestId, result);
+            const pending = (persistenceService as any).pendingPromises.get(requestId);
+            if (!pending) return;
+            (persistenceService as any).pendingPromises.delete(requestId);
+            if (type === 'SAVE_SUCCESS') pending.resolve(true);
+            else pending.resolve(state);
         };
 
         console.log('[Test] Injected mock worker and attached handler');
@@ -65,24 +61,17 @@ describe('Persistence Layer Race Hardening', () => {
     it('handles rapid concurrent saves with unique requestIds', async () => {
         console.log('[Test] Starting rapid save test');
         const results = await Promise.all([
-            persistenceService.save(0, { v: 1 }),
-            persistenceService.save(0, { v: 2 }),
-            persistenceService.save(0, { v: 3 })
+            persistenceService.save(0, { v: 1 } as unknown as GameState),
+            persistenceService.save(0, { v: 2 } as unknown as GameState),
+            persistenceService.save(0, { v: 3 } as unknown as GameState)
         ]);
         console.log('[Test] Save results received:', results);
 
         expect(results).toEqual([true, true, true]);
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        expect(persistenceService.worker.postMessage).toHaveBeenCalledTimes(3);
+        expect((persistenceService as any).worker.postMessage).toHaveBeenCalledTimes(3);
 
-        // Ensure request IDs were unique in the calls
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const firstId = persistenceService.worker.postMessage.mock.calls[0][0].requestId;
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const secondId = persistenceService.worker.postMessage.mock.calls[1][0].requestId;
+        const firstId = (persistenceService as any).worker.postMessage.mock.calls[0][0].requestId;
+        const secondId = (persistenceService as any).worker.postMessage.mock.calls[1][0].requestId;
         expect(firstId).not.toBe(secondId);
     });
 

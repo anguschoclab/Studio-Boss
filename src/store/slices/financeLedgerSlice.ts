@@ -2,6 +2,7 @@ import { StateCreator } from 'zustand';
 import { GameStore } from '../gameStore';
 import { WeeklyFinancialReport, FinanceState } from '@/engine/types';
 import { FinancialSnapshot } from '@/engine/types/state.types';
+import { type SnapshotId } from '@/engine/types/shared.types';
 import { RandomGenerator } from '@/engine/utils/rng';
 
 export interface FinanceLedgerSlice {
@@ -14,7 +15,7 @@ export const createFinanceLedgerSlice: StateCreator<GameStore, [], [], FinanceLe
       const gs = state.gameState;
       if (!gs) return state;
       const snapshot: FinancialSnapshot = {
-        id: new RandomGenerator(gs.rngState).uuid('SNP'),
+        id: new RandomGenerator(gs.rngState).uuid('SNP') as SnapshotId,
         week: report.week,
         revenue: {
           theatrical: report.revenue.boxOffice,

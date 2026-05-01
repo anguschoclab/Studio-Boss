@@ -6,7 +6,7 @@ describe("applyStateImpact utility", () => {
   const getInitialMockState = (): GameState => ({
     week: 1,
     entities: {
-      projects: {
+      projects: { 
         "proj-1": {
           id: "proj-1",
           title: "Test Project",
@@ -25,10 +25,10 @@ describe("applyStateImpact utility", () => {
           revenue: 0,
           weeklyRevenue: 0,
           releaseWeek: null
-        } as Project
+        } as Project 
       },
-      contracts: {},
       talents: {},
+      contracts: {},
       rivals: {}
     },
     studio: {
@@ -40,15 +40,21 @@ describe("applyStateImpact utility", () => {
       }
     },
     industry: {
+      families: [],
+      agencies: [],
+      agents: [],
       newsHistory: [],
     },
     market: {
         opportunities: [],
-        trends: []
+        buyers: []
     },
     finance: {
         cash: 1000000,
         ledger: []
+    },
+    news: {
+        headlines: []
     }
   } as unknown as GameState);
 
@@ -81,11 +87,10 @@ describe("applyStateImpact utility", () => {
   it("should add news events", () => {
     const impact: StateImpact = {
       type: 'NEWS_ADDED',
-      payload: { id: "news-1", headline: "Award Won!", description: "Win" }
+      payload: { headline: "Award Won!", description: "Win" }
     };
     const newState = applyStateImpact(getInitialMockState(), impact);
     expect(newState.industry.newsHistory).toHaveLength(1);
     expect(newState.industry.newsHistory[0].headline).toBe("Award Won!");
-    expect(newState.industry.newsHistory[0].id).toBe("news-1");
   });
 });

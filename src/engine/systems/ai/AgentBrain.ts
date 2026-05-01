@@ -1,11 +1,98 @@
-import { Agency, Talent, GameState, StateImpact, Project, RivalStudio } from '@/engine/types';
+import { Agency, Talent, GameState, StateImpact } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
-import { MarketState } from '../../types';
 
-export {
-  evaluatePackageOffer,
-  tickAgencies,
-  generateFestivalBid,
-  assignRivalTimeSlot,
-  shouldAttemptHostileTakeover
-} from './index';
+/**
+ * Pure function to evaluate if an agency offers a "Package Deal".
+ */
+export function evaluatePackageOffer(
+  agency: Agency, 
+  leadTalent: Talent, 
+  talentPool: Talent[],
+  rng: RandomGenerator
+): { requiredTalentId?: string; packageDiscount?: number; reason: string } {
+  const motivation = agency.currentMotivation || 'VOLUME_RETAIL';
+  
+  // 🎭 The Method Actor Tuning: Agencies will aggressively leverage high-prestige lead talent to force package deals, carrying lesser-known clients to boost their roster's value.
+  const isAuteur = leadTalent.roles?.includes('director') && leadTalent.prestige > 85;
+  const prestigeLeverage = isAuteur ? 0.80 : (leadTalent.prestige > 80 ? 0.4 : 0.15);
+
+  if (motivation === 'THE_PACKAGER' || rng.next() < prestigeLeverage) {
+    const otherClients = talentPool.filter(t => t.agencyId === agency.id && t.id !== leadTalent.id);
+    
+    if (otherClients.length > 0) {
+      const bundled = rng.pick(otherClients);
+      const discount = isAuteur ? 0.15 : 0.1;
+      const reason = isAuteur
+        ? `Creative Mandate: ${leadTalent.name} refuses to sign unless their frequent collaborator ${bundled.name} is attached.`
+        : `Agency policy: To secure ${leadTalent.name}, we require ${bundled.name}.`;
+
+      return {
+        requiredTalentId: bundled.id,
+        packageDiscount: discount,
+        reason
+      };
+    }
+  }
+
+  return { reason: 'No package deal offered.' };
+}
+
+/**
+ * Agency Weekly Tick (Target C2).
+ * Generates rumors and poach attempts as discrete state impacts.
+ */
+export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpact[] {
+  const impacts: StateImpact[] = [];
+
+  state.industry.agencies.forEach(agency => {
+    // Aggressive agencies (Sharks) leak rumors
+    if (agency.culture === 'shark' || agency.currentMotivation === 'THE_SHARK') {
+      if (rng.next() < 0.1) {
+        const brands = Object.values(state.entities.rivals || {});
+        let rival = rng.pick(brands);
+
+        // 🎭 The Method Actor Tuning: Shark agencies smell blood in the water and specifically target vulnerable studios or "easy marks" (low prestige, high cash) for poaching.
+        const vulnerableRivals = brands.filter(r => r.prestige < 50 || r.currentMotivation === 'CASH_CRUNCH' || (r.prestige < 60 && r.cash > 10000000));
+        if (vulnerableRivals.length > 0 && rng.next() < 0.8) {
+          rival = rng.pick(vulnerableRivals);
+        }
+
+        if (rival) {
+          impacts.push({
+            type: 'NEWS_ADDED',
+            payload: {
+              headline: `${agency.name} is looking to poach top talent from ${rival.name}.`,
+              description: `Industry whispers suggest ${agency.name} is making aggressive overtures to talent currently under contract at ${rival.name}.`,
+            }
+          });
+        }
+      }
+    }
+  });
+
+  // Fix 5: Simple rival crisis simulation — rivals with projects in production face occasional setbacks
+  Object.values(state.entities.rivals || {}).forEach(rival => {
+    if (rival.currentMotivation === 'CASH_CRUNCH') return; // already struggling
+
+    // 2% weekly chance a rival faces a production problem
+    if (rng.next() < 0.02) {
+      const crisisCost = rival.cash * 0.05; // costs 5% of cash
+      impacts.push({
+        type: 'RIVAL_UPDATED',
+        payload: {
+          rivalId: rival.id,
+          update: { cash: Math.max(0, rival.cash - crisisCost) }
+        }
+      });
+      impacts.push({
+        type: 'NEWS_ADDED',
+        payload: {
+          headline: `${rival.name} faces production setback, sources say costs have escalated.`,
+          description: `Industry sources confirm ${rival.name} is dealing with an unexpected production issue that has impacted their Q${Math.floor(state.week / 13) + 1} budget.`,
+        }
+      });
+    }
+  });
+
+  return impacts;
+}

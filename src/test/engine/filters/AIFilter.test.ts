@@ -2,28 +2,28 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { AIFilter } from '@/engine/services/filters/AIFilter';
 import { GameState } from '@/engine/types';
 import { RandomGenerator } from '@/engine/utils/rng';
-import { TickContext } from '@/engine/services/filters/types';
+import { TickContext, WeekFilter } from '@/engine/services/filters/types';
 
 describe('AIFilter', () => {
-  let filter: AIFilter;
+  let filter: WeekFilter;
   let mockState: GameState;
   let mockContext: TickContext;
   let mockRng: RandomGenerator;
 
   beforeEach(() => {
-    filter = new AIFilter();
+    filter = AIFilter;
     mockRng = new RandomGenerator(42);
     
     mockState = {
       week: 1,
       tickCount: 1,
       gameSeed: 12345,
-      rngState: 12345,
       studio: {
         id: 'studio-1',
         name: 'Test Studio',
         archetype: 'major',
         prestige: 50,
+        internal: { projectHistory: [] },
       } as any,
       entities: {
         projects: {},
@@ -42,6 +42,8 @@ describe('AIFilter', () => {
               legacy: 50,
               aggression: 50,
             },
+            projects: {},
+            contracts: [],
           },
         },
         talents: {},
@@ -54,6 +56,11 @@ describe('AIFilter', () => {
       } as any,
       industry: {
         agencies: [],
+        newsHistory: [],
+        families: [],
+        agents: [],
+        rivals: [],
+        awards: [],
       } as any,
       finance: {
         cash: 10000000,
@@ -65,19 +72,16 @@ describe('AIFilter', () => {
           debtRate: 0.07,
           loanRate: 0.08,
           rateHistory: [],
-          sentiment: 50,
-          cycle: 'STABLE',
         },
       },
-      game: {} as any,
-      news: { headlines: [], events: [] } as any,
-      deals: { activeDeals: [], expiredDeals: [], pendingOffers: [] } as any,
-      talentAgentRelationships: {} as any,
+      game: { currentWeek: 1 } as any,
+      news: { headlines: [] } as any,
       eventHistory: [] as any,
       ip: { vault: [], franchises: {} } as any,
-      relationships: {} as any,
+      relationships: { discovery: {} } as any,
+      culture: { genrePopularity: {} },
       history: [] as any,
-    } as GameState;
+    } as unknown as GameState;
 
     mockContext = {
       week: 2,

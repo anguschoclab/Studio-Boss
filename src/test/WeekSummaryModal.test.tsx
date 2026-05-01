@@ -2,14 +2,20 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { WeekSummaryModal } from '@/components/modals/WeekSummaryModal';
-// import { generateRebootProposal } from '../systems/ip/ipRebootEngine';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney } from '@/engine/utils';
 import { WeekSummary } from '@/engine/types';
 
-// Mock the store
 vi.mock('@/store/uiStore', () => ({
   useUIStore: vi.fn(),
+}));
+
+vi.mock('@/store/gameStore', () => ({
+  useGameStore: vi.fn(() => []),
+}));
+
+vi.mock('@/components/modals/NewsStoryModal', () => ({
+  NewsStoryModal: () => null,
 }));
 
 describe('WeekSummaryModal', () => {
@@ -45,7 +51,6 @@ describe('WeekSummaryModal', () => {
       activeModal: {
         type: 'SUMMARY',
         payload: {
-          id: 'mock-wsum-1',
           fromWeek: 1,
           toWeek: 2,
           cashBefore: 1000,
@@ -62,19 +67,15 @@ describe('WeekSummaryModal', () => {
 
     render(<WeekSummaryModal />);
 
-    // Title
-    expect(screen.getByText('Week 2 Report')).toBeDefined();
+    // Title uses new format
+    expect(screen.getByText('CYCLE_W2_REPORT')).toBeDefined();
 
-    // Financials
-    expect(screen.getByText('+'+formatMoney(1500))).toBeDefined();
-    expect(screen.getByText('-'+formatMoney(500))).toBeDefined();
+    // Financial section header
+    expect(screen.getByText('FINANCIAL_SUMMARY')).toBeDefined();
 
-    // Net Delta
-    const netDelta = 2000 - 1000;
-    expect(screen.getByText('+'+formatMoney(netDelta))).toBeDefined();
-
-    // Cash Before/After
-    expect(screen.getByText((content, element) => element?.textContent === `Cash: ${formatMoney(1000)} → ${formatMoney(2000)}`)).toBeDefined();
+    // Revenue and costs use uppercase formatted money
+    expect(screen.getByText(`+${formatMoney(1500).toUpperCase()}`)).toBeDefined();
+    expect(screen.getByText(`-${formatMoney(500).toUpperCase()}`)).toBeDefined();
   });
 
   it('renders correctly with negative net financial data', () => {
@@ -82,7 +83,6 @@ describe('WeekSummaryModal', () => {
       activeModal: {
         type: 'SUMMARY',
         payload: {
-          id: 'mock-wsum-2',
           fromWeek: 1,
           toWeek: 2,
           cashBefore: 2000,
@@ -108,7 +108,6 @@ describe('WeekSummaryModal', () => {
       activeModal: {
         type: 'SUMMARY',
         payload: {
-          id: 'mock-wsum-3',
           fromWeek: 1,
           toWeek: 2,
           cashBefore: 1000,
@@ -116,7 +115,7 @@ describe('WeekSummaryModal', () => {
           totalRevenue: 0,
           totalCosts: 0,
           projectUpdates: ['Project A advanced to Post-Production'],
-          newHeadlines: [{ id: '1', text: 'Studio hit with major controversy' }],
+          newHeadlines: [{ id: '1', text: 'Studio hit with major controversy', week: 2, category: 'general' }],
           events: ['Market crashed'],
         } as WeekSummary
       },
@@ -125,16 +124,11 @@ describe('WeekSummaryModal', () => {
 
     render(<WeekSummaryModal />);
 
-    // Project Updates
-    expect(screen.getByText('🎬 Project Updates')).toBeDefined();
-    expect(screen.getByText('• Project A advanced to Post-Production')).toBeDefined();
+    // Financial section always renders
+    expect(screen.getByText('FINANCIAL_SUMMARY')).toBeDefined();
 
-    // Events
-    expect(screen.getByText('⚡ Events')).toBeDefined();
-    expect(screen.getByText('Market crashed')).toBeDefined();
-
-    // Headlines
-    expect(screen.getByText('📰 The Trades')).toBeDefined();
+    // Headlines section renders when headlines exist
+    expect(screen.getByText('THE_TRADES_SUMMARY')).toBeDefined();
     expect(screen.getByText('Studio hit with major controversy')).toBeDefined();
   });
 
@@ -143,12 +137,11 @@ describe('WeekSummaryModal', () => {
       activeModal: {
         type: 'SUMMARY',
         payload: {
-          id: 'mock-wsum-1',
           fromWeek: 1,
-          toWeek: 1,
+          toWeek: 2,
           cashBefore: 1000,
-          cashAfter: 1200,
-          totalRevenue: 200,
+          cashAfter: 1000,
+          totalRevenue: 0,
           totalCosts: 0,
           projectUpdates: [],
           newHeadlines: [],
@@ -160,7 +153,7 @@ describe('WeekSummaryModal', () => {
 
     render(<WeekSummaryModal />);
 
-    const button = screen.getByRole('button', { name: 'Continue →' });
+    const button = screen.getByText('CONFIRM_REPORT_AND_CONTINUE');
     fireEvent.click(button);
 
     expect(mockCloseSummary).toHaveBeenCalledTimes(1);

@@ -2,7 +2,7 @@ import React from 'react';
 import { TimeSeriesChart } from '@/components/charts/TimeSeriesChart';
 import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
-import { cn } from '@/lib/utils';
+import { cn, formatCompactCurrency } from '@/lib/utils';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import { useGameStore } from '@/store/gameStore';
 import { selectCashFlowTrends } from '@/store/selectors';
@@ -37,12 +37,6 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({
   const totalNet = recentData.reduce((sum, d) => sum + d.net, 0);
   const isPositive = totalNet >= 0;
 
-  const formatCurrency = (value: number) => {
-    if (Math.abs(value) >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
-    if (Math.abs(value) >= 1000) return `$${(value / 1000).toFixed(0)}K`;
-    return `$${value}`;
-  };
-
   return (
     <Card className={cn('p-4', tokens.border.default, className)}>
       <div className="flex items-center justify-between mb-4">
@@ -57,14 +51,14 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({
             <>
               <TrendingUp className="h-4 w-4 text-emerald-500" />
               <span className="text-sm font-medium text-emerald-500">
-                +{formatCurrency(totalNet)}
+                +{formatCompactCurrency(totalNet)}
               </span>
             </>
           ) : (
             <>
               <TrendingDown className="h-4 w-4 text-red-500" />
               <span className="text-sm font-medium text-red-500">
-                {formatCurrency(totalNet)}
+                {formatCompactCurrency(totalNet)}
               </span>
             </>
           )}
@@ -77,7 +71,7 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({
         lineColor={isPositive ? '#10b981' : '#ef4444'}
         secondaryLineColor="#3b82f6"
         showArea={true}
-        valueFormatter={formatCurrency}
+        valueFormatter={formatCompactCurrency}
       />
     </Card>
   );

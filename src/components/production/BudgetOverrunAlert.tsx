@@ -67,7 +67,7 @@ export const BudgetOverrunAlert: React.FC<BudgetOverrunAlertProps> = ({
 
   if (alerts.length === 0) {
     return (
-      <div className={cn('text-center py-12', tokens.border.default, 'border-dashed rounded-xl')}>
+      <div className={cn('text-center py-12', tokens.border.default, 'border-dashed rounded-none')}>
         <CheckCircle2 className="h-12 w-12 mx-auto mb-4 text-emerald-500 opacity-50" />
         <p className={tokens.text.label}>All Projects On Budget</p>
         <p className={cn('text-sm mt-2', tokens.text.caption)}>
@@ -81,7 +81,7 @@ export const BudgetOverrunAlert: React.FC<BudgetOverrunAlertProps> = ({
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Summary Alert */}
       <div className={cn(
-        'border rounded-lg p-4',
+        'border rounded-none p-4',
         critical.length > 0 ? 'bg-red-500/10 border-red-500/50' : 'bg-amber-500/10 border-amber-500/50'
       )}>
         <div className="flex items-start gap-3">
@@ -108,7 +108,7 @@ export const BudgetOverrunAlert: React.FC<BudgetOverrunAlertProps> = ({
       <div className="grid grid-cols-3 gap-4">
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-red-500/10">
+            <div className="p-2 rounded-none bg-red-500/10">
               <AlertTriangle className="h-5 w-5 text-red-500" />
             </div>
             <div>
@@ -120,7 +120,7 @@ export const BudgetOverrunAlert: React.FC<BudgetOverrunAlertProps> = ({
 
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-amber-500/10">
+            <div className="p-2 rounded-none bg-amber-500/10">
               <DollarSign className="h-5 w-5 text-amber-500" />
             </div>
             <div>
@@ -132,7 +132,7 @@ export const BudgetOverrunAlert: React.FC<BudgetOverrunAlertProps> = ({
 
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-500/10">
+            <div className="p-2 rounded-none bg-blue-500/10">
               <Clock className="h-5 w-5 text-blue-500" />
             </div>
             <div>
@@ -190,13 +190,13 @@ export const BudgetOverrunAlert: React.FC<BudgetOverrunAlertProps> = ({
                       Projected: {formatCurrency(alert.projectedFinal)}
                     </span>
                   </div>
-                  <div className="h-3 bg-muted rounded-full overflow-hidden">
+                  <div className="h-3 bg-muted rounded-none overflow-hidden">
                     <div
-                      className="h-full bg-primary rounded-full"
+                      className="h-full bg-primary rounded-none"
                       style={{ width: `${Math.min((alert.currentSpend / alert.originalBudget) * 100, 100)}%` }}
                     />
                     <div
-                      className="h-full bg-red-500 rounded-full -mt-3"
+                      className="h-full bg-red-500 rounded-none -mt-3"
                       style={{ 
                         width: `${Math.min(((alert.projectedFinal - alert.originalBudget) / alert.originalBudget) * 100, 100)}%`,
                         marginLeft: `${Math.min((alert.currentSpend / alert.originalBudget) * 100, 100)}%`

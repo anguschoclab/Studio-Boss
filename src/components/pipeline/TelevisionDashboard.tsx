@@ -3,17 +3,17 @@ import { useGameStore } from '@/store/gameStore';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tv, Activity, Star, AlertCircle, PlayCircle, Zap, BarChart3, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { Tv, Activity, Star, AlertCircle, PlayCircle, Zap, BarChart3, Users, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { Project, SeriesProject } from '@/engine/types';
 import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
 import { NielsenProfile } from '@/engine/systems/television/nielsenSystem';
 
 export const TelevisionDashboard = () => {
-  const activeProjects = useGameStore(useShallow(s => Object.values(s.gameState?.entities?.projects || {})));
+  const activeProjects = useGameStore(useShallow(s => Object.values(s.gameState?.studio.internal.projects || {})));
   
   const tvShows = React.useMemo(() => 
-    (activeProjects as Project[]).filter((p: Project) => p.type === 'SERIES' && 'tvDetails' in p),
+    activeProjects.filter((p: Project) => p.type === 'SERIES' && 'tvDetails' in p),
   [activeProjects]);
 
   if (tvShows.length === 0) {
@@ -28,10 +28,10 @@ export const TelevisionDashboard = () => {
 
   return (
     <div className="h-full flex flex-col space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 overflow-hidden">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 bg-white/5 p-5 rounded-xl border border-white/5 backdrop-blur-sm">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 bg-white/5 p-5 rounded-none border border-white/5 backdrop-blur-sm">
         <div>
           <div className="flex items-center gap-3 mb-1">
-            <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-none bg-primary/10 border border-primary/20 flex items-center justify-center">
               <Tv className="h-5 w-5 text-primary" />
             </div>
             <h2 className="text-2xl font-black tracking-tighter uppercase leading-none">TV Empire Status</h2>
@@ -42,7 +42,7 @@ export const TelevisionDashboard = () => {
 
       <ScrollArea className="flex-1 pr-4">
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 pb-10">
-          {(tvShows as Project[]).map((show: Project) => (
+          {tvShows.map((show: Project) => (
             <TVShowCard key={show.id} show={show} />
           ))}
         </div>

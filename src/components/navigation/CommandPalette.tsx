@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -16,6 +17,7 @@ import {
   Activity,
   Zap,
   Flame,
+  ChevronRight,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { tokens } from '@/lib/tokens';
@@ -49,8 +51,9 @@ interface CommandPaletteProps {
  * - Recent actions
  * - Project/talent search
  * - Common actions (new project, etc.)
+ * - Full Design Bible v1.0 Compliance
  */
-export const CommandPalette: React.FC<CommandPaletteProps> = ({
+const CommandPalette: React.FC<CommandPaletteProps> = ({
   isOpen,
   onClose,
 }) => {
@@ -65,163 +68,163 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       // Navigation
       {
         id: 'nav-hq',
-        title: 'Studio HQ',
-        subtitle: 'Overview, operations, strategy',
+        title: 'STUDIO HQ',
+        subtitle: 'OVERVIEW_OPERATIONS_STRATEGY',
         icon: LayoutDashboard,
         shortcut: '⌘1',
         action: () => setActiveHub('hq'),
-        section: 'Navigation',
+        section: 'NAVIGATION_HUB',
       },
       {
         id: 'nav-production',
-        title: 'Production',
-        subtitle: 'Slate, development, distribution',
+        title: 'PRODUCTION_CONTROL',
+        subtitle: 'SLATE_DEVELOPMENT_DISTRIBUTION',
         icon: Film,
         shortcut: '⌘2',
         action: () => setActiveHub('production'),
-        section: 'Navigation',
+        section: 'NAVIGATION_HUB',
       },
       {
         id: 'nav-talent',
-        title: 'Talent & Deals',
-        subtitle: 'Roster, marketplace, agencies',
+        title: 'TALENT_&_DEALS',
+        subtitle: 'ROSTER_MARKETPLACE_AGENCIES',
         icon: Users,
         shortcut: '⌘3',
         action: () => setActiveHub('talent'),
-        section: 'Navigation',
+        section: 'NAVIGATION_HUB',
       },
       {
         id: 'nav-intelligence',
-        title: 'Intelligence',
-        subtitle: 'Rivals, awards, market, financials',
+        title: 'STRATEGIC_INTELLIGENCE',
+        subtitle: 'RIVALS_AWARDS_MARKET_FINANCIALS',
         icon: Globe,
         shortcut: '⌘4',
         action: () => setActiveHub('intelligence'),
-        section: 'Navigation',
+        section: 'NAVIGATION_HUB',
       },
       // Actions
       {
         id: 'action-new-project',
-        title: 'New Project',
-        subtitle: 'Create a new film or TV project',
+        title: 'INITIALIZE_NEW_PROJECT',
+        subtitle: 'CREATE_A_NEW_FILM_OR_TV_PROJECT',
         icon: Sparkles,
         shortcut: '⌘N',
         action: () => openCreateProject(),
-        section: 'Actions',
+        section: 'TACTICAL_ACTIONS',
       },
       {
         id: 'action-week',
-        title: 'Advance Week',
-        subtitle: 'Progress to next production week',
+        title: 'ADVANCE_WEEKLY_CYCLE',
+        subtitle: 'PROGRESS_TO_NEXT_PRODUCTION_WEEK',
         icon: Clock,
         action: () => { doAdvanceWeek(); },
-        section: 'Actions',
+        section: 'TACTICAL_ACTIONS',
       },
       // Crisis Management
       {
         id: 'crisis-dashboard',
-        title: 'Crisis Dashboard',
-        subtitle: 'View all active crises and issues',
+        title: 'CRISIS_COMMAND_DASHBOARD',
+        subtitle: 'VIEW_ALL_ACTIVE_CRISES_AND_ISSUES',
         icon: AlertTriangle,
         shortcut: '⌘⇧C',
         action: () => {
           setActiveHub('hq');
           setActiveSubTab('operations');
         },
-        section: 'Crisis Management',
+        section: 'CRISIS_MANAGEMENT',
         keywords: ['emergency', 'problems', 'issues', 'alerts'],
       },
       {
         id: 'greenlight-queue',
-        title: 'Greenlight Queue',
-        subtitle: 'Review projects awaiting approval',
+        title: 'GREENLIGHT_QUEUE_AUDIT',
+        subtitle: 'REVIEW_PROJECTS_AWAITING_APPROVAL',
         icon: Zap,
         action: () => {
           setActiveHub('production');
           setActiveSubTab('slate');
         },
-        section: 'Crisis Management',
+        section: 'CRISIS_MANAGEMENT',
         keywords: ['approve', 'projects', 'slate'],
       },
       // Intelligence Views
       {
         id: 'market-trends',
-        title: 'Market Trends',
-        subtitle: 'View genre trends and market sentiment',
+        title: 'MARKET_TREND_ANALYSIS',
+        subtitle: 'VIEW_GENRE_TRENDS_AND_MARKET_SENTIMENT',
         icon: TrendingUp,
         action: () => {
           setActiveHub('intelligence');
           setActiveSubTab('market');
         },
-        section: 'Intelligence',
+        section: 'INTELLIGENCE_REPORTS',
         keywords: ['genres', 'trends', 'market', 'analysis'],
       },
       {
         id: 'studio-health',
-        title: 'Studio Health',
-        subtitle: 'Check overall studio performance metrics',
+        title: 'STUDIO_HEALTH_AUDIT',
+        subtitle: 'CHECK_OVERALL_STUDIO_PERFORMANCE_METRICS',
         icon: Activity,
         action: () => {
           setActiveHub('hq');
           setActiveSubTab('overview');
         },
-        section: 'Intelligence',
+        section: 'INTELLIGENCE_REPORTS',
         keywords: ['health', 'metrics', 'performance', 'dashboard'],
       },
       // Talent Views  
       {
         id: 'talent-morale',
-        title: 'Talent Morale',
-        subtitle: 'Check roster satisfaction levels',
+        title: 'TALENT_MORALE_MONITOR',
+        subtitle: 'CHECK_ROSTER_SATISFACTION_LEVELS',
         icon: Users,
         action: () => {
           setActiveHub('talent');
           setActiveSubTab('roster');
         },
-        section: 'Talent',
+        section: 'TALENT_MANAGEMENT',
         keywords: ['morale', 'happiness', 'satisfaction', 'roster'],
       },
       {
         id: 'deal-history',
-        title: 'Deal History',
-        subtitle: 'View negotiation history and offers',
+        title: 'DEAL_HISTORY_LOG',
+        subtitle: 'VIEW_NEGOTIATION_HISTORY_AND_OFFERS',
         icon: Briefcase,
         action: () => {
           setActiveHub('talent');
           setActiveSubTab('negotiations');
         },
-        section: 'Talent',
+        section: 'TALENT_MANAGEMENT',
         keywords: ['offers', 'negotiations', 'deals', 'history'],
       },
       // Financial Views
       {
         id: 'budget-burn',
-        title: 'Budget Burn Rate',
-        subtitle: 'Monitor production spending vs planned',
+        title: 'BUDGET_BURN_RATE_AUDIT',
+        subtitle: 'MONITOR_PRODUCTION_SPENDING_VS_PLANNED',
         icon: Flame,
         action: () => {
           setActiveHub('production');
           setActiveSubTab('development');
         },
-        section: 'Finance',
+        section: 'FINANCIAL_INTELLIGENCE',
         keywords: ['budget', 'spending', 'overrun', 'costs'],
       },
       {
         id: 'cash-flow',
-        title: 'Cash Flow',
-        subtitle: 'View revenue and expense trends',
+        title: 'CASH_FLOW_ANALYSIS',
+        subtitle: 'VIEW_REVENUE_AND_EXPENSE_TRENDS',
         icon: DollarSign,
         action: () => {
           setActiveHub('intelligence');
           setActiveSubTab('financials');
         },
-        section: 'Finance',
+        section: 'FINANCIAL_INTELLIGENCE',
         keywords: ['cash', 'revenue', 'expenses', 'financials'],
       },
     ];
 
     return list;
-  }, [setActiveHub, setActiveSubTab, openCreateProject]);
+  }, [setActiveHub, setActiveSubTab, openCreateProject, doAdvanceWeek]);
 
   // Filter commands based on query
   const filteredCommands = React.useMemo(() => {
@@ -305,48 +308,48 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/80 backdrop-blur-md z-50"
             onClick={onClose}
           />
 
           {/* Palette */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: -20 }}
+            initial={{ opacity: 0, scale: 0.98, y: -20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: -20 }}
-            transition={{ ...transitions.spring }}
-            className="fixed top-[20%] left-1/2 -translate-x-1/2 w-full max-w-2xl z-50"
+            exit={{ opacity: 0, scale: 0.98, y: -20 }}
+            transition={{ ...transitions.spring, duration: 0.8 }}
+            className="fixed top-[15%] left-1/2 -translate-x-1/2 w-full max-w-2xl z-50 px-6"
           >
-            <div className="bg-card/95 backdrop-blur-2xl border border-white/10 rounded-xl shadow-2xl overflow-hidden">
+            <div className="bg-black/90 backdrop-blur-3xl border border-white/10 rounded-none shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden">
               {/* Search header */}
-              <div className="flex items-center gap-3 px-4 py-4 border-b border-white/5">
-                <Search className="w-5 h-5 text-muted-foreground" />
+              <div className="flex items-center gap-6 px-8 py-8 border-b border-white/5 bg-white/[0.02]">
+                <Search className="w-5 h-5 text-primary" strokeWidth={3} />
                 <input
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search commands, navigate, or run actions..."
-                  className="flex-1 bg-transparent border-none outline-none text-sm placeholder:text-muted-foreground"
+                  placeholder="SEARCH_COMMANDS_&_TAC_INTEL..."
+                  className="flex-1 bg-transparent border-none outline-none text-sm font-black uppercase tracking-[0.2em] placeholder:text-muted-foreground/30 italic"
                   autoFocus
                 />
-                <kbd className="px-2 py-1 bg-muted rounded text-xs text-muted-foreground">
+                <kbd className="px-3 py-1 bg-white/5 border border-white/10 rounded-none text-[10px] font-black text-muted-foreground/40 italic">
                   ESC
                 </kbd>
               </div>
 
               {/* Results */}
-              <div className="max-h-[400px] overflow-y-auto py-2">
+              <div className="max-h-[500px] overflow-y-auto py-4 custom-scrollbar">
                 {flatCommands.length === 0 ? (
-                  <div className="px-4 py-8 text-center text-muted-foreground">
-                    <p>No commands found</p>
-                    <p className="text-xs mt-1">
-                      Try a different search term
+                  <div className="px-8 py-16 text-center">
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic">NULL_RESULT_DETECTED</p>
+                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/20 mt-2 italic">
+                      SYSTEM_SCAN_FAILED: TRY_ALTERNATIVE_QUERY
                     </p>
                   </div>
                 ) : (
                   Object.entries(groupedCommands).map(([section, items]) => (
-                    <div key={section}>
-                      <div className="px-4 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    <div key={section} className="mb-6 last:mb-2">
+                      <div className="px-8 py-2 text-[9px] font-black text-primary/40 uppercase tracking-[0.4em] italic mb-2">
                         {section}
                       </div>
                       {items.map((item) => {
@@ -363,27 +366,36 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                             }}
                             onMouseEnter={() => setSelectedIndex(flatIdx)}
                             className={cn(
-                              'w-full flex items-center gap-3 px-4 py-3 text-left',
-                              'hover:bg-white/5',
-                              isSelected && 'bg-white/10',
-                              tokens.transition.fast
+                              'w-full flex items-center gap-6 px-8 py-4 text-left border-l-2 transition-all duration-700',
+                              isSelected 
+                                ? 'bg-primary/5 border-primary text-primary translate-x-1 shadow-2xl' 
+                                : 'bg-transparent border-transparent text-muted-foreground/40 hover:bg-white/[0.02] hover:text-foreground hover:translate-x-1',
                             )}
                           >
-                            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                              <Icon className="w-4 h-4 text-primary" />
+                            <div className={cn(
+                              "w-10 h-10 rounded-none flex items-center justify-center shrink-0 transition-all duration-700",
+                              isSelected ? "bg-primary text-black" : "bg-white/5 text-muted-foreground/40"
+                            )}>
+                              <Icon className="w-5 h-5" strokeWidth={isSelected ? 3 : 2} />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-foreground">
+                              <p className={cn(
+                                "text-sm font-black uppercase italic tracking-tight leading-none mb-1",
+                                isSelected ? "text-foreground" : "text-foreground/60"
+                              )}>
                                 {item.title}
                               </p>
                               {item.subtitle && (
-                                <p className="text-xs text-muted-foreground truncate">
+                                <p className="text-[9px] font-black uppercase tracking-[0.2em] opacity-40 truncate italic">
                                   {item.subtitle}
                                 </p>
                               )}
                             </div>
                             {item.shortcut && (
-                              <kbd className="px-2 py-1 bg-muted rounded text-xs text-muted-foreground shrink-0">
+                              <kbd className={cn(
+                                "px-3 py-1 rounded-none text-[10px] font-black shrink-0 italic border transition-all duration-700",
+                                isSelected ? "bg-primary/20 text-primary border-primary/20" : "bg-white/5 text-muted-foreground/30 border-white/5"
+                              )}>
                                 {item.shortcut}
                               </kbd>
                             )}
@@ -396,19 +408,19 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               </div>
 
               {/* Footer */}
-              <div className="px-4 py-3 bg-muted/30 border-t border-white/5 flex items-center justify-between text-xs text-muted-foreground">
-                <div className="flex items-center gap-4">
-                  <span className="flex items-center gap-1">
-                    <ArrowRight className="w-3 h-3" /> to select
+              <div className="px-8 py-4 bg-white/[0.02] border-t border-white/5 flex items-center justify-between text-[8px] font-black text-muted-foreground/30 uppercase tracking-[0.3em] italic">
+                <div className="flex items-center gap-8">
+                  <span className="flex items-center gap-2">
+                    <ArrowRight className="w-3 h-3 text-primary" strokeWidth={3} /> SELECT_NODE
                   </span>
-                  <span className="flex items-center gap-1">
-                    <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px]">
-                      ↵
-                    </kbd>{' '}
-                    to run
+                  <span className="flex items-center gap-2">
+                    <kbd className="px-2 py-0.5 bg-white/5 border border-white/10 rounded-none text-[8px]">
+                      ENTER
+                    </kbd>
+                    INITIALIZE_LINK
                   </span>
                 </div>
-                <span>{flatCommands.length} commands</span>
+                <span>{flatCommands.length}_TAC_NODES_FOUND</span>
               </div>
             </div>
           </motion.div>
@@ -421,7 +433,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 /**
  * Hook to manage command palette state
  */
-export const useCommandPalette = () => {
+const useCommandPalette = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -445,4 +457,4 @@ export const useCommandPalette = () => {
   };
 };
 
-export default CommandPalette;
+export { useCommandPalette, CommandPalette };

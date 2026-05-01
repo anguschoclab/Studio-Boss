@@ -32,14 +32,14 @@ export const ActiveProjectCosts = ({ activeProjects, weeklyCosts }: ActiveProjec
                 </span>
               </div>
               <div className="flex items-center gap-2 relative z-10">
-                <span className="text-[9px] font-bold tracking-widest text-muted-foreground uppercase bg-background/50 backdrop-blur-sm border border-border/40 px-2 py-0.5 rounded-full shadow-sm">
+                <span className="text-[9px] font-bold tracking-widest text-muted-foreground uppercase bg-background/50 backdrop-blur-sm border border-border/40 px-2 py-0.5 rounded-none shadow-sm">
                   {p.state}
                 </span>
               </div>
             </div>
           )) : (
             <div className="p-8 text-center flex flex-col items-center justify-center h-full opacity-60">
-              <p className="text-xs font-black uppercase tracking-widest text-muted-foreground bg-muted/10 inline-block px-4 py-2 rounded-full border border-border/20 shadow-inner">
+              <p className="text-xs font-black uppercase tracking-widest text-muted-foreground bg-muted/10 inline-block px-4 py-2 rounded-none border border-border/20 shadow-inner">
                 No active burn
               </p>
             </div>

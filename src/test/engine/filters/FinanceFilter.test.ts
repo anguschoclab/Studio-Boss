@@ -1,96 +1,41 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { FinanceFilter } from '@/engine/services/filters/FinanceFilter';
-import { GameState } from '@/engine/types';
-import { RandomGenerator } from '@/engine/utils/rng';
-import { TickContext } from '@/engine/services/filters/types';
+import { createMockGameState, createMockTickContext } from '../generators/mockFactory';
 
 describe('FinanceFilter', () => {
-  let filter: FinanceFilter;
-  let mockState: GameState;
-  let mockContext: TickContext;
-  let mockRng: RandomGenerator;
+  let mockState: any;
+  let mockContext: any;
 
   beforeEach(() => {
-    filter = new FinanceFilter();
-    mockRng = new RandomGenerator(42);
-    
-    mockState = {
-      week: 1,
-      tickCount: 1,
-      gameSeed: 12345,
-      rngState: 12345,
-      studio: {
-        id: 'studio-1',
-        name: 'Test Studio',
-        archetype: 'major',
-        prestige: 50,
-      } as any,
-      entities: {
-        projects: {},
-        rivals: {},
-        talents: {},
-        contracts: {},
-      } as any,
-      market: {
-        trends: [],
-        buyers: [],
-        opportunities: [],
-      } as any,
-      industry: {
-        agencies: [],
-      } as any,
-      finance: {
-        cash: 10000000,
-        ledger: [],
-        weeklyHistory: [],
-        marketState: {
-          baseRate: 0.05,
-          savingsYield: 0.02,
-          debtRate: 0.07,
-          loanRate: 0.08,
-          rateHistory: [],
-          sentiment: 50,
-          cycle: 'STABLE',
-        },
-      },
-      game: {} as any,
-      news: { headlines: [], events: [] } as any,
-      deals: { activeDeals: [], expiredDeals: [], pendingOffers: [] } as any,
-      talentAgentRelationships: {} as any,
-      eventHistory: [] as any,
-      ip: { vault: [], franchises: {} } as any,
-      relationships: {} as any,
-      history: [] as any,
-    } as GameState;
-
-    mockContext = {
-      week: 2,
-      tickCount: 2,
-      rng: mockRng,
-      timestamp: 2000,
-      impacts: [],
-      events: [],
-    };
+    mockState = createMockGameState();
+    mockContext = createMockTickContext();
   });
 
   it('should have correct name', () => {
-    expect(filter.name).toBe('FinanceFilter');
+    expect(FinanceFilter.name).toBe('FinanceFilter');
   });
 
   it('should execute without errors', () => {
-    expect(() => filter.execute(mockState, mockContext)).not.toThrow();
+    expect(() => FinanceFilter.execute(mockState, mockContext)).not.toThrow();
   });
 
-  it('should generate impacts', () => {
-    filter.execute(mockState, mockContext);
+  it('should generate impacts for foundational finances', () => {
+    FinanceFilter.execute(mockState, mockContext);
+    // tickFinance usually generates LEDGER_UPDATED and FINANCES_SNAPSHOT_ADDED
     expect(mockContext.impacts.length).toBeGreaterThan(0);
   });
 
-  it('should generate finance impacts', () => {
-    filter.execute(mockState, mockContext);
-    const financeImpacts = mockContext.impacts.filter(i => 
-      i.type === 'FUNDS_CHANGED' || i.type === 'LEDGER_UPDATED' || i.type === 'FINANCE_SNAPSHOT_ADDED'
-    );
-    expect(financeImpacts.length).toBeGreaterThan(0);
+  it('should generate ledger and snapshot impacts', () => {
+    FinanceFilter.execute(mockState, mockContext);
+    const ledgerImpact = mockContext.impacts.find((i: any) => i.type === 'LEDGER_UPDATED');
+    const snapshotImpact = mockContext.impacts.find((i: any) => i.type === 'FINANCE_SNAPSHOT_ADDED' || i.type === 'HISTORY_SNAPSHOT_ADDED');
+    
+    expect(ledgerImpact).toBeDefined();
+    expect(snapshotImpact).toBeDefined();
+  });
+
+  it('should handle negative cash flow scenarios', () => {
+    mockState.finance.cash = 100; // Small amount to trigger potential warnings or bankrupcy risk logic
+    expect(() => FinanceFilter.execute(mockState, mockContext)).not.toThrow();
   });
 });

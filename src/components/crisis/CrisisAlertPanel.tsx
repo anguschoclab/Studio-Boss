@@ -83,7 +83,7 @@ export const CrisisAlertPanel: React.FC<CrisisAlertPanelProps> = ({
         <Card className={cn('p-4', tokens.border.default, activeCrises.length > 0 && 'border-red-500/50')}>
           <div className="flex items-center gap-3">
             <div className={cn(
-              'p-2 rounded-lg',
+              'p-2 rounded-none',
               activeCrises.length > 0 ? 'bg-red-500/10' : 'bg-emerald-500/10'
             )}>
               <AlertTriangle className={cn(
@@ -105,7 +105,7 @@ export const CrisisAlertPanel: React.FC<CrisisAlertPanelProps> = ({
 
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-500/10">
+            <div className="p-2 rounded-none bg-blue-500/10">
               <Shield className="h-5 w-5 text-blue-500" />
             </div>
             <div>
@@ -230,7 +230,7 @@ export const CrisisAlertPanel: React.FC<CrisisAlertPanelProps> = ({
       )}
 
       {activeCrises.length === 0 && crisisHistory.length === 0 && (
-        <div className={cn('text-center py-12', tokens.border.default, 'border-dashed rounded-xl')}>
+        <div className={cn('text-center py-12', tokens.border.default, 'border-dashed rounded-none')}>
           <Shield className="h-12 w-12 mx-auto mb-4 opacity-20" />
           <p className={tokens.text.label}>No Active Crises</p>
           <p className={cn('text-sm mt-2', tokens.text.caption)}>

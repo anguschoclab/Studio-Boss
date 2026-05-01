@@ -2,7 +2,7 @@ import React from 'react';
 import { SimpleBarChart } from '@/components/charts/SimpleBarChart';
 import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
-import { cn } from '@/lib/utils';
+import { cn, formatCompactCurrency } from '@/lib/utils';
 import { TrendingUp, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { useGameStore } from '@/store/gameStore';
 import { selectRecoupmentStatus } from '@/store/selectors';
@@ -31,12 +31,6 @@ export const RecoupmentStatus: React.FC<RecoupmentStatusProps> = ({
   const totalRecouped = projects.reduce((sum, p) => sum + p.revenue, 0);
   const totalBudget = projects.reduce((sum, p) => sum + p.budget, 0);
   const overallRate = totalBudget > 0 ? (totalRecouped / totalBudget) * 100 : 0;
-
-  const formatCurrency = (value: number) => {
-    if (Math.abs(value) >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
-    if (Math.abs(value) >= 1000) return `$${(value / 1000).toFixed(0)}K`;
-    return `$${value}`;
-  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -87,7 +81,7 @@ export const RecoupmentStatus: React.FC<RecoupmentStatusProps> = ({
           <p className={cn('text-[9px]', tokens.text.caption)}>Profitable</p>
         </div>
         <div className="p-2 bg-muted/30 rounded text-center">
-          <p className="text-sm font-bold">{formatCurrency(totalRecouped)}</p>
+          <p className="text-sm font-bold">{formatCompactCurrency(totalRecouped)}</p>
           <p className={cn('text-[9px]', tokens.text.caption)}>Revenue</p>
         </div>
         <div className="p-2 bg-red-500/10 rounded text-center">

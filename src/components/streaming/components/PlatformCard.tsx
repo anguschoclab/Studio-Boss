@@ -55,7 +55,7 @@ export const PlatformCard: React.FC<PlatformCardProps> = ({ buyer, allBuyers, on
 
   return (
     <div className={cn(
-      "p-5 rounded-2xl border backdrop-blur-md transition-all duration-300 space-y-4 group relative overflow-hidden flex flex-col justify-between",
+      "p-5 rounded-none border backdrop-blur-md transition-all duration-300 space-y-4 group relative overflow-hidden flex flex-col justify-between",
       isAcquired 
         ? "border-muted/30 bg-muted/5 opacity-60 grayscale-[0.5]" 
         : buyer.isAcquirable 
@@ -72,19 +72,16 @@ export const PlatformCard: React.FC<PlatformCardProps> = ({ buyer, allBuyers, on
       <div className="flex items-start justify-between gap-3 relative z-10">
         <div className="flex items-center gap-3">
           <TooltipWrapper tooltip={config.tooltip} side="top">
-            <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center border shadow-inner cursor-help", config.bg, config.border)}>
+            <div className={cn("w-10 h-10 rounded-none flex items-center justify-center border shadow-inner cursor-help", config.bg, config.border)}>
               <Icon className={cn("w-5 h-5", config.color)} />
             </div>
           </TooltipWrapper>
           <div>
-            <h3>
-              <button
-                type="button"
-                className="font-display font-black text-[15px] tracking-tight text-foreground leading-tight group-hover:text-primary transition-colors cursor-pointer text-left"
-                onClick={() => onViewHistory(buyer)}
-              >
-                {buyer.name}
-              </button>
+            <h3 
+              className="font-display font-black text-[15px] tracking-tight text-foreground leading-tight group-hover:text-primary transition-colors cursor-pointer"
+              onClick={() => onViewHistory(buyer)}
+            >
+              {buyer.name}
             </h3>
             <div className="flex items-center gap-1.5 mt-1">
               <Badge variant="outline" className={cn("text-[9px] font-black tracking-widest uppercase px-1.5 py-0 h-4 border-none", config.bg, config.color)}>
@@ -114,7 +111,7 @@ export const PlatformCard: React.FC<PlatformCardProps> = ({ buyer, allBuyers, on
       {/* Chart Section (Streamer Only) */}
       {isStreamer && (
         <TooltipWrapper tooltip="Subscriber trajectory over the last 12 weeks. Trends influence platform valuation and buying power." side="top">
-          <div className="h-20 w-full relative z-10 my-1 overflow-hidden rounded-lg bg-black/20 border border-white/5 p-1 group/chart cursor-help">
+          <div className="h-20 w-full relative z-10 my-1 overflow-hidden rounded-none bg-black/20 border border-white/5 p-1 group/chart cursor-help">
              <SubscriberTrendChart platform={streamer} />
              <div className="absolute top-1 right-2 flex items-center gap-1 text-[8px] font-black uppercase tracking-widest">
                 {isTrendingUp ? (
@@ -182,7 +179,7 @@ export const PlatformCard: React.FC<PlatformCardProps> = ({ buyer, allBuyers, on
               Pitch Deal
             </Button>
         ) : (
-          <div className="flex-1 h-8 flex items-center justify-center text-[9px] uppercase font-black tracking-[0.2em] text-muted-foreground/40 bg-white/2 bg-dotted border border-white/5 rounded-md">
+          <div className="flex-1 h-8 flex items-center justify-center text-[9px] uppercase font-black tracking-[0.2em] text-muted-foreground/40 bg-white/2 bg-dotted border border-white/5 rounded-none">
             Controlled by {acquirer?.name}
           </div>
         )}
@@ -201,7 +198,7 @@ export const PlatformCard: React.FC<PlatformCardProps> = ({ buyer, allBuyers, on
       {/* Vulnerability Alert */}
       {buyer.isAcquirable && !isAcquired && (
         <TooltipWrapper tooltip="This platform is currently vulnerable to a corporate takeover." side="top">
-          <div className="absolute top-2 right-2 flex items-center gap-1.5 bg-rose-500/10 border border-rose-500/20 px-2 py-0.5 rounded-full animate-pulse cursor-help">
+          <div className="absolute top-2 right-2 flex items-center gap-1.5 bg-rose-500/10 border border-rose-500/20 px-2 py-0.5 rounded-none animate-pulse cursor-help">
              <AlertTriangle className="w-2.5 h-2.5 text-rose-500" />
              <span className="text-[8px] font-black text-rose-500 uppercase tracking-widest">M&A Target</span>
           </div>

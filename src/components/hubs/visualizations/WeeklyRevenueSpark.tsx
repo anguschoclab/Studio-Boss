@@ -2,7 +2,7 @@ import React from 'react';
 import { SparkLine } from '@/components/charts/SparkLine';
 import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
-import { cn } from '@/lib/utils';
+import { cn, formatCompactCurrency } from '@/lib/utils';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import { useGameStore } from '@/store/gameStore';
 import { selectWeeklyRevenueHistory } from '@/store/selectors';
@@ -28,18 +28,12 @@ export const WeeklyRevenueSpark: React.FC<WeeklyRevenueSparkProps> = ({
   const percentChange = previous !== 0 ? ((change / previous) * 100) : 0;
   const isPositive = change >= 0;
 
-  const formatCurrency = (value: number) => {
-    if (Math.abs(value) >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
-    if (Math.abs(value) >= 1000) return `$${(value / 1000).toFixed(0)}K`;
-    return `$${value}`;
-  };
-
   return (
     <Card className={cn('p-3', tokens.border.default, className)}>
       <div className="flex items-center justify-between">
         <div>
           <p className={cn('text-[10px] uppercase', tokens.text.caption)}>{label}</p>
-          <p className="text-lg font-bold">{formatCurrency(latest)}</p>
+          <p className="text-lg font-bold">{formatCompactCurrency(latest)}</p>
           <div className={cn(
             'flex items-center gap-1 text-[10px]',
             isPositive ? 'text-emerald-500' : 'text-red-500'

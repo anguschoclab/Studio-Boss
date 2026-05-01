@@ -23,16 +23,16 @@ const Base_Icon_Wrapper = ({ children, size = 20, ...props }: IconProps) => (
 
 export const LayoutDashboardIcon = (props: IconProps) => (
   <Base_Icon_Wrapper {...props}>
-    <rect width="7" height="9" x="3" y="3" rx="1" />
-    <rect width="7" height="5" x="14" y="3" rx="1" />
-    <rect width="7" height="9" x="14" y="12" rx="1" />
-    <rect width="7" height="5" x="3" y="16" rx="1" />
+    <rect width="7" height="9" x="3" y="3" rx="0" />
+    <rect width="7" height="5" x="14" y="3" rx="0" />
+    <rect width="7" height="9" x="14" y="12" rx="0" />
+    <rect width="7" height="5" x="3" y="16" rx="0" />
   </Base_Icon_Wrapper>
 );
 
 export const FilmIcon = (props: IconProps) => (
   <Base_Icon_Wrapper {...props}>
-    <rect width="18" height="18" x="3" y="3" rx="2" />
+    <rect width="18" height="18" x="3" y="3" rx="0" />
     <path d="M7 3v18" /><path d="M17 3v18" /><path d="M3 7h4" /><path d="M3 12h4" /><path d="M3 17h4" /><path d="M17 7h4" /><path d="M17 12h4" /><path d="M17 17h4" />
   </Base_Icon_Wrapper>
 );
@@ -68,8 +68,8 @@ export const UsersIcon = (props: IconProps) => (
 
 export const BriefcaseIcon = (props: IconProps) => (
   <Base_Icon_Wrapper {...props}>
-    <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-    <rect width="20" height="14" x="2" y="6" rx="2" />
+    <path d="M16 20V4a0 0 0 0 0-2-2h-4a0 0 0 0 0-2 2v16" />
+    <rect width="20" height="14" x="2" y="6" rx="0" />
   </Base_Icon_Wrapper>
 );
 
@@ -82,7 +82,7 @@ export const NewspaperIcon = (props: IconProps) => (
 
 export const TvIcon = (props: IconProps) => (
   <Base_Icon_Wrapper {...props}>
-    <rect width="20" height="15" x="2" y="7" rx="2" />
+    <rect width="20" height="15" x="2" y="7" rx="0" />
     <path d="m8 2 4 5 4-5" />
   </Base_Icon_Wrapper>
 );
@@ -107,7 +107,7 @@ export const ChevronRightIcon = (props: IconProps) => (
 
 export const LogOutIcon = (props: IconProps) => (
   <Base_Icon_Wrapper {...props}>
-    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" x2="9" y1="12" y2="12" />
+    <path d="M9 21H5a0 0 0 0 1-2-2V5a0 0 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" x2="9" y1="12" y2="12" />
   </Base_Icon_Wrapper>
 );
 
@@ -120,7 +120,7 @@ export const SettingsIcon = (props: IconProps) => (
 
 export const SaveIcon = (props: IconProps) => (
   <Base_Icon_Wrapper {...props}>
-    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13 7 21" /><polyline points="7 3 7 8 15 8" />
+    <path d="M19 21H5a0 0 0 0 1-2-2V5a0 0 0 0 1 2-2h11l5 5v11a0 0 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13 7 21" /><polyline points="7 3 7 8 15 8" />
   </Base_Icon_Wrapper>
 );
 
@@ -132,7 +132,7 @@ export const FastForwardIcon = (props: IconProps) => (
 
 export const AlertTriangleIcon = (props: IconProps) => (
   <Base_Icon_Wrapper {...props}>
-    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" x2="12" y1="9" y2="13" /><line x1="12" x2="12.01" y1="17" y2="17" />
+    <path d="m21.73 18-8-14a0 0 0 0 0-3.48 0l-8 14A0 0 0 0 0 4 21h16a0 0 0 0 0 1.73-3Z" /><line x1="12" x2="12" y1="9" y2="13" /><line x1="12" x2="12.01" y1="17" y2="17" />
   </Base_Icon_Wrapper>
 );
 

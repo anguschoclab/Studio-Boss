@@ -1,6 +1,4 @@
 import { Project, Talent } from '@/engine/types';
-import { BardResolver } from './bardResolver';
-import { RandomGenerator } from '../utils/rng';
 
 export type GreenlightRecommendation =
   | 'Easy Greenlight'
@@ -20,7 +18,6 @@ export function evaluateGreenlight(
   project: Project,
   cash: number,
   attachedTalent: Talent[],
-  rng: RandomGenerator,
   currentWeek: number = 0,
   allProjects: Project[] = []
 ): GreenlightReport {
@@ -57,66 +54,30 @@ export function evaluateGreenlight(
 
   if (saturationPenalty > 0) {
     score -= saturationPenalty;
-    negatives.push(BardResolver.resolve({
-      domain: 'Greenlight',
-      subDomain: 'MarketSat',
-      intensity: 10, // Risky
-      context: { genre: project.genre, count: recentSimilarProjectsCount },
-      rng
-    }));
+    negatives.push(`Market saturation: -${saturationPenalty} points due to ${recentSimilarProjectsCount} recent ${project.genre} release(s).`);
   } else if (recentSimilarProjectsCount === 0) {
     // Trend-modifier: Calendar Gap Bonus
     // If there have been no similar projects released in the last 52 weeks, the market is starved for this genre.
     score += 15;
-    positives.push(BardResolver.resolve({
-      domain: 'Greenlight',
-      subDomain: 'MarketSat',
-      intensity: 80, // Prestige/Gap
-      context: { genre: project.genre },
-      rng
-    }));
+    positives.push(`Market gap: +15 points due to no recent ${project.genre} releases in the past year.`);
   }
 
   // 1. Budget vs Cash
   if (cash < project.budget) {
     score -= 40;
-    negatives.push(BardResolver.resolve({
-      domain: 'Greenlight',
-      subDomain: 'Finance',
-      intensity: 0,
-      context: { amount: project.budget },
-      rng
-    }));
+    negatives.push('Severe cashflow strain: insufficient funds for budget.');
   } else if (cash < project.budget * 2) {
     score -= 15;
-    negatives.push(BardResolver.resolve({
-      domain: 'Greenlight',
-      subDomain: 'Finance',
-      intensity: 30,
-      context: { amount: project.budget },
-      rng
-    }));
+    negatives.push('High financial exposure relative to current reserves.');
   } else if (cash > project.budget * 5) {
     score += 10;
-    positives.push(BardResolver.resolve({
-      domain: 'Greenlight',
-      subDomain: 'Finance',
-      intensity: 90,
-      context: { amount: project.budget },
-      rng
-    }));
+    positives.push('Comfortable cash reserves for this budget tier.');
   }
 
   // 2. Talent Package
   if (attachedTalent.length === 0) {
     score -= 20;
-    negatives.push(BardResolver.resolve({
-      domain: 'Greenlight',
-      subDomain: 'Talent',
-      intensity: 10,
-      context: {},
-      rng
-    }));
+    negatives.push('Unpackaged: No key talent attached.');
   } else {
     let totalDraw = 0;
     let totalPrestige = 0;
@@ -129,31 +90,13 @@ export function evaluateGreenlight(
 
     if (avgDraw > 75) {
       score += 30;
-      positives.push(BardResolver.resolve({
-        domain: 'Greenlight',
-        subDomain: 'Talent',
-        intensity: 90,
-        context: {},
-        rng
-      }));
+      positives.push('A-list package provides strong market floor.');
     } else if (avgDraw > 50) {
       score += 15;
-      positives.push(BardResolver.resolve({
-        domain: 'Greenlight',
-        subDomain: 'Talent',
-        intensity: 60,
-        context: {},
-        rng
-      }));
+      positives.push('Solid bankable talent attached.');
     } else {
       score -= 5;
-      negatives.push(BardResolver.resolve({
-        domain: 'Greenlight',
-        subDomain: 'Talent',
-        intensity: 30,
-        context: {},
-        rng
-      }));
+      negatives.push('Attached talent lacks strong box office/ratings draw.');
     }
 
     if (totalPrestige > 150) {
@@ -165,31 +108,13 @@ export function evaluateGreenlight(
   // 3. Project Buzz
   if (project.buzz > 80) {
     score += 20;
-    positives.push(BardResolver.resolve({
-      domain: 'Greenlight',
-      subDomain: 'Marketing',
-      intensity: 90,
-      context: {},
-      rng
-    }));
+    positives.push('Exceptional pre-production buzz.');
   } else if (project.buzz > 60) {
     score += 10;
-    positives.push(BardResolver.resolve({
-      domain: 'Greenlight',
-      subDomain: 'Marketing',
-      intensity: 70,
-      context: {},
-      rng
-    }));
+    positives.push('Healthy development buzz.');
   } else if (project.buzz < 30) {
     score -= 15;
-    negatives.push(BardResolver.resolve({
-      domain: 'Greenlight',
-      subDomain: 'Marketing',
-      intensity: 20,
-      context: {},
-      rng
-    }));
+    negatives.push('Very low market awareness/buzz.');
   }
 
   // Bound score

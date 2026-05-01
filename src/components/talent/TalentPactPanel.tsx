@@ -124,7 +124,7 @@ export const TalentPactPanel: React.FC<TalentPactPanelProps> = ({
       <div className="grid grid-cols-3 gap-4">
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10">
+            <div className="p-2 rounded-none bg-primary/10">
               <Handshake className="h-5 w-5 text-primary" />
             </div>
             <div>
@@ -136,7 +136,7 @@ export const TalentPactPanel: React.FC<TalentPactPanelProps> = ({
 
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-amber-500/10">
+            <div className="p-2 rounded-none bg-amber-500/10">
               <AlertTriangle className="h-5 w-5 text-amber-500" />
             </div>
             <div>
@@ -148,7 +148,7 @@ export const TalentPactPanel: React.FC<TalentPactPanelProps> = ({
 
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-red-500/10">
+            <div className="p-2 rounded-none bg-red-500/10">
               <DollarSign className="h-5 w-5 text-red-500" />
             </div>
             <div>
@@ -179,7 +179,7 @@ export const TalentPactPanel: React.FC<TalentPactPanelProps> = ({
         icon={Handshake}
       >
         {activePacts.length === 0 ? (
-          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-xl')}>
+          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-none')}>
             <Handshake className="h-10 w-10 mx-auto mb-3 opacity-20" />
             <p className={cn('text-sm', tokens.text.caption)}>
               No active talent pacts

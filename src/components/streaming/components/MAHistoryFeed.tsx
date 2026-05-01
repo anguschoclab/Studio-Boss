@@ -2,6 +2,7 @@ import React from 'react';
 import { Buyer } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
 import { History, Calendar, DollarSign, ArrowRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface MAHistoryFeedProps {
   buyer: Buyer;
@@ -32,9 +33,9 @@ export const MAHistoryFeed: React.FC<MAHistoryFeedProps> = ({ buyer }) => {
         {history.map((event, idx) => (
           <div key={idx} className="relative group">
             {/* Timeline Dot */}
-            <div className="absolute -left-[10px] top-1.5 w-[10px] h-[10px] rounded-full bg-background border-2 border-primary group-hover:scale-125 transition-transform" />
+            <div className="absolute -left-[10px] top-1.5 w-[10px] h-[10px] rounded-none bg-background border-2 border-primary group-hover:scale-125 transition-transform" />
             
-            <div className="glass-panel p-3 rounded-xl border border-white/5 hover:border-primary/30 transition-colors shadow-lg">
+            <div className="glass-panel p-3 rounded-none border border-white/5 hover:border-primary/30 transition-colors shadow-lg">
               <div className="flex items-center justify-between gap-4">
                 <div className="min-w-0">
                   <p className="text-[11px] font-black uppercase text-foreground leading-tight truncate">

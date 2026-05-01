@@ -6,7 +6,7 @@
  */
 
 self.onmessage = async (e: MessageEvent) => {
-  const { type, slotId, requestId, state } = e.data;
+  const { type, slotId, state, requestId } = e.data;
 
   try {
     if (type === 'SAVE_GAME') {
@@ -14,32 +14,20 @@ self.onmessage = async (e: MessageEvent) => {
       self.postMessage({ type: 'SAVE_SUCCESS', slotId, requestId });
     } else if (type === 'LOAD_GAME') {
       const loadedState = await handleLoad(slotId);
-      self.postMessage({ type: 'LOAD_SUCCESS', slotId, requestId, state: loadedState });
+      self.postMessage({ type: 'LOAD_SUCCESS', slotId, state: loadedState, requestId });
     }
   } catch (error) {
-    console.error(`SaveWorker Error [${type}] (req: ${requestId}):`, error);
-    self.postMessage({ type: 'ERROR', requestId, message: (error as Error).message });
+    console.error(`SaveWorker Error [${type}]:`, error);
+    self.postMessage({ type: 'ERROR', message: (error as Error).message, requestId });
   }
 };
 
-async function handleSave(slotId: string | number, state: any, retries = 3) {
+async function handleSave(slotId: string | number, state: any) {
   const root = await navigator.storage.getDirectory();
   const fileHandle = await root.getFileHandle(`slot_${slotId}.sb`, { create: true });
 
-  let accessHandle: any;
-  let attempt = 0;
-
-  while (attempt < retries) {
-    try {
-      // @ts-expect-error - createSyncAccessHandle is only in Workers
-      accessHandle = await fileHandle.createSyncAccessHandle();
-      break; 
-    } catch (e) {
-      attempt++;
-      if (attempt >= retries) throw e;
-      await new Promise(resolve => setTimeout(resolve, 50 * attempt)); // Exponential-ish backoff
-    }
-  }
+  // @ts-ignore - createSyncAccessHandle is only in Workers
+  const accessHandle = await fileHandle.createSyncAccessHandle();
 
   try {
     // 1. Off-thread serialization
@@ -59,7 +47,7 @@ async function handleLoad(slotId: string | number) {
   const root = await navigator.storage.getDirectory();
   const fileHandle = await root.getFileHandle(`slot_${slotId}.sb`);
 
-  // @ts-expect-error - createSyncAccessHandle is only in Workers
+  // @ts-ignore - createSyncAccessHandle is only in Workers
   const accessHandle = await fileHandle.createSyncAccessHandle();
 
   try {

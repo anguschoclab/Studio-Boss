@@ -6,14 +6,10 @@ import { useGameStore } from '@/store/gameStore';
 import { selectMarketShareData } from '@/store/selectors';
 import { Building2, Trophy } from 'lucide-react';
 
-interface StudioShare {
-  name: string;
-  share: number; // percentage
-  isPlayer?: boolean;
-}
+import { MarketSharePoint } from '@/store/chartSelectors';
 
 interface MarketShareComparisonProps {
-  studios?: StudioShare[];
+  studios?: MarketSharePoint[];
   className?: string;
 }
 
@@ -59,10 +55,10 @@ export const MarketShareComparison: React.FC<MarketShareComparisonProps> = ({
                 <span className="ml-1 text-[9px] text-primary">(You)</span>
               )}
             </div>
-            <div className="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div className="flex-1 h-2 bg-slate-800 rounded-none overflow-hidden">
               <div
                 className={cn(
-                  'h-full rounded-full transition-all',
+                  'h-full rounded-none transition-all',
                   studio.isPlayer ? 'bg-primary' : 'bg-slate-600'
                 )}
                 style={{ width: `${(studio.share / maxShare) * 100}%` }}

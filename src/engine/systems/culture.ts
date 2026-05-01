@@ -8,7 +8,7 @@ export function initializeCulture(archetype: ArchetypeKey): StudioCulture {
         talentFriendlyVsControlling: 70, // Talent friendly
         nicheVsBroad: 20, // Niche
         filmFirstVsTvFirst: 90, // Film focused
-        genrePopularity: { 'Drama': 80, 'Comedy': 50, 'Action': 30, 'Sci-Fi': 40, 'Horror': 50, 'Romance': 40 }
+        franchiseOriginal: 20 // Mostly originals
       };
     case 'major':
       return {
@@ -16,15 +16,15 @@ export function initializeCulture(archetype: ArchetypeKey): StudioCulture {
         talentFriendlyVsControlling: 30, // Controlling
         nicheVsBroad: 90, // Broad
         filmFirstVsTvFirst: 60, // Slight film bias
-        genrePopularity: { 'Drama': 50, 'Comedy': 60, 'Action': 80, 'Sci-Fi': 70, 'Horror': 40, 'Romance': 50 }
+        franchiseOriginal: 80 // Franchise focused
       };
     default:
       return {
-        prestigeVsCommercial: 0,
-        talentFriendlyVsControlling: 0,
+        prestigeVsCommercial: 50,
+        talentFriendlyVsControlling: 50,
         nicheVsBroad: 50,
-        filmFirstVsTvFirst: 0,
-        genrePopularity: { 'Drama': 50, 'Comedy': 50, 'Action': 50, 'Sci-Fi': 50, 'Horror': 50, 'Romance': 50 }
+        filmFirstVsTvFirst: 50,
+        franchiseOriginal: 50
       };
   }
 }

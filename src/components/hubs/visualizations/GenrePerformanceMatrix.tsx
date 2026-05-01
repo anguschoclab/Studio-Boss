@@ -9,7 +9,7 @@ import { selectGenrePerformanceMatrix } from '@/store/selectors';
 interface GenrePerformanceData {
   genre: string;
   metric: string;
-  value: number; // ROI percentage or performance score
+  value: number;
 }
 
 interface GenrePerformanceMatrixProps {

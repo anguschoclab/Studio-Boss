@@ -2,8 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore, TalentSubTab } from '@/store/uiStore';
 import { SubNav } from '@/components/navigation/SubNav';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import {
   Users,
   Search,
@@ -15,7 +13,9 @@ import {
   TrendingUp,
   Newspaper,
   Briefcase,
-  AlertTriangle
+  AlertTriangle,
+  Zap,
+  Target
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Talent, TalentRole, Opportunity } from '@/engine/types';
@@ -37,7 +37,7 @@ const RosterPanel = () => {
   const [filter, setFilter] = useState<TalentRole | 'all'>('all');
   const [search, setSearch] = useState('');
   
-  const talentPool = useMemo(() => selectTalentPool(state), [state?.entities?.talents]);
+  const talentPool = useMemo(() => selectTalentPool(state), [state]);
 
   const moraleData = useMemo(() => {
     const low = selectLowMoraleTalent(state);
@@ -66,41 +66,44 @@ const RosterPanel = () => {
   const roleFilters: (TalentRole | 'all')[] = ['all', 'actor', 'director', 'writer', 'producer'];
   
   return (
-    <div className="h-full flex flex-col space-y-4">
+    <div className="h-full flex flex-col space-y-10 animate-in fade-in duration-700">
       {/* Filters */}
-      <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between bg-white/5 p-4 rounded-xl border border-white/5">
-        <div className="flex gap-2 flex-wrap">
+      <div className="flex flex-col md:flex-row gap-8 items-start md:items-center justify-between bg-white/[0.02] p-10 rounded-none border border-white/5 backdrop-blur-3xl shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl -mr-16 -mt-16" />
+        
+        <div className="flex gap-4 flex-wrap relative z-10">
           {roleFilters.map(role => (
             <button
               key={role}
               onClick={() => setFilter(role)}
+              aria-pressed={filter === role}
               className={cn(
-                'px-3.5 py-2.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 border',
+                'px-8 py-3 text-[10px] uppercase tracking-[0.3em] font-black rounded-none transition-all duration-700 border italic',
                 filter === role
-                  ? 'bg-primary text-primary-foreground shadow-[0_0_15px_hsl(var(--primary)/0.4)] scale-105 border-primary/50'
-                  : 'bg-muted/50 text-muted-foreground hover:bg-secondary/20 hover:text-foreground border-transparent hover:border-secondary/30'
+                  ? 'bg-primary text-black shadow-[0_0_20px_rgba(var(--primary),0.2)] border-primary'
+                  : 'bg-white/[0.02] text-muted-foreground/40 hover:bg-white/10 hover:text-white border-white/5'
               )}
             >
-              {role}
+              {role.toUpperCase()}
             </button>
           ))}
         </div>
         
-        <div className="relative w-full md:w-64">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <div className="relative w-full md:w-80 relative z-10">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/20" />
           <input
             type="text"
-            placeholder="Search talent..."
+            placeholder="SEARCH TALENT..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full h-9 pl-10 pr-3 text-[11px] bg-black/40 border border-white/10 rounded-md focus:outline-none focus:border-primary/50"
+            className="w-full h-12 pl-12 pr-4 text-[10px] bg-black/40 border border-white/10 rounded-none focus:outline-none focus:border-primary/50 uppercase font-black tracking-[0.2em] italic placeholder:text-muted-foreground/5 transition-all duration-700"
           />
         </div>
       </div>
       
       {/* Talent Grid */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-4">
+      <div className="flex-1 overflow-y-auto custom-scrollbar pr-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 pb-10">
           {filteredTalent.map((talent: Talent) => (
             <div 
               key={talent.id}
@@ -113,27 +116,33 @@ const RosterPanel = () => {
                 }
               }}
               onClick={() => selectTalent(talent.id)}
-              className="group p-4 bg-card/40 border border-border/40 rounded-xl hover:border-primary/30 hover:bg-card/60 transition-all cursor-pointer"
+              className="group p-8 bg-white/[0.01] border border-white/5 rounded-none hover:border-primary/40 hover:bg-white/[0.03] transition-all duration-700 cursor-pointer shadow-xl relative overflow-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none"
             >
-              <div className="flex items-start gap-3">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-lg font-black">
+              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-20 transition-opacity">
+                 <Zap className="w-12 h-12 text-primary" strokeWidth={1} />
+              </div>
+              
+              <div className="flex flex-col gap-6 relative z-10">
+                <div className="w-16 h-16 rounded-none bg-gradient-to-br from-primary/10 to-secondary/10 border border-white/5 flex items-center justify-center text-2xl font-display font-black italic shadow-2xl">
                   {talent.name.charAt(0)}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-bold text-sm truncate group-hover:text-primary transition-colors">{talent.name}</h4>
-                  <p className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
-                    {talent.roles.join(' / ')}
-                  </p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <Badge variant="secondary" className="text-[9px]">
-                      <Star className="h-3 w-3 mr-1" />
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-display font-black text-lg truncate group-hover:text-primary transition-all duration-700 uppercase italic leading-none mb-2 tracking-tight">{talent.name}</h4>
+                    <p className="text-[9px] uppercase text-muted-foreground/30 font-black tracking-[0.2em] italic">
+                      {talent.roles.join(' / ').toUpperCase()}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="bg-secondary/5 border border-secondary/20 px-3 h-5 flex items-center justify-center text-[9px] font-black uppercase tracking-widest text-secondary italic rounded-none">
+                      <Star className="h-3 w-3 mr-2" />
                       {talent.prestige}
-                    </Badge>
+                    </div>
                     {talent.starMeter && (
-                      <Badge variant="outline" className="text-[9px]">
-                        <TrendingUp className="h-3 w-3 mr-1" />
+                      <div className="bg-primary/5 border border-primary/20 px-3 h-5 flex items-center justify-center text-[9px] font-black uppercase tracking-widest text-primary italic rounded-none shadow-[0_0_10px_rgba(var(--primary),0.1)]">
+                        <TrendingUp className="h-3 w-3 mr-2" />
                         {talent.starMeter}
-                      </Badge>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -143,9 +152,9 @@ const RosterPanel = () => {
         </div>
         
         {filteredTalent.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
-            <Users className="w-12 h-12 mb-4 opacity-20" />
-            <p className="text-sm font-bold uppercase tracking-widest">No talent found</p>
+          <div className="flex flex-col items-center justify-center py-40 text-muted-foreground/10 space-y-8">
+            <Users className="w-24 h-24" strokeWidth={1} />
+            <p className="text-xl font-display font-black uppercase tracking-[0.4em] italic">NO ASSETS FOUND</p>
           </div>
         )}
       </div>
@@ -165,43 +174,45 @@ const MarketplacePanel = () => {
   const [activeTab, setActiveTab] = useState<'scripts' | 'talent'>('scripts');
   
   return (
-    <div className="h-full flex flex-col">
-      <div className="flex items-center gap-2 mb-4">
+    <div className="h-full flex flex-col space-y-10 animate-in fade-in duration-700">
+      <div className="flex items-center gap-4 bg-white/[0.02] border border-white/5 p-2 rounded-none w-fit shadow-xl">
         <button
           onClick={() => setActiveTab('scripts')}
+          aria-pressed={activeTab === 'scripts'}
           className={cn(
-            'px-4 py-3 text-[11px] font-bold uppercase tracking-wider rounded-lg transition-all',
+            'px-10 py-3 text-[10px] font-black uppercase tracking-[0.3em] rounded-none transition-all duration-700 italic',
             activeTab === 'scripts'
-              ? 'bg-primary/20 text-primary'
-              : 'text-muted-foreground hover:text-foreground'
+              ? 'bg-primary text-black shadow-lg shadow-primary/10'
+              : 'text-muted-foreground/40 hover:text-white hover:bg-white/5'
           )}
         >
-          <Newspaper className="h-3.5 w-3.5 inline mr-2" />
-          Script Marketplace
+          <Newspaper className="h-3.5 w-3.5 inline mr-3" strokeWidth={3} />
+          SCRIPT MARKETPLACE
         </button>
         <button
           onClick={() => setActiveTab('talent')}
+          aria-pressed={activeTab === 'talent'}
           className={cn(
-            'px-4 py-2 text-[11px] font-bold uppercase tracking-wider rounded-lg transition-all',
+            'px-10 py-3 text-[10px] font-black uppercase tracking-[0.3em] rounded-none transition-all duration-700 italic',
             activeTab === 'talent'
-              ? 'bg-primary/20 text-primary'
-              : 'text-muted-foreground hover:text-foreground'
+              ? 'bg-primary text-black shadow-lg shadow-primary/10'
+              : 'text-muted-foreground/40 hover:text-white hover:bg-white/5'
           )}
         >
-          <Sparkles className="h-3.5 w-3.5 inline mr-2" />
-          Talent Packages
+          <Sparkles className="h-3.5 w-3.5 inline mr-3" strokeWidth={3} />
+          TALENT PACKAGES
         </button>
       </div>
       
       <div className="flex-1 overflow-hidden">
         {activeTab === 'scripts' ? (
-          <div className="h-full overflow-y-auto custom-scrollbar">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-4">
+          <div className="h-full overflow-y-auto custom-scrollbar pr-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pb-10">
               {opportunities.length === 0 ? (
-                <div className="col-span-full py-20 text-center">
-                  <Sparkles className="w-12 h-12 mx-auto mb-4 opacity-20" />
-                  <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">
-                    No active opportunities
+                <div className="col-span-full py-40 text-center space-y-8 opacity-10">
+                  <Sparkles className="w-20 h-20 mx-auto" strokeWidth={1} />
+                  <p className="text-xl font-display font-black uppercase tracking-[0.4em] italic">
+                    NO ACTIVE FLOW
                   </p>
                 </div>
               ) : (
@@ -210,7 +221,7 @@ const MarketplacePanel = () => {
                   return (
                     <div 
                       key={opp.id}
-                      className="p-4 bg-card/40 border border-border/40 rounded-xl hover:border-primary/30 transition-all cursor-pointer"
+                      className="p-10 bg-white/[0.01] border border-white/5 rounded-none hover:border-primary/40 hover:bg-white/[0.03] transition-all duration-700 cursor-pointer shadow-2xl relative overflow-hidden group focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none"
                       role="button"
                       tabIndex={0}
                       onKeyDown={(e) => {
@@ -221,19 +232,25 @@ const MarketplacePanel = () => {
                       }}
                       onClick={() => setSelectedAuction(opp)}
                     >
-                      <div className="flex justify-between items-start mb-2">
-                        <h4 className="font-bold text-sm">{opp.title}</h4>
-                        <Badge variant="outline" className="text-[9px]">{opp.type}</Badge>
+                      <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-20 transition-opacity">
+                         <Target className="w-12 h-12 text-primary" strokeWidth={1} />
                       </div>
-                      <p className="text-[11px] text-muted-foreground line-clamp-2">{opp.flavor}</p>
-                      <div className="flex items-center gap-2 mt-3">
-                        <Badge variant="secondary" className="text-[9px]">{opp.genre}</Badge>
-                        {hasBids && (
-                          <Badge className="text-[9px] bg-amber-500/20 text-amber-500">
-                            <Gavel className="h-3 w-3 mr-1" />
-                            Bidding Active
-                          </Badge>
-                        )}
+                      
+                      <div className="space-y-6 relative z-10">
+                        <div className="flex justify-between items-start">
+                          <h4 className="text-xl font-display font-black uppercase italic tracking-tighter leading-none group-hover:text-primary transition-all duration-700 mb-2">{opp.title}</h4>
+                          <div className="text-[9px] font-black border border-white/10 px-3 h-5 flex items-center justify-center uppercase tracking-widest italic rounded-none text-muted-foreground/40">{opp.type.toUpperCase()}</div>
+                        </div>
+                        <p className="text-xs text-muted-foreground/60 line-clamp-2 italic uppercase tracking-wider leading-relaxed pr-10">"{opp.flavor.toUpperCase()}"</p>
+                        <div className="flex items-center gap-4 pt-2">
+                          <div className="text-[9px] font-black bg-secondary/5 text-secondary border border-secondary/20 px-3 h-5 flex items-center justify-center uppercase tracking-widest italic rounded-none">{opp.genre.toUpperCase()}</div>
+                          {hasBids && (
+                            <div className="text-[9px] font-black bg-primary/10 text-primary border border-primary/20 px-3 h-5 flex items-center justify-center uppercase tracking-widest italic rounded-none shadow-[0_0_15px_rgba(var(--primary),0.2)]">
+                              <Gavel className="h-3 w-3 mr-2" strokeWidth={3} />
+                              BIDDING ACTIVE
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   );
@@ -327,7 +344,7 @@ const NegotiationsPanel = () => {
   }, [gameState, currentWeek]);
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar space-y-6 pb-4">
+    <div className="h-full overflow-y-auto custom-scrollbar space-y-10 pr-6 pb-20">
       <TalentPactPanel pacts={pacts} />
       <OfferHistoryLog offers={offerHistory} />
     </div>
@@ -341,39 +358,43 @@ const AgenciesPanel = () => {
   const agents = gameState?.industry?.agents || [];
   
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar">
-      <div className="space-y-3 pb-4">
+    <div className="h-full overflow-y-auto custom-scrollbar pr-6">
+      <div className="space-y-6 pb-20">
         {agencies.sort((a, b) => b.leverage - a.leverage).map((agency, i) => {
           const agencyAgents = agents.filter(ag => ag.agencyId === agency.id);
           
           return (
             <div 
               key={agency.id}
-              className="p-4 bg-card/40 border border-border/40 rounded-xl hover:border-primary/30 transition-all"
+              className="p-8 bg-white/[0.01] border border-white/5 rounded-none hover:border-secondary/40 hover:bg-white/[0.03] transition-all duration-700 shadow-xl group relative overflow-hidden"
             >
-              <div className="flex justify-between items-start mb-3">
-                <div className="flex items-center gap-3">
-                  <span className="text-lg font-black font-mono opacity-20">#{String(i + 1).padStart(2, '0')}</span>
+              <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-100 transition-opacity">
+                 <Building2 className="w-16 h-16 text-secondary" strokeWidth={1} />
+              </div>
+              
+              <div className="flex justify-between items-start mb-6 relative z-10">
+                <div className="flex items-center gap-6">
+                  <span className="text-4xl font-display font-black italic opacity-5 group-hover:opacity-20 transition-opacity">#{String(i + 1).padStart(2, '0')}</span>
                   <div>
-                    <h4 className="font-bold text-sm">{agency.name}</h4>
-                    <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
-                      {agency.archetype} Culture
+                    <h4 className="text-xl font-display font-black uppercase italic tracking-tighter leading-none group-hover:text-secondary transition-colors mb-2">{agency.name}</h4>
+                    <p className="text-[10px] uppercase font-black text-muted-foreground/30 tracking-[0.4em] italic">
+                      {agency.archetype.toUpperCase()} CULTURE
                     </p>
                   </div>
                 </div>
-                <Badge variant="secondary" className="text-[10px] font-mono">
+                <div className="bg-secondary/5 border border-secondary/20 px-4 h-6 flex items-center justify-center text-[10px] font-black font-mono text-secondary italic rounded-none shadow-[0_0_15px_rgba(var(--secondary),0.1)]">
                   LEV {agency.leverage}
-                </Badge>
+                </div>
               </div>
               
-              <div className="flex items-center gap-4 text-[10px] font-bold text-muted-foreground">
-                <div className="flex items-center gap-1">
-                  <Users className="h-3 w-3" />
-                  {agencyAgents.length} Agents
+              <div className="flex items-center gap-8 text-[10px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] italic relative z-10">
+                <div className="flex items-center gap-3">
+                  <Users className="h-4 w-4" />
+                  {agencyAgents.length} AGENTS
                 </div>
-                <div className="flex items-center gap-1">
-                  <Briefcase className="h-3 w-3" />
-                  {agency.culture}
+                <div className="flex items-center gap-3">
+                  <Briefcase className="h-4 w-4" />
+                  {agency.culture.toUpperCase()}
                 </div>
               </div>
             </div>
@@ -401,13 +422,14 @@ const ScandalsPanel = () => {
       weeksRemaining: s.weeksRemaining,
       publicSentiment: s.severity > 60 ? 'outraged' as const : 'divided' as const,
       pressCoverage: Math.round(s.severity * 0.5),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       effects: [] as any[],
       hasInsurance: false,
     };
   }), [gameState, talents]);
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar pb-4">
+    <div className="h-full overflow-y-auto custom-scrollbar pb-20 pr-6">
       <ScandalTracker activeScandals={activeScandals} scandalHistory={[]} />
     </div>
   );
@@ -445,35 +467,35 @@ export const TalentHub: React.FC = () => {
   const tabs = [
     { 
       id: 'roster', 
-      label: 'Your Roster', 
+      label: 'YOUR ROSTER', 
       icon: <Users className="h-3.5 w-3.5" />,
       badge: badgeCounts.roster,
       description: 'Signed talent and contract management'
     },
     { 
       id: 'marketplace', 
-      label: 'Marketplace', 
+      label: 'MARKETPLACE', 
       icon: <Sparkles className="h-3.5 w-3.5" />,
       badge: badgeCounts.marketplace,
       description: 'Available IP opportunities and talent packages'
     },
     { 
       id: 'negotiations', 
-      label: 'Negotiations', 
+      label: 'NEGOTIATIONS', 
       icon: <Handshake className="h-3.5 w-3.5" />,
       badge: badgeCounts.negotiations,
       description: 'Active deals and pending offers'
     },
     { 
       id: 'agencies', 
-      label: 'Agencies', 
+      label: 'AGENCIES', 
       icon: <Building2 className="h-3.5 w-3.5" />,
       badge: badgeCounts.agencies,
       description: 'Agency power rankings and relationships'
     },
     {
       id: 'scandals',
-      label: 'Scandals',
+      label: 'SCANDALS',
       icon: <AlertTriangle className="h-3.5 w-3.5" />,
       badge: badgeCounts.scandals,
       description: 'Active PR crises and talent controversies'
@@ -484,33 +506,33 @@ export const TalentHub: React.FC = () => {
     switch (activeSubTab) {
       case 'roster':
         return {
-          icon: <Users className="h-6 w-6 text-secondary" />,
-          title: 'Talent Roster',
-          subtitle: 'Your signed talent and contract management'
+          icon: <Users className="h-8 w-8 text-secondary" />,
+          title: 'TALENT ROSTER',
+          subtitle: 'YOUR SIGNED TALENT AND CONTRACT MANAGEMENT'
         };
       case 'marketplace':
         return {
-          icon: <Sparkles className="h-6 w-6 text-primary" />,
-          title: 'IP Marketplace',
-          subtitle: 'Script opportunities and talent packages'
+          icon: <Sparkles className="h-8 w-8 text-primary" />,
+          title: 'IP MARKETPLACE',
+          subtitle: 'SCRIPT OPPORTUNITIES AND TALENT PACKAGES'
         };
       case 'negotiations':
         return {
-          icon: <Handshake className="h-6 w-6 text-primary" />,
-          title: 'Deal Negotiations',
-          subtitle: 'Active offers, counters, and deal flow'
+          icon: <Handshake className="h-8 w-8 text-primary" />,
+          title: 'DEAL NEGOTIATIONS',
+          subtitle: 'ACTIVE OFFERS, COUNTERS, AND DEAL FLOW'
         };
       case 'agencies':
         return {
-          icon: <Building2 className="h-6 w-6 text-secondary" />,
-          title: 'Agency Network',
-          subtitle: 'Power rankings and relationship status'
+          icon: <Building2 className="h-8 w-8 text-secondary" />,
+          title: 'AGENCY NETWORK',
+          subtitle: 'POWER RANKINGS AND RELATIONSHIP STATUS'
         };
       case 'scandals':
         return {
-          icon: <AlertTriangle className="h-6 w-6 text-destructive" />,
-          title: 'Scandal Tracker',
-          subtitle: 'Active PR crises and talent controversies'
+          icon: <AlertTriangle className="h-8 w-8 text-red-500" />,
+          title: 'SCANDAL TRACKER',
+          subtitle: 'ACTIVE PR CRISES AND TALENT CONTROVERSIES'
         };
       default:
         return { icon: null, title: '', subtitle: '' };
@@ -520,22 +542,23 @@ export const TalentHub: React.FC = () => {
   const header = getHeaderContent();
   
   return (
-    <div className="h-full flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-500">
-      {/* Header */}
-      <div className="flex items-center gap-4 mb-4 bg-gradient-to-r from-white/5 to-transparent p-5 rounded-xl border border-white/5">
-        <div className="w-12 h-12 rounded-lg bg-secondary/10 border border-secondary/20 flex items-center justify-center shadow-[0_0_15px_hsl(var(--secondary)/0.2)]">
+    <div className="h-full flex flex-col animate-in fade-in slide-in-from-bottom-8 duration-1000">
+      {/* Executive Header */}
+      <div className="flex items-center gap-8 mb-10 bg-white/[0.02] p-10 rounded-none border border-white/5 backdrop-blur-3xl shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-secondary/5 blur-[120px] -mr-32 -mt-32" />
+        <div className="w-16 h-16 rounded-none bg-secondary/5 border border-secondary/20 flex items-center justify-center shadow-2xl relative z-10">
           {header.icon}
         </div>
-        <div>
-          <h2 className="text-2xl font-black tracking-tighter uppercase leading-none">{header.title}</h2>
-          <p className="text-[11px] font-black uppercase text-muted-foreground/60 tracking-[0.2em] mt-1">
+        <div className="relative z-10">
+          <h2 className="text-5xl font-display font-black tracking-tighter uppercase italic leading-none mb-3 drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]">{header.title}</h2>
+          <p className="text-[10px] font-black uppercase text-muted-foreground/30 tracking-[0.4em] italic">
             {header.subtitle}
           </p>
         </div>
       </div>
       
       {/* Sub Navigation */}
-      <div className="mb-4">
+      <div className="mb-10">
         <SubNav 
           tabs={tabs}
           activeTab={activeSubTab}
@@ -546,7 +569,7 @@ export const TalentHub: React.FC = () => {
       
       {/* Content */}
       <div className="flex-1 min-h-0 overflow-hidden">
-        <React.Suspense fallback={<div className="flex items-center justify-center h-64">Loading...</div>}>
+        <React.Suspense fallback={<div className="flex items-center justify-center h-64 font-display font-black text-muted-foreground/10 animate-pulse uppercase tracking-[0.5em] italic">INITIALIZING MODULE...</div>}>
           {activeSubTab === 'roster' && <RosterPanel />}
           {activeSubTab === 'marketplace' && <MarketplacePanel />}
           {activeSubTab === 'negotiations' && <NegotiationsPanel />}

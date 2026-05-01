@@ -41,8 +41,8 @@ describe('MoraleDashboard', () => {
 
     render(<MoraleDashboard moraleData={moraleData} />);
 
-    expect(screen.getByText('At-Risk Talent')).toBeInTheDocument();
-    expect(screen.getByText('John Actor')).toBeInTheDocument();
+    expect(screen.getByText('AT-RISK TALENT')).toBeInTheDocument();
+    expect(screen.getByText('JOHN ACTOR')).toBeInTheDocument();
     expect(screen.getAllByText('25%').length).toBeGreaterThan(0);
     expect(screen.getByText('Contract dispute')).toBeInTheDocument();
   });
@@ -65,8 +65,8 @@ describe('MoraleDashboard', () => {
 
     render(<MoraleDashboard moraleData={moraleData} />);
 
-    expect(screen.getByText('Talent Morale Overview')).toBeInTheDocument();
-    expect(screen.getByText('Happy Actor')).toBeInTheDocument();
+    expect(screen.getByText('TALENT MORALE OVERVIEW')).toBeInTheDocument();
+    expect(screen.getByText('HAPPY ACTOR')).toBeInTheDocument();
     expect(screen.getAllByText('85%').length).toBeGreaterThan(0);
   });
 

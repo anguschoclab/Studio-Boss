@@ -36,10 +36,48 @@ export function handleNewsAdded(state: GameState, impact: StateImpact): GameStat
 }
 
 export function handleSystemTick(state: GameState, impact: StateImpact): GameState {
-  const { week, tickCount } = impact.payload || {};
-  return {
+  const payload = impact.payload || {};
+  const { week, tickCount, __studioUpdate, studioIdentity } = payload as any;
+
+  let updated: GameState = {
     ...state,
     week: week ?? state.week,
     tickCount: tickCount ?? state.tickCount
   };
+
+  // Generic studio property patch (used by loan tick, identity tick, etc.)
+  if (__studioUpdate) {
+    updated = {
+      ...updated,
+      studio: { ...updated.studio, ...__studioUpdate }
+    };
+  }
+
+  // Studio identity axes update
+  if (studioIdentity) {
+    updated = {
+      ...updated,
+      studio: {
+        ...updated.studio,
+        identity: { ...(updated.studio as any).identity, ...studioIdentity }
+      }
+    };
+  }
+
+  // New achievement ID unlock
+  const { newAchievementId } = payload as any;
+  if (newAchievementId) {
+    const existing: string[] = (updated.studio as any).achievements ?? [];
+    if (!existing.includes(newAchievementId)) {
+      updated = {
+        ...updated,
+        studio: {
+          ...updated.studio,
+          achievements: [...existing, newAchievementId]
+        } as any
+      };
+    }
+  }
+
+  return updated;
 }

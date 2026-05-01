@@ -56,6 +56,15 @@ export function renderAvatarSVG(f: AvatarFeatures): string {
   // ── Background & Canvas ──
   svg += `<circle cx="100" cy="100" r="95" fill="${darkenColor(f.skin.shadow, 0.4)}" opacity="0.1"/>`;
 
+  // ── Composition transform ──
+  // Shift the entire portrait up and scale down slightly so:
+  //   • eyes land at ~40% from the top (rule-of-thirds for portraits)
+  //   • the top of the head clears the frame with breathing room
+  //   • shoulders/neckline are always visible at the bottom
+  // This guarantees consistent framing across all avatars regardless of
+  // randomized faceWidth/faceHeight.
+  svg += `<g transform="translate(0, -10) scale(0.88) translate(13.6, 13.6)">`;
+
   // ── Layered Rendering ──
   
   // 1. Clothing (Shoulders/Neck) - includes breathing animation
@@ -68,7 +77,16 @@ export function renderAvatarSVG(f: AvatarFeatures): string {
   svg += renderHairBack(f, cx, cy, faceW, faceH);
   
   // 4. Face Base
+  // Subtle outer skin halo so pale-skinned talent with white/grey/blond hair
+  // don't blend into the background. Rendered just behind the face so it
+  // reads as a soft rim shadow rather than an outline.
+  svg += `<path d="${facePath}" fill="none" stroke="${darkenColor(f.skin.shadow, 0.35)}" stroke-width="3" opacity="0.45" transform="translate(0.5, 1)"/>`;
   svg += `<path d="${facePath}" fill="url(#${uid}-skin)" stroke="${f.skin.shadow}" stroke-width="0.5" filter="url(#${uid}-shadow)"/>`;
+
+  // 4b. Jowls (mild sagging at jawline) — ramps in 45-70
+  if (f.age >= 45) {
+    svg += renderJowls(f, cx, cy, faceW, faceH);
+  }
   
   // 5. Features
   svg += renderNose(f, cx, cy, faceW, faceH, f.skin);
@@ -82,98 +100,77 @@ export function renderAvatarSVG(f: AvatarFeatures): string {
   // 7. Hair Front
   svg += renderHairFront(f, cx, cy, faceW, faceH);
 
-  // 8. Overlays & Aging
-  if (f.wrinkleOpacity > 0.1) {
+  // 8. Overlays & Aging — gradual wrinkles + crow's feet, ramping 45-70
+  if (f.age >= 45) {
     svg += renderWrinkleLines(f, cx, cy, faceW, faceH);
   }
-
-  // 9. Skin Details
-  svg += renderSkinDetails(f, cx, cy, faceW, faceH);
 
   // Final Lighting Overlay (Rim Light)
   svg += `<ellipse cx="100" cy="80" rx="90" ry="85" stroke="white" stroke-width="0.5" opacity="0.1" pointer-events="none"/>`;
 
+  svg += `</g>`; // close composition transform
   svg += `</svg>`;
   return svg;
 }
 
 function renderWrinkleLines(f: AvatarFeatures, cx: number, cy: number, faceW: number, faceH: number): string {
-  const opacity = f.wrinkleOpacity * 0.3;
+  // Gradual ramp 45 → 70 (then plateaus). Matches the greying curve cadence.
+  const t = Math.max(0, Math.min(1, (f.age - 45) / 25));
+  if (t <= 0) return '';
   const shadow = f.skin.shadow;
   const browY = cy - faceH * 0.18;
   const eyeY = cy - faceH * 0.08;
   const mouthY = cy + faceH * 0.28;
-  const chinY = cy + faceH * 0.48;
 
   let lines = '';
-  // Forehead
-  if (f.age >= 40) {
-    lines += `<path d="M ${cx - faceW/4} ${browY - 8} Q ${cx} ${browY - 10} ${cx + faceW/4} ${browY - 8}" stroke="${shadow}" stroke-width="0.5" opacity="${opacity}"/>`;
-    lines += `<path d="M ${cx - faceW/5} ${browY - 14} Q ${cx} ${browY - 16} ${cx + faceW/5} ${browY - 14}" stroke="${shadow}" stroke-width="0.5" opacity="${opacity * 0.7}"/>`;
+
+  // Forehead lines — fade in from 45, deepen through 70
+  const foreheadOp = 0.10 + t * 0.20;
+  lines += `<path d="M ${cx - faceW/4} ${browY - 8} Q ${cx} ${browY - 10} ${cx + faceW/4} ${browY - 8}" stroke="${shadow}" stroke-width="0.5" fill="none" opacity="${foreheadOp.toFixed(2)}"/>`;
+  if (t > 0.4) {
+    lines += `<path d="M ${cx - faceW/5} ${browY - 14} Q ${cx} ${browY - 16} ${cx + faceW/5} ${browY - 14}" stroke="${shadow}" stroke-width="0.5" fill="none" opacity="${(foreheadOp * 0.7).toFixed(2)}"/>`;
   }
-  // Crow's feet (around eyes)
-  if (f.age >= 45) {
-    lines += `<path d="M ${cx - faceW/3} ${eyeY} Q ${cx - faceW/3 - 5} ${eyeY - 5} ${cx - faceW/3 - 3} ${eyeY - 8}" stroke="${shadow}" stroke-width="0.4" fill="none" opacity="${opacity * 0.8}"/>`;
-    lines += `<path d="M ${cx + faceW/3} ${eyeY} Q ${cx + faceW/3 + 5} ${eyeY - 5} ${cx + faceW/3 + 3} ${eyeY - 8}" stroke="${shadow}" stroke-width="0.4" fill="none" opacity="${opacity * 0.8}"/>`;
+
+  // Crow's feet — appear early (~47), fan out from outer eye corners
+  if (t > 0.08) {
+    const crowOp = (0.15 + t * 0.25).toFixed(2);
+    const eyeOuterL = cx - faceW * 0.32;
+    const eyeOuterR = cx + faceW * 0.32;
+    const ey = eyeY;
+    // Left
+    lines += `<path d="M ${eyeOuterL} ${ey} l -6 -3" stroke="${shadow}" stroke-width="0.5" fill="none" opacity="${crowOp}" stroke-linecap="round"/>`;
+    lines += `<path d="M ${eyeOuterL} ${ey + 2} l -7 0"  stroke="${shadow}" stroke-width="0.5" fill="none" opacity="${crowOp}" stroke-linecap="round"/>`;
+    lines += `<path d="M ${eyeOuterL} ${ey + 4} l -6 3"  stroke="${shadow}" stroke-width="0.5" fill="none" opacity="${crowOp}" stroke-linecap="round"/>`;
+    // Right (mirror)
+    lines += `<path d="M ${eyeOuterR} ${ey} l 6 -3"     stroke="${shadow}" stroke-width="0.5" fill="none" opacity="${crowOp}" stroke-linecap="round"/>`;
+    lines += `<path d="M ${eyeOuterR} ${ey + 2} l 7 0"  stroke="${shadow}" stroke-width="0.5" fill="none" opacity="${crowOp}" stroke-linecap="round"/>`;
+    lines += `<path d="M ${eyeOuterR} ${ey + 4} l 6 3"  stroke="${shadow}" stroke-width="0.5" fill="none" opacity="${crowOp}" stroke-linecap="round"/>`;
   }
-  // Laugh lines
-  if (f.age >= 50) {
-    lines += `<path d="M ${cx - 15} ${eyeY + 15} Q ${cx - 18} ${mouthY} ${cx - 12} ${mouthY + 5}" stroke="${shadow}" stroke-width="0.8" fill="none" opacity="${opacity * 1.5}"/>`;
-    lines += `<path d="M ${cx + 15} ${eyeY + 15} Q ${cx + 18} ${mouthY} ${cx + 12} ${mouthY + 5}" stroke="${shadow}" stroke-width="0.8" fill="none" opacity="${opacity * 1.5}"/>`;
+
+  // Nasolabial / laugh lines — show from ~50
+  if (t > 0.2) {
+    const laughOp = (0.20 + t * 0.30).toFixed(2);
+    lines += `<path d="M ${cx - 15} ${eyeY + 15} Q ${cx - 18} ${mouthY} ${cx - 12} ${mouthY + 5}" stroke="${shadow}" stroke-width="0.8" fill="none" opacity="${laughOp}" stroke-linecap="round"/>`;
+    lines += `<path d="M ${cx + 15} ${eyeY + 15} Q ${cx + 18} ${mouthY} ${cx + 12} ${mouthY + 5}" stroke="${shadow}" stroke-width="0.8" fill="none" opacity="${laughOp}" stroke-linecap="round"/>`;
   }
-  // Marionette lines (mouth to chin)
-  if (f.age >= 55) {
-    lines += `<path d="M ${cx - 10} ${mouthY + 5} Q ${cx - 12} ${chinY} ${cx - 8} ${chinY + 3}" stroke="${shadow}" stroke-width="0.6" fill="none" opacity="${opacity * 1.2}"/>`;
-    lines += `<path d="M ${cx + 10} ${mouthY + 5} Q ${cx + 12} ${chinY} ${cx + 8} ${chinY + 3}" stroke="${shadow}" stroke-width="0.6" fill="none" opacity="${opacity * 1.2}"/>`;
-  }
-  // Jowl rendering
-  if (f.jowlAmount > 0.1) {
-    const jowlOpacity = f.jowlAmount * 0.4;
-    lines += `<path d="M ${cx - faceW/3} ${chinY} Q ${cx - faceW/3 + 3} ${chinY + 5} ${cx - faceW/4} ${chinY + 2}" fill="${f.skin.shadow}" opacity="${jowlOpacity}"/>`;
-    lines += `<path d="M ${cx + faceW/3} ${chinY} Q ${cx + faceW/3 - 3} ${chinY + 5} ${cx + faceW/4} ${chinY + 2}" fill="${f.skin.shadow}" opacity="${jowlOpacity}"/>`;
-  }
+
   return lines;
 }
 
-function renderSkinDetails(f: AvatarFeatures, cx: number, cy: number, faceW: number, faceH: number): string {
-  let details = '';
-  const mouthY = cy + faceH * 0.28;
-
-  // Beauty mark
-  if (f.hasBeautyMark) {
-    details += `<circle cx="${cx + (f.beautyMarkPosition.x - 0.5) * faceW}" cy="${cy + (f.beautyMarkPosition.y - 0.5) * faceH}" r="1.2" fill="#5D4037" opacity="0.7"/>`;
-  }
-
-  // Age spots
-  if (f.hasAgeSpots) {
-    for (let i = 0; i < 3; i++) {
-      const spotX = cx + (Math.random() - 0.5) * faceW * 0.6;
-      const spotY = cy + (Math.random() - 0.3) * faceH * 0.6;
-      details += `<circle cx="${spotX}" cy="${spotY}" r="${1 + Math.random() * 1.5}" fill="#8B7355" opacity="0.3"/>`;
-    }
-  }
-
-  // Rosy cheeks
-  if (f.hasRosyCheeks) {
-    const cheekY = cy + faceH * 0.1;
-    details += `<ellipse cx="${cx - faceW * 0.3}" cy="${cheekY}" rx="8" ry="5" fill="#FFB6C1" opacity="0.15"/>`;
-    details += `<ellipse cx="${cx + faceW * 0.3}" cy="${cheekY}" rx="8" ry="5" fill="#FFB6C1" opacity="0.15"/>`;
-  }
-
-  // Skin texture
-  if (f.skinTexture === 'pores') {
-    for (let i = 0; i < 15; i++) {
-      const texX = cx + (Math.random() - 0.5) * faceW * 0.8;
-      const texY = cy + (Math.random() - 0.3) * faceH * 0.8;
-      details += `<circle cx="${texX}" cy="${texY}" r="0.3" fill="${f.skin.shadow}" opacity="0.1"/>`;
-    }
-  } else if (f.skinTexture === 'rough') {
-    for (let i = 0; i < 25; i++) {
-      const texX = cx + (Math.random() - 0.5) * faceW * 0.8;
-      const texY = cy + (Math.random() - 0.3) * faceH * 0.8;
-      details += `<circle cx="${texX}" cy="${texY}" r="0.4" fill="${f.skin.shadow}" opacity="0.15"/>`;
-    }
-  }
-
-  return details;
+/**
+ * Mild jowls — soft sagging shadow at the jawline. Ramps in between
+ * ages 45-70 and plateaus, mirroring the greying curve cadence.
+ */
+function renderJowls(f: AvatarFeatures, cx: number, cy: number, faceW: number, faceH: number): string {
+  const t = Math.max(0, Math.min(1, (f.age - 45) / 25));
+  if (t <= 0) return '';
+  const op = (0.12 + t * 0.18).toFixed(2);
+  const shadow = f.skin.shadow;
+  const jawY = cy + faceH * 0.30;
+  const jawX = faceW * 0.42;
+  // Subtle filled crescents along the lower jaw
+  let s = '';
+  s += `<path d="M ${cx - jawX} ${jawY} Q ${cx - jawX * 0.6} ${jawY + 8 + t * 4} ${cx - jawX * 0.2} ${jawY + 4}" stroke="${shadow}" stroke-width="1" fill="none" opacity="${op}" stroke-linecap="round"/>`;
+  s += `<path d="M ${cx + jawX} ${jawY} Q ${cx + jawX * 0.6} ${jawY + 8 + t * 4} ${cx + jawX * 0.2} ${jawY + 4}" stroke="${shadow}" stroke-width="1" fill="none" opacity="${op}" stroke-linecap="round"/>`;
+  return s;
 }

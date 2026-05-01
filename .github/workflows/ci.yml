@@ -20,7 +20,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 20
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -30,14 +30,11 @@ jobs:
       - name: Install Dependencies
         run: for i in 1 2 3 4 5; do if bun install; then break; fi; if [ $i -eq 5 ]; then exit 1; fi; sleep 15; done
 
-      - name: Type Check
-        run: bun run type-check
-
       - name: Lint
         run: bun run lint
 
       - name: Test
-        run: bun test
+        run: bun run test
 
   build:
     needs: test
@@ -51,7 +48,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 20
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2

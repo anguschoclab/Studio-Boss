@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
-import { formatMoney } from '@/engine/utils';
+import { cn } from '@/lib/utils';
 
 interface Metric {
   label: string;
@@ -16,19 +16,25 @@ interface SummaryCardsProps {
 
 export const SummaryCards = ({ metrics }: SummaryCardsProps) => {
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid grid-cols-4 gap-8">
       {metrics.map((metric, i) => (
         <TooltipWrapper key={metric.label} tooltip={metric.tooltip} side="top">
           <Card 
-            className={`border-border/50 bg-card/60 bg-gradient-to-br ${metric.bg} backdrop-blur-md shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:-translate-y-1 hover:border-primary/30 transition-all duration-300 relative overflow-hidden group cursor-help`} 
+            className={cn(
+              "border-white/5 bg-white/[0.01] backdrop-blur-3xl transition-all duration-700 relative overflow-hidden group cursor-help rounded-none hover:bg-white/[0.03] hover:border-primary/20 hover:shadow-[0_0_30px_rgba(var(--primary),0.05)]",
+              metric.bg
+            )}
             style={{ animationDelay: `${i * 100}ms` }}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
-            <CardContent className="p-5 relative z-10">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-black drop-shadow-sm group-hover:text-foreground/80 transition-colors">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.02] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
+            <CardContent className="p-8 relative z-10 space-y-4">
+              <p className="text-[10px] text-muted-foreground/20 uppercase tracking-[0.3em] font-black italic leading-none group-hover:text-muted-foreground/40 transition-colors">
                 {metric.label}
               </p>
-              <p className={`text-2xl font-display font-black tracking-tighter mt-2 ${metric.color} transition-colors duration-300`}>
+              <p className={cn(
+                "text-3xl font-display font-black tracking-tighter italic leading-none transition-colors duration-700",
+                metric.color
+              )}>
                 {metric.value}
               </p>
             </CardContent>

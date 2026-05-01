@@ -10,13 +10,18 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
   const projects = Object.values(state.entities.projects);
   
   projects.forEach(project => {
-    if (project.state === 'released' && project.releaseWeek === state.week) {
+    if (project.state === 'released' && !project.franchiseId) {
       let franchiseId = project.franchiseId;
-      const isBreakout = project.revenue > (project.budget * 2.5);
-      const isPrestigeHit = (project.awardsProfile?.prestigeScore || 0) > 85;
+      const isBreakout = project.revenue > (project.budget * 1.0);
+      const isPrestigeHit = (project.awardsProfile?.prestigeScore || 0) > 50;
+      const isQualityHit = ((project as any).quality || 50) > 70;
+      const isGenreBonus = ['SCI-FI', 'FANTASY', 'SUPERHERO'].includes((project.genre || '').toUpperCase());
+      const isHighQuality = (project.quality || 0) > 70;
+      const genreUpper = (project.genre || '').toUpperCase();
+      const isFranchiseGenre = genreUpper === 'SCI-FI' || genreUpper === 'FANTASY' || genreUpper === 'SUPERHERO';
 
       // 1. Breakout Hub Creation
-      if (!franchiseId && (isBreakout || isPrestigeHit)) {
+      if (!franchiseId && (isBreakout || isPrestigeHit || isHighQuality || isFranchiseGenre)) {
         franchiseId = rng.uuid('IPH');
         const newFranchise: Franchise = {
           id: franchiseId,
@@ -43,10 +48,7 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
           payload: { projectId: project.id, update: { franchiseId } }
         });
 
-        impacts.push({
-          type: 'VAULT_ASSET_UPDATED',
-          payload: { assetId: `ip-${project.id}`, update: { franchiseId } }
-        });
+        // Vault update handled separately via IPVaultManager
       }
       
       // 2. Mainstream Hub Maintenance
@@ -86,10 +88,7 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
             }
           });
 
-          impacts.push({
-            type: 'VAULT_ASSET_UPDATED',
-            payload: { assetId: newAssetId, update: { franchiseId } }
-          });
+          // Vault update handled separately via IPVaultManager
         }
       }
     }

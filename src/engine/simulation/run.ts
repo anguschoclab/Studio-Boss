@@ -25,7 +25,7 @@ for (let r = 0; r < runs; r++) {
   const result = SimulationRunner.run(weeks, currentSeed, archetype, persona, true);
   
   const report = result.metrics.getSummaryReport();
-  console.log(`Run ${r + 1}: ${report}`);  console.log(`Run ${r + 1}: ${report}`);
+  console.log(`Run ${r + 1}: ${report}`);
 
 
   // Save detailed history

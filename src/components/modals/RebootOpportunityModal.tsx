@@ -57,7 +57,7 @@ export const RebootOpportunityModal: React.FC = () => {
 
   return (
     <Dialog open onOpenChange={handleDecline}>
-      <DialogContent className="max-w-lg bg-background border-border">
+      <DialogContent className="max-w-lg bg-card/90 backdrop-blur-2xl border border-white/10">
         <DialogHeader>
           <div className="flex items-center gap-2 mb-1">
             <Film className="h-5 w-5 text-primary" />
@@ -65,7 +65,7 @@ export const RebootOpportunityModal: React.FC = () => {
               IP Reboot Opportunity
             </span>
           </div>
-          <DialogTitle className="text-xl font-bold">{proposal.title}</DialogTitle>
+          <DialogTitle className="font-display font-black text-xl tracking-tight uppercase">{proposal.title}</DialogTitle>
           <DialogDescription className="text-muted-foreground text-sm leading-relaxed">
             {logline}
           </DialogDescription>
@@ -73,12 +73,12 @@ export const RebootOpportunityModal: React.FC = () => {
 
         <div className="space-y-4 mt-2">
           {/* Source IP info */}
-          <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-3">
+          <div className="rounded-none border border-border bg-muted/30 p-4 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Source IP</span>
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium">{assetTitle}</span>
-                <span className={`text-xs px-2 py-0.5 rounded-full border font-semibold ${TIER_COLORS[assetTier] ?? 'bg-muted text-muted-foreground'}`}>
+                <span className={`text-xs px-2 py-0.5 rounded-none border font-semibold ${TIER_COLORS[assetTier] ?? 'bg-muted text-muted-foreground'}`}>
                   {assetTier.replace('_', ' ')}
                 </span>
               </div>
@@ -91,17 +91,17 @@ export const RebootOpportunityModal: React.FC = () => {
 
           {/* Metrics */}
           <div className="grid grid-cols-3 gap-3">
-            <div className="rounded-lg border border-border bg-muted/20 p-3 text-center">
+            <div className="rounded-none border border-border bg-muted/20 p-3 text-center">
               <Zap className="h-4 w-4 text-yellow-400 mx-auto mb-1" />
               <div className="text-lg font-bold text-foreground">{estimatedBuzz}</div>
               <div className="text-xs text-muted-foreground">Est. Buzz</div>
             </div>
-            <div className="rounded-lg border border-border bg-muted/20 p-3 text-center">
+            <div className="rounded-none border border-border bg-muted/20 p-3 text-center">
               <DollarSign className="h-4 w-4 text-green-400 mx-auto mb-1" />
               <div className="text-lg font-bold text-foreground">{developmentCostMultiplier.toFixed(1)}×</div>
               <div className="text-xs text-muted-foreground">Dev Cost</div>
             </div>
-            <div className="rounded-lg border border-border bg-muted/20 p-3 text-center">
+            <div className="rounded-none border border-border bg-muted/20 p-3 text-center">
               <TrendingUp className="h-4 w-4 text-blue-400 mx-auto mb-1" />
               <div className="text-lg font-bold text-foreground capitalize">{proposal.budgetTier}</div>
               <div className="text-xs text-muted-foreground">Budget Tier</div>

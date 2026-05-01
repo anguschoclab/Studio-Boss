@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
-import { Card, CardContent } from '@/components/ui/card';
-import { Award, Target, TrendingUp } from 'lucide-react';
+import { Award, Target, TrendingUp, ChevronRight, Zap, Trophy, ShieldCheck } from 'lucide-react';
 import { selectReleasedProjects } from '@/store/selectors';
 
 export const StrategyPanel: React.FC = () => {
@@ -9,7 +8,7 @@ export const StrategyPanel: React.FC = () => {
 
   const prestige = gameState?.studio?.prestige ?? 0;
   const prestigeGoal = prestige >= 80 ? 100 : 80;
-  const prestigeLabel = prestige >= 80 ? 'Build Prestige to 100' : 'Build Prestige to 80+';
+  const prestigeLabel = (prestige >= 80 ? 'BUILD_PRESTIGE_TO_100' : 'BUILD_PRESTIGE_TO_80+').toUpperCase();
 
   const currentYear = Math.floor((gameState?.week ?? 0) / 52);
   const releasedThisYear = useMemo(() => {
@@ -19,96 +18,111 @@ export const StrategyPanel: React.FC = () => {
   }, [gameState, currentYear]);
   const releaseGoal = 3;
 
-  const tier = prestige >= 90 ? 'Tier 1 Studio' : prestige >= 70 ? 'Tier 2 Studio' : prestige >= 50 ? 'Tier 3 Studio' : 'Emerging Studio';
-  const tierDesc = prestige >= 90 ? 'Industry leader' : prestige >= 70 ? 'Rising competitor' : prestige >= 50 ? 'Building reputation' : 'Establishing foothold';
+  const tier = (prestige >= 90 ? 'TIER_1_STUDIO' : prestige >= 70 ? 'TIER_2_STUDIO' : prestige >= 50 ? 'TIER_3_STUDIO' : 'EMERGING_STUDIO').toUpperCase();
+  const tierDesc = (prestige >= 90 ? 'INDUSTRY LEADER' : prestige >= 70 ? 'RISING COMPETITOR' : prestige >= 50 ? 'BUILDING REPUTATION' : 'ESTABLISHING FOOTHOLD').toUpperCase();
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar space-y-6 pb-4">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="bg-gradient-to-br from-primary/10 to-transparent border-primary/20">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Target className="h-4 w-4 text-primary" />
-              <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">Current Goal</span>
-            </div>
-            <p className="font-bold text-sm">{prestigeLabel}</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Current: {prestige}/{prestigeGoal}
-            </p>
-            <div className="mt-2 h-1.5 bg-muted/30 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-primary rounded-full transition-all"
-                style={{ width: `${Math.min(100, Math.round((prestige / prestigeGoal) * 100))}%` }}
-              />
-            </div>
-          </CardContent>
-        </Card>
+    <div className="h-full overflow-y-auto custom-scrollbar space-y-10 pb-20 pr-6 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="bg-white/[0.01] border border-white/5 p-8 rounded-none backdrop-blur-3xl shadow-2xl relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+            <Target className="h-16 w-16 text-primary" strokeWidth={1} />
+          </div>
+          <div className="flex items-center gap-4 mb-6">
+            <Target className="h-4 w-4 text-primary" strokeWidth={3} />
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">CURRENT_OBJECTIVE</span>
+          </div>
+          <p className="font-display font-black text-lg tracking-tight italic text-foreground mb-2 leading-none">{prestigeLabel}</p>
+          <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
+            PROGRESS: {prestige} / {prestigeGoal} UNITS
+          </p>
+          <div className="mt-6 h-1 bg-white/5 rounded-none overflow-hidden">
+            <div
+              className="h-full bg-primary transition-all duration-1000"
+              style={{ width: `${Math.min(100, Math.round((prestige / prestigeGoal) * 100))}%` }}
+            />
+          </div>
+        </div>
 
-        <Card className="bg-gradient-to-br from-secondary/10 to-transparent border-secondary/20">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Award className="h-4 w-4 text-secondary" />
-              <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">Next Milestone</span>
-            </div>
-            <p className="font-bold text-sm">Release {releaseGoal} Projects This Year</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Progress: {releasedThisYear}/{releaseGoal} complete
-            </p>
-            <div className="mt-2 h-1.5 bg-muted/30 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-secondary rounded-full transition-all"
-                style={{ width: `${Math.min(100, Math.round((releasedThisYear / releaseGoal) * 100))}%` }}
-              />
-            </div>
-          </CardContent>
-        </Card>
+        <div className="bg-white/[0.01] border border-white/5 p-8 rounded-none backdrop-blur-3xl shadow-2xl relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+            <Award className="h-16 w-16 text-secondary" strokeWidth={1} />
+          </div>
+          <div className="flex items-center gap-4 mb-6">
+            <Award className="h-4 w-4 text-secondary" strokeWidth={3} />
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">OPERATIONAL_MILESTONE</span>
+          </div>
+          <p className="font-display font-black text-lg tracking-tight italic text-foreground mb-2 leading-none uppercase">RELEASE {releaseGoal} SLATES_FY</p>
+          <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
+            COMPLETED: {releasedThisYear} / {releaseGoal} UNITS
+          </p>
+          <div className="mt-6 h-1 bg-white/5 rounded-none overflow-hidden">
+            <div
+              className="h-full bg-secondary transition-all duration-1000"
+              style={{ width: `${Math.min(100, Math.round((releasedThisYear / releaseGoal) * 100))}%` }}
+            />
+          </div>
+        </div>
 
-        <Card className="bg-gradient-to-br from-amber-500/10 to-transparent border-amber-500/20">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <TrendingUp className="h-4 w-4 text-amber-500" />
-              <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">Market Position</span>
-            </div>
-            <p className="font-bold text-sm">{tier}</p>
-            <p className="text-xs text-muted-foreground mt-1">{tierDesc}</p>
-          </CardContent>
-        </Card>
+        <div className="bg-white/[0.01] border border-white/5 p-8 rounded-none backdrop-blur-3xl shadow-2xl relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+            <TrendingUp className="h-16 w-16 text-amber-500" strokeWidth={1} />
+          </div>
+          <div className="flex items-center gap-4 mb-6">
+            <TrendingUp className="h-4 w-4 text-amber-500" strokeWidth={3} />
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">MARKET_POSITION</span>
+          </div>
+          <p className="font-display font-black text-lg tracking-tight italic text-foreground mb-2 leading-none">{tier}</p>
+          <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic leading-none">{tierDesc}</p>
+        </div>
       </div>
 
-      <div className="p-6 bg-card/40 border border-border/40 rounded-xl">
-        <h4 className="text-sm font-black uppercase tracking-wider mb-4">Strategic Recommendations</h4>
-        <div className="space-y-3">
+      <div className="bg-white/[0.02] border border-white/5 p-10 rounded-none backdrop-blur-3xl shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-10 opacity-[0.02]">
+          <ShieldCheck className="h-48 w-48 text-primary" strokeWidth={1} />
+        </div>
+        <h4 className="text-sm font-black uppercase italic tracking-[0.4em] text-primary/60 mb-10 flex items-center gap-4">
+          <Zap className="h-5 w-5" strokeWidth={3} />
+          STRATEGIC_INTELLIGENCE_REPORT
+        </h4>
+        <div className="space-y-6 relative z-10">
           {prestige < 80 && (
-            <div className="flex items-start gap-3 p-3 bg-primary/5 rounded-lg border border-primary/10">
-              <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
-                <span className="text-xs font-bold text-primary">1</span>
+            <div className="flex items-start gap-8 p-8 bg-primary/[0.03] border border-primary/10 rounded-none group hover:bg-primary/[0.05] transition-all duration-700">
+              <div className="w-12 h-12 rounded-none bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0 group-hover:border-primary/40 transition-colors">
+                <Trophy className="h-6 w-6 text-primary" strokeWidth={2} />
               </div>
-              <div>
-                <p className="text-sm font-bold">Focus on Prestige Projects</p>
-                <p className="text-xs text-muted-foreground">Your prestige is at {prestige}. Greenlight 2-3 high-quality dramas to reach 80+.</p>
+              <div className="space-y-2">
+                <p className="text-lg font-display font-black uppercase italic tracking-tight text-foreground leading-none">PRIORITIZE_PRESTIGE_ASSETS</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic leading-relaxed max-w-2xl">
+                  CURRENT PRESTIGE: {prestige}. INITIALIZE 2-3 HIGH-FIDELITY DRAMATIC PROJECTS TO SECURE TIER-2 STATUS.
+                </p>
               </div>
             </div>
           )}
 
           {releasedThisYear < releaseGoal && (
-            <div className="flex items-start gap-3 p-3 bg-secondary/5 rounded-lg border border-secondary/10">
-              <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0">
-                <span className="text-xs font-bold text-secondary">{prestige < 80 ? 2 : 1}</span>
+            <div className="flex items-start gap-8 p-8 bg-secondary/[0.03] border border-secondary/10 rounded-none group hover:bg-secondary/[0.05] transition-all duration-700">
+              <div className="w-12 h-12 rounded-none bg-secondary/10 border border-secondary/20 flex items-center justify-center flex-shrink-0 group-hover:border-secondary/40 transition-colors">
+                <Zap className="h-6 w-6 text-secondary" strokeWidth={2} />
               </div>
-              <div>
-                <p className="text-sm font-bold">Accelerate Releases</p>
-                <p className="text-xs text-muted-foreground">{releaseGoal - releasedThisYear} more release{releaseGoal - releasedThisYear > 1 ? 's' : ''} needed this year. Check the production pipeline.</p>
+              <div className="space-y-2">
+                <p className="text-lg font-display font-black uppercase italic tracking-tight text-foreground leading-none">ACCELERATE_PRODUCTION_CYCLES</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic leading-relaxed max-w-2xl">
+                  {releaseGoal - releasedThisYear} ADDITIONAL UNITS REQUIRED FOR ANNUAL QUOTA. AUDIT PRODUCTION PIPELINE IMMEDIATELY.
+                </p>
               </div>
             </div>
           )}
 
-          <div className="flex items-start gap-3 p-3 bg-secondary/5 rounded-lg border border-secondary/10">
-            <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0">
-              <span className="text-xs font-bold text-secondary">{(prestige < 80 ? 1 : 0) + (releasedThisYear < releaseGoal ? 1 : 0) + 1}</span>
+          <div className="flex items-start gap-8 p-8 bg-white/[0.01] border border-white/5 rounded-none group hover:bg-white/[0.03] transition-all duration-700">
+            <div className="w-12 h-12 rounded-none bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0 group-hover:border-white/20 transition-colors">
+              <ChevronRight className="h-6 w-6 text-muted-foreground" strokeWidth={2} />
             </div>
-            <div>
-              <p className="text-sm font-bold">Secure A-List Talent</p>
-              <p className="text-xs text-muted-foreground">Talent with 80+ prestige boosts project quality. Check the Talent Marketplace.</p>
+            <div className="space-y-2">
+              <p className="text-lg font-display font-black uppercase italic tracking-tight text-foreground leading-none">ACQUIRE_A_LIST_ASSETS</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic leading-relaxed max-w-2xl">
+                TALENT WITH 80+ PRECISION RATING CRITICAL FOR BLOCKBUSTER VELOCITY. MONITOR MARKETPLACE FOR CONTRACT OPPORTUNITIES.
+              </p>
             </div>
           </div>
         </div>

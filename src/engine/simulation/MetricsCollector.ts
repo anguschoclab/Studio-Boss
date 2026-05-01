@@ -35,10 +35,10 @@ export class MetricsCollector {
   
   public record(state: GameState, summary: WeekSummary): void {
     const rivalsList = Object.values(state.entities.rivals || {});
-    const platforms = state.market.buyers.filter(b => b.archetype === 'streamer') as any[];
+    const platforms = state.market.buyers.filter(b => b.archetype === 'streamer') as import('@/engine/types').StreamerPlatform[];
     
     // Total bails tracking (Phase 2 hardening)
-    const currentBailouts = (summary as any).totalBailouts || 0;
+    const currentBailouts = summary.totalBailouts || 0;
     this.totalBailoutCash += currentBailouts;
     
     const rivalTotalCash = rivalsList.reduce((sum, r) => sum + (Number(r.cash) || 0), 0);
@@ -46,20 +46,37 @@ export class MetricsCollector {
     const playerCash = Number(state.finance.cash) || 0;
     
     // Increment total retirements
-    this.totalRetired += (summary as any).retiredCount || 0;
+    this.totalRetired += summary.retiredCount || 0;
 
     // Track total completed & Genre ROI
     let worldCompletedCount = 0;
     
+    // totalSystemCash = player + rivals + platforms + (active budgets estimate)
+    let activeBudgets = 0;
+    let activeProjectsCount = 0;
+
+    // Nielsen & Cut Analytics
+    let totalNielsenDemo = 0;
+    let tvProjectCount = 0;
+    const cutCounts: Record<string, number> = { 'theatrical': 0, 'directors_cut': 0, 'sanitized': 0, 'unrated': 0 };
+
+    const playerProjectsList = Object.values(state.entities.projects).filter(p => p.ownerId === 'PLAYER');
     const allStudios = [
-        { id: 'PLAYER', projects: Object.values(state.entities.projects), cash: Number(state.finance.cash) || 0, name: state.studio.name },
+        { id: 'PLAYER', projects: playerProjectsList, cash: Number(state.finance.cash) || 0, name: state.studio.name },
         ...rivalsList.map(r => ({ id: r.id, projects: Object.values(r.projects || {}), cash: Number(r.cash) || 0, name: r.name }))
     ];
 
+    // Single-pass project loop for performance
     allStudios.forEach(studio => {
         studio.projects.forEach(p => {
             const isFinished = ['released', 'archived', 'post_release'].includes(p.state);
             if (isFinished) worldCompletedCount++;
+
+            // Player active projects tracking
+            if (studio.id === 'PLAYER' && !isFinished) {
+                activeBudgets += p.budget || 0;
+                activeProjectsCount++;
+            }
 
             // ROI Tracking
             if (p.budget > 0 && (p.revenue > 0 || isFinished)) {
@@ -74,6 +91,19 @@ export class MetricsCollector {
                   this.tvGenreStats[genre].cost += p.budget;
                   this.tvGenreStats[genre].revenue += p.revenue;
                 }
+            }
+
+            // Nielsen & Cut Analytics
+            const formatMatch = (p.format || '').toLowerCase();
+            const isSeries = p.type === 'SERIES';
+            const nProfile = isSeries ? (p as import('@/engine/types').SeriesProject).nielsenProfile : undefined;
+
+            if ((formatMatch === 'tv' || isSeries) && nProfile) {
+                totalNielsenDemo += Number(nProfile.seasonAvgKeyDemo) || 0;
+                tvProjectCount++;
+            }
+            if (p.activeCut) {
+                cutCounts[p.activeCut] = (cutCounts[p.activeCut] || 0) + 1;
             }
         });
     });
@@ -111,30 +141,6 @@ export class MetricsCollector {
     const totalAssets = playerCash + rivalTotalCash + platformTotalCash;
     const marketShare = totalAssets > 0 ? (playerCash / totalAssets) * 100 : 0;
 
-    // totalSystemCash = player + rivals + platforms + (active budgets estimate)
-    const activeBudgets = Object.values(state.entities.projects)
-      .filter(p => !['released', 'archived', 'post_release'].includes(p.state))
-      .reduce((sum, p) => sum + (p.budget || 0), 0);
-
-    // Nielsen & Cut Analytics
-    let totalNielsenDemo = 0;
-    let tvProjectCount = 0;
-    const cutCounts: Record<string, number> = { 'theatrical': 0, 'directors_cut': 0, 'sanitized': 0, 'unrated': 0 };
-
-    allStudios.forEach(studio => {
-        studio.projects.forEach(p => {
-            const formatMatch = (p.format || '').toLowerCase();
-            const nProfile = (p as any).nielsenProfile;
-            if ((formatMatch === 'tv' || formatMatch === 'series') && nProfile) {
-                totalNielsenDemo += Number(nProfile.seasonAvgKeyDemo) || 0;
-                tvProjectCount++;
-            }
-            if (p.activeCut) {
-                cutCounts[p.activeCut] = (cutCounts[p.activeCut] || 0) + 1;
-            }
-        });
-    });
-
     // 10. Talent Pool Analysis (Optimized single-pass)
     let totalPrestige = 0;
     let aListCount = 0;
@@ -154,7 +160,7 @@ export class MetricsCollector {
       totalMarketSentiment: state.finance.marketState?.sentiment || 50,
       talentPoolSize: talentPoolSize,
       avgTalentPrestige: totalPrestige / (talentPoolSize || 1),
-      activeProjects: Object.values(state.entities.projects).reduce((acc, p) => acc + (!['released', 'archived', 'post_release'].includes(p.state) ? 1 : 0), 0),
+      activeProjects: activeProjectsCount,
       completedProjects: worldCompletedCount,
       retiredCount: this.totalRetired,
       bankruptcyCount: rivalsList.filter(r => (Number(r.cash) || 0) <= -50000000).length,

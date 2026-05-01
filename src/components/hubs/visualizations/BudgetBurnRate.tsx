@@ -2,21 +2,14 @@ import React from 'react';
 import { TimeSeriesChart } from '@/components/charts/TimeSeriesChart';
 import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
-import { cn } from '@/lib/utils';
+import { cn, formatCompactCurrency } from '@/lib/utils';
 import { AlertTriangle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useGameStore } from '@/store/gameStore';
-import { selectBudgetBurnData } from '@/store/selectors';
-
-interface BurnRateData {
-  week: number;
-  planned: number;
-  actual: number;
-  remaining: number;
-}
+import { selectBudgetBurnReport, type BudgetBurnData } from '@/store/chartSelectors';
 
 interface BudgetBurnRateProps {
-  data?: BurnRateData[];
+  data?: BudgetBurnData[];
   totalBudget?: number;
   projectId?: string;
   className?: string;
@@ -29,22 +22,20 @@ export const BudgetBurnRate: React.FC<BudgetBurnRateProps> = ({
   className,
 }) => {
   const gameState = useGameStore(s => s.gameState);
-  const selectorData = projectId ? selectBudgetBurnData(gameState, projectId) : null;
-  const data = externalData || selectorData || [];
-  const totalBudget = externalBudget || (selectorData && selectorData[0]?.remaining + selectorData.reduce((sum, d) => sum + d.actual, 0)) || 0;
-  const currentBurn = data[data.length - 1]?.actual || 0;
-  const plannedBurn = data[data.length - 1]?.planned || 0;
+  const selectorReport = projectId ? selectBudgetBurnReport(gameState, projectId) : null;
+  
+  const data = externalData || selectorReport?.history || [];
+  const totalBudget = externalBudget || selectorReport?.totalBudget || 0;
+  
+  const currentEntry = data[data.length - 1];
+  const currentBurn = currentEntry?.actual || 0;
+  const plannedBurn = currentEntry?.planned || 0;
   const variance = currentBurn - plannedBurn;
   const isOverBurn = variance > 0;
+  
   const totalSpent = data.reduce((sum, d) => sum + d.actual, 0);
   const remaining = totalBudget - totalSpent;
-  const percentUsed = (totalSpent / totalBudget) * 100;
-
-  const formatCurrency = (value: number) => {
-    if (Math.abs(value) >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
-    if (Math.abs(value) >= 1000) return `$${(value / 1000).toFixed(0)}K`;
-    return `$${value}`;
-  };
+  const percentUsed = totalBudget > 0 ? (totalSpent / totalBudget) * 100 : 0;
 
   const chartData = data.map(d => ({
     date: `W${d.week}`,
@@ -63,7 +54,7 @@ export const BudgetBurnRate: React.FC<BudgetBurnRateProps> = ({
         </div>
         <div className="flex items-center gap-2">
           {isOverBurn && (
-            <Badge className="text-[9px] bg-red-500/20 text-red-500">
+            <Badge className="text-[9px] bg-red-500/20 text-red-500 border-none">
               <AlertTriangle className="h-3 w-3 mr-1" />
               Over burn
             </Badge>
@@ -80,7 +71,7 @@ export const BudgetBurnRate: React.FC<BudgetBurnRateProps> = ({
 
       <div className="grid grid-cols-3 gap-2 mb-4 text-center">
         <div className="p-2 bg-muted/30 rounded">
-          <p className="text-xs font-bold">{formatCurrency(totalSpent)}</p>
+          <p className="text-xs font-bold">{formatCompactCurrency(totalSpent)}</p>
           <p className={cn('text-[9px]', tokens.text.caption)}>Spent</p>
         </div>
         <div className="p-2 bg-muted/30 rounded">
@@ -88,12 +79,12 @@ export const BudgetBurnRate: React.FC<BudgetBurnRateProps> = ({
             'text-xs font-bold',
             isOverBurn ? 'text-red-500' : 'text-emerald-500'
           )}>
-            {formatCurrency(currentBurn)}
+            {formatCompactCurrency(currentBurn)}
           </p>
           <p className={cn('text-[9px]', tokens.text.caption)}>This week</p>
         </div>
         <div className="p-2 bg-muted/30 rounded">
-          <p className="text-xs font-bold">{formatCurrency(remaining)}</p>
+          <p className="text-xs font-bold">{formatCompactCurrency(remaining)}</p>
           <p className={cn('text-[9px]', tokens.text.caption)}>Remaining</p>
         </div>
       </div>
@@ -103,7 +94,7 @@ export const BudgetBurnRate: React.FC<BudgetBurnRateProps> = ({
         height={140}
         lineColor="#ef4444"
         secondaryLineColor="#3b82f6"
-        valueFormatter={formatCurrency}
+        valueFormatter={formatCompactCurrency}
         showGrid={false}
       />
 

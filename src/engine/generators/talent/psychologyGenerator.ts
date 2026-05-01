@@ -1,16 +1,15 @@
 import { TalentPsychology } from '../../types/talent.types';
-import { RandomGenerator } from '../../utils/rng';
+import { rand } from '../../utils';
 
-export function generatePsychology(rng: RandomGenerator, tier: string): TalentPsychology {
-  const isGlobalSuperstar = tier === 'A-List' || tier === 'S-List';
+export function psychologyGenerator(tier: string): TalentPsychology {
+  const isGlobalSuperstar = tier === 'A_LIST';
   const egoBase = isGlobalSuperstar ? 50 : 10;
   
   return {
-    ego: Math.min(100, egoBase + rng.rangeInt(0, 50)),
-    mood: rng.rangeInt(50, 100),
-    scandalRisk: rng.rangeInt(0, 100),
+    ego: Math.min(100, egoBase + Math.floor(rand() * 50)),
+    mood: 50 + Math.floor(rand() * 50),
+    scandalRisk: Math.floor(rand() * 100),
     synergyAffinities: [],
     synergyConflicts: [],
   };
 }
-
