@@ -6,8 +6,7 @@ import {
   Merge, 
   Search, 
   Zap, 
-  Type, 
-  ArrowRight,
+  Type,
   TrendingUp,
   Brain,
   History as LucideHistory
