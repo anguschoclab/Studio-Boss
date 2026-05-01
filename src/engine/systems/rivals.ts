@@ -90,9 +90,15 @@ export function advanceRivals(state: GameState): StateImpact {
   const rivalUpdates: RivalUpdate[] = [];
   const newsEvents: NewsEvent[] = [];
   const uiNotifications: string[] = [];
-  const ALL_RIVALS = Object.values(state.entities.rivals);
+
+  // Create talent array once instead of per-rival
+  const talentPool: TalentProfile[] = [];
+  for (const tid in state.entities.talents || {}) {
+    talentPool.push(state.entities.talents[tid]);
+  }
   
-  for (const rival of ALL_RIVALS) {
+  for (const rid in state.entities.rivals || {}) {
+    const rival = state.entities.rivals[rid];
     const update = updateRival(rival);
     
     rivalUpdates.push({
@@ -120,24 +126,22 @@ export function advanceRivals(state: GameState): StateImpact {
       // Add to narrative events for weekly summary
       uiNotifications.push(`RIVAL: ${archetypeContext} ${rival.name} is vulnerable to takeover due to cash crunch`);
     }
-  }
 
-  // Talent Poaching News
-  for (const rival of ALL_RIVALS) {
-     const poakMsg = rivalPoachTalent(rival, Object.values(state.entities.talents));
-     if (poakMsg) {
-       newsEvents.push({
-         id: generateId('NWS'),
-         week: state.week,
-         type: 'RIVAL',
-         headline: `Talent Poached by ${rival.name}`,
-         description: poakMsg,
-         impact: 'Pool updated'
-       });
+    // Talent Poaching News
+    const poakMsg = rivalPoachTalent(rival, talentPool);
+    if (poakMsg) {
+      newsEvents.push({
+        id: generateId('NWS'),
+        week: state.week,
+        type: 'RIVAL',
+        headline: `Talent Poached by ${rival.name}`,
+        description: poakMsg,
+        impact: 'Pool updated'
+      });
 
-       // Add to narrative events for weekly summary
-       uiNotifications.push(`RIVAL: ${poakMsg}`);
-     }
+      // Add to narrative events for weekly summary
+      uiNotifications.push(`RIVAL: ${poakMsg}`);
+    }
   }
 
   return {
