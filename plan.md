@@ -1,21 +1,12 @@
-1. **Optimize `checkAchievements` in `AchievementsSystem.ts`**
-   - It currently allocates `Object.values(state.entities.projects)`, `Object.values(state.entities.talents)`, and `Object.values(state.entities.rivals)` on every check.
-   - Refactor to use `for...in` to iterate over `state.entities.projects`, `state.entities.talents`, and `state.entities.rivals` avoiding array creation overhead.
-   - For `projects`, we filter `releasedProjects` (state === 'released' || 'post_release' || 'archived').
-   - For `talents`, we check if any `A_LIST` was newcomer.
-   - For `rivals`, we find their cash values to compare against player cash.
+1. **Expand Franchise System (`src/engine/systems/ip/fatigueEngine.ts` and `src/engine/systems/ip/franchiseCoordinator.ts`)**
+   - In `fatigueEngine.ts`: Update `calculateFranchiseFatigue` to take `genre: string` instead of `genreType: 'spectacle' | 'comfort_food'`. Look up the risk from `FRANCHISE_FATIGUE_RISK` imported from `../../data/genres`. Apply an oversaturation multiplier if `genreSaturation > 10`. Update `fatigueEngine.test.ts` to match.
+   - In `franchiseCoordinator.ts`: Import `CROSSOVER_AFFINITY` from `../../data/genres`. Add logic to `calculateFranchiseEquity` to calculate genre crossover synergy.
 
-2. **Optimize `advanceRivals` in `rivals.ts`**
-   - It currently allocates `Object.values(state.entities.rivals)` and then calls `Object.values(state.entities.talents)` inside a second loop over `ALL_RIVALS`.
-   - Refactor to create the talent pool array *once* before looping over rivals.
-   - Instead of allocating `ALL_RIVALS`, just iterate over `state.entities.rivals` with `for...in`.
-   - Merge the two loops (updating rival + checking poach news) into a single `for...in` loop over `state.entities.rivals`.
+2. **Integrate new logics into generation metrics**
+   - In `projectSlice.ts`, update the `calculateFranchiseFatigue` call to pass `project.genre` instead of ternary logic checking for spectacle.
 
-3. **Verify functionality with tests**
-   - Run `pnpm test` to ensure logic remains intact.
+3. **Pre commit checks**
+   - Complete pre commit steps to make sure proper testing, verifications, reviews and reflections are done.
 
-4. **Complete Pre-Commit Steps**
-   - Follow `pre_commit_instructions` before submitting.
-
-5. **Submit PR**
-   - Format PR following Bolt's guidelines (e.g. "⚡ Bolt: Replace Object.values with for...in for State Records").
+4. **Submit changes**
+   - Submit the change with a descriptive commit message.

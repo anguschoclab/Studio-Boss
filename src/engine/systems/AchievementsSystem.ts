@@ -188,13 +188,9 @@ export function checkAchievements(state: GameState): StateImpact[] {
   const week = state.week;
   const currentYear = Math.floor(week / 52);
 
-  const releasedProjects: import('@/engine/types').Project[] = [];
-  for (const pid in state.entities.projects || {}) {
-    const p = state.entities.projects[pid];
-    if (p.state === 'released' || p.state === 'post_release' || p.state === 'archived') {
-      releasedProjects.push(p);
-    }
-  }
+  const allProjects = Object.values(state.entities.projects);
+  const releasedProjects = allProjects.filter((p) => p.state === 'released' || p.state === 'post_release' || p.state === 'archived');
+  const allTalents = Object.values(state.entities.talents);
 
   // Helper: push impacts if newly unlocked
   const check = (
@@ -254,14 +250,9 @@ export function checkAchievements(state: GameState): StateImpact[] {
   // We can't easily reconstruct career history without a snapshot; defer to
   // a flag on the talent object. Check for presence of A_LIST talents — the
   // reducer should set this flag when a newcomer is promoted.
-  let hasStarMaker = false;
-  for (const tid in state.entities.talents || {}) {
-    const t = state.entities.talents[tid];
-    if (t.tier === 'A_LIST' && (t as any).wasNewcomerWhenSigned === true) {
-      hasStarMaker = true;
-      break;
-    }
-  }
+  const hasStarMaker = allTalents.some(
+    (t) => t.tier === 'A_LIST' && (t as any).wasNewcomerWhenSigned === true,
+  );
   check('star_maker', hasStarMaker);
 
   // Big Agency Deal — First Look deal with a powerhouse agency
@@ -282,17 +273,8 @@ export function checkAchievements(state: GameState): StateImpact[] {
 
   // Market Dominator — player cash > all rivals
   const playerCash = cash;
-  let isMarketDominator = false;
-  let hasRivals = false;
-  let playerHasMoreCash = true;
-  for (const rid in state.entities.rivals || {}) {
-    hasRivals = true;
-    if (playerCash <= state.entities.rivals[rid].cash) {
-      playerHasMoreCash = false;
-      break;
-    }
-  }
-  if (hasRivals && playerHasMoreCash) isMarketDominator = true;
+  const allRivalCash = Object.values(state.entities.rivals).map((r) => r.cash);
+  const isMarketDominator = allRivalCash.length > 0 && allRivalCash.every((rc) => playerCash > rc);
   check('market_dominator', isMarketDominator, true);
 
   // Legend — Best Picture win AND $500M film in the same year
