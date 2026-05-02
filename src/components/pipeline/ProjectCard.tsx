@@ -2,7 +2,6 @@ import { Project } from '@/engine/types';
 import { useUIStore } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 import { AlertTriangle, TrendingUp, Activity, Zap, DollarSign, Target } from 'lucide-react';
