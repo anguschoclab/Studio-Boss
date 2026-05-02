@@ -1,9 +1,8 @@
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney } from '@/engine/utils';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
-import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { evaluateGreenlight } from '@/engine/systems/greenlight';
 import { FESTIVALS } from '@/engine/systems/festivals';
 import { AwardBody, Project, Talent, ScriptedProject, SeriesProject } from '@/engine/types';
