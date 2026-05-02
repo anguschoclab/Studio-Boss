@@ -70,7 +70,7 @@ const STRATEGY_CARDS: StrategyCardData[] = [
 
 export const ReleaseStrategyModal: React.FC = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
-  const setReleaseStrategy = useGameStore(s => (s as any).setReleaseStrategy);
+  const setReleaseStrategy = useGameStore(s => s.setReleaseStrategy);
   const gameState = useGameStore(s => s.gameState);
 
   const [selected, setSelected] = useState<ReleaseStrategy | null>(null);

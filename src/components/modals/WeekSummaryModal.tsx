@@ -2,8 +2,6 @@ import { useUIStore } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';
 import { formatMoney } from '@/engine/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { useState } from 'react';
 import { Headline, NarrativeEvent } from '@/engine/types';
 import { NewsStoryModal } from './NewsStoryModal';
