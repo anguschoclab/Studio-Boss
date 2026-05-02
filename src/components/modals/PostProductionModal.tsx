@@ -6,10 +6,11 @@ import { useUIStore } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';
 import { cn } from '@/lib/utils';
 import { Clapperboard, Clock, Zap, Film, ChevronRight } from 'lucide-react';
+import { Project } from '@/engine/types';
 
 // ─── Post-production timeline steps ──────────────────────────────────────────
 
-const TIMELINE_STEPS = [
+export const TIMELINE_STEPS = [
   { week: 1, label: 'Editing & Assembly Cut', icon: '✂️' },
   { week: 2, label: 'Colour Grading & Sound Mix', icon: '🎨' },
   { week: 3, label: 'Ratings Board Submission', icon: '📋' },
@@ -20,7 +21,7 @@ const TIMELINE_STEPS = [
 export const PostProductionModal: React.FC = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
   const updateProject = useGameStore(s => s.updateProject);
-  const addFunds = useGameStore(s => (s as any).addFunds);
+  const addFunds = useGameStore(s => s.addFunds);
   const gameState = useGameStore(s => s.gameState);
 
   const [choice, setChoice] = useState<'none' | 'rush' | 'extended'>('none');
@@ -34,7 +35,7 @@ export const PostProductionModal: React.FC = () => {
 
   const project = gameState?.entities?.projects?.[projectId];
   const weeksRemaining: number =
-    (project as any)?.postProductionWeeksRemaining ?? 3;
+    (project as Project & { postProductionWeeksRemaining?: number })?.postProductionWeeksRemaining ?? 3;
 
   const handleConfirm = () => {
     if (!projectId || !project) {
@@ -47,15 +48,15 @@ export const PostProductionModal: React.FC = () => {
       if (addFunds) addFunds(-2_000_000);
       updateProject(projectId, {
         postProductionWeeksRemaining: 1,
-      } as any);
+      } as Partial<Project> & { postProductionWeeksRemaining?: number });
     } else if (choice === 'extended') {
       // Extended cut: +2 weeks, +5 prestige, +10 buzz
       updateProject(projectId, {
         postProductionWeeksRemaining: weeksRemaining + 2,
         buzz: Math.min(100, (project.buzz ?? 0) + 10),
-      } as any);
+      } as Partial<Project> & { postProductionWeeksRemaining?: number });
       // Prestige is applied via store action if available, otherwise inline
-      const applyPrestige = (gameState as any)?.studio?.prestige !== undefined;
+      const applyPrestige = gameState?.studio?.prestige !== undefined;
       if (applyPrestige) {
         // The parent store will handle prestige on the next tick via the
         // PRESTIGE_CHANGED mechanism; for now we note it via project buzz.
@@ -67,7 +68,7 @@ export const PostProductionModal: React.FC = () => {
 
   // Director's cut sub-section — shown if project has been marked for a cut
   const directorsCutPending =
-    project && (project as any).directorsCutNotified === true &&
+    project && (project as Project & { directorsCutNotified?: boolean }).directorsCutNotified === true &&
     !project.availableCuts?.some((c: any) => c.type === 'directors_cut');
 
   return (
@@ -103,7 +104,7 @@ export const PostProductionModal: React.FC = () => {
               Timeline — {weeksRemaining} week{weeksRemaining !== 1 ? 's' : ''} remaining
             </p>
             <div className="space-y-2">
-              {TIMELINE_STEPS.map((step, idx) => {
+              {TIMELINE_STEPS.map((step) => {
                 const isComplete = step.week > weeksRemaining;
                 const isCurrent = step.week === weeksRemaining;
                 return (
