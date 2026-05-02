@@ -20,8 +20,6 @@ export type ModalType =
 
 let modalIdCounter = 0;
 
-let modalIdCounter = 0;
-
 export interface QueuedModal {
   id: string;
   type: ModalType;
