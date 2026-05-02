@@ -95,7 +95,10 @@ function studioDecides(
 function openMarketBuyer(state: GameState, rng: RandomGenerator, excludeId: string | null): string | null {
   const candidates: string[] = [];
   if (excludeId !== 'PLAYER' && (state.finance.cash || 0) > 100_000_000) candidates.push('PLAYER');
-  for (const r of Object.values(state.entities.rivals || {})) {
+  // ⚡ The Framerate Fanatic: Replaced Object.values() with a direct for...in loop
+  const rivals = state.entities.rivals || {};
+  for (const id in rivals) {
+    const r = rivals[id];
     if (r.id === excludeId) continue;
     if ((r.cash || 0) > 100_000_000) candidates.push(r.id);
   }
@@ -105,8 +108,10 @@ function openMarketBuyer(state: GameState, rng: RandomGenerator, excludeId: stri
 
 export function tickShinglePitchRouter(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const shingles = Object.values(state.entities.shingles || {});
-  for (const s of shingles) {
+  // ⚡ The Framerate Fanatic: Replaced Object.values() with a direct for...in loop
+  const shingles = state.entities.shingles || {};
+  for (const shingleId in shingles) {
+    const s = shingles[shingleId];
     const owner = state.entities.talents[s.ownerTalentId];
     if (!owner) continue;
     const rate = shinglePitchRate(s, owner.prestige || 0);
