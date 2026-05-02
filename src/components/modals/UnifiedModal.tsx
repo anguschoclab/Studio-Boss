@@ -1,8 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { X, LucideIcon } from 'lucide-react';
-import { tokens } from '@/lib/tokens';
-import { Button } from '@/components/ui/button';
 import { m, AnimatePresence } from 'framer-motion';
 
 export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';

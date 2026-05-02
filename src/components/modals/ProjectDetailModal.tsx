@@ -5,7 +5,7 @@ import { formatMoney } from '@/engine/utils';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { evaluateGreenlight } from '@/engine/systems/greenlight';
 import { FESTIVALS } from '@/engine/systems/festivals';
-import { AwardBody, Project, Talent, ScriptedProject, SeriesProject } from '@/engine/types';
+import { AwardBody, Talent, ScriptedProject, SeriesProject } from '@/engine/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
@@ -23,7 +23,6 @@ import {
   AlertCircle,
   Megaphone,
   ShieldAlert,
-  Search,
   CheckCircle2,
   Brain,
   Type,
@@ -42,15 +41,6 @@ import {
 import { cn } from '@/lib/utils';
 import { DevelopmentLog } from './DevelopmentLog';
 import { CastingFeedback } from '../talent/CastingFeedback';
-
-const MARKETING_ANGLES = [
-  { id: 'romance', label: 'Romance & Heart' },
-  { id: 'spectacle', label: 'Visual Spectacle' },
-  { id: 'thrills', label: 'Action & Thrills' },
-  { id: 'humor', label: 'Comedy & Fun' },
-  { id: 'prestige', label: 'Prestige & Awards' },
-  { id: 'mystery', label: 'Mystery & Intrigue' }
-];
 
 export const ProjectDetailModal = () => {
   const [selectedTier, setSelectedTier] = useState<'none' | 'basic' | 'blockbuster'>('none');
@@ -486,7 +476,7 @@ export const ProjectDetailModal = () => {
                        <button
                          key={tier.id}
                          disabled={!!project.marketingLevel || (gameState ? gameState.finance.cash < tier.cost : false)}
-                         onClick={() => setSelectedTier(tier.id as any)}
+                         onClick={() => setSelectedTier(tier.id as 'none' | 'basic' | 'blockbuster')}
                          className={cn(
                            "p-6 rounded-none border text-left transition-all relative overflow-hidden flex flex-col justify-between group h-52",
                            project.marketingLevel === tier.id || selectedTier === tier.id 
