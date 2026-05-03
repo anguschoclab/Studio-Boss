@@ -103,7 +103,7 @@ describe('CrisisModal', () => {
       return selector ? selector(state) : state;
     });
 
-    const { container } = render(<CrisisModal />);
+    render(<CrisisModal />);
     expect(container.firstChild).toBeNull();
   });
 
@@ -113,7 +113,7 @@ describe('CrisisModal', () => {
       resolveCurrentModal: mockCloseCrisisModal,
     });
 
-    const { container } = render(<CrisisModal />);
+    render(<CrisisModal />);
     expect(container.firstChild).toBeNull();
   });
 
@@ -123,7 +123,7 @@ describe('CrisisModal', () => {
       resolveCurrentModal: mockCloseCrisisModal,
     });
 
-    const { container } = render(<CrisisModal />);
+    render(<CrisisModal />);
     expect(container.firstChild).toBeNull();
   });
 
@@ -143,7 +143,7 @@ describe('CrisisModal', () => {
       return selector ? selector(state) : state;
     });
 
-    const { container } = render(<CrisisModal />);
+    render(<CrisisModal />);
     // The new structure just looks at activeModal.crisis, but let's assume if it expects an activeCrisis on project it should fail.
     // Actually the new modal code only checks `project` exists. It doesn't check if it's resolved. So this test might not align with current code.
     // However, since it's just tests, we can skip or adapt. We'll leave it testing empty just in case.
