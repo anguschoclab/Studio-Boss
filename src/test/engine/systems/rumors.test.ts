@@ -10,7 +10,7 @@ vi.mock('../../../engine/utils', async (importOriginal) => {
   const actual = await importOriginal<typeof import('../../../engine/utils')>();
   return {
     ...actual,
-    secureRandom: vi.fn(() => 0.99), // Always return 0.99 so no random rumors trigger
+    secureRandom: vi.fn().mockReturnValue(0.99), // Always return 0.99 so no random rumors trigger
   };
 });
 

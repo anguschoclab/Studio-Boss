@@ -1,22 +1,16 @@
 import * as React from "react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
+import { Wrapper } from "@/components/ui/tooltip-wrapper";
 import { FinancialCausalityEntry } from "@/engine/types/state.types";
 import { formatMoney } from "@/engine/utils";
 
-interface CausalityTooltipProps {
+interface CausalityProps {
   children: React.ReactNode;
   value: number;
   causality?: FinancialCausalityEntry[];
   label: string;
 }
 
-export const CausalityTooltip: React.FC<CausalityTooltipProps> = ({
+export const CausalityTooltip: React.FC<CausalityProps> = ({
   children,
   value,
   causality,
@@ -30,7 +24,7 @@ export const CausalityTooltip: React.FC<CausalityTooltipProps> = ({
   }
 
   return (
-    <TooltipWrapper
+    <Wrapper
       tooltip={
         <div className="space-y-3 max-w-xs">
           <p className="text-primary font-bold text-[10px] uppercase tracking-widest">
@@ -58,6 +52,6 @@ export const CausalityTooltip: React.FC<CausalityTooltipProps> = ({
       <div className="cursor-help">
         {children}
       </div>
-    </TooltipWrapper>
+    </Wrapper>
   );
 };
