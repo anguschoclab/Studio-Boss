@@ -1,8 +1,4 @@
 import * as React from "react";
-import {
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { FinancialCausalityEntry } from "@/engine/types/state.types";
 import { formatMoney } from "@/engine/utils";
