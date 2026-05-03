@@ -85,7 +85,7 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
               // Sanitize the color value to prevent CSS breakout.
               // We permit standard CSS color characters: #, (), %, commas, and decimals.
               // We use a strict allowlist regex to prevent CSS injection.
-              const safeColor = color.replace(/[^a-zA-Z0-9#(),.% \-/]/g, "");
+              const safeColor = color.replace(/[^a-zA-Z0-9#(),.% _\-\/]/g, "");
 
               return `  --color-${safeKey}: ${safeColor};`;
             })
