@@ -25,6 +25,7 @@ const updateServiceWorker = () => {};
 
 // Try to load PWA module if available (for web version)
 try {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   // @ts-expect-error - Virtual module provided by vite-plugin-pwa (may not exist)
   require('virtual:pwa-register/react');
 } catch {

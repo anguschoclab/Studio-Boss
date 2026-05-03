@@ -4,7 +4,7 @@ import { useGameStore } from '@/store/gameStore';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { Button } from '@/components/ui/button';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
-import { AlertTriangle, TrendingUp, Activity, Zap, DollarSign, Target } from 'lucide-react';
+import { AlertTriangle, Activity, Zap, DollarSign, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatMoney } from '@/engine/utils';
 import { DistributionBadge } from '../shared/DistributionBadge';
@@ -31,8 +31,8 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
     ? Math.floor(project.budget * 0.03)
     : 0;
 
-  const displayFormat = project.type === 'SERIES'
-      ? `S${(project as any).tvDetails?.currentSeason || 1}`
+  const displayFormat = project.type === 'SERIES' && 'tvDetails' in project
+      ? `S${project.tvDetails?.currentSeason || 1}`
       : project.format.toUpperCase();
 
   const hasUnresolvedCrisis = project.activeCrisis && !project.activeCrisis.resolved;
