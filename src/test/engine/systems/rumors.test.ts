@@ -1,7 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { advanceRumors } from '../../../engine/systems/rumors';
 import { Rumor, Talent } from '../../../engine/types';
-import { RandomGenerator } from '../../../engine/utils/rng';
 import { createMockGameState } from '../../utils/mockFactories';
 
 import { secureRandom } from '../../../engine/utils';
@@ -15,6 +14,10 @@ vi.mock('../../../engine/utils', async (importOriginal) => {
 });
 
 describe('advanceRumors', () => {
+  beforeEach(() => {
+    vi.mocked(secureRandom).mockReturnValue(0.99); // Reset to default behavior before each test
+  });
+
   it('handles missing rumors array gracefully', () => {
     const stateWithoutRumors = createMockGameState({
       week: 10,
