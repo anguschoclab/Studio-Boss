@@ -4,21 +4,24 @@ import { RandomGenerator } from '../utils/rng';
 export const SchedulingEngine = {
   tick(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
-    const projects = Object.values(state.entities.projects);
-    const contractsList = Object.values(state.entities.contracts || {});
     const talentPool = state.entities.talents;
+    const contracts = state.entities.contracts || {};
 
     // ⚡ Bolt: Pre-group contracts by projectId to avoid O(N) filter in O(M) loop (O(N*M) total)
+    // ⚡ Bolt: Replaced Object.values with for...in loop to avoid intermediate array allocations
     const contractsByProject: Record<string, Contract[]> = {};
-    for (const contract of contractsList) {
+    for (const id in contracts) {
+      const contract = contracts[id];
       if (!contractsByProject[contract.projectId]) {
         contractsByProject[contract.projectId] = [];
       }
       contractsByProject[contract.projectId].push(contract);
     }
 
-    projects.forEach(project => {
-      if (project.state !== 'production') return;
+    // ⚡ Bolt: Replaced Object.values().forEach() with a direct for...in loop
+    for (const projectId in state.entities.projects) {
+      const project = state.entities.projects[projectId];
+      if (project.state !== 'production') continue;
 
       const projectContracts = contractsByProject[project.id] || [];
       const { hasConflict, conflicts } = this.evaluateSchedulingConflicts(project, projectContracts, talentPool, state.week);
@@ -44,7 +47,7 @@ export const SchedulingEngine = {
           }
         });
       }
-    });
+    }
 
     return impacts;
   },
