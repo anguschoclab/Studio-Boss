@@ -48,7 +48,7 @@ export const PipelineBoard = () => {
               placeholder="SEARCH PROPERTY..." 
             />
           </div>
-          <Button variant="ghost" size="icon" className="h-12 w-12 rounded-none bg-white/5 border border-white/5 text-muted-foreground/40 hover:text-primary hover:border-primary/40 transition-all duration-700">
+          <Button variant="ghost" size="icon" aria-label="Filter" className="h-12 w-12 rounded-none bg-white/5 border border-white/5 text-muted-foreground/40 hover:text-primary hover:border-primary/40 transition-all duration-700">
             <ListFilter className="h-5 w-5" />
           </Button>
           <Button 
