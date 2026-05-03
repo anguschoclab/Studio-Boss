@@ -2,13 +2,11 @@ import { useUIStore } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';
 import { formatMoney } from '@/engine/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { useState } from 'react';
 import { Headline, NarrativeEvent } from '@/engine/types';
 import { NewsStoryModal } from './NewsStoryModal';
 import { cn } from '@/lib/utils';
-import { ArrowRight, TrendingUp, DollarSign, Activity, Newspaper, AlertTriangle, Trophy, MessageSquare } from 'lucide-react';
+import { ArrowRight, DollarSign, Activity, Newspaper, AlertTriangle, Trophy, MessageSquare } from 'lucide-react';
 
 export const WeekSummaryModal = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();

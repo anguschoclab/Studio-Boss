@@ -17,10 +17,8 @@ import {
   Activity,
   Zap,
   Flame,
-  ChevronRight,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { tokens } from '@/lib/tokens';
 import { transitions } from '@/lib/animations';
 import { useUIStore } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';

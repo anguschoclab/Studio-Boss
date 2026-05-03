@@ -220,7 +220,15 @@ function proposeDealType(
 }
 
 function countDealsByStudio(state: GameState, studioId: string): number {
-  return Object.values(state.entities.shingles || {}).filter(s => s.baseStudioId === studioId).length;
+  // ⚡ The Framerate Fanatic: Replaced Object.values().filter() with a direct for...in loop
+  let count = 0;
+  const shingles = state.entities.shingles || {};
+  for (const id in shingles) {
+    if (shingles[id].baseStudioId === studioId) {
+      count++;
+    }
+  }
+  return count;
 }
 
 function createShingle(
@@ -236,11 +244,14 @@ function createShingle(
   type Offer = { id: string; dealType: ShingleDealType; overhead: number; score: number };
   const offers: Offer[] = [];
   // TV deals gravitate toward majors with streamers; for TV we skip indies entirely.
-  const streamerOwners = new Set<string>(
-    Object.values(state.entities.rivals || {})
-      .filter(r => (r.ownedPlatforms || []).length > 0)
-      .map(r => r.id)
-  );
+  const streamerOwners = new Set<string>();
+  // ⚡ The Framerate Fanatic: Replaced Object.values().filter().map() with a direct for...in loop
+  const rivals = state.entities.rivals || {};
+  for (const id in rivals) {
+    if ((rivals[id].ownedPlatforms || []).length > 0) {
+      streamerOwners.add(rivals[id].id);
+    }
+  }
   // Player owns a streamer at launch for major/mid-tier archetypes — treat as streamer owner too.
   if ((state.studio?.ownedPlatforms || []).length > 0) streamerOwners.add('PLAYER');
 
@@ -248,9 +259,16 @@ function createShingle(
   // within the last 2 years, it should score a +20M-equivalent shingle bonus (studios
   // lock up talent they already work with).
   const twoYearWeek = Math.max(0, state.week - 104);
-  const playerHasRecentContractWithOwner = Object.values(state.entities.contracts || {}).some(
-    (c: any) => c.talentId === owner.id && (c.ownerId === 'PLAYER' || !c.ownerId) && ((c.signedWeek || 0) >= twoYearWeek || (c.weeksRemaining || 0) > 0)
-  );
+  // ⚡ The Framerate Fanatic: Replaced Object.values().some() with a direct for...in loop
+  let playerHasRecentContractWithOwner = false;
+  const contracts = state.entities.contracts || {};
+  for (const id in contracts) {
+    const c: any = contracts[id];
+    if (c.talentId === owner.id && (c.ownerId === 'PLAYER' || !c.ownerId) && ((c.signedWeek || 0) >= twoYearWeek || (c.weeksRemaining || 0) > 0)) {
+      playerHasRecentContractWithOwner = true;
+      break;
+    }
+  }
 
   for (const b of bidders) {
     if (medium === 'TV' && b.archetype === 'indie') continue;
