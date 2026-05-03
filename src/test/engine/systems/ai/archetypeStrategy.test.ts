@@ -15,7 +15,6 @@ import {
   createMockProject, 
   createMockRival, 
   createMockGameState,
-  createMockMarketState
 } from '../../../utils/mockFactories';
 import { AI_ARCHETYPES } from '../../../../engine/data/aiArchetypes';
 
