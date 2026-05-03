@@ -2,7 +2,7 @@ import React from 'react';
 import { LucideIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { Badge } from '@/components/ui/badge';
+
 import { cardHover } from '@/lib/animations';
 
 type CardVariant = 'default' | 'interactive' | 'active' | 'glass' | 'subtle';
@@ -88,7 +88,7 @@ export const ContentCard: React.FC<ContentCardProps> = ({
   icon: Icon,
   iconColor = 'primary',
   badge,
-  badgeVariant = 'secondary',
+
   onClick,
   className,
   header,
@@ -246,4 +246,3 @@ export const StatRow: React.FC<{
 };
 
 export default ContentCard;
-Card;

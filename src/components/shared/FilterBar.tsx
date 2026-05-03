@@ -1,7 +1,7 @@
 import React from 'react';
 import { Search, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { tokens } from '@/lib/tokens';
+
 import { Button } from '@/components/ui/button';
 import { Stack, HorizontalStack } from '@/components/layout/Stack';
 

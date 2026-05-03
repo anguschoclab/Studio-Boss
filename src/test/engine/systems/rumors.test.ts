@@ -1,20 +1,15 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { advanceRumors } from '../../../engine/systems/rumors';
 import { Rumor, Talent } from '../../../engine/types';
-import { RandomGenerator } from '../../../engine/utils/rng';
 import { createMockGameState } from '../../utils/mockFactories';
 
-import { secureRandom } from '../../../engine/utils';
-
-vi.mock('../../../engine/utils', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../../../engine/utils')>();
-  return {
-    ...actual,
-    secureRandom: vi.fn(() => 0.99), // Always return 0.99 so no random rumors trigger
-  };
-});
+import * as utils from '../../../engine/utils';
 
 describe('advanceRumors', () => {
+  beforeEach(() => {
+    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.99); // No random rumors
+  });
+
   it('handles missing rumors array gracefully', () => {
     const stateWithoutRumors = createMockGameState({
       week: 10,
@@ -91,8 +86,7 @@ describe('advanceRumors', () => {
       }
     });
 
-    // Temporarily mock secureRandom to trigger rumor logic
-    vi.mocked(secureRandom).mockReturnValueOnce(0.01).mockReturnValueOnce(0.9);
+    vi.spyOn(utils, 'secureRandom').mockReturnValueOnce(0.01).mockReturnValueOnce(0.9);
     
     const impact = advanceRumors(stateWithTalent);
 
