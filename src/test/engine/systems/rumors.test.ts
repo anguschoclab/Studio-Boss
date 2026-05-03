@@ -26,6 +26,7 @@ describe('advanceRumors', () => {
   });
 
   it('resolves truthful rumors and generates CONFIRMED headlines', () => {
+    vi.mocked(secureRandom).mockReturnValue(0.99);
     const rumor: Rumor = {
       id: 'r1',
       text: 'Test truthful rumor',
@@ -47,6 +48,7 @@ describe('advanceRumors', () => {
   });
 
   it('resolves false rumors and generates DEBUNKED headlines', () => {
+    vi.mocked(secureRandom).mockReturnValue(0.99);
     const rumor: Rumor = {
       id: 'r1',
       text: 'Test false rumor',
