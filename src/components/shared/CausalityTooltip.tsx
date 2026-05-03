@@ -1,10 +1,4 @@
 import * as React from "react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { FinancialCausalityEntry } from "@/engine/types/state.types";
 import { formatMoney } from "@/engine/utils";
@@ -42,11 +36,13 @@ export const CausalityTooltip: React.FC<CausalityTooltipProps> = ({
             </p>
             {causality.map((c, i) => (
               <div key={i} className="flex items-start gap-2 text-[10px]">
-                <span className={c.magnitude >= 0 ? 'text-emerald-400' : 'text-rose-400'}>
-                  {c.magnitude >= 0 ? '▲' : '▼'}
+                <span className={c.magnitude >= 0 ? "text-emerald-400" : "text-rose-400"}>
+                  {c.magnitude >= 0 ? "▲" : "▼"}
                 </span>
                 <div>
-                  <p className="font-semibold">{c.factor}: {c.effect}</p>
+                  <p className="font-semibold">
+                    {c.factor}: {c.effect}
+                  </p>
                   <p className="text-muted-foreground/60 italic">{c.description}</p>
                 </div>
               </div>
@@ -55,9 +51,7 @@ export const CausalityTooltip: React.FC<CausalityTooltipProps> = ({
         </div>
       }
     >
-      <div className="cursor-help">
-        {children}
-      </div>
+      <div className="cursor-help">{children}</div>
     </TooltipWrapper>
   );
 };

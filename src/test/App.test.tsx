@@ -9,6 +9,8 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
   disconnect: vi.fn(),
 }));
 
+Object.defineProperty(window, 'scrollTo', { value: vi.fn(), writable: true });
+
 describe("App", () => {
   it("renders the main application without crashing", async () => {
     render(<App />);
