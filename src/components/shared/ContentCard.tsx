@@ -2,7 +2,6 @@ import React from 'react';
 import { LucideIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { Badge } from '@/components/ui/badge';
 import { cardHover } from '@/lib/animations';
 
 type CardVariant = 'default' | 'interactive' | 'active' | 'glass' | 'subtle';
