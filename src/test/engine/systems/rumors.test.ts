@@ -1,7 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { advanceRumors } from '../../../engine/systems/rumors';
 import { Rumor, Talent } from '../../../engine/types';
-import { RandomGenerator } from '../../../engine/utils/rng';
 import { createMockGameState } from '../../utils/mockFactories';
 
 import { secureRandom } from '../../../engine/utils';
