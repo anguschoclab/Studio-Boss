@@ -25,6 +25,8 @@ Object.defineProperty(window, "matchMedia", {
   }),
 });
 
+Object.defineProperty(window, 'scrollTo', { value: () => {}, writable: true });
+
 Object.defineProperty(window, "Worker", {
   writable: true,
   value: class {
