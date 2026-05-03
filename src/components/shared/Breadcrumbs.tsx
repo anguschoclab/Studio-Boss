@@ -1,7 +1,7 @@
 import React from 'react';
 import { ChevronRight, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { tokens } from '@/lib/tokens';
+
 
 interface BreadcrumbItem {
   label: string;
