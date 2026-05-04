@@ -77,7 +77,7 @@ export const StatsTab = ({ talent, statData }: StatsTabProps) => {
             <div className="w-full bg-slate-900 h-2 rounded-full overflow-hidden mb-4">
               <div
                 className="h-full bg-gradient-to-r from-primary to-emerald-400"
-                style={{ width: `${talent.momentum}%` }}
+                style={{ width: `${talent.momentum || 0}%` }}
               />
             </div>
           </div>
