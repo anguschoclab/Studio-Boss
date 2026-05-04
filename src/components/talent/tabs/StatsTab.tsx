@@ -67,7 +67,7 @@ export const StatsTab = ({ talent, statData }: StatsTabProps) => {
                 <div
                   className="absolute inset-0 rounded-full border-4 border-primary"
                   style={{
-                    clipPath: `polygon(0 0, 100% 0, 100% ${talent.momentum}%, 0 ${talent.momentum}%)`,
+                    clipPath: `polygon(0 ${100 - (talent.momentum || 0)}%, 100% ${100 - (talent.momentum || 0)}%, 100% 100%, 0 100%)`,
                     opacity: 0.8,
                   }}
                 />
