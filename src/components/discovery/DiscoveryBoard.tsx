@@ -37,7 +37,7 @@ const DiscoveryHeader = ({ openCreateProject }: { openCreateProject: () => void 
       <div className="relative w-64 hidden xl:block">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/20" />
         <TooltipWrapper tooltip="FILTER LISTINGS BY PROPERTY NAME, WRITER, OR GENRE" side="bottom">
-          <Input aria-label="SEARCH LISTINGS" className="h-12 pl-12 text-[10px] bg-black/40 border-white/5 uppercase font-black tracking-[0.2em] rounded-none focus:ring-secondary/20 italic placeholder:text-muted-foreground/10" placeholder="SEARCH LISTINGS..." />
+          <Input disabled aria-label="SEARCH LISTINGS" className="h-12 pl-12 text-[10px] bg-black/40 border-white/5 uppercase font-black tracking-[0.2em] rounded-none focus:ring-secondary/20 italic placeholder:text-muted-foreground/10" placeholder="SEARCH LISTINGS (COMING SOON)..." />
         </TooltipWrapper>
       </div>
       <Button
