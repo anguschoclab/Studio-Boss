@@ -1,10 +1,9 @@
 import React from 'react';
 import { TimeSeriesChart } from '@/components/charts/TimeSeriesChart';
-import { Card } from '@/components/ui/card';
-import { tokens } from '@/lib/tokens';
+import { } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { TrendingUp, TrendingDown, Flame, Snowflake, Activity } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { } from '@/components/ui/badge';
 import { useGameStore } from '@/store/gameStore';
 import { selectMarketTrends } from '@/store/selectors';
 

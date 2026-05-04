@@ -9,7 +9,6 @@ describe('Historical Snapshots System', () => {
   });
 
   it('should capture a complete snapshot exactly on week 52', () => {
-     const store = useGameStore.getState();
      
      // Advance 51 weeks (getting to week 52)
      for (let i = 1; i < 52; i++) {

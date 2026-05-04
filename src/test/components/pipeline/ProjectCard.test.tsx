@@ -2,7 +2,6 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ProjectCard } from '@/components/pipeline/ProjectCard';
 import { useUIStore } from '@/store/uiStore';
-import { useGameStore } from '@/store/gameStore';
 import { Project } from '@/engine/types';
 
 vi.mock('@/store/gameStore', () => ({

@@ -2,11 +2,11 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { UnifiedModal } from '@/components/modals/UnifiedModal';
-import { Settings, X } from 'lucide-react';
+import { Settings } from 'lucide-react';
 
 describe('UnifiedModal', () => {
   it('renders nothing when closed', () => {
-    const { container } = render(
+    render(
       <UnifiedModal isOpen={false} onClose={() => {}} title="Test">
         <div>Content</div>
       </UnifiedModal>
@@ -124,7 +124,7 @@ describe('UnifiedModal', () => {
   });
 
   it('applies size variants', () => {
-    const { container } = render(
+    render(
       <UnifiedModal isOpen={true} onClose={() => {}} title="Test" size="lg">
         <div>Content</div>
       </UnifiedModal>

@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Headline, NarrativeEvent } from '@/engine/types';
 import { NewsStoryModal } from './NewsStoryModal';
 import { cn } from '@/lib/utils';
-import { ArrowRight, DollarSign, Activity, Newspaper, AlertTriangle, Trophy, MessageSquare } from 'lucide-react';
+import { ArrowRight, DollarSign,Newspaper, AlertTriangle, Trophy, MessageSquare } from 'lucide-react';
 
 export const WeekSummaryModal = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
@@ -16,7 +16,7 @@ export const WeekSummaryModal = () => {
   if (!activeModal || activeModal.type !== 'SUMMARY') return null;
 
   const weekSummary = activeModal.payload;
-  const { toWeek, cashBefore, cashAfter, totalRevenue, totalCosts, projectUpdates, newHeadlines, events, narrativeEvents, isQuietWeek } = weekSummary;
+  const { toWeek, cashBefore, cashAfter, totalRevenue, totalCosts, projectUpdates, newHeadlines,narrativeEvents, isQuietWeek } = weekSummary;
   const netDelta = cashAfter - cashBefore;
 
   // Categorize narrative events

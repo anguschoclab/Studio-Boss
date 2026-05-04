@@ -115,7 +115,7 @@ describe('RivalsPanel', () => {
       }
     } as any);
 
-    const { container } = render(<RivalsPanel />);
+    render(<RivalsPanel />);
 
     // Check that 3 rivals are rendered by checking for their names
     expect(screen.getByText('Strong Rival')).toBeInTheDocument();
