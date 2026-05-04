@@ -125,6 +125,7 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({
               return (
                 <motion.button
                   key={action.id}
+                  type="button"
                   initial={{ opacity: 0, x: 40 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05, duration: 0.5 }}
@@ -135,7 +136,7 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({
                   className={cn(
                     'flex items-center gap-6 px-8 py-4 rounded-none',
                     'bg-black/90 backdrop-blur-3xl border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)]',
-                    'hover:border-primary/40 hover:bg-black group relative overflow-hidden',
+                    'hover:border-primary/40 hover:bg-black group relative overflow-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none',
                     tokens.transition.normal
                   )}
                 >
@@ -169,12 +170,14 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({
 
       {/* Toggle button */}
       <motion.button
+        type="button"
+        aria-expanded={isExpanded}
         onClick={() => setIsExpanded(!isExpanded)}
         className={cn(
           'flex items-center gap-4 px-10 py-5 rounded-none',
           'bg-primary text-black shadow-[0_0_50px_rgba(var(--primary),0.3)]',
           'hover:shadow-[0_0_80px_rgba(var(--primary),0.5)] transition-all duration-700',
-          'active:scale-95 group relative overflow-hidden'
+          'active:scale-95 group relative overflow-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-black focus-visible:outline-none focus-visible:transition-none'
         )}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
