@@ -3,7 +3,6 @@ import { useGameStore } from '@/store/gameStore';
 import { Talent, TalentRole } from '@/engine/types';
 import { TalentModal } from './TalentProfileModal';
 import { TalentCard } from './TalentCard';
-import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -14,8 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Search, Filter, Users, Star, Database, Target, ShieldCheck } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Search, Users, Star, Database } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { EmptyState } from '@/components/shared/EmptyState';
 

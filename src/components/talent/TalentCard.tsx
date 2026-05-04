@@ -1,5 +1,5 @@
 import React from 'react';
-import { Package, ShieldCheck, Target } from 'lucide-react';
+import { Package } from 'lucide-react';
 import { Talent } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
 import { AGENCY_ARCHETYPES } from '@/engine/data/archetypes';
@@ -22,7 +22,6 @@ interface TalentCardProps {
 export const TalentCard: React.FC<TalentCardProps> = ({ 
   talent, 
   className, 
-  showStarMeter,
   onClick,
   tooltip 
 }) => {
@@ -40,7 +39,6 @@ export const TalentCard: React.FC<TalentCardProps> = ({
   const starPower = talent.starMeter || 50;
 
   const visualAge = getTalentVisualAge(talent, currentWeek);
-  const countryFlag = getCountryFlag(talent.demographics.country);
   const genderSymbol = talent.demographics.gender === 'MALE' ? '♂' : talent.demographics.gender === 'FEMALE' ? '♀' : '⚧';
 
   const handleClick = (e: React.MouseEvent) => {
