@@ -20,13 +20,14 @@ export const TalentModal = () => {
   const gameState = useGameStore((s) => s.gameState);
   const currentWeek = gameState?.week ?? 1;
 
+  const talent = useMemo(
+    () => (selectedTalentId ? gameState?.industry.talentPool?.[selectedTalentId] : null),
+    [gameState?.industry.talentPool, selectedTalentId]
+  );
+
   const talentPool = useMemo(
     () => Object.values(gameState?.industry.talentPool || {}),
     [gameState?.industry.talentPool]
-  );
-  const talent = useMemo(
-    () => talentPool.find((t) => t.id === selectedTalentId),
-    [talentPool, selectedTalentId]
   );
 
   const agencies = useMemo(
