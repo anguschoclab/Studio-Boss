@@ -16,7 +16,7 @@ import { cn } from '@/lib/utils';
 import { RivalStudio } from '@/engine/types/studio.types';
 
 const strengthColor = (s: number) => {
-  if (s >= 70) return 'bg-destructive shadow-[0_0_15px_rgba(var(--destructive),0.4)]';
+  if (s >= 70) return 'bg-destructive shadow-[0_0_15px_hsl(var(--destructive)/0.4)]';
   if (s >= 45) return 'bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]';
   return 'bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.4)]';
 };
