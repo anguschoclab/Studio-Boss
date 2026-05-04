@@ -7,9 +7,7 @@ import {
   TrendingUp, 
   AlertCircle, 
   CheckCircle2, 
-  Clock,
   ShieldAlert,
-  ChevronRight,
   History as LucideHistory,
   X
 } from 'lucide-react';

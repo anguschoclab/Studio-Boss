@@ -1,7 +1,5 @@
 import React from 'react';
-import { Badge } from '@/components/ui/badge';
-import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
-import { Star, TrendingUp, TrendingDown, Package, ShieldCheck, Target } from 'lucide-react';
+import { Package, ShieldCheck, Target } from 'lucide-react';
 import { Talent } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
 import { AGENCY_ARCHETYPES } from '@/engine/data/archetypes';

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { resolveCrisis, checkAndTriggerCrisis } from "../../../engine/systems/crises";
 import { Project, GameState } from "../../../engine/types";
 import * as utils from "../../../engine/utils";
@@ -64,7 +64,7 @@ describe("crises system", () => {
   describe("checkAndTriggerCrisis", () => {
     it("should return null if project is not in production", () => {
       const devProject = { ...mockProject, state: "marketing" as const } as unknown as Project;
-      const impact = checkAndTriggerCrisis(devProject);
+      checkAndTriggerCrisis(devProject);
       // It currently always returns something or null depending on rand(), which uses Math.random
       // We don't check state in checkAndTriggerCrisis actually.
       // But we can test the probability.
