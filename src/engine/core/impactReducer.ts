@@ -1,6 +1,8 @@
 import { GameState, StateImpact, NewsEvent, Project, RivalStudio, Talent, Buyer } from '@/engine/types';
 import { generateId } from '../utils';
 
+const RESTRICTED_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+
 /**
  * Pure function to apply a single StateImpact to the GameState.
  */
@@ -103,13 +105,13 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
             let cur: any = newState;
             for (let i = 0; i < parts.length - 1; i++) {
               const p = parts[i];
-              if (p === '__proto__' || p === 'constructor' || p === 'prototype') { cur = null; break; }
+              if (RESTRICTED_KEYS.has(p)) { cur = null; break; }
               cur[p] = Array.isArray(cur[p]) ? [...cur[p]] : { ...(cur[p] || {}) };
               cur = cur[p];
             }
             if (cur) {
               const last = parts[parts.length - 1];
-              if (last !== '__proto__' && last !== 'constructor' && last !== 'prototype') {
+              if (!RESTRICTED_KEYS.has(last)) {
                 cur[last] = update[key];
               }
             }
