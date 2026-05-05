@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { processRazzies } from '../../../engine/systems/awards';
-import { Project, StateImpact } from '../../../engine/types';
+import { Project,  } from '../../../engine/types';
 import { createMockGameState } from '../../utils/mockFactories';
-import { RandomGenerator } from '../../../engine/utils/rng';
+;
 
 describe('Razzies Award System', () => {
-  const rng = new RandomGenerator(42);
+
 
   const createProject = (id: string, budget: number, score: number, flavor: string, genre: string): Project => ({
     id, 
