@@ -87,8 +87,8 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
                </p>
             </div>
             {onClose && (
-              <Button variant="ghost" size="icon" onClick={onClose} className="h-12 w-12 hover:bg-white/5 border border-transparent hover:border-white/10 rounded-none">
-                <X className="h-6 w-6" />
+              <Button variant="ghost" size="icon" aria-label="Close Marketing War Room" title="Close" onClick={onClose} className="h-12 w-12 hover:bg-white/5 border border-transparent hover:border-white/10 rounded-none">
+                <X className="h-6 w-6" aria-hidden="true" />
               </Button>
             )}
           </div>
