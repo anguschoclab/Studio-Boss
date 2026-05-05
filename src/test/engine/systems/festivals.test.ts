@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { FESTIVALS, submitToFestival, resolveFestivals } from '../../../engine/systems/festivals';
-import { Project, GameState, FestivalSubmission, ContentFlag } from '../../../engine/types';
+import { Project, GameState, FestivalSubmission } from '../../../engine/types';
 import * as utils from '../../../engine/utils';
 
 const mockProject: Project = {

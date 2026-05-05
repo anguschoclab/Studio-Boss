@@ -1,7 +1,5 @@
 import React from 'react';
-import { Badge } from '@/components/ui/badge';
-import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
-import { Star, TrendingUp, TrendingDown, Package, ShieldCheck, Target } from 'lucide-react';
+import { Package } from 'lucide-react';
 import { Talent } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
 import { AGENCY_ARCHETYPES } from '@/engine/data/archetypes';
@@ -10,13 +8,13 @@ import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 import { TalentAvatar } from './TalentAvatar';
-import { getTalentVisualAge, getCountryFlag } from '@/engine/generators/avatarGenerator';
+import { getTalentVisualAge } from '@/engine/generators/avatarGenerator';
 import { useAgencyMap } from '@/hooks/useTalentMap';
 
 interface TalentCardProps {
   talent: Talent;
   className?: string;
-  showStarMeter?: boolean;
+
   onClick?: (talentId: string) => void;
   tooltip?: string;
 }
@@ -24,7 +22,7 @@ interface TalentCardProps {
 export const TalentCard: React.FC<TalentCardProps> = ({ 
   talent, 
   className, 
-  showStarMeter,
+
   onClick,
   tooltip 
 }) => {
@@ -42,7 +40,7 @@ export const TalentCard: React.FC<TalentCardProps> = ({
   const starPower = talent.starMeter || 50;
 
   const visualAge = getTalentVisualAge(talent, currentWeek);
-  const countryFlag = getCountryFlag(talent.demographics.country);
+
   const genderSymbol = talent.demographics.gender === 'MALE' ? '♂' : talent.demographics.gender === 'FEMALE' ? '♀' : '⚧';
 
   const handleClick = (e: React.MouseEvent) => {

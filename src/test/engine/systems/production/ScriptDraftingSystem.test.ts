@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 import { describe, it, expect } from 'vitest';
-import { Project, ScriptedProject } from '@/engine/types';
+import { Project } from '@/engine/types';
 import { RandomGenerator } from '@/engine/utils/rng';
 import { tickScriptDevelopment } from '@/engine/systems/production/ScriptDraftingSystem';
 import { createMockProject } from '../../../utils/mockFactories';
@@ -17,7 +17,10 @@ describe('ScriptDraftingSystem - Edge Cases', () => {
         const rng = new RandomGenerator(555);
         const project = createMockProject({ state: 'development' });
         // Manually strip scripted fields to simulate non-scripted project
-        const { scriptHeat, activeRoles, scriptEvents, ...nonScriptedProject } = project as any;
+        const nonScriptedProject = { ...project };
+        delete (nonScriptedProject as any).scriptHeat;
+        delete (nonScriptedProject as any).activeRoles;
+        delete (nonScriptedProject as any).scriptEvents;
         const impacts = tickScriptDevelopment(nonScriptedProject as Project, rng);
         expect(impacts).toEqual([]);
     });

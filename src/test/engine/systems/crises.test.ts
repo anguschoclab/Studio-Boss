@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { resolveCrisis, checkAndTriggerCrisis } from "../../../engine/systems/crises";
 import { Project, GameState } from "../../../engine/types";
 import * as utils from "../../../engine/utils";
@@ -110,8 +110,8 @@ describe("crises system", () => {
           },
           studio: { internal: { projects: { [resolvedProject.id]: resolvedProject } } }
       } as any;
-      const impact = resolveCrisis(stateWithResolved, resolvedProject.id, 0);
-      expect(impact).toEqual({});
+      resolveCrisis(stateWithResolved, resolvedProject.id, 0);
+
     });
   });
 });

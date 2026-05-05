@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { tickProduction } from '../../../../engine/systems/productionEngine';
-import { GameState, Project, Talent, ProjectUpdateImpact } from '../../../../engine/types';
+import { GameState, Project, ProjectUpdateImpact } from '../../../../engine/types';
 import { RandomGenerator } from '../../../../engine/utils/rng';
 
 describe('tickProduction', () => {

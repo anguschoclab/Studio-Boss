@@ -45,16 +45,6 @@ const mockTalentAlist: Talent = {
   accessLevel: 'outsider',
 } as any;
 
-const mockTalentEgo: Talent = {
-  id: 't3',
-  name: 'Ego Maniac',
-  roles: ['actor'],
-  prestige: 100,
-  fee: 5_000_000,
-  draw: 0,
-  personality: 'Diva',
-  accessLevel: 'outsider',
-} as any;
 
 describe('evaluateGreenlight', () => {
   describe('Base Scoring Mechanics', () => {
