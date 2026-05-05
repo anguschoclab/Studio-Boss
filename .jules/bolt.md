@@ -19,3 +19,6 @@
 ## 2026-05-20 - Eliminate intermediate array allocations in Deals system
 **Learning:** Functions like `countDealsByStudio` and `createShingle` in the Deals system (`ShingleSystem.ts` and `ShinglePitchRouter.ts`) were calling `Object.values()` coupled with `.filter()`, `.map()`, or `.some()` to process GameState records. This caused redundant intermediate array allocations that compound GC spikes.
 **Action:** Replaced these chains with direct `for...in` loops in `ShingleSystem.ts` and `ShinglePitchRouter.ts` to process record entities directly, eliminating O(N) array allocation overhead.
+## 2026-05-23 - Replace O(N) array search inside mapping loop with O(1) dictionary lookup
+**Learning:** Using `Object.values(state.entities.projects).find()` inside a mapping function over high-frequency state objects (like `state.ip.vault.map()`) creates O(N*M) time complexity and massive garbage collection pressure by regenerating and searching arrays on every iteration.
+**Action:** Replace `Object.values(projects).find(p => p.id === id)` with a direct `for...in` loop to iterate or standard O(1) dictionary lookup (`state.entities.projects[id]`) when possible to eliminate the nested iteration and intermediate array allocations.
