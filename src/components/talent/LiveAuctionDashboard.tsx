@@ -7,10 +7,10 @@ import {
   TrendingUp, 
   AlertCircle, 
   CheckCircle2, 
-  ArrowUpRight, 
-  Clock,
+
+
   ShieldAlert,
-  ChevronRight,
+
   History as LucideHistory,
   X
 } from 'lucide-react';
