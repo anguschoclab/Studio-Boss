@@ -7,7 +7,6 @@ import {
   TrendingUp, 
   AlertCircle, 
   CheckCircle2, 
-  ArrowUpRight, 
   Clock,
   ShieldAlert,
   ChevronRight,

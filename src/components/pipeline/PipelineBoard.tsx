@@ -28,7 +28,7 @@ export const PipelineBoard = () => {
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-none blur-[120px] pointer-events-none -mr-48 -mt-48 opacity-40" />
         <div className="flex items-center gap-8 relative z-10">
           <div className="w-20 h-20 rounded-none bg-primary/5 border border-primary/20 flex items-center justify-center shadow-[0_0_40px_rgba(var(--primary),0.15)]">
-            <Layers className="h-10 w-10 text-primary" strokeWidth={1} />
+            <Layers className="h-10 w-10 text-primary" strokeWidth={1} aria-hidden="true" />
           </div>
           <div className="space-y-2">
             <h2 className="text-5xl font-display font-black tracking-tighter uppercase italic leading-none drop-shadow-[0_0_20px_rgba(255,255,255,0.05)]">PRODUCTION SLATE</h2>
@@ -42,20 +42,21 @@ export const PipelineBoard = () => {
 
         <div className="flex items-center gap-6 relative z-10">
           <div className="relative w-80 hidden lg:block group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/20 group-focus-within:text-primary transition-all duration-700" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/20 group-focus-within:text-primary transition-all duration-700" aria-hidden="true" />
             <Input 
               className="h-12 pl-12 text-[10px] bg-black/40 border-white/5 focus-visible:border-primary/40 focus-visible:ring-0 transition-all font-black uppercase tracking-[0.3em] rounded-none italic" 
               placeholder="SEARCH PROPERTY..." 
+              aria-label="Search properties"
             />
           </div>
-          <Button variant="ghost" size="icon" className="h-12 w-12 rounded-none bg-white/5 border border-white/5 text-muted-foreground/40 hover:text-primary hover:border-primary/40 transition-all duration-700">
-            <ListFilter className="h-5 w-5" />
+          <Button variant="ghost" size="icon" aria-label="Filter production slate" title="Filter" className="h-12 w-12 rounded-none bg-white/5 border border-white/5 text-muted-foreground/40 hover:text-primary hover:border-primary/40 transition-all duration-700">
+            <ListFilter className="h-5 w-5" aria-hidden="true" />
           </Button>
           <Button 
             onClick={openCreateProject} 
             className="h-12 px-10 font-display font-black uppercase tracking-[0.3em] text-[10px] gap-4 bg-primary text-black hover:bg-white transition-all duration-700 rounded-none shadow-[0_0_30px_rgba(var(--primary),0.2)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)]"
           >
-            <Plus className="h-5 w-5" strokeWidth={3} />
+            <Plus className="h-5 w-5" strokeWidth={3} aria-hidden="true" />
             NEW IP VENTURE
           </Button>
         </div>
