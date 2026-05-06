@@ -1,5 +1,7 @@
 import { GameState, StateImpact, Franchise } from '@/engine/types';
 
+const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+
 /**
  * Industry-related impact handlers
  * Pure functions that apply industry-related state impacts
@@ -52,7 +54,7 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
 
       for (let i = 0; i < parts.length - 1; i++) {
         const part = parts[i];
-        if (part === '__proto__' || part === 'constructor' || part === 'prototype') break;
+        if (FORBIDDEN_KEYS.has(part)) break;
 
         if (Array.isArray(current[part])) {
           current[part] = [...current[part]];
@@ -65,7 +67,7 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
       }
 
       const lastPart = parts[parts.length - 1];
-      if (lastPart !== '__proto__' && lastPart !== 'constructor' && lastPart !== 'prototype') {
+      if (!FORBIDDEN_KEYS.has(lastPart)) {
         current[lastPart] = value;
       }
     }
