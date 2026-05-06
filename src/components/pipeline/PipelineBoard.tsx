@@ -49,7 +49,7 @@ export const PipelineBoard = () => {
               aria-label="Search properties"
             />
           </div>
-          <Button variant="ghost" size="icon" aria-label="Filter production slate" title="Filter" className="h-12 w-12 rounded-none bg-white/5 border border-white/5 text-muted-foreground/40 hover:text-primary hover:border-primary/40 transition-all duration-700">
+          <Button variant="ghost" size="icon" aria-label="Filter production slate" tooltip="Filter" className="h-12 w-12 rounded-none bg-white/5 border border-white/5 text-muted-foreground/40 hover:text-primary hover:border-primary/40 transition-all duration-700">
             <ListFilter className="h-5 w-5" aria-hidden="true" />
           </Button>
           <Button 
