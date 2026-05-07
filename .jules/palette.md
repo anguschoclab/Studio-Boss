@@ -9,3 +9,7 @@
 ## 2024-05-18 - Keyboard Focus Indicators for Custom Interactive Cards
 **Learning:** Custom interactive elements (like div tags with role="button" and tabIndex={0}) in grid layouts often lack default browser focus indicators, making it impossible for keyboard users navigating via Tab to see the currently active element.
 **Action:** Always add Tailwind's focus-visible utility classes (e.g., focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none) to these custom button elements to ensure proper keyboard accessibility.
+
+## 2024-05-19 - Accessible Inputs Without Labels
+**Learning:** In complex hub dashboards (like TalentHub and ProductionHub), search and filter inputs are often styled cleanly without explicit `<label>` tags. Screen readers cannot deduce the input's purpose without one.
+**Action:** Always provide an `aria-label` attribute on `<input>` elements that lack an associated visible `<label>`, ensuring screen reader users understand the field's purpose (e.g., "Search talent" or "Filter slate").
