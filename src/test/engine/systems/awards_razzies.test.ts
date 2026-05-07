@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { processRazzies } from '../../../engine/systems/awards';
-import { Project, StateImpact } from '../../../engine/types';
+import { Project, GameState } from "../../../engine/types";
 import { createMockGameState } from '../../utils/mockFactories';
 import { RandomGenerator } from '../../../engine/utils/rng';
 
