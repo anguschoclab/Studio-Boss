@@ -98,6 +98,8 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
 
       if (update) {
         for (const key in update) {
+          if (FORBIDDEN_KEYS.has(key)) continue;
+
           // Dotted paths (e.g. "ip.vault") let DistressCascade rewrite nested arrays
           // without needing per-field impact types for every asset mutation.
           if (key.includes('.')) {
