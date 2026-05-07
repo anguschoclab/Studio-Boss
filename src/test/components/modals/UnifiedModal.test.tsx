@@ -6,7 +6,7 @@ import { Settings } from 'lucide-react';
 
 describe('UnifiedModal', () => {
   it('renders nothing when closed', () => {
-    render(
+    const { container } = render(
       <UnifiedModal isOpen={false} onClose={() => {}} title="Test">
         <div>Content</div>
       </UnifiedModal>

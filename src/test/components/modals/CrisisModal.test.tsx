@@ -103,7 +103,7 @@ describe('CrisisModal', () => {
       return selector ? selector(state) : state;
     });
 
-    render(<CrisisModal />);
+    const { container } = render(<CrisisModal />);
     expect(container.firstChild).toBeNull();
   });
 
@@ -113,7 +113,7 @@ describe('CrisisModal', () => {
       resolveCurrentModal: mockCloseCrisisModal,
     });
 
-    render(<CrisisModal />);
+    const { container } = render(<CrisisModal />);
     expect(container.firstChild).toBeNull();
   });
 
@@ -123,7 +123,7 @@ describe('CrisisModal', () => {
       resolveCurrentModal: mockCloseCrisisModal,
     });
 
-    render(<CrisisModal />);
+    const { container } = render(<CrisisModal />);
     expect(container.firstChild).toBeNull();
   });
 
