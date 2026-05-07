@@ -38,10 +38,9 @@ TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
 const TabsContentInner = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & { "data-state"?: string; forceMount?: boolean }
->(({ className, children, "data-state": state, forceMount, ...props }, ref) => {
+  React.HTMLAttributes<HTMLDivElement> & { "data-state"?: string; forceMount?: boolean; hidden?: boolean }
+>(({ className, children, "data-state": state, forceMount, hidden: _hidden, ...props }, ref) => {
   const isActive = state === "active";
-  const { hidden, ...restProps } = props as any;
 
   return (
     <AnimatePresence mode="wait">
@@ -57,7 +56,7 @@ const TabsContentInner = React.forwardRef<
             className,
           )}
           data-state={state}
-          {...restProps}
+          {...props}
         >
           {children}
         </motion.div>
