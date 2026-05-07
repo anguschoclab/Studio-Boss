@@ -1,75 +1,91 @@
-import React, { useMemo, useState } from 'react';
-import { useGameStore } from '@/store/gameStore';
-import { Project, TalentRole } from '@/engine/types';
-import { formatMoney } from '@/engine/utils';
-import { getRecommendedTalentForProject } from '@/engine/utils/projectUtils';
-import { selectTalentPool } from '@/store/selectors';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  Users, 
-  Search, 
-  Star, 
-  TrendingUp, 
-  X,
-  Target
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { TalentAvatar } from './TalentAvatar';
-import { CastingFeedback } from './CastingFeedback';
-import { useUIStore } from '@/store/uiStore';
-import { useTalentMap } from '@/hooks/useTalentMap';
+import React, { useMemo, useState } from "react";
+import { useGameStore } from "@/store/gameStore";
+import { Project, TalentRole } from "@/engine/types";
+import { formatMoney } from "@/engine/utils";
+import { getRecommendedTalentForProject } from "@/engine/utils/projectUtils";
+import { selectTalentPool } from "@/store/selectors";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Users, Search, Star, TrendingUp, X, Target } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { TalentAvatar } from "./TalentAvatar";
+import { CastingFeedback } from "./CastingFeedback";
+import { useUIStore } from "@/store/uiStore";
+import { useTalentMap } from "@/hooks/useTalentMap";
 
 interface TalentAttachmentPanelProps {
   project: Project;
   onClose?: () => void;
 }
 
-export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ project, onClose }) => {
-  const gameState = useGameStore(s => s.gameState);
-  const signContract = useGameStore(s => s.signContract);
+export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
+  project,
+  onClose,
+}) => {
+  const gameState = useGameStore((s) => s.gameState);
+  const signContract = useGameStore((s) => s.signContract);
   const { selectTalent } = useUIStore();
 
   // Filters
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTier, setSelectedTier] = useState<string>('ALL');
-  const [selectedRole, setSelectedRole] = useState<TalentRole | 'ALL'>('ALL');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedTier, setSelectedTier] = useState<string>("ALL");
+  const [selectedRole, setSelectedRole] = useState<TalentRole | "ALL">("ALL");
   const [showMatchesOnly, setShowMatchesOnly] = useState(false);
   const [hoveredTalentId, setHoveredTalentId] = useState<string | null>(null);
 
   const talentPool = useMemo(() => selectTalentPool(gameState), [gameState]);
-  const contracts = useMemo(() => Object.values(gameState?.entities.contracts || {}), [gameState?.entities.contracts]);
-  
+  const contracts = useMemo(
+    () => Object.values(gameState?.entities.contracts || {}),
+    [gameState?.entities.contracts]
+  );
+
   const attachedTalentIds = useMemo(() => {
-    return new Set(contracts.filter(c => c.projectId === project.id).map(c => c.talentId));
+    return new Set(contracts.filter((c) => c.projectId === project.id).map((c) => c.talentId));
   }, [contracts, project.id]);
 
   const attachedTalent = useMemo(() => {
-    return talentPool.filter(t => attachedTalentIds.has(t.id));
+    return talentPool.filter((t) => attachedTalentIds.has(t.id));
   }, [talentPool, attachedTalentIds]);
 
   const filteredTalent = useMemo(() => {
-    const pool = talentPool.filter(t => !attachedTalentIds.has(t.id));
+    const pool = talentPool.filter((t) => !attachedTalentIds.has(t.id));
     const recommendations = getRecommendedTalentForProject(
       pool,
       project,
-      selectedRole === 'ALL' ? undefined : selectedRole,
+      selectedRole === "ALL" ? undefined : selectedRole,
       Array.from(attachedTalentIds)
     );
 
-    return recommendations.filter(rec => {
+    return recommendations.filter((rec) => {
       const t = rec.talent;
       const matchesSearch = t.name.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesTier = selectedTier === 'ALL' || t.tier.toString() === selectedTier;
-      const matchesRole = selectedRole === 'ALL' || t.roles.includes(selectedRole as TalentRole) || t.role === selectedRole;
+      const matchesTier = selectedTier === "ALL" || t.tier.toString() === selectedTier;
+      const matchesRole =
+        selectedRole === "ALL" ||
+        t.roles.includes(selectedRole as TalentRole) ||
+        t.role === selectedRole;
       const matchesScore = !showMatchesOnly || rec.score >= 70;
 
       return matchesSearch && matchesTier && matchesRole && matchesScore;
     });
-  }, [talentPool, attachedTalentIds, project, searchQuery, selectedTier, selectedRole, showMatchesOnly]);
+  }, [
+    talentPool,
+    attachedTalentIds,
+    project,
+    searchQuery,
+    selectedTier,
+    selectedRole,
+    showMatchesOnly,
+  ]);
 
   const talentMap = useTalentMap(talentPool);
   const hoveredTalent = hoveredTalentId ? talentMap.get(hoveredTalentId) : null;
@@ -83,7 +99,13 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
             <Target className="w-4 h-4 text-primary" /> Active Production Slate
           </h3>
           {onClose && (
-            <Button variant="ghost" size="icon" aria-label="Close panel" onClick={onClose} className="h-8 w-8 text-slate-500 hover:text-white">
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Close panel"
+              onClick={onClose}
+              className="h-8 w-8 text-slate-500 hover:text-white"
+            >
               <X className="w-4 h-4" />
             </Button>
           )}
@@ -91,13 +113,14 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
 
         {attachedTalent.length > 0 && (
           <div className="flex flex-wrap gap-2">
-            {attachedTalent.map(t => (
-              <Badge 
-              key={t.id} 
-              variant="secondary" 
-              className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 py-1 pl-1 pr-2 gap-2 flex items-center h-8 cursor-pointer hover:border-emerald-500/50 transition-colors"
-              aria-label={`View ${t.name} profile`} onClick={() => selectTalent(t.id)}
-            >
+            {attachedTalent.map((t) => (
+              <Badge
+                key={t.id}
+                variant="secondary"
+                className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 py-1 pl-1 pr-2 gap-2 flex items-center h-8 cursor-pointer hover:border-emerald-500/50 transition-colors"
+                aria-label={`View ${t.name} profile`}
+                onClick={() => selectTalent(t.id)}
+              >
                 <TalentAvatar talent={t} size="xs" />
                 <span className="text-[10px] font-black">{t.name}</span>
               </Badge>
@@ -112,9 +135,9 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
           <div className="p-4 space-y-4 bg-black/20">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-              <Input 
-                placeholder="Search industry database..." 
-                className="pl-10 bg-black/40 border-slate-700 text-xs" 
+              <Input
+                placeholder="Search industry database..."
+                className="pl-10 bg-black/40 border-slate-700 text-xs"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -134,7 +157,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
                 </SelectContent>
               </Select>
 
-              <Select value={selectedRole} onValueChange={(v: any) => setSelectedRole(v)}>
+              <Select value={selectedRole} onValueChange={(v: string) => setSelectedRole(v)}>
                 <SelectTrigger className="flex-1 bg-black/60 border-slate-700 h-9 text-[10px] font-bold uppercase">
                   <SelectValue placeholder="Role" />
                 </SelectTrigger>
@@ -147,8 +170,8 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
                 </SelectContent>
               </Select>
 
-              <Button 
-                variant={showMatchesOnly ? "default" : "outline"} 
+              <Button
+                variant={showMatchesOnly ? "default" : "outline"}
                 size="sm"
                 onClick={() => setShowMatchesOnly(!showMatchesOnly)}
                 className={cn(
@@ -164,7 +187,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
           <ScrollArea className="flex-1">
             <div className="p-2 space-y-1">
               {filteredTalent.map(({ talent: t, score, tags }) => (
-                <div 
+                <div
                   key={t.id}
                   onMouseEnter={() => setHoveredTalentId(t.id)}
                   className="group flex items-center gap-4 p-3 rounded-none hover:bg-white/10 transition-all duration-200 border border-transparent hover:border-white/5 cursor-pointer"
@@ -172,43 +195,61 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
                   <TalentAvatar talent={t} size="sm" />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                       <span 
-                      className="font-bold text-sm text-white truncate cursor-pointer hover:text-primary transition-colors"
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          selectTalent(t.id);
-                        }
-                      }}
-                      onClick={() => selectTalent(t.id)}
-                    >{t.name}</span>
-                       <Badge variant="outline" className="text-[8px] h-4 px-1 border-slate-700 text-slate-400">Tier {t.tier}</Badge>
+                      <span
+                        className="font-bold text-sm text-white truncate cursor-pointer hover:text-primary transition-colors"
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            selectTalent(t.id);
+                          }
+                        }}
+                        onClick={() => selectTalent(t.id)}
+                      >
+                        {t.name}
+                      </span>
+                      <Badge
+                        variant="outline"
+                        className="text-[8px] h-4 px-1 border-slate-700 text-slate-400"
+                      >
+                        Tier {t.tier}
+                      </Badge>
                     </div>
                     <div className="flex items-center gap-2 mt-0.5">
-                      {tags.map(tag => (
-                        <span key={tag} className="text-[8px] font-bold text-primary/60 uppercase tracking-tighter">{tag}</span>
+                      {tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="text-[8px] font-bold text-primary/60 uppercase tracking-tighter"
+                        >
+                          {tag}
+                        </span>
                       ))}
                     </div>
                   </div>
-                  
+
                   <div className="text-right">
                     <div className="text-xs font-black text-white">{formatMoney(t.fee)}</div>
-                    <div className={cn(
-                      "text-[10px] font-bold flex items-center justify-end gap-1",
-                      score >= 80 ? "text-emerald-400" : score >= 60 ? "text-amber-400" : "text-slate-500"
-                    )}>
+                    <div
+                      className={cn(
+                        "text-[10px] font-bold flex items-center justify-end gap-1",
+                        score >= 80
+                          ? "text-emerald-400"
+                          : score >= 60
+                            ? "text-amber-400"
+                            : "text-slate-500"
+                      )}
+                    >
                       {score}% Match
                     </div>
                   </div>
-                  
-                  <Button 
-                    size="sm" 
+
+                  <Button
+                    size="sm"
                     className="opacity-0 group-hover:opacity-100 h-8 font-black text-[10px] uppercase bg-primary text-black"
                     onClick={() => {
-                        signContract(t.id, project.id);
-                        setHoveredTalentId(null);
+                      signContract(t.id, project.id);
+                      setHoveredTalentId(null);
                     }}
                     disabled={gameState && gameState.finance.cash < t.fee ? true : false}
                   >
@@ -220,7 +261,9 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
                 <div className="py-20 text-center space-y-4 opacity-30">
                   <Users className="w-12 h-12 mx-auto" />
                   <p className="text-xs font-black uppercase tracking-widest leading-relaxed">
-                    No matching talent found<br />Adjust filters or check industry availability
+                    No matching talent found
+                    <br />
+                    Adjust filters or check industry availability
                   </p>
                 </div>
               )}
@@ -233,44 +276,60 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
           {hoveredTalent ? (
             <div className="h-full flex flex-col space-y-6">
               <div className="flex flex-col items-center text-center space-y-4">
-                 <TalentAvatar talent={hoveredTalent} size="xl" className="ring-4 ring-primary/20 shadow-2xl" />
-                 <div>
-                    <h4 
+                <TalentAvatar
+                  talent={hoveredTalent}
+                  size="xl"
+                  className="ring-4 ring-primary/20 shadow-2xl"
+                />
+                <div>
+                  <h4
                     className="text-xl font-black italic uppercase tracking-tighter text-white cursor-pointer hover:text-primary transition-colors"
                     role="button"
                     tabIndex={0}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
+                      if (e.key === "Enter" || e.key === " ") {
                         e.preventDefault();
                         selectTalent(hoveredTalent.id);
                       }
                     }}
-                    aria-label={`View ${hoveredTalent.name} profile`} onClick={() => selectTalent(hoveredTalent.id)}
-                  >{hoveredTalent.name}</h4>
-                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{hoveredTalent.roles.join(' / ')} • {hoveredTalent.tier}</p>
-                 </div>
+                    aria-label={`View ${hoveredTalent.name} profile`}
+                    onClick={() => selectTalent(hoveredTalent.id)}
+                  >
+                    {hoveredTalent.name}
+                  </h4>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                    {hoveredTalent.roles.join(" / ")} • {hoveredTalent.tier}
+                  </p>
+                </div>
               </div>
 
               <CastingFeedback talent={hoveredTalent} project={project} />
-              
+
               <div className="mt-auto space-y-4">
-                 <div className="p-4 rounded-none bg-black/40 border border-white/5 space-y-3">
-                    <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-500">
-                       <span>Market Draw</span>
-                       <span className="text-emerald-400">{hoveredTalent.draw}%</span>
-                    </div>
-                    <div className="h-1 bg-slate-800 rounded-none overflow-hidden">
-                       <div className="h-full bg-success shadow-[0_0_10px_rgba(var(--success),0.5)]" style={{ width: `${hoveredTalent.draw}%` }} />
-                    </div>
-                 </div>
+                <div className="p-4 rounded-none bg-black/40 border border-white/5 space-y-3">
+                  <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-500">
+                    <span>Market Draw</span>
+                    <span className="text-emerald-400">{hoveredTalent.draw}%</span>
+                  </div>
+                  <div className="h-1 bg-slate-800 rounded-none overflow-hidden">
+                    <div
+                      className="h-full bg-success shadow-[0_0_10px_rgba(var(--success),0.5)]"
+                      style={{ width: `${hoveredTalent.draw}%` }}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           ) : (
             <div className="h-full flex flex-col items-center justify-center text-center space-y-4 opacity-20">
-               <TrendingUp className="w-12 h-12" />
-               <p className="text-[10px] font-black uppercase tracking-[0.2em] leading-relaxed">
-                  Hover over talent in the roster<br />to perform high-fidelity<br />econometric casting analysis
-               </p>
+              <TrendingUp className="w-12 h-12" />
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] leading-relaxed">
+                Hover over talent in the roster
+                <br />
+                to perform high-fidelity
+                <br />
+                econometric casting analysis
+              </p>
             </div>
           )}
         </div>
