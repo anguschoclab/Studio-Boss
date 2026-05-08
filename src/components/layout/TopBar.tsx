@@ -145,6 +145,7 @@ export const TopBar = () => {
         <button
           onClick={handleSave}
           title="SAVE_SYSTEM_STATE"
+          aria-label="Save system state"
           className="h-12 w-12 rounded-none bg-white/[0.02] border border-white/5 flex items-center justify-center text-muted-foreground/40 hover:text-primary hover:bg-primary/10 hover:border-primary/40 transition-all duration-700 active:scale-90 shadow-2xl"
         >
           <Save className="h-5 w-5" />
