@@ -14,7 +14,7 @@ const TabsList = React.forwardRef<
     ref={ref}
     className={cn(
       "inline-flex h-10 items-center justify-center rounded-none bg-muted p-1 text-muted-foreground",
-      className,
+      className
     )}
     {...props}
   />
@@ -29,7 +29,7 @@ const TabsTrigger = React.forwardRef<
     ref={ref}
     className={cn(
       "inline-flex items-center justify-center whitespace-nowrap rounded-none px-3 py-1.5 text-sm font-medium ring-offset-background transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
-      className,
+      className
     )}
     {...props}
   />
@@ -38,10 +38,12 @@ TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
 const TabsContentInner = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & { "data-state"?: string; forceMount?: boolean }
+  React.HTMLAttributes<HTMLDivElement> & {
+    "data-state"?: string;
+    forceMount?: boolean;
+  }
 >(({ className, children, "data-state": state, forceMount, ...props }, ref) => {
   const isActive = state === "active";
-  const { hidden, ...restProps } = props as any;
 
   return (
     <AnimatePresence mode="wait">
@@ -54,10 +56,10 @@ const TabsContentInner = React.forwardRef<
           transition={{ duration: 0.2 }}
           className={cn(
             "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-            className,
+            className
           )}
           data-state={state}
-          {...restProps}
+          {...props}
         >
           {children}
         </motion.div>
@@ -71,12 +73,7 @@ const TabsContent = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
 >(({ className, children, forceMount, ...props }, ref) => (
-  <TabsPrimitive.Content
-    ref={ref}
-    forceMount={forceMount}
-    asChild
-    {...props}
-  >
+  <TabsPrimitive.Content ref={ref} forceMount={forceMount} asChild {...props}>
     <TabsContentInner className={className} forceMount={forceMount}>
       {children}
     </TabsContentInner>
