@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, } from 'vitest';
 import { calculateWeeklyRevenue } from '../../../engine/systems/finance/CalculatorModule';
 import { GameState, Project } from '../../../engine/types';
 
