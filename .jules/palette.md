@@ -9,3 +9,7 @@
 ## 2024-05-18 - Keyboard Focus Indicators for Custom Interactive Cards
 **Learning:** Custom interactive elements (like div tags with role="button" and tabIndex={0}) in grid layouts often lack default browser focus indicators, making it impossible for keyboard users navigating via Tab to see the currently active element.
 **Action:** Always add Tailwind's focus-visible utility classes (e.g., focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none) to these custom button elements to ensure proper keyboard accessibility.
+
+## 2025-02-27 - Search Input Accessibility
+**Learning:** Search inputs in multiple components were relying solely on `placeholder` attributes for context. Placeholders are not consistently announced as accessible names by screen readers, leading to poor keyboard navigation and screen reader support.
+**Action:** Always add explicit `aria-label` attributes to standalone `<Input>` components (especially search bars) that do not have a corresponding `<label>` element.

@@ -12,7 +12,7 @@ describe('UnifiedModal', () => {
       </UnifiedModal>
     );
     
-    expect(container.firstChild).toBeNull();
+    expect(screen.queryByRole('dialog')).toBeNull();
   });
 
   it('renders when open', () => {

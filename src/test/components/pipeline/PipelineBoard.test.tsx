@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { PipelineBoard } from '@/components/pipeline/PipelineBoard';
+import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { Project } from '@/engine/types';
@@ -28,7 +29,7 @@ describe('PipelineBoard', () => {
 
   it('renders title and New Project button', () => {
     vi.mocked(useGameStore).mockReturnValue([]);
-    render(<PipelineBoard />);
+    render(<TooltipProvider><PipelineBoard /></TooltipProvider>);
 
     expect(screen.getByText('PRODUCTION SLATE')).toBeInTheDocument();
     expect(screen.getByText('NEW IP VENTURE')).toBeInTheDocument();
@@ -36,7 +37,7 @@ describe('PipelineBoard', () => {
 
   it('calls openCreateProject when New Project button is clicked', () => {
     vi.mocked(useGameStore).mockReturnValue([]);
-    render(<PipelineBoard />);
+    render(<TooltipProvider><PipelineBoard /></TooltipProvider>);
 
     const button = screen.getByRole('button', { name: /NEW IP VENTURE/i });
     fireEvent.click(button);
@@ -46,7 +47,7 @@ describe('PipelineBoard', () => {
 
   it('renders all pipeline columns', () => {
     vi.mocked(useGameStore).mockReturnValue([]);
-    render(<PipelineBoard />);
+    render(<TooltipProvider><PipelineBoard /></TooltipProvider>);
 
     expect(screen.getByText('DEVELOPMENT')).toBeInTheDocument();
     expect(screen.getByText('PITCHING')).toBeInTheDocument();
@@ -63,7 +64,7 @@ describe('PipelineBoard', () => {
     ];
 
     vi.mocked(useGameStore).mockReturnValue(mockProjects);
-    render(<PipelineBoard />);
+    render(<TooltipProvider><PipelineBoard /></TooltipProvider>);
 
     expect(screen.getByTestId('project-card-1')).toBeInTheDocument();
     expect(screen.getByTestId('project-card-2')).toBeInTheDocument();
@@ -78,7 +79,7 @@ describe('PipelineBoard', () => {
     ];
 
     vi.mocked(useGameStore).mockReturnValue(mockProjects);
-    render(<PipelineBoard />);
+    render(<TooltipProvider><PipelineBoard /></TooltipProvider>);
 
     expect(screen.getByTestId('project-card-1')).toBeInTheDocument();
 

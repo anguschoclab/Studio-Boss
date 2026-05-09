@@ -136,6 +136,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
               <Input
+                aria-label="Search industry database"
                 placeholder="Search industry database..."
                 className="pl-10 bg-black/40 border-slate-700 text-xs"
                 value={searchQuery}

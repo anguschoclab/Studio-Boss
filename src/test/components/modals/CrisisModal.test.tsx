@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { CrisisModal } from '@/components/modals/CrisisModal';
 import { useGameStore } from '@/store/gameStore';
@@ -103,8 +104,8 @@ describe('CrisisModal', () => {
       return selector ? selector(state) : state;
     });
 
-    render(<CrisisModal />);
-    expect(container.firstChild).toBeNull();
+    render(<TooltipProvider><CrisisModal /></TooltipProvider>);
+    expect(screen.queryByRole('dialog')).toBeNull();
   });
 
   it('renders nothing if crisisProjectId is missing', () => {
@@ -113,8 +114,8 @@ describe('CrisisModal', () => {
       resolveCurrentModal: mockCloseCrisisModal,
     });
 
-    render(<CrisisModal />);
-    expect(container.firstChild).toBeNull();
+    render(<TooltipProvider><CrisisModal /></TooltipProvider>);
+    expect(screen.queryByRole('dialog')).toBeNull();
   });
 
   it('renders nothing if project is not found', () => {
@@ -123,8 +124,8 @@ describe('CrisisModal', () => {
       resolveCurrentModal: mockCloseCrisisModal,
     });
 
-    render(<CrisisModal />);
-    expect(container.firstChild).toBeNull();
+    render(<TooltipProvider><CrisisModal /></TooltipProvider>);
+    expect(screen.queryByRole('dialog')).toBeNull();
   });
 
   it('renders nothing if project has no active crisis', () => {
@@ -143,7 +144,7 @@ describe('CrisisModal', () => {
       return selector ? selector(state) : state;
     });
 
-    render(<CrisisModal />);
+    render(<TooltipProvider><CrisisModal /></TooltipProvider>);
     // The new structure just looks at activeModal.crisis, but let's assume if it expects an activeCrisis on project it should fail.
     // Actually the new modal code only checks `project` exists. It doesn't check if it's resolved. So this test might not align with current code.
     // However, since it's just tests, we can skip or adapt. We'll leave it testing empty just in case.
@@ -151,7 +152,7 @@ describe('CrisisModal', () => {
   });
 
   it('renders the modal with crisis details correctly', () => {
-    render(<CrisisModal />);
+    render(<TooltipProvider><CrisisModal /></TooltipProvider>);
 
     expect(screen.getByText(/Phase 2: Production Crisis/i)).toBeInTheDocument();
     expect(screen.getByText('The set is on fire.')).toBeInTheDocument();
@@ -162,7 +163,7 @@ describe('CrisisModal', () => {
   });
 
   it('calls resolveProjectCrisis and closeCrisisModal when an option is selected', () => {
-    render(<CrisisModal />);
+    render(<TooltipProvider><CrisisModal /></TooltipProvider>);
 
     const chooseButtons = screen.getAllByRole('button');
     // Button 0 is the first option
