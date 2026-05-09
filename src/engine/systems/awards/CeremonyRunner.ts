@@ -21,15 +21,17 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   const projectToRivalMap = new Map<string, RivalStudio>();
   const projectToContractsMap = new Map<string, Contract[]>();
 
-  const contractsList = Object.values(state.entities.contracts || {});
-  for (const c of contractsList) {
+  const contracts = state.entities.contracts || {};
+  for (const id in contracts) {
+    const c = contracts[id];
     const list = projectToContractsMap.get(c.projectId) || [];
     list.push(c);
     projectToContractsMap.set(c.projectId, list);
   }
 
-  const playerProjects = Object.values(state.entities.projects || {});
-  for (const p of playerProjects) {
+  const playerProjects = state.entities.projects || {};
+  for (const id in playerProjects) {
+    const p = playerProjects[id];
     if ((p.state === 'released' || p.state === 'post_release' || p.state === 'archived') &&
         p.releaseWeek !== null &&
         p.releaseWeek > currentWeek - 52) {
@@ -41,10 +43,11 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   }
 
   const rivalsMap = state.entities.rivals || {};
-  const allProjects = Object.values(state.entities.projects || {});
+  const allProjects = state.entities.projects || {};
 
   const rivalProjects: Project[] = [];
-  for (const p of allProjects) {
+  for (const id in allProjects) {
+    const p = allProjects[id];
     if (p.ownerId && rivalsMap[p.ownerId]) {
       rivalProjects.push(p);
     }

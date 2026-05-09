@@ -4,13 +4,17 @@ import { BardResolver } from '../bardResolver';
 
 export function processRazzies(state: GameState, week: number, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const projects = Object.values(state.entities.projects || {});
   
-  const eligibleProjects = projects.filter(p => {
+  const eligibleProjects = [];
+  const projects = state.entities.projects || {};
+  for (const id in projects) {
+    const p = projects[id];
     const score = p.reviewScore || 100;
     const budget = p.budget || 0;
-    return p.state === 'released' && budget >= 50_000_000 && score <= 30 && p.releaseWeek !== null;
-  });
+    if (p.state === 'released' && budget >= 50_000_000 && score <= 30 && p.releaseWeek !== null) {
+      eligibleProjects.push(p);
+    }
+  }
 
   if (eligibleProjects.length === 0) return impacts;
 
