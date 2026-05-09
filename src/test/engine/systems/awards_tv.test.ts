@@ -1,11 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { runAwardsCeremony } from '../../../engine/systems/awards';
 import { GameState, Project } from '../../../engine/types';
-import { RandomGenerator } from '../../../engine/utils/rng';
 import { createMockGameState } from '../../utils/mockFactories';
 
 describe('TV Awards Filtering & Taxonomy', () => {
-  const rng = new RandomGenerator(123);
+  // const rng = new RandomGenerator(state.seed + 123);
 
   const createTvProject = (id: string, format: any, criticScore: number, genre: string = 'Comedy'): Project => ({
     id,
