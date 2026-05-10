@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Search, Filter, Users, Star, Database, Target, ShieldCheck } from 'lucide-react';
+import { Search, Users, Star, Database, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { EmptyState } from '@/components/shared/EmptyState';
@@ -24,12 +24,12 @@ export const TalentHub = () => {
   const talentPool = useMemo(() => Object.values(state?.industry.talentPool || {}), [state?.industry.talentPool]);
   
   // Roster filters
-  const [rosterFilter, setRosterFilter] = useState<TalentRole | 'all'>('all');
+  const [rostersetRosterFilter] = useState<TalentRole | 'all'>('all');
   
   // SBDB filters
   const [search, setSearch] = useState('');
-  const [roleFilter, setRoleFilter] = useState<string>('all');
-  const [tierFilter, setTierFilter] = useState<string>('all');
+  const [rolesetRoleFilter] = useState<string>('all');
+  const [tiersetTierFilter] = useState<string>('all');
 
   const filteredRoster = useMemo(() => {
     return talentPool.filter(t => rosterFilter === 'all' || t.roles.includes(rosterFilter as TalentRole));
@@ -49,7 +49,7 @@ export const TalentHub = () => {
       }
       return matchesSearch && matchesRole && matchesTier;
     }).sort((a, b) => (b.starMeter || 0) - (a.starMeter || 0));
-  }, [talentPool, search, roleFilter, tierFilter]);
+  }, [talentPool, search, roletierFilter]);
 
   if (!state) return null;
 

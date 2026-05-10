@@ -1,6 +1,6 @@
 import { describe, it, expect,beforeEach } from "vitest";
 import { generateAwardsProfile, runAwardsCeremony, processRazzies } from "../../../engine/systems/awards";
-import { Project, GameState, Talent, ContentFlag, StateImpact } from "../../../engine/types";
+import { Project, GameState, StateImpact } from "../../../engine/types";
 import { RandomGenerator } from "../../../engine/utils/rng";
 
 describe("awards system", () => {
@@ -94,7 +94,6 @@ describe("awards system", () => {
       const state = getInitialState();
       state.entities.projects = { [eligibleProject.id]: eligibleProject };
       state.week = 4;
-      const rng = new RandomGenerator(42);
 
       const impacts = runAwardsCeremony(state, 4, 2024);
 
@@ -107,7 +106,6 @@ describe("awards system", () => {
       const state = getInitialState();
       state.entities.projects = { [eligibleProject.id]: eligibleProject };
       state.week = 4;
-      const rng = new RandomGenerator(42);
 
       const impacts = runAwardsCeremony(state, 4, 2024);
       expect(impacts.prestigeChange).toBeGreaterThanOrEqual(0);
@@ -129,7 +127,6 @@ describe("awards system", () => {
           const state = getInitialState();
           state.entities.projects = { [badFilm.id]: badFilm };
           state.week = 4;
-          const rng = new RandomGenerator(42);
 
           const impacts = processRazzies(state, 4);
 

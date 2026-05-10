@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Tv, TrendingUp, TrendingDown, Minus, BarChart3, Users, Radio, Clock, Trophy, ArrowUp, ArrowDown, Activity, Zap } from 'lucide-react';
+import { Tv, Minus, BarChart3, Users, Radio, Clock, Trophy, ArrowUp, ArrowDown, Activity, Zap } from 'lucide-react';
 import { SeriesProject, Project } from '@/engine/types';
 import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
