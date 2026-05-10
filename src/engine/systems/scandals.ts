@@ -100,9 +100,14 @@ export function advanceScandals(state: GameState): StateImpact[] {
 
   for (const s of currentScandals) {
     if (s.weeksRemaining > 1) {
-      // In a real state-impact system, we'd have a SCANDAL_UPDATED
-      // or just replace the list. For now, let's just update the list.
       activeScandalTalent.add(s.talentId);
+      impacts.push({
+        type: 'SCANDAL_UPDATED',
+        payload: {
+          scandalId: s.id,
+          update: { weeksRemaining: s.weeksRemaining - 1 }
+        }
+      });
     } else {
       impacts.push({
         type: 'SCANDAL_REMOVED',
@@ -111,20 +116,6 @@ export function advanceScandals(state: GameState): StateImpact[] {
     }
   }
   
-  // Update weeks remaining for all scandals (shortcut for now since we don't have SCANDAL_UPDATED)
-  const updatedScandals = currentScandals
-    .filter(s => s.weeksRemaining > 1)
-    .map(s => ({ ...s, weeksRemaining: s.weeksRemaining - 1 }));
-
-  // This is a bit of a hack since we don't have a bulk update, 
-  // but we can use SYSTEM_TICK or a new impact if needed.
-  // Actually, let's just make it simple: replace the whole list if it changed.
-  if (updatedScandals.length !== currentScandals.length) {
-    // Handled by SCANDAL_REMOVED above individualy. 
-    // But we still need to tick down the ones that stay.
-  }
-  
-  // Let's add SCANDAL_UPDATED to the types or just use a bulk impact.
   // For now, I'll just use PROJECT_UPDATED for the penalties.
 
   const contracts = state.studio.internal.contracts || [];

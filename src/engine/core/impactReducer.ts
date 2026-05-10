@@ -279,6 +279,19 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       };
     }
 
+    case 'SCANDAL_UPDATED': {
+      const { scandalId, update } = impact.payload;
+      return {
+        ...state,
+        industry: {
+          ...state.industry,
+          scandals: (state.industry.scandals || []).map(s =>
+            s.id === scandalId ? { ...s, ...update } : s
+          )
+        }
+      };
+    }
+
     case 'SCANDAL_REMOVED': {
       const { scandalId } = impact.payload;
       return {

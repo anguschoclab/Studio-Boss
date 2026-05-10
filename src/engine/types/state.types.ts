@@ -167,6 +167,7 @@ export interface OpportunityUpdateImpact extends BaseImpact { type: 'OPPORTUNITY
 export interface TrendsUpdateImpact extends BaseImpact { type: 'TRENDS_UPDATED'; payload: { trends: import('./project.types').GenreTrend[] } }
 export interface ScandalAddedImpact extends BaseImpact { type: 'SCANDAL_ADDED'; payload: { scandal: import('./talent.types').Scandal } }
 export interface ScandalRemovedImpact extends BaseImpact { type: 'SCANDAL_REMOVED'; payload: { scandalId: string } }
+export interface ScandalUpdatedImpact extends BaseImpact { type: 'SCANDAL_UPDATED'; payload: ScandalUpdate }
 export interface MarketEventUpdateImpact extends BaseImpact { type: 'MARKET_EVENT_UPDATED'; payload: { events?: import('./engine.types').MarketEvent[]; marketState?: MarketState } }
 export interface LedgerImpact extends BaseImpact { type: 'LEDGER_UPDATED'; payload: { report: WeeklyFinancialReport } }
 export interface FinanceTransactionImpact extends BaseImpact { type: 'FINANCE_TRANSACTION'; payload: { amount: number; description: string } }
@@ -204,6 +205,7 @@ export type StateImpact =
   | TrendsUpdateImpact
   | ScandalAddedImpact
   | ScandalRemovedImpact
+  | ScandalUpdatedImpact
   | MarketEventUpdateImpact
   | LedgerImpact
   | FinanceTransactionImpact

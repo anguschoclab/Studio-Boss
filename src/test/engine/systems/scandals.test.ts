@@ -31,6 +31,23 @@ describe("scandals system", () => {
       expect(impacts).toHaveLength(0);
     });
 
+    it("updates existing scandals via SCANDAL_UPDATED", () => {
+      const s1: Scandal = {
+          id: "s1",
+          talentId: "t1",
+          severity: 50,
+          type: "legal",
+          weeksRemaining: 5
+      };
+
+      const initialState = createMockState([s1]);
+      const impacts = advanceScandals(initialState);
+      const updateImpact = impacts.find(i => i.type === 'SCANDAL_UPDATED');
+      expect(updateImpact).toBeDefined();
+      expect(updateImpact?.payload.scandalId).toBe("s1");
+      expect(updateImpact?.payload.update.weeksRemaining).toBe(4);
+    });
+
     it("removes expired scandals via SCANDAL_REMOVED", () => {
       const s1: Scandal = { 
           id: "s1", 
