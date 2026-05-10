@@ -1,3 +1,4 @@
+import * as utils from '../../../engine/utils';
 import { describe, it, expect, vi } from 'vitest';
 import { advanceRumors } from '../../../engine/systems/rumors';
 import { Rumor, Talent } from '../../../engine/types';
@@ -40,6 +41,8 @@ describe('advanceRumors', () => {
       week: 10,
       industry: { ...createMockGameState().industry, rumors: [rumor] }
     });
+
+    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5);
     const impact = advanceRumors(stateWithRumor);
 
     expect(impact.newHeadlines).toHaveLength(1);
@@ -61,6 +64,8 @@ describe('advanceRumors', () => {
       week: 10,
       industry: { ...createMockGameState().industry, rumors: [rumor] }
     });
+
+    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5);
     const impact = advanceRumors(stateWithRumor);
 
     expect(impact.newHeadlines).toHaveLength(1);

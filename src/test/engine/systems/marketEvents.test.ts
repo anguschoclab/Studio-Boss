@@ -84,7 +84,8 @@ describe('Market Events System', () => {
       };
 
       mockGameState.market.activeMarketEvents = [expiringEvent];
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // No new event spawn
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5);
+      vi.spyOn(utils, 'rand').mockReturnValue(0.5); // No new event spawn
 
       const impacts = advanceMarketEvents(mockGameState);
       const marketImpact = impacts.find(i => i.type === 'MARKET_EVENT_UPDATED') as MarketEventUpdateImpact | undefined;
