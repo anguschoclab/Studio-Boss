@@ -41,7 +41,7 @@ const TabsContentInner = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement> & { "data-state"?: string; forceMount?: boolean }
 >(({ className, children, "data-state": state, forceMount, ...props }, ref) => {
   const isActive = state === "active";
-  const { hidden, ...restProps } = props as any;
+  const { hidden: _hidden, ...restProps } = props as React.HTMLAttributes<HTMLDivElement>;
 
   return (
     <AnimatePresence mode="wait">

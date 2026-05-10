@@ -3,7 +3,6 @@ import { useGameStore } from '@/store/gameStore';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Flame, TrendingUp, TrendingDown, Minus, Snowflake, Activity, Zap } from 'lucide-react';
 import { GenreTrend } from '@/engine/types';
-import { cn } from '@/lib/utils';
 
 export function TrendBoard() {
   const trends = useGameStore(state => state.gameState?.market.trends) || [];
