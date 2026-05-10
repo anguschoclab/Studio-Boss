@@ -24,7 +24,7 @@ export const TalentHub = () => {
   const talentPool = useMemo(() => Object.values(state?.industry.talentPool || {}), [state?.industry.talentPool]);
   
   // Roster filters
-  const [rostersetRosterFilter] = useState<TalentRole | 'all'>('all');
+  const [rostersetRosterFilter] = useState<TalentRole |const [tierFilter, setTierFilter] = useState<string>('all');
   
   // SBDB filters
   const [search, setSearch] = useState('');
@@ -49,7 +49,7 @@ export const TalentHub = () => {
       }
       return matchesSearch && matchesRole && matchesTier;
     }).sort((a, b) => (b.starMeter || 0) - (a.starMeter || 0));
-  }, [talentPool, search, roletierFilter]);
+  }, [talentPool, search, tierFilter]);
 
   if (!state) return null;
 
