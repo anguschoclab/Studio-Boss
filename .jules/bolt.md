@@ -19,3 +19,7 @@
 ## 2026-05-20 - Eliminate intermediate array allocations in Deals system
 **Learning:** Functions like `countDealsByStudio` and `createShingle` in the Deals system (`ShingleSystem.ts` and `ShinglePitchRouter.ts`) were calling `Object.values()` coupled with `.filter()`, `.map()`, or `.some()` to process GameState records. This caused redundant intermediate array allocations that compound GC spikes.
 **Action:** Replaced these chains with direct `for...in` loops in `ShingleSystem.ts` and `ShinglePitchRouter.ts` to process record entities directly, eliminating O(N) array allocation overhead.
+
+## 2024-05-24 - Pre-compute and avoid Object.values in loops
+**Learning:** Calling `Object.values(state.entities.talents)` inside a loop over rivals causes unnecessary GC pressure and N*M operations during weekly ticks.
+**Action:** Pre-compute the needed data (like filtering high-prestige stars) via a single `for...in` loop outside the inner iteration to reduce O(N*M) complexity to O(N + M).
