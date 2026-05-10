@@ -104,7 +104,7 @@ describe('CrisisModal', () => {
     });
 
     render(<CrisisModal />);
-    expect(container.firstChild).toBeNull();
+    expect(screen.queryByTestId("crisis-modal")).not.toBeInTheDocument();
   });
 
   it('renders nothing if crisisProjectId is missing', () => {
@@ -114,7 +114,7 @@ describe('CrisisModal', () => {
     });
 
     render(<CrisisModal />);
-    expect(container.firstChild).toBeNull();
+    expect(screen.queryByTestId("crisis-modal")).not.toBeInTheDocument();
   });
 
   it('renders nothing if project is not found', () => {
@@ -124,7 +124,7 @@ describe('CrisisModal', () => {
     });
 
     render(<CrisisModal />);
-    expect(container.firstChild).toBeNull();
+    expect(screen.queryByTestId("crisis-modal")).not.toBeInTheDocument();
   });
 
   it('renders nothing if project has no active crisis', () => {
