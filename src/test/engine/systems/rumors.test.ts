@@ -42,7 +42,7 @@ describe('advanceRumors', () => {
       industry: { ...createMockGameState().industry, rumors: [rumor] }
     });
 
-    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5);
+    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.99);
     const impact = advanceRumors(stateWithRumor);
 
     expect(impact.newHeadlines).toHaveLength(1);
@@ -65,7 +65,7 @@ describe('advanceRumors', () => {
       industry: { ...createMockGameState().industry, rumors: [rumor] }
     });
 
-    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5);
+    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.99);
     const impact = advanceRumors(stateWithRumor);
 
     expect(impact.newHeadlines).toHaveLength(1);

@@ -13,8 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Search, Users, Star, Database, ShieldCheck } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Search, Users, Star, Database } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { EmptyState } from '@/components/shared/EmptyState';
 
