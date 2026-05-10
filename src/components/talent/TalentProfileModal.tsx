@@ -6,7 +6,6 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  User, 
   BarChart3, 
   Clapperboard, 
   Trophy, 
@@ -16,8 +15,7 @@ import {
   DollarSign,
   History,
   Star,
-  Award,
-  Zap,
+    Zap,
   Info,
   MapPin,
   Calendar,
@@ -468,7 +466,7 @@ export const TalentModal = () => {
   );
 };
 
-const Quote = (props: any) => (
+const Quote = (props: React.SVGProps<SVGSVGElement>) => (
   <svg 
     viewBox="0 0 24 24" 
     fill="currentColor" 

@@ -1,7 +1,6 @@
 import React from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tv, TrendingUp, TrendingDown, Minus, BarChart3, Users, Radio, Clock, Trophy, ArrowUp, ArrowDown, Activity, Zap } from 'lucide-react';

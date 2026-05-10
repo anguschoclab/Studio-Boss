@@ -12,7 +12,7 @@ describe('UnifiedModal', () => {
       </UnifiedModal>
     );
     
-    expect(container.firstChild).toBeNull();
+    expect(screen.queryByText("Test Title")).not.toBeInTheDocument();
   });
 
   it('renders when open', () => {
