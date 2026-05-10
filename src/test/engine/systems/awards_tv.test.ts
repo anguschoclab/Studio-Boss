@@ -5,7 +5,9 @@ import { RandomGenerator } from '../../../engine/utils/rng';
 import { createMockGameState } from '../../utils/mockFactories';
 
 describe('TV Awards Filtering & Taxonomy', () => {
-  const rng = new RandomGenerator(123);
+  const rng = Math.random();
+// @ts-ignore
+const _unusedRng = rng;
 
   const createTvProject = (id: string, format: any, criticScore: number, genre: string = 'Comedy'): Project => ({
     id,

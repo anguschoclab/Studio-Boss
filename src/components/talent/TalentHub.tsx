@@ -3,7 +3,7 @@ import { useGameStore } from '@/store/gameStore';
 import { Talent, TalentRole } from '@/engine/types';
 import { TalentModal } from './TalentProfileModal';
 import { TalentCard } from './TalentCard';
-import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
+import { /* TooltipWrapper */ } from '@/components/ui/tooltip-wrapper';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';

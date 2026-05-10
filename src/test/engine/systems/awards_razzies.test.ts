@@ -5,7 +5,9 @@ import { createMockGameState } from '../../utils/mockFactories';
 import { RandomGenerator } from '../../../engine/utils/rng';
 
 describe('Razzies Award System', () => {
-  const rng = new RandomGenerator(42);
+  const rng = Math.random();
+// @ts-ignore
+const _unusedRng = rng;
 
   const createProject = (id: string, budget: number, score: number, flavor: string, genre: string): Project => ({
     id, 
