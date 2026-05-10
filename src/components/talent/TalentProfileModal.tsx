@@ -15,8 +15,7 @@ import {
   DollarSign,
   History,
   Star,
-  Award,
-  Zap,
+    Zap,
   Info,
   MapPin,
   Calendar,
@@ -467,7 +466,7 @@ export const TalentModal = () => {
   );
 };
 
-const Quote = (props: any) => (
+const Quote = (props: React.SVGProps<SVGSVGElement>) => (
   <svg 
     viewBox="0 0 24 24" 
     fill="currentColor" 
