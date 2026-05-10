@@ -1,7 +1,6 @@
 import React from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Flame, TrendingUp, TrendingDown, Minus, Snowflake, Activity, Zap } from 'lucide-react';
 import { GenreTrend } from '@/engine/types';
 import { cn } from '@/lib/utils';

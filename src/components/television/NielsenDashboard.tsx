@@ -3,12 +3,12 @@ import { useGameStore } from '@/store/gameStore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Tv, Minus, BarChart3, Radio, Clock, Trophy, ArrowUp, ArrowDown, Activity, Zap } from 'lucide-react';
+import { Tv, Minus, BarChart3, Radio, Trophy, ArrowUp, ArrowDown, Activity } from 'lucide-react';
 import { SeriesProject, Project } from '@/engine/types';
 import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
 import { NielsenSnapshot, NielsenProfile, NielsenDemographic, TIME_SLOTS } from '@/engine/systems/television/nielsenSystem';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, CartesianGrid, Legend, LineChart, Line } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, CartesianGrid } from 'recharts';
 
 // Color map for demographics
 const DEMO_COLORS: Record<NielsenDemographic, string> = {
@@ -28,7 +28,7 @@ export const NielsenDashboard = () => {
   
   const tvShows = React.useMemo(() => 
     projects.filter((p: Project): p is SeriesProject => 
-      p.type === 'SERIES' && 'tvDetails' in p && !!(p as any).nielsenProfile
+      p.type === 'SERIES' && 'tvDetails' in p && !!(p as unknown as { nielsenProfile?: unknown }).nielsenProfile
     ),
   [projects]);
 
@@ -39,7 +39,7 @@ export const NielsenDashboard = () => {
   const weeklyRankings = React.useMemo(() => {
     return airingShows
       .map(show => {
-        const profile = (show as any).nielsenProfile as NielsenProfile | undefined;
+        const profile = (show as unknown as { nielsenProfile?: NielsenProfile }).nielsenProfile;
         const latest = profile?.snapshots?.[profile.snapshots.length - 1];
         return { show, profile, latest };
       })
@@ -233,7 +233,7 @@ const WeeklyRankingsTable = ({ rankings }: { rankings: RankingEntry[] }) => {
 };
 
 const ShowDetailCard = ({ show }: { show: SeriesProject }) => {
-  const profile = (show as any).nielsenProfile as NielsenProfile | undefined;
+  const profile = (show as unknown as { nielsenProfile?: NielsenProfile }).nielsenProfile;
   if (!profile || profile.snapshots.length === 0) return null;
 
   const chartData = profile.snapshots.map(snap => ({
@@ -308,7 +308,7 @@ const ShowDetailCard = ({ show }: { show: SeriesProject }) => {
 };
 
 const DemoBreakdownCard = ({ show }: { show: SeriesProject }) => {
-  const profile = (show as any).nielsenProfile as NielsenProfile | undefined;
+  const profile = (show as unknown as { nielsenProfile?: NielsenProfile }).nielsenProfile;
   if (!profile || profile.snapshots.length === 0) return null;
 
   const latest = profile.snapshots[profile.snapshots.length - 1];
