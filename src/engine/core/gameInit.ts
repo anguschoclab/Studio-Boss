@@ -149,8 +149,8 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
         totalEpisodes: 0,
         rightsExpirationWeek: 99999,
         rightsOwner: 'RIVAL',
-        ownerStudioId: rival.id as any,
-      } as any);
+        ownerStudioId: rival.id,
+      });
     }
   });
 

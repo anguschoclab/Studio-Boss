@@ -89,6 +89,7 @@ export interface IPAsset {
   totalEpisodes: number;
   rightsExpirationWeek: number;
   rightsOwner: "STUDIO" | "MARKET" | "RIVAL";
+  ownerStudioId?: string;
 }
 
 export interface IPState {
