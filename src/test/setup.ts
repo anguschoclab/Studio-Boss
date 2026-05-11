@@ -25,6 +25,8 @@ Object.defineProperty(window, "matchMedia", {
   }),
 });
 
+Object.defineProperty(window, 'scrollTo', { value: vi.fn(), writable: true });
+
 Object.defineProperty(window, "Worker", {
   writable: true,
   value: class {
