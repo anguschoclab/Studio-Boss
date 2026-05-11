@@ -60,9 +60,10 @@ export const SBDBView = () => {
       {/* SBDB Toolbar */}
       <div className="glass-panel p-4 flex flex-col md:flex-row gap-4 items-center justify-between">
         <div className="relative w-full md:w-96">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Search aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <TooltipWrapper tooltip="Search by talent name or professional alias" side="bottom">
             <Input 
+              aria-label="Search SBDB"
               placeholder="Search SBDB..." 
               className="pl-10 bg-white/5 border-white/10"
               value={search}
@@ -74,7 +75,7 @@ export const SBDBView = () => {
         <div className="flex items-center gap-3 w-full md:w-auto">
           <TooltipWrapper tooltip="Filter by primary industry role" side="bottom">
             <Select value={roleFilter} onValueChange={setRoleFilter}>
-              <SelectTrigger className="w-[140px] bg-white/5 border-white/10">
+              <SelectTrigger aria-label="Filter by role" className="w-[140px] bg-white/5 border-white/10">
                 <SelectValue placeholder="All Roles" />
               </SelectTrigger>
               <SelectContent>
@@ -89,7 +90,7 @@ export const SBDBView = () => {
 
           <TooltipWrapper tooltip="Filter by career tier and prestige level" side="bottom">
             <Select value={tierFilter} onValueChange={setTierFilter}>
-              <SelectTrigger className="w-[140px] bg-white/5 border-white/10">
+              <SelectTrigger aria-label="Filter by tier" className="w-[140px] bg-white/5 border-white/10">
                 <SelectValue placeholder="All Tiers" />
               </SelectTrigger>
               <SelectContent>
@@ -109,7 +110,7 @@ export const SBDBView = () => {
             aria-label="Filter talent" 
             className="border-white/10"
           >
-            <Filter className="w-4 h-4" />
+            <Filter aria-hidden="true" className="w-4 h-4" />
           </Button>
         </div>
       </div>

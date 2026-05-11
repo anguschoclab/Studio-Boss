@@ -120,8 +120,9 @@ export const TalentHub = () => {
         <TabsContent value="sbdb" className="flex-1 flex flex-col overflow-hidden mt-0 outline-none animate-in fade-in duration-1000">
           <div className="glass-card p-10 flex flex-col md:flex-row gap-8 items-center justify-between mb-12 bg-black/40 border border-white/5 rounded-none shadow-2xl">
             <div className="relative w-full md:w-[500px] group">
-              <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/20 group-focus-within:text-primary transition-all duration-700" />
+              <Search aria-hidden="true" className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/20 group-focus-within:text-primary transition-all duration-700" />
               <Input
+                aria-label="Search global database"
                 placeholder="SEARCH GLOBAL DATABASE..."
                 className="pl-14 h-14 bg-black/60 border-white/10 focus-visible:border-primary/40 focus-visible:ring-0 text-[10px] font-black uppercase tracking-[0.3em] rounded-none italic"
                 value={search}
@@ -130,7 +131,7 @@ export const TalentHub = () => {
             </div>
             <div className="flex items-center gap-6 w-full md:w-auto">
               <Select value={roleFilter} onValueChange={setRoleFilter}>
-                <SelectTrigger className="w-[200px] h-14 bg-black/60 border-white/10 text-[10px] font-black uppercase tracking-[0.3em] rounded-none italic focus:ring-0 focus:border-primary/40 transition-all duration-700">
+                <SelectTrigger aria-label="Filter by role" className="w-[200px] h-14 bg-black/60 border-white/10 text-[10px] font-black uppercase tracking-[0.3em] rounded-none italic focus:ring-0 focus:border-primary/40 transition-all duration-700">
                   <SelectValue placeholder="ALL ROLES" />
                 </SelectTrigger>
                 <SelectContent className="bg-black/95 backdrop-blur-3xl border-white/10 rounded-none">
@@ -142,7 +143,7 @@ export const TalentHub = () => {
                 </SelectContent>
               </Select>
               <Select value={tierFilter} onValueChange={setTierFilter}>
-                <SelectTrigger className="w-[200px] h-14 bg-black/60 border-white/10 text-[10px] font-black uppercase tracking-[0.3em] rounded-none italic focus:ring-0 focus:border-primary/40 transition-all duration-700">
+                <SelectTrigger aria-label="Filter by tier" className="w-[200px] h-14 bg-black/60 border-white/10 text-[10px] font-black uppercase tracking-[0.3em] rounded-none italic focus:ring-0 focus:border-primary/40 transition-all duration-700">
                   <SelectValue placeholder="ALL TIERS" />
                 </SelectTrigger>
                 <SelectContent className="bg-black/95 backdrop-blur-3xl border-white/10 rounded-none">

@@ -106,7 +106,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
               onClick={onClose}
               className="h-8 w-8 text-slate-500 hover:text-white"
             >
-              <X className="w-4 h-4" />
+              <X aria-hidden="true" className="w-4 h-4" />
             </Button>
           )}
         </div>
@@ -134,8 +134,9 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
         <div className="w-full lg:w-3/5 flex flex-col border-r border-white/5">
           <div className="p-4 space-y-4 bg-black/20">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+              <Search aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
               <Input
+                aria-label="Search industry database"
                 placeholder="Search industry database..."
                 className="pl-10 bg-black/40 border-slate-700 text-xs"
                 value={searchQuery}
@@ -145,7 +146,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
 
             <div className="flex gap-2">
               <Select value={selectedTier} onValueChange={(v: string) => setSelectedTier(v)}>
-                <SelectTrigger className="flex-1 bg-black/60 border-slate-700 h-9 text-[10px] font-bold uppercase">
+                <SelectTrigger aria-label="Filter by tier" className="flex-1 bg-black/60 border-slate-700 h-9 text-[10px] font-bold uppercase">
                   <SelectValue placeholder="Tier" />
                 </SelectTrigger>
                 <SelectContent className="bg-black border-white/5 text-slate-200">
@@ -158,7 +159,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
               </Select>
 
               <Select value={selectedRole} onValueChange={(v: string) => setSelectedRole(v)}>
-                <SelectTrigger className="flex-1 bg-black/60 border-slate-700 h-9 text-[10px] font-bold uppercase">
+                <SelectTrigger aria-label="Filter by role" className="flex-1 bg-black/60 border-slate-700 h-9 text-[10px] font-bold uppercase">
                   <SelectValue placeholder="Role" />
                 </SelectTrigger>
                 <SelectContent className="bg-black border-white/5 text-slate-200">
