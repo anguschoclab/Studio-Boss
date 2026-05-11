@@ -1,5 +1,5 @@
 import { Talent } from '@/engine/types';
-import { type TalentId, type AgencyId, type AgentId, type FamilyId } from '@/engine/types/shared.types';
+import { type TalentId } from '@/engine/types/shared.types';
 import { generateFamilies, generateTalentPool } from '../../generators/talent';
 import { generateAgencies, generateAgents } from '../../generators/agencies';
 import { RandomGenerator } from '../../utils/rng';

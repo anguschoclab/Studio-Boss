@@ -1,4 +1,4 @@
-import { GameState, StateImpact, Franchise } from '@/engine/types';
+import { GameState, StateImpact } from '@/engine/types';
 
 const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
 
@@ -8,6 +8,7 @@ const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
  */
 
 export function handleIndustryUpdate(state: GameState, impact: StateImpact): GameState {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const payload = impact.payload as Record<string, any>; 
   if (!payload || typeof payload !== 'object') return state;
   let nextState = { ...state };
@@ -50,6 +51,7 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
   if (update && typeof update === 'object' && !Array.isArray(update)) {
     for (const [path, value] of Object.entries(update)) {
       const parts = path.split('.');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let current: any = nextState;
 
       for (let i = 0; i < parts.length - 1; i++) {
