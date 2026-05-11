@@ -19,3 +19,6 @@
 ## 2026-05-20 - Eliminate intermediate array allocations in Deals system
 **Learning:** Functions like `countDealsByStudio` and `createShingle` in the Deals system (`ShingleSystem.ts` and `ShinglePitchRouter.ts`) were calling `Object.values()` coupled with `.filter()`, `.map()`, or `.some()` to process GameState records. This caused redundant intermediate array allocations that compound GC spikes.
 **Action:** Replaced these chains with direct `for...in` loops in `ShingleSystem.ts` and `ShinglePitchRouter.ts` to process record entities directly, eliminating O(N) array allocation overhead.
+## 2026-05-22 - Optimize AchievementsSystem array allocations
+**Learning:** The `checkAchievements` function executed multiple iterations over high-frequency State Records using `Object.values(state.entities.projects)`, creating significant intermediate arrays per week. Additionally, processing multiple flags required redundant loop passes (e.g. `some()` chains).
+**Action:** Replaced multiple chained `.filter()`, `.map()`, and `.some()` arrays with a single unified `for...in` traversal over `state.entities.projects` to aggregate all necessary metrics in one pass. Similarly converted `talents` and `rivals` iterations to `for...in`. This drastically reduces O(N) array allocation overhead during weekly ticks.
