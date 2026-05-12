@@ -28,7 +28,7 @@ export const NielsenDashboard = () => {
   
   const tvShows = React.useMemo(() => 
     projects.filter((p: Project): p is SeriesProject => 
-      p.type === 'SERIES' && 'tvDetails' in p && !!(p as any).nielsenProfile
+      p.type === 'SERIES' && 'tvDetails' in p && !!(p as unknown as Record<string, unknown>).nielsenProfile
     ),
   [projects]);
 
@@ -39,7 +39,7 @@ export const NielsenDashboard = () => {
   const weeklyRankings = React.useMemo(() => {
     return airingShows
       .map(show => {
-        const profile = (show as any).nielsenProfile as NielsenProfile | undefined;
+        const profile = (show as unknown as Record<string, unknown>).nielsenProfile as NielsenProfile | undefined;
         const latest = profile?.snapshots?.[profile.snapshots.length - 1];
         return { show, profile, latest };
       })
@@ -233,7 +233,7 @@ const WeeklyRankingsTable = ({ rankings }: { rankings: RankingEntry[] }) => {
 };
 
 const ShowDetailCard = ({ show }: { show: SeriesProject }) => {
-  const profile = (show as any).nielsenProfile as NielsenProfile | undefined;
+  const profile = (show as unknown as Record<string, unknown>).nielsenProfile as NielsenProfile | undefined;
   if (!profile || profile.snapshots.length === 0) return null;
 
   const chartData = profile.snapshots.map(snap => ({
@@ -308,7 +308,7 @@ const ShowDetailCard = ({ show }: { show: SeriesProject }) => {
 };
 
 const DemoBreakdownCard = ({ show }: { show: SeriesProject }) => {
-  const profile = (show as any).nielsenProfile as NielsenProfile | undefined;
+  const profile = (show as unknown as Record<string, unknown>).nielsenProfile as NielsenProfile | undefined;
   if (!profile || profile.snapshots.length === 0) return null;
 
   const latest = profile.snapshots[profile.snapshots.length - 1];
