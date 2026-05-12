@@ -19,3 +19,6 @@
 ## 2026-05-20 - Eliminate intermediate array allocations in Deals system
 **Learning:** Functions like `countDealsByStudio` and `createShingle` in the Deals system (`ShingleSystem.ts` and `ShinglePitchRouter.ts`) were calling `Object.values()` coupled with `.filter()`, `.map()`, or `.some()` to process GameState records. This caused redundant intermediate array allocations that compound GC spikes.
 **Action:** Replaced these chains with direct `for...in` loops in `ShingleSystem.ts` and `ShinglePitchRouter.ts` to process record entities directly, eliminating O(N) array allocation overhead.
+## 2026-05-23 - Avoid array iteration inside mapping of large sets for lookups
+**Learning:** In `IPVaultManager.ts`, evaluating IP vault assets requires checking the associated source projects. The original code used `Object.values(state.entities.projects).find(p => p.id === updatedAsset.originalProjectId)` TWICE inside a map of the entire vault, leading to O(N*M) complexity (vault size * project size) due to iterating over an array allocated per loop.
+**Action:** Instead of iterating over `Object.values()` to find a project by ID, use direct property access on `state.entities.projects` dictionary (`state.entities.projects[updatedAsset.originalProjectId]`). This provides an O(1) lookup, dramatically reducing processing time during the weekly IP Vault tick.
