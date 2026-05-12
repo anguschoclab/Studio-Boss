@@ -1,5 +1,4 @@
 import { ArchetypeKey } from '../../types/studio.types';
-import { ARCHETYPES } from '../../data/archetypes';
 import { generateProjectName } from '../../generators/names';
 import { RandomGenerator } from '../../utils/rng';
 import { ALL_GENRES } from '../../systems/trends';
