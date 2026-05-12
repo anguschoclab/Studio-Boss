@@ -38,3 +38,5 @@ Object.defineProperty(window, "Worker", {
     dispatchEvent(event: Event) { return true; }
   }
 });
+
+Object.defineProperty(window, 'scrollTo', { value: vi.fn(), writable: true });
