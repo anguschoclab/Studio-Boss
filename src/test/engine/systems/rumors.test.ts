@@ -1,18 +1,10 @@
-import * as utils from '../../../engine/utils';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { advanceRumors } from '../../../engine/systems/rumors';
 import { Rumor, Talent } from '../../../engine/types';
 import { createMockGameState } from '../../utils/mockFactories';
 
+import * as utils from '../../../engine/utils';
 import { secureRandom } from '../../../engine/utils';
-
-vi.mock('../../../engine/utils', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../../../engine/utils')>();
-  return {
-    ...actual,
-    secureRandom: vi.fn(() => 0.99), // Always return 0.99 so no random rumors trigger
-  };
-});
 
 describe('advanceRumors', () => {
   beforeEach(() => {
@@ -99,8 +91,7 @@ describe('advanceRumors', () => {
       }
     });
 
-    // Temporarily mock secureRandom to trigger rumor logic
-    vi.mocked(secureRandom).mockReturnValueOnce(0.01).mockReturnValueOnce(0.9);
+    vi.spyOn(utils, 'secureRandom').mockReturnValueOnce(0.01).mockReturnValueOnce(0.9);
     
     const impact = advanceRumors(stateWithTalent);
 
