@@ -17,11 +17,12 @@ describe('ScriptDraftingSystem - Edge Cases', () => {
         const rng = new RandomGenerator(555);
         const project = createMockProject({ state: 'development' });
         // Manually strip scripted fields to simulate non-scripted project
-        const {  activeRoles, scriptEvents, ...non } = project as any;
-        const unscripted = { ...non, genre: 'Reality' }; // Reality is unscripted genre
-        const impacts = tickScriptDevelopment(unscripted as Project, rng);
-        // ScriptDraftingSystem applies updates even if scriptEvents is missing, it creates an empty array, it doesnt return early
-        expect(impacts.length).toBeGreaterThanOrEqual(1);
+        const nonScriptedProject = { ...project };
+        delete (nonScriptedProject as any).scriptHeat;
+        delete (nonScriptedProject as any).activeRoles;
+        delete (nonScriptedProject as any).scriptEvents;
+        const impacts = tickScriptDevelopment(nonScriptedProject as Project, rng);
+        expect(impacts).toEqual([]);
     });
 
     it('should cap scriptHeat at 100 and 0', () => {

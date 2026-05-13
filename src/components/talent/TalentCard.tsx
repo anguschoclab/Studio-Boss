@@ -1,7 +1,5 @@
 import React from "react";
-
-import { } from "@/components/ui/hover-card";
-import { Package, } from "lucide-react";
+import { Package } from "lucide-react";
 import { Talent } from "@/engine/types";
 import { formatMoney } from "@/engine/utils";
 import { AGENCY_ARCHETYPES } from "@/engine/data/archetypes";

@@ -11,7 +11,11 @@ import { determineSyndicationTier } from './syndicationEngine';
  */
 export function tickIPVault(state: GameState, archetype?: import('../../data/aiArchetypes').StudioArchetype): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const activeProjects = Object.values(state.entities.projects);
+  // ⚡ The Framerate Fanatic: Eliminate intermediate array allocation
+  const activeProjects: import('../../types').Project[] = [];
+  for (const id in state.entities.projects) {
+    activeProjects.push(state.entities.projects[id]);
+  }
 
   let decayMultiplier = 1.0;
   const genreFocusBonus: Record<string, number> = {};
@@ -93,15 +97,18 @@ export function tickIPVault(state: GameState, archetype?: import('../../data/aiA
   });
 
   const genreSaturation: Record<string, number> = {};
-  const projects = Object.values(state.entities.projects);
-  projects.forEach((p) => {
+  // ⚡ The Framerate Fanatic: Replace Object.values with direct for...in loop
+  for (const id in state.entities.projects) {
+    const p = state.entities.projects[id];
     if (p.genre) {
       const g = p.genre.toUpperCase();
       genreSaturation[g] = (genreSaturation[g] || 0) + 1;
     }
-  });
+  }
 
-  Object.values(state.ip.franchises).forEach(franchise => {
+  // ⚡ The Framerate Fanatic: Replace Object.values with direct for...in loop
+  for (const id in state.ip.franchises) {
+    const franchise = state.ip.franchises[id];
     const firstAssetId = (franchise.assetIds || [])[0];
     const firstAsset = state.ip.vault.find(a => a.id === firstAssetId);
     const sourceProject = firstAsset?.originalProjectId ? state.entities.projects[firstAsset.originalProjectId] : undefined;
@@ -119,7 +126,7 @@ export function tickIPVault(state: GameState, archetype?: import('../../data/aiA
         }
       });
     }
-  });
+  }
 
   return impacts;
 }

@@ -19,22 +19,6 @@
 ## 2026-05-20 - Eliminate intermediate array allocations in Deals system
 **Learning:** Functions like `countDealsByStudio` and `createShingle` in the Deals system (`ShingleSystem.ts` and `ShinglePitchRouter.ts`) were calling `Object.values()` coupled with `.filter()`, `.map()`, or `.some()` to process GameState records. This caused redundant intermediate array allocations that compound GC spikes.
 **Action:** Replaced these chains with direct `for...in` loops in `ShingleSystem.ts` and `ShinglePitchRouter.ts` to process record entities directly, eliminating O(N) array allocation overhead.
-## 2026-05-22 - Optimize AchievementsSystem array allocations
-**Learning:** The `checkAchievements` function executed multiple iterations over high-frequency State Records using `Object.values(state.entities.projects)`, creating significant intermediate arrays per week. Additionally, processing multiple flags required redundant loop passes (e.g. `some()` chains).
-**Action:** Replaced multiple chained `.filter()`, `.map()`, and `.some()` arrays with a single unified `for...in` traversal over `state.entities.projects` to aggregate all necessary metrics in one pass. Similarly converted `talents` and `rivals` iterations to `for...in`. This drastically reduces O(N) array allocation overhead during weekly ticks.
-
-## 2026-05-23 - Avoid array iteration inside mapping of large sets for lookups
-**Learning:** In `IPVaultManager.ts`, evaluating IP vault assets requires checking the associated source projects. The original code used `Object.values(state.entities.projects).find(p => p.id === updatedAsset.originalProjectId)` TWICE inside a map of the entire vault, leading to O(N*M) complexity (vault size * project size) due to iterating over an array allocated per loop.
-**Action:** Instead of iterating over `Object.values()` to find a project by ID, use direct property access on `state.entities.projects` dictionary (`state.entities.projects[updatedAsset.originalProjectId]`). This provides an O(1) lookup, dramatically reducing processing time during the weekly IP Vault tick.
-
-## 2026-05-24 - Optimize Rival processing loops
-**Learning:** The `advanceRivals` system was performing redundant `Object.values()` calls on projects and talents within the rival iteration loop, creating O(Rivals * (Projects + Talents)) complexity and high GC pressure.
-**Action:** Replaced internal array allocations with direct record access where possible and converted the outer rival processing to a `for...in` loop. Combined multiple property checks into a single traversal pass.
-
-## 2024-05-08 - Eliminate Array Allocations in High-Frequency Engine Ticks
-**Learning:** Engine loops running Object.values().filter() and then iterating multiple times cause unnecessary O(N) allocations per tick, adding significant garbage collection pressure.
-**Action:** Replace filter/map chains with a single for...in loop to process items and update multiple state counters simultaneously in hot paths.
-
-## 2025-01-20 - Eliminating Object.values() Array Allocations (Global Standard)
-**Learning:** Iterating over high-frequency State Records (like `state.entities.projects` or `contracts`) using `Object.values()` creates intermediate O(N) array allocation overhead per tick, which compounds GC pressure significantly during simulation loops.
-**Action:** Always use a direct `for...in` loop over keys when iterating through large state entity records to avoid allocating throwaway arrays, yielding measurable speedups in hot path benchmarks.
+## 2026-05-23 - Replace O(N) array search inside mapping loop with O(1) dictionary lookup
+**Learning:** Using `Object.values(state.entities.projects).find()` inside a mapping function over high-frequency state objects (like `state.ip.vault.map()`) creates O(N*M) time complexity and massive garbage collection pressure by regenerating and searching arrays on every iteration.
+**Action:** Replace `Object.values(projects).find(p => p.id === id)` with a direct `for...in` loop to iterate or standard O(1) dictionary lookup (`state.entities.projects[id]`) when possible to eliminate the nested iteration and intermediate array allocations.

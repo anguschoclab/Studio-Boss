@@ -157,7 +157,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
                 </SelectContent>
               </Select>
 
-              <Select value={selectedRole} onValueChange={(v: string) => setSelectedRole(v)}>
+              <Select value={selectedRole} onValueChange={(v: any) => setSelectedRole(v)}>
                 <SelectTrigger className="flex-1 bg-black/60 border-slate-700 h-9 text-[10px] font-bold uppercase">
                   <SelectValue placeholder="Role" />
                 </SelectTrigger>

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { advanceMarketEvents, getActiveMarketEvent } from '../../../engine/systems/marketEvents';
-import { GameState, MarketEvent, Talent, StateImpact, MarketEventUpdateImpact } from '../../../engine/types';
+import { GameState, MarketEvent, Talent, MarketEventUpdateImpact } from '../../../engine/types';
 import * as utils from '../../../engine/utils';
 
 describe('Market Events System', () => {
