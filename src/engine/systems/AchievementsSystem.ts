@@ -186,11 +186,6 @@ export function checkAchievements(state: GameState): StateImpact[] {
   const impacts: StateImpact[] = [];
   const cash = state.finance.cash;
   const week = state.week;
-  const currentYear = Math.floor(week / 52);
-
-  const allProjects = Object.values(state.entities.projects);
-  const releasedProjects = allProjects.filter((p) => p.state === 'released' || p.state === 'post_release' || p.state === 'archived');
-  const allTalents = Object.values(state.entities.talents);
 
   // Helper: push impacts if newly unlocked
   const check = (
@@ -214,45 +209,80 @@ export function checkAchievements(state: GameState): StateImpact[] {
   // (A more precise check would require a loans field on finance state.)
   // For now we skip automatic unlock — it requires explicit loan tracking.
 
-  // --- CREATIVE ---
-  const hasCriticsDarling = releasedProjects.some((p) => (p.reviewScore ?? 0) >= 85);
-  check('critics_darling', hasCriticsDarling);
-
-  const boxOfficeChampion = releasedProjects.some(
-    (p) => (p.boxOffice?.totalDomestic ?? 0) >= 200_000_000,
-  );
-  check('box_office_champion', boxOfficeChampion, true);
-
-  // Award season sweep — 3+ award wins in the same calendar year
+  // ⚡ Bolt: Single pass over projects to aggregate all creative stats, replacing multiple Object.values + filter + some calls
+  let hasCriticsDarling = false;
+  let boxOfficeChampion = false;
   const awardsByYear: Record<number, number> = {};
-  for (const p of releasedProjects) {
+  const franchiseFilmCounts: Record<string, number> = {};
+  const bestPictureYears = new Set<number>();
+  const highGrossingYears = new Set<number>();
+
+  for (const id in state.entities.projects) {
+    const p = state.entities.projects[id];
+
+    if (p.state !== 'released' && p.state !== 'post_release' && p.state !== 'archived') {
+      continue;
+    }
+
+    if ((p.reviewScore ?? 0) >= 85) hasCriticsDarling = true;
+
+    const domGross = p.boxOffice?.totalDomestic ?? 0;
+    const totalGross = domGross + (p.boxOffice?.totalForeign ?? 0);
+
+    if (domGross >= 200_000_000) boxOfficeChampion = true;
+
     for (const award of (p.awards ?? [])) {
       if (award.status === 'won') {
         awardsByYear[award.year] = (awardsByYear[award.year] ?? 0) + 1;
+        if (award.category === 'Best Picture') {
+          bestPictureYears.add(award.year);
+        }
       }
     }
-  }
-  const hasSweep = Object.values(awardsByYear).some((count) => count >= 3);
-  check('award_season_sweep', hasSweep);
 
-  // Franchise builder — franchise with 3+ films
-  const franchiseFilmCounts: Record<string, number> = {};
-  for (const p of releasedProjects) {
     if (p.franchiseId) {
       franchiseFilmCounts[p.franchiseId] = (franchiseFilmCounts[p.franchiseId] ?? 0) + 1;
     }
+
+    if (totalGross >= 500_000_000 && p.releaseWeek !== null) {
+      highGrossingYears.add(Math.floor(p.releaseWeek / 52));
+    }
   }
-  const hasFranchise3 = Object.values(franchiseFilmCounts).some((c) => c >= 3);
+
+  // --- CREATIVE ---
+  check('critics_darling', hasCriticsDarling);
+  check('box_office_champion', boxOfficeChampion, true);
+
+  // Award season sweep — 3+ award wins in the same calendar year
+  let hasSweep = false;
+  for (const year in awardsByYear) {
+    if (awardsByYear[year] >= 3) {
+      hasSweep = true;
+      break;
+    }
+  }
+  check('award_season_sweep', hasSweep);
+
+  // Franchise builder — franchise with 3+ films
+  let hasFranchise3 = false;
+  for (const franchiseId in franchiseFilmCounts) {
+    if (franchiseFilmCounts[franchiseId] >= 3) {
+      hasFranchise3 = true;
+      break;
+    }
+  }
   check('franchise_builder', hasFranchise3);
 
   // --- TALENT ---
   // Star Maker: any A_LIST talent that was originally a NEWCOMER
-  // We can't easily reconstruct career history without a snapshot; defer to
-  // a flag on the talent object. Check for presence of A_LIST talents — the
-  // reducer should set this flag when a newcomer is promoted.
-  const hasStarMaker = allTalents.some(
-    (t) => t.tier === 'A_LIST' && (t as any).wasNewcomerWhenSigned === true,
-  );
+  let hasStarMaker = false;
+  for (const id in state.entities.talents) {
+    const t = state.entities.talents[id];
+    if (t.tier === 'A_LIST' && (t as any).wasNewcomerWhenSigned === true) {
+      hasStarMaker = true;
+      break;
+    }
+  }
   check('star_maker', hasStarMaker);
 
   // Big Agency Deal — First Look deal with a powerhouse agency
@@ -272,27 +302,26 @@ export function checkAchievements(state: GameState): StateImpact[] {
   check('prestige_peak', state.studio.prestige >= 90);
 
   // Market Dominator — player cash > all rivals
-  const playerCash = cash;
-  const allRivalCash = Object.values(state.entities.rivals).map((r) => r.cash);
-  const isMarketDominator = allRivalCash.length > 0 && allRivalCash.every((rc) => playerCash > rc);
+  let isMarketDominator = true;
+  let hasRivals = false;
+  for (const id in state.entities.rivals) {
+    hasRivals = true;
+    if (cash <= state.entities.rivals[id].cash) {
+      isMarketDominator = false;
+      break;
+    }
+  }
+  if (!hasRivals) isMarketDominator = false;
   check('market_dominator', isMarketDominator, true);
 
   // Legend — Best Picture win AND $500M film in the same year
-  const bestPictureYears = new Set<number>();
-  for (const p of releasedProjects) {
-    for (const award of (p.awards ?? [])) {
-      if (award.status === 'won' && award.category === 'Best Picture') {
-        bestPictureYears.add(award.year);
-      }
+  let hasLegend = false;
+  for (const year of bestPictureYears) {
+    if (highGrossingYears.has(year)) {
+      hasLegend = true;
+      break;
     }
   }
-  const hasLegend = releasedProjects.some((p) => {
-    const gross = (p.boxOffice?.totalDomestic ?? 0) + (p.boxOffice?.totalForeign ?? 0);
-    if (gross < 500_000_000) return false;
-    // releaseWeek to year
-    const releaseYear = p.releaseWeek !== null ? Math.floor(p.releaseWeek / 52) : -1;
-    return bestPictureYears.has(releaseYear);
-  });
   check('legend', hasLegend, true);
 
   return impacts;
