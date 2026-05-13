@@ -22,6 +22,11 @@
 ## 2026-05-23 - Replace O(N) array search inside mapping loop with O(1) dictionary lookup
 **Learning:** Using `Object.values(state.entities.projects).find()` inside a mapping function over high-frequency state objects (like `state.ip.vault.map()`) creates O(N*M) time complexity and massive garbage collection pressure by regenerating and searching arrays on every iteration.
 **Action:** Replace `Object.values(projects).find(p => p.id === id)` with a direct `for...in` loop to iterate or standard O(1) dictionary lookup (`state.entities.projects[id]`) when possible to eliminate the nested iteration and intermediate array allocations.
+
+## 2026-05-23 - Optimize ProductionEnhancementSystem Array Allocations
+**Learning:** Functions like `getProjectQualityBonus`, `generateScreenplayNotes`, and `tickProductionEnhancementSystem` in `ProductionEnhancementSystem.ts` were performing multiple `Object.values()` calls coupled with `.filter()`, `.map()`, and `.reduce()` on high-frequency state records (contracts, enhancements, projects). Given these functions run every tick for active projects, these intermediate array allocations caused compounding garbage collection spikes during core loops.
+**Action:** Replaced these chains with direct `for...in` loops. By interacting with the record's keys directly, O(N) memory allocations were entirely eliminated in these hot paths, reducing GC load and overall tick duration.
+
 ## 2026-05-03 - Extracted TalentProfileModal components
 **Learning:** `TalentProfileModal.tsx` grew to 470+ lines due to dense tabs content, decreasing maintainability.
 **Action:** Extracted inner Tab content blocks into dedicated smaller sub-components (`BioTab`, `StatsTab`, `KnownForTab`, and `FilmographyTab`) under `src/components/talent/tabs/`. This separation of concerns improves component readability and maintainability.
