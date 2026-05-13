@@ -138,9 +138,11 @@ export const StudioSidebar = () => {
             <Tooltip key={item.id} delayDuration={0}>
               <TooltipTrigger asChild>
                 <button
+                  type="button"
+                  aria-pressed={isActive}
                   onClick={() => setActiveTab(item.id)}
                   className={cn(
-                    "w-full flex items-center gap-4 transition-all duration-500 relative group overflow-hidden",
+                    "w-full flex items-center gap-4 transition-all duration-500 relative group overflow-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none",
                     isCollapsed ? "justify-center h-14" : "h-12 px-6",
                     isActive
                       ? "bg-primary/10 text-primary border-l-4 border-primary shadow-2xl"
@@ -236,7 +238,8 @@ export const StudioSidebar = () => {
         <Tooltip delayDuration={0}>
           <TooltipTrigger asChild>
             <button
-              className="w-full flex items-center gap-4 h-12 px-6 text-muted-foreground/30 hover:bg-white/5 hover:text-foreground transition-all duration-500 group overflow-hidden"
+              type="button"
+              className="w-full flex items-center gap-4 h-12 px-6 text-muted-foreground/30 hover:bg-white/5 hover:text-foreground transition-all duration-500 group overflow-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none"
               onClick={() => {}}
             >
               <Settings className="h-5 w-5 shrink-0 group-hover:rotate-90 transition-transform duration-700" />
@@ -258,8 +261,9 @@ export const StudioSidebar = () => {
         <Tooltip delayDuration={0}>
           <TooltipTrigger asChild>
             <button
+              type="button"
               onClick={handleExit}
-              className="w-full flex items-center gap-4 h-12 px-6 text-rose-900 hover:text-rose-500 hover:bg-rose-500/10 transition-all duration-500 group overflow-hidden"
+              className="w-full flex items-center gap-4 h-12 px-6 text-rose-900 hover:text-rose-500 hover:bg-rose-500/10 transition-all duration-500 group overflow-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none"
             >
               <LogOut className="h-5 w-5 shrink-0" />
               {!isCollapsed && (
@@ -278,9 +282,11 @@ export const StudioSidebar = () => {
         </Tooltip>
 
         <button
+          type="button"
+          aria-expanded={!isCollapsed}
           aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="w-full flex justify-center h-10 items-center hover:bg-white/5 text-muted-foreground/20 hover:text-primary transition-all duration-500"
+          className="w-full flex justify-center h-10 items-center hover:bg-white/5 text-muted-foreground/20 hover:text-primary transition-all duration-500 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none"
         >
           {isCollapsed ? (
             <ChevronRight className="h-5 w-5" strokeWidth={3} />

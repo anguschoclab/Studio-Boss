@@ -22,7 +22,6 @@ interface TalentCardProps {
 export const TalentCard: React.FC<TalentCardProps> = ({
   talent,
   className,
-
   onClick,
   tooltip,
 }) => {
@@ -41,7 +40,6 @@ export const TalentCard: React.FC<TalentCardProps> = ({
   const starPower = talent.starMeter || 50;
 
   const visualAge = getTalentVisualAge(talent, currentWeek);
-
   const genderSymbol =
     talent.demographics.gender === "MALE"
       ? "♂"
