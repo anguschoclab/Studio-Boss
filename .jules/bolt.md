@@ -26,3 +26,7 @@
 ## 2026-05-23 - Avoid array iteration inside mapping of large sets for lookups
 **Learning:** In `IPVaultManager.ts`, evaluating IP vault assets requires checking the associated source projects. The original code used `Object.values(state.entities.projects).find(p => p.id === updatedAsset.originalProjectId)` TWICE inside a map of the entire vault, leading to O(N*M) complexity (vault size * project size) due to iterating over an array allocated per loop.
 **Action:** Instead of iterating over `Object.values()` to find a project by ID, use direct property access on `state.entities.projects` dictionary (`state.entities.projects[updatedAsset.originalProjectId]`). This provides an O(1) lookup, dramatically reducing processing time during the weekly IP Vault tick.
+
+## 2026-05-24 - Optimize Rival processing loops
+**Learning:** The `advanceRivals` system was performing redundant `Object.values()` calls on projects and talents within the rival iteration loop, creating O(Rivals * (Projects + Talents)) complexity and high GC pressure.
+**Action:** Replaced internal array allocations with direct record access where possible and converted the outer rival processing to a `for...in` loop. Combined multiple property checks into a single traversal pass.

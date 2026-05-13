@@ -3,6 +3,7 @@ import { MarketState } from '../types/state.types';
 import { ALL_GENRES, initializeTrends } from '../systems/trends';
 import { ARCHETYPES } from '../data/archetypes';
 import { BrandSystem } from '../generators/BrandSystem';
+import { IPAsset } from '../types';
 import { generateMotto } from '../generators/names';
 import { generateFamilies, generateTalentPool } from '../generators/talent';
 import { generateBuyers } from '../generators/buyers';
@@ -149,8 +150,8 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
         totalEpisodes: 0,
         rightsExpirationWeek: 99999,
         rightsOwner: 'RIVAL',
-        ownerStudioId: rival.id as any,
-      } as any);
+        ownerStudioId: rival.id,
+      } as unknown as IPAsset);
     }
   });
 

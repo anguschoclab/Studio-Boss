@@ -7,10 +7,7 @@ import {
   TrendingUp,
   AlertCircle,
   CheckCircle2,
-
-
   ShieldAlert,
-
   History as LucideHistory,
   X,
 } from "lucide-react";
