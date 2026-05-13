@@ -1,9 +1,7 @@
 import React from 'react';
 import { TimeSeriesChart } from '@/components/charts/TimeSeriesChart';
-import { } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { TrendingUp, TrendingDown, Flame, Snowflake, Activity } from 'lucide-react';
-import { } from '@/components/ui/badge';
 import { useGameStore } from '@/store/gameStore';
 import { selectMarketTrends } from '@/store/selectors';
 
@@ -146,7 +144,5 @@ export const GenreTrendLine: React.FC<GenreTrendLineProps> = ({
     </div>
   );
 };
-
-export default GenreTrendLine;
 
 export default GenreTrendLine;
