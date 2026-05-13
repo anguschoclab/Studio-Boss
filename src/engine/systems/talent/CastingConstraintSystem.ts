@@ -5,7 +5,6 @@ import {
   ComfortPremiumRates,
   ScriptRequirement,
   ScriptRequirementType,
-  ScriptRequirementLevel,
   CastingConstraintCheck,
   CastingConstraintViolation,
   CastingConstraintOption,
@@ -13,21 +12,8 @@ import {
   NUDITY_PREMIUM_RATES,
   STUNT_PREMIUM_RATES,
   INTIMACY_PREMIUM_RATES,
-  RISK_PREMIUM_RATES,
-  ComfortLevelNudity,
-  ComfortLevelStunts,
-  ComfortLevelIntimacy,
-  ComfortLevelRisk,
 } from '../../types/casting.types';
-import { getTalentRelationships, areRomantic } from './RelationshipSystem';
 
-/**
- * Casting Constraint System
- * Manages script requirements (nudity, stunts, intimacy) and checks talent willingness.
- * Handles premium negotiations and suggests alternatives.
- */
-
-// Base comfort levels by personality
 const PERSONALITY_COMFORT_BASE: Record<string, Partial<TalentComfortLevel>> = {
   'charismatic': { intimacy: 'passionate', risk: 'adventurous' },
   'difficult': { nudity: 'none', risk: 'conservative' },
@@ -35,16 +21,12 @@ const PERSONALITY_COMFORT_BASE: Record<string, Partial<TalentComfortLevel>> = {
   'collaborative': { nudity: 'tasteful', intimacy: 'tasteful' },
 };
 
-// Prestige affects comfort (higher prestige = more selective)
 const PRESTIGE_COMFORT_MODIFIER = (prestige: number): Partial<TalentComfortLevel> => {
   if (prestige > 80) return { nudity: 'tasteful', risk: 'conservative' };
   if (prestige > 60) return { nudity: 'partial' };
   return {};
 };
 
-/**
- * Generate comfort levels for a talent based on personality and prestige
- */
 export function generateTalentComfortLevel(
   talent: Talent,
   rng: RandomGenerator
@@ -56,11 +38,9 @@ export function generateTalentComfortLevel(
     risk: 'moderate',
   };
 
-  // Apply personality modifiers
   const personalityMods = talent.personality ? PERSONALITY_COMFORT_BASE[talent.personality] : {};
   const prestigeMods = PRESTIGE_COMFORT_MODIFIER(talent.prestige || 50);
 
-  // Merge modifiers
   const comfort: TalentComfortLevel = {
     nudity: personalityMods?.nudity || prestigeMods?.nudity || baseComfort.nudity,
     stunts: personalityMods?.stunts || baseComfort.stunts,
@@ -68,7 +48,6 @@ export function generateTalentComfortLevel(
     risk: personalityMods?.risk || prestigeMods?.risk || baseComfort.risk,
   };
 
-  // Random variation
   if (rng.next() < 0.2) {
     const nudityLevels: Array<'none' | 'tasteful' | 'partial' | 'full'> = ['none', 'tasteful', 'partial', 'full'];
     const currentIdx = nudityLevels.indexOf(comfort.nudity);
@@ -77,7 +56,6 @@ export function generateTalentComfortLevel(
     comfort.nudity = nudityLevels[newIdx];
   }
 
-  // Calculate premium rates based on comfort
   const rates: ComfortPremiumRates = {
     nudityMultiplier: NUDITY_PREMIUM_RATES[comfort.nudity as keyof typeof NUDITY_PREMIUM_RATES] || 1.5,
     stuntMultiplier: STUNT_PREMIUM_RATES[comfort.stunts as keyof typeof STUNT_PREMIUM_RATES] || 1.2,
@@ -87,16 +65,52 @@ export function generateTalentComfortLevel(
   return { comfort, rates };
 }
 
-/**
- * Check if talent is willing to fulfill a requirement
- */
+type WillingnessResult = { willing: boolean; requiresPremium?: boolean; premium?: number; reason?: string };
+
+const WILLINGNESS_HANDLERS: Record<ScriptRequirementType, (talent: Talent, req: ScriptRequirement, comfort: TalentComfortLevel, rates: ComfortPremiumRates) => WillingnessResult> = {
+  nudity: (talent, req, comfort, rates) => {
+    const acceptable = REQUIREMENT_COMFORT_MAPPING[req.level];
+    const willing = acceptable.includes(comfort.nudity);
+    if (!willing) return { willing: false, reason: `${talent.name} is not comfortable with ${req.level} nudity scenes` };
+    if (comfort.nudity === 'tasteful' && req.level === 'extreme') {
+      return { willing: true, requiresPremium: true, premium: Math.floor(talent.fee * (rates.nudityMultiplier - 1)) };
+    }
+    return { willing: true };
+  },
+  stunts: (talent, req, comfort, rates) => {
+    const acceptable = REQUIREMENT_COMFORT_MAPPING[req.level];
+    const willing = acceptable.includes(comfort.stunts);
+    if (!willing) return { willing: false, reason: `${talent.name} refuses to perform ${req.level} stunt work` };
+    if (rates.stuntMultiplier > 1.2) {
+      return { willing: true, requiresPremium: true, premium: Math.floor(talent.fee * (rates.stuntMultiplier - 1)) };
+    }
+    return { willing: true };
+  },
+  intimacy: (talent, req, comfort, rates) => {
+    const acceptable = REQUIREMENT_COMFORT_MAPPING[req.level];
+    const willing = acceptable.includes(comfort.intimacy);
+    if (!willing) return { willing: false, reason: `${talent.name} is not comfortable with ${req.level} intimacy scenes` };
+    if (rates.intimacyMultiplier > 1.3) {
+      return { willing: true, requiresPremium: true, premium: Math.floor(talent.fee * (rates.intimacyMultiplier - 1)) };
+    }
+    return { willing: true };
+  },
+  physical_risk: (talent, req, comfort) => {
+    const willing = comfort.risk !== 'conservative' || req.level === 'mild';
+    return { willing, reason: willing ? undefined : `${talent.name} prefers to avoid high-risk or emotionally intense content` };
+  },
+  emotionally_intense: (talent, req, comfort) => {
+    const willing = comfort.risk !== 'conservative' || req.level === 'mild';
+    return { willing, reason: willing ? undefined : `${talent.name} prefers to avoid high-risk or emotionally intense content` };
+  }
+};
+
 export function checkTalentWillingness(
   talent: Talent,
   requirement: ScriptRequirement,
   state: GameState,
   rng: RandomGenerator
 ): CastingConstraintCheck {
-  // Get or generate comfort level
   let comfort = talent.comfortLevel;
   let rates = talent.comfortPremiumRates;
 
@@ -106,73 +120,20 @@ export function checkTalentWillingness(
     rates = generated.rates;
   }
 
-  const acceptableLevels = REQUIREMENT_COMFORT_MAPPING[requirement.level];
-  let willing = false;
-  let requiresPremium = false;
-  let requestedPremium = 0;
-  let refusalReason: string | undefined;
+  const handler = WILLINGNESS_HANDLERS[requirement.type];
+  const result = handler ? handler(talent, requirement, comfort, rates) : { willing: true };
 
-  // Check willingness based on requirement type
-  switch (requirement.type) {
-    case 'nudity':
-      willing = acceptableLevels.includes(comfort.nudity);
-      if (!willing) {
-        refusalReason = `${talent.name} is not comfortable with ${requirement.level} nudity scenes`;
-      } else if (comfort.nudity === 'tasteful' && requirement.level === 'extreme') {
-        requiresPremium = true;
-        requestedPremium = Math.floor(talent.fee * (rates.nudityMultiplier - 1));
-      }
-      break;
-
-    case 'stunts':
-      willing = acceptableLevels.includes(comfort.stunts);
-      if (!willing) {
-        refusalReason = `${talent.name} refuses to perform ${requirement.level} stunt work`;
-      } else if (rates.stuntMultiplier > 1.2) {
-        requiresPremium = true;
-        requestedPremium = Math.floor(talent.fee * (rates.stuntMultiplier - 1));
-      }
-      break;
-
-    case 'intimacy':
-      willing = acceptableLevels.includes(comfort.intimacy);
-      if (!willing) {
-        refusalReason = `${talent.name} is not comfortable with ${requirement.level} intimacy scenes`;
-      } else if (rates.intimacyMultiplier > 1.3) {
-        requiresPremium = true;
-        requestedPremium = Math.floor(talent.fee * (rates.intimacyMultiplier - 1));
-      }
-      break;
-
-    case 'physical_risk':
-    case 'emotionally_intense':
-      willing = comfort.risk !== 'conservative' || requirement.level === 'mild';
-      if (!willing) {
-        refusalReason = `${talent.name} prefers to avoid high-risk or emotionally intense content`;
-      }
-      break;
-  }
-
-  // Find alternative talent if not willing
   const alternativeTalentIds: string[] = [];
-  if (!willing) {
+  if (!result.willing) {
     const allTalents = Object.values(state.entities.talents || {});
     for (const other of allTalents) {
       if (other.id === talent.id) continue;
-
       const otherComfort = other.comfortLevel || generateTalentComfortLevel(other, rng).comfort;
-      const otherAcceptable = REQUIREMENT_COMFORT_MAPPING[requirement.level];
+      const otherRates = other.comfortPremiumRates || generateTalentComfortLevel(other, rng).rates;
+      const otherHandler = WILLINGNESS_HANDLERS[requirement.type];
+      const otherResult = otherHandler ? otherHandler(other, requirement, otherComfort, otherRates) : { willing: true };
 
-      let otherWilling = false;
-      switch (requirement.type) {
-        case 'nudity': otherWilling = otherAcceptable.includes(otherComfort.nudity); break;
-        case 'stunts': otherWilling = otherAcceptable.includes(otherComfort.stunts); break;
-        case 'intimacy': otherWilling = otherAcceptable.includes(otherComfort.intimacy); break;
-        case 'physical_risk':
-        case 'emotionally_intense': otherWilling = otherComfort.risk !== 'conservative'; break;
-      }
-
-      if (otherWilling && other.tier <= talent.tier + 1) {
+      if (otherResult.willing && other.tier <= talent.tier + 1) {
         alternativeTalentIds.push(other.id);
         if (alternativeTalentIds.length >= 3) break;
       }
@@ -182,17 +143,14 @@ export function checkTalentWillingness(
   return {
     talentId: talent.id,
     requirement,
-    willing,
-    requiresPremium,
-    requestedPremium,
-    refusalReason,
+    willing: result.willing,
+    requiresPremium: !!result.requiresPremium,
+    requestedPremium: result.premium || 0,
+    refusalReason: result.reason,
     alternativeTalentIds,
   };
 }
 
-/**
- * Generate script requirements from screenplay notes
- */
 export function generateRequirementsFromNotes(
   project: Project,
   state: GameState,
@@ -205,7 +163,6 @@ export function generateRequirementsFromNotes(
     const n = note as import('../../types/state.types').ScreenplayNote;
     if (n.projectId !== project.id || n.status !== 'implemented') continue;
 
-    // Check note type for requirements
     if (n.type === 'emotional_beat' && n.intensity === 'high') {
       requirements.push({
         id: rng.uuid('REQ'),
@@ -233,7 +190,6 @@ export function generateRequirementsFromNotes(
     }
   }
 
-  // Add requirements based on project genre
   if (project.genre?.toLowerCase().includes('action')) {
     requirements.push({
       id: rng.uuid('REQ'),
@@ -249,9 +205,6 @@ export function generateRequirementsFromNotes(
   return requirements;
 }
 
-/**
- * Create a casting constraint violation event
- */
 export function createConstraintViolation(
   check: CastingConstraintCheck,
   project: Project,
@@ -280,7 +233,6 @@ export function createConstraintViolation(
     },
   ];
 
-  // Add replacement option if alternatives exist
   if (check.alternativeTalentIds.length > 0) {
     const altTalent = state.entities.talents?.[check.alternativeTalentIds[0]];
     options.push({
@@ -303,9 +255,6 @@ export function createConstraintViolation(
   };
 }
 
-/**
- * Main casting constraint tick
- */
 export function tickCastingConstraintSystem(
   state: GameState,
   rng: RandomGenerator
@@ -314,7 +263,6 @@ export function tickCastingConstraintSystem(
   const projects = Object.values(state.entities.projects || {});
 
   for (const project of projects) {
-    // Only check projects in pre-production or production
     const projectState = project.state;
     if (!['PRE_PRODUCTION', 'IN_PRODUCTION', 'scripting', 'casting', 'production'].some(s =>
       projectState?.toLowerCase().includes(s.toLowerCase())
@@ -322,16 +270,12 @@ export function tickCastingConstraintSystem(
       continue;
     }
 
-    // Generate requirements from notes
     const requirements = generateRequirementsFromNotes(project, state, rng);
-
-    // Get attached talent
     const contracts = Object.values(state.entities.contracts || {})
       .filter(c => c.projectId === project.id);
     const talentIds = contracts.map(c => c.talentId);
 
     for (const requirement of requirements) {
-      // Check which talent are required for this requirement
       const targetTalentIds = requirement.requiredTalentIds.length > 0
         ? requirement.requiredTalentIds
         : talentIds;
@@ -342,7 +286,6 @@ export function tickCastingConstraintSystem(
 
         const check = checkTalentWillingness(talent, requirement, state, rng);
 
-        // Store the check
         impacts.push({
           type: 'CASTING_CONSTRAINT_CHECKED',
           payload: {
@@ -352,10 +295,8 @@ export function tickCastingConstraintSystem(
           },
         });
 
-        // If not willing, create violation
         if (!check.willing) {
           const violation = createConstraintViolation(check, project, state, rng);
-
           impacts.push({
             type: 'CASTING_CONSTRAINT_VIOLATION',
             payload: {
@@ -363,8 +304,6 @@ export function tickCastingConstraintSystem(
               notification: `Casting Issue: ${talent.name} refuses ${requirement.type} requirement in "${project.title}"`,
             },
           });
-
-          // Modal for player decision
           impacts.push({
             type: 'MODAL_TRIGGERED',
             payload: {
@@ -377,7 +316,6 @@ export function tickCastingConstraintSystem(
           });
         }
 
-        // If willing but wants premium
         if (check.willing && check.requiresPremium) {
           impacts.push({
             type: 'CASTING_PREMIUM_DEMAND',
@@ -391,7 +329,6 @@ export function tickCastingConstraintSystem(
           });
         }
 
-        // Suggest alternatives if not willing
         if (!check.willing && check.alternativeTalentIds.length > 0) {
           impacts.push({
             type: 'CASTING_ALTERNATIVE_SUGGESTED',
@@ -410,15 +347,11 @@ export function tickCastingConstraintSystem(
   return impacts;
 }
 
-/**
- * Apply comfort level to a talent (called on talent creation)
- */
 export function applyComfortLevelToTalent(
   talent: Talent,
   rng: RandomGenerator
 ): Partial<Talent> {
   const { comfort, rates } = generateTalentComfortLevel(talent, rng);
-
   return {
     comfortLevel: comfort,
     comfortPremiumRates: rates,

@@ -1,7 +1,7 @@
 import { Agency, GameState, StateImpact, RivalStudio } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 import { AGENCY_ARCHETYPES } from '../../data/archetypes';
-import { AI_ARCHETYPES } from '../../data/aiArchetypes';
+import { getStudioArchetype } from '../../data/aiArchetypes';
 import { pick } from '../../utils';
 
 function getAgencyArchetype(agency: Agency) {
@@ -70,7 +70,7 @@ export function shouldAttemptHostileTakeover(
   if (attacker.id === target.id) return false;
 
   const behaviorId = attacker.archetypeId || ('behaviorId' in attacker ? (attacker as any).behaviorId : undefined);
-  const archetype = AI_ARCHETYPES.find(a => a.id === behaviorId);
+  const archetype = getStudioArchetype(behaviorId);
   if (!archetype) return false;
 
   const minimumOfferSize = target.cash * 1.5 + (target.prestige * 1_000_000);

@@ -1,4 +1,4 @@
-import { GameState, StateImpact } from '@/engine/types';
+import { GameState, StateImpact, ImpactType } from '@/engine/types';
 
 // Import all handler modules
 import * as financeHandlers from './financeHandlers';
@@ -16,7 +16,7 @@ import * as noopHandlers from './noopHandlers';
 /**
  * Handler registry mapping impact types to their handler functions
  */
-const handlerRegistry: Record<string, (state: GameState, impact: StateImpact) => GameState> = {
+const handlerRegistry: Record<Exclude<ImpactType, undefined>, (state: GameState, impact: any) => GameState> = {
   // Finance handlers
   'FUNDS_CHANGED': financeHandlers.handleFundsChanged,
   'LEDGER_UPDATED': financeHandlers.handleLedgerUpdated,
@@ -29,6 +29,18 @@ const handlerRegistry: Record<string, (state: GameState, impact: StateImpact) =>
   // Project handlers
   'PROJECT_UPDATED': projectHandlers.handleProjectUpdated,
   'PROJECT_REMOVED': projectHandlers.handleProjectRemoved,
+  'PROJECT_CREATED': (state: GameState, impact: any) => {
+    const { project } = impact.payload;
+    const projects = { ...state.entities.projects };
+    projects[project.id] = project;
+    return {
+      ...state,
+      entities: {
+        ...state.entities,
+        projects,
+      },
+    };
+  },
   'AWARD_WON': projectHandlers.handleAwardWon,
   'PILOT_GRADUATED': projectHandlers.handlePilotGraduated,
 
@@ -67,6 +79,26 @@ const handlerRegistry: Record<string, (state: GameState, impact: StateImpact) =>
   'INDUSTRY_UPDATE': industryHandlers.handleIndustryUpdate,
   'SCANDAL_ADDED': industryHandlers.handleScandalAdded,
   'SCANDAL_REMOVED': industryHandlers.handleScandalRemoved,
+  'SCANDAL_UPDATED': (state: GameState, impact: any) => {
+    const { scandalUpdates } = impact.payload;
+    if (!scandalUpdates || scandalUpdates.length === 0) return state;
+
+    const updatesMap = new Map(scandalUpdates.map((u: any) => [u.scandalId, u.update]));
+
+    return {
+      ...state,
+      industry: {
+        ...state.industry,
+        scandals: (state.industry.scandals || []).map((s: any) => {
+          const update = updatesMap.get(s.id);
+          if (update) {
+            return { ...s, ...update };
+          }
+          return s;
+        }),
+      },
+    };
+  },
   'RIVAL_UPDATED': industryHandlers.handleRivalUpdated,
   'MERGER_OFFERED': industryHandlers.handleMergerOffered,
   'MERGER_RESOLVED': industryHandlers.handleMergerResolved,
@@ -93,7 +125,47 @@ const handlerRegistry: Record<string, (state: GameState, impact: StateImpact) =>
   'CASTING_CONSTRAINT_VIOLATION': noopHandlers.handleCastingConstraintViolation,
   'CASTING_PREMIUM_DEMAND': noopHandlers.handleCastingPremiumDemand,
   'CASTING_ALTERNATIVE_SUGGESTED': noopHandlers.handleCastingAlternativeSuggested,
+  'MODAL_TRIGGERED': (state: GameState) => state,
+
+  // Shingle handlers
+  'SHINGLE_CREATED': (state: GameState, impact: any) => {
+    const { shingle } = impact.payload;
+    const existing = (state.entities as any).shingles || {};
+    return {
+      ...state,
+      entities: {
+        ...state.entities,
+        shingles: { ...existing, [shingle.id]: shingle },
+      } as any,
+    };
+  },
+  'SHINGLE_UPDATED': (state: GameState, impact: any) => {
+    const { shingleId, update } = impact.payload;
+    const existing = (state.entities as any).shingles || {};
+    const cur = existing[shingleId];
+    if (!cur) return state;
+    return {
+      ...state,
+      entities: {
+        ...state.entities,
+        shingles: { ...existing, [shingleId]: { ...cur, ...update } },
+      } as any,
+    };
+  },
+  'SHINGLE_DISSOLVED': (state: GameState, impact: any) => {
+    const { shingleId } = impact.payload;
+    const existing = { ...((state.entities as any).shingles || {}) };
+    delete existing[shingleId];
+    return {
+      ...state,
+      entities: {
+        ...state.entities,
+        shingles: existing,
+      } as any,
+    };
+  },
 };
+
 
 /**
  * Apply a single StateImpact to the GameState using the handler registry
@@ -115,6 +187,91 @@ export function applySingleImpact(state: GameState, impact: StateImpact): GameSt
     impact.payload.update.cash = val;
   }
 
+  // Handle "bag" impacts (impacts with undefined type but other impact fields)
+  if (!impact.type) {
+    let newState = state;
+    if (impact.cashChange !== undefined) {
+      newState = applySingleImpact(newState, {
+        type: 'FUNDS_CHANGED',
+        payload: { amount: impact.cashChange },
+      });
+    }
+    if (impact.prestigeChange !== undefined) {
+      newState = applySingleImpact(newState, {
+        type: 'PRESTIGE_CHANGED',
+        payload: { amount: impact.prestigeChange },
+      });
+    }
+    if (impact.projectUpdates) {
+      impact.projectUpdates.forEach((u) => {
+        newState = applySingleImpact(newState, { type: 'PROJECT_UPDATED', payload: u });
+      });
+    }
+    if (impact.rivalUpdates) {
+      impact.rivalUpdates.forEach((u) => {
+        newState = applySingleImpact(newState, { type: 'RIVAL_UPDATED', payload: u });
+      });
+    }
+    if (impact.newHeadlines) {
+      impact.newHeadlines.forEach((h) => {
+        newState = applySingleImpact(newState, {
+          type: 'NEWS_ADDED',
+          payload: { headline: h.text, description: '' },
+        });
+      });
+    }
+    if (impact.newsEvents) {
+      impact.newsEvents.forEach((e) => {
+        newState = applySingleImpact(newState, {
+          type: 'NEWS_ADDED',
+          payload: { headline: e.headline, description: e.description },
+        });
+      });
+    }
+    if (impact.newAwards) {
+      impact.newAwards.forEach((award) => {
+        const projects = { ...newState.entities.projects };
+        const project = projects[award.projectId];
+        if (project) {
+          projects[award.projectId] = {
+            ...project,
+            awards: [...(project.awards || []), award],
+          } as any;
+        }
+        newState = { ...newState, entities: { ...newState.entities, projects } };
+      });
+    }
+    if (impact.cultClassicProjectIds) {
+      impact.cultClassicProjectIds.forEach((id) => {
+        const projects = { ...newState.entities.projects };
+        const project = projects[id];
+        if (project) {
+          projects[id] = { ...project, isCultClassic: true } as any;
+        }
+        newState = { ...newState, entities: { ...newState.entities, projects } };
+      });
+    }
+    if (impact.razzieWinnerTalents) {
+      impact.razzieWinnerTalents.forEach((id) => {
+        const talents = { ...newState.entities.talents };
+        const talent = talents[id];
+        if (talent) {
+          talents[id] = { ...talent, razzieWinner: true } as any;
+        }
+        newState = { ...newState, entities: { ...newState.entities, talents } };
+      });
+    }
+    if (impact.scandalUpdates && impact.scandalUpdates.length > 0) {
+      newState = applySingleImpact(newState, {
+        type: 'SCANDAL_UPDATED',
+        payload: {
+          scandalUpdates: impact.scandalUpdates,
+        },
+      });
+    }
+    return newState;
+  }
+
   // Look up handler and apply
   const handler = handlerRegistry[impact.type as keyof typeof handlerRegistry];
   if (handler) {
@@ -123,6 +280,13 @@ export function applySingleImpact(state: GameState, impact: StateImpact): GameSt
 
   // If no handler found, return state unchanged
   return state;
+}
+
+/**
+ * Pure reducer that processes an array of impacts without mutating original state.
+ */
+export function applyImpacts(state: GameState, impacts: StateImpact[]): GameState {
+  return impacts.reduce((currentState, impact) => applySingleImpact(currentState, impact), state);
 }
 
 // Re-export all handlers for testing purposes

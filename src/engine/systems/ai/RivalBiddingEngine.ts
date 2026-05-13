@@ -1,6 +1,6 @@
 import { Project, RivalStudio } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
-import { AI_ARCHETYPES } from '../../data/aiArchetypes';
+import { getStudioArchetype } from '../../data/aiArchetypes';
 import { SeriesProject } from '@/engine/types/project.types';
 import { assignTimeSlot, TimeSlot } from '../television/nielsenSystem';
 
@@ -10,7 +10,7 @@ export function generateFestivalBid(
   rng: RandomGenerator
 ): number | null {
   const behaviorId = rival.archetypeId || ('behaviorId' in rival ? (rival as any).behaviorId : undefined);
-  const archetype = AI_ARCHETYPES.find(a => a.id === behaviorId) || AI_ARCHETYPES[5];
+  const archetype = getStudioArchetype(behaviorId);
 
   const bidChance = (archetype.riskAppetite + archetype.biddingAggression) / 200;
   if (rng.next() > bidChance) return null;

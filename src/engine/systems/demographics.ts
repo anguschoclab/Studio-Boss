@@ -4,37 +4,39 @@ import { Project, AudienceQuadrant, DemographicGroup, GameState } from '@/engine
  * Evaluates how strongly a project resonates with a specific marketing target audience.
  * Returns a score between 0.0 and 2.0 (where >1.0 means highly efficient reach).
  */
+const GENRE_AFFINITIES: Record<string, Partial<Record<string, number>>> = {
+  male: { 'Action': 0.3, 'Sci-Fi': 0.3, 'Romance': -0.3 },
+  female: { 'Romance': 0.3, 'Drama': 0.3, 'Action': -0.2 },
+  under_25: { 'Horror': 0.4, 'Animation': 0.4, 'Documentary': -0.4, 'Historical': -0.4 },
+  over_25: { 'Documentary': 0.2, 'Thriller': 0.2, 'Animation': -0.3 },
+  four_quadrant: { 'Horror': -0.5, 'Documentary': -0.5 }
+};
+
+/**
+ * Evaluates how strongly a project resonates with a specific marketing target audience.
+ * Returns a score between 0.0 and 2.0 (where >1.0 means highly efficient reach).
+ */
 export function calculateAudienceIndex(project: Project, target: AudienceQuadrant): number {
   let index = 1.0;
   
-  // Genre affinities
-  if (target.includes('male')) {
-    if (project.genre === 'Action' || project.genre === 'Sci-Fi') index += 0.3;
-    if (project.genre === 'Romance') index -= 0.3;
-  }
-  
-  if (target.includes('female')) {
-    if (project.genre === 'Romance' || project.genre === 'Drama') index += 0.3;
-    if (project.genre === 'Action') index -= 0.2;
-  }
-  
-  if (target.includes('under_25')) {
-    if (project.genre === 'Horror' || project.genre === 'Animation') index += 0.4;
-    if (project.genre === 'Documentary' || project.genre === 'Historical') index -= 0.4;
-  }
-  
-  if (target.includes('over_25')) {
-    if (project.genre === 'Documentary' || project.genre === 'Thriller') index += 0.2;
-    if (project.genre === 'Animation') index -= 0.3;
+  // Apply genre affinities from map
+  const genre = project.genre;
+  if (genre) {
+    // Check specific quadrant affinities
+    Object.entries(GENRE_AFFINITIES).forEach(([quadrant, affinities]) => {
+      if (target === quadrant || target.includes(quadrant)) {
+        const affinity = affinities[genre];
+        if (affinity !== undefined) {
+          index += affinity;
+        }
+      }
+    });
   }
   
   if (target === 'four_quadrant') {
     // Four quadrant requires high budget / broad appeal
     if (project.budgetTier === 'blockbuster') index += 0.5;
     else if (project.budgetTier === 'low') index -= 0.4;
-    
-    // Niche genres hurt 4-quadrant
-    if (project.genre === 'Horror' || project.genre === 'Documentary') index -= 0.5;
   }
   
   // Content Rating affinity

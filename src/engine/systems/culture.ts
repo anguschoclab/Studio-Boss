@@ -1,35 +1,48 @@
 import { StudioCulture, ArchetypeKey, Project } from '@/engine/types';
 
-export function initializeCulture(archetype: ArchetypeKey): StudioCulture {
-  switch (archetype) {
-    case 'indie':
-      return {
-        prestigeVsCommercial: 80, // High prestige
-        talentFriendlyVsControlling: 70, // Talent friendly
-        nicheVsBroad: 20, // Niche
-        filmFirstVsTvFirst: 90, // Film focused
-        franchiseOriginal: 20 // Mostly originals
-      };
-    case 'major':
-      return {
-        prestigeVsCommercial: 30, // Commercial
-        talentFriendlyVsControlling: 30, // Controlling
-        nicheVsBroad: 90, // Broad
-        filmFirstVsTvFirst: 60, // Slight film bias
-        franchiseOriginal: 80 // Franchise focused
-      };
-    default:
-      return {
-        prestigeVsCommercial: 50,
-        talentFriendlyVsControlling: 50,
-        nicheVsBroad: 50,
-        filmFirstVsTvFirst: 50,
-        franchiseOriginal: 50
-      };
+const CULTURE_TEMPLATES: Record<ArchetypeKey, StudioCulture> = {
+  indie: {
+    prestigeVsCommercial: 80,
+    talentFriendlyVsControlling: 70,
+    nicheVsBroad: 20,
+    filmFirstVsTvFirst: 90,
+    franchiseOriginal: 20
+  },
+  major: {
+    prestigeVsCommercial: 30,
+    talentFriendlyVsControlling: 30,
+    nicheVsBroad: 90,
+    filmFirstVsTvFirst: 60,
+    franchiseOriginal: 80
+  },
+  boutique: {
+    prestigeVsCommercial: 70,
+    talentFriendlyVsControlling: 60,
+    nicheVsBroad: 30,
+    filmFirstVsTvFirst: 80,
+    franchiseOriginal: 40
+  },
+  streamer: {
+    prestigeVsCommercial: 40,
+    talentFriendlyVsControlling: 40,
+    nicheVsBroad: 80,
+    filmFirstVsTvFirst: 20,
+    franchiseOriginal: 60
   }
+};
+
+const DEFAULT_CULTURE: StudioCulture = {
+  prestigeVsCommercial: 50,
+  talentFriendlyVsControlling: 50,
+  nicheVsBroad: 50,
+  filmFirstVsTvFirst: 50,
+  franchiseOriginal: 50
+};
+
+export function initializeCulture(archetype: ArchetypeKey): StudioCulture {
+  return CULTURE_TEMPLATES[archetype] || DEFAULT_CULTURE;
 }
 
-// Helper to gracefully shift culture towards a target
 function shiftAxis(current: number, target: number, weight: number = 2): number {
   const diff = target - current;
   return Math.min(100, Math.max(0, current + (diff * (weight / 100))));
@@ -38,7 +51,6 @@ function shiftAxis(current: number, target: number, weight: number = 2): number 
 export function updateCultureFromProject(culture: StudioCulture, project: Project): StudioCulture {
   const updated = { ...culture };
   
-  // Shift Prestige vs Commercial
   if (project.budgetTier === 'low') {
     updated.prestigeVsCommercial = shiftAxis(updated.prestigeVsCommercial, 100, 1);
   } else if (project.budgetTier === 'blockbuster') {
@@ -49,12 +61,10 @@ export function updateCultureFromProject(culture: StudioCulture, project: Projec
     updated.prestigeVsCommercial = shiftAxis(updated.prestigeVsCommercial, 100, 1);
   }
   
-  // Shift Niche vs Broad
   if (project.targetAudience === 'niche' || project.targetAudience === 'four-quadrant') {
      updated.nicheVsBroad = shiftAxis(updated.nicheVsBroad, project.targetAudience === 'four-quadrant' ? 100 : 0, 2);
   }
   
-  // Shift Film vs TV
   updated.filmFirstVsTvFirst = shiftAxis(updated.filmFirstVsTvFirst, project.format === 'film' ? 100 : 0, 2);
   
   return updated;

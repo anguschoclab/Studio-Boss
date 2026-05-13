@@ -19,6 +19,51 @@ export interface LeverageResult {
   explanation: string[];
 }
 
+const TALENT_TIER_EFFECTS: Record<number, { effect: number; explanation: string }> = {
+  1: { effect: 0.4, explanation: 'A-List status provides maximum leverage.' },
+  2: { effect: 0.2, explanation: 'B-List status provides solid bargaining ground.' },
+  3: { effect: 0.15, explanation: 'Rising star momentum increases leverage.' },
+  4: { effect: -0.1, explanation: 'C-List status limits negotiation power.' },
+};
+
+const MARKET_CYCLE_EFFECTS: Record<string, { effect: number; explanation: string }> = {
+  'BOOM': { effect: 0.2, explanation: 'Market boom: Talent has the upper hand.' },
+  'BEAR': { effect: -0.15, explanation: 'Market cooling: Fees are under pressure.' },
+  'RECESSION': { effect: -0.3, explanation: 'Economic recession: Agencies are desperate for deals.' },
+  'RECOVERY': { effect: 0.1, explanation: 'Market recovery: Sentiment is improving.' },
+  'STABLE': { effect: 0, explanation: '' }
+};
+
+const AGENCY_TIER_EFFECTS: Record<string, { effect: number; explanation?: string }> = {
+  'powerhouse': { effect: 0.15, explanation: 'powerhouse status adds significant weight.' },
+  'major': { effect: 0.1 },
+  'specialist': { effect: 0.05 },
+  'boutique': { effect: -0.05 },
+};
+
+const TACTIC_BASE_EFFECTS: Record<string, { effect: number; explanation: string; alignmentExplanation: string }> = {
+  'SHARK': { 
+    effect: 0.1, 
+    explanation: 'is using aggressive \'Shark\' tactics.',
+    alignmentExplanation: 'is using aggressive \'Shark\' tactics, aligned with {archetype} archetype.'
+  },
+  'PRESTIGE': { 
+    effect: 0.05, 
+    explanation: 'is leveraging critical acclaim.',
+    alignmentExplanation: 'is leveraging critical acclaim, aligned with {archetype} archetype.'
+  },
+  'VOLUME': { 
+    effect: -0.05, 
+    explanation: 'prefers deal velocity over top dollar.',
+    alignmentExplanation: 'prefers deal velocity over top dollar, aligned with {archetype} archetype.'
+  },
+  'DIPLOMAT': { 
+    effect: 0, 
+    explanation: 'is using diplomatic tactics.',
+    alignmentExplanation: 'is using diplomatic tactics, aligned with {archetype} archetype.'
+  }
+};
+
 export const AgencyLeverageEngine = {
   /**
    * Calculates the total leverage score for a specific negotiation.
@@ -33,63 +78,43 @@ export const AgencyLeverageEngine = {
     const _buzz = projectContext?.buzz || 0;
     const explanation: string[] = [];
     
-    // 1. Base Talent Leverage (Primary driver)
-    let talentEffect = 0.5; // Baseline
-    
-    // Project Heat (Buzz) multiplier
+    // 1. Base Talent Leverage
+    let talentEffect = 0.5;
     if (_buzz > 80) {
       talentEffect += 0.1;
       explanation.push('High project buzz increases talent bargaining power.');
     }
-    switch (talent.tier) {
-      case 1: talentEffect += 0.4; explanation.push('A-List status provides maximum leverage.'); break;
-      case 2: talentEffect += 0.2; explanation.push('B-List status provides solid bargaining ground.'); break;
-      case 3: talentEffect += 0.15; explanation.push('Rising star momentum increases leverage.'); break;
-      case 4: talentEffect -= 0.1; explanation.push('C-List status limits negotiation power.'); break;
-      default: talentEffect -= 0.3; explanation.push('Newcomers have minimal standing.'); break;
+    
+    const tierImpact = TALENT_TIER_EFFECTS[talent.tier];
+    if (tierImpact) {
+      talentEffect += tierImpact.effect;
+      explanation.push(tierImpact.explanation);
+    } else {
+      talentEffect -= 0.3;
+      explanation.push('Newcomers have minimal standing.');
     }
 
     // 2. Market Cycle Effect
+    const cycleImpact = MARKET_CYCLE_EFFECTS[market.cycle];
     let marketEffect = 0;
-    switch (market.cycle) {
-      case 'BOOM': 
-        marketEffect = 0.2; 
-        explanation.push('Market boom: Talent has the upper hand.'); 
-        break;
-      case 'STABLE': 
-        marketEffect = 0; 
-        break;
-      case 'BEAR': 
-        marketEffect = -0.15; 
-        explanation.push('Market cooling: Fees are under pressure.'); 
-        break;
-      case 'RECESSION': 
-        marketEffect = -0.3; 
-        explanation.push('Economic recession: Agencies are desperate for deals.'); 
-        break;
-      case 'RECOVERY': 
-        marketEffect = 0.1; 
-        explanation.push('Market recovery: Sentiment is improving.'); 
-        break;
+    if (cycleImpact) {
+      marketEffect = cycleImpact.effect;
+      if (cycleImpact.explanation) explanation.push(cycleImpact.explanation);
     }
 
     // 3. Agency & Agent Effect
     let agencyEffect = 0;
     if (agency) {
-      // Use agency archetype leverage_base if available
       const archetype = agency.culture ? AGENCY_ARCHETYPES[agency.culture as keyof typeof AGENCY_ARCHETYPES] : undefined;
       if (archetype) {
-        // Convert leverage_base (0-100) to effect (0-0.2)
         const leverageBonus = (archetype.leverage_base / 100) * 0.2;
         agencyEffect += leverageBonus;
         explanation.push(`${agency.name}'s ${archetype.name} archetype provides leverage base of ${archetype.leverage_base}.`);
       } else {
-        // Fallback to tier-based calculation
-        switch (agency.tier) {
-          case 'powerhouse': agencyEffect += 0.15; explanation.push(`${agency.name}'s powerhouse status adds significant weight.`); break;
-          case 'major': agencyEffect += 0.1; break;
-          case 'specialist': agencyEffect += 0.05; break;
-          case 'boutique': agencyEffect -= 0.05; break;
+        const tierImpact = AGENCY_TIER_EFFECTS[agency.tier];
+        if (tierImpact) {
+          agencyEffect += tierImpact.effect;
+          if (tierImpact.explanation) explanation.push(`${agency.name}'s ${tierImpact.explanation}`);
         }
       }
     }
@@ -97,45 +122,18 @@ export const AgencyLeverageEngine = {
     // 4. Agent Tactic
     let tacticEffect = 0;
     if (agent) {
-      // Check if agent's tactic aligns with agency archetype preferences
       const archetype = agency?.culture ? AGENCY_ARCHETYPES[agency.culture as keyof typeof AGENCY_ARCHETYPES] : undefined;
       const tacticMatchesArchetype = archetype?.negotiation_tactic_preferences.includes(agent.negotiationTactic.toUpperCase());
-      
-      switch (agent.negotiationTactic) {
-        case 'SHARK': 
-          tacticEffect = 0.1;
-          if (tacticMatchesArchetype) {
-            tacticEffect += 0.05; // Bonus if tactic matches archetype preference
-            explanation.push(`${agent.name} is using aggressive 'Shark' tactics, aligned with ${archetype?.name} archetype.`);
-          } else {
-            explanation.push(`${agent.name} is using aggressive 'Shark' tactics.`);
-          }
-          break;
-        case 'PRESTIGE': 
-          tacticEffect = 0.05;
-          if (tacticMatchesArchetype) {
-            tacticEffect += 0.05;
-            explanation.push(`${agent.name} is leveraging critical acclaim, aligned with ${archetype?.name} archetype.`);
-          } else {
-            explanation.push(`${agent.name} is leveraging critical acclaim.`);
-          }
-          break;
-        case 'VOLUME': 
-          tacticEffect = -0.05;
-          if (tacticMatchesArchetype) {
-            tacticEffect += 0.05; // Reduce penalty if tactic matches archetype preference
-            explanation.push(`${agent.name} prefers deal velocity over top dollar, aligned with ${archetype?.name} archetype.`);
-          } else {
-            explanation.push(`${agent.name} prefers deal velocity over top dollar.`);
-          }
-          break;
-        case 'DIPLOMAT': 
-          tacticEffect = 0;
-          if (tacticMatchesArchetype) {
-            tacticEffect += 0.05;
-            explanation.push(`${agent.name} is using diplomatic tactics, aligned with ${archetype?.name} archetype.`);
-          }
-          break;
+      const tacticImpact = TACTIC_BASE_EFFECTS[agent.negotiationTactic.toUpperCase()];
+
+      if (tacticImpact) {
+        tacticEffect = tacticImpact.effect;
+        if (tacticMatchesArchetype) {
+          tacticEffect += 0.05;
+          explanation.push(`${agent.name} ${tacticImpact.alignmentExplanation.replace('{archetype}', archetype?.name || '')}`);
+        } else {
+          explanation.push(`${agent.name} ${tacticImpact.explanation}`);
+        }
       }
     }
 
@@ -144,22 +142,13 @@ export const AgencyLeverageEngine = {
 
     return {
       score: totalScore,
-      modifiers: {
-        marketEffect,
-        agencyEffect,
-        talentEffect,
-        tacticEffect
-      },
+      modifiers: { marketEffect, agencyEffect, talentEffect, tacticEffect },
       explanation
     };
   },
 
-  /**
-   * Applies leverage to a proposed fee.
-   * Higher leverage results in higher minimum fee demands.
-   */
   getRequiredFee(baseFee: number, leverage: LeverageResult): number {
-    const multiplier = 1.0 + (leverage.score - 0.5) * 0.5; // Ranges from 0.75x to 1.25x of base fee
+    const multiplier = 1.0 + (leverage.score - 0.5) * 0.5;
     return Math.floor(baseFee * multiplier);
   }
 };

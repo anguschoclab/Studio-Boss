@@ -22,6 +22,19 @@ import { PitchProjectModal } from '@/components/modals/PitchProjectModal';
 import { CrisisModal } from '@/components/modals/CrisisModal';
 import { AwardsCeremonyModal } from '@/components/modals/AwardsCeremonyModal';
 
+import { TabId } from '@/store/uiStore';
+
+const TAB_CONTENT: Record<TabId, React.ReactNode> = {
+  command: <CommandCenter key="command" />,
+  pipeline: <PipelineBoard key="pipeline" />,
+  ip: <IPVault key="ip" />,
+  distribution: <DistributionHub key="distribution" />,
+  industry: <RivalsPanel key="industry" />,
+  talent: <TalentHub key="talent" />,
+  finance: <FinancePanel key="finance" />,
+  trades: <DiscoveryBoard key="trades" />,
+};
+
 const Dashboard: React.FC = () => {
   const gameState = useGameStore(s => s.gameState);
   const { activeTab } = useUIStore();
@@ -38,19 +51,7 @@ const Dashboard: React.FC = () => {
   if (!gameState && !isAutoStarting) return <Navigate to="/" />;
   if (!gameState) return <div className="flex items-center justify-center h-screen font-sans">Initializing Studio...</div>;
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'command': return <CommandCenter key="command" />;
-      case 'pipeline': return <PipelineBoard key="pipeline" />;
-      case 'ip': return <IPVault key="ip" />;
-      case 'distribution': return <DistributionHub key="distribution" />;
-      case 'industry': return <RivalsPanel key="industry" />;
-      case 'talent': return <TalentHub key="talent" />;
-      case 'finance': return <FinancePanel key="finance" />;
-      case 'trades': return <DiscoveryBoard key="trades" />;
-      default: return <CommandCenter key="default" />;
-    }
-  };
+  const renderContent = () => TAB_CONTENT[activeTab] || <CommandCenter key="default" />;
 
   return (
     <div className="flex bg-background min-h-screen text-foreground font-sans overflow-hidden">

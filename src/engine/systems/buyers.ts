@@ -6,7 +6,42 @@ const MANDATE_TYPES: MandateType[] = [
   'sci-fi', 'comedy', 'drama', 'budget_freeze', 'broad_appeal', 'prestige'
 ];
 
-// Pre-compute available mandate types per mandate to avoid O(N) array allocations in the loop
+const MANDATE_HEADLINES: Record<MandateType, string> = {
+  'sci-fi': 'Industry chatter: {name} is desperately looking for the next big Sci-Fi hit.',
+  'comedy': '{name} shifts focus, seeking half-hour comedies for their upcoming slate.',
+  'drama': 'New mandate at {name}: high-stakes drama is the priority.',
+  'budget_freeze': 'Austerity hits {name}! Execs are instituting a sudden budget freeze on new pitches.',
+  'broad_appeal': '{name} pivots to four-quadrant, broad appeal projects after subscriber churn.',
+  'prestige': 'Awards chase: {name} announces a massive fund specifically for prestige projects.'
+};
+
+const MANDATE_FIT_HANDLERS: Record<MandateType, (project: Project) => number> = {
+  'sci-fi': (p) => {
+    const l = p.genre.toLowerCase();
+    return (l.includes('sci-fi') || l.includes('fantasy')) ? 30 : 0;
+  },
+  'comedy': (p) => p.genre.toLowerCase().includes('comedy') ? 30 : 0,
+  'drama': (p) => p.genre.toLowerCase().includes('drama') ? 30 : 0,
+  'prestige': (p) => {
+    if (p.budgetTier === 'high') return 20;
+    if (p.budgetTier === 'blockbuster') return 10;
+    if (p.budgetTier === 'low') return -20;
+    return 0;
+  },
+  'broad_appeal': (p) => {
+    let bonus = 0;
+    if (p.budgetTier === 'mid' || p.budgetTier === 'high') bonus += 20;
+    if (p.targetAudience.toLowerCase().includes('family')) bonus += 15;
+    return bonus;
+  },
+  'budget_freeze': (p) => {
+    if (p.budgetTier === 'blockbuster') return -50;
+    if (p.budgetTier === 'high') return -30;
+    if (p.budgetTier === 'low') return 20;
+    return 0;
+  }
+};
+
 const AVAILABLE_MANDATES = new Map<string, MandateType[]>();
 AVAILABLE_MANDATES.set('none', MANDATE_TYPES);
 for (let i = 0; i < MANDATE_TYPES.length; i++) {
@@ -21,7 +56,6 @@ export function updateBuyers(buyers: Buyer[], currentWeek: number): StateImpact 
   };
 
   buyers.forEach((buyer) => {
-    // If mandate expired or random 5% chance to shift early
     if (!buyer.currentMandate || buyer.currentMandate.activeUntilWeek <= currentWeek || rand() < 0.05) {
       const currentType = buyer.currentMandate?.type || 'none';
       const availableTypes = AVAILABLE_MANDATES.get(currentType) || MANDATE_TYPES;
@@ -38,34 +72,13 @@ export function updateBuyers(buyers: Buyer[], currentWeek: number): StateImpact 
         }
       });
 
-      let headlineText = "";
-      switch (newMandateType) {
-        case 'sci-fi':
-          headlineText = `Industry chatter: ${buyer.name} is desperately looking for the next big Sci-Fi hit.`;
-          break;
-        case 'comedy':
-          headlineText = `${buyer.name} shifts focus, seeking half-hour comedies for their upcoming slate.`;
-          break;
-        case 'drama':
-          headlineText = `New mandate at ${buyer.name}: high-stakes drama is the priority.`;
-          break;
-        case 'budget_freeze':
-          headlineText = `Austerity hits ${buyer.name}! Execs are instituting a sudden budget freeze on new pitches.`;
-          break;
-        case 'broad_appeal':
-          headlineText = `${buyer.name} pivots to four-quadrant, broad appeal projects after subscriber churn.`;
-          break;
-        case 'prestige':
-          headlineText = `Awards chase: ${buyer.name} announces a massive fund specifically for prestige projects.`;
-          break;
-      }
-      
-      if (headlineText && rand() < 0.6) { // Don't spam headlines every single shift
+      const headlineTemplate = MANDATE_HEADLINES[newMandateType];
+      if (headlineTemplate && rand() < 0.6) {
         impact.newHeadlines!.push({
           id: generateId('HL'),
           week: currentWeek,
           category: 'market',
-          text: headlineText
+          text: headlineTemplate.replace('{name}', buyer.name)
         });
       }
     }
@@ -74,11 +87,9 @@ export function updateBuyers(buyers: Buyer[], currentWeek: number): StateImpact 
   return impact;
 }
 
-
 export function calculateFitScore(project: Project, buyer: Buyer, currentWeek: number = 0, allProjects: Project[] = []): number {
-  let score = 50; // Base score
+  let score = 50;
 
-  // Market Saturation Penalty
   let recentSimilarProjectsCount = 0;
   for (let i = 0; i < allProjects.length; i++) {
     const p = allProjects[i];
@@ -94,43 +105,19 @@ export function calculateFitScore(project: Project, buyer: Buyer, currentWeek: n
   }
 
   let saturationPenalty = recentSimilarProjectsCount * 5;
-
-  if (recentSimilarProjectsCount >= 5) {
-    saturationPenalty += 20;
-  }
-
+  if (recentSimilarProjectsCount >= 5) saturationPenalty += 20;
   if (recentSimilarProjectsCount >= 5 && project.genre && project.genre.toLowerCase().includes('superhero')) {
     saturationPenalty *= 3;
     saturationPenalty += 75;
   }
-
-  if (saturationPenalty > 0) {
-    score -= saturationPenalty;
-  }
-
-  if (recentSimilarProjectsCount === 0) {
-    score += 15;
-  }
+  
+  if (saturationPenalty > 0) score -= saturationPenalty;
+  if (recentSimilarProjectsCount === 0) score += 15;
 
   if (buyer.currentMandate) {
-    const mandate = buyer.currentMandate.type;
-
-    const lowerGenre = project.genre.toLowerCase();
-    if (mandate === 'sci-fi' && (lowerGenre.includes('sci-fi') || lowerGenre.includes('fantasy'))) score += 30;
-    if (mandate === 'comedy' && lowerGenre.includes('comedy')) score += 30;
-    if (mandate === 'drama' && lowerGenre.includes('drama')) score += 30;
-
-    if (mandate === 'prestige' && project.budgetTier === 'high') score += 20;
-    if (mandate === 'prestige' && project.budgetTier === 'blockbuster') score += 10;
-    if (mandate === 'prestige' && project.budgetTier === 'low') score -= 20;
-
-    if (mandate === 'broad_appeal' && (project.budgetTier === 'mid' || project.budgetTier === 'high')) score += 20;
-    if (mandate === 'broad_appeal' && project.targetAudience.toLowerCase().includes('family')) score += 15;
-
-    if (mandate === 'budget_freeze') {
-      if (project.budgetTier === 'blockbuster') score -= 50;
-      if (project.budgetTier === 'high') score -= 30;
-      if (project.budgetTier === 'low') score += 20;
+    const handler = MANDATE_FIT_HANDLERS[buyer.currentMandate.type];
+    if (handler) {
+      score += handler(project);
     }
   }
 

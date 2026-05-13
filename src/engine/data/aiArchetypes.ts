@@ -4,7 +4,6 @@ import { ProjectFormat, BudgetTierKey } from '../types/project.types';
 
 /**
  * Unified Studio Archetype System
- * Combines AI_ARCHETYPES and RIVAL_BEHAVIOR_CONFIGS into a single comprehensive system
  */
 export interface StudioArchetype {
   id: string;
@@ -12,24 +11,22 @@ export interface StudioArchetype {
   strategy: RivalStrategy;
   motivation: StudioMotivation;
   biddingAggression: number; // 0-100
-  talentLoyalty: number;    // 0-100 (chance to keep talent vs poach)
+  talentLoyalty: number;    // 0-100
   riskAppetite: number;     // 0-100
   awardObsession: number;   // 0-100
   genreFocus: string[];
-  // Properties from RIVAL_BEHAVIOR_CONFIGS
   greenlight_bias: ProjectFormat[];
   budget_tier_weights: Record<BudgetTierKey, number>;
-  pact_aggression: number;      // 0-1: probability of poaching in any given week
-  ma_willingness: number;       // 0-1: willingness to attempt acquisition
-  festivalParticipation: number; // 0-1: weight for festival submissions
+  pact_aggression: number;      // 0-1
+  ma_willingness: number;       // 0-1
+  festivalParticipation: number; // 0-1
   preferredGenres: string[];
 }
 
-// Legacy alias for backward compatibility during migration
 export type AIArchetype = StudioArchetype;
 
-export const AI_ARCHETYPES: StudioArchetype[] = [
-  {
+export const STUDIO_ARCHETYPES: Record<string, StudioArchetype> = {
+  BLOCKBUSTER_BULL: {
     id: 'BLOCKBUSTER_BULL',
     name: 'Blockbuster Bull',
     strategy: 'blockbuster_focused',
@@ -46,7 +43,7 @@ export const AI_ARCHETYPES: StudioArchetype[] = [
     festivalParticipation: 0.2,
     preferredGenres: ['Action', 'Sci-Fi', 'Superhero']
   },
-  {
+  PRESTIGE_PURIST: {
     id: 'PRESTIGE_PURIST',
     name: 'Prestige Purist',
     strategy: 'prestige_chaser',
@@ -63,7 +60,7 @@ export const AI_ARCHETYPES: StudioArchetype[] = [
     festivalParticipation: 0.9,
     preferredGenres: ['Drama', 'Art House', 'Historical']
   },
-  {
+  GENRE_KING: {
     id: 'GENRE_KING',
     name: 'Genre King',
     strategy: 'genre_specialist',
@@ -80,7 +77,7 @@ export const AI_ARCHETYPES: StudioArchetype[] = [
     festivalParticipation: 0.3,
     preferredGenres: ['Horror', 'Comedy', 'Thriller']
   },
-  {
+  THE_ACQUIRER: {
     id: 'THE_ACQUIRER',
     name: 'The Acquirer',
     strategy: 'acquirer',
@@ -97,7 +94,7 @@ export const AI_ARCHETYPES: StudioArchetype[] = [
     festivalParticipation: 0.1,
     preferredGenres: ['Any']
   },
-  {
+  SILENT_POACHER: {
     id: 'SILENT_POACHER',
     name: 'Silent Poacher',
     strategy: 'poacher',
@@ -114,7 +111,7 @@ export const AI_ARCHETYPES: StudioArchetype[] = [
     festivalParticipation: 0.8,
     preferredGenres: ['Any']
   },
-  {
+  BALANCED_GIANT: {
     id: 'BALANCED_GIANT',
     name: 'Balanced Giant',
     strategy: 'balanced',
@@ -131,7 +128,7 @@ export const AI_ARCHETYPES: StudioArchetype[] = [
     festivalParticipation: 0.5,
     preferredGenres: ['Any']
   },
-  {
+  STREAMING_TITAN: {
     id: 'STREAMING_TITAN',
     name: 'Streaming Titan',
     strategy: 'blockbuster_focused',
@@ -148,7 +145,7 @@ export const AI_ARCHETYPES: StudioArchetype[] = [
     festivalParticipation: 0.4,
     preferredGenres: ['Sci-Fi', 'Fantasy', 'Crime']
   },
-  {
+  INDIE_DARLING: {
     id: 'INDIE_DARLING',
     name: 'Indie Darling',
     strategy: 'prestige_chaser',
@@ -165,7 +162,7 @@ export const AI_ARCHETYPES: StudioArchetype[] = [
     festivalParticipation: 0.9,
     preferredGenres: ['Art House', 'Documentary', 'Animation']
   },
-  {
+  CASH_COW: {
     id: 'CASH_COW',
     name: 'Cash Cow',
     strategy: 'genre_specialist',
@@ -182,7 +179,7 @@ export const AI_ARCHETYPES: StudioArchetype[] = [
     festivalParticipation: 0.05,
     preferredGenres: ['Family', 'Comedy', 'Unscripted']
   },
-  {
+  RETRO_REVOLUTIONARY: {
     id: 'RETRO_REVOLUTIONARY',
     name: 'Retro Revolutionary',
     strategy: 'acquirer',
@@ -199,4 +196,9 @@ export const AI_ARCHETYPES: StudioArchetype[] = [
     festivalParticipation: 0.4,
     preferredGenres: ['Historical', 'Legacy', 'Musical']
   }
-];
+};
+
+export const AI_ARCHETYPES = Object.values(STUDIO_ARCHETYPES);
+export function getStudioArchetype(id: string): StudioArchetype {
+  return STUDIO_ARCHETYPES[id] || STUDIO_ARCHETYPES.BALANCED_GIANT;
+}

@@ -1,10 +1,8 @@
-import { GameState, Project, StateImpact, RivalStudio } from '@/engine/types';
-import { generateId, clamp } from '../../utils';
+import { GameState, Project, StateImpact } from '@/engine/types';
+import { clamp } from '../../utils';
 
 /**
  * Flop Mechanics System
- * Detects financial failures and applies penalties to studios.
- * Applies to both Film and TV projects.
  */
 
 export enum FlopSeverity {
@@ -21,6 +19,32 @@ export interface FlopResult {
   ipDevaluation: number;
   shouldRestructure: boolean;
 }
+
+const FLOP_PENALTY_CONFIGS: Record<Exclude<FlopSeverity, FlopSeverity.NONE>, {
+  writeOffPct: number;
+  prestigePenalty: number;
+  ipDevaluation: number;
+  shouldRestructure: boolean;
+}> = {
+  [FlopSeverity.MINOR]: {
+    writeOffPct: 0.3,
+    prestigePenalty: -5,
+    ipDevaluation: 0.2,
+    shouldRestructure: false
+  },
+  [FlopSeverity.MAJOR]: {
+    writeOffPct: 0.5,
+    prestigePenalty: -10,
+    ipDevaluation: 0.4,
+    shouldRestructure: false
+  },
+  [FlopSeverity.CATASTROPHIC]: {
+    writeOffPct: 0.7,
+    prestigePenalty: -20,
+    ipDevaluation: 0.6,
+    shouldRestructure: true
+  }
+};
 
 /**
  * Calculate flop severity based on revenue vs budget
@@ -40,47 +64,31 @@ export function calculateFlopSeverity(project: Project): FlopSeverity {
  * Calculate flop penalties
  */
 export function calculateFlopPenalties(project: Project, severity: FlopSeverity): FlopResult {
-  const revenue = project.revenue || 0;
   const budget = project.budget || 1;
   const marketingBudget = (project as any).marketingBudget || 0;
   const totalCost = budget + marketingBudget;
 
-  let writeOffCost = 0;
-  let prestigePenalty = 0;
-  let ipDevaluation = 0;
-  let shouldRestructure = false;
+  const config = severity !== FlopSeverity.NONE ? FLOP_PENALTY_CONFIGS[severity] : null;
 
-  switch (severity) {
-    case FlopSeverity.MINOR:
-      writeOffCost = Math.floor(totalCost * 0.3);
-      prestigePenalty = -5;
-      ipDevaluation = 0.2;
-      break;
-    case FlopSeverity.MAJOR:
-      writeOffCost = Math.floor(totalCost * 0.5);
-      prestigePenalty = -10;
-      ipDevaluation = 0.4;
-      break;
-    case FlopSeverity.CATASTROPHIC:
-      writeOffCost = Math.floor(totalCost * 0.7);
-      prestigePenalty = -20;
-      ipDevaluation = 0.6;
-      shouldRestructure = true;
-      break;
+  if (!config) {
+    return {
+      severity: FlopSeverity.NONE,
+      writeOffCost: 0,
+      prestigePenalty: 0,
+      ipDevaluation: 0,
+      shouldRestructure: false
+    };
   }
 
   return {
     severity,
-    writeOffCost,
-    prestigePenalty,
-    ipDevaluation,
-    shouldRestructure
+    writeOffCost: Math.floor(totalCost * config.writeOffPct),
+    prestigePenalty: config.prestigePenalty,
+    ipDevaluation: config.ipDevaluation,
+    shouldRestructure: config.shouldRestructure
   };
 }
 
-/**
- * Track flop history for a studio
- */
 export interface StudioFlopHistory {
   rivalId: string;
   majorFlops: number;
@@ -90,9 +98,6 @@ export interface StudioFlopHistory {
 
 const flopHistory: Map<string, StudioFlopHistory> = new Map();
 
-/**
- * Check if studio needs restructuring due to multiple flops
- */
 export function shouldRestructureStudio(rivalId: string, currentWeek: number): boolean {
   const history = flopHistory.get(rivalId);
   if (!history) return false;
@@ -100,23 +105,17 @@ export function shouldRestructureStudio(rivalId: string, currentWeek: number): b
   const oneYearAgo = currentWeek - 52;
   const twoYearsAgo = currentWeek - 104;
 
-  // 3 major flops in 1 year: executive shakeup
   const majorFlopsLastYear = history.flopWeeks.filter(w => w >= oneYearAgo).length;
   if (majorFlopsLastYear >= 3) return true;
 
-  // 5 major flops in 2 years: bankruptcy risk
   const majorFlopsLastTwoYears = history.flopWeeks.filter(w => w >= twoYearsAgo).length;
   if (majorFlopsLastTwoYears >= 5) return true;
 
-  // 1 catastrophic flop always triggers restructuring
   if (history.catastrophicFlops > 0) return true;
 
   return false;
 }
 
-/**
- * Apply flop penalties to a project
- */
 export function applyFlopPenalties(
   state: GameState,
   project: Project,
@@ -130,7 +129,6 @@ export function applyFlopPenalties(
   const penalties = calculateFlopPenalties(project, severity);
   const isRival = state.entities.rivals[ownerId];
 
-  // Update flop history
   if (isRival) {
     let history = flopHistory.get(ownerId);
     if (!history) {
@@ -146,7 +144,6 @@ export function applyFlopPenalties(
       history.flopWeeks.push(state.week);
     }
 
-    // Check for restructuring
     if (shouldRestructureStudio(ownerId, state.week)) {
       impacts.push({
         type: 'RIVAL_UPDATED',
@@ -164,13 +161,12 @@ export function applyFlopPenalties(
         payload: {
           headline: `${isRival.name} restructures after flop streak`,
           description: `After multiple failed releases, ${isRival.name} has shaken up its executive team and reset its strategy.`,
-          category: 'rival'
+          category: 'rival' as any
         }
       });
     }
   }
 
-  // Deduct write-off cost from owner
   if (penalties.writeOffCost > 0) {
     if (isRival) {
       impacts.push({
@@ -192,7 +188,6 @@ export function applyFlopPenalties(
     }
   }
 
-  // Apply prestige penalty
   if (penalties.prestigePenalty !== 0) {
     if (isRival) {
       impacts.push({
@@ -214,16 +209,6 @@ export function applyFlopPenalties(
     }
   }
 
-  // Devalue IP asset - using INDUSTRY_UPDATE since there's no specific VAULT impact type
-  if (penalties.ipDevaluation > 0) {
-    const ipAsset = state.ip.vault.find(a => a.originalProjectId === project.id);
-    if (ipAsset) {
-      // We'll handle IP devaluation in a separate system or through INDUSTRY_UPDATE
-      // For now, we'll skip this as it requires a proper vault update mechanism
-    }
-  }
-
-  // Generate news for major/catastrophic flops
   if (severity === FlopSeverity.MAJOR || severity === FlopSeverity.CATASTROPHIC) {
     const ownerName = isRival ? isRival.name : state.studio.name;
     const severityText = severity === FlopSeverity.CATASTROPHIC ? 'catastrophic' : 'major';
@@ -234,7 +219,7 @@ export function applyFlopPenalties(
       payload: {
         headline: `${ownerName} writes off ${costText} after ${severityText} flop`,
         description: `${project.title} failed to perform, forcing ${ownerName} to take a significant write-off.`,
-        category: 'general'
+        category: 'general' as any
       }
     });
   }
@@ -242,15 +227,10 @@ export function applyFlopPenalties(
   return impacts;
 }
 
-/**
- * Process all released projects for flop detection
- * Called weekly after project releases
- */
 export function processFlops(state: GameState): StateImpact[] {
   const impacts: StateImpact[] = [];
   const projects = Object.values(state.entities.projects);
 
-  // Only process projects released in the current week
   for (const project of projects) {
     if (project.state === 'released' && (project.releaseWeek || 0) === state.week && project.ownerId) {
       const flopImpacts = applyFlopPenalties(state, project, project.ownerId);
