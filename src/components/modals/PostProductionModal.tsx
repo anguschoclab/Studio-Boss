@@ -10,7 +10,7 @@ import { Project } from '@/engine/types';
 
 // ─── Post-production timeline steps ──────────────────────────────────────────
 
-export const TIMELINE_STEPS = [
+const TIMELINE_STEPS = [
   { week: 1, label: 'Editing & Assembly Cut', icon: '✂️' },
   { week: 2, label: 'Colour Grading & Sound Mix', icon: '🎨' },
   { week: 3, label: 'Ratings Board Submission', icon: '📋' },

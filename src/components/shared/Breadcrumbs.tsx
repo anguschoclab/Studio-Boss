@@ -1,6 +1,5 @@
 import React from 'react';
 import { ChevronRight, Home } from 'lucide-react';
-import { useUIStore } from '@/store/uiStore';
 import { cn } from '@/lib/utils';
 
 

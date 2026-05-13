@@ -10,8 +10,7 @@ import {
   FileSearch,
   Globe,
   History,
-  Activity,
-  Target
+  Activity
 
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
