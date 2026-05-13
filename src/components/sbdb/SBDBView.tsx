@@ -1,45 +1,50 @@
-import React, { useState, useMemo } from 'react';
-import { useGameStore } from '@/store/gameStore';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import React, { useState, useMemo } from "react";
+import { useGameStore } from "@/store/gameStore";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Search, Filter, Users } from 'lucide-react';
-import { TalentRole } from '@/engine/types';
-import { TalentCard } from '../talent/TalentCard';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
+} from "@/components/ui/select";
+import { Search, Filter, Users } from "lucide-react";
+import { TalentRole } from "@/engine/types";
+import { TalentCard } from "../talent/TalentCard";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 
 export const SBDBView = () => {
-  const gameState = useGameStore(s => s.gameState);
-  
-  const [search, setSearch] = useState('');
-  const [roleFilter, setRoleFilter] = useState<string>('all');
-  const [tierFilter, setTierFilter] = useState<string>('all');
-  
-  const talentPool = useMemo(() => Object.values(gameState?.industry.talentPool || {}), [gameState]);
-  
+  const gameState = useGameStore((s) => s.gameState);
+
+  const [search, setSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState<string>("all");
+  const [tierFilter, setTierFilter] = useState<string>("all");
+
+  const talentPool = useMemo(
+    () => Object.values(gameState?.industry.talentPool || {}),
+    [gameState]
+  );
+
   const filteredTalent = useMemo(() => {
-    return talentPool.filter(t => {
-      const matchesSearch = t.name.toLowerCase().includes(search.toLowerCase());
-      const matchesRole = roleFilter === 'all' || t.roles.includes(roleFilter as TalentRole);
-      
-      let matchesTier = true;
-      if (tierFilter !== 'all') {
-        const prestige = t.prestige;
-        if (tierFilter === 'a-list') matchesTier = prestige >= 80;
-        else if (tierFilter === 'b-list') matchesTier = prestige >= 60 && prestige < 80;
-        else if (tierFilter === 'rising') matchesTier = prestige >= 40 && prestige < 60;
-        else if (tierFilter === 'undiscovered') matchesTier = prestige < 40;
-      }
-      
-      return matchesSearch && matchesRole && matchesTier;
-    }).sort((a, b) => (b.starMeter || 0) - (a.starMeter || 0));
+    return talentPool
+      .filter((t) => {
+        const matchesSearch = t.name.toLowerCase().includes(search.toLowerCase());
+        const matchesRole = roleFilter === "all" || t.roles.includes(roleFilter as TalentRole);
+
+        let matchesTier = true;
+        if (tierFilter !== "all") {
+          const prestige = t.prestige;
+          if (tierFilter === "a-list") matchesTier = prestige >= 80;
+          else if (tierFilter === "b-list") matchesTier = prestige >= 60 && prestige < 80;
+          else if (tierFilter === "rising") matchesTier = prestige >= 40 && prestige < 60;
+          else if (tierFilter === "undiscovered") matchesTier = prestige < 40;
+        }
+
+        return matchesSearch && matchesRole && matchesTier;
+      })
+      .sort((a, b) => (b.starMeter || 0) - (a.starMeter || 0));
   }, [talentPool, search, roleFilter, tierFilter]);
 
   if (!gameState) return null;
@@ -65,13 +70,14 @@ export const SBDBView = () => {
             <Input 
               aria-label="Search SBDB"
               placeholder="Search SBDB..." 
+
               className="pl-10 bg-white/5 border-white/10"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </TooltipWrapper>
         </div>
-        
+
         <div className="flex items-center gap-3 w-full md:w-auto">
           <TooltipWrapper tooltip="Filter by primary industry role" side="bottom">
             <Select value={roleFilter} onValueChange={setRoleFilter}>
@@ -103,11 +109,11 @@ export const SBDBView = () => {
             </Select>
           </TooltipWrapper>
 
-          <Button 
-            variant="outline" 
-            size="icon" 
+          <Button
+            variant="outline"
+            size="icon"
             tooltip="Open advanced filtering and sorting options"
-            aria-label="Filter talent" 
+            aria-label="Filter talent"
             className="border-white/10"
           >
             <Filter aria-hidden="true" className="w-4 h-4" />
@@ -119,14 +125,10 @@ export const SBDBView = () => {
       <ScrollArea className="flex-1">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-8">
           {filteredTalent.map((talent) => (
-            <TalentCard 
-              key={talent.id}
-              talent={talent} 
-              showStarMeter={true}
-            />
+            <TalentCard key={talent.id} talent={talent} showStarMeter={true} />
           ))}
         </div>
-        
+
         {filteredTalent.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
             <Users className="w-12 h-12 mb-4 opacity-20" />

@@ -94,6 +94,7 @@ describe("awards system", () => {
       const state = getInitialState();
       state.entities.projects = { [eligibleProject.id]: eligibleProject };
       state.week = 4;
+      state.week = 4;
 
       const impacts = runAwardsCeremony(state, 4, 2024);
 
@@ -105,6 +106,7 @@ describe("awards system", () => {
     it("accumulates prestige change for high-scoring project", () => {
       const state = getInitialState();
       state.entities.projects = { [eligibleProject.id]: eligibleProject };
+      state.week = 4;
       state.week = 4;
 
       const impacts = runAwardsCeremony(state, 4, 2024);
@@ -126,6 +128,7 @@ describe("awards system", () => {
           } as Project;
           const state = getInitialState();
           state.entities.projects = { [badFilm.id]: badFilm };
+          state.week = 4;
           state.week = 4;
 
           const impacts = processRazzies(state, 4);

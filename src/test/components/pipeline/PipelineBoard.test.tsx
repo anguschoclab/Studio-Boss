@@ -3,6 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { PipelineBoard } from '@/components/pipeline/PipelineBoard';
+import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { Project } from '@/engine/types';
