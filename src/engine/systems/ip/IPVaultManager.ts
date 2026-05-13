@@ -35,6 +35,8 @@ export function tickIPVault(state: GameState, archetype?: import('../../data/aiA
     }
   }
 
+  const hasGenreBonus = Object.keys(genreFocusBonus).length > 0;
+
   const updatedVault = evaluateVaultSynergy(activeProjects, state.ip.vault).map(asset => {
     let updatedAsset = applyIPDecay(asset);
 
@@ -43,8 +45,12 @@ export function tickIPVault(state: GameState, archetype?: import('../../data/aiA
       updatedAsset = { ...updatedAsset, decayRate: adjustedDecay };
     }
 
-    if (Object.keys(genreFocusBonus).length > 0) {
-      const sourceProject = Object.values(state.entities.projects).find(p => p.id === updatedAsset.originalProjectId);
+    // ⚡ Bolt: Fetch source project once from map instead of O(N) array search inside map iteration
+    const sourceProject = (hasGenreBonus || updatedAsset.totalEpisodes > 0)
+      ? state.entities.projects[updatedAsset.originalProjectId]
+      : undefined;
+
+    if (hasGenreBonus) {
       if (sourceProject && sourceProject.genre) {
         const genreBonus = genreFocusBonus[sourceProject.genre.toLowerCase()] || 0;
         if (genreBonus > 0) {
@@ -64,7 +70,6 @@ export function tickIPVault(state: GameState, archetype?: import('../../data/aiA
     }
 
     if (updatedAsset.totalEpisodes > 0) {
-      const sourceProject = Object.values(state.entities.projects).find(p => p.id === updatedAsset.originalProjectId);
       const genre = sourceProject?.genre || 'DRAMA';
       
       const newTier = determineSyndicationTier(updatedAsset.totalEpisodes, genre);
