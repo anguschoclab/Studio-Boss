@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+
 import { EmptyState } from './EmptyState';
 import { SkeletonList } from './SkeletonCard';
 import { staggerContainer, staggerItem } from '@/lib/animations';

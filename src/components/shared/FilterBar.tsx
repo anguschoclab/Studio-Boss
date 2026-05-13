@@ -1,6 +1,7 @@
 import React from 'react';
 import { Search, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
 import { Button } from '@/components/ui/button';
 import { Stack, HorizontalStack } from '@/components/layout/Stack';
 
@@ -192,25 +193,6 @@ export const FilterBar: React.FC<FilterBarProps> = ({
     </Stack>
   );
 };
-
-/**
- * Simplified search-only variant
- */
-export const SearchBar: React.FC<{
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  className?: string;
-}> = ({ value, onChange, placeholder, className }) => (
-  <FilterBar
-    searchValue={value}
-    onSearchChange={onChange}
-    searchPlaceholder={placeholder}
-    className={className}
-  />
-);
-
-export default FilterBar;
 
 /**
  * Simplified search-only variant

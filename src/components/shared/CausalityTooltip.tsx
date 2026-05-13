@@ -36,11 +36,13 @@ export const CausalityTooltip: React.FC<CausalityTooltipProps> = ({
             </p>
             {causality.map((c, i) => (
               <div key={i} className="flex items-start gap-2 text-[10px]">
-                <span className={c.magnitude >= 0 ? 'text-emerald-400' : 'text-rose-400'}>
-                  {c.magnitude >= 0 ? '▲' : '▼'}
+                <span className={c.magnitude >= 0 ? "text-emerald-400" : "text-rose-400"}>
+                  {c.magnitude >= 0 ? "▲" : "▼"}
                 </span>
                 <div>
-                  <p className="font-semibold">{c.factor}: {c.effect}</p>
+                  <p className="font-semibold">
+                    {c.factor}: {c.effect}
+                  </p>
                   <p className="text-muted-foreground/60 italic">{c.description}</p>
                 </div>
               </div>
@@ -49,9 +51,7 @@ export const CausalityTooltip: React.FC<CausalityTooltipProps> = ({
         </div>
       }
     >
-      <div className="cursor-help">
-        {children}
-      </div>
+      <div className="cursor-help">{children}</div>
     </TooltipWrapper>
   );
 };

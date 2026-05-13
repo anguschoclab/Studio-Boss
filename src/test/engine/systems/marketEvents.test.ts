@@ -84,7 +84,6 @@ describe('Market Events System', () => {
       };
 
       mockGameState.market.activeMarketEvents = [expiringEvent];
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5);
       vi.spyOn(utils, 'rand').mockReturnValue(0.5); // No new event spawn
 
       const impacts = advanceMarketEvents(mockGameState);

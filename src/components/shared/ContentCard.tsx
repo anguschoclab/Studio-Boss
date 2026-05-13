@@ -87,7 +87,7 @@ export const ContentCard: React.FC<ContentCardProps> = ({
   icon: Icon,
   iconColor = 'primary',
   badge,
-  badgeVariant = 'secondary',
+  badgeVariant = 'secondary', // eslint-disable-line @typescript-eslint/no-unused-vars
   onClick,
   className,
   header,

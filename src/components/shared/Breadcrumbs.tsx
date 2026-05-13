@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChevronRight, Home } from 'lucide-react';
+import { useUIStore } from '@/store/uiStore';
 import { cn } from '@/lib/utils';
 
 interface BreadcrumbItem {
@@ -19,27 +20,23 @@ interface BreadcrumbsProps {
 }
 
 const HUB_LABELS: Record<string, string> = {
-  hq: 'STUDIO HQ',
-  production: 'PRODUCTION',
-  talent: 'TALENT & DEALS',
-  intelligence: 'INTELLIGENCE',
+  hq: "STUDIO HQ",
+  production: "PRODUCTION",
+  talent: "TALENT & DEALS",
+  intelligence: "INTELLIGENCE",
 };
 
 /**
  * Breadcrumbs - Hierarchical navigation indicator
- * 
+ *
  * Shows the user's current location in the app hierarchy:
  * Hub > SubTab > Context (e.g., Project Name)
  */
-export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
-  items,
-  className,
-  showHome = true,
-}) => {
+export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className, showHome = true }) => {
   return (
     <nav
       className={cn(
-        'flex items-center gap-1 text-[10px] font-black uppercase tracking-[0.2em] italic',
+        "flex items-center gap-1 text-[10px] font-black uppercase tracking-[0.2em] italic",
         className
       )}
       aria-label="Breadcrumb"
@@ -63,23 +60,21 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
               {/* Item */}
               <div
                 className={cn(
-                  'flex items-center gap-2 px-4 py-2 rounded-none transition-all duration-700',
-                  !isLast && [
-                    'hover:bg-white/[0.03] hover:text-foreground cursor-pointer',
-                  ],
-                  isLast && 'text-foreground font-display tracking-tighter italic scale-110 ml-1',
-                  !isLast && 'text-muted-foreground/40'
+                  "flex items-center gap-2 px-4 py-2 rounded-none transition-all duration-700",
+                  !isLast && ["hover:bg-white/[0.03] hover:text-foreground cursor-pointer"],
+                  isLast && "text-foreground font-display tracking-tighter italic scale-110 ml-1",
+                  !isLast && "text-muted-foreground/40"
                 )}
                 role={!isLast && item.onClick ? "button" : undefined}
                 tabIndex={!isLast && item.onClick ? 0 : undefined}
                 onKeyDown={(e) => {
-                  if (!isLast && item.onClick && (e.key === 'Enter' || e.key === ' ')) {
+                  if (!isLast && item.onClick && (e.key === "Enter" || e.key === " ")) {
                     e.preventDefault();
                     item.onClick();
                   }
                 }}
                 onClick={!isLast && item.onClick ? item.onClick : undefined}
-                aria-current={isLast ? 'page' : undefined}
+                aria-current={isLast ? "page" : undefined}
               >
                 {/* Show home icon for first item if requested */}
                 {index === 0 && showHome && !Icon && (
@@ -108,14 +103,7 @@ export const HubBreadcrumbs: React.FC<{
   onHubClick?: () => void;
   onSubTabClick?: () => void;
   className?: string;
-}> = ({
-  hubId,
-  subTabId,
-  contextLabel,
-  onHubClick,
-  onSubTabClick,
-  className,
-}) => {
+}> = ({ hubId, subTabId, contextLabel, onHubClick, onSubTabClick, className }) => {
   const items: BreadcrumbItem[] = [
     {
       label: HUB_LABELS[hubId] || hubId,

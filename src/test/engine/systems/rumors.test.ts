@@ -8,7 +8,7 @@ import { secureRandom } from '../../../engine/utils';
 
 describe('advanceRumors', () => {
   beforeEach(() => {
-    vi.mocked(secureRandom).mockReturnValue(0.99); // Reset to default behavior before each test
+    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.99); // Reset to default behavior before each test
   });
 
   it('handles missing rumors array gracefully', () => {
