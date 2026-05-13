@@ -38,7 +38,7 @@ TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
 const TabsContentInner = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & { "data-state"?: string; forceMount?: boolean }
+  React.HTMLAttributes<HTMLDivElement> & { "data-state"?: string; forceMount?: boolean; hidden?: boolean }
 >(({ className, children, "data-state": state, forceMount, hidden, ...props }, ref) => {
   const isActive = state === "active";
 

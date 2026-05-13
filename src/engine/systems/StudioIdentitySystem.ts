@@ -24,27 +24,23 @@ export function tickStudioIdentity(state: GameState): StateImpact[] {
   };
 
   const currentWeek = state.week;
-  const recentReleases = Object.values(state.entities.projects).filter(
-    (p) =>
-      p.state === 'released' &&
-      p.releaseWeek !== null &&
-      p.releaseWeek > currentWeek - WINDOW,
-  );
-
   let newPC = current.prestigeVsCommercial;
   let newFO = current.franchiseOriginal;
 
-  if (recentReleases.length === 0) {
-    // No recent releases — gently drift toward centre
-    const driftPC = newPC > 50 ? -1 : newPC < 50 ? 1 : 0;
-    const driftFO = newFO > 50 ? -1 : newFO < 50 ? 1 : 0;
-    newPC += driftPC;
-    newFO += driftFO;
-  } else {
-    // --- Prestige vs Commercial ---
-    let prestigeCount = 0;
-    let commercialCount = 0;
-    for (const p of recentReleases) {
+  let recentReleasesCount = 0;
+  let prestigeCount = 0;
+  let commercialCount = 0;
+  let franchiseCount = 0;
+  let originalCount = 0;
+
+  // ⚡ The Framerate Fanatic: Replaced Object.values().filter() and secondary loops with a single O(N) for...in pass
+  const projects = state.entities.projects || {};
+  for (const id in projects) {
+    const p = projects[id];
+    if (p.state === 'released' && p.releaseWeek !== null && p.releaseWeek > currentWeek - WINDOW) {
+      recentReleasesCount++;
+
+      // Prestige vs Commercial
       const isAwardsPush = p.marketingAngle === 'AWARDS_PUSH';
       const reviewHigh = (p.reviewScore ?? 0) > 75;
       const lowBudget = p.budget < 20_000_000;
@@ -53,18 +49,22 @@ export function tickStudioIdentity(state: GameState): StateImpact[] {
 
       if (isAwardsPush || reviewHigh || lowBudget) prestigeCount += 1;
       if (highBudget || spectacle) commercialCount += 1;
-    }
 
-    if (prestigeCount > commercialCount) newPC += NUDGE;
-    else if (commercialCount > prestigeCount) newPC -= NUDGE;
-
-    // --- Franchise vs Original ---
-    let franchiseCount = 0;
-    let originalCount = 0;
-    for (const p of recentReleases) {
+      // Franchise vs Original
       if (p.franchiseId) franchiseCount += 1;
       else originalCount += 1;
     }
+  }
+
+  if (recentReleasesCount === 0) {
+    // No recent releases — gently drift toward centre
+    const driftPC = newPC > 50 ? -1 : newPC < 50 ? 1 : 0;
+    const driftFO = newFO > 50 ? -1 : newFO < 50 ? 1 : 0;
+    newPC += driftPC;
+    newFO += driftFO;
+  } else {
+    if (prestigeCount > commercialCount) newPC += NUDGE;
+    else if (commercialCount > prestigeCount) newPC -= NUDGE;
 
     if (franchiseCount > originalCount) newFO += NUDGE;
     else if (originalCount > franchiseCount) newFO -= NUDGE;
@@ -77,9 +77,9 @@ export function tickStudioIdentity(state: GameState): StateImpact[] {
   };
 
   return [{
-    type: 'SYSTEM_TICK' as any,
+    type: 'SYSTEM_TICK' as unknown as 'STUDIO_CULTURE_UPDATED',
     payload: { studioCulture: updatedCulture },
-  } as StateImpact];
+  } as unknown as StateImpact];
 }
 
 /**

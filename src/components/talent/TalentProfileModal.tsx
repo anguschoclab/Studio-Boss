@@ -15,7 +15,7 @@ import {
   DollarSign,
   History,
   Star,
-    Zap,
+  Zap,
   Info,
   MapPin,
   Calendar,
@@ -164,7 +164,7 @@ export const TalentModal = () => {
                 <div className="col-span-3 space-y-8">
                    <div className="glass-panel p-8 rounded-none relative group overflow-hidden">
                       <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                        <Quote className="w-20 h-20" />
+                        <Quote />
                       </div>
                       <h4 className="text-[11px] font-black text-primary uppercase tracking-widest mb-4 flex items-center gap-2">
                         <Info className="h-4 w-4" /> Biography
