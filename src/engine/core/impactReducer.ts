@@ -8,7 +8,6 @@ import { applySingleImpact as apply, applyImpacts as applyAll } from "./impactHa
 export function applySingleImpact(state: GameState, impact: StateImpact): GameState {
   return apply(state, impact);
 }
-}
 
 /**
  * Pure reducer that processes an array of impacts without mutating original state.

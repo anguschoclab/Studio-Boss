@@ -113,12 +113,21 @@ export function advanceScandals(state: GameState): StateImpact[] {
       type: "SCANDAL_UPDATED",
       payload: { scandalUpdates },
     });
-    
-    // Add to active set for project penalties
-    currentScandals.forEach(s => {
-      if (s.weeksRemaining > 1) activeScandalTalent.add(s.talentId);
-    });
   }
+
+  // Remove scandals that have finished their duration
+  const expiredScandals = currentScandals.filter((s) => s.weeksRemaining <= 1);
+  expiredScandals.forEach((s) => {
+    impacts.push({
+      type: "SCANDAL_REMOVED",
+      payload: { scandalId: s.id },
+    });
+  });
+
+  // Active scandals for project penalties include both continuing AND just finishing this week
+  currentScandals.forEach(s => {
+    activeScandalTalent.add(s.talentId);
+  });
 
   const contracts = state.studio.internal.contracts || [];
   const penalizedProjectIds = new Set<string>();

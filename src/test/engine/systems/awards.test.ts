@@ -94,10 +94,6 @@ describe("awards system", () => {
       const state = getInitialState();
       state.entities.projects = { [eligibleProject.id]: eligibleProject };
       state.week = 4;
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/sentinel-prototype-pollution-fix-1980912507803385236
 
       const impacts = runAwardsCeremony(state, 4, 2024);
 
@@ -110,10 +106,6 @@ describe("awards system", () => {
       const state = getInitialState();
       state.entities.projects = { [eligibleProject.id]: eligibleProject };
       state.week = 4;
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/sentinel-prototype-pollution-fix-1980912507803385236
 
       const impacts = runAwardsCeremony(state, 4, 2024);
       expect(impacts.prestigeChange).toBeGreaterThanOrEqual(0);
@@ -135,10 +127,6 @@ describe("awards system", () => {
           const state = getInitialState();
           state.entities.projects = { [badFilm.id]: badFilm };
           state.week = 4;
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/sentinel-prototype-pollution-fix-1980912507803385236
 
           const impacts = processRazzies(state, 4);
 

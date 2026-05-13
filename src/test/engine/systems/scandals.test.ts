@@ -44,8 +44,9 @@ describe("scandals system", () => {
       const impacts = advanceScandals(initialState);
       const updateImpact = impacts.find(i => i.type === 'SCANDAL_UPDATED');
       expect(updateImpact).toBeDefined();
-      expect(updateImpact?.payload.scandalId).toBe("s1");
-      expect(updateImpact?.payload.update.weeksRemaining).toBe(4);
+      expect(updateImpact?.payload.scandalUpdates).toBeDefined();
+      expect(updateImpact?.payload.scandalUpdates[0].scandalId).toBe("s1");
+      expect(updateImpact?.payload.scandalUpdates[0].update.weeksRemaining).toBe(4);
     });
 
     it("removes expired scandals via SCANDAL_REMOVED", () => {
