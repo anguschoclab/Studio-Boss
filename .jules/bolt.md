@@ -30,3 +30,7 @@
 ## 2026-05-24 - Optimize Rival processing loops
 **Learning:** The `advanceRivals` system was performing redundant `Object.values()` calls on projects and talents within the rival iteration loop, creating O(Rivals * (Projects + Talents)) complexity and high GC pressure.
 **Action:** Replaced internal array allocations with direct record access where possible and converted the outer rival processing to a `for...in` loop. Combined multiple property checks into a single traversal pass.
+
+## 2025-01-20 - Eliminating Object.values() Array Allocations (Global Standard)
+**Learning:** Iterating over high-frequency State Records (like `state.entities.projects` or `contracts`) using `Object.values()` creates intermediate O(N) array allocation overhead per tick, which compounds GC pressure significantly during simulation loops.
+**Action:** Always use a direct `for...in` loop over keys when iterating through large state entity records to avoid allocating throwaway arrays, yielding measurable speedups in hot path benchmarks.
