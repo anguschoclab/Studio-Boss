@@ -2,7 +2,7 @@ import { Talent } from "@/engine/types/talent.types";
 import { TabsContent } from "@/components/ui/tabs";
 import { Star, DollarSign, TrendingUp } from "lucide-react";
 import { formatMoney } from "@/engine/utils";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell, Tooltip } from "recharts";
+import { CartesianGrid, Cell } from "recharts";
 
 interface StatsTabProps {
   talent: Talent;

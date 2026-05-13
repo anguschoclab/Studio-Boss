@@ -16,7 +16,7 @@ import * as noopHandlers from './noopHandlers';
 /**
  * Handler registry mapping impact types to their handler functions
  */
-const handlerRegistry: Record<Exclude<ImpactType, undefined>, (state: GameState, impact: any) => GameState> = {
+const handlerRegistry: Record<Exclude<ImpactType, undefined>, (state: GameState, impact: import('@/engine/types').StateImpact) => GameState> = {
   // Finance handlers
   'FUNDS_CHANGED': financeHandlers.handleFundsChanged,
   'LEDGER_UPDATED': financeHandlers.handleLedgerUpdated,
@@ -29,7 +29,7 @@ const handlerRegistry: Record<Exclude<ImpactType, undefined>, (state: GameState,
   // Project handlers
   'PROJECT_UPDATED': projectHandlers.handleProjectUpdated,
   'PROJECT_REMOVED': projectHandlers.handleProjectRemoved,
-  'PROJECT_CREATED': (state: GameState, impact: any) => {
+  'PROJECT_CREATED': (state: GameState, impact: import("@/engine/types").StateImpact) => {
     const { project } = impact.payload;
     const projects = { ...state.entities.projects };
     projects[project.id] = project;
@@ -79,17 +79,17 @@ const handlerRegistry: Record<Exclude<ImpactType, undefined>, (state: GameState,
   'INDUSTRY_UPDATE': industryHandlers.handleIndustryUpdate,
   'SCANDAL_ADDED': industryHandlers.handleScandalAdded,
   'SCANDAL_REMOVED': industryHandlers.handleScandalRemoved,
-  'SCANDAL_UPDATED': (state: GameState, impact: any) => {
+  'SCANDAL_UPDATED': (state: GameState, impact: import("@/engine/types").StateImpact) => {
     const { scandalUpdates } = impact.payload;
     if (!scandalUpdates || scandalUpdates.length === 0) return state;
 
-    const updatesMap = new Map(scandalUpdates.map((u: any) => [u.scandalId, u.update]));
+    const updatesMap = new Map(scandalUpdates.map((u: import("@/engine/types").StateImpact) => [u.scandalId, u.update]));
 
     return {
       ...state,
       industry: {
         ...state.industry,
-        scandals: (state.industry.scandals || []).map((s: any) => {
+        scandals: (state.industry.scandals || []).map((s: import("@/engine/types").StateImpact) => {
           const update = updatesMap.get(s.id);
           if (update) {
             return { ...s, ...update };
@@ -128,20 +128,20 @@ const handlerRegistry: Record<Exclude<ImpactType, undefined>, (state: GameState,
   'MODAL_TRIGGERED': (state: GameState) => state,
 
   // Shingle handlers
-  'SHINGLE_CREATED': (state: GameState, impact: any) => {
+  'SHINGLE_CREATED': (state: GameState, impact: import("@/engine/types").StateImpact) => {
     const { shingle } = impact.payload;
-    const existing = (state.entities as any).shingles || {};
+    const existing = (state.entities as unknown).shingles || {};
     return {
       ...state,
       entities: {
         ...state.entities,
         shingles: { ...existing, [shingle.id]: shingle },
-      } as any,
+      } as unknown,
     };
   },
-  'SHINGLE_UPDATED': (state: GameState, impact: any) => {
+  'SHINGLE_UPDATED': (state: GameState, impact: import("@/engine/types").StateImpact) => {
     const { shingleId, update } = impact.payload;
-    const existing = (state.entities as any).shingles || {};
+    const existing = (state.entities as unknown).shingles || {};
     const cur = existing[shingleId];
     if (!cur) return state;
     return {
@@ -149,19 +149,19 @@ const handlerRegistry: Record<Exclude<ImpactType, undefined>, (state: GameState,
       entities: {
         ...state.entities,
         shingles: { ...existing, [shingleId]: { ...cur, ...update } },
-      } as any,
+      } as unknown,
     };
   },
-  'SHINGLE_DISSOLVED': (state: GameState, impact: any) => {
+  'SHINGLE_DISSOLVED': (state: GameState, impact: import("@/engine/types").StateImpact) => {
     const { shingleId } = impact.payload;
-    const existing = { ...((state.entities as any).shingles || {}) };
+    const existing = { ...((state.entities as unknown).shingles || {}) };
     delete existing[shingleId];
     return {
       ...state,
       entities: {
         ...state.entities,
         shingles: existing,
-      } as any,
+      } as unknown,
     };
   },
 };
@@ -236,7 +236,7 @@ export function applySingleImpact(state: GameState, impact: StateImpact): GameSt
           projects[award.projectId] = {
             ...project,
             awards: [...(project.awards || []), award],
-          } as any;
+          } as unknown;
         }
         newState = { ...newState, entities: { ...newState.entities, projects } };
       });
@@ -246,7 +246,7 @@ export function applySingleImpact(state: GameState, impact: StateImpact): GameSt
         const projects = { ...newState.entities.projects };
         const project = projects[id];
         if (project) {
-          projects[id] = { ...project, isCultClassic: true } as any;
+          projects[id] = { ...project, isCultClassic: true } as unknown;
         }
         newState = { ...newState, entities: { ...newState.entities, projects } };
       });
@@ -256,7 +256,7 @@ export function applySingleImpact(state: GameState, impact: StateImpact): GameSt
         const talents = { ...newState.entities.talents };
         const talent = talents[id];
         if (talent) {
-          talents[id] = { ...talent, razzieWinner: true } as any;
+          talents[id] = { ...talent, razzieWinner: true } as unknown;
         }
         newState = { ...newState, entities: { ...newState.entities, talents } };
       });

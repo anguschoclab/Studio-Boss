@@ -3,12 +3,12 @@ import { useGameStore } from '@/store/gameStore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Tv, Minus, BarChart3, Radio, Trophy, ArrowUp, ArrowDown, Activity, Zap, Clock } from 'lucide-react';
+import { Tv, Minus, BarChart3, Radio, Trophy, ArrowUp, ArrowDown, Activity } from 'lucide-react';
 import { SeriesProject, Project } from '@/engine/types';
 import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
 import { NielsenSnapshot, NielsenProfile, NielsenDemographic, TIME_SLOTS } from '@/engine/systems/television/nielsenSystem';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, CartesianGrid, Line } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, CartesianGrid } from 'recharts';
 
 // Color map for demographics
 const DEMO_COLORS: Record<NielsenDemographic, string> = {

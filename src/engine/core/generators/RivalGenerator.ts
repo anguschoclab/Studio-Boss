@@ -137,7 +137,7 @@ export function generateRivals(
       projectIds: Object.keys(rProjects) as ProjectId[],
       contractIds: [],
       ipAssetIds: [],
-      archetypeId: (rArchData as any).id || rArch,
+      archetypeId: (rArchData as { id?: string }).id || rArch,
     });
 
     Object.assign(allRivalProjects, rProjects);

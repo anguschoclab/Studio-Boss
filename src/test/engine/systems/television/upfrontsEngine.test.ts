@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { runUpfronts } from '../../../../engine/systems/television/upfrontsEngine';
-import { GameState, SeriesProject, StateImpact } from '../../../../engine/types';
+import { GameState, SeriesProject } from '../../../../engine/types';
 import { RandomGenerator } from '../../../../engine/utils/rng';
 
 describe('Upfronts Engine (Guild Auditor)', () => {
