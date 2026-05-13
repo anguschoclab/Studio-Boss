@@ -16,26 +16,27 @@ export function generatePlayerProjects(
   archetype: ArchetypeKey,
   options: PlayerProjectOptions = {}
 ): Record<ProjectId, Project> {
-  const { startingProjectCount = archetype === 'major' ? 3 : (archetype === 'mid-tier' ? 1 : 0) } = options;
-  
+  const { startingProjectCount = archetype === "major" ? 3 : archetype === "mid-tier" ? 1 : 0 } =
+    options;
+
   const playerProjects: Record<ProjectId, Project> = {};
   for (let i = 0; i < startingProjectCount; i++) {
-    const pId = rng.uuid<ProjectId>('PRJ');
+    const pId = rng.uuid<ProjectId>("PRJ");
     const genre = rng.pick(ALL_GENRES);
-    const format = rng.next() < 0.3 ? 'tv' : 'film';
-    
+    const format = rng.next() < 0.3 ? "tv" : "film";
+
     const projectBase = {
       id: pId,
       title: generateProjectName(format, genre, rng),
-      type: (format === 'tv' ? 'SERIES' : 'FILM') as ProjectType,
+      type: (format === "tv" ? "SERIES" : "FILM") as ProjectType,
       format: format as ProjectFormat,
       genre,
-      budgetTier: (archetype === 'major' ? 'high' : 'mid') as BudgetTierKey,
-      budget: (archetype === 'major' ? 100 : 40) * 1_000_000,
+      budgetTier: (archetype === "major" ? "high" : "mid") as BudgetTierKey,
+      budget: (archetype === "major" ? 100 : 40) * 1_000_000,
       weeklyCost: 0,
-      targetAudience: 'four_quadrant',
-      flavor: 'Standard',
-      state: 'production' as ProjectStatus,
+      targetAudience: "four_quadrant",
+      flavor: "Standard",
+      state: "production" as ProjectStatus,
       weeksInPhase: rng.rangeInt(1, 4),
       productionWeeks: rng.rangeInt(12, 20),
       developmentWeeks: rng.rangeInt(4, 8),
@@ -52,28 +53,28 @@ export function generatePlayerProjects(
       releaseWeek: null,
       activeCrisis: null,
       activeRoles: [],
-      scriptEvents: []
+      scriptEvents: [],
     };
 
     let project: Project;
-    if (format === 'tv') {
+    if (format === "tv") {
       project = {
         ...projectBase,
-        type: 'SERIES',
-        tvFormat: 'Scripted',
+        type: "SERIES",
+        tvFormat: "Scripted",
         tvDetails: {
           currentSeason: 1,
           episodesOrdered: 10,
           episodesCompleted: 0,
           episodesAired: 0,
           averageRating: 0,
-          status: 'IN_PRODUCTION'
-        }
+          status: "IN_PRODUCTION",
+        },
       } as SeriesProject;
     } else {
       project = {
         ...projectBase,
-        type: 'FILM'
+        type: "FILM",
       } as FilmProject;
     }
 
@@ -87,7 +88,7 @@ export function initializePlayerStudio(
   studioName: string,
   archetype: ArchetypeKey,
   playerStudioId: StudioId,
-  arch: import('../../data/archetypes').StudioArchetype
+  arch: import("../../data/archetypes").StudioArchetype
 ): PlayerStudio {
   return {
     id: playerStudioId,
@@ -104,7 +105,7 @@ export function initializePlayerStudio(
       talentFriendlyVsControlling: 0,
       nicheVsBroad: 50,
       filmFirstVsTvFirst: 0,
-      genrePopularity: { 'Drama': 50, 'Comedy': 50, 'Action': 50, 'Sci-Fi': 50, 'Horror': 50, 'Romance': 50 }
+      genrePopularity: { Drama: 50, Comedy: 50, Action: 50, "Sci-Fi": 50, Horror: 50, Romance: 50 },
     },
     activeCampaigns: {},
   };
