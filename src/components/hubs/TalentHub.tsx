@@ -93,6 +93,7 @@ const RosterPanel = () => {
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/20" />
           <input
             type="text"
+            aria-label="Search talent"
             placeholder="SEARCH TALENT..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}

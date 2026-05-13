@@ -28,6 +28,7 @@ export const NielsenDashboard = () => {
   
 
 
+
   const tvShows = React.useMemo(
     () =>
       projects.filter(
@@ -318,11 +319,7 @@ const WeeklyRankingsTable = ({ rankings }: { rankings: RankingEntry[] }) => {
 };
 
 const ShowDetailCard = ({ show }: { show: SeriesProject }) => {
-<<<<<<< HEAD
   const profile = (show as unknown as Record<string, unknown>).nielsenProfile as NielsenProfile | undefined;
-=======
-  const profile = (show as unknown as { nielsenProfile?: NielsenProfile }).nielsenProfile;
->>>>>>> origin/palette-a11y-inputs-13734714669130155633
   if (!profile || profile.snapshots.length === 0) return null;
 
   const chartData = profile.snapshots.map((snap) => ({
@@ -463,11 +460,7 @@ const ShowDetailCard = ({ show }: { show: SeriesProject }) => {
 };
 
 const DemoBreakdownCard = ({ show }: { show: SeriesProject }) => {
-<<<<<<< HEAD
   const profile = (show as unknown as Record<string, unknown>).nielsenProfile as NielsenProfile | undefined;
-=======
-  const profile = (show as unknown as { nielsenProfile?: NielsenProfile }).nielsenProfile;
->>>>>>> origin/palette-a11y-inputs-13734714669130155633
   if (!profile || profile.snapshots.length === 0) return null;
 
   const latest = profile.snapshots[profile.snapshots.length - 1];

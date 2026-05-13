@@ -374,6 +374,7 @@ export const ProductionHub: React.FC = () => {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/20" />
             <input 
               type="text" 
+              aria-label="Filter slate"
               placeholder="FILTER_SLATE..."
               className="w-full h-12 pl-12 pr-4 text-[10px] bg-black/40 border border-white/10 rounded-none uppercase font-black tracking-[0.2em] italic focus:outline-none focus:border-primary/50 transition-all duration-700 placeholder:text-muted-foreground/5"
             />

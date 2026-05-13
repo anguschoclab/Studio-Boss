@@ -13,3 +13,7 @@
 ## 2024-05-19 - Missing aria-expanded and type="button" in UI Action Elements
 **Learning:** Collapsible sidebars and quick action docks frequently utilize <button> or <motion.button> elements without explicit type="button" attributes, causing potential form submission risks, and often miss aria-expanded attributes which are critical for screen readers to understand toggle states.
 **Action:** Always verify that functional UI toggle buttons have both explicit type="button" and aria-expanded={booleanState} properties applied.
+
+## 2024-05-19 - Accessible Inputs Without Labels
+**Learning:** In complex hub dashboards (like TalentHub and ProductionHub), search and filter inputs are often styled cleanly without explicit <label> tags. Screen readers cannot deduce the input's purpose without one.
+**Action:** Always provide an aria-label attribute on <input> elements that lack an associated visible <label>, ensuring screen reader users understand the field's purpose (e.g., "Search talent" or "Filter slate").

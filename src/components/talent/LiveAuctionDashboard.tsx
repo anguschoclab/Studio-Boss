@@ -8,10 +8,7 @@ import {
   AlertCircle,
   CheckCircle2,
   ShieldAlert,
-<<<<<<< HEAD
   Zap,
-=======
->>>>>>> origin/palette-a11y-inputs-13734714669130155633
   History as LucideHistory,
   X,
 } from "lucide-react";
