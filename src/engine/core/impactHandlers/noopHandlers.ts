@@ -5,14 +5,17 @@ import { GameState, StateImpact } from '@/engine/types';
  * State updates handled through other impact types
  */
 
-export function handleCastingConstraintViolation(state: GameState, impact: StateImpact): GameState {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function handleCastingConstraintViolation(state: GameState, _impact: StateImpact): GameState {
   return state;
 }
 
-export function handleCastingPremiumDemand(state: GameState, impact: StateImpact): GameState {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function handleCastingPremiumDemand(state: GameState, _impact: StateImpact): GameState {
   return state;
 }
 
-export function handleCastingAlternativeSuggested(state: GameState, impact: StateImpact): GameState {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function handleCastingAlternativeSuggested(state: GameState, _impact: StateImpact): GameState {
   return state;
 }

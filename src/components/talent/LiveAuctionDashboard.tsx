@@ -96,7 +96,6 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({
                   {opportunity.type} AUCTION
                 </span>
               </div>
-<<<<<<< HEAD
             </div>
           </div>
           <button

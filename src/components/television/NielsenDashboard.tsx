@@ -9,10 +9,14 @@ import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
 import { NielsenSnapshot, NielsenProfile, NielsenDemographic, TIME_SLOTS } from '@/engine/systems/television/nielsenSystem';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, CartesianGrid, Line } from 'recharts';
 =======
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, CartesianGrid } from 'recharts';
 >>>>>>> origin/palette-fix-live-auction-a11y-15954246495200845579
+=======
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, CartesianGrid } from 'recharts';
+>>>>>>> origin/palette-project-card-focus-15086994587950093556
 
 // Color map for demographics
 const DEMO_COLORS: Record<NielsenDemographic, string> = {
@@ -34,7 +38,11 @@ export const NielsenDashboard = () => {
 =======
   const tvShows = React.useMemo(() => 
     projects.filter((p: Project): p is SeriesProject => 
+<<<<<<< HEAD
       p.type === 'SERIES' && 'tvDetails' in p && !!(p as unknown as { nielsenProfile?: unknown }).nielsenProfile
+=======
+      p.type === 'SERIES' && 'tvDetails' in p && !!(p as unknown as Record<string, unknown>).nielsenProfile
+>>>>>>> origin/palette-project-card-focus-15086994587950093556
     ),
   [projects]);
 >>>>>>> origin/palette-fix-live-auction-a11y-15954246495200845579
@@ -60,10 +68,14 @@ export const NielsenDashboard = () => {
     return airingShows
       .map(show => {
 <<<<<<< HEAD
+<<<<<<< HEAD
         const profile = (show as unknown as Record<string, unknown>).nielsenProfile as NielsenProfile | undefined;
 =======
         const profile = (show as unknown as { nielsenProfile?: NielsenProfile }).nielsenProfile;
 >>>>>>> origin/palette-fix-live-auction-a11y-15954246495200845579
+=======
+        const profile = (show as unknown as Record<string, unknown>).nielsenProfile as NielsenProfile | undefined;
+>>>>>>> origin/palette-project-card-focus-15086994587950093556
         const latest = profile?.snapshots?.[profile.snapshots.length - 1];
         return { show, profile, latest };
       })
@@ -336,10 +348,14 @@ const WeeklyRankingsTable = ({ rankings }: { rankings: RankingEntry[] }) => {
 
 const ShowDetailCard = ({ show }: { show: SeriesProject }) => {
 <<<<<<< HEAD
+<<<<<<< HEAD
   const profile = (show as unknown as Record<string, unknown>).nielsenProfile as NielsenProfile | undefined;
 =======
   const profile = (show as unknown as { nielsenProfile?: NielsenProfile }).nielsenProfile;
 >>>>>>> origin/palette-fix-live-auction-a11y-15954246495200845579
+=======
+  const profile = (show as unknown as Record<string, unknown>).nielsenProfile as NielsenProfile | undefined;
+>>>>>>> origin/palette-project-card-focus-15086994587950093556
   if (!profile || profile.snapshots.length === 0) return null;
 
   const chartData = profile.snapshots.map((snap) => ({
@@ -481,10 +497,14 @@ const ShowDetailCard = ({ show }: { show: SeriesProject }) => {
 
 const DemoBreakdownCard = ({ show }: { show: SeriesProject }) => {
 <<<<<<< HEAD
+<<<<<<< HEAD
   const profile = (show as unknown as Record<string, unknown>).nielsenProfile as NielsenProfile | undefined;
 =======
   const profile = (show as unknown as { nielsenProfile?: NielsenProfile }).nielsenProfile;
 >>>>>>> origin/palette-fix-live-auction-a11y-15954246495200845579
+=======
+  const profile = (show as unknown as Record<string, unknown>).nielsenProfile as NielsenProfile | undefined;
+>>>>>>> origin/palette-project-card-focus-15086994587950093556
   if (!profile || profile.snapshots.length === 0) return null;
 
   const latest = profile.snapshots[profile.snapshots.length - 1];
