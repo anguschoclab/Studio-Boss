@@ -1,4 +1,4 @@
-import { Project } from '@/engine/types';
+import { Project, SeriesProject } from '@/engine/types';
 import { useUIStore } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';

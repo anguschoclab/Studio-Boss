@@ -6,6 +6,7 @@ import { createMockGameState } from '../../utils/mockFactories';
 import * as utils from '../../../engine/utils';
 import { secureRandom } from '../../../engine/utils';
 
+
 describe('advanceRumors', () => {
   beforeEach(() => {
     vi.spyOn(utils, 'secureRandom').mockReturnValue(0.99); // Reset to default behavior before each test

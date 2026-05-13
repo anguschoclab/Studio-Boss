@@ -3,14 +3,14 @@ import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { FinancialCausalityEntry } from "@/engine/types/state.types";
 import { formatMoney } from "@/engine/utils";
 
-interface CausalityTooltipProps {
+interface CausalityProps {
   children: React.ReactNode;
   value: number;
   causality?: FinancialCausalityEntry[];
   label: string;
 }
 
-export const CausalityTooltip: React.FC<CausalityTooltipProps> = ({
+export const CausalityTooltip: React.FC<CausalityProps> = ({
   children,
   value,
   causality,
