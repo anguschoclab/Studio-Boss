@@ -10,7 +10,6 @@ const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
 export function applySingleImpact(state: GameState, impact: StateImpact): GameState {
   return apply(state, impact);
 }
-}
 
 /**
  * Pure reducer that processes an array of impacts without mutating original state.
