@@ -30,3 +30,6 @@
 ## 2026-05-03 - Extracted TalentProfileModal components
 **Learning:** `TalentProfileModal.tsx` grew to 470+ lines due to dense tabs content, decreasing maintainability.
 **Action:** Extracted inner Tab content blocks into dedicated smaller sub-components (`BioTab`, `StatsTab`, `KnownForTab`, and `FilmographyTab`) under `src/components/talent/tabs/`. This separation of concerns improves component readability and maintainability.
+## 2026-05-25 - Replace Object.values with for...in loops in MarketingPromotionSystem.ts
+**Learning:** `MarketingPromotionSystem.ts` was doing multiple `Object.values()` calls with `.filter()` on state records (talents, projects, contracts). It runs on every tick and creates an intermediate array, which adds memory allocation and garbage collection overhead. Furthermore, doing this lookup of contracts by filtering inside an outer iteration loop creates an O(Projects * Contracts) complexity loop.
+**Action:** Replace `Object.values(state.entities...)` with `for...in` loops in `MarketingPromotionSystem.ts` and pre-group `contractsByProject` to reduce O(N*M) lookups.
