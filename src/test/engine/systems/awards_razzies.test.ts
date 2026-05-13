@@ -4,7 +4,6 @@ import { Project, GameState } from "../../../engine/types";
 import { createMockGameState } from '../../utils/mockFactories';
 
 describe('Razzies Award System', () => {
-
   const createProject = (id: string, budget: number, score: number, flavor: string, genre: string): Project => ({
     id, 
     title: `Title ${id}`, 
