@@ -4,14 +4,14 @@ import { calculateWillingness } from "@/engine/systems/talent/willingnessEngine"
 import { useGameStore } from "@/store/gameStore";
 import {
   AlertCircle,
-  Brain, 
-  Zap, 
-  ChevronRight, 
-  MessageSquare, 
-  Star, 
-  TrendingUp, 
-  TrendingDown, 
-  Minus 
+  Brain,
+  Zap,
+  ChevronRight,
+  MessageSquare,
+  Star,
+  TrendingUp,
+  TrendingDown,
+  Minus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { type TalentId, type ProjectId } from "@/engine/types/shared.types";

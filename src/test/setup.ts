@@ -25,7 +25,10 @@ Object.defineProperty(window, "matchMedia", {
   }),
 });
 
-Object.defineProperty(window, 'scrollTo', { value: () => {}, writable: true });
+Object.defineProperty(window, "scrollTo", {
+  writable: true,
+  value: vi.fn(),
+});
 
 Object.defineProperty(window, "Worker", {
   writable: true,
@@ -35,10 +38,10 @@ Object.defineProperty(window, "Worker", {
     constructor(stringUrl: string | URL, options?: WorkerOptions) {}
     postMessage(message: any, transfer?: Transferable[]) {}
     terminate() {}
-    addEventListener(type: string, listener: any, options?: any) {}
+    addEventListener(type: string, listener: any, options?: any) {
+      if (type === 'message') this.onmessage = listener;
+    }
     removeEventListener(type: string, listener: any, options?: any) {}
     dispatchEvent(event: Event) { return true; }
   }
 });
-
-Object.defineProperty(window, 'scrollTo', { value: vi.fn(), writable: true });
