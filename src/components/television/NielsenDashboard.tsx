@@ -8,7 +8,11 @@ import { SeriesProject, Project } from '@/engine/types';
 import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
 import { NielsenSnapshot, NielsenProfile, NielsenDemographic, TIME_SLOTS } from '@/engine/systems/television/nielsenSystem';
+<<<<<<< HEAD
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, CartesianGrid, Line } from 'recharts';
+=======
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, CartesianGrid } from 'recharts';
+>>>>>>> origin/palette-fix-live-auction-a11y-15954246495200845579
 
 // Color map for demographics
 const DEMO_COLORS: Record<NielsenDemographic, string> = {
@@ -26,6 +30,14 @@ export const NielsenDashboard = () => {
   const projects = useGameStore(useShallow(s => Object.values(s.gameState?.studio.internal.projects || {})));
   const week = useGameStore(s => s.gameState?.week || 0);
   
+<<<<<<< HEAD
+=======
+  const tvShows = React.useMemo(() => 
+    projects.filter((p: Project): p is SeriesProject => 
+      p.type === 'SERIES' && 'tvDetails' in p && !!(p as unknown as { nielsenProfile?: unknown }).nielsenProfile
+    ),
+  [projects]);
+>>>>>>> origin/palette-fix-live-auction-a11y-15954246495200845579
 
 
 
@@ -47,7 +59,11 @@ export const NielsenDashboard = () => {
   const weeklyRankings = React.useMemo(() => {
     return airingShows
       .map(show => {
+<<<<<<< HEAD
         const profile = (show as unknown as Record<string, unknown>).nielsenProfile as NielsenProfile | undefined;
+=======
+        const profile = (show as unknown as { nielsenProfile?: NielsenProfile }).nielsenProfile;
+>>>>>>> origin/palette-fix-live-auction-a11y-15954246495200845579
         const latest = profile?.snapshots?.[profile.snapshots.length - 1];
         return { show, profile, latest };
       })
@@ -319,7 +335,11 @@ const WeeklyRankingsTable = ({ rankings }: { rankings: RankingEntry[] }) => {
 };
 
 const ShowDetailCard = ({ show }: { show: SeriesProject }) => {
+<<<<<<< HEAD
   const profile = (show as unknown as Record<string, unknown>).nielsenProfile as NielsenProfile | undefined;
+=======
+  const profile = (show as unknown as { nielsenProfile?: NielsenProfile }).nielsenProfile;
+>>>>>>> origin/palette-fix-live-auction-a11y-15954246495200845579
   if (!profile || profile.snapshots.length === 0) return null;
 
   const chartData = profile.snapshots.map((snap) => ({
@@ -460,7 +480,11 @@ const ShowDetailCard = ({ show }: { show: SeriesProject }) => {
 };
 
 const DemoBreakdownCard = ({ show }: { show: SeriesProject }) => {
+<<<<<<< HEAD
   const profile = (show as unknown as Record<string, unknown>).nielsenProfile as NielsenProfile | undefined;
+=======
+  const profile = (show as unknown as { nielsenProfile?: NielsenProfile }).nielsenProfile;
+>>>>>>> origin/palette-fix-live-auction-a11y-15954246495200845579
   if (!profile || profile.snapshots.length === 0) return null;
 
   const latest = profile.snapshots[profile.snapshots.length - 1];

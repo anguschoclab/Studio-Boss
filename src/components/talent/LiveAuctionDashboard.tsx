@@ -99,7 +99,12 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({
 <<<<<<< HEAD
             </div>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-none transition-colors">
+          <button
+            type="button"
+            aria-label="Close"
+            onClick={onClose}
+            className="p-2 hover:bg-white/5 rounded-none transition-colors"
+          >
             <X className="w-6 h-6 text-slate-500" />
           </button>
         </div>
