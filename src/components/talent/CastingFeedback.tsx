@@ -2,8 +2,8 @@ import React from "react";
 import { Talent, Project } from "@/engine/types";
 import { calculateWillingness } from "@/engine/systems/talent/willingnessEngine";
 import { useGameStore } from "@/store/gameStore";
-import { 
-  AlertCircle, 
+import {
+  AlertCircle,
   Brain, 
   Zap, 
   ChevronRight, 

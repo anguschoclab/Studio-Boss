@@ -6,6 +6,7 @@ import { PipelineBoard } from '@/components/pipeline/PipelineBoard';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { Project } from '@/engine/types';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 vi.mock('@/store/gameStore');
 vi.mock('@/store/uiStore');

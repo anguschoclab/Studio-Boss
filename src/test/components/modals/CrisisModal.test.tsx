@@ -103,8 +103,8 @@ describe('CrisisModal', () => {
       return selector ? selector(state) : state;
     });
 
-    render(<CrisisModal />);
-    expect(screen.queryByTestId("crisis-modal")).not.toBeInTheDocument();
+    const { container } = render(<CrisisModal />);
+    expect(container.firstChild).toBeNull();
   });
 
   it('renders nothing if crisisProjectId is missing', () => {
@@ -113,8 +113,8 @@ describe('CrisisModal', () => {
       resolveCurrentModal: mockCloseCrisisModal,
     });
 
-    render(<CrisisModal />);
-    expect(screen.queryByTestId("crisis-modal")).not.toBeInTheDocument();
+    const { container } = render(<CrisisModal />);
+    expect(container.firstChild).toBeNull();
   });
 
   it('renders nothing if project is not found', () => {
@@ -123,8 +123,8 @@ describe('CrisisModal', () => {
       resolveCurrentModal: mockCloseCrisisModal,
     });
 
-    render(<CrisisModal />);
-    expect(screen.queryByTestId("crisis-modal")).not.toBeInTheDocument();
+    const { container } = render(<CrisisModal />);
+    expect(container.firstChild).toBeNull();
   });
 
   it('renders nothing if project has no active crisis', () => {

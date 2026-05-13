@@ -26,11 +26,6 @@ export const NielsenDashboard = () => {
   const projects = useGameStore(useShallow(s => Object.values(s.gameState?.studio.internal.projects || {})));
   const week = useGameStore(s => s.gameState?.week || 0);
   
-  const tvShows = React.useMemo(() => 
-    projects.filter((p: Project): p is SeriesProject => 
-      p.type === 'SERIES' && 'tvDetails' in p && !!(p as unknown as Record<string, unknown>).nielsenProfile
-    ),
-  [projects]);
 
   const tvShows = React.useMemo(
     () =>
