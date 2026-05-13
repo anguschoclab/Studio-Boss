@@ -6,10 +6,11 @@ import { useUIStore } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';
 import { cn } from '@/lib/utils';
 import { Clapperboard, Clock, Zap, Film, ChevronRight } from 'lucide-react';
+import { Project } from '@/engine/types';
 
 // ─── Post-production timeline steps ──────────────────────────────────────────
 
-const TIMELINE_STEPS = [
+export const TIMELINE_STEPS = [
   { week: 1, label: 'Editing & Assembly Cut', icon: '✂️' },
   { week: 2, label: 'Colour Grading & Sound Mix', icon: '🎨' },
   { week: 3, label: 'Ratings Board Submission', icon: '📋' },
@@ -35,8 +36,7 @@ export const PostProductionModal: React.FC = () => {
 
   const project = gameState?.entities?.projects?.[projectId];
   const weeksRemaining: number =
-    // @ts-expect-error - specific state might not be typed
-    project?.postProductionWeeksRemaining ?? 3;
+    (project as Project & { postProductionWeeksRemaining?: number })?.postProductionWeeksRemaining ?? 3;
 
   const handleConfirm = () => {
     if (!projectId || !project) {
@@ -49,17 +49,14 @@ export const PostProductionModal: React.FC = () => {
       if (addFunds) addFunds(-2_000_000);
       updateProject(projectId, {
         postProductionWeeksRemaining: 1,
-      // @ts-expect-error - updating specific fields
-      });
+      } as Partial<Project>);
     } else if (choice === 'extended') {
       // Extended cut: +2 weeks, +5 prestige, +10 buzz
       updateProject(projectId, {
         postProductionWeeksRemaining: weeksRemaining + 2,
         buzz: Math.min(100, (project.buzz ?? 0) + 10),
-      // @ts-expect-error - updating specific fields
-      });
+      } as Partial<Project>);
       // Prestige is applied via store action if available, otherwise inline
-      // @ts-expect-error - studio properties might not be typed
       const applyPrestige = gameState?.studio?.prestige !== undefined;
       if (applyPrestige) {
         // The parent store will handle prestige on the next tick via the
@@ -72,9 +69,8 @@ export const PostProductionModal: React.FC = () => {
 
   // Director's cut sub-section — shown if project has been marked for a cut
   const directorsCutPending =
-    // @ts-expect-error - directorsCutNotified might not be typed
-    project && project.directorsCutNotified === true &&
-    !project.availableCuts?.some((c) => c.type === 'directors_cut');
+    project && (project as Project & { directorsCutNotified?: boolean }).directorsCutNotified === true &&
+    !(project as Project).availableCuts?.some((c: any) => c.type === 'directors_cut');
 
   return (
     <Dialog

@@ -300,8 +300,8 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
           {project.marketingCampaign && (
             <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest opacity-70">
               Angle: {ALL_ANGLES.find(a => a.id === (project.marketingCampaign!.primaryAngle))?.label ?? project.marketingCampaign.primaryAngle}
-              {project.marketingCampaign.secondaryAngle && (
-                <> + {ALL_ANGLES.find(a => a.id === project.marketingCampaign!.secondaryAngle)?.label ?? project.marketingCampaign.secondaryAngle}</>
+              {(project.marketingCampaign as { secondaryAngle?: string }).secondaryAngle && (
+                <> + {ALL_ANGLES.find(a => a.id === (project.marketingCampaign as { secondaryAngle?: string }).secondaryAngle)?.label ?? (project.marketingCampaign as { secondaryAngle?: string }).secondaryAngle}</>
               )}
             </p>
           )}
