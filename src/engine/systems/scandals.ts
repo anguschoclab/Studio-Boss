@@ -100,19 +100,6 @@ export function advanceScandals(state: GameState): StateImpact[] {
   const currentScandals = state.industry.scandals || [];
   const activeScandalTalent = new Set<string>();
 
-  for (const s of currentScandals) {
-    if (s.weeksRemaining > 1) {
-      // In a real state-impact system, we'd have a SCANDAL_UPDATED
-      // or just replace the list. For now, let's just update the list.
-      activeScandalTalent.add(s.talentId);
-    } else {
-      impacts.push({
-        type: "SCANDAL_REMOVED",
-        payload: { scandalId: s.id },
-      });
-    }
-  }
-
   // Collect updates for scandals that are continuing
   const scandalUpdates = currentScandals
     .filter((s) => s.weeksRemaining > 1)
@@ -125,6 +112,11 @@ export function advanceScandals(state: GameState): StateImpact[] {
     impacts.push({
       type: "SCANDAL_UPDATED",
       payload: { scandalUpdates },
+    });
+    
+    // Add to active set for project penalties
+    currentScandals.forEach(s => {
+      if (s.weeksRemaining > 1) activeScandalTalent.add(s.talentId);
     });
   }
 
