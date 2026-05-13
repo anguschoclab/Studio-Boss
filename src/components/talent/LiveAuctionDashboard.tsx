@@ -96,6 +96,7 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({
                   {opportunity.type} AUCTION
                 </span>
               </div>
+<<<<<<< HEAD
             </div>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-none transition-colors">

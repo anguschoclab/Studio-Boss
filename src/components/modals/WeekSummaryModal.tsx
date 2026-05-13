@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Headline, NarrativeEvent } from '@/engine/types';
 import { NewsStoryModal } from './NewsStoryModal';
 import { cn } from '@/lib/utils';
-import { ArrowRight, DollarSign, Newspaper, AlertTriangle, Trophy, MessageSquare, Activity, Zap, Target } from 'lucide-react';
+import { AlertTriangle, Activity, Zap, DollarSign, Target, ArrowRight, Newspaper, Trophy, MessageSquare } from 'lucide-react';
 
 export const WeekSummaryModal = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
