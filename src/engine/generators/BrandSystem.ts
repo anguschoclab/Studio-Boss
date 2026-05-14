@@ -1,10 +1,7 @@
 import { pick, rand } from '../utils';
 import { 
   CONGLOMERATE_PREFIXES, 
-  PREFIXES, 
-  NETWORK_SUFFIXES, 
-  STREAMER_SUFFIXES, 
-  PREMIUM_SUFFIXES 
+  PREFIXES
 } from '../data/names.data';
 
 export type BrandIdentity = {

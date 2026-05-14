@@ -1,7 +1,6 @@
 import { Talent } from '../../types/talent.types';
 import { 
-  AvatarFeatures, AgeBracket, Gender, 
-  ColorPalette, HairColor 
+  AvatarFeatures, AgeBracket
 } from './types';
 import { 
   hashString, seededRandom, seededRange, seededPick, 
