@@ -946,7 +946,7 @@ export function getArchetypeConfig(role: string, archetypeKey: string): Archetyp
  * Generate a random archetype for a given role and tier
  */
 export function generateArchetypeForRole(role: string, tier: TalentTier, rng: { next: () => number }): string {
-  let archetypes: string[] = [];
+  let archetypes: string[];
   
   switch (role) {
     case 'actor':
