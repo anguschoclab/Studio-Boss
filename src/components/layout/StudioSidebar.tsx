@@ -139,6 +139,7 @@ export const StudioSidebar = () => {
               <TooltipTrigger asChild>
                 <button
                   type="button"
+                  aria-label={item.label}
                   aria-pressed={isActive}
                   onClick={() => setActiveTab(item.id)}
                   className={cn(
@@ -150,6 +151,7 @@ export const StudioSidebar = () => {
                   )}
                 >
                   <item.icon
+                    aria-hidden="true"
                     className={cn(
                       "h-5 w-5 shrink-0 transition-all duration-700",
                       isActive
@@ -165,7 +167,7 @@ export const StudioSidebar = () => {
                   )}
                   {isActive && !isCollapsed && (
                     <div className="absolute right-4">
-                      <Zap className="h-3 w-3 fill-current animate-pulse" />
+                      <Zap aria-hidden="true" className="h-3 w-3 fill-current animate-pulse" />
                     </div>
                   )}
                 </button>
@@ -239,10 +241,11 @@ export const StudioSidebar = () => {
           <TooltipTrigger asChild>
             <button
               type="button"
+              aria-label="Configuration"
               className="w-full flex items-center gap-4 h-12 px-6 text-muted-foreground/30 hover:bg-white/5 hover:text-foreground transition-all duration-500 group overflow-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none"
               onClick={() => {}}
             >
-              <Settings className="h-5 w-5 shrink-0 group-hover:rotate-90 transition-transform duration-700" />
+              <Settings aria-hidden="true" className="h-5 w-5 shrink-0 group-hover:rotate-90 transition-transform duration-700" />
               {!isCollapsed && (
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] italic">
                   CONFIGURATION
@@ -262,10 +265,11 @@ export const StudioSidebar = () => {
           <TooltipTrigger asChild>
             <button
               type="button"
+              aria-label="Terminate Session"
               onClick={handleExit}
               className="w-full flex items-center gap-4 h-12 px-6 text-rose-900 hover:text-rose-500 hover:bg-rose-500/10 transition-all duration-500 group overflow-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none"
             >
-              <LogOut className="h-5 w-5 shrink-0" />
+              <LogOut aria-hidden="true" className="h-5 w-5 shrink-0" />
               {!isCollapsed && (
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] italic">
                   TERMINATE_SESSION
