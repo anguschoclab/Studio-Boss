@@ -10,10 +10,21 @@ import { formatMoney } from '@/engine/utils';
 import { DistributionBadge } from '../shared/DistributionBadge';
 import { RecoupmentStatus } from '../shared/RecoupmentStatus';
 
+/**
+ * Props for the ProjectCard component.
+ */
 interface ProjectCardProps {
+  /** The project entity to display. */
   project: Project;
 }
 
+/**
+ * A highly stylized card component for the studio production pipeline.
+ * Displays project title, genre, budget tier, market buzz, and current production phase progress.
+ * Includes executive action buttons for greenlighting projects, pitching, or resolving crises.
+ * 
+ * @param props - Component properties
+ */
 export const ProjectCard = ({ project }: ProjectCardProps) => {
   const { selectProject, openPitchProject, openCrisisModal } = useUIStore();
   const gameState = useGameStore((s) => s.gameState);

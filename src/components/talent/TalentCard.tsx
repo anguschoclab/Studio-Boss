@@ -11,14 +11,26 @@ import { TalentAvatar } from "./TalentAvatar";
 import { getTalentVisualAge } from "@/engine/generators/avatarGenerator";
 import { useAgencyMap } from "@/hooks/useTalentMap";
 
+/**
+ * Props for the TalentCard component.
+ */
 interface TalentCardProps {
+  /** The talent entity to display. */
   talent: Talent;
+  /** Optional additional CSS classes for the card container. */
   className?: string;
-
+  /** Optional callback function when the card is clicked. If not provided, it defaults to selecting the talent in the UI store. */
   onClick?: (talentId: string) => void;
+  /** Optional tooltip text to show on hover. */
   tooltip?: string;
 }
 
+/**
+ * A highly stylized card component for displaying a talent's key metrics and portrait.
+ * Features a vertical star power bar, prestige indicators, and market ask details.
+ * 
+ * @param props - Component properties
+ */
 export const TalentCard: React.FC<TalentCardProps> = ({
   talent,
   className,
