@@ -39,7 +39,8 @@ TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 const TabsContentInner = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & { "data-state"?: string; forceMount?: boolean; hidden?: boolean }
->(({ className, children, "data-state": state, forceMount, hidden, ...props }, ref) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+>(({ className, children, "data-state": state, forceMount, hidden: _hidden, ...props }, ref) => {
   const isActive = state === "active";
 
   return (

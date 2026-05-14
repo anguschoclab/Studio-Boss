@@ -2,6 +2,7 @@ import React from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Button } from '@/components/ui/button';
 import { Target } from 'lucide-react';
+
 import { MADashboard } from '../industry/MADashboard';
 import { cn } from '@/lib/utils';
 import { RivalCard } from './RivalCard';

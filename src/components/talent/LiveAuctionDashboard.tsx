@@ -8,7 +8,6 @@ import {
   AlertCircle,
   CheckCircle2,
   ShieldAlert,
-  Zap,
   History as LucideHistory,
   X,
 } from "lucide-react";

@@ -1,16 +1,16 @@
 import { WeekCoordinator } from '@/engine/services/WeekCoordinator';
 import { initializeGame } from '@/engine/core/gameInit';
-import { RandomGenerator } from '@/engine/utils/rng';
-import { describe, it, expect, beforeEach, test } from 'vitest';
+
+import { describe, expect, beforeEach, test } from 'vitest';
 import { GameState, Project, IPAsset } from '@/engine/types';
-import { type ProjectId, type AssetId, type TalentId } from '@/engine/types/shared.types';
+import { type ProjectId, type AssetId } from '@/engine/types/shared.types';
 
 describe('System Connectivity - Phase 3 Integration', () => {
     let state: GameState;
-    let rng: RandomGenerator;
+
 
     beforeEach(() => {
-        rng = new RandomGenerator(12345);
+
         state = initializeGame('Test Studio', 'major', 12345);
     });
 

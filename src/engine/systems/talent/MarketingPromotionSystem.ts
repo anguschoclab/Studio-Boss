@@ -1,4 +1,4 @@
-import { GameState, StateImpact, Talent, Project } from '../../types';
+import { GameState, StateImpact, Talent, Project, Contract } from '../../types';
 import { RandomGenerator } from '../../utils/rng';
 import {
   TalkShowAppearance,
@@ -9,8 +9,7 @@ import {
   FAMOUS_TALK_SHOWS,
   PRESTIGIOUS_MAGAZINES,
 } from '../../types/marketing.types';
-import { areRomantic, areFriends, getTalentRelationships } from './RelationshipSystem';
-import { getCliqueFameBonus } from './CliqueSystem';
+import { areRomantic } from './RelationshipSystem';
 
 /**
  * Marketing & Promotion System
@@ -247,10 +246,12 @@ export function tickMarketingPromotionSystem(
   rng: RandomGenerator
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const talents = Object.values(state.entities.talents || {});
+  const talentsRecord = state.entities.talents || {};
 
   // 1. Individual talk show appearances
-  for (const talent of talents) {
+  // ⚡ Bolt: Replaced Object.values() with for...in
+  for (const talentId in talentsRecord) {
+    const talent = talentsRecord[talentId];
     if (rng.next() < TALK_SHOW_CHANCE * (talent.starMeter || 50) / 50) {
       const appearance = generateTalkShowAppearance(talent, state, rng);
 
@@ -261,7 +262,7 @@ export function tickMarketingPromotionSystem(
             talentId: talent.id,
             appearance,
           },
-        } as any);
+        } as unknown as StateImpact);
 
         // Apply star meter boost
         if (appearance.starMeterBoost !== 0) {
@@ -313,7 +314,9 @@ export function tickMarketingPromotionSystem(
   }
 
   // 2. Individual photoshoots
-  for (const talent of talents) {
+  // ⚡ Bolt: Replaced Object.values() with for...in
+  for (const talentId in talentsRecord) {
+    const talent = talentsRecord[talentId];
     // Higher chance for top-tier talent
     const photoshootChance = PHOTOSHOOT_CHANCE * (talent.tier === 1 ? 2 : 1);
 
@@ -390,24 +393,42 @@ export function tickMarketingPromotionSystem(
   }
 
   // 3. Press tours for upcoming releases
-  const upcomingReleases = Object.values(state.entities.projects || {})
-    .filter(p => {
-      const releaseWeek = p.releaseWeek;
-      return releaseWeek && releaseWeek - state.week >= 2 && releaseWeek - state.week <= 6;
-    });
+  // ⚡ Bolt: Replaced Object.values().filter() with for...in
+  const projectsRecord = state.entities.projects || {};
+  const upcomingReleases: Project[] = [];
+  for (const id in projectsRecord) {
+    const p = projectsRecord[id];
+    if (p.releaseWeek && p.releaseWeek - state.week >= 2 && p.releaseWeek - state.week <= 6) {
+      upcomingReleases.push(p);
+    }
+  }
+
+  // ⚡ Bolt: Pre-group contracts to avoid O(Projects * Contracts) loop inside the press tour loop
+  let contractsByProject: Record<string, Contract[]> | null = null;
 
   for (const project of upcomingReleases) {
     if (rng.next() < PRESS_TOUR_CHANCE) {
+      if (!contractsByProject) {
+        contractsByProject = {};
+        const contractsRecord = state.entities.contracts || {};
+        for (const cid in contractsRecord) {
+          const c = contractsRecord[cid];
+          if (!contractsByProject[c.projectId]) {
+            contractsByProject[c.projectId] = [];
+          }
+          contractsByProject[c.projectId].push(c);
+        }
+      }
+
       // Get attached talent
-      const projectContracts = Object.values(state.entities.contracts || {})
-        .filter(c => c.projectId === project.id);
+      const projectContracts = contractsByProject[project.id] || [];
       const talentIds = projectContracts.map(c => c.talentId);
-      const talents = talentIds
+      const projectTalents = talentIds
         .map(id => state.entities.talents?.[id])
         .filter((t): t is Talent => !!t);
 
-      if (talents.length > 0) {
-        const tour = generatePressTour(project, talents, state, rng);
+      if (projectTalents.length > 0) {
+        const tour = generatePressTour(project, projectTalents, state, rng);
 
         if (tour) {
           impacts.push({
@@ -415,9 +436,9 @@ export function tickMarketingPromotionSystem(
             payload: {
               projectId: project.id,
               tour,
-              notification: `Press tour launched for "${project.title}" with ${talents.length} talents`,
+              notification: `Press tour launched for "${project.title}" with ${projectTalents.length} talents`,
             },
-          } as any);
+          } as unknown as StateImpact);
 
           // Deduct cost
           impacts.push({

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { ScriptMetricsCalculator } from '@/engine/systems/production/ScriptMetricsCalculator';
 import { createMockProject } from '@/test/utils/mockFactories';
 import { ScriptedProject, ScriptEvent, ScriptMetrics } from '@/engine/types';

@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { tickProduction } from '@/engine/systems/production/TickModule';
-import { createMockGameState, createMockProject, createMockTalent, createMockContract, createMockRival } from '@/test/utils/mockFactories';
+import { createMockGameState, createMockProject, createMockTalent, createMockContract } from '@/test/utils/mockFactories';
 import { RandomGenerator } from '@/engine/utils/rng';
-import * as directorsMod from '@/engine/systems/directors';
-import * as projectsMod from '@/engine/systems/projects';
+
+
 
 
 describe('TickModule - tickProduction', () => {
