@@ -1,8 +1,6 @@
 import { GameState, StateImpact } from "@/engine/types";
 import { applySingleImpact as apply, applyImpacts as applyAll } from "./impactHandlers";
 
-const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
-
 /**
  * Legacy entry point for applying state impacts.
  * Now delegates to the strictly typed handler registry in impactHandlers/index.ts.

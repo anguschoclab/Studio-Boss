@@ -990,6 +990,9 @@ export function generateArchetypeForRole(role: string, tier: TalentTier, rng: { 
       case 'personality':
         archetypes = Object.keys(PERSONALITY_ARCHETYPES);
         break;
+      default:
+        archetypes = ['everyman']; // fallback for unknown roles
+        break;
     }
   }
   
