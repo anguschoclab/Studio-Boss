@@ -2,6 +2,14 @@ import { GameState, Rumor } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
 import { pick, randRange, secureRandom, generateId } from '../utils';
 
+/**
+ * Advances the industry rumor system by one week.
+ * Resolves due rumors into confirmed or debunked headlines, removes stale resolved rumors,
+ * and has a small chance to generate new industry rumors based on current game state.
+ * 
+ * @param state - The current game state
+ * @returns A StateImpact containing the updated rumors list and any new headlines generated.
+ */
 export function advanceRumors(state: GameState): StateImpact {
   const newHeadlines: import('../types/engine.types').Headline[] = [];
   let currentRumors = state.industry.rumors || [];
