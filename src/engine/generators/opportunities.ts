@@ -1,6 +1,6 @@
 import { Opportunity, BudgetTierKey, TvFormatKey } from '@/engine/types';
 import { GENRES, TARGET_AUDIENCES } from '../data/genres';
-import { pick, randRange, secureRandom, generateId, rand } from '../utils';
+import { pick, randRange, generateId, rand } from '../utils';
  // Reuse some generation logic if needed, or build new one
 
 const PROJECT_ADJECTIVES = [

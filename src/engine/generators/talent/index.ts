@@ -2,7 +2,7 @@ import { Talent, TalentRole, Family, Agency, Agent, TalentTier } from '../../typ
 import { generateDemographics } from './demographicsGenerator';
 import { psychologyGenerator } from './psychologyGenerator';
 import { generateDemographicName } from '../names';
-import { randRange, secureRandom, pick, rand, generateId } from '../../utils';
+import { randRange, pick, rand, generateId } from '../../utils';
 
 
 const TALENT_QUIRKS = [
@@ -97,11 +97,12 @@ export function generateFamilies(count: number): Family[] {
   }));
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function generateTalentPool(
   count: number, 
-  families: Family[] = [], 
-  agents: Agent[] = [], 
-  agencies: Agency[] = [], 
+  _families: Family[] = [],
+  _agents: Agent[] = [],
+  _agencies: Agency[] = [],
   localCountry?: string
 ): Talent[] {
     const roles: TalentRole[] = ['actor', 'director', 'writer', 'producer'];

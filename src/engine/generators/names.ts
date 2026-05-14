@@ -2,8 +2,6 @@ import { pick } from '../utils';
 import { BrandSystem } from './BrandSystem';
 import { ProjectFormat } from '@/engine/types';
 import { 
-  PREFIXES, 
-  SUFFIXES, 
   MOTTOS, 
   MALE_FIRST_NAMES, 
   FEMALE_FIRST_NAMES, 
@@ -52,7 +50,8 @@ const REGIONAL_NAMES: Record<string, { firstM: string[], firstF: string[], last:
   }
 };
 
-export function generateDemographicName(gender: 'MALE' | 'FEMALE' | 'NON_BINARY', country: string, ethnicity: string): string {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function generateDemographicName(gender: 'MALE' | 'FEMALE' | 'NON_BINARY', country: string, _ethnicity: string): string {
   const region = REGIONAL_NAMES[country];
   
   if (region) {
