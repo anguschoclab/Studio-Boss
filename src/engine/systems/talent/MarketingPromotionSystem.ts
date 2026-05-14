@@ -22,6 +22,15 @@ const TALK_SHOW_CHANCE = 0.08; // 8% per week per talent
 const PHOTOSHOOT_CHANCE = 0.05; // 5% per week per talent
 const PRESS_TOUR_CHANCE = 0.15; // 15% chance when releasing major film
 
+const TALK_SHOW_TYPES: TalkShowType[] = [
+  'late_night', 'morning_show', 'podcast', 'variety', 'comedy_central', 'serious_interview'
+];
+
+const PHOTOSHOOT_TYPES: PhotoshootType[] = [
+  'magazine_cover', 'fashion_editorial', 'promotional', 'candid', 'red_carpet', 'controversial'
+];
+
+
 // Performance factors
 const BASE_PERFORMANCE = 50;
 const CHARISMA_BONUS = 15;
@@ -39,12 +48,9 @@ function generateTalkShowAppearance(
   // Check if talent is available (not on medical leave, etc)
   if (talent.onMedicalLeave) return null;
 
-  const showTypes: TalkShowType[] = [
-    'late_night', 'morning_show', 'podcast', 'variety', 'comedy_central', 'serious_interview'
-  ];
-
   // Match show type to talent personality
-  let preferredTypes = showTypes;
+  let preferredTypes = TALK_SHOW_TYPES;
+
   if (talent.personality === 'charismatic') {
     preferredTypes = ['late_night', 'variety', 'comedy_central'];
   } else if (talent.prestige > 80) {
@@ -113,12 +119,9 @@ function generatePhotoshoot(
   rng: RandomGenerator,
   coTalent?: Talent // For couple/clique shoots
 ): MagazinePhotoshoot | null {
-  const shootTypes: PhotoshootType[] = [
-    'magazine_cover', 'fashion_editorial', 'promotional', 'candid', 'red_carpet', 'controversial'
-  ];
-
   // Choose shoot type based on talent
-  let preferredTypes = shootTypes;
+  let preferredTypes = PHOTOSHOOT_TYPES;
+
   if (talent.accessLevel === 'dynasty' || talent.tier === 1) {
     preferredTypes = ['magazine_cover', 'fashion_editorial'];
   } else if (talent.psychology?.scandalRisk && talent.psychology.scandalRisk > 60) {
@@ -181,10 +184,15 @@ function generatePressTour(
 
   const duration = rng.rangeInt(2, 4); // 2-4 weeks
 
+  const talentIds: string[] = [];
+  for (let i = 0; i < talents.length; i++) {
+    talentIds.push(talents[i].id);
+  }
+
   const tour: PressTour = {
     id: rng.uuid('PRT'),
     projectId: project.id,
-    talentIds: talents.map(t => t.id),
+    talentIds,
     startWeek: state.week,
     endWeek: state.week + duration,
     appearances: [],
@@ -192,6 +200,7 @@ function generatePressTour(
     totalCost: talents.length * duration * 50000, // $50k per talent per week
     effectiveness: 0, // Calculated after generation
   };
+
 
   // Generate appearances for each week
   for (let week = 0; week < duration; week++) {
@@ -230,10 +239,17 @@ function generatePressTour(
   }
 
   // Calculate effectiveness
-  const avgPerformance = tour.appearances.length > 0
-    ? tour.appearances.reduce((sum, a) => sum + a.performance, 0) / tour.appearances.length
-    : 50;
-  tour.effectiveness = Math.floor(avgPerformance);
+  let totalPerformance = 0;
+  const appearanceCount = tour.appearances.length;
+  if (appearanceCount > 0) {
+    for (let i = 0; i < appearanceCount; i++) {
+      totalPerformance += tour.appearances[i].performance;
+    }
+    tour.effectiveness = Math.floor(totalPerformance / appearanceCount);
+  } else {
+    tour.effectiveness = 50;
+  }
+
 
   return tour;
 }
@@ -248,10 +264,11 @@ export function tickMarketingPromotionSystem(
   const impacts: StateImpact[] = [];
   const talentsRecord = state.entities.talents || {};
 
-  // 1. Individual talk show appearances
-  // ⚡ Bolt: Replaced Object.values() with for...in
+  // 1 & 2. Individual talk show appearances & photoshoots
   for (const talentId in talentsRecord) {
     const talent = talentsRecord[talentId];
+
+    // --- Talk Show Appearance ---
     if (rng.next() < TALK_SHOW_CHANCE * (talent.starMeter || 50) / 50) {
       const appearance = generateTalkShowAppearance(talent, state, rng);
 
@@ -311,12 +328,8 @@ export function tickMarketingPromotionSystem(
         }
       }
     }
-  }
 
-  // 2. Individual photoshoots
-  // ⚡ Bolt: Replaced Object.values() with for...in
-  for (const talentId in talentsRecord) {
-    const talent = talentsRecord[talentId];
+    // --- Photoshoot ---
     // Higher chance for top-tier talent
     const photoshootChance = PHOTOSHOOT_CHANCE * (talent.tier === 1 ? 2 : 1);
 
@@ -340,7 +353,7 @@ export function tickMarketingPromotionSystem(
               talentId: talent.id,
               update: {
                 starMeter: Math.max(0, Math.min(100, (talent.starMeter || 50) + photoshoot.starMeterBoost)),
-                prestige: talent.prestige + photoshoot.prestigeChange,
+                prestige: (talent.prestige || 50) + photoshoot.prestigeChange,
               },
             },
           });
@@ -365,7 +378,7 @@ export function tickMarketingPromotionSystem(
               type: 'NEWS_ADDED',
               payload: {
                 id: rng.uuid('NWS'),
-                headline: `${photoshoot.magazineName} ${photoshoot.magazineName} Shoot Sparks Controversy`,
+                headline: `${photoshoot.magazineName} Shoot Sparks Controversy`,
                 description: `${talent.name}'s edgy photoshoot is dividing fans and critics alike.`,
                 category: 'talent',
                 publication: 'Page Six',
@@ -393,74 +406,72 @@ export function tickMarketingPromotionSystem(
   }
 
   // 3. Press tours for upcoming releases
-  // ⚡ Bolt: Replaced Object.values().filter() with for...in
   const projectsRecord = state.entities.projects || {};
-  const upcomingReleases: Project[] = [];
-  for (const id in projectsRecord) {
-    const p = projectsRecord[id];
-    if (p.releaseWeek && p.releaseWeek - state.week >= 2 && p.releaseWeek - state.week <= 6) {
-      upcomingReleases.push(p);
-    }
-  }
-
-  // ⚡ Bolt: Pre-group contracts to avoid O(Projects * Contracts) loop inside the press tour loop
   let contractsByProject: Record<string, Contract[]> | null = null;
 
-  for (const project of upcomingReleases) {
-    if (rng.next() < PRESS_TOUR_CHANCE) {
-      if (!contractsByProject) {
-        contractsByProject = {};
-        const contractsRecord = state.entities.contracts || {};
-        for (const cid in contractsRecord) {
-          const c = contractsRecord[cid];
-          if (!contractsByProject[c.projectId]) {
-            contractsByProject[c.projectId] = [];
+  for (const id in projectsRecord) {
+    const project = projectsRecord[id];
+
+    // Release window check (2-6 weeks out)
+    if (project.releaseWeek && project.releaseWeek - state.week >= 2 && project.releaseWeek - state.week <= 6) {
+      if (rng.next() < PRESS_TOUR_CHANCE) {
+        // Lazy initialize contracts map
+        if (!contractsByProject) {
+          contractsByProject = {};
+          const contractsRecord = state.entities.contracts || {};
+          for (const cid in contractsRecord) {
+            const c = contractsRecord[cid];
+            if (!contractsByProject[c.projectId]) {
+              contractsByProject[c.projectId] = [];
+            }
+            contractsByProject[c.projectId].push(c);
           }
-          contractsByProject[c.projectId].push(c);
         }
-      }
 
-      // Get attached talent
-      const projectContracts = contractsByProject[project.id] || [];
-      const talentIds = projectContracts.map(c => c.talentId);
-      const projectTalents = talentIds
-        .map(id => state.entities.talents?.[id])
-        .filter((t): t is Talent => !!t);
+        // Gather attached talent
+        const projectContracts = contractsByProject[project.id] || [];
+        const projectTalents: Talent[] = [];
+        for (let i = 0; i < projectContracts.length; i++) {
+          const t = state.entities.talents?.[projectContracts[i].talentId];
+          if (t) projectTalents.push(t);
+        }
 
-      if (projectTalents.length > 0) {
-        const tour = generatePressTour(project, projectTalents, state, rng);
+        if (projectTalents.length > 0) {
+          const tour = generatePressTour(project, projectTalents, state, rng);
 
-        if (tour) {
-          impacts.push({
-            type: 'PRESS_TOUR_CREATED',
-            payload: {
-              projectId: project.id,
-              tour,
-              notification: `Press tour launched for "${project.title}" with ${projectTalents.length} talents`,
-            },
-          } as unknown as StateImpact);
+          if (tour) {
+            impacts.push({
+              type: 'PRESS_TOUR_CREATED',
+              payload: {
+                projectId: project.id,
+                tour,
+                notification: `Press tour launched for "${project.title}" with ${projectTalents.length} talents`,
+              },
+            } as unknown as StateImpact);
 
-          // Deduct cost
-          impacts.push({
-            type: 'FUNDS_DEDUCTED',
-            cashChange: -tour.totalCost,
-          });
+            // Deduct cost
+            impacts.push({
+              type: 'FUNDS_DEDUCTED',
+              cashChange: -tour.totalCost,
+            });
 
-          // News about tour
-          impacts.push({
-            type: 'NEWS_ADDED',
-            payload: {
-              id: rng.uuid('NWS'),
-              headline: `"${project.title}" Press Tour Kicks Off`,
-              description: `The cast is hitting all the major talk shows and magazines to promote the upcoming release.`,
-              category: 'industry',
-              publication: 'Variety',
-            },
-          });
+            // News about tour
+            impacts.push({
+              type: 'NEWS_ADDED',
+              payload: {
+                id: rng.uuid('NWS'),
+                headline: `"${project.title}" Press Tour Kicks Off`,
+                description: `The cast is hitting all the major talk shows and magazines to promote the upcoming release.`,
+                category: 'industry',
+                publication: 'Variety',
+              },
+            });
+          }
         }
       }
     }
   }
+
 
   return impacts;
 }
@@ -468,11 +479,22 @@ export function tickMarketingPromotionSystem(
 /**
  * Get active press tours for a project
  */
-export function getActivePressTours(projectId: string, state: GameState): import('../../types/marketing.types').PressTour[] {
+export function getActivePressTours(projectId: string, state: GameState): PressTour[] {
+
   const marketing = state.relationships?.marketingPromotions || {};
-  return Object.values(marketing.activePressTours || {})
-    .filter((t) => t.projectId === projectId);
+  const activeTours = marketing.activePressTours || {};
+  const result: PressTour[] = [];
+  
+  for (const id in activeTours) {
+    const tour = activeTours[id];
+    if (tour.projectId === projectId) {
+      result.push(tour);
+    }
+  }
+  
+  return result;
 }
+
 
 /**
  * Calculate buzz bonus from marketing activities
@@ -482,12 +504,21 @@ export function calculateMarketingBuzz(
   state: GameState
 ): { buzzScore: number; viralMoments: number } {
   const marketing = state.relationships?.marketingPromotions || {};
+  const appearances = marketing.talkShowAppearances || {};
 
-  const appearances = Object.values(marketing.talkShowAppearances || {});
-  const relevantAppearances = appearances.filter(a => a.projectId === projectId);
+  let buzzScore = 0;
+  let viralMoments = 0;
 
-  const viralMoments = relevantAppearances.filter(a => a.viralMoment).length;
-  const buzzScore = relevantAppearances.reduce((sum, a) => sum + (a.performance / 10), 0);
+  for (const id in appearances) {
+    const a = appearances[id];
+    if (a.projectId === projectId) {
+      if (a.viralMoment) {
+        viralMoments++;
+      }
+      buzzScore += (a.performance / 10);
+    }
+  }
 
   return { buzzScore, viralMoments };
 }
+

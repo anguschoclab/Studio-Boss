@@ -17,14 +17,26 @@ import { createNewsSlice, NewsSlice } from './slices/newsSlice';
 import { createSnapshotSlice, SnapshotSlice } from './slices/snapshotSlice';
 import { createLoanSlice, LoanSlice } from './slices/loanSlice';
 
+/**
+ * The main game store interface, combining multiple slices for state management.
+ * Manages the top-level game state, week advancement, and persistence.
+ */
 export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, RivalSlice, NewsSlice, SnapshotSlice, LoanSlice {
+  /** The current game state object. Null if no game is in progress. */
   gameState: GameState | null;
+  /** Initializes a new game with the given studio name and archetype. */
   newGame: (studioName: string, archetype: ArchetypeKey) => Promise<void>;
+  /** Advances the game world by one week, resolving all systems and projects. */
   doAdvanceWeek: () => WeekSummary;
+  /** Saves the current game state to a specific slot. */
   saveToSlot: (slot: number) => Promise<void>;
+  /** Loads the game state from a specific slot. */
   loadFromSlot: (slot: number) => Promise<boolean>;
+  /** Retrieves metadata for all available save slots. */
   getSaveSlots: () => Promise<SaveSlotInfo[]>;
+  /** Clears the current game state from the store. */
   clearGame: () => void;
+  /** Developer utility to automatically initialize a game for testing. */
   devAutoInit: (archetype?: ArchetypeKey) => void;
 }
 

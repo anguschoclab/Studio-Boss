@@ -12,6 +12,16 @@ import { pick, randRange, setDeterministicSeed, rand, generateId } from '../util
 import { generateOpportunity } from '../generators/opportunities';
 import { generateProjectTitle } from '../generators/titles';
 
+/**
+ * Initializes a fresh game state for a new playthrough.
+ * Generates initial rivals, talent pool, agencies, buyers, and industry trends.
+ * Assigns starting platforms and seeds the IP vaults for rivals.
+ * 
+ * @param studioName - The name of the player's studio
+ * @param archetype - The studio's starting archetype (major, mid-tier, or indie)
+ * @param seed - Optional seed for deterministic world generation
+ * @returns A fully populated initial GameState object
+ */
 export function initializeGame(
   studioName: string,
   archetype: ArchetypeKey,
