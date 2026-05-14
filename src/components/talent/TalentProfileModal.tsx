@@ -15,6 +15,13 @@ import { StatsTab } from "./tabs/StatsTab";
 import { KnownForTab } from "./tabs/KnownForTab";
 import { FilmographyTab } from "./tabs/FilmographyTab";
 
+/**
+ * A comprehensive cinematic modal component for viewing a talent's detailed profile.
+ * Displays a cinematic header with demographic badges, star meter, and role information.
+ * Organized into tabs for Bio, Market Stats, Top Projects, and Filmography.
+ * 
+ * Uses game and UI stores to resolve the selected talent and display their data.
+ */
 export const TalentModal = () => {
   const { selectedTalentId, selectTalent } = useUIStore();
   const gameState = useGameStore((s) => s.gameState);

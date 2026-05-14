@@ -51,6 +51,12 @@ declare module '@tanstack/react-router' {
   }
 }
 
+/**
+ * Main application entry point.
+ * Configures the QueryClient, TooltipProvider, and Router.
+ *
+ * @returns The rendered App component with all global providers
+ */
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider delayDuration={300}>

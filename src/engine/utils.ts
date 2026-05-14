@@ -1,6 +1,12 @@
 import { Contract } from '@/engine/types';
 // Shared utilities for the engine layer — no React imports
 
+/**
+ * Formats a numeric amount into a human-readable money string with suffixes (K, M, B).
+ *
+ * @param amount - The numeric amount to format
+ * @returns The formatted money string (e.g., "$1.2M")
+ */
 export function formatMoney(amount: number): string {
   if (Number.isNaN(amount)) return "$NaN";
 
@@ -17,6 +23,12 @@ export function formatMoney(amount: number): string {
   return `${sign}$${abs.toFixed(0)}`;
 }
 
+/**
+ * Calculates the display week and year from a total week count.
+ *
+ * @param week - The total number of weeks since the start
+ * @returns An object containing the display week (1-52) and the current year
+ */
 export function getWeekDisplay(week: number): { displayWeek: number; year: number } {
   return {
     displayWeek: ((week - 1) % 52) + 1,
@@ -74,19 +86,46 @@ export function secureRandom(): number {
   return rand(); // Redirect to our seedable source for unified determinism
 }
 
+/**
+ * Randomly selects an element from an array using the engine's PRNG.
+ *
+ * @param arr - The array to pick from
+ * @returns A randomly selected element from the array
+ */
 export function pick<T>(arr: T[]): T {
   if (arr.length === 0) return undefined as T;
   return arr[Math.floor(rand() * arr.length)];
 }
 
+/**
+ * Generates a random number within a specified range using the engine's PRNG.
+ *
+ * @param min - The minimum value (inclusive)
+ * @param max - The maximum value (exclusive)
+ * @returns A random number between min and max
+ */
 export function randRange(min: number, max: number): number {
   return min + rand() * (max - min);
 }
 
+/**
+ * Clamps a number between a minimum and maximum value.
+ *
+ * @param value - The value to clamp
+ * @param min - The minimum allowed value
+ * @param max - The maximum allowed value
+ * @returns The clamped value
+ */
 export function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
 
+/**
+ * Groups a list of contracts by their project ID.
+ *
+ * @param contracts - The list of contracts to group
+ * @returns A Map where keys are project IDs and values are arrays of contracts
+ */
 export function groupContractsByProject(contracts: Contract[]): Map<string, Contract[]> {
   const map = new Map<string, Contract[]>();
   for (const contract of contracts) {
