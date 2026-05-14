@@ -2,6 +2,8 @@ import archiveData from '../data/narrative/archive.json';
 import { ResolutionRequest, NarrativeArchive } from '../data/narrative/archive';
 import { RandomGenerator } from '../utils/rng';
 
+const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+
 /**
  * The Bard Resolver
  * Decouples logic from text by resolving strings from a tiered archive.
@@ -21,6 +23,9 @@ export const BardResolver = {
     const subDomainParts = subDomain.split('.');
     
     for (const part of subDomainParts) {
+      if (FORBIDDEN_KEYS.has(part)) {
+        return `[INVALID SUB-DOMAIN: ${subDomain}]`;
+      }
       if (subDomainData && typeof subDomainData === 'object' && part in subDomainData) {
         subDomainData = (subDomainData as Record<string, unknown>)[part];
       } else {

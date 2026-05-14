@@ -7,14 +7,8 @@ import {
   Brain,
   Zap,
   ChevronRight,
-  MessageSquare,
-  Star,
-  TrendingUp,
-  TrendingDown,
-  Minus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { type TalentId, type ProjectId } from "@/engine/types/shared.types";
 
 interface CastingFeedbackProps {
   talent: Talent;

@@ -10,7 +10,7 @@ import { Project } from '@/engine/types';
 
 // ─── Post-production timeline steps ──────────────────────────────────────────
 
-export const TIMELINE_STEPS = [
+const TIMELINE_STEPS = [
   { week: 1, label: 'Editing & Assembly Cut', icon: '✂️' },
   { week: 2, label: 'Colour Grading & Sound Mix', icon: '🎨' },
   { week: 3, label: 'Ratings Board Submission', icon: '📋' },
@@ -70,7 +70,7 @@ export const PostProductionModal: React.FC = () => {
   // Director's cut sub-section — shown if project has been marked for a cut
   const directorsCutPending =
     project && (project as Project & { directorsCutNotified?: boolean }).directorsCutNotified === true &&
-    !(project as Project).availableCuts?.some((c: any) => c.type === 'directors_cut');
+    !(project as Project).availableCuts?.some((c: { type: string }) => c.type === 'directors_cut');
 
   return (
     <Dialog
