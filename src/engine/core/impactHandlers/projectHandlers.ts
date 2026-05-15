@@ -1,4 +1,4 @@
-import { GameState, StateImpact, Award } from '@/engine/types';
+import { GameState, StateImpact } from "@/engine/types";
 
 /**
  * Project-related impact handlers
@@ -17,8 +17,8 @@ export function handleProjectUpdated(state: GameState, impact: StateImpact): Gam
     ...state,
     entities: {
       ...state.entities,
-      projects
-    }
+      projects,
+    },
   };
 }
 
@@ -31,8 +31,8 @@ export function handleProjectRemoved(state: GameState, impact: StateImpact): Gam
     ...state,
     entities: {
       ...state.entities,
-      projects
-    }
+      projects,
+    },
   };
 }
 
@@ -42,41 +42,45 @@ export function handleAwardWon(state: GameState, impact: StateImpact): GameState
   const projects = { ...state.entities.projects };
   const project = projects[projectId];
   if (project) {
-    projects[projectId] = { 
-      ...project, 
-      awards: [...(project.awards || []), award] 
+    projects[projectId] = {
+      ...project,
+      awards: [...(project.awards || []), award],
     };
   }
   return {
     ...state,
     entities: {
       ...state.entities,
-      projects
-    }
+      projects,
+    },
   };
 }
 
 export function handlePilotGraduated(state: GameState, impact: StateImpact): GameState {
-  const { projectId, nextState } = impact.payload as { projectId: string; nextState?: import('@/engine/types/project.types').ProjectStatus };
+  const { projectId, nextState } = impact.payload as {
+    projectId: string;
+    nextState?: import("@/engine/types/project.types").ProjectStatus;
+  };
   const projects = { ...state.entities.projects };
   const project = projects[projectId];
   if (project) {
     // Remove stage and update state for graduating pilots
     const updatedProject = { ...project };
-    if ('stage' in updatedProject) {
+    if ("stage" in updatedProject) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       delete (updatedProject as any).stage; // stage is pilot-specific, but not in strict Project result
     }
-    projects[projectId] = { 
-      ...updatedProject, 
-      state: nextState ?? 'production', 
-      weeksInPhase: 0 
+    projects[projectId] = {
+      ...updatedProject,
+      state: nextState ?? "production",
+      weeksInPhase: 0,
     };
   }
   return {
     ...state,
     entities: {
       ...state.entities,
-      projects
-    }
+      projects,
+    },
   };
 }

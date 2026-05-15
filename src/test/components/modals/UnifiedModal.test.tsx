@@ -6,6 +6,7 @@ import { Settings } from 'lucide-react';
 
 describe('UnifiedModal', () => {
   it('renders nothing when closed', () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { container } = render(
       <UnifiedModal isOpen={false} onClose={() => {}} title="Test">
         <div>Content</div>
