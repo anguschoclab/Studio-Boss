@@ -33,3 +33,6 @@
 ## 2026-05-25 - Replace Object.values with for...in loops in MarketingPromotionSystem.ts
 **Learning:** `MarketingPromotionSystem.ts` was doing multiple `Object.values()` calls with `.filter()` on state records (talents, projects, contracts). It runs on every tick and creates an intermediate array, which adds memory allocation and garbage collection overhead. Furthermore, doing this lookup of contracts by filtering inside an outer iteration loop creates an O(Projects * Contracts) complexity loop.
 **Action:** Replace `Object.values(state.entities...)` with `for...in` loops in `MarketingPromotionSystem.ts` and pre-group `contractsByProject` to reduce O(N*M) lookups.
+## 2025-05-26 - Eliminate intermediate array allocations in IndustryUpstarts
+**Learning:** `IndustryUpstarts.ts` was performing `Object.values(state.entities.rivals || {})` and then immediately calling `.length` and `.map(r => r.name)` on the result. Given this function runs frequently in the engine tick loop, these intermediate array allocations caused compounding garbage collection spikes.
+**Action:** Replaced `Object.values()` and `.map()` with a direct `for...in` loop to populate the `usedNames` Set and count the total active rivals simultaneously, eliminating O(N) array allocation overhead.

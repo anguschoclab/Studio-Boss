@@ -10,11 +10,17 @@ import { generateMotto } from '../../generators/names';
  */
 export function tickIndustryUpstarts(state: GameState): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const rivals = Object.values(state.entities.rivals || {});
-  const currentRivals = rivals.length;
-  const currentStreamers = state.market.buyers.filter(b => b.archetype === 'streamer').length;
+  // ⚡ Bolt: Replace Object.values() and map() with direct for...in loop
+  let currentRivals = 0;
+  const usedNames = new Set<string>();
 
-  const usedNames = new Set(rivals.map(r => r.name));
+  const rivalsDict = state.entities.rivals || {};
+  for (const id in rivalsDict) {
+    currentRivals++;
+    usedNames.add(rivalsDict[id].name);
+  }
+
+  const currentStreamers = state.market.buyers.filter(b => b.archetype === 'streamer').length;
   state.market.buyers.forEach(b => usedNames.add(b.name));
 
   // Minimum thresholds
