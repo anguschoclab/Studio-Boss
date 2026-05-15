@@ -1,9 +1,7 @@
 import { Buyer, BuyerArchetype, NetworkPlatform, PremiumPlatform, StreamerPlatform } from '@/engine/types';
-import { pick, randRange, secureRandom, generateId, rand } from '../utils';
+import { randRange, generateId, rand, pick } from '../utils';
 import { 
-  NETWORK_PREFIXES, NETWORK_SUFFIXES,
-  PREMIUM_PREFIXES, PREMIUM_SUFFIXES,
-  STREAMER_PREFIXES, STREAMER_SUFFIXES
+  PREMIUM_PREFIXES, PREMIUM_SUFFIXES
 } from '../data/names.data';
 import { BrandSystem } from './BrandSystem';
 
