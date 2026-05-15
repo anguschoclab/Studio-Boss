@@ -37,19 +37,20 @@ export function handleNewsAdded(state: GameState, impact: StateImpact): GameStat
 
 export function handleSystemTick(state: GameState, impact: StateImpact): GameState {
   const payload = impact.payload || {};
-  const { week, tickCount, __studioUpdate, studioIdentity } = payload as any;
+  const typedPayload = payload as Record<string, unknown>;
+  const { week, tickCount, __studioUpdate, studioIdentity } = typedPayload;
 
   let updated: GameState = {
     ...state,
-    week: week ?? state.week,
-    tickCount: tickCount ?? state.tickCount
+    week: (week as number) ?? state.week,
+    tickCount: (tickCount as number) ?? state.tickCount
   };
 
   // Generic studio property patch (used by loan tick, identity tick, etc.)
   if (__studioUpdate) {
     updated = {
       ...updated,
-      studio: { ...updated.studio, ...__studioUpdate }
+      studio: { ...updated.studio, ...(__studioUpdate as Record<string, unknown>) }
     };
   }
 
@@ -59,22 +60,22 @@ export function handleSystemTick(state: GameState, impact: StateImpact): GameSta
       ...updated,
       studio: {
         ...updated.studio,
-        identity: { ...(updated.studio as any).identity, ...studioIdentity }
+        identity: { ...((updated.studio as unknown as Record<string, unknown>).identity as Record<string, unknown>), ...(studioIdentity as Record<string, unknown>) }
       }
     };
   }
 
   // New achievement ID unlock
-  const { newAchievementId } = payload as any;
+  const { newAchievementId } = typedPayload;
   if (newAchievementId) {
-    const existing: string[] = (updated.studio as any).achievements ?? [];
-    if (!existing.includes(newAchievementId)) {
+    const existing: string[] = ((updated.studio as unknown as Record<string, unknown>).achievements as string[]) ?? [];
+    if (!existing.includes(newAchievementId as string)) {
       updated = {
         ...updated,
         studio: {
           ...updated.studio,
-          achievements: [...existing, newAchievementId]
-        } as any
+          achievements: [...existing, newAchievementId as string]
+        } as unknown as typeof updated.studio
       };
     }
   }
