@@ -85,6 +85,7 @@ export const AwardsHQ: React.FC = () => {
                     <h3
                       className="text-xl font-black italic uppercase tracking-tight text-white group-hover:text-primary transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       role="button"
+                      aria-label={`View details for ${project.title}`}
                       tabIndex={0}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
