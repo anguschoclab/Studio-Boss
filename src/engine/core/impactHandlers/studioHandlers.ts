@@ -37,7 +37,13 @@ export function handleNewsAdded(state: GameState, impact: StateImpact): GameStat
 
 export function handleSystemTick(state: GameState, impact: StateImpact): GameState {
   const payload = impact.payload || {};
-  const { week, tickCount, __studioUpdate, studioIdentity } = payload as any;
+  const { week, tickCount, __studioUpdate, studioIdentity, newAchievementId } = payload as unknown as {
+    week?: number;
+    tickCount?: number;
+    __studioUpdate?: Record<string, unknown>;
+    studioIdentity?: Record<string, number>;
+    newAchievementId?: string;
+  };
 
   let updated: GameState = {
     ...state,
@@ -59,22 +65,21 @@ export function handleSystemTick(state: GameState, impact: StateImpact): GameSta
       ...updated,
       studio: {
         ...updated.studio,
-        identity: { ...(updated.studio as any).identity, ...studioIdentity }
+        identity: { ...(updated.studio as unknown as { identity?: Record<string, number> }).identity, ...studioIdentity }
       }
     };
   }
 
   // New achievement ID unlock
-  const { newAchievementId } = payload as any;
   if (newAchievementId) {
-    const existing: string[] = (updated.studio as any).achievements ?? [];
+    const existing: string[] = (updated.studio as unknown as { achievements?: string[] }).achievements ?? [];
     if (!existing.includes(newAchievementId)) {
       updated = {
         ...updated,
         studio: {
           ...updated.studio,
           achievements: [...existing, newAchievementId]
-        } as any
+        } as unknown as GameState['studio']
       };
     }
   }

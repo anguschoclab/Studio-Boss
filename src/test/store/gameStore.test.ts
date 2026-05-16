@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { useGameStore } from "../../store/gameStore";
 import * as saveLoad from "../../persistence/saveLoad";
-import { Talent, Project, GameState } from "../../engine/types";
+import { GameState } from "../../engine/types";
 
 // Mock saveLoad
 vi.mock("../../persistence/saveLoad", () => ({

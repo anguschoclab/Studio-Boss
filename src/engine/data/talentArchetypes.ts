@@ -971,7 +971,7 @@ export function generateArchetypeForRole(role: string, tier: TalentTier, rng: { 
       );
       break;
     default:
-      archetypes = [];
+      break;
   }
   
   // Fallback to all archetypes if tier filter yields none

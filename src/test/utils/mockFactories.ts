@@ -9,7 +9,6 @@ import {
   Agency,
   Opportunity,
   MarketState,
-  TVSeasonDetails,
   CriticConsensus,
   AwardsProfile,
   FilmProject,
@@ -19,7 +18,6 @@ import {
   NetworkPlatform,
   ProjectBase,
   ProjectType,
-  ScriptMetrics,
 } from '@/engine/types';
 
 export const createMockTalent = (overrides: Partial<Talent> = {}): Talent => ({
@@ -316,7 +314,7 @@ export const createMockBuyer = (overrides: Partial<Buyer> = {}): Buyer => {
     return premium;
   }
 
-  const networkOverrides = overrides as Partial<NetworkPlatform>;
+  const _networkOverrides = overrides as Partial<NetworkPlatform>;
   const network: NetworkPlatform = {
     ...baseDefaults,
     archetype: 'network',
