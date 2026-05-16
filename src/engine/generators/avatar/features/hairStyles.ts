@@ -1,4 +1,4 @@
-import { AvatarFeatures, HairColor } from '../types';
+import { AvatarFeatures } from '../types';
 
 /**
  * Renders the back layer of the hair (for long styles).
@@ -47,7 +47,7 @@ export function renderHairFront(f: AvatarFeatures, cx: number, cy: number, faceW
         <line x1="${cx - faceW/6}" y1="${topY - 18}" x2="${cx - faceW/6 + 2}" y2="${topY + 5}" stroke="${secondary}" stroke-width="1.5" opacity="0.4"/>
       `.trim();
 
-    case 'textured-fade':
+    case 'textured-fade': {
       let circles = '';
       for (let i = 0; i < 12; i++) {
         const ang = (i / 12) * Math.PI;
@@ -59,6 +59,7 @@ export function renderHairFront(f: AvatarFeatures, cx: number, cy: number, faceW
         <path d="M ${cx - faceW/2} ${topY + 10} Q ${cx} ${topY - 10} ${cx + faceW/2} ${topY + 10}" fill="${color}"/>
         ${circles}
       `.trim();
+    }
 
     case 'long-straight':
       // Crown + bangs + thin side-frames only. Body sits in `renderHairBack`
@@ -108,7 +109,7 @@ export function renderHairFront(f: AvatarFeatures, cx: number, cy: number, faceW
         <path d="M ${cx + faceW/2} ${topY} Q ${cx + faceW/2 + 20} ${topY + 10} ${cx + faceW/2 + 10} ${topY + 60}" fill="${color}" stroke="${secondary}" stroke-width="1"/>
       `.trim();
 
-    case 'curls-medium':
+    case 'curls-medium': {
       let curls = '';
       for (let i = 0; i < 15; i++) {
         const x = cx - faceW/2 + (i/15) * faceW;
@@ -119,6 +120,7 @@ export function renderHairFront(f: AvatarFeatures, cx: number, cy: number, faceW
         <path d="M ${cx - faceW/2 - 5} ${topY + 10} Q ${cx} ${topY - 20} ${cx + faceW/2 + 5} ${topY + 10}" fill="${color}"/>
         ${curls}
       `.trim();
+    }
 
     case 'slick-back':
       return `
