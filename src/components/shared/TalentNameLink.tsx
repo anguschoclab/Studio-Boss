@@ -30,7 +30,7 @@ export const TalentNameLink: React.FC<TalentNameLinkProps> = ({ talentId, name, 
         }
       }}
       className={cn(
-        "text-primary hover:text-white cursor-pointer transition-all duration-700 font-display font-black italic uppercase tracking-[0.1em] drop-shadow-[0_0_10px_rgba(var(--primary),0.2)] hover:drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]",
+        "text-primary hover:text-white cursor-pointer transition-all duration-700 font-display font-black italic uppercase tracking-[0.1em] drop-shadow-[0_0_10px_rgba(var(--primary),0.2)] hover:drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none",
         className
       )}
     >

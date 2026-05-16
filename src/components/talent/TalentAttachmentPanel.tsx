@@ -197,7 +197,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span
-                        className="font-bold text-sm text-white truncate cursor-pointer hover:text-primary transition-colors"
+                        className="font-bold text-sm text-white truncate cursor-pointer hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none"
                         role="button"
                         tabIndex={0}
                         onKeyDown={(e) => {
@@ -284,7 +284,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
                 />
                 <div>
                   <h4
-                    className="text-xl font-black italic uppercase tracking-tighter text-white cursor-pointer hover:text-primary transition-colors"
+                    className="text-xl font-black italic uppercase tracking-tighter text-white cursor-pointer hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none"
                     role="button"
                     tabIndex={0}
                     onKeyDown={(e) => {

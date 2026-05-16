@@ -85,7 +85,7 @@ export const HeatMap: React.FC<HeatMapProps> = ({
                 <div
                   key={`${xLabel}-${yLabel}`}
                   className={cn(
-                    'w-16 h-10 flex-shrink-0 flex items-center justify-center text-[9px] font-medium cursor-pointer transition-all hover:ring-2 hover:ring-primary',
+                    'w-16 h-10 flex-shrink-0 flex items-center justify-center text-[9px] font-medium cursor-pointer transition-all hover:ring-2 hover:ring-primary focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none',
                     onCellClick && 'cursor-pointer'
                   )}
                   role="button" aria-label={`Heatmap cell ${xLabel} ${yLabel}`}
