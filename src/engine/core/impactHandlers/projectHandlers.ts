@@ -1,4 +1,4 @@
-import { GameState, StateImpact, Award } from '@/engine/types';
+import { GameState, StateImpact } from '@/engine/types';
 
 /**
  * Project-related impact handlers
