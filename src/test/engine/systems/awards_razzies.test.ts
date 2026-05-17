@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { processRazzies } from '../../../engine/systems/awards';
-import { Project, GameState } from "../../../engine/types";
+import { Project, } from "../../../engine/types";
 import { createMockGameState } from '../../utils/mockFactories';
 
 describe('Razzies Award System', () => {

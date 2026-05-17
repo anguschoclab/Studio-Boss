@@ -102,8 +102,12 @@ export function generateTalentPool(
   _families: Family[] = [],
   _agents: Agent[] = [],
   _agencies: Agency[] = [],
+
   localCountry?: string
 ): Talent[] {
+  void _families;
+  void _agents;
+  void _agencies;
     const roles: TalentRole[] = ['actor', 'director', 'writer', 'producer'];
     
     return Array.from({ length: count }).map(() => {

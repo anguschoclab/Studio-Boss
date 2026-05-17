@@ -51,6 +51,8 @@ const REGIONAL_NAMES: Record<string, { firstM: string[], firstF: string[], last:
 };
 
 export function generateDemographicName(gender: 'MALE' | 'FEMALE' | 'NON_BINARY', country: string, _ethnicity: string): string {
+  void _ethnicity;
+
   const region = REGIONAL_NAMES[country];
   
   if (region) {
