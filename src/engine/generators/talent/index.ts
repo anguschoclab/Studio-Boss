@@ -99,9 +99,9 @@ export function generateFamilies(count: number): Family[] {
 
 export function generateTalentPool(
   count: number, 
-  _families: Family[] = [],
-  _agents: Agent[] = [],
-  _agencies: Agency[] = [],
+  _families: Family[] = [], // eslint-disable-line @typescript-eslint/no-unused-vars
+  _agents: Agent[] = [], // eslint-disable-line @typescript-eslint/no-unused-vars
+  _agencies: Agency[] = [], // eslint-disable-line @typescript-eslint/no-unused-vars
   localCountry?: string
 ): Talent[] {
     const roles: TalentRole[] = ['actor', 'director', 'writer', 'producer'];
