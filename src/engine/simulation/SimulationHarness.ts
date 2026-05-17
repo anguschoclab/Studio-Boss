@@ -40,7 +40,6 @@ export class SimulationHarness {
         state = newState;
 
         const rivalsList = Object.values(state.entities.rivals || {});
-        const projectsList = Object.values(state.entities.projects || {});
 
         // Collect Snapshot Metrics
         const totalRivalCash = rivalsList.reduce((sum, r) => sum + r.cash, 0);

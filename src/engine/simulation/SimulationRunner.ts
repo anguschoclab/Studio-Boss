@@ -22,6 +22,7 @@ export class SimulationRunner {
     weeks: number, 
     seed: number = 42, 
     archetype: ArchetypeKey = 'major', 
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     persona: string = 'balanced',
     autoPilot: boolean = true
   ): SimulationResult {
@@ -46,7 +47,7 @@ export class SimulationRunner {
       const rng = new RandomGenerator(state.gameSeed + state.week + (state.tickCount || 0));
 
       // 1. Core Engine Tick
-      const { newState: steppedState, summary, impacts: engineImpacts } = WeekCoordinator.execute(state, rng);
+      const { newState: steppedState, summary } = WeekCoordinator.execute(state, rng);
       state = steppedState;
 
       // 3. Studio Automation (Greenlights, Pitches, Releases)
