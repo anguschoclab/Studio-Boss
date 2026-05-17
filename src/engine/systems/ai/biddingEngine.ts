@@ -82,7 +82,7 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
     // ⚡ Bolt: Replaced ALL_RIVALS.forEach with for...in loop over state.entities.rivals
     for (const rivalId in state.entities.rivals) {
       const rival = state.entities.rivals[rivalId];
-      const myBid = opportunity.bids[rival.id]?.amount || 0;
+      const myBid = opportunity.bids?.[rival.id]?.amount || 0;
       const isPlayerLeading =
         opportunity.highestBidderId === state.studio.id || opportunity.highestBidderId === "PLAYER";
       const aggressionFactor = isPlayerLeading ? 1.2 : 1.0;
