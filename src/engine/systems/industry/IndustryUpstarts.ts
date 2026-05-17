@@ -20,8 +20,13 @@ export function tickIndustryUpstarts(state: GameState): StateImpact[] {
     usedNames.add(rivalsDict[id].name);
   }
 
-  const currentStreamers = state.market.buyers.filter(b => b.archetype === 'streamer').length;
-  state.market.buyers.forEach(b => usedNames.add(b.name));
+  let currentStreamers = 0;
+  for (const buyer of state.market.buyers) {
+    if (buyer.archetype === 'streamer') {
+      currentStreamers++;
+    }
+    usedNames.add(buyer.name);
+  }
 
   // Minimum thresholds
   const MIN_RIVALS = 8;
