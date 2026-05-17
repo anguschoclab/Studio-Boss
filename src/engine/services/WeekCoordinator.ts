@@ -73,7 +73,7 @@ import { advanceRumors } from '../systems/rumors';
 
 // Rival Systems
 import { RivalRevenueCalculator } from '../systems/rivals/RivalRevenueCalculator';
-import { getMarketHeat, getBudgetInflation } from '../systems/industry/MacroCycle';
+import { getBudgetInflation } from '../systems/industry/MacroCycle';
 
 /**
  * Studio Boss - Simulation Tick Context
@@ -277,7 +277,7 @@ export class WeekCoordinator {
     context.impacts.push(advanceRivals(state));
 
     // First-look deal expiry
-    const deals = (state.studio as any).firstLookDeals || [];
+    const deals = (state.studio as unknown as { firstLookDeals?: unknown[] }).firstLookDeals || [];
     if (deals.length > 0) {
       context.impacts.push(...advanceDeals(deals));
     }
@@ -296,15 +296,15 @@ export class WeekCoordinator {
     // Loan payments + bankruptcy check
     context.impacts.push(...tickLoans(state, context.rng));
     // Decrement weeksRemaining on loans and remove paid-off ones
-    const currentLoans: any[] = (state.studio as any).loans || [];
+    const currentLoans: import('@/engine/types').Loan[] = state.studio.loans || [];
     if (currentLoans.length > 0) {
       const updatedLoans = currentLoans
-        .map((l: any) => ({ ...l, weeksRemaining: l.weeksRemaining - 1 }))
-        .filter((l: any) => l.weeksRemaining > 0);
+        .map((l) => ({ ...l, weeksRemaining: l.weeksRemaining - 1 }))
+        .filter((l) => l.weeksRemaining > 0);
       context.impacts.push({
-        type: 'SYSTEM_TICK' as any,
+        type: 'SYSTEM_TICK',
         payload: { __studioUpdate: { loans: updatedLoans } }
-      });
+      } as unknown as import('@/engine/types').StateImpact);
     }
 
     // Rival weekly revenue + overhead drain. Opening-weekend gross already bakes

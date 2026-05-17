@@ -33,3 +33,6 @@
 ## 2026-05-25 - Replace Object.values with for...in loops in MarketingPromotionSystem.ts
 **Learning:** `MarketingPromotionSystem.ts` was doing multiple `Object.values()` calls with `.filter()` on state records (talents, projects, contracts). It runs on every tick and creates an intermediate array, which adds memory allocation and garbage collection overhead. Furthermore, doing this lookup of contracts by filtering inside an outer iteration loop creates an O(Projects * Contracts) complexity loop.
 **Action:** Replace `Object.values(state.entities...)` with `for...in` loops in `MarketingPromotionSystem.ts` and pre-group `contractsByProject` to reduce O(N*M) lookups.
+## 2026-05-26 - Reduce AI Bidding Engine Loop GC Spikes
+**Learning:** Found high-frequency array allocation due to `Object.values` and chained methods (`.reduce`) being called on nested properties inside double loops in `biddingEngine.ts`.
+**Action:** Replace `Object.values` chained functions with `for...in` loops to eliminate intermediate array GC spikes in `tickAuctions`.

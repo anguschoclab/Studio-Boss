@@ -1,4 +1,4 @@
-import { GameState, StateImpact, Award } from '@/engine/types';
+import { GameState, StateImpact } from '@/engine/types';
 
 /**
  * Project-related impact handlers
@@ -62,10 +62,9 @@ export function handlePilotGraduated(state: GameState, impact: StateImpact): Gam
   const project = projects[projectId];
   if (project) {
     // Remove stage and update state for graduating pilots
-    const updatedProject = { ...project };
-    if ('stage' in updatedProject) {
-      delete (updatedProject as any).stage; // stage is pilot-specific, but not in strict Project result
-    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { stage, ...updatedProject } = project as typeof project & { stage?: string };
+
     projects[projectId] = { 
       ...updatedProject, 
       state: nextState ?? 'production', 
