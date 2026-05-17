@@ -36,3 +36,6 @@
 ## 2026-05-26 - Reduce AI Bidding Engine Loop GC Spikes
 **Learning:** Found high-frequency array allocation due to `Object.values` and chained methods (`.reduce`) being called on nested properties inside double loops in `biddingEngine.ts`.
 **Action:** Replace `Object.values` chained functions with `for...in` loops to eliminate intermediate array GC spikes in `tickAuctions`.
+## 2026-05-27 - Replace Object.values with for...in loops in AI Motivation Engine
+**Learning:** Iterating over high-frequency state records (like rivals and projects) using `Object.values()` coupled with array methods (`forEach`, `filter`) in `motivationEngine.ts` creates intermediate O(N) array allocation overhead per tick. Doing this inside an outer loop creates O(N*M) complexity and compounding GC spikes.
+**Action:** Replaced `Object.values()` chains with direct `for...in` loops in `tickAIMinds` to iterate over state entities efficiently without creating intermediate arrays.

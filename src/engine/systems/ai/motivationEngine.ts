@@ -79,7 +79,9 @@ export function calculateRivalMotivation(rival: RivalStudio, state: GameState, r
 export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
 
-  Object.values(state.entities.rivals || {}).forEach(rival => {
+  const rivalsObj = state.entities.rivals || {};
+  for (const rivalId in rivalsObj) {
+    const rival = rivalsObj[rivalId];
     let newMotivation: StudioMotivation = calculateRivalMotivation(rival, state, rng);
 
     // Fix 3: Prestige decay — rivals that haven't won an award in 2+ years drift toward AWARD_CHASE
@@ -122,8 +124,14 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
 
     // Fix 2: FRANCHISE_BUILDING rivals track IP syndication potential
     if (rival.currentMotivation === 'FRANCHISE_BUILDING') {
-      const releasedProjects = Object.values(state.entities.projects || {})
-        .filter(p => p.ownerId === rival.id && p.state === 'released');
+      const releasedProjects = [];
+      const projectsObj = state.entities.projects || {};
+      for (const projectId in projectsObj) {
+        const p = projectsObj[projectId];
+        if (p.ownerId === rival.id && p.state === 'released') {
+          releasedProjects.push(p);
+        }
+      }
 
       const syndicationEligible = releasedProjects.filter(p => {
         // TV projects with enough aired episodes qualify for syndication
@@ -142,7 +150,7 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
         });
       }
     }
-  });
+  }
 
   return impacts;
 }
