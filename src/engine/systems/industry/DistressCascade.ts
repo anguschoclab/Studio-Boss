@@ -63,7 +63,10 @@ function counts(id: string) {
 function updateStreaks(state: GameState) {
   // ⚡ Bolt: Replaced Object.values + map with Object.keys for faster Set instantiation
   const rivalsObj = state.entities.rivals || {};
-  const live = new Set(Object.keys(rivalsObj));
+  const live = new Set<string>();
+  for (const id in rivalsObj) {
+    live.add(id);
+  }
   // Prune dead rivals from the trackers so a reused id doesn't inherit stale state.
   for (const k of Object.keys(negativeStreak)) if (!live.has(k)) delete negativeStreak[k];
   for (const k of Object.keys(lastActionWeek)) if (!live.has(k)) delete lastActionWeek[k];
