@@ -50,6 +50,7 @@ const REGIONAL_NAMES: Record<string, { firstM: string[], firstF: string[], last:
   }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function generateDemographicName(gender: 'MALE' | 'FEMALE' | 'NON_BINARY', country: string, _ethnicity: string): string {
   const region = REGIONAL_NAMES[country];
   

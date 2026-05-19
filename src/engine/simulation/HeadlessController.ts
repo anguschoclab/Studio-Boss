@@ -1,9 +1,7 @@
 import { GameState, StateImpact, Contract, Project } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
-import { evaluateGreenlight } from '../systems/greenlight';
 import { executeGreenlight, executeMarketing } from '../systems/projects';
 import { BudgetTierKey } from '../types/project.types';
-import { StudioArchetype, AI_ARCHETYPES } from '../data/aiArchetypes';
 import { processFlops } from '../systems/finance/FlopMechanics';
 import { calculateOpeningWeekend } from '../systems/releaseSimulation';
 import { getMarketHeat, getBudgetInflation, BANKRUPTCY_CASH_FLOOR, BANKRUPTCY_WEEKS_REQUIRED } from '../systems/industry/MacroCycle';
@@ -31,7 +29,7 @@ export class HeadlessController {
 
     // 0. Auto-Pitch New Projects (for headless simulation)
     const activePlayerProjects = Object.values(state.entities.projects).filter(p => p.ownerId === 'PLAYER' && p.state !== 'archived');
-    let newlyPitchedProject: any = null;
+    let newlyPitchedProject: Project | null = null;
     if (activePlayerProjects.length < 10 && rng.next() < 0.8) {
       const pitchResult = this.pitchNewProject(state, rng);
       if (pitchResult) {
@@ -39,7 +37,7 @@ export class HeadlessController {
         console.log(`[HeadlessController] Pitched new project for PLAYER`);
         // Extract the newly pitched project for immediate processing
         if (pitchResult.type === 'INDUSTRY_UPDATE' && pitchResult.payload.update['entities.projects']) {
-          const newProjects = pitchResult.payload.update['entities.projects'] as any;
+          const newProjects = pitchResult.payload.update['entities.projects'] as Record<string, Project>;
           const newProjectIds = Object.keys(newProjects).filter(id => !state.entities.projects[id]);
           if (newProjectIds.length > 0) {
             newlyPitchedProject = newProjects[newProjectIds[0]];
