@@ -1,43 +1,61 @@
-import { useState } from 'react';
-import { useGameStore } from '@/store/gameStore';
-import { useUIStore } from '@/store/uiStore';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Package, Building2, Users } from 'lucide-react';
-import type { Agency, Talent } from '@/engine/types';
+import { useState } from "react";
+import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Package, Building2, Users } from "lucide-react";
+import type { Agency, Talent } from "@/engine/types";
 
 interface CreatePackageModalProps {
   agencies?: Agency[];
   talents?: Record<string, Talent>;
 }
 
-export const CreatePackageModal = ({ agencies: propAgencies, talents: propTalents }: CreatePackageModalProps) => {
+export const CreatePackageModal = ({
+  agencies: propAgencies,
+  talents: propTalents,
+}: CreatePackageModalProps) => {
   const { resolveCurrentModal } = useUIStore();
-  const gameState = useGameStore(s => s.gameState);
-  const [selectedAgency, setSelectedAgency] = useState<string>('');
-  const [selectedTier, setSelectedTier] = useState<string>('mid');
+  const gameState = useGameStore((s) => s.gameState);
+  const [selectedAgency, setSelectedAgency] = useState<string>("");
+  const [selectedTier, setSelectedTier] = useState<string>("mid");
   const [selectedTalents, setSelectedTalents] = useState<string[]>([]);
 
   const agencies = propAgencies || gameState?.industry?.agencies || [];
   const talents = propTalents || gameState?.entities.talents || {};
-  const talentList = Object.values(talents).filter(t => t.contractId && t.tier <= 3);
+  const talentList = Object.values(talents).filter((t) => t.contractId && t.tier <= 3);
 
   const handleCreatePackage = () => {
     if (!selectedAgency || selectedTalents.length === 0) {
       return;
     }
 
-      // For now, just close the modal
-      resolveCurrentModal();
+    // For now, just close the modal
+    resolveCurrentModal();
   };
 
   const handleToggleTalent = (talentId: string) => {
-    setSelectedTalents(prev =>
+    setSelectedTalents((prev) =>
       prev.includes(talentId)
-        ? prev.filter(id => id !== talentId)
-        : prev.length < 5 ? [...prev, talentId] : prev
+        ? prev.filter((id) => id !== talentId)
+        : prev.length < 5
+          ? [...prev, talentId]
+          : prev
     );
   };
 
@@ -53,9 +71,7 @@ export const CreatePackageModal = ({ agencies: propAgencies, talents: propTalent
             <Package className="h-5 w-5" />
             Create Talent Package
           </DialogTitle>
-          <DialogDescription>
-            Assemble a talent package to offer to agencies
-          </DialogDescription>
+          <DialogDescription>Assemble a talent package to offer to agencies</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6 py-4">
@@ -70,7 +86,7 @@ export const CreatePackageModal = ({ agencies: propAgencies, talents: propTalent
                 <SelectValue placeholder="Choose an agency" />
               </SelectTrigger>
               <SelectContent>
-                {agencies.map(agency => (
+                {agencies.map((agency) => (
                   <SelectItem key={agency.id} value={agency.name}>
                     {agency.name} (Leverage: {agency.leverage}%)
                   </SelectItem>
@@ -104,14 +120,14 @@ export const CreatePackageModal = ({ agencies: propAgencies, talents: propTalent
               {talentList.length === 0 ? (
                 <p className="text-sm text-muted-foreground">No available talent with contracts</p>
               ) : (
-                talentList.map(talent => (
+                talentList.map((talent) => (
                   <div
                     key={talent.id}
-                    className="flex items-center justify-between p-3 m-2 rounded-none shadow-sm hover:shadow-md hover:bg-muted cursor-pointer transition-all"
+                    className="flex items-center justify-between p-3 m-2 rounded-none shadow-sm hover:shadow-md hover:bg-muted cursor-pointer transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
                     role="button"
                     tabIndex={0}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
+                      if (e.key === "Enter" || e.key === " ") {
                         e.preventDefault();
                         handleToggleTalent(talent.id);
                       }
@@ -121,7 +137,7 @@ export const CreatePackageModal = ({ agencies: propAgencies, talents: propTalent
                     <div className="flex-1">
                       <span className="font-medium">{talent.name}</span>
                       <span className="text-xs text-muted-foreground ml-2">
-                        {talent.roles.join(', ')} • Tier {talent.tier}
+                        {talent.roles.join(", ")} • Tier {talent.tier}
                       </span>
                     </div>
                     <input
@@ -136,9 +152,7 @@ export const CreatePackageModal = ({ agencies: propAgencies, talents: propTalent
                 ))
               )}
             </div>
-            <p className="text-xs text-muted-foreground">
-              Selected: {selectedTalents.length}/5
-            </p>
+            <p className="text-xs text-muted-foreground">Selected: {selectedTalents.length}/5</p>
           </div>
         </div>
 

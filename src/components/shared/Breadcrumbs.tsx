@@ -1,7 +1,6 @@
-import React from 'react';
-import { ChevronRight, Home } from 'lucide-react';
-import { cn } from '@/lib/utils';
-
+import React from "react";
+import { ChevronRight, Home } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface BreadcrumbItem {
   label: string;
@@ -61,7 +60,9 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className, show
               <div
                 className={cn(
                   "flex items-center gap-2 px-4 py-2 rounded-none transition-all duration-700",
-                  !isLast && ["hover:bg-white/[0.03] hover:text-foreground cursor-pointer"],
+                  !isLast && [
+                    "hover:bg-white/[0.03] hover:text-foreground cursor-pointer focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none",
+                  ],
                   isLast && "text-foreground font-display tracking-tighter italic scale-110 ml-1",
                   !isLast && "text-muted-foreground/40"
                 )}
