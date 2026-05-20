@@ -36,3 +36,6 @@
 ## 2026-05-26 - Reduce AI Bidding Engine Loop GC Spikes
 **Learning:** Found high-frequency array allocation due to `Object.values` and chained methods (`.reduce`) being called on nested properties inside double loops in `biddingEngine.ts`.
 **Action:** Replace `Object.values` chained functions with `for...in` loops to eliminate intermediate array GC spikes in `tickAuctions`.
+## 2025-05-26 - Eliminate intermediate array allocations in IndustryUpstarts
+**Learning:** `IndustryUpstarts.ts` was performing `Object.values(state.entities.rivals || {})` and then immediately calling `.length` and `.map(r => r.name)` on the result. Given this function runs frequently in the engine tick loop, these intermediate array allocations caused compounding garbage collection spikes.
+**Action:** Replaced `Object.values()` and `.map()` with a direct `for...in` loop to populate the `usedNames` Set and count the total active rivals simultaneously, eliminating O(N) array allocation overhead.

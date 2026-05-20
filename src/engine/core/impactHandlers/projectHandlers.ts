@@ -62,9 +62,10 @@ export function handlePilotGraduated(state: GameState, impact: StateImpact): Gam
   const project = projects[projectId];
   if (project) {
     // Remove stage and update state for graduating pilots
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { stage, ...updatedProject } = project as typeof project & { stage?: string };
-
+    const updatedProject = { ...project };
+    if ('stage' in updatedProject) {
+      delete (updatedProject as unknown as Record<string, unknown>).stage; // stage is pilot-specific, but not in strict Project result
+    }
     projects[projectId] = { 
       ...updatedProject, 
       state: nextState ?? 'production', 
