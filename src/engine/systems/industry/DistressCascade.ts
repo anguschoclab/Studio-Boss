@@ -61,15 +61,22 @@ function counts(id: string) {
 }
 
 function updateStreaks(state: GameState) {
-  const rivals = Object.values(state.entities.rivals || {});
-  const live = new Set(rivals.map(r => r.id));
+  // ⚡ Bolt: Replaced Object.values + map with Object.keys for faster Set instantiation
+  const rivalsObj = state.entities.rivals || {};
+  const live = new Set<string>();
+  for (const id in rivalsObj) {
+    live.add(id);
+  }
   // Prune dead rivals from the trackers so a reused id doesn't inherit stale state.
   for (const k of Object.keys(negativeStreak)) if (!live.has(k)) delete negativeStreak[k];
   for (const k of Object.keys(lastActionWeek)) if (!live.has(k)) delete lastActionWeek[k];
   for (const k of Object.keys(stageActionCount)) if (!live.has(k)) delete stageActionCount[k];
-  for (const r of rivals) {
-    if ((r.cash || 0) < 0) negativeStreak[r.id] = (negativeStreak[r.id] || 0) + 1;
-    else negativeStreak[r.id] = 0;
+
+  // ⚡ Bolt: Replaced Object.values iteration with direct for...in loop
+  for (const id in rivalsObj) {
+    const r = rivalsObj[id];
+    if ((r.cash || 0) < 0) negativeStreak[id] = (negativeStreak[id] || 0) + 1;
+    else negativeStreak[id] = 0;
   }
 }
 
@@ -268,11 +275,22 @@ function stage2AssetLiquidation(state: GameState, seller: RivalStudio): StateImp
   if (roll < 0.58) {
     // Shelve an in-production project — Batgirl-style tax write-down. Cancel the most
     // expensive active project, recover ~40% of sunk cost as salvage + write-off value.
-    const projects = Object.values(state.entities.projects || {})
-      .filter((p: any) => p.ownerId === seller.id)
-      .filter((p: any) => p.state === 'development' || p.state === 'pitching' || p.state === 'needs_greenlight' || p.state === 'production' || p.state === 'post_production');
-    if (projects.length > 0) {
-      const target: any = projects.sort((a: any, b: any) => (b.accumulatedCost || b.budget || 0) - (a.accumulatedCost || a.budget || 0))[0];
+    // ⚡ Bolt: Replaced Object.values().filter().sort() with a single for...in maximum-find pass
+    const allProjects = state.entities.projects || {};
+    let target: any = undefined;
+    let maxCost = -1;
+    for (const id in allProjects) {
+      const p: any = allProjects[id];
+      if (p.ownerId === seller.id &&
+         (p.state === 'development' || p.state === 'pitching' || p.state === 'needs_greenlight' || p.state === 'production' || p.state === 'post_production')) {
+        const cost = p.accumulatedCost || p.budget || 0;
+        if (cost > maxCost) {
+          maxCost = cost;
+          target = p;
+        }
+      }
+    }
+    if (target) {
       const sunk = Math.max(target.accumulatedCost || 0, (target.budget || 0) * 0.4);
       const proceeds = Math.max(20_000_000, Math.round(sunk * 0.4));
       impacts.push({
@@ -412,13 +430,25 @@ function stage2AssetLiquidation(state: GameState, seller: RivalStudio): StateImp
 
 function stage3DistressedMA(state: GameState, target: RivalStudio): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const rivals = Object.values(state.entities.rivals || {});
+
+  // ⚡ Bolt: Replaced Object.values().filter().sort() with single-pass maximum find
   // Richest acquirer with >$750M cash, not antitrust-frozen, not the target itself.
-  const candidates = rivals
-    .filter(r => r.id !== target.id && (r.cash || 0) > 750_000_000)
-    .filter(r => !isAcquirerBlockedByAntitrust(r.id, state.week))
-    .sort((a, b) => (b.cash || 0) - (a.cash || 0));
-  if (candidates.length === 0) {
+  const allRivals = state.entities.rivals || {};
+  let acquirer: RivalStudio | undefined = undefined;
+  let maxCash = 0;
+
+  for (const id in allRivals) {
+    const r = allRivals[id];
+    const cash = r.cash || 0;
+    if (r.id !== target.id && cash > 750_000_000 && cash > maxCash) {
+      if (!isAcquirerBlockedByAntitrust(r.id, state.week)) {
+        acquirer = r;
+        maxCash = cash;
+      }
+    }
+  }
+
+  if (!acquirer) {
     // No buyer found — still counts as a failed stage-3 attempt so we escalate to bankruptcy.
     counts(target.id).s3++;
     impacts.push({
@@ -431,8 +461,6 @@ function stage3DistressedMA(state: GameState, target: RivalStudio): StateImpact[
     });
     return impacts;
   }
-
-  const acquirer = candidates[0];
   // Fire-sale price: token amount reflecting toxic negative cash.
   const assetValue = Math.max(50_000_000, (target.strength || 20) * 2_000_000 + (target.prestige || 30) * 500_000);
   const price = Math.round(assetValue * (0.3 + secureRandom() * 0.2));
@@ -497,14 +525,22 @@ function stage4Bankruptcy(state: GameState, target: RivalStudio): StateImpact[] 
 export function tickDistressCascade(state: GameState): StateImpact[] {
   updateStreaks(state);
   const impacts: StateImpact[] = [];
-  const rivals = Object.values(state.entities.rivals || {});
+  const allRivals = state.entities.rivals || {};
   const MIN_FLOOR = 7; // don't let cascade alone collapse the field below the spawner floor
 
+  // ⚡ Bolt: Replaced Object.values().map().filter() with a direct for...in loop
   // Pick distressed rivals, highest-stage first so the worst-off progress before the just-slipping.
-  const queue = rivals
-    .map(r => ({ r, stage: classifyStage(r) }))
-    .filter(x => x.stage > 0)
-    .sort((a, b) => b.stage - a.stage);
+  const queue: { r: RivalStudio, stage: 0|1|2|3|4 }[] = [];
+  let rivalsCount = 0;
+  for (const id in allRivals) {
+    rivalsCount++;
+    const r = allRivals[id];
+    const stage = classifyStage(r);
+    if (stage > 0) {
+      queue.push({ r, stage });
+    }
+  }
+  queue.sort((a, b) => b.stage - a.stage);
 
   for (const { r, stage } of queue) {
     const last = lastActionWeek[r.id] ?? -9999;
@@ -515,7 +551,7 @@ export function tickDistressCascade(state: GameState): StateImpact[] {
     else if (stage === 2) emitted = stage2AssetLiquidation(state, r);
     else if (stage === 3) emitted = stage3DistressedMA(state, r);
     else if (stage === 4) {
-      if (rivals.length <= MIN_FLOOR) continue;
+      if (rivalsCount <= MIN_FLOOR) continue;
       emitted = stage4Bankruptcy(state, r);
     }
 
