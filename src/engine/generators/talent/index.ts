@@ -97,6 +97,7 @@ export function generateFamilies(count: number): Family[] {
   }));
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function generateTalentPool(
   count: number, 
   _families: Family[] = [], // eslint-disable-line @typescript-eslint/no-unused-vars
