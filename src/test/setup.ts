@@ -35,13 +35,13 @@ Object.defineProperty(window, "Worker", {
   value: class {
     onmessage: ((ev: MessageEvent) => any) | null = null;
     onerror: ((ev: ErrorEvent) => any) | null = null;
-    constructor(stringUrl: string | URL, options?: WorkerOptions) {}
-    postMessage(message: any, transfer?: Transferable[]) {}
+    constructor(_stringUrl: string | URL, _options?: WorkerOptions) {}
+    postMessage(_message: any, transfer?: Transferable[]) {}
     terminate() {}
-    addEventListener(type: string, listener: any, options?: any) {
+    addEventListener(_type: string, listener: any, options?: any) {
       if (type === 'message') this.onmessage = listener;
     }
-    removeEventListener(type: string, listener: any, options?: any) {}
-    dispatchEvent(event: Event) { return true; }
+    removeEventListener(_type: string, listener: any, options?: any) {}
+    dispatchEvent(_event: Event) { return true; }
   }
 });

@@ -104,6 +104,9 @@ export function generateTalentPool(
   _agencies: Agency[] = [], // eslint-disable-line @typescript-eslint/no-unused-vars
   localCountry?: string
 ): Talent[] {
+  void _families;
+  void _agents;
+  void _agencies;
     const roles: TalentRole[] = ['actor', 'director', 'writer', 'producer'];
     
     return Array.from({ length: count }).map(() => {

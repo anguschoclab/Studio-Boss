@@ -4,7 +4,7 @@ import { RandomGenerator } from '../utils/rng';
 import { calculateOpeningWeekend } from '../systems/releaseSimulation';
 import { StreamingViewershipTracker } from '../systems/production/StreamingViewershipTracker';
 import { StudioArchetype, AI_ARCHETYPES } from '../data/aiArchetypes';
-import { getMarketHeat, getBudgetInflation } from '../systems/industry/MacroCycle';
+import { getBudgetInflation } from '../systems/industry/MacroCycle';
 import { HeadlessController } from './HeadlessController';
 
 export class StudioAutomation {
@@ -13,7 +13,7 @@ export class StudioAutomation {
    * Uses archetypeId if available, falls back to behaviorId for backward compatibility.
    */
   private static getRivalArchetype(rival: RivalStudio): StudioArchetype {
-    const archetypeId = rival.archetypeId || ('behaviorId' in rival ? (rival as any).behaviorId : undefined);
+    const archetypeId = rival.archetypeId || ('behaviorId' in rival ? (rival as unknown).behaviorId : undefined);
     if (archetypeId) {
       const archetype = AI_ARCHETYPES.find(a => a.id === archetypeId);
       if (archetype) return archetype;
@@ -32,8 +32,7 @@ export class StudioAutomation {
 
     // 1. Studio-Level Logic (Liquidation, Platform Launch, Strategy)
     rivalsList.forEach(rival => {
-      const archetype = this.getRivalArchetype(rival);
-      const isDistressed = (Number(rival.cash) || 0) < -50000000;
+            const isDistressed = (Number(rival.cash) || 0) < -50000000;
 
       if (isDistressed && (state.week % 4 === 0) && rng.next() < 0.1) {
           this.triggerLiquidation(rival, state, rng, impacts);
@@ -61,8 +60,7 @@ export class StudioAutomation {
       const rival = state.entities.rivals[p.ownerId];
       if (!rival) return;
 
-      const archetype = this.getRivalArchetype(rival);
-      this.processProject(p, rival.id, state, rng, impacts, archetype);
+            this.processProject(p, rival.id, state, rng, impacts);
 
       if (p.state !== 'archived') {
         rivalProjectCounts[rival.id] = (rivalProjectCounts[rival.id] || 0) + 1;
@@ -78,23 +76,21 @@ export class StudioAutomation {
     });
 
     // 3. Pitch New Projects (If slots available)
-    const heat = getMarketHeat(state.week);
-    rivalsList.forEach(rival => {
+        rivalsList.forEach(rival => {
       const activeCount = rivalProjectCounts[rival.id] || 0;
-      const archetype = this.getRivalArchetype(rival);
-      // Increased slot cap for headless simulation (15 vs 3-6)
+            // Increased slot cap for headless simulation (15 vs 3-6)
       const slotCap = 15;
       // Increased pitch probability for headless simulation (60% vs 4% * heat)
       const basePitchRate = 0.6;
       if (activeCount < slotCap && rng.next() < basePitchRate) {
-        this.pitchNewProject(rival, state, rng, impacts, archetype);
+        this.pitchNewProject(rival, state, rng, impacts, this.getRivalArchetype(rival));
       }
     });
 
     return impacts;
   }
 
-  private static processProject(p: Project, studioId: string, state: GameState, rng: RandomGenerator, impacts: StateImpact[], archetype: StudioArchetype): void {
+  private static processProject(p: Project, studioId: string, state: GameState, rng: RandomGenerator, impacts: StateImpact[]): void {
     // 1. Resolve Pitching (Random buyer pickup)
     if (p.state === 'pitching') {
       const eligibleBuyers = state.market.buyers.filter(b => b.archetype === 'streamer' || b.archetype === 'network');
@@ -142,9 +138,9 @@ export class StudioAutomation {
       // Status Transition (TV Special Case)
       let nextStatus = 'released';
       let tvUpdate = {};
-      if ((p.format === 'tv' || p.type === 'SERIES') && (p as any).tvDetails) {
+      if ((p.format === 'tv' || p.type === 'SERIES') && (p as unknown).tvDetails) {
           nextStatus = 'ON_AIR';
-          tvUpdate = { tvDetails: { ...(p as any).tvDetails, status: 'ON_AIR' } };
+          tvUpdate = { tvDetails: { ...(p as unknown).tvDetails, status: 'ON_AIR' } };
       }
 
       // Initialize streaming viewership for streaming distribution
@@ -267,7 +263,7 @@ export class StudioAutomation {
     const weights = budgetTiers.map(tier => archetype.budget_tier_weights[tier]);
     const budgetTier = this.weightedRandom(budgetTiers, weights, rng);
 
-    const project: any = {
+    const project: unknown = {
       id,
       title: `${genre} ${rng.rangeInt(1, 100)}`,
       genre,
@@ -336,6 +332,7 @@ export class StudioAutomation {
     return { update, subImpacts };
   }
 
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   private static createUpdateImpact(studioId: string, projectId: string, update: Partial<Project>, state: GameState): StateImpact {
     return { type: 'PROJECT_UPDATED', payload: { projectId, update } };
   }

@@ -512,7 +512,7 @@ export class HeadlessController {
       if (isHit && ROI > 3.0 && (t.prestige || 0) >= 60) {
         bonus += 4;
       }
-      // Mid-career bump: any hit moves a mid-career talent (40-65 prestige) up meaningfully.
+      // Mid-career bump: unknown hit moves a mid-career talent (40-65 prestige) up meaningfully.
       if (isHit && (t.prestige || 0) >= 40 && (t.prestige || 0) < 60) {
         bonus += 2;
       }
