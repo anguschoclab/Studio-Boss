@@ -17,3 +17,7 @@
 ## 2024-05-19 - Accessible Inputs Without Labels
 **Learning:** In complex hub dashboards (like TalentHub and ProductionHub), search and filter inputs are often styled cleanly without explicit <label> tags. Screen readers cannot deduce the input's purpose without one.
 **Action:** Always provide an aria-label attribute on <input> elements that lack an associated visible <label>, ensuring screen reader users understand the field's purpose (e.g., "Search talent" or "Filter slate").
+
+## 2026-05-21 - Accessible Shared Search Inputs
+**Learning:** Shared filtering and data list components (like `FilterBar` and `DataList`) often use `<input>` elements that rely on visible placeholder text instead of an explicit `<label>`. Screen reader users require an `aria-label` attribute on these inputs to understand their purpose, and decorative search icons should be hidden from accessibility trees.
+**Action:** Always provide an `aria-label` (e.g., `aria-label={searchPlaceholder || 'Search'}`) to `<input>` elements in shared UI components lacking a visible label, and apply `aria-hidden="true"` to accompanying decorative `lucide-react` icons.

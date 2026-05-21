@@ -199,9 +199,10 @@ export function FilterableDataList<T>({
     <div className="space-y-8">
       {showSearch && onSearchChange && (
         <div className="relative group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/20 group-focus-within:text-primary transition-colors" />
+          <Search aria-hidden="true" className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/20 group-focus-within:text-primary transition-colors" />
           <input
             type="text"
+            aria-label={searchPlaceholder || 'Search'}
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={searchPlaceholder}
