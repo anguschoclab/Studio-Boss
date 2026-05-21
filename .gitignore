@@ -34,11 +34,7 @@ test-results/
 bun_output.txt
 
 # AI Assistant Directories
-.agent/
-.claude/
-.jules/
-.gemini/
-.tanstack/
+
 
 # Temporary and generated reports
 *.txt
