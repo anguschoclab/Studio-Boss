@@ -133,7 +133,7 @@ export const ACHIEVEMENT_CATALOGUE: Omit<Achievement, 'unlocked' | 'unlockedWeek
 // ---------------------------------------------------------------------------
 
 function alreadyUnlocked(state: GameState, id: string): boolean {
-  const unlocked: string[] = (state.studio as any).achievements ?? [];
+  const unlocked: string[] = state.studio.achievements ?? [];
   return unlocked.includes(id);
 }
 
@@ -151,24 +151,24 @@ function buildUnlockImpacts(
       description: achievement.description,
       category: 'general',
     },
-  } as StateImpact);
+  });
 
   if (major) {
     impacts.push({
-      type: 'MODAL_TRIGGERED',
+      type: 'MODAL_TRIGGERED' as unknown as StateImpact['type'],
       payload: {
         modalType: 'ACHIEVEMENT_UNLOCKED',
         priority: 80,
         payload: { achievementId: achievement.id, name: achievement.name, description: achievement.description, week },
       },
-    } as StateImpact);
+    } as unknown as StateImpact);
   }
 
   // Carry the achievement ID in a SYSTEM_TICK bag so the reducer can persist it
   impacts.push({
-    type: 'SYSTEM_TICK' as any,
+    type: 'SYSTEM_TICK' as unknown as StateImpact['type'],
     payload: { newAchievementId: achievement.id },
-  } as StateImpact);
+  } as unknown as StateImpact);
 
   return impacts;
 }
@@ -278,7 +278,7 @@ export function checkAchievements(state: GameState): StateImpact[] {
   let hasStarMaker = false;
   for (const id in state.entities.talents) {
     const t = state.entities.talents[id];
-    if (t.tier === 'A_LIST' && (t as any).wasNewcomerWhenSigned === true) {
+    if (t.tier === 'A_LIST' && t.wasNewcomerWhenSigned === true) {
       hasStarMaker = true;
       break;
     }
@@ -294,7 +294,7 @@ export function checkAchievements(state: GameState): StateImpact[] {
   check('big_agency_deal', hasPowerhouseDeal);
 
   // Scandal Survivor — resolved 5 crises; tracked via studioCrisisResolved counter
-  const resolvedCrises: number = (state.studio as any).resolvedCrisesCount ?? 0;
+  const resolvedCrises: number = state.studio.resolvedCrisesCount ?? 0;
   check('scandal_survivor', resolvedCrises >= 5);
 
   // --- EMPIRE ---

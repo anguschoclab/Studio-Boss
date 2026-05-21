@@ -87,6 +87,7 @@ export interface GameState {
     isBankrupt?: boolean;
     // Achievement tracking (array of unlocked achievement IDs)
     achievements?: string[];
+    resolvedCrisesCount?: number;
   };
   market: {
     opportunities: Opportunity[];

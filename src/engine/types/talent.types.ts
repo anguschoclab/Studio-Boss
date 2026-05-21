@@ -100,6 +100,7 @@ export interface Talent {
   momentum: number; // 0-100
   perks?: string[];
   bio?: string;
+  wasNewcomerWhenSigned?: boolean;
   demographics: TalentDemographics;
   psychology: TalentPsychology;
   
