@@ -134,11 +134,15 @@ function findPotentialCliques(state: GameState, rng: RandomGenerator): string[][
       const sortedIds = mutuallyFriendly.slice(0, MAX_CLIQUE_SIZE).sort();
 
       // Check if this exact clique already exists
-      const existingCliques = Object.values(state.relationships?.cliques?.cliques || {});
-      const alreadyExists = existingCliques.some(c =>
-        c.members.length === sortedIds.length &&
-        c.members.every(id => sortedIds.includes(id))
-      );
+      const existingCliques = state.relationships?.cliques?.cliques || {};
+      let alreadyExists = false;
+      for (const key in existingCliques) {
+        const c = existingCliques[key];
+        if (c.members.length === sortedIds.length && c.members.every(id => sortedIds.includes(id))) {
+          alreadyExists = true;
+          break;
+        }
+      }
 
       if (!alreadyExists) {
         potentialCliques.push(sortedIds);
@@ -375,9 +379,10 @@ export function tickCliqueSystem(state: GameState, rng: RandomGenerator): StateI
   }
 
   // 2. Evolve existing cliques
-  const existingCliques = Object.values((state as any).relationships?.cliques?.cliques || {}) as Clique[];
+  const existingCliquesRecord = (state as any).relationships?.cliques?.cliques || {};
 
-  for (const clique of existingCliques) {
+  for (const key in existingCliquesRecord) {
+    const clique = existingCliquesRecord[key] as Clique;
     if (rng.next() < 0.3) { // 30% chance to evolve each clique per week
       const { updated, impacts: evolutionImpacts } = evolveClique(clique, state, rng);
 
@@ -402,16 +407,25 @@ export function tickCliqueSystem(state: GameState, rng: RandomGenerator): StateI
  * Get fame bonus for a talent based on clique membership
  */
 export function getCliqueFameBonus(talentId: string, state: GameState): number {
-  const cliques = Object.values((state as any).relationships?.cliques?.cliques || {}) as Clique[];
+  const cliques = (state as any).relationships?.cliques?.cliques || {};
 
-  const memberCliques = cliques.filter(c =>
-    c.status === 'active' && c.members.includes(talentId)
-  );
+  let highestFameBonus = 0;
+  let found = false;
 
-  if (memberCliques.length === 0) return 0;
+  for (const key in cliques) {
+    const c = cliques[key] as Clique;
+    if (c.status === 'active' && c.members.includes(talentId)) {
+      found = true;
+      if (c.fameBonus > highestFameBonus) {
+        highestFameBonus = c.fameBonus;
+      }
+    }
+  }
+
+  if (!found) return 0;
 
   // Return the highest fame bonus from any clique
-  return Math.max(...memberCliques.map(c => c.fameBonus));
+  return highestFameBonus;
 }
 
 /**
