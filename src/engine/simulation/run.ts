@@ -8,6 +8,7 @@ import * as path from 'path';
  * Execution: bun src/engine/simulation/run.ts --weeks 104 --runs 1
  */
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
 declare const Bun: any;
 
 const args = (process.argv || []).slice(2);

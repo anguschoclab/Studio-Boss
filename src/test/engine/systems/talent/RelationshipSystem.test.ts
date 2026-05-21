@@ -9,8 +9,6 @@ import {
   tickRelationshipSystem 
 } from '@/engine/systems/talent/RelationshipSystem';
 import { RandomGenerator } from '@/engine/utils/rng';
-import type { GameState } from '@/engine/types';
-
 import { createMockGameState, createMockProject, createMockTalent, createMockContract } from '../../../utils/mockFactories';
 
 describe('RelationshipSystem - Award Nominee Tracking', () => {

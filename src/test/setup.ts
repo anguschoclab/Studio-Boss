@@ -35,13 +35,18 @@ Object.defineProperty(window, "Worker", {
   value: class {
     onmessage: ((ev: MessageEvent) => any) | null = null;
     onerror: ((ev: ErrorEvent) => any) | null = null;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     constructor(_stringUrl: string | URL, _options?: WorkerOptions) {}
-    postMessage(_message: any, transfer?: Transferable[]) {}
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    postMessage(_message: any, _transfer?: Transferable[]) {}
     terminate() {}
-    addEventListener(_type: string, listener: any, options?: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    addEventListener(type: string, listener: any, _options?: any) {
       if (type === 'message') this.onmessage = listener;
     }
-    removeEventListener(_type: string, listener: any, options?: any) {}
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    removeEventListener(_type: string, _listener: any, _options?: any) {}
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     dispatchEvent(_event: Event) { return true; }
   }
 });
