@@ -17,7 +17,9 @@ export function generateScandals(state: GameState): StateImpact[] {
 
   const studioProjects = state.studio.internal.projects || {};
 
-  for (const talent of Object.values(state.industry.talentPool || {})) {
+  const talentPool = state.industry.talentPool || {};
+  for (const talentId in talentPool) {
+    const talent = talentPool[talentId];
     const risk = talent.psychology?.scandalRisk || 5;
     if (secureRandom() * 1000 < risk) {
       const types: ScandalType[] = ["financial", "personal", "onset_behavior", "legal", "feud"];
