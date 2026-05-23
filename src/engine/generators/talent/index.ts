@@ -97,12 +97,12 @@ export function generateFamilies(count: number): Family[] {
   }));
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 export function generateTalentPool(
   count: number, 
-  _families: Family[] = [], // eslint-disable-line @typescript-eslint/no-unused-vars
-  _agents: Agent[] = [], // eslint-disable-line @typescript-eslint/no-unused-vars
-  _agencies: Agency[] = [], // eslint-disable-line @typescript-eslint/no-unused-vars
+  _families: Family[] = [],
+  _agents: Agent[] = [],
+  _agencies: Agency[] = [],
   localCountry?: string
 ): Talent[] {
   void _families;
