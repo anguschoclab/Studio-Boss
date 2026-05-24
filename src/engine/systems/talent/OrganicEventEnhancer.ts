@@ -1,4 +1,4 @@
-import { GameState, StateImpact, Talent, Project } from '../../types';
+import { GameState, StateImpact, Talent, Project, Contract } from '../../types';
 import { RandomGenerator } from '../../utils/rng';
 import { TalentRelationship } from '../../types/relationship.types';
 import { Clique } from '../../types/clique.types';
@@ -16,7 +16,7 @@ export function checkRelationshipCrises(
   project: Project,
   state: GameState,
   rng: RandomGenerator,
-  projectContracts: any[] = [] // Default parameter for backwards compatibility
+  projectContracts: Contract[] = [] // Default parameter for backwards compatibility
 ): StateImpact | null {
   // Get cast members - default to backward compatible slow path if pre-grouped not provided
   let talentIds = projectContracts.map(c => c.talentId);
@@ -105,7 +105,7 @@ export function checkCliqueCrises(
   project: Project,
   state: GameState,
   rng: RandomGenerator,
-  projectContracts: any[] = [] // Default parameter
+  projectContracts: Contract[] = [] // Default parameter
 ): StateImpact | null {
   let talentIds = projectContracts.map(c => c.talentId);
   if (projectContracts.length === 0) {
@@ -292,7 +292,7 @@ export function tickOrganicEvents(
   const impacts: StateImpact[] = [];
 
   // Pre-group contracts by project to avoid O(Projects * Contracts) loop
-  const contractsByProject: Record<string, any[]> = {};
+  const contractsByProject: Record<string, Contract[]> = {};
   const contracts = state.entities.contracts || {};
   for (const id in contracts) {
     const c = contracts[id];
