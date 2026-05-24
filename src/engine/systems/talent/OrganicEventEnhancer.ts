@@ -15,22 +15,35 @@ import { Clique } from '../../types/clique.types';
 export function checkRelationshipCrises(
   project: Project,
   state: GameState,
-  rng: RandomGenerator
+  rng: RandomGenerator,
+  projectContracts: any[] = [] // Default parameter for backwards compatibility
 ): StateImpact | null {
-  // Get cast members
-  const contracts = Object.values(state.entities.contracts || {})
-    .filter(c => c.projectId === project.id);
-  const talentIds = contracts.map(c => c.talentId);
+  // Get cast members - default to backward compatible slow path if pre-grouped not provided
+  let talentIds = projectContracts.map(c => c.talentId);
+  if (projectContracts.length === 0) {
+    const contracts = state.entities.contracts || {};
+    for (const id in contracts) {
+      if (contracts[id].projectId === project.id) {
+        talentIds.push(contracts[id].talentId);
+      }
+    }
+  }
 
   if (talentIds.length < 2) return null;
 
   // Check for feuds among cast
-  const relationships = Object.values(state.relationships?.relationships || {})
-    .filter((r) =>
-      talentIds.includes(r.talentAId) && talentIds.includes(r.talentBId)
-    );
+  const feuds = [];
+  const relationships = state.relationships?.relationships || {};
+  const talentSet = new Set(talentIds);
 
-  const feuds = relationships.filter(r => r.type === 'rival' || r.type === 'enemy');
+  for (const relId in relationships) {
+    const r = relationships[relId];
+    if (talentSet.has(r.talentAId) && talentSet.has(r.talentBId)) {
+      if (r.type === 'rival' || r.type === 'enemy') {
+        feuds.push(r);
+      }
+    }
+  }
 
   if (feuds.length > 0 && rng.next() < 0.15) { // 15% chance if feuds exist
     const feud = rng.pick(feuds);
@@ -91,11 +104,18 @@ export function checkRelationshipCrises(
 export function checkCliqueCrises(
   project: Project,
   state: GameState,
-  rng: RandomGenerator
+  rng: RandomGenerator,
+  projectContracts: any[] = [] // Default parameter
 ): StateImpact | null {
-  const contracts = Object.values(state.entities.contracts || {})
-    .filter(c => c.projectId === project.id);
-  const talentIds = contracts.map(c => c.talentId);
+  let talentIds = projectContracts.map(c => c.talentId);
+  if (projectContracts.length === 0) {
+    const contracts = state.entities.contracts || {};
+    for (const id in contracts) {
+      if (contracts[id].projectId === project.id) {
+        talentIds.push(contracts[id].talentId);
+      }
+    }
+  }
 
   if (talentIds.length < 3) return null;
 
@@ -148,12 +168,20 @@ export function generateRelationshipScandals(
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
 
-  const relationships = Object.values(state.relationships?.relationships || {});
+  const relationships = state.relationships?.relationships || {};
+  const secretRomances = [];
+  const publicRomances = [];
 
-  // Check for affair scandals (secret romantic relationships becoming public)
-  const secretRomances = relationships.filter(r =>
-    r.type === 'romantic' && !r.isPublic && r.strength > 60
-  );
+  for (const relId in relationships) {
+    const r = relationships[relId];
+    if (r.type === 'romantic') {
+      if (!r.isPublic && r.strength > 60) {
+        secretRomances.push(r);
+      } else if (r.isPublic) {
+        publicRomances.push(r);
+      }
+    }
+  }
 
   for (const romance of secretRomances) {
     if (rng.next() < 0.05) { // 5% chance per secret romance
@@ -226,10 +254,6 @@ export function generateRelationshipScandals(
   }
 
   // Check for public breakups
-  const publicRomances = relationships.filter(r =>
-    r.type === 'romantic' && r.isPublic
-  );
-
   for (const romance of publicRomances) {
     // Check for negative events in history
     const breakupEvent = romance.history.find(h =>
@@ -267,19 +291,32 @@ export function tickOrganicEvents(
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
 
+  // Pre-group contracts by project to avoid O(Projects * Contracts) loop
+  const contractsByProject: Record<string, any[]> = {};
+  const contracts = state.entities.contracts || {};
+  for (const id in contracts) {
+    const c = contracts[id];
+    if (!contractsByProject[c.projectId]) {
+      contractsByProject[c.projectId] = [];
+    }
+    contractsByProject[c.projectId].push(c);
+  }
+
   // 1. Check projects for relationship-based crises
-  const projects = Object.values(state.entities.projects || {});
-  for (const project of projects) {
+  const projects = state.entities.projects || {};
+  for (const projectId in projects) {
+    const project = projects[projectId];
     const projectState = project.state;
-    if (['IN_PRODUCTION', 'production', 'filming'].some(s =>
-      projectState?.toLowerCase().includes(s.toLowerCase())
+    if (projectState && ['IN_PRODUCTION', 'production', 'filming'].some(s =>
+      projectState.toLowerCase().includes(s.toLowerCase())
     )) {
-      const relationshipCrisis = checkRelationshipCrises(project, state, rng);
+      const projectContracts = contractsByProject[project.id] || [];
+      const relationshipCrisis = checkRelationshipCrises(project, state, rng, projectContracts);
       if (relationshipCrisis) {
         impacts.push(relationshipCrisis);
       }
 
-      const cliqueCrisis = checkCliqueCrises(project, state, rng);
+      const cliqueCrisis = checkCliqueCrises(project, state, rng, projectContracts);
       if (cliqueCrisis) {
         impacts.push(cliqueCrisis);
       }

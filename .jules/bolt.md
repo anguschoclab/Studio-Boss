@@ -45,3 +45,6 @@
 ## 2026-05-26 - Replace O(N log N) sorts and array chain allocations with O(N) single-pass maximum find
 **Learning:** Finding the maximum or best matching element (like finding a rescue acquirer in `DistressCascade`) using `Object.values().filter().sort()[0]` creates O(N) array allocations and an O(N log N) sort overhead on every tick.
 **Action:** Replace `Object.values().filter().sort()` chains when only the single top candidate is needed by using a direct `for...in` loop to track the maximum value in a single O(N) pass, reducing time complexity and eliminating GC pressure.
+## 2026-05-28 - Optimize OrganicEventEnhancer loop overhead
+**Learning:** Checking relationships and cliques by repeatedly executing `Object.values(state.entities.contracts).filter(...)` for every active project creates extreme O(Projects * Contracts) loops and significant garbage collection pressure.
+**Action:** Replace embedded `.filter` combinations inside loops with a pre-computed dictionary (grouping by `projectId` first) and direct `for...in` loops to process the event checks efficiently.
