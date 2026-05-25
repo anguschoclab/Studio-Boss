@@ -447,6 +447,7 @@ export interface TVSeasonDetails {
 export type ProjectType = 'FILM' | 'SERIES';
 
 export interface ProjectBase {
+  directorsCutNotified?: boolean;
   id: string;
   title: string;
   type: ProjectType;

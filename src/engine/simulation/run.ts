@@ -8,7 +8,7 @@ import * as path from 'path';
  * Execution: bun src/engine/simulation/run.ts --weeks 104 --runs 1
  */
 
-declare const Bun: any;
+// declare const Bun: any;
 
 const args = (process.argv || []).slice(2);
 const weeks = parseInt(args.find((_: string, i: number) => args[i-1] === '--weeks') || '104');
