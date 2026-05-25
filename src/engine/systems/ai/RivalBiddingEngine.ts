@@ -9,7 +9,7 @@ export function generateFestivalBid(
   project: Project,
   rng: RandomGenerator
 ): number | null {
-  const behaviorId = rival.archetypeId || ('behaviorId' in rival ? (rival as any).behaviorId : undefined);
+  const behaviorId = rival.archetypeId || ('behaviorId' in rival ? (rival as unknown as Record<string, string>).behaviorId : undefined);
   const archetype = getStudioArchetype(behaviorId);
 
   const bidChance = (archetype.riskAppetite + archetype.biddingAggression) / 200;

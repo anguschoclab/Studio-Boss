@@ -65,11 +65,12 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
 export function shouldAttemptHostileTakeover(
   attacker: RivalStudio,
   target: RivalStudio,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   state: GameState
 ): boolean {
   if (attacker.id === target.id) return false;
 
-  const behaviorId = attacker.archetypeId || ('behaviorId' in attacker ? (attacker as any).behaviorId : undefined);
+  const behaviorId = attacker.archetypeId || ('behaviorId' in attacker ? (attacker as unknown as Record<string, string>).behaviorId : undefined);
   const archetype = getStudioArchetype(behaviorId);
   if (!archetype) return false;
 
