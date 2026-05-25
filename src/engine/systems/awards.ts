@@ -247,8 +247,14 @@ export function processRazzies(state: GameState, week: number): StateImpact {
      impact.cultClassicProjectIds = [worstPicture.id];
   }
 
-  const projectContracts = Object.values(state.entities.contracts || {}).filter(c => c.projectId === worstPicture.id);
-  const contractTalentIds = new Set(projectContracts.map(c => c.talentId));
+  // ⚡ Bolt: Replaced Object.values().filter().map() with a direct for...in loop
+  const contractTalentIds = new Set<string>();
+  const contracts = state.entities.contracts || {};
+  for (const contractId in contracts) {
+    if (contracts[contractId].projectId === worstPicture.id) {
+      contractTalentIds.add(contracts[contractId].talentId);
+    }
+  }
 
   let worstLeadId: string | null = null;
   let highestDraw = 0;
