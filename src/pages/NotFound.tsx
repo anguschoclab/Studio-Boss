@@ -5,7 +5,8 @@ const NotFound = () => {
   const { location } = useRouterState();
 
   useEffect(() => {
-    console.error("404 Error: User attempted to access non-existent route:", location.pathname);
+    const safePathname = location.pathname.replace(/[\r\n]+/g, "");
+    console.error("404 Error: User attempted to access non-existent route:", safePathname);
   }, [location.pathname]);
 
   return (
