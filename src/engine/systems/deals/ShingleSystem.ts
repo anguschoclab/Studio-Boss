@@ -1,4 +1,4 @@
-import { GameState, StateImpact, RivalStudio, Talent } from '@/engine/types';
+import { GameState, StateImpact, Talent } from '@/engine/types';
 import { ProducerShingle, ShingleDealType, ShingleMedium } from '@/engine/types/talent.types';
 import { RandomGenerator } from '@/engine/utils/rng';
 
@@ -88,11 +88,6 @@ function getStudioName(state: GameState, studioId: string | null): string {
   return state.entities.rivals[studioId]?.name || studioId;
 }
 
-function getStudioCash(state: GameState, studioId: string | null): number {
-  if (!studioId) return 0;
-  if (studioId === 'PLAYER') return state.finance.cash || 0;
-  return state.entities.rivals[studioId]?.cash || 0;
-}
 
 function rollOverhead(rng: RandomGenerator, dealType: ShingleDealType, ownerPrestige: number, medium: ShingleMedium = 'FILM'): number {
   const ranges = medium === 'TV' ? TV_OVERHEAD_RANGES : OVERHEAD_RANGES;
@@ -172,7 +167,7 @@ function getEligibleTalent(state: GameState): Talent[] {
 }
 
 function rankBidders(state: GameState): { id: string; archetype: 'major' | 'mid-tier' | 'indie'; cash: number; prestige: number }[] {
-  const bidders: { id: string; archetype: any; cash: number; prestige: number }[] = [];
+  const bidders: { id: string; archetype: import("@/engine/types").ArchetypeKey; cash: number; prestige: number }[] = [];
   bidders.push({ id: 'PLAYER', archetype: state.studio?.archetype || 'major', cash: state.finance.cash || 0, prestige: state.studio?.prestige || 0 });
 
   // ⚡ The Framerate Fanatic: Replaced Object.values with for...in loop
