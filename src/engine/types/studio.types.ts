@@ -19,6 +19,7 @@ export type ArchetypeKey = 'major' | 'mid-tier' | 'indie';
 export type StudioMotivation = 'CASH_CRUNCH' | 'AWARD_CHASE' | 'FRANCHISE_BUILDING' | 'MARKET_DISRUPTION' | 'STABILITY';
 
 export interface RivalStudio {
+  behaviorId?: string;
   id: string;
   name: string;
   motto: string;
