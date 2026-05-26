@@ -19,6 +19,7 @@ export const BardResolver = {
     const domainData = archive[domain];
     if (!domainData) return `[MISSING DOMAIN: ${domain}]`;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let subDomainData: any = domainData;
     const subDomainParts = subDomain.split('.');
     
