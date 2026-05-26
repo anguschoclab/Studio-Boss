@@ -229,9 +229,12 @@ export function applyFlopPenalties(
 
 export function processFlops(state: GameState): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const projects = Object.values(state.entities.projects);
 
-  for (const project of projects) {
+  // ⚡ Bolt: Iterate directly over the State Record using a for...in loop
+  // instead of Object.values() to avoid allocating an intermediate O(N) array
+  // on every engine tick, reducing overall Garbage Collection pressure.
+  for (const projectId in state.entities.projects) {
+    const project = state.entities.projects[projectId];
     if (project.state === 'released' && (project.releaseWeek || 0) === state.week && project.ownerId) {
       const flopImpacts = applyFlopPenalties(state, project, project.ownerId);
       impacts.push(...flopImpacts);
