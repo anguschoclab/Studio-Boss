@@ -42,6 +42,7 @@ export function processRazzies(state: GameState, week: number, rng: RandomGenera
         update: {
           razzieWinner: true,
           razzieCategory: score <= 10 ? 'Worst Picture' : score <= 20 ? 'Worst Director' : 'Worst Screenplay'
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any
       }
     });

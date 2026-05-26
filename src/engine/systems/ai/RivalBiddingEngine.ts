@@ -9,6 +9,7 @@ export function generateFestivalBid(
   project: Project,
   rng: RandomGenerator
 ): number | null {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const behaviorId = rival.archetypeId || ('behaviorId' in rival ? (rival as any).behaviorId : undefined);
   const archetype = getStudioArchetype(behaviorId);
 

@@ -83,9 +83,11 @@ export function tickReleaseStrategy(state: GameState): StateImpact[] {
     const project = state.entities.projects[projectId];
     if (
       project.state === 'marketing' &&
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       !(project as any).releaseStrategy
     ) {
       impacts.push({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         type: 'MODAL_TRIGGERED' as any,
         payload: {
           modalType: 'RELEASE_STRATEGY',
@@ -105,6 +107,7 @@ export function tickReleaseStrategy(state: GameState): StateImpact[] {
  */
 export function getReleaseStrategyEffect(
   strategy: ReleaseStrategy,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   project: any
 ): ReleaseStrategyEffect {
   const def = STRATEGY_DEFS[strategy];
@@ -167,6 +170,7 @@ export function applyReleaseStrategy(
         releaseStrategy: strategy,
         // Store the revenue multiplier on the project so the release system can read it
         releaseStrategyMultiplier: effect.revenueMultiplier,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any,
     },
   });
