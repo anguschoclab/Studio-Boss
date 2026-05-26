@@ -34,6 +34,7 @@ export function tickPostProduction(
     if (project.state !== 'post_production') continue;
 
     const currentWeeksRemaining: number =
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (project as any).postProductionWeeksRemaining ??
       DEFAULT_POST_PRODUCTION_WEEKS;
 
@@ -56,17 +57,20 @@ export function tickPostProduction(
     // ── Director's cut request (20%) ─────────────────────────────────────────
     if (
       rng.next() < DIRECTORS_CUT_REQUEST_CHANCE &&
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       !(project as any).directorsCutNotified
     ) {
       impacts.push({
         type: 'PROJECT_UPDATED',
         payload: {
           projectId: project.id,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           update: { directorsCutNotified: true } as any,
         },
       });
 
       impacts.push({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         type: 'MODAL_TRIGGERED' as any,
         payload: {
           modalType: 'DIRECTORS_CUT_AVAILABLE',
@@ -86,9 +90,11 @@ export function tickPostProduction(
         payload: {
           projectId: project.id,
           update: {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             state: 'marketing' as any,
             postProductionWeeksRemaining: 0,
             weeksInPhase: 0,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
         },
       });
@@ -109,6 +115,7 @@ export function tickPostProduction(
           projectId: project.id,
           update: {
             postProductionWeeksRemaining: weeksRemaining,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
         },
       });

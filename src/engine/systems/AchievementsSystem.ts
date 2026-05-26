@@ -133,6 +133,7 @@ export const ACHIEVEMENT_CATALOGUE: Omit<Achievement, 'unlocked' | 'unlockedWeek
 // ---------------------------------------------------------------------------
 
 function alreadyUnlocked(state: GameState, id: string): boolean {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const unlocked: string[] = (state.studio as any).achievements ?? [];
   return unlocked.includes(id);
 }
@@ -166,6 +167,7 @@ function buildUnlockImpacts(
 
   // Carry the achievement ID in a SYSTEM_TICK bag so the reducer can persist it
   impacts.push({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     type: 'SYSTEM_TICK' as any,
     payload: { newAchievementId: achievement.id },
   } as StateImpact);
@@ -278,6 +280,7 @@ export function checkAchievements(state: GameState): StateImpact[] {
   let hasStarMaker = false;
   for (const id in state.entities.talents) {
     const t = state.entities.talents[id];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (t.tier === 'A_LIST' && (t as any).wasNewcomerWhenSigned === true) {
       hasStarMaker = true;
       break;
@@ -294,6 +297,7 @@ export function checkAchievements(state: GameState): StateImpact[] {
   check('big_agency_deal', hasPowerhouseDeal);
 
   // Scandal Survivor — resolved 5 crises; tracked via studioCrisisResolved counter
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const resolvedCrises: number = (state.studio as any).resolvedCrisesCount ?? 0;
   check('scandal_survivor', resolvedCrises >= 5);
 
