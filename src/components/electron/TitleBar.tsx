@@ -40,6 +40,7 @@ export function TitleBar() {
           onClick={handleMinimize}
           className="h-12 w-12 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors"
           title="Minimize"
+          aria-label="Minimize Window"
         >
           <Minus className="w-4 h-4" />
         </button>
@@ -47,6 +48,7 @@ export function TitleBar() {
           onClick={handleMaximize}
           className="h-12 w-12 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors"
           title="Maximize"
+          aria-label="Maximize Window"
         >
           <Square className="w-4 h-4" />
         </button>
@@ -54,6 +56,7 @@ export function TitleBar() {
           onClick={handleClose}
           className="h-12 w-12 flex items-center justify-center text-white/60 hover:text-white hover:bg-red-500/80 transition-colors"
           title="Close"
+          aria-label="Close Window"
         >
           <X className="w-4 h-4" />
         </button>
