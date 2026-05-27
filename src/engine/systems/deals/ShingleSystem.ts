@@ -1,4 +1,4 @@
-import { GameState, StateImpact, RivalStudio, Talent } from '@/engine/types';
+import { GameState, StateImpact, Talent } from '@/engine/types';
 import { ProducerShingle, ShingleDealType, ShingleMedium } from '@/engine/types/talent.types';
 import { RandomGenerator } from '@/engine/utils/rng';
 
@@ -88,6 +88,7 @@ function getStudioName(state: GameState, studioId: string | null): string {
   return state.entities.rivals[studioId]?.name || studioId;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getStudioCash(state: GameState, studioId: string | null): number {
   if (!studioId) return 0;
   if (studioId === 'PLAYER') return state.finance.cash || 0;
@@ -172,7 +173,7 @@ function getEligibleTalent(state: GameState): Talent[] {
 }
 
 function rankBidders(state: GameState): { id: string; archetype: 'major' | 'mid-tier' | 'indie'; cash: number; prestige: number }[] {
-  const bidders: { id: string; archetype: any; cash: number; prestige: number }[] = [];
+  const bidders: { id: string; archetype: import("@/engine/types").ArchetypeKey; cash: number; prestige: number }[] = [];
   bidders.push({ id: 'PLAYER', archetype: state.studio?.archetype || 'major', cash: state.finance.cash || 0, prestige: state.studio?.prestige || 0 });
 
   // ⚡ The Framerate Fanatic: Replaced Object.values with for...in loop
@@ -263,7 +264,7 @@ function createShingle(
   let playerHasRecentContractWithOwner = false;
   const contracts = state.entities.contracts || {};
   for (const id in contracts) {
-    const c: any = contracts[id];
+    const c = contracts[id] as import('@/engine/types').Contract;
     if (c.talentId === owner.id && (c.ownerId === 'PLAYER' || !c.ownerId) && ((c.signedWeek || 0) >= twoYearWeek || (c.weeksRemaining || 0) > 0)) {
       playerHasRecentContractWithOwner = true;
       break;
@@ -336,7 +337,7 @@ function createShingle(
     medium,
     historyTrail: [{ week: state.week, studioId: winner.id, dealType: winner.dealType, overhead: winner.overhead }]
   };
-  impacts.push({ type: 'SHINGLE_CREATED', payload: { shingle } } as any);
+  impacts.push({ type: 'SHINGLE_CREATED', payload: { shingle } });
   const mediumLabel = medium === 'TV' ? 'TV showrunner ' : '';
   impacts.push({
     type: 'NEWS_ADDED',
@@ -372,7 +373,7 @@ function chargeOverhead(state: GameState, impacts: StateImpact[]) {
         impacts.push({
           type: 'RIVAL_UPDATED',
           payload: { rivalId: rival.id, update: { cash: (rival.cash || 0) - weekly } }
-        } as any);
+        });
       }
     }
   }
@@ -385,7 +386,7 @@ function decrementTerms(state: GameState, rng: RandomGenerator, impacts: StateIm
     const s = shingles[id];
     const next = (s.termWeeksRemaining || 0) - 1;
     if (next > 0) {
-      impacts.push({ type: 'SHINGLE_UPDATED', payload: { shingleId: s.id, update: { termWeeksRemaining: next } } } as any);
+      impacts.push({ type: 'SHINGLE_UPDATED', payload: { shingleId: s.id, update: { termWeeksRemaining: next } } });
       continue;
     }
     // Term expired — renegotiate or churn.
@@ -396,7 +397,7 @@ function decrementTerms(state: GameState, rng: RandomGenerator, impacts: StateIm
 function handleExpiry(state: GameState, s: ProducerShingle, rng: RandomGenerator, impacts: StateImpact[]) {
   const owner = state.entities.talents[s.ownerTalentId];
   if (!owner) {
-    impacts.push({ type: 'SHINGLE_DISSOLVED', payload: { shingleId: s.id } } as any);
+    impacts.push({ type: 'SHINGLE_DISSOLVED', payload: { shingleId: s.id } });
     shingleEventLog.push({
       week: state.week, year: yearFromWeek(state.week), kind: 'dissolved',
       shingleId: s.id, shingleName: s.name, ownerName: '(deceased owner)',
@@ -407,7 +408,7 @@ function handleExpiry(state: GameState, s: ProducerShingle, rng: RandomGenerator
   // Reopen bidding. Home studio gets a renewal bonus; rival majors may steal with higher overhead.
   const bidders = rankBidders(state);
   const hasHits = (owner.prestige || 0) >= 70 && (owner.momentum || 0) > 40;
-  const medium: ShingleMedium = (s as any).medium === 'TV' ? 'TV' : 'FILM';
+  const medium: ShingleMedium = (s as unknown as {medium?: string}).medium === 'TV' ? 'TV' : 'FILM';
   type Offer = { id: string; dealType: ShingleDealType; overhead: number; score: number };
   const offers: Offer[] = [];
   for (const b of bidders) {
@@ -440,7 +441,7 @@ function handleExpiry(state: GameState, s: ProducerShingle, rng: RandomGenerator
   }
   if (offers.length === 0) {
     // Free agent now; will retry next year or pitch open market.
-    impacts.push({ type: 'SHINGLE_UPDATED', payload: { shingleId: s.id, update: { baseStudioId: null, termWeeksRemaining: 52, dealType: 'HOUSEKEEPING', overheadPerYear: 0 } } } as any);
+    impacts.push({ type: 'SHINGLE_UPDATED', payload: { shingleId: s.id, update: { baseStudioId: null, termWeeksRemaining: 52, dealType: 'HOUSEKEEPING', overheadPerYear: 0 } } });
     shingleEventLog.push({
       week: state.week, year: yearFromWeek(state.week), kind: 'expired',
       shingleId: s.id, shingleName: s.name, ownerName: owner.name,
@@ -466,7 +467,7 @@ function handleExpiry(state: GameState, s: ProducerShingle, rng: RandomGenerator
         historyTrail: trail
       }
     }
-  } as any);
+  });
   const prior = getStudioName(state, s.baseStudioId);
   const now = getStudioName(state, winner.id);
   impacts.push({
@@ -609,7 +610,7 @@ function createPodShingle(state: GameState, owner: Talent, rng: RandomGenerator,
     medium: 'FILM',
     historyTrail: [{ week: state.week, studioId: winner.id, dealType: 'POD', overhead: winner.overhead }]
   };
-  impacts.push({ type: 'SHINGLE_CREATED', payload: { shingle } } as any);
+  impacts.push({ type: 'SHINGLE_CREATED', payload: { shingle } });
   impacts.push({
     type: 'NEWS_ADDED',
     payload: {
@@ -664,7 +665,7 @@ function createHousekeepingShingle(state: GameState, owner: Talent, rng: RandomG
     medium: 'FILM',
     historyTrail: [{ week: state.week, studioId: winner.id, dealType: 'HOUSEKEEPING', overhead: winner.overhead }]
   };
-  impacts.push({ type: 'SHINGLE_CREATED', payload: { shingle } } as any);
+  impacts.push({ type: 'SHINGLE_CREATED', payload: { shingle } });
   impacts.push({
     type: 'NEWS_ADDED',
     payload: {
@@ -718,7 +719,7 @@ export function cancelHighestOverheadDeal(state: GameState, studioId: string): S
       impacts.push({
         type: 'RIVAL_UPDATED',
         payload: { rivalId: rival.id, update: { cash: (rival.cash || 0) + severance, prestige: Math.max(0, (rival.prestige || 0) - 2) } }
-      } as any);
+      });
     }
   }
   // Convert shingle to free-agent (no studio, zero overhead).
@@ -728,7 +729,7 @@ export function cancelHighestOverheadDeal(state: GameState, studioId: string): S
       shingleId: target.id,
       update: { baseStudioId: null, overheadPerYear: 0, dealType: 'HOUSEKEEPING', exclusivity: false, termWeeksRemaining: 52 }
     }
-  } as any);
+  });
   const owner = state.entities.talents[target.ownerTalentId];
   impacts.push({
     type: 'NEWS_ADDED',

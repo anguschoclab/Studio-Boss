@@ -1,6 +1,7 @@
 import { GameState, StateImpact } from '@/engine/types';
 import { ProducerShingle } from '@/engine/types/talent.types';
 import { RandomGenerator } from '@/engine/utils/rng';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { shingleEventLog } from './ShingleSystem';
 
 /**
@@ -171,7 +172,7 @@ export function tickShinglePitchRouter(state: GameState, rng: RandomGenerator): 
           lastPitchWeek: state.week
         }
       }
-    } as any);
+    });
   }
   return impacts;
 }
