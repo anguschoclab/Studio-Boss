@@ -83,10 +83,10 @@ export function tickReleaseStrategy(state: GameState): StateImpact[] {
     const project = state.entities.projects[projectId];
     if (
       project.state === 'marketing' &&
-      !(project as any).releaseStrategy
+      !(project as unknown as {releaseStrategy?: unknown}).releaseStrategy
     ) {
       impacts.push({
-        type: 'MODAL_TRIGGERED' as any,
+        type: 'MODAL_TRIGGERED' as unknown as StateImpact['type'],
         payload: {
           modalType: 'RELEASE_STRATEGY',
           priority: 90,
@@ -105,7 +105,7 @@ export function tickReleaseStrategy(state: GameState): StateImpact[] {
  */
 export function getReleaseStrategyEffect(
   strategy: ReleaseStrategy,
-  project: any
+  project: import('@/engine/types').Project
 ): ReleaseStrategyEffect {
   const def = STRATEGY_DEFS[strategy];
   let revenueMultiplier = def.baseMultiplier;
@@ -167,7 +167,7 @@ export function applyReleaseStrategy(
         releaseStrategy: strategy,
         // Store the revenue multiplier on the project so the release system can read it
         releaseStrategyMultiplier: effect.revenueMultiplier,
-      } as any,
+      } as unknown as Partial<Project>,
     },
   });
 

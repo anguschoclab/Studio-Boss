@@ -40,7 +40,7 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
         state: 'development',
         weeksInPhase: 0,
         ownerId: rival.id
-      } as any;
+      } as unknown as Partial<import('@/engine/types').RivalStudio>;
 
       const willingnessReport = calculateWillingness(target, dummyProject, state);
 
@@ -91,6 +91,7 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
       );
       let leveragedFee = AgencyLeverageEngine.getRequiredFee(lockFee, leverage);
 
+      // eslint-disable-next-line no-useless-assignment
       let relationshipBonus = 0;
       if (target.agentId) {
         const relationship = state.talentAgentRelationships[`${target.id}-${target.agentId}`];
