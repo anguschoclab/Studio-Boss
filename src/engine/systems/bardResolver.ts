@@ -19,7 +19,7 @@ export const BardResolver = {
     const domainData = archive[domain];
     if (!domainData) return `[MISSING DOMAIN: ${domain}]`;
 
-    let subDomainData: any = domainData;
+    let subDomainData: unknown = domainData;
     const subDomainParts = subDomain.split('.');
     
     for (const part of subDomainParts) {

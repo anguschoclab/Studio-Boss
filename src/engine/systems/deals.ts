@@ -1,5 +1,5 @@
 import { Talent, GameState, Project, FirstLookDeal, Agency, StateImpact } from '@/engine/types';
-import { rand, generateId } from '../utils';
+import { rand } from '../utils';
 
 const ACCESS_LEVEL_BONUSES: Record<string, number> = {
   'outsider': 20,
@@ -21,7 +21,13 @@ export function evaluateFirstLookDeal(talent: Talent, state: GameState): boolean
   return rand() * 100 <= acceptanceChance;
 }
 
-export function offerFirstLookDeal(state: GameState, talentId: string, weeksRemaining: number, exclusivity: boolean = true): StateImpact[] {
+export function offerFirstLookDeal(
+  state: GameState,
+  talentId: string,
+  weeksRemaining: number,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  exclusivity: boolean = true
+): StateImpact[] {
   const talent = state.industry.talentPool[talentId];
   if (!talent) return [];
   
@@ -70,7 +76,13 @@ export function advanceDeals(deals: FirstLookDeal[]): StateImpact[] {
   return [];
 }
 
-export function packageProject(project: Project, talentIds?: string[], agency?: Agency): { packageScore: number, synergies: string[] } {
+export function packageProject(
+  project: Project,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  talentIds?: string[],
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  agency?: Agency
+): { packageScore: number, synergies: string[] } {
   const score = project.buzz; 
   const synergies: string[] = [];
   return { packageScore: score, synergies };
