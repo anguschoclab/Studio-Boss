@@ -137,9 +137,11 @@ export const BardResolver = {
         }
 
         // 2. Check Dictionary
-        const entry = dictionary[trimmedKey];
-        if (entry && Array.isArray(entry)) {
-          return this.pick(entry, rng);
+        if (!FORBIDDEN_KEYS.has(trimmedKey)) {
+          const entry = dictionary[trimmedKey];
+          if (entry && Array.isArray(entry)) {
+            return this.pick(entry, rng);
+          }
         }
 
         // 3. Keep as is if not found

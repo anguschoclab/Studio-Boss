@@ -1,0 +1,4 @@
+## 2024-05-20 - [Fix prototype pollution in BardResolver dictionary lookup]
+**Vulnerability:** The `interpolate` method in `src/engine/systems/bardResolver.ts` accesses keys directly from the `dictionary` object based on user-provided strings without checking if the key is a forbidden property (like `__proto__`, `constructor`, `prototype`). This allows a malicious payload containing `{{__proto__}}` to access or execute arbitrary properties on the Object prototype via prototype pollution.
+**Learning:** Even simple string interpolation loops that fall back to a dictionary lookup can inadvertently allow access to Object prototype properties if keys are not explicitly filtered.
+**Prevention:** Always use a `Set` of forbidden keys (e.g., `new Set(['__proto__', 'constructor', 'prototype'])`) and its `.has()` method to validate dictionary keys before accessing them, especially when falling back to global/shared dictionaries.
