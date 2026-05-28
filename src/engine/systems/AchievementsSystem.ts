@@ -133,7 +133,7 @@ export const ACHIEVEMENT_CATALOGUE: Omit<Achievement, 'unlocked' | 'unlockedWeek
 // ---------------------------------------------------------------------------
 
 function alreadyUnlocked(state: GameState, id: string): boolean {
-  const unlocked: string[] = (state.studio as any).achievements ?? [];
+  const unlocked: string[] = (state.studio as unknown as { achievements?: string[] }).achievements ?? [];
   return unlocked.includes(id);
 }
 
@@ -166,7 +166,7 @@ function buildUnlockImpacts(
 
   // Carry the achievement ID in a SYSTEM_TICK bag so the reducer can persist it
   impacts.push({
-    type: 'SYSTEM_TICK' as any,
+    type: 'SYSTEM_TICK' as unknown as 'SYSTEM_TICK',
     payload: { newAchievementId: achievement.id },
   } as StateImpact);
 
@@ -278,7 +278,7 @@ export function checkAchievements(state: GameState): StateImpact[] {
   let hasStarMaker = false;
   for (const id in state.entities.talents) {
     const t = state.entities.talents[id];
-    if (t.tier === 'A_LIST' && (t as any).wasNewcomerWhenSigned === true) {
+    if (t.tier === 'A_LIST' && (t as unknown as { wasNewcomerWhenSigned?: boolean }).wasNewcomerWhenSigned === true) {
       hasStarMaker = true;
       break;
     }
@@ -294,7 +294,7 @@ export function checkAchievements(state: GameState): StateImpact[] {
   check('big_agency_deal', hasPowerhouseDeal);
 
   // Scandal Survivor — resolved 5 crises; tracked via studioCrisisResolved counter
-  const resolvedCrises: number = (state.studio as any).resolvedCrisesCount ?? 0;
+  const resolvedCrises: number = (state.studio as unknown as { resolvedCrisesCount?: number }).resolvedCrisesCount ?? 0;
   check('scandal_survivor', resolvedCrises >= 5);
 
   // --- EMPIRE ---
