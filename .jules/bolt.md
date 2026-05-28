@@ -45,3 +45,6 @@
 ## 2026-05-26 - Replace O(N log N) sorts and array chain allocations with O(N) single-pass maximum find
 **Learning:** Finding the maximum or best matching element (like finding a rescue acquirer in `DistressCascade`) using `Object.values().filter().sort()[0]` creates O(N) array allocations and an O(N log N) sort overhead on every tick.
 **Action:** Replace `Object.values().filter().sort()` chains when only the single top candidate is needed by using a direct `for...in` loop to track the maximum value in a single O(N) pass, reducing time complexity and eliminating GC pressure.
+## 2026-05-28 - Corrected and Optimized State Record Iteration
+**Learning:** Functions were incorrectly accessing `state.industry.talentPool` and iterating over it using `Object.values().forEach()`. The correct record is `state.entities.talents`. Additionally, chaining `Object.values()` creates intermediate O(N) array allocation overhead per tick.
+**Action:** Replaced `Object.values(state.industry.talentPool).forEach()` with a direct `for...in` loop over `state.entities.talents` in `WorldSimulator.ts`, `scandals.ts`, and `deals.ts` to correctly access entities and eliminate O(N) array allocation overhead.
