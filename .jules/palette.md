@@ -17,3 +17,7 @@
 ## 2024-05-19 - Accessible Inputs Without Labels
 **Learning:** In complex hub dashboards (like TalentHub and ProductionHub), search and filter inputs are often styled cleanly without explicit <label> tags. Screen readers cannot deduce the input's purpose without one.
 **Action:** Always provide an aria-label attribute on <input> elements that lack an associated visible <label>, ensuring screen reader users understand the field's purpose (e.g., "Search talent" or "Filter slate").
+
+## 2024-05-28 - Custom Tooltips over Native Title
+**Learning:** When providing hover information on icon buttons, avoiding the native HTML `title` attribute improves the UX because native titles render slow, unstyled OS tooltips. Instead, utilizing the custom `tooltip` prop built into the `<Button>` component provides a responsive, consistently styled experience, which should be paired with `aria-label` for screen reader accessibility.
+**Action:** Replace `title` attributes with the `tooltip` prop on `<Button>` components and ensure `aria-label` is explicitly defined.
