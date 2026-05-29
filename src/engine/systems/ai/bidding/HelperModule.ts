@@ -53,6 +53,13 @@ export function calculateLiveCounterBid(
 }
 
 export function getLiveCounterBid(opportunity: Opportunity, increment: number = 0.1): number {
-  const currentMax = Math.max(...Object.values(opportunity.bids || {}).map(b => b.amount), opportunity.costToAcquire);
+  let currentMax = opportunity.costToAcquire;
+  if (opportunity.bids) {
+    for (const key in opportunity.bids) {
+      if (opportunity.bids[key].amount > currentMax) {
+        currentMax = opportunity.bids[key].amount;
+      }
+    }
+  }
   return Math.round(currentMax * (1 + increment) / 1000) * 1000;
 }

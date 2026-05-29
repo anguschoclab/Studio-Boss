@@ -9,8 +9,14 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
   
   if (state.week % 4 !== 0) return [];
 
-  const rivalsList = Object.values(state.entities.rivals || {});
-  const eligibleRivals = rivalsList.filter(r => r.cash > 100_000_000);
+  const eligibleRivals: typeof state.entities.rivals[string][] = [];
+  if (state.entities.rivals) {
+    for (const id in state.entities.rivals) {
+      if (state.entities.rivals[id].cash > 100_000_000) {
+        eligibleRivals.push(state.entities.rivals[id]);
+      }
+    }
+  }
   if (eligibleRivals.length === 0) return [];
 
   const availableTalent: typeof state.entities.talents[string][] = [];
@@ -26,7 +32,7 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
   
   if (availableTalent.length === 0) return [];
 
-  eligibleRivals.forEach(rival => {
+  for (const rival of eligibleRivals) {
     if (rng.next() < 0.1) {
       const target = rng.pick(availableTalent);
 
@@ -123,7 +129,7 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
          });
       }
     }
-  });
+  }
 
   return impacts;
 }

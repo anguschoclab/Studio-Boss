@@ -13,10 +13,15 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
   const currWeek = state.week;
   const opportunities = state.market.opportunities.filter(o => (o.expirationWeek || 0) >= currWeek);
 
-  const rivalsList = Object.values(state.entities.rivals || {});
-
   opportunities.forEach(opportunity => {
-    const currentHighest = Object.values(opportunity.bids || {}).reduce((max: number, b) => Math.max(max, b.amount), 0);
+    let currentHighest = 0;
+    if (opportunity.bids) {
+      for (const bidId in opportunity.bids) {
+        if (opportunity.bids[bidId].amount > currentHighest) {
+          currentHighest = opportunity.bids[bidId].amount;
+        }
+      }
+    }
     
     let opportunityLeverageAggression = 1.0;
     if (opportunity.attachedTalentIds && opportunity.attachedTalentIds.length > 0) {
@@ -34,8 +39,9 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
       }
     }
 
-    rivalsList.forEach(rival => {
-      const myBid = opportunity.bids[rival.id]?.amount || 0;
+    for (const rivalId in state.entities.rivals || {}) {
+      const rival = state.entities.rivals[rivalId];
+      const myBid = opportunity.bids?.[rival.id]?.amount || 0;
 
       const isPlayerLeading = opportunity.highestBidderId === 'PLAYER';
       const aggressionFactor = isPlayerLeading ? 1.5 : 1.0;
@@ -90,7 +96,7 @@ const franchiseAggression = isFranchiseBuilder && isKeyIPGenre ? 2.2 : (isFranch
           }
         }
       }
-    });
+    }
   });
 
   return impacts;
