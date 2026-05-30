@@ -19,14 +19,14 @@ export const BardResolver = {
     const domainData = archive[domain];
     if (!domainData) return `[MISSING DOMAIN: ${domain}]`;
 
-    let subDomainData: any = domainData;
+    let subDomainData: unknown = domainData;
     const subDomainParts = subDomain.split('.');
     
     for (const part of subDomainParts) {
       if (FORBIDDEN_KEYS.has(part)) {
         return `[INVALID SUB-DOMAIN: ${subDomain}]`;
       }
-      if (subDomainData && typeof subDomainData === 'object' && part in subDomainData) {
+      if (subDomainData && typeof subDomainData === 'object' && part in (subDomainData as Record<string, unknown>)) {
         subDomainData = (subDomainData as Record<string, unknown>)[part];
       } else {
         return `[MISSING SUB-DOMAIN: ${subDomain}]`;
