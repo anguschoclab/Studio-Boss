@@ -1,6 +1,6 @@
-import { Project, Buyer, Contract } from '../../types';
-import { IPAsset } from '../../types/state.types';
-import { calculateWeeklyIPRevenue } from '../ip/merchandisingEngine';
+import { Project, Buyer, Contract } from "../../types";
+import { IPAsset } from "../../types/state.types";
+import { calculateWeeklyIPRevenue } from "../ip/merchandisingEngine";
 
 /**
  * RevenueProcessor handles all income-related calculations for the studio.
@@ -13,7 +13,7 @@ export class RevenueProcessor {
    */
   static calculateStreamingRevenue(project: Project, platform: Buyer): number {
     const quality = project.reviewScore || 50;
-    const marketShare = platform.marketShare || 0.10;
+    const marketShare = platform.marketShare || 0.1;
 
     // Base fee is $2,000 per 1% market share at 100 quality
     const baseFeePerUnit = 2000;
@@ -27,7 +27,11 @@ export class RevenueProcessor {
   /**
    * Calculates box office decay for a project in a given week.
    */
-  static calculateTheatricalDecay(currentRevenue: number, decayRate: number, isCultClassic?: boolean): number {
+  static calculateTheatricalDecay(
+    currentRevenue: number,
+    decayRate: number,
+    isCultClassic?: boolean
+  ): number {
     const decayed = Math.round(currentRevenue * decayRate);
     if (isCultClassic) {
       return Math.max(decayed * 2, 50000);
@@ -40,13 +44,13 @@ export class RevenueProcessor {
    */
   static calculateMerchRevenue(hype: number, franchiseRelevance: number): number {
     if (hype < 70) return 0;
-    
+
     // Revenue scales with hype and franchise relevance
     const base = 5000;
     const hypeFactor = (hype - 70) / 30; // 0 to 1
     const relevanceFactor = franchiseRelevance / 100; // 0 to 1
-    
-    const revenue = base + (base * 5 * hypeFactor * relevanceFactor);
+
+    const revenue = base + base * 5 * hypeFactor * relevanceFactor;
     return Math.round(revenue);
   }
 
@@ -61,7 +65,11 @@ export class RevenueProcessor {
    * Calculates talent royalties (Net Points) for a project.
    * Royalties ONLY trigger after the project has recouped (Total Revenue >= Total Cost).
    */
-  static calculateNetPointsRoyalty(project: Project, weeklyRevenue: number, contracts: Contract[]): number {
+  static calculateNetPointsRoyalty(
+    project: Project,
+    weeklyRevenue: number,
+    contracts: Contract[]
+  ): number {
     const totalCost = project.budget + (project.marketingBudget || 0);
     const totalRevenue = project.revenue || 0;
 
@@ -72,7 +80,7 @@ export class RevenueProcessor {
 
     // Payout logic: Gross points based on the current week's revenue
     let totalRoyalty = 0;
-    contracts.forEach(contract => {
+    contracts.forEach((contract) => {
       if (contract.projectId === project.id && contract.backendPercent > 0) {
         let percent = contract.backendPercent / 100;
 
@@ -93,9 +101,9 @@ export class RevenueProcessor {
    */
   static calculateActiveRevenue(
     projects: Project[],
-    state: import('../../types').GameState,
-    contracts: import('../../types').Contract[],
-    vault: import('../../types/state.types').IPAsset[],
+    state: import("../../types").GameState,
+    contracts: import("../../types").Contract[],
+    vault: import("../../types/state.types").IPAsset[],
     studioId: string
   ) {
     let boxOffice = 0;
@@ -104,29 +112,46 @@ export class RevenueProcessor {
     let totalRoyalties = 0;
     const projectRecoupment: Record<string, number> = {};
 
-    projects.forEach(p => {
-      if (p.state === 'released') {
+    // ⚡ Bolt: Pre-group contracts by project to avoid O(P * C) complexity during royalty calculations
+    const contractsByProject: Record<string, import("../../types").Contract[]> = {};
+    for (let i = 0; i < contracts.length; i++) {
+      const c = contracts[i];
+      if (!contractsByProject[c.projectId]) contractsByProject[c.projectId] = [];
+      contractsByProject[c.projectId].push(c);
+    }
+
+    // ⚡ Bolt: Pre-map buyers to avoid O(P * B) lookups using Array.find inside the loop
+    const buyerMap = new Map<string, import("../../types").Buyer>();
+    state.market.buyers.forEach((b) => buyerMap.set(b.id, b));
+
+    projects.forEach((p) => {
+      if (p.state === "released") {
         let weeklyGross = 0;
-        
+
         // 1. Theatrical vs Streaming
-        if (p.distributionStatus === 'theatrical') {
+        if (p.distributionStatus === "theatrical") {
           weeklyGross = this.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.5);
           boxOffice += weeklyGross;
-        } else if (p.distributionStatus === 'streaming') {
-          const platform = state.market.buyers.find(b => b.id === p.buyerId);
+        } else if (p.distributionStatus === "streaming") {
+          const platform = p.buyerId ? buyerMap.get(p.buyerId) : undefined;
           if (platform) {
             weeklyGross = this.calculateStreamingRevenue(p, platform);
             distribution += weeklyGross;
           }
         }
-        
+
         // 2. Merchandise
         const franchise = p.franchiseId ? state.ip.franchises[p.franchiseId] : null;
         const weeklyMerch = this.calculateMerchRevenue(p.buzz, franchise?.relevanceScore || 0);
         merch += weeklyMerch;
 
         // 3. Royalties
-        const projRoyalties = this.calculateNetPointsRoyalty(p, weeklyGross + weeklyMerch, contracts);
+        const projContracts = contractsByProject[p.id] || [];
+        const projRoyalties = this.calculateNetPointsRoyalty(
+          p,
+          weeklyGross + weeklyMerch,
+          projContracts
+        );
         totalRoyalties += projRoyalties;
 
         // 4. Track Recoupment Status
@@ -139,7 +164,7 @@ export class RevenueProcessor {
       distribution,
       merch,
       totalRoyalties,
-      projectRecoupment
+      projectRecoupment,
     };
   }
 }

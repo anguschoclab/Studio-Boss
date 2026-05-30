@@ -45,3 +45,6 @@
 ## 2026-05-26 - Replace O(N log N) sorts and array chain allocations with O(N) single-pass maximum find
 **Learning:** Finding the maximum or best matching element (like finding a rescue acquirer in `DistressCascade`) using `Object.values().filter().sort()[0]` creates O(N) array allocations and an O(N log N) sort overhead on every tick.
 **Action:** Replace `Object.values().filter().sort()` chains when only the single top candidate is needed by using a direct `for...in` loop to track the maximum value in a single O(N) pass, reducing time complexity and eliminating GC pressure.
+## 2026-05-28 - Replace Array searches inside loops with pre-computed lookup Maps in RevenueProcessor
+**Learning:** Calling `state.market.buyers.find()` and filtering `contracts` by `projectId` inside the `projects.forEach()` loop in `calculateActiveRevenue` creates an O(P * (B + C)) complexity, resulting in redundant iterations and elevated GC pressure during finance ticks.
+**Action:** Always pre-group relational entities into a `Record` or `Map` before iterating over the primary list, converting the complexity from O(N*M) to O(N + M). This was successfully applied to `buyers` and `contracts` in `RevenueProcessor.ts`.
