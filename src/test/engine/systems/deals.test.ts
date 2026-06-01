@@ -40,7 +40,7 @@ describe('Deals System', () => {
   it('offers a deal and returns NEWS_ADDED impact if accepted', () => {
     const state = {
         studio: { name: 'Test Studio', prestige: 90 },
-        industry: { talentPool: { [mockTalent.id]: mockTalent } }
+        entities: { talents: { [mockTalent.id]: mockTalent } }
     } as unknown as GameState;
     
     vi.spyOn(utils, 'rand').mockReturnValue(0.01); // Trigger success

@@ -91,11 +91,10 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
       );
       let leveragedFee = AgencyLeverageEngine.getRequiredFee(lockFee, leverage);
 
-      let relationshipBonus = 0;
       if (target.agentId) {
         const relationship = state.talentAgentRelationships[`${target.id}-${target.agentId}`];
         if (relationship) {
-          relationshipBonus = TalentAgentInteractionEngine.getLoyaltyBonus(relationship);
+          const relationshipBonus = TalentAgentInteractionEngine.getLoyaltyBonus(relationship);
           leveragedFee = leveragedFee * (1 - (relationshipBonus / 100));
         }
       }

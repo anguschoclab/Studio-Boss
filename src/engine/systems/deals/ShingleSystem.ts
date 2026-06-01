@@ -257,7 +257,7 @@ function createShingle(
   let playerHasRecentContractWithOwner = false;
   const contracts = state.entities.contracts || {};
   for (const id in contracts) {
-    const c: any = contracts[id];
+    const c = contracts[id] as unknown as { talentId?: string; ownerId?: string; signedWeek?: number; weeksRemaining?: number };
     if (c.talentId === owner.id && (c.ownerId === 'PLAYER' || !c.ownerId) && ((c.signedWeek || 0) >= twoYearWeek || (c.weeksRemaining || 0) > 0)) {
       playerHasRecentContractWithOwner = true;
       break;
