@@ -229,9 +229,10 @@ export function applyFlopPenalties(
 
 export function processFlops(state: GameState): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const projects = Object.values(state.entities.projects);
+  const projectsMap = state.entities.projects || {};
 
-  for (const project of projects) {
+  for (const projId in projectsMap) {
+    const project = projectsMap[projId];
     if (project.state === 'released' && (project.releaseWeek || 0) === state.week && project.ownerId) {
       const flopImpacts = applyFlopPenalties(state, project, project.ownerId);
       impacts.push(...flopImpacts);

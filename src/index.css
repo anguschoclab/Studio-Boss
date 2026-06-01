@@ -115,6 +115,11 @@
   .hover-glow {
     @apply transition-all duration-700 hover:shadow-[0_0_30px_rgba(var(--primary),0.1)] hover:border-primary/20;
   }
+
+  /* Keyboard navigation — only show focus ring when navigating via keyboard */
+  .focus-visible-ring {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
 }
 
 @layer base {

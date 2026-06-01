@@ -1,5 +1,5 @@
 import { Talent, GameState, Project, FirstLookDeal, Agency, StateImpact } from '@/engine/types';
-import { rand, generateId } from '../utils';
+import { rand } from '../utils';
 
 const ACCESS_LEVEL_BONUSES: Record<string, number> = {
   'outsider': 20,
@@ -22,7 +22,7 @@ export function evaluateFirstLookDeal(talent: Talent, state: GameState): boolean
 }
 
 export function offerFirstLookDeal(state: GameState, talentId: string, weeksRemaining: number, exclusivity: boolean = true): StateImpact[] {
-  const talent = state.industry.talentPool[talentId];
+  const talent = state.entities?.talents?.[talentId];
   if (!talent) return [];
   
   const accepted = evaluateFirstLookDeal(talent, state);

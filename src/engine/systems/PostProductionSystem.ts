@@ -34,7 +34,7 @@ export function tickPostProduction(
     if (project.state !== 'post_production') continue;
 
     const currentWeeksRemaining: number =
-      (project as any).postProductionWeeksRemaining ??
+      project.postProductionWeeksRemaining ??
       DEFAULT_POST_PRODUCTION_WEEKS;
 
     let weeksRemaining = currentWeeksRemaining;
@@ -56,13 +56,13 @@ export function tickPostProduction(
     // ── Director's cut request (20%) ─────────────────────────────────────────
     if (
       rng.next() < DIRECTORS_CUT_REQUEST_CHANCE &&
-      !(project as any).directorsCutNotified
+      !project.directorsCutNotified
     ) {
       impacts.push({
         type: 'PROJECT_UPDATED',
         payload: {
           projectId: project.id,
-          update: { directorsCutNotified: true } as any,
+          update: { directorsCutNotified: true },
         },
       });
 
@@ -86,10 +86,10 @@ export function tickPostProduction(
         payload: {
           projectId: project.id,
           update: {
-            state: 'marketing' as any,
+            state: 'marketing',
             postProductionWeeksRemaining: 0,
             weeksInPhase: 0,
-          } as any,
+          } as unknown as Partial<import('@/engine/types').Project>,
         },
       });
 
@@ -109,7 +109,7 @@ export function tickPostProduction(
           projectId: project.id,
           update: {
             postProductionWeeksRemaining: weeksRemaining,
-          } as any,
+          },
         },
       });
     }

@@ -19,7 +19,7 @@ export const BardResolver = {
     const domainData = archive[domain];
     if (!domainData) return `[MISSING DOMAIN: ${domain}]`;
 
-    let subDomainData: any = domainData;
+    let subDomainData: unknown = domainData;
     const subDomainParts = subDomain.split('.');
     
     for (const part of subDomainParts) {
@@ -27,6 +27,7 @@ export const BardResolver = {
         return `[INVALID SUB-DOMAIN: ${subDomain}]`;
       }
       if (subDomainData && typeof subDomainData === 'object' && part in subDomainData) {
+        if (FORBIDDEN_KEYS.has(part)) return `[INVALID KEY: ${part}]`;
         subDomainData = (subDomainData as Record<string, unknown>)[part];
       } else {
         return `[MISSING SUB-DOMAIN: ${subDomain}]`;
@@ -45,7 +46,7 @@ export const BardResolver = {
     }
 
     // 1. Variant-Specific Resolution (High Priority)
-    if (variant && typeof subDomainData === 'object' && variant in subDomainData) {
+    if (variant && subDomainData !== null && typeof subDomainData === 'object' && variant in subDomainData) {
       const variantData = (subDomainData as Record<string, string[]>)[variant];
       if (Array.isArray(variantData)) {
         return pickAndResolve(variantData) || `[EMPTY VARIANT: ${variant}]`;

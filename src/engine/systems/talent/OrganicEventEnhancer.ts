@@ -18,14 +18,17 @@ export function checkRelationshipCrises(
   rng: RandomGenerator
 ): StateImpact | null {
   // Get cast members
-  const contracts = Object.values(state.entities.contracts || {})
-    .filter(c => c.projectId === project.id);
-  const talentIds = contracts.map(c => c.talentId);
+  const contractsMap = state.entities.contracts || {};
+  const talentIds: string[] = [];
+  for (const cId in contractsMap) {
+    if (contractsMap[cId].projectId === project.id) talentIds.push(contractsMap[cId].talentId);
+  }
 
   if (talentIds.length < 2) return null;
 
   // Check for feuds among cast
-  const relationships = Object.values(state.relationships?.relationships || {})
+  const relMap = (state as unknown as { relationships?: { relationships?: Record<string, { talentAId: string; talentBId: string; type: string; strength: number }> } })?.relationships?.relationships || {};
+  const relationships = Object.values(relMap)
     .filter((r) =>
       talentIds.includes(r.talentAId) && talentIds.includes(r.talentBId)
     );
@@ -93,9 +96,11 @@ export function checkCliqueCrises(
   state: GameState,
   rng: RandomGenerator
 ): StateImpact | null {
-  const contracts = Object.values(state.entities.contracts || {})
-    .filter(c => c.projectId === project.id);
-  const talentIds = contracts.map(c => c.talentId);
+  const contractsMap2 = state.entities.contracts || {};
+  const talentIds: string[] = [];
+  for (const cId in contractsMap2) {
+    if (contractsMap2[cId].projectId === project.id) talentIds.push(contractsMap2[cId].talentId);
+  }
 
   if (talentIds.length < 3) return null;
 
@@ -148,7 +153,8 @@ export function generateRelationshipScandals(
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
 
-  const relationships = Object.values(state.relationships?.relationships || {});
+  const relMap2 = (state as unknown as { relationships?: { relationships?: Record<string, { talentAId: string; talentBId: string; type: string; isPublic?: boolean; strength: number }> } })?.relationships?.relationships || {};
+  const relationships = Object.values(relMap2);
 
   // Check for affair scandals (secret romantic relationships becoming public)
   const secretRomances = relationships.filter(r =>
@@ -268,8 +274,9 @@ export function tickOrganicEvents(
   const impacts: StateImpact[] = [];
 
   // 1. Check projects for relationship-based crises
-  const projects = Object.values(state.entities.projects || {});
-  for (const project of projects) {
+  const projectsMap = state.entities.projects || {};
+  for (const projId in projectsMap) {
+    const project = projectsMap[projId];
     const projectState = project.state;
     if (['IN_PRODUCTION', 'production', 'filming'].some(s =>
       projectState?.toLowerCase().includes(s.toLowerCase())
@@ -303,14 +310,17 @@ export function calculateSocialCrisisModifier(
   let modifier = 1.0;
 
   // Get cast
-  const contracts = Object.values(state.entities.contracts || {})
-    .filter(c => c.projectId === projectId);
-  const talentIds = contracts.map(c => c.talentId);
+  const contractsMap3 = state.entities.contracts || {};
+  const talentIds: string[] = [];
+  for (const cId in contractsMap3) {
+    if (contractsMap3[cId].projectId === projectId) talentIds.push(contractsMap3[cId].talentId);
+  }
 
   if (talentIds.length < 2) return modifier;
 
   // Check for feuds
-  const relationships = Object.values(state.relationships?.relationships || {})
+  const relMap3 = (state as unknown as { relationships?: { relationships?: Record<string, { talentAId: string; talentBId: string; type: string; strength: number }> } })?.relationships?.relationships || {};
+  const relationships = Object.values(relMap3)
     .filter((r) =>
       talentIds.includes(r.talentAId) && talentIds.includes(r.talentBId)
     );

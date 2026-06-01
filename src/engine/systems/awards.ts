@@ -247,8 +247,11 @@ export function processRazzies(state: GameState, week: number): StateImpact {
      impact.cultClassicProjectIds = [worstPicture.id];
   }
 
-  const projectContracts = Object.values(state.entities.contracts || {}).filter(c => c.projectId === worstPicture.id);
-  const contractTalentIds = new Set(projectContracts.map(c => c.talentId));
+  const contractTalentIds = new Set<string>();
+  const contractsObj = state.entities.contracts || {};
+  for (const cId in contractsObj) {
+    if (contractsObj[cId].projectId === worstPicture.id) contractTalentIds.add(contractsObj[cId].talentId);
+  }
 
   let worstLeadId: string | null = null;
   let highestDraw = 0;

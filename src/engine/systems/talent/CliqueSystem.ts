@@ -96,11 +96,12 @@ function calculateExclusivity(members: Talent[]): number {
  * Find potential cliques (groups of mutually friendly talents)
  */
 function findPotentialCliques(state: GameState, rng: RandomGenerator): string[][] {
-  const talents = Object.values(state.entities.talents || {});
   const potentialCliques: string[][] = [];
+  const talentsObj = state.entities.talents || {};
 
   // Check each talent as a potential clique center
-  for (const center of talents) {
+  for (const tId in talentsObj) {
+    const center = talentsObj[tId];
     // Get all friends of this talent
     const centerRelationships = getTalentRelationships(center.id, state);
     const friendIds = centerRelationships
@@ -134,7 +135,8 @@ function findPotentialCliques(state: GameState, rng: RandomGenerator): string[][
       const sortedIds = mutuallyFriendly.slice(0, MAX_CLIQUE_SIZE).sort();
 
       // Check if this exact clique already exists
-      const existingCliques = Object.values(state.relationships?.cliques?.cliques || {});
+      const cliquesRecord = (state.relationships as unknown as { cliques?: { cliques?: Record<string, Clique> } })?.cliques?.cliques || {};
+      const existingCliques = Object.values(cliquesRecord);
       const alreadyExists = existingCliques.some(c =>
         c.members.length === sortedIds.length &&
         c.members.every(id => sortedIds.includes(id))
@@ -375,7 +377,7 @@ export function tickCliqueSystem(state: GameState, rng: RandomGenerator): StateI
   }
 
   // 2. Evolve existing cliques
-  const existingCliques = Object.values((state as any).relationships?.cliques?.cliques || {}) as Clique[];
+  const existingCliques = Object.values((state.relationships as unknown as { cliques?: { cliques?: Record<string, Clique> } })?.cliques?.cliques || {}) as Clique[];
 
   for (const clique of existingCliques) {
     if (rng.next() < 0.3) { // 30% chance to evolve each clique per week
@@ -402,7 +404,7 @@ export function tickCliqueSystem(state: GameState, rng: RandomGenerator): StateI
  * Get fame bonus for a talent based on clique membership
  */
 export function getCliqueFameBonus(talentId: string, state: GameState): number {
-  const cliques = Object.values((state as any).relationships?.cliques?.cliques || {}) as Clique[];
+  const cliques = Object.values((state.relationships as unknown as { cliques?: { cliques?: Record<string, Clique> } })?.cliques?.cliques || {}) as Clique[];
 
   const memberCliques = cliques.filter(c =>
     c.status === 'active' && c.members.includes(talentId)

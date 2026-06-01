@@ -13,10 +13,15 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
   const currWeek = state.week;
   const opportunities = state.market.opportunities.filter(o => (o.expirationWeek || 0) >= currWeek);
 
-  const rivalsList = Object.values(state.entities.rivals || {});
+  const rivalsMap = state.entities.rivals || {};
+  const rivalsList = Object.keys(rivalsMap).map(k => rivalsMap[k]);
 
   opportunities.forEach(opportunity => {
-    const currentHighest = Object.values(opportunity.bids || {}).reduce((max: number, b) => Math.max(max, b.amount), 0);
+    let currentHighest = 0;
+    const bidsMap = opportunity.bids || {};
+    for (const bidKey in bidsMap) {
+      if (bidsMap[bidKey].amount > currentHighest) currentHighest = bidsMap[bidKey].amount;
+    }
     
     let opportunityLeverageAggression = 1.0;
     if (opportunity.attachedTalentIds && opportunity.attachedTalentIds.length > 0) {

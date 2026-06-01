@@ -1,4 +1,4 @@
-import { GameState, StateImpact } from '@/engine/types';
+import { GameState, StateImpact, Project } from '@/engine/types';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -83,7 +83,7 @@ export function tickReleaseStrategy(state: GameState): StateImpact[] {
     const project = state.entities.projects[projectId];
     if (
       project.state === 'marketing' &&
-      !(project as any).releaseStrategy
+      !project.releaseStrategy
     ) {
       impacts.push({
         type: 'MODAL_TRIGGERED' as any,
@@ -105,7 +105,7 @@ export function tickReleaseStrategy(state: GameState): StateImpact[] {
  */
 export function getReleaseStrategyEffect(
   strategy: ReleaseStrategy,
-  project: any
+  project: Project
 ): ReleaseStrategyEffect {
   const def = STRATEGY_DEFS[strategy];
   let revenueMultiplier = def.baseMultiplier;
@@ -122,7 +122,7 @@ export function getReleaseStrategyEffect(
   // Streaming: bonus for prestige dramas
   if (strategy === 'streaming') {
     const genre: string = (project.genre ?? '').toUpperCase();
-    const tvFormat: string = (project.tvFormat ?? '').toLowerCase();
+    const tvFormat: string = ((project as unknown as Record<string, unknown>).tvFormat as string ?? '').toLowerCase();
     const isPrestigeDrama =
       genre.includes('DRAMA') ||
       tvFormat === 'prestige_drama' ||
@@ -167,7 +167,7 @@ export function applyReleaseStrategy(
         releaseStrategy: strategy,
         // Store the revenue multiplier on the project so the release system can read it
         releaseStrategyMultiplier: effect.revenueMultiplier,
-      } as any,
+      } as unknown as Partial<Project>,
     },
   });
 

@@ -22,6 +22,7 @@ export interface RivalStudio {
   id: string;
   name: string;
   motto: string;
+  behaviorId?: string;
   archetype: ArchetypeKey;
   strength: number;
   cash: number;
@@ -87,6 +88,7 @@ export interface GameState {
     isBankrupt?: boolean;
     // Achievement tracking (array of unlocked achievement IDs)
     achievements?: string[];
+    resolvedCrisesCount?: number;
   };
   market: {
     opportunities: Opportunity[];

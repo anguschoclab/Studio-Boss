@@ -515,6 +515,8 @@ export interface ProjectBase {
   morale?: number; // 0-100
   // Loan tracking
   loanId?: string;
+  // Post-production director's cut notification flag
+  directorsCutNotified?: boolean;
 }
 
 export interface ScriptedProject extends ProjectBase {

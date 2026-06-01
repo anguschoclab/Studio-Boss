@@ -40,7 +40,7 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
         state: 'development',
         weeksInPhase: 0,
         ownerId: rival.id
-      } as any;
+      } as unknown as Project;
 
       const willingnessReport = calculateWillingness(target, dummyProject, state);
 

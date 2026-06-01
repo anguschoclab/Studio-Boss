@@ -1,4 +1,4 @@
-import { GameState, StateImpact } from '@/engine/types';
+import { GameState, StateImpact, Project } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 import { BardResolver } from '../bardResolver';
 
@@ -42,7 +42,7 @@ export function processRazzies(state: GameState, week: number, rng: RandomGenera
         update: {
           razzieWinner: true,
           razzieCategory: score <= 10 ? 'Worst Picture' : score <= 20 ? 'Worst Director' : 'Worst Screenplay'
-        } as any
+        } as unknown as Partial<Project>
       }
     });
 

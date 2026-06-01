@@ -25,7 +25,9 @@ export function tickWorldEvents(state: GameState, rng: RandomGenerator): StateIm
   });
 
   // 2. Star Meter & Talent Momentum
-  Object.values(state.industry.talentPool || {}).forEach(talent => {
+  const talentsMap = state.entities.talents || {};
+  for (const talentId in talentsMap) {
+    const talent = talentsMap[talentId];
     if (talent.momentum > 85 && rng.next() < 0.1) {
       impacts.push({
         type: 'NEWS_ADDED',
@@ -35,7 +37,7 @@ export function tickWorldEvents(state: GameState, rng: RandomGenerator): StateIm
         }
       });
     }
-  });
+  }
 
   return impacts;
 }

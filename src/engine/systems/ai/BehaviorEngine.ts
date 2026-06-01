@@ -69,7 +69,7 @@ export function shouldAttemptHostileTakeover(
 ): boolean {
   if (attacker.id === target.id) return false;
 
-  const behaviorId = attacker.archetypeId || ('behaviorId' in attacker ? (attacker as any).behaviorId : undefined);
+  const behaviorId = attacker.archetypeId || attacker.behaviorId || 'major';
   const archetype = getStudioArchetype(behaviorId);
   if (!archetype) return false;
 
