@@ -21,7 +21,7 @@ import {
   selectCrisisRiskLevel,
   selectAwardsProbability,
 } from '@/store/selectors';
-import type { GameState, Project, Talent } from '@/engine/types';
+import type { Project, Talent } from '@/engine/types';
 
 import { createMockGameState } from './mockFactory';
 

@@ -1,4 +1,4 @@
-import { Project, GameState, WeeklyFinancialReport, Contract, Buyer } from '@/engine/types';
+import { Project, GameState, WeeklyFinancialReport, Buyer } from '@/engine/types';
 import { StateImpact, FinancialSnapshot } from '../types/state.types';
 import { RevenueProcessor } from './finance/RevenueProcessor';
 import { ExpenseProcessor } from './finance/ExpenseProcessor';
@@ -39,7 +39,7 @@ export function generateWeeklyFinancialReport(
 ): { report: WeeklyFinancialReport; snapshot: FinancialSnapshot } {
   const projects = Object.values(state.entities.projects).filter(p => p.ownerId === 'player');
   const playerContracts = Object.values(state.entities.contracts).filter(c => c.ownerId === 'player');
-  const studioLevel = (state.studio as any).level || 1;
+  const studioLevel = (state.studio as unknown as { level?: number }).level || 1;
   const market = state.finance.marketState || InterestRateSimulator.initialize();
 
   // 1. Calculate Passive Income from Vault
@@ -94,7 +94,7 @@ export function generateWeeklyFinancialReport(
 
   pendingImpacts.forEach(impact => {
     if (impact.type === 'FINANCE_TRANSACTION' && impact.payload) {
-      const amount = (impact.payload as any).amount || 0;
+      const amount = (impact.payload as { amount?: number }).amount || 0;
       if (amount > 0) otherRevenue += amount;
       else otherExpenses += Math.abs(amount);
     } else if (impact.cashChange) {
@@ -156,6 +156,7 @@ export function calculateWeeklyCosts(projects: Project[]): number {
   return production + marketing + overhead;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function calculateWeeklyRevenue(projects: Project[], buyers: Buyer[] = [], _legacyContext?: unknown): number {
   let boxOffice = 0;
   let distribution = 0;
