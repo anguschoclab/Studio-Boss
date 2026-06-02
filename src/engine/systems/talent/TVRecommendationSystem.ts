@@ -250,8 +250,8 @@ function generateRecommendation(
     estimatedFee,
     prestigeBoost,
     starMeterBoost,
-    generatedWeek: criteria.currentTier, // This should be the actual week, will fix in main function
-    expiresWeek: criteria.currentTier + config.recommendationLifetimeWeeks,
+    generatedWeek: criteria.currentWeek,
+    expiresWeek: criteria.currentWeek + config.recommendationLifetimeWeeks,
   };
 }
 
@@ -269,6 +269,7 @@ export function generateTVRecommendationsForTalent(
   // Build criteria from talent
   const criteria: TVRecommendationCriteria = {
     talentId: talent.id,
+    currentWeek: state.week,
     currentTier: talent.tier,
     currentPrestige: talent.prestige || 50,
     starMeter: talent.starMeter || 50,
@@ -288,10 +289,6 @@ export function generateTVRecommendationsForTalent(
 
     const recommendation = generateRecommendation(criteria, config, rng);
     if (recommendation) {
-      // Fix the week fields
-      recommendation.generatedWeek = state.week;
-      recommendation.expiresWeek = state.week + config.recommendationLifetimeWeeks;
-
       // Check for duplicates
       const isDuplicate = recommendations.some(
         r => r.roleType === recommendation.roleType && r.genre === recommendation.genre

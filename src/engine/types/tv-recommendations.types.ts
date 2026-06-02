@@ -19,10 +19,13 @@ export interface TVShowRecommendation {
   starMeterBoost: number;
   generatedWeek: number;
   expiresWeek: number;
+  accepted?: boolean;
+  acceptedWeek?: number;
 }
 
 export interface TVRecommendationCriteria {
   talentId: string;
+  currentWeek: number;
   currentTier: number;
   currentPrestige: number;
   starMeter: number;
