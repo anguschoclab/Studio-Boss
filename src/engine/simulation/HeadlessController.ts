@@ -14,10 +14,10 @@ import { getMarketHeat, getBudgetInflation, BANKRUPTCY_CASH_FLOOR, BANKRUPTCY_WE
 export class HeadlessController {
   static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
-    const contractsList = Object.values(state.entities.contracts || {});
-
+    // ⚡ Bolt: Replaced Object.values() with a single-pass for...in loop
     const contractsByProject = new Map<string, Contract[]>();
-    contractsList.forEach((c: Contract) => {
+    for (const id in state.entities.contracts) {
+      const c = state.entities.contracts[id] as Contract;
       if (c.projectId) {
         let list = contractsByProject.get(c.projectId);
         if (!list) {
@@ -26,12 +26,19 @@ export class HeadlessController {
         }
         list.push(c);
       }
-    });
+    }
 
     // 0. Auto-Pitch New Projects (for headless simulation)
-    const activePlayerProjects = Object.values(state.entities.projects).filter(p => isPlayerOwner(state, p.ownerId) && p.state !== 'archived');
+    // ⚡ Bolt: Avoided intermediate array allocations with a targeted for...in counter
+    let activePlayerProjectsCount = 0;
+    for (const id in state.entities.projects) {
+      const p = state.entities.projects[id];
+      if (isPlayerOwner(state, p.ownerId) && p.state !== 'archived') {
+        activePlayerProjectsCount++;
+      }
+    }
     let newlyPitchedProject: unknown = null;
-    if (activePlayerProjects.length < 10 && rng.next() < 0.8) {
+    if (activePlayerProjectsCount < 10 && rng.next() < 0.8) {
       const pitchResult = this.pitchNewProject(state, rng);
       if (pitchResult) {
         impacts.push(pitchResult);
@@ -48,11 +55,8 @@ export class HeadlessController {
     }
 
     // Process projects from current state (including newly pitched ones)
-    const allProjects = Object.values(state.entities.projects);
-    if (newlyPitchedProject) {
-      allProjects.push(newlyPitchedProject);
-    }
-    allProjects.forEach(project => {
+    // ⚡ Bolt: Replaced Object.values() array creation with direct iteration
+    const processProject = (project: Record<string, unknown> & { id: string, ownerId: string, state: string, genre?: string, budget?: number, releaseWeek?: number, title?: string, weeksInPhase?: number, productionWeeks?: number, buzz?: number, type?: string }) => {
       // Track all player project states for debugging
       if (isPlayerOwner(state, project.ownerId) && project.state !== 'archived') {
         if (project.state === 'production' && project.weeksInPhase === 0) {
@@ -326,14 +330,21 @@ export class HeadlessController {
           payload: { projectId: project.id, update: { state: 'archived' } }
         });
       }
-    });
+    };
 
-    // Pre-calculate genre counts to avoid O(N) inside the loop
     const playerGenreCounts: Record<string, number> = {};
-    for (let i = 0; i < allProjects.length; i++) {
-      const g = allProjects[i].genre;
-      if (g) {
-        playerGenreCounts[g] = (playerGenreCounts[g] || 0) + 1;
+    for (const id in state.entities.projects) {
+      const p = state.entities.projects[id];
+      processProject(p);
+      if (p.genre) {
+        playerGenreCounts[p.genre] = (playerGenreCounts[p.genre] || 0) + 1;
+      }
+    }
+    if (newlyPitchedProject) {
+      processProject(newlyPitchedProject);
+      const genre = (newlyPitchedProject as Record<string, unknown>).genre as string | undefined;
+      if (genre) {
+        playerGenreCounts[genre] = (playerGenreCounts[genre] || 0) + 1;
       }
     }
 
@@ -399,7 +410,9 @@ export class HeadlessController {
     // Bankruptcy check: cash below floor for 52+ consecutive weeks → failure.
     // A failed rival is marked acquirable so ConsolidationEngine sweeps it next downturn.
     const cashStreaks = HeadlessController._cashStreaks;
-    Object.values(state.entities.rivals || {}).forEach(r => {
+    // ⚡ Bolt: Replaced Object.values().forEach() with a direct for...in loop
+    for (const id in state.entities.rivals) {
+      const r = state.entities.rivals[id];
       const cash = Number(r.cash) || 0;
       const prev = cashStreaks.get(r.id) || 0;
       const next = cash < BANKRUPTCY_CASH_FLOOR ? prev + 1 : 0;
@@ -419,7 +432,7 @@ export class HeadlessController {
         });
         cashStreaks.set(r.id, 0);
       }
-    });
+    }
 
     return impacts;
   }
@@ -442,7 +455,11 @@ export class HeadlessController {
     ratingScore: number
   ): StateImpact[] {
     const impacts: StateImpact[] = [];
-    const pool = Object.values(state.entities.talents || {});
+    // ⚡ Bolt: Replaced Object.values() with a direct for...in loop to construct pool
+    const pool = [];
+    for (const id in state.entities.talents) {
+      pool.push(state.entities.talents[id]);
+    }
     if (pool.length === 0) return impacts;
     const totalCost = (project.budget || 0) + (project.marketingBudget || 0);
     const ROI = totalCost > 0 ? revenue / totalCost : 0;
