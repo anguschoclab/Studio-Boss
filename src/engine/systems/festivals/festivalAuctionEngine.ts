@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { GameState, StateImpact, Project, RivalStudio } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 import { isPlayerOwner } from '../../utils/ownership';
@@ -91,7 +92,7 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
 
     // Generate NPC bids from all buyers
     buyers.forEach(buyer => {
-      const buyerCash = (buyer as any).cash ?? 50_000_000;
+      const buyerCash = (buyer as unknown as Record<string, number>).cash ?? 50_000_000;
       const bid = generateNPCBid(project, buyerCash, rng);
       if (bid) {
         bids.push({ ...bid, bidderId: buyer.id, bidderName: buyer.name });
