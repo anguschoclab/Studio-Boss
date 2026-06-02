@@ -57,11 +57,9 @@ export const AnnualScans = {
           context.impacts.push({
             type: 'NEWS_ADDED',
             payload: {
-              id: `ma-${attacker.id}-${target.id}-${context.week}`,
               headline: `${attacker.name} makes hostile bid for ${target.name}`,
               description: `Industry insiders confirm an unsolicited acquisition offer has been made.`,
-              category: 'acquisition',
-              publication: 'The Hollywood Reporter'
+              category: 'market'
             }
           });
           break; // one hostile move per attacker per year
@@ -94,7 +92,6 @@ export const AnnualScans = {
           context.impacts.push({
              type: 'NEWS_ADDED',
              payload: {
-                id: context.rng.uuid('NWS'),
                 headline: `"${project.title}" achieves cult status!`,
                 description: `Years later, fans have rediscovered this hidden gem. Catalog value is surging.`,
                 category: 'general'

@@ -3,6 +3,8 @@ import { RouterProvider, createRouter, createRoute, createRootRoute, Outlet } fr
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { useArchetypeTheme } from "@/hooks/useArchetypeTheme";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import TitleScreen from "./pages/TitleScreen";
 import NewGame from "./pages/NewGame";
 import Dashboard from "./pages/Dashboard";
@@ -57,12 +59,17 @@ declare module '@tanstack/react-router' {
  *
  * @returns The rendered App component with all global providers
  */
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider delayDuration={300}>
-      <RouterProvider router={router} />
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  useArchetypeTheme();
+  useKeyboardShortcuts();
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider delayDuration={300}>
+        <RouterProvider router={router} />
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

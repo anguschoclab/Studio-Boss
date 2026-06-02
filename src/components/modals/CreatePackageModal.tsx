@@ -16,21 +16,33 @@ interface CreatePackageModalProps {
 export const CreatePackageModal = ({ agencies: propAgencies, talents: propTalents }: CreatePackageModalProps) => {
   const { resolveCurrentModal } = useUIStore();
   const gameState = useGameStore(s => s.gameState);
+  const logNewsEvent = useGameStore(s => s.logNewsEvent);
   const [selectedAgency, setSelectedAgency] = useState<string>('');
   const [selectedTier, setSelectedTier] = useState<string>('mid');
   const [selectedTalents, setSelectedTalents] = useState<string[]>([]);
 
   const agencies = propAgencies || gameState?.industry?.agencies || [];
   const talents = propTalents || gameState?.entities.talents || {};
-  const talentList = Object.values(talents).filter(t => t.contractId && t.tier <= 3);
+  const talentList = Object.values(talents).filter(t => t.agencyId === selectedAgency);
 
   const handleCreatePackage = () => {
     if (!selectedAgency || selectedTalents.length === 0) {
       return;
     }
 
-      // For now, just close the modal
-      resolveCurrentModal();
+    const agency = agencies.find(a => a.id === selectedAgency);
+    const selectedTalentNames = selectedTalents
+      .map(id => talents[id]?.name)
+      .filter(Boolean)
+      .join(', ');
+
+    logNewsEvent({
+      type: 'STUDIO_EVENT',
+      headline: `${agency?.name || 'Agency'} package created: ${selectedTalentNames}`,
+      description: `A talent package featuring ${selectedTalentNames} has been assembled for pitching.`
+    });
+
+    resolveCurrentModal();
   };
 
   const handleToggleTalent = (talentId: string) => {
@@ -71,7 +83,7 @@ export const CreatePackageModal = ({ agencies: propAgencies, talents: propTalent
               </SelectTrigger>
               <SelectContent>
                 {agencies.map(agency => (
-                  <SelectItem key={agency.id} value={agency.name}>
+                  <SelectItem key={agency.id} value={agency.id}>
                     {agency.name} (Leverage: {agency.leverage}%)
                   </SelectItem>
                 ))}

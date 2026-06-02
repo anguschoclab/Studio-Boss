@@ -13,6 +13,10 @@ interface PackageDetailPayload {
   packageId?: string;
 }
 
+interface PackageDetailModalProps {
+  packageId?: string;
+}
+
 export const PackageDetailModal = ({ packageId: propPackageId }: PackageDetailModalProps) => {
   const { resolveCurrentModal, activeModal } = useUIStore();
   const gameState = useGameStore(s => s.gameState);
@@ -29,9 +33,8 @@ export const PackageDetailModal = ({ packageId: propPackageId }: PackageDetailMo
 
   const handleBid = () => {
     if (!packageData || bidAmount <= 0) return;
-    
-    // Implement bidding logic - this would need a proper store action
-    // For now, just close the modal
+
+    useGameStore.getState().placeBid(String(packageData.id), bidAmount);
     resolveCurrentModal();
   };
 
