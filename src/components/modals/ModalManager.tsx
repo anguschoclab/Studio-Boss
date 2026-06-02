@@ -16,6 +16,7 @@ const GameOverModal = React.lazy(() => import('./GameOverModal').then(m => ({ de
 const ReleaseStrategyModal = React.lazy(() => import('./ReleaseStrategyModal').then(m => ({ default: m.ReleaseStrategyModal })));
 const PostProductionModal = React.lazy(() => import('./PostProductionModal').then(m => ({ default: m.PostProductionModal })));
 const AchievementUnlockedModal = React.lazy(() => import('./AchievementUnlockedModal').then(m => ({ default: m.AchievementUnlockedModal })));
+const PackageDealOfferedModal = React.lazy(() => import('./PackageDealOfferedModal').then(m => ({ default: m.PackageDealOfferedModal })));
 
 /**
  * Unified Modal Manager.
@@ -55,11 +56,13 @@ export const ModalManager: React.FC = () => {
           case 'GAME_OVER':
             return <GameOverModal key={activeModal.id} />;
           case 'RELEASE_STRATEGY':
-            return <ReleaseStrategyModal key={activeModal.id} payload={activeModal.payload} />;
+            return <ReleaseStrategyModal key={activeModal.id} />;
           case 'POST_PRODUCTION':
-            return <PostProductionModal key={activeModal.id} payload={activeModal.payload} />;
+            return <PostProductionModal key={activeModal.id} />;
           case 'ACHIEVEMENT_UNLOCKED':
             return <AchievementUnlockedModal key={activeModal.id} payload={activeModal.payload} />;
+          case 'PACKAGE_DEAL_OFFERED':
+            return <PackageDealOfferedModal key={activeModal.id} />;
           default:
             return null;
         }

@@ -211,6 +211,8 @@ export function generateAgencies(count: number): Agency[] {
        'comedy_specialist': 'VOLUME_RETAIL',
        'lit_agency': 'THE_PROTECTOR',
        'mega_corp': 'THE_PACKAGER',
+       'streaming_titan': 'VOLUME_RETAIL',
+       'indie_darling': 'THE_PROTECTOR',
        'nepotism_mill': 'THE_PROTECTOR',
        'international_broker': 'THE_CLIMBER'
     };

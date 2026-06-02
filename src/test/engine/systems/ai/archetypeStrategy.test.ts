@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { MarketState } from '../../../../engine/types/state.types';
 import { 
   evaluatePackageOffer
 } from '../../../../engine/systems/ai/AgentBrain';
@@ -18,6 +19,14 @@ import {
 } from '../../../utils/mockFactories';
 import { AI_ARCHETYPES } from '../../../../engine/data/aiArchetypes';
 
+const mockMarket: MarketState = {
+  baseRate: 0.045,
+  savingsYield: 0.025,
+  debtRate: 0.095,
+  loanRate: 0.07,
+  rateHistory: [],
+};
+
 describe('AI Archetype Strategy (AgentBrain)', () => {
   describe('evaluatePackageOffer', () => {
     it('offeres a package deal when motivation is THE_PACKAGER', () => {
@@ -26,7 +35,7 @@ describe('AI Archetype Strategy (AgentBrain)', () => {
       const lead = createMockTalent({ id: 'lead', prestige: 50, agencyId: agency.id });
       const client = createMockTalent({ id: 'client', agencyId: agency.id });
       
-      const result = evaluatePackageOffer(agency, lead, [lead, client], rng);
+      const result = evaluatePackageOffer(agency, lead, [lead, client], mockMarket, rng);
       
       expect(result.reason).toBeDefined();
     });
@@ -37,7 +46,7 @@ describe('AI Archetype Strategy (AgentBrain)', () => {
       const auteur = createMockTalent({ id: 'auteur', prestige: 95, roles: ['director'], agencyId: agency.id });
       const collaborator = createMockTalent({ id: 'collateral', agencyId: agency.id });
 
-      const result = evaluatePackageOffer(agency, auteur, [auteur, collaborator], rng);
+      const result = evaluatePackageOffer(agency, auteur, [auteur, collaborator], mockMarket, rng);
       expect(result.reason).toBeDefined();
     });
   });

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { GameState, WeekSummary, ArchetypeKey, FinanceState, NewsState, Award } from '@/engine/types';
+import { GameState, WeekSummary, ArchetypeKey, FinanceState, NewsState } from '@/engine/types';
 import { type StudioId, type ProjectId, type NewsId } from '@/engine/types/shared.types';
 import { initializeGame } from '@/engine/core/gameInit';
 import { advanceWeek } from '@/engine/core/weekAdvance';
@@ -83,12 +83,14 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   doAdvanceWeek: () => {
     let summary: WeekSummary | null = null;
     let nextState: GameState | null = null;
+    let weekImpacts: import('@/engine/types').StateImpact[] = [];
 
     set((state) => {
       if (!state.gameState) throw new Error('No game in progress');
       const result = advanceWeek(state.gameState);
       summary = result.summary;
       nextState = result.newState;
+      weekImpacts = result.impacts;
 
       if (state.gameState === result.newState) return state; 
 
@@ -111,18 +113,12 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     if (!summary || !nextState) throw new Error('Failed to advance week');
 
     // --- Modal Queue Integration ---
-    // Route all MODAL_TRIGGERED impacts from the engine to the UI modal queue.
-    // The engine emits CRISIS, AWARDS, SUMMARY, UPFRONTS, FESTIVAL_MARKET, BIDDING_WAR,
+    // Route all MODAL_TRIGGERED impacts from the engine pipeline to the UI modal queue.
+    // This covers: CRISIS, AWARDS, SUMMARY, UPFRONTS, FESTIVAL_MARKET, BIDDING_WAR,
     // BREAKOUT_BIDDING_WAR, REBOOT_OPPORTUNITY, RELEASE_STRATEGY, DIRECTORS_CUT_AVAILABLE,
-    // ACHIEVEMENT_UNLOCKED, GAME_OVER, PACKAGE_DEAL_OFFERED, and CASTING_CONSTRAINT modals.
+    // ACHIEVEMENT_UNLOCKED, GAME_OVER, PACKAGE_DEAL_OFFERED, and CASTING_CONSTRAINT.
     const ui = useUIStore.getState();
-    const result = { summary, impacts: (nextState as any).__impacts__ };
-
-    // Pull impacts from the advance result (weekAdvance now returns them)
-    const advanceResult = (get() as any).__lastAdvanceResult__;
-    void advanceResult; // unused, we get impacts via the set() closure below
-
-    for (const impact of (set as any).__lastImpacts__ || []) {
+    for (const impact of weekImpacts) {
       if (impact.type === 'MODAL_TRIGGERED') {
         const { modalType, ...rest } = impact.payload as { modalType: string; [key: string]: unknown };
         ui.enqueueModal(modalType as ModalType, rest);
@@ -134,7 +130,6 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
       get().captureSnapshot();
     }
 
-    void result;
     return summary;
   },
 
