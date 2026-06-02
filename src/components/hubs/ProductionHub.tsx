@@ -177,7 +177,7 @@ const SlatePanel = () => {
         </React.Suspense>
       </div>
       <div className="pt-10 border-t border-white/5">
-        <button
+        <button type="button"
           className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 hover:text-primary flex items-center gap-4 mb-6 italic transition-all duration-700"
           onClick={() => setShowLocations(v => !v)}
         >

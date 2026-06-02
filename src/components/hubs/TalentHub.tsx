@@ -73,7 +73,7 @@ const RosterPanel = () => {
         
         <div className="flex gap-4 flex-wrap relative z-10">
           {roleFilters.map(role => (
-            <button
+            <button type="button"
               key={role}
               onClick={() => setFilter(role)}
               aria-pressed={filter === role}
@@ -177,7 +177,7 @@ const MarketplacePanel = () => {
   return (
     <div className="h-full flex flex-col space-y-10 animate-in fade-in duration-700">
       <div className="flex items-center gap-4 bg-white/[0.02] border border-white/5 p-2 rounded-none w-fit shadow-xl">
-        <button
+        <button type="button"
           onClick={() => setActiveTab('scripts')}
           aria-pressed={activeTab === 'scripts'}
           className={cn(
@@ -190,7 +190,7 @@ const MarketplacePanel = () => {
           <Newspaper className="h-3.5 w-3.5 inline mr-3" strokeWidth={3} />
           SCRIPT MARKETPLACE
         </button>
-        <button
+        <button type="button"
           onClick={() => setActiveTab('talent')}
           aria-pressed={activeTab === 'talent'}
           className={cn(
