@@ -1,5 +1,6 @@
 import { GameState, Project, StateImpact } from '@/engine/types';
 import { clamp } from '../../utils';
+import { isPlayerOwner } from '../../utils/ownership';
 
 /**
  * Flop Mechanics System
@@ -178,7 +179,7 @@ export function applyFlopPenalties(
           }
         }
       });
-    } else if (ownerId === 'PLAYER') {
+    } else if (isPlayerOwner(state, ownerId)) {
       impacts.push({
         type: 'FUNDS_DEDUCTED',
         payload: {
@@ -199,7 +200,7 @@ export function applyFlopPenalties(
           }
         }
       });
-    } else if (ownerId === 'PLAYER') {
+    } else if (isPlayerOwner(state, ownerId)) {
       impacts.push({
         type: 'PRESTIGE_CHANGED',
         payload: {

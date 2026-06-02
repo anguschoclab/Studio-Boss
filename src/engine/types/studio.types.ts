@@ -112,6 +112,9 @@ export interface GameState {
   };
   history: StudioSnapshot[];
   eventHistory: GameEvent[];
+  tvRecommendations?: {
+    recommendations: Record<string, import('./tv-recommendations.types').TVShowRecommendation>;
+  };
 }
 
 export interface SaveSlotMeta {

@@ -1,5 +1,6 @@
 import { GameState, StateImpact, Project, RivalStudio } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
+import { isPlayerOwner } from '../../utils/ownership';
 import { FestivalSubmission } from '@/engine/types/project.types';
 
 // Festival market weeks: Sundance (4), Cannes (20), TIFF (36)
@@ -107,7 +108,7 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
     bids.sort((a, b) => b.amount - a.amount);
     const winner = bids[0] ?? null;
 
-    const isPlayerProject = project.ownerId === 'PLAYER' || !project.ownerId;
+    const isPlayerProject = isPlayerOwner(state, project.ownerId) || !project.ownerId;
 
     auctionResults.push({
       projectId: project.id,

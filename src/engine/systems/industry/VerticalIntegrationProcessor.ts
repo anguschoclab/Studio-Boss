@@ -1,5 +1,6 @@
 import { GameState, StateImpact, StreamerPlatform, RivalStudio } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
+import { isPlayerOwner } from '../../utils/ownership';
 
 /**
  * Studio Boss - Vertical Integration Processor
@@ -22,7 +23,7 @@ export function tickVerticalIntegration(state: GameState, rng: RandomGenerator):
     const netProfit = weeklyRevenue - weeklyCosts;
 
     // Apply netProfit to the owner's cash
-    if (platform.ownerId === 'player') {
+    if (isPlayerOwner(state, platform.ownerId)) {
       impacts.push({
         type: 'FINANCE_TRANSACTION',
         payload: {
@@ -30,7 +31,7 @@ export function tickVerticalIntegration(state: GameState, rng: RandomGenerator):
           description: `Platform P&L: ${platform.name}`,
         }
       });
-    } else {
+    } else if (platform.ownerId) {
       // Rival owner
       const rival = state.entities.rivals[platform.ownerId];
       if (rival) {
@@ -51,7 +52,7 @@ export function tickVerticalIntegration(state: GameState, rng: RandomGenerator):
         payload: {
           headline: netProfit > 0 
             ? `${platform.name} reports record weekly profits` 
-            : `${platform.ownerId === 'player' ? state.studio.name : platform.name} shares tumble on streaming losses`,
+            : `${isPlayerOwner(state, platform.ownerId) ? state.studio.name : platform.name} shares tumble on streaming losses`,
           description: `Weekly platform earnings signal a major shift in distribution economics for ${platform.name}.`,
           category: 'market',
         }

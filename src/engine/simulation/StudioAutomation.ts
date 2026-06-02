@@ -5,6 +5,7 @@ import { calculateOpeningWeekend } from '../systems/releaseSimulation';
 import { StreamingViewershipTracker } from '../systems/production/StreamingViewershipTracker';
 import { StudioArchetype, AI_ARCHETYPES } from '../data/aiArchetypes';
 import { getBudgetInflation } from '../systems/industry/MacroCycle';
+import { isPlayerOwner } from '../utils/ownership';
 import { HeadlessController } from './HeadlessController';
 
 export class StudioAutomation {
@@ -55,7 +56,7 @@ export class StudioAutomation {
     const rivalProjectCounts: Record<string, number> = {};
 
     allProjects.forEach(p => {
-      if (p.ownerId === 'player' || !p.ownerId) return;
+      if (isPlayerOwner(state, p.ownerId) || !p.ownerId) return;
       
       const rival = state.entities.rivals[p.ownerId];
       if (!rival) return;

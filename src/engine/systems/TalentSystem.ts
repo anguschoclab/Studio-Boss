@@ -3,6 +3,7 @@ type TalentProfile = Talent;
 import { StateImpact } from '../types/state.types';
 import { generateOpportunity } from '../generators/opportunities';
 import { clamp, secureRandom } from '../utils';
+import { isPlayerOwner } from '../utils/ownership';
 import { applyAwardBoostsToTalent } from './talentStats';
 
 /**
@@ -47,7 +48,7 @@ export class TalentSystem {
       const activeTalentIds = new Set<string>();
       const contractsMap = state.entities.contracts || {};
       for (const cId in contractsMap) {
-        if (contractsMap[cId].ownerId === 'player') activeTalentIds.add(contractsMap[cId].talentId);
+        if (isPlayerOwner(state, contractsMap[cId].ownerId)) activeTalentIds.add(contractsMap[cId].talentId);
       }
       const availableTalentIds: string[] = [];
       const talentsMap = state.entities.talents || {};

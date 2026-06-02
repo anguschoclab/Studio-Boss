@@ -1,3 +1,5 @@
+// ⚠️ DEAD CODE: This file is not imported by any active module (WeekCoordinator, filters, etc.).
+// Retained for reference only. The active financial logic lives in src/engine/systems/finance.ts.
 import { Project, GameState, WeeklyFinancialReport, Contract, Buyer } from '@/engine/types';
 import { StateImpact, FinancialSnapshot } from '../types/state.types';
 import { RevenueProcessor } from './finance/RevenueProcessor';

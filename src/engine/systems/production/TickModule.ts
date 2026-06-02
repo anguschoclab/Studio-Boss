@@ -1,3 +1,5 @@
+// ⚠️ DEAD CODE: This file is not imported by any active module. The active production tick lives in
+// src/engine/systems/productionEngine.ts and src/engine/services/filters/ProductionFilter.ts.
 import { GameState, Project, StateImpact, Contract, Talent } from '../../types';
 import { RandomGenerator } from '../../utils/rng';
 import { TalentMoraleSystem } from '../talent/TalentMoraleSystem';

@@ -207,7 +207,7 @@ export const createMockContract = (overrides: Partial<Contract> = {}): Contract 
   role: 'actor',
   fee: 500000,
   backendPercent: 0,
-  ownerId: 'player',
+  ownerId: 'player-studio',
   ...overrides
 });
 
@@ -225,7 +225,7 @@ export const createMockIPAsset = (overrides: Partial<IPAsset> = {}): IPAsset => 
   totalEpisodes: 0,
   rightsExpirationWeek: 100,
   rightsOwner: 'STUDIO',
-  ownerId: 'player',
+  ownerId: 'player-studio',
   ...overrides
 });
 

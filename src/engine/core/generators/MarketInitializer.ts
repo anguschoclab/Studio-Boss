@@ -1,3 +1,5 @@
+// ⚠️ DEAD CODE: Exported but never imported by any active initialization path.
+// The active market initialization logic lives in src/engine/core/gameInit.ts.
 import { ArchetypeKey, RivalStudio } from '../../types/studio.types';
 import { BrandSystem } from '../../generators/BrandSystem';
 import { generateBuyers } from '../../generators/buyers';

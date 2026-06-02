@@ -1,4 +1,5 @@
 import { GameState, StateImpact, Talent } from '../../types';
+import { TalentTier } from '../../types/talent.types';
 import { RandomGenerator } from '../../utils/rng';
 import {
   TVShowRecommendation,
@@ -12,6 +13,14 @@ import {
   ROLE_PRESTIGE_MULTIPLIERS,
   TV_SHOW_TEMPLATES,
 } from '../../types/tv-recommendations.types';
+
+const TIER_TO_NUMBER: Record<TalentTier, number> = {
+  'A_LIST': 1,
+  'B_LIST': 2,
+  'C_LIST': 3,
+  'RISING_STAR': 4,
+  'NEWCOMER': 5,
+};
 
 /**
  * TV Show Recommendation System
@@ -270,7 +279,7 @@ export function generateTVRecommendationsForTalent(
   const criteria: TVRecommendationCriteria = {
     talentId: talent.id,
     currentWeek: state.week,
-    currentTier: talent.tier,
+    currentTier: TIER_TO_NUMBER[talent.tier] || 4,
     currentPrestige: talent.prestige || 50,
     starMeter: talent.starMeter || 50,
     preferredGenres: talent.preferredGenres || [],
@@ -330,7 +339,7 @@ export function tickTVRecommendationSystem(
     }
 
     // Only generate for mid-tier and higher talents
-    if (talent.tier > 3) {
+    if (TIER_TO_NUMBER[talent.tier] > 3) {
       continue;
     }
 
@@ -358,8 +367,8 @@ export function tickTVRecommendationSystem(
 export function getTVRecommendationsForTalent(
   talentId: string,
   state: GameState
-): import('../../types/tv-recommendations.types').TVShowRecommendation[] {
-  const recommendations = state.tvRecommendations?.recommendations || {};
+): TVShowRecommendation[] {
+  const recommendations: Record<string, TVShowRecommendation> = state.tvRecommendations?.recommendations || {};
   return Object.values(recommendations)
     .filter((r) => r.talentId === talentId && r.expiresWeek > state.week);
 }

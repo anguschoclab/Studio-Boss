@@ -90,13 +90,13 @@ describe('FlopMechanics', () => {
 
     it('returns empty array if severity is NONE', () => {
       const project = createMockProject({ id: 'p1', revenue: 100, budget: 100 });
-      const impacts = applyFlopPenalties(state, project, 'PLAYER');
+      const impacts = applyFlopPenalties(state, project, state.studio.id);
       expect(impacts).toHaveLength(0);
     });
 
     it('applies penalties to PLAYER correctly for MAJOR flop', () => {
       const project = createMockProject({ id: 'p1', title: 'Test Flop', revenue: 25, budget: 100 }); // ratio 0.25 -> MAJOR
-      const impacts = applyFlopPenalties(state, project, 'PLAYER');
+      const impacts = applyFlopPenalties(state, project, state.studio.id);
 
       const fundsDeducted = impacts.find(i => i.type === 'FUNDS_DEDUCTED');
       expect(fundsDeducted).toBeDefined();
@@ -171,9 +171,9 @@ describe('FlopMechanics', () => {
     it('processes flops for released projects in current week', () => {
       const state = createMockGameState({ week: 10 });
 
-      const p1 = createMockProject({ id: 'p1', state: 'released', releaseWeek: 10, ownerId: 'PLAYER', revenue: 0, budget: 100 });
-      const p2 = createMockProject({ id: 'p2', state: 'released', releaseWeek: 9, ownerId: 'PLAYER', revenue: 0, budget: 100 }); // Not current week
-      const p3 = createMockProject({ id: 'p3', state: 'production', ownerId: 'PLAYER', revenue: 0, budget: 100 }); // Not released
+      const p1 = createMockProject({ id: 'p1', state: 'released', releaseWeek: 10, ownerId: 'player-studio', revenue: 0, budget: 100 });
+      const p2 = createMockProject({ id: 'p2', state: 'released', releaseWeek: 9, ownerId: 'player-studio', revenue: 0, budget: 100 }); // Not current week
+      const p3 = createMockProject({ id: 'p3', state: 'production', ownerId: 'player-studio', revenue: 0, budget: 100 }); // Not released
 
       state.entities.projects['p1'] = p1;
       state.entities.projects['p2'] = p2;
@@ -184,6 +184,50 @@ describe('FlopMechanics', () => {
       // Should have impacts from p1 only (CATASTROPHIC flop for PLAYER)
       const fundsDeducted = impacts.filter(i => i.type === 'FUNDS_DEDUCTED');
       expect(fundsDeducted).toHaveLength(1);
+    });
+  });
+
+  describe('player ownership via real studio ID', () => {
+    it('emits FUNDS_DEDUCTED and PRESTIGE_CHANGED for player-owned catastrophic flop', () => {
+      const state = createMockGameState({ week: 10 });
+      const playerId = state.studio.id;
+
+      const project = createMockProject({
+        id: 'player-flop',
+        state: 'released',
+        releaseWeek: 10,
+        ownerId: playerId,
+        revenue: 0,
+        budget: 1000
+      });
+      state.entities.projects['player-flop'] = project;
+
+      const impacts = processFlops(state);
+
+      const fundsDeducted = impacts.filter(i => i.type === 'FUNDS_DEDUCTED');
+      const prestigeChanged = impacts.filter(i => i.type === 'PRESTIGE_CHANGED');
+      expect(fundsDeducted).toHaveLength(1);
+      expect(prestigeChanged).toHaveLength(1);
+    });
+
+    it('does NOT emit FUNDS_DEDUCTED when ownerId does not match player studio id', () => {
+      const state = createMockGameState({ week: 10 });
+      // Simulate an orphaned project with an outdated magic-string ownerId
+      const project = createMockProject({
+        id: 'orphan-flop',
+        state: 'released',
+        releaseWeek: 10,
+        ownerId: 'PLAYER',
+        revenue: 0,
+        budget: 1000
+      });
+      state.entities.projects['orphan-flop'] = project;
+
+      const impacts = processFlops(state);
+
+      const fundsDeducted = impacts.filter(i => i.type === 'FUNDS_DEDUCTED');
+      // Because 'PLAYER' !== state.studio.id, this should NOT deduct player funds
+      expect(fundsDeducted).toHaveLength(0);
     });
   });
 });

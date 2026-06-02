@@ -1,5 +1,6 @@
 import { GameState, StateImpact, Contract } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
+import { isPlayerOwner, getPlayerId } from '../utils/ownership';
 import { executeGreenlight, executeMarketing } from '../systems/projects';
 import { BudgetTierKey } from '../types/project.types';
 import { processFlops } from '../systems/finance/FlopMechanics';
@@ -28,7 +29,7 @@ export class HeadlessController {
     });
 
     // 0. Auto-Pitch New Projects (for headless simulation)
-    const activePlayerProjects = Object.values(state.entities.projects).filter(p => p.ownerId === 'PLAYER' && p.state !== 'archived');
+    const activePlayerProjects = Object.values(state.entities.projects).filter(p => isPlayerOwner(state, p.ownerId) && p.state !== 'archived');
     let newlyPitchedProject: unknown = null;
     if (activePlayerProjects.length < 10 && rng.next() < 0.8) {
       const pitchResult = this.pitchNewProject(state, rng);
@@ -53,7 +54,7 @@ export class HeadlessController {
     }
     allProjects.forEach(project => {
       // Track all player project states for debugging
-      if (project.ownerId === 'PLAYER' && project.state !== 'archived') {
+      if (isPlayerOwner(state, project.ownerId) && project.state !== 'archived') {
         if (project.state === 'production' && project.weeksInPhase === 0) {
           console.log(`[HeadlessController] Project ${project.title} entered production, productionWeeks: ${project.productionWeeks}`);
         } else if (project.state === 'post_production' && project.weeksInPhase === 0) {
@@ -230,7 +231,7 @@ export class HeadlessController {
               budgetTier: project.budgetTier,
               budget: Math.round((project.budget || 0) * (isHit ? 1.15 : 1.05)),
               buzz: Math.min(95, (project.buzz || 40) + (isHit ? 15 : 5)),
-              ownerId: 'PLAYER',
+              ownerId: getPlayerId(state),
               quality: 50,
               scriptHeat: 55,
               progress: 0,
@@ -319,7 +320,7 @@ export class HeadlessController {
       }
 
       // Archive released player projects so the pitch gate isn't permanently saturated
-      if (project.ownerId === 'PLAYER' && project.state === 'released' && project.releaseWeek && (state.week - project.releaseWeek) > 1) {
+      if (isPlayerOwner(state, project.ownerId) && project.state === 'released' && project.releaseWeek && (state.week - project.releaseWeek) > 1) {
         impacts.push({
           type: 'PROJECT_UPDATED',
           payload: { projectId: project.id, update: { state: 'archived' } }
@@ -338,7 +339,7 @@ export class HeadlessController {
 
     // 3. Auto-Bidding on Opportunities
     state.market.opportunities.forEach(opportunity => {
-      const isAlreadyBid = !!opportunity.bids['PLAYER'];
+      const isAlreadyBid = !!opportunity.bids[getPlayerId(state)];
       const isSimulation = true; // We are in headless mode
       
       let shouldBid = !isAlreadyBid && (state.finance.cash > opportunity.costToAcquire * 2 || isSimulation);
@@ -384,7 +385,7 @@ export class HeadlessController {
           type: 'OPPORTUNITY_UPDATED',
           payload: {
             opportunityId: opportunity.id,
-            rivalId: 'PLAYER',
+            rivalId: getPlayerId(state),
             bid: { amount: bidAmount, terms: 'standard' }
           }
         });
@@ -595,7 +596,7 @@ export class HeadlessController {
       budgetTier,
       budget,
       buzz: rng.rangeInt(20, 50),
-      ownerId: 'PLAYER',
+      ownerId: getPlayerId(state),
       quality: 50,
       scriptHeat: 50,
       progress: 0,

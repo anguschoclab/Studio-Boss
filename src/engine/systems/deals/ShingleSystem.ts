@@ -1,6 +1,7 @@
 import { GameState, StateImpact, Talent } from '@/engine/types';
 import { ProducerShingle, ShingleDealType, ShingleMedium } from '@/engine/types/talent.types';
 import { RandomGenerator } from '@/engine/utils/rng';
+import { isPlayerOwner, getPlayerId } from '@/engine/utils/ownership';
 
 /**
  * ShingleSystem — models vanity-shingle / production-company deals (Bad Robot,
@@ -247,7 +248,7 @@ function createShingle(
     }
   }
   // Player owns a streamer at launch for major/mid-tier archetypes — treat as streamer owner too.
-  if ((state.studio?.ownedPlatforms || []).length > 0) streamerOwners.add('PLAYER');
+  if ((state.studio?.ownedPlatforms || []).length > 0) streamerOwners.add(getPlayerId(state));
 
   // D1 Player-preference: if the player studio has an active Contract with this talent
   // within the last 2 years, it should score a +20M-equivalent shingle bonus (studios
@@ -258,7 +259,7 @@ function createShingle(
   const contracts = state.entities.contracts || {};
   for (const id in contracts) {
     const c: any = contracts[id];
-    if (c.talentId === owner.id && (c.ownerId === 'PLAYER' || !c.ownerId) && ((c.signedWeek || 0) >= twoYearWeek || (c.weeksRemaining || 0) > 0)) {
+    if (c.talentId === owner.id && (isPlayerOwner(state, c.ownerId) || !c.ownerId) && ((c.signedWeek || 0) >= twoYearWeek || (c.weeksRemaining || 0) > 0)) {
       playerHasRecentContractWithOwner = true;
       break;
     }
@@ -289,7 +290,7 @@ function createShingle(
     const streamerBias = medium === 'TV' && streamerOwners.has(b.id)
       ? (streamingEraWeek(state.week) ? 20_000_000 : 5_000_000)
       : 0;
-    const existingContractBias = (b.id === 'PLAYER' && playerHasRecentContractWithOwner) ? 20_000_000 : 0;
+    const existingContractBias = (isPlayerOwner(state, b.id) && playerHasRecentContractWithOwner) ? 20_000_000 : 0;
     const score = overhead * archetypeWeight + b.prestige * 50_000 + streamerBias + existingContractBias + rng.next() * 500_000;
     offers.push({ id: b.id, dealType, overhead, score });
   }

@@ -1,4 +1,5 @@
 import { GameState, WeekSummary } from '../types';
+import { isPlayerOwner } from '../utils/ownership';
 
 export interface SimulationMetrics {
   week: number;
@@ -60,9 +61,9 @@ export class MetricsCollector {
     let tvProjectCount = 0;
     const cutCounts: Record<string, number> = { 'theatrical': 0, 'directors_cut': 0, 'sanitized': 0, 'unrated': 0 };
 
-    const playerProjectsList = Object.values(state.entities.projects).filter(p => p.ownerId === 'PLAYER');
+    const playerProjectsList = Object.values(state.entities.projects).filter(p => isPlayerOwner(state, p.ownerId));
     const allStudios = [
-        { id: 'PLAYER', projects: playerProjectsList, cash: Number(state.finance.cash) || 0, name: state.studio.name },
+        { id: state.studio.id, projects: playerProjectsList, cash: Number(state.finance.cash) || 0, name: state.studio.name },
         ...rivalsList.map(r => ({ id: r.id, projects: Object.values(r.projects || {}), cash: Number(r.cash) || 0, name: r.name }))
     ];
 

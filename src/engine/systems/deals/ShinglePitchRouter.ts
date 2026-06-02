@@ -40,7 +40,7 @@ function yearFromWeek(week: number): number {
 
 function getStudioName(state: GameState, studioId: string | null): string {
   if (!studioId) return 'open market';
-  if (studioId === 'PLAYER') return state.studio?.name || 'Player Studio';
+  if (studioId === state.studio.id) return state.studio?.name || 'Player Studio';
   return state.entities.rivals[studioId]?.name || studioId;
 }
 
@@ -51,7 +51,7 @@ function shinglePitchRate(s: ProducerShingle, ownerPrestige: number): number {
 }
 
 function studioInDistressStage3Plus(state: GameState, studioId: string): boolean {
-  if (studioId === 'PLAYER') return false;
+  if (studioId === state.studio.id) return false;
   const r = state.entities.rivals[studioId];
   if (!r) return true;
   return (r.cash || 0) < -200_000_000;
@@ -70,7 +70,7 @@ function studioDecides(
   // Bucket C: NPC AI heuristic — accept if cash > overhead*20 and project fit is strong.
   // Fit proxies: owner prestige (higher = better fit) + macro/genre heat (skipped for now — owner
   // prestige captures most of the signal for the pass-through router).
-  const cash = studioId === 'PLAYER' ? (state.finance.cash || 0) : (state.entities.rivals[studioId]?.cash || 0);
+  const cash = studioId === state.studio.id ? (state.finance.cash || 0) : (state.entities.rivals[studioId]?.cash || 0);
   const owner = state.entities.talents[shingle.ownerTalentId];
   const ownerPrestige = owner?.prestige || 0;
   const overhead = shingle.overheadPerYear || 1;
@@ -93,7 +93,7 @@ function studioDecides(
 
 function openMarketBuyer(state: GameState, rng: RandomGenerator, excludeId: string | null): string | null {
   const candidates: string[] = [];
-  if (excludeId !== 'PLAYER' && (state.finance.cash || 0) > 100_000_000) candidates.push('PLAYER');
+  if (excludeId !== state.studio.id && (state.finance.cash || 0) > 100_000_000) candidates.push(state.studio.id);
   // ⚡ The Framerate Fanatic: Replaced Object.values() with a direct for...in loop
   const rivals = state.entities.rivals || {};
   for (const id in rivals) {

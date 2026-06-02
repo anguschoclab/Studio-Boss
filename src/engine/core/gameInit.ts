@@ -111,7 +111,7 @@ export function initializeGame(
       archetype: "streamer",
       foundedWeek: 1,
       parentBrand: playerBrand.core,
-      ownerId: "PLR-STUDIO-1", // Simplified placeholder for now, will be updated below
+      ownerId: "PLR-STUDIO-1",
       subscribers: archetype === "major" ? 25_000_000 : 10_000_000,
       churnRate: 0.05,
       contentLibraryQuality: 60,

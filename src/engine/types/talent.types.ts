@@ -104,6 +104,17 @@ export interface Talent {
   demographics: TalentDemographics;
   psychology: TalentPsychology;
   
+  preferredGenres?: string[];
+  personality?: string;
+  careerTrajectory?: string;
+  skills?: {
+    acting: number;
+    writing: number;
+    directing: number;
+    stardom: number;
+  };
+  retired?: boolean;
+  onMedicalLeave?: boolean;
   filmography?: {
     title: string;
     year: number;

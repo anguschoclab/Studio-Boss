@@ -60,7 +60,7 @@ export const OpportunitySystem = {
       };
 
       // 3. Apply Impacts based on Winner
-      if (winnerId === 'PLAYER') {
+      if (winnerId === state.studio.id) {
         impacts.push({
           type: 'FUNDS_DEDUCTED',
           payload: { amount: bidData.amount }

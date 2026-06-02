@@ -25,13 +25,13 @@ export function executeAcquisition(state: GameState, targetId: string): GameStat
   const updatedProjects = { ...state.entities.projects };
   const targetProjects = Object.values(state.entities.projects).filter(p => p.ownerId === targetId);
   targetProjects.forEach(p => {
-      updatedProjects[p.id] = { ...p, ownerId: 'player', isAcquired: true };
+      updatedProjects[p.id] = { ...p, ownerId: state.studio.id, isAcquired: true };
   });
 
   const updatedContracts = { ...state.entities.contracts };
   const targetContracts = Object.values(state.entities.contracts).filter(c => c.ownerId === targetId);
   targetContracts.forEach(c => {
-      updatedContracts[c.id] = { ...c, ownerId: 'player' };
+      updatedContracts[c.id] = { ...c, ownerId: state.studio.id };
   });
 
   const newPrestige = Math.min(100, state.studio.prestige + (target.strength * 0.2));

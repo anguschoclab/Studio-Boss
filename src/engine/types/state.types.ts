@@ -122,7 +122,10 @@ export type ImpactType =
   | "PILOT_GRADUATED"
   | "SHINGLE_CREATED"
   | "SHINGLE_UPDATED"
-  | "SHINGLE_DISSOLVED";
+  | "SHINGLE_DISSOLVED"
+  | "TV_RECOMMENDATION_CREATED"
+  | "TV_RECOMMENDATION_ACCEPTED"
+  | "TV_RECOMMENDATION_STATE_UPDATED";
 
 export interface ProjectUpdate {
   projectId: string;
@@ -274,6 +277,18 @@ export interface ShingleDissolvedImpact extends BaseImpact {
   type: "SHINGLE_DISSOLVED";
   payload: { shingleId: string };
 }
+export interface TVRecommendationCreatedImpact extends BaseImpact {
+  type: "TV_RECOMMENDATION_CREATED";
+  payload: { recommendation: import("./tv-recommendations.types").TVShowRecommendation; notification?: string };
+}
+export interface TVRecommendationAcceptedImpact extends BaseImpact {
+  type: "TV_RECOMMENDATION_ACCEPTED";
+  payload: { recommendationId: string; talentId?: string; notification?: string };
+}
+export interface TVRecommendationStateUpdatedImpact extends BaseImpact {
+  type: "TV_RECOMMENDATION_STATE_UPDATED";
+  payload: { tvRecommendations: Record<string, import("./tv-recommendations.types").TVShowRecommendation> };
+}
 export interface IndustryUpdateImpact extends BaseImpact {
   type: "INDUSTRY_UPDATE";
   payload: {
@@ -313,4 +328,7 @@ export type StateImpact =
   | ShingleCreatedImpact
   | ShingleUpdatedImpact
   | ShingleDissolvedImpact
+  | TVRecommendationCreatedImpact
+  | TVRecommendationAcceptedImpact
+  | TVRecommendationStateUpdatedImpact
   | (BaseImpact & { type?: undefined }); // The "Bag" impact

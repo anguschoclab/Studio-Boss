@@ -1,3 +1,5 @@
+// ⚠️ DEAD CODE: This file is not imported by any active module (WeekCoordinator, filters, etc.).
+// Retained for reference only. The active scandal logic lives in src/engine/systems/scandals.ts.
 import { GameState, Scandal, ScandalType, Project } from '@/engine/types';
 import { rand, generateId } from '../utils';
 import { StateImpact } from '../types/state.types';
