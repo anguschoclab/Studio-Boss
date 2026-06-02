@@ -9,7 +9,7 @@ describe('ScriptMetricsCalculator', () => {
       const project = createMockProject({
         scriptHeat: 50,
         genre: 'Drama',
-        activeRoles: ['role1', 'role2', 'role3', 'role4', 'role5'], // 5 roles
+        activeRoles: ['protagonist', 'antagonist', 'mentor', 'love_interest', 'sidekick'], // 5 roles
         scriptEvents: []
       }) as ScriptedProject;
 
@@ -28,7 +28,7 @@ describe('ScriptMetricsCalculator', () => {
       const project = createMockProject({
         scriptHeat: 50,
         genre: 'Comedy',
-        activeRoles: ['r1', 'r2', 'r3', 'r4', 'r5'],
+        activeRoles: ['protagonist', 'antagonist', 'mentor', 'love_interest', 'sidekick'],
       }) as ScriptedProject;
 
       const prevMetrics: ScriptMetrics = {
@@ -71,7 +71,7 @@ describe('ScriptMetricsCalculator', () => {
         scriptHeat: 150,
         genre: 'Sci-Fi',
         weeksInPhase: 2,
-        activeRoles: Array.from({ length: 15 }, (_, i) => `role${i}`), // 15 roles
+        activeRoles: Array.from({ length: 15 }, (_, i) => (['protagonist', 'antagonist', 'mentor', 'love_interest', 'sidekick', 'comic_relief', 'anti_hero', 'femme_fatale', 'loose_cannon', 'everyman', 'chosen_one', 'wise_fool', 'protagonist', 'antagonist', 'mentor'][i] as import('@/engine/types').CharacterArchetype)), // 15 roles
         scriptEvents: [
           { type: 'ROLE_SPLIT', qualityImpact: 5, heatGain: 2 } as ScriptEvent,
           { type: 'ROLE_SPLIT', qualityImpact: 5, heatGain: 2 } as ScriptEvent,
@@ -108,7 +108,7 @@ describe('ScriptMetricsCalculator', () => {
         const project = createMockProject({
           scriptHeat: 50,
           genre,
-          activeRoles: ['role1', 'role2', 'role3', 'role4', 'role5'],
+          activeRoles: ['protagonist', 'antagonist', 'mentor', 'love_interest', 'sidekick'],
         }) as ScriptedProject;
 
         const metrics = ScriptMetricsCalculator.calculateMetrics(project, 10);

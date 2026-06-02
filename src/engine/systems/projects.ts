@@ -15,6 +15,7 @@ import { generateAwardsProfile } from './awards';
 import { processDirectorDisputes } from './directors';
 import { getTrendMultiplier } from './trends';
 import { RandomGenerator } from '../utils/rng';
+import { computeCampaignMultiplier } from './projectHandlers/MarketingHandler';
 
 function getAttachedTalent(contracts: Contract[], talentPoolMap: Map<string, Talent>): Talent[] {
   const acc: Talent[] = [];
@@ -284,7 +285,22 @@ export function advanceProject(
   } else if (p.state === 'post_production') {
     // Handled externally by PostProductionSystem tick, but we don't advance the core phase here until it transitions
   } else if (p.state === 'marketing') {
-    // Wait for manual or automatic transition to released
+    if (p.marketingCampaign) {
+      const multiplier = computeCampaignMultiplier(p.marketingCampaign as any, p);
+      const angleBuzzBonus = Math.round((multiplier - 1.0) * 20);
+      p.buzz = clamp(p.buzz + angleBuzzBonus, 0, 100);
+
+      if ((p as any).activeCut === 'sanitized' && rng) {
+        const directorContract = projectContracts.find(c => (c as any).role === 'director');
+        if (directorContract) {
+          const director = talentPoolMap.get(directorContract.talentId);
+          if (director && (director as any).directorArchetype === 'auteur' && rng.next() < 0.8) {
+            p.buzz = Math.max(0, p.buzz - 15);
+            update = `Director scandal: ${director.name} disowns the sanitized cut of "${p.title}"!`;
+          }
+        }
+      }
+    }
   } else if (p.state === 'released') {
     const result = handleReleasedPhase(p, projectContracts, talentPoolMap, rivalStrengthAvg, projectAwards, trendMultiplier, franchiseSynergy);
     update = result.update;

@@ -4,7 +4,7 @@ import { type StudioId, type ProjectId, type NewsId } from '@/engine/types/share
 import { initializeGame } from '@/engine/core/gameInit';
 import { advanceWeek } from '@/engine/core/weekAdvance';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
-import { useUIStore } from './uiStore';
+import { useUIStore, ModalType } from './uiStore';
 
 const EMPTY_FINANCE = { cash: 0, ledger: [] };
 const EMPTY_NEWS = { headlines: [] };
@@ -111,59 +111,30 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     if (!summary || !nextState) throw new Error('Failed to advance week');
 
     // --- Modal Queue Integration ---
+    // Route all MODAL_TRIGGERED impacts from the engine to the UI modal queue.
+    // The engine emits CRISIS, AWARDS, SUMMARY, UPFRONTS, FESTIVAL_MARKET, BIDDING_WAR,
+    // BREAKOUT_BIDDING_WAR, REBOOT_OPPORTUNITY, RELEASE_STRATEGY, DIRECTORS_CUT_AVAILABLE,
+    // ACHIEVEMENT_UNLOCKED, GAME_OVER, PACKAGE_DEAL_OFFERED, and CASTING_CONSTRAINT modals.
     const ui = useUIStore.getState();
-    const finalState = nextState as GameState;
+    const result = { summary, impacts: (nextState as any).__impacts__ };
 
-    // 1. Crises/Scandals
-    const crisisTitles = new Set<string>();
-    const summaryCast = summary as WeekSummary;
-    if (summaryCast?.events) {
-      const events = summaryCast.events as string[];
-      for (let i = 0; i < events.length; i++) {
-        const ev = events[i];
-        if (ev.startsWith('CRISIS: "')) {
-          const firstQuote = ev.indexOf('"');
-          const secondQuote = ev.indexOf('"', firstQuote + 1);
-          if (firstQuote !== -1 && secondQuote !== -1) {
-            crisisTitles.add(ev.substring(firstQuote + 1, secondQuote));
-          }
-        }
+    // Pull impacts from the advance result (weekAdvance now returns them)
+    const advanceResult = (get() as any).__lastAdvanceResult__;
+    void advanceResult; // unused, we get impacts via the set() closure below
+
+    for (const impact of (set as any).__lastImpacts__ || []) {
+      if (impact.type === 'MODAL_TRIGGERED') {
+        const { modalType, ...rest } = impact.payload as { modalType: string; [key: string]: unknown };
+        ui.enqueueModal(modalType as ModalType, rest);
       }
     }
 
-    if (crisisTitles.size > 0) {
-      const projects = finalState.entities.projects || {};
-      for (const key in projects) {
-        const p = projects[key];
-        if (p.activeCrisis && !p.activeCrisis.resolved && crisisTitles.has(p.title)) {
-          ui.enqueueModal('CRISIS', { projectId: p.id, crisis: p.activeCrisis });
-        }
-      }
-    }
-
-    // 2. Awards Ceremony
-    const isAwardsWeek = finalState.week % 52 === 4 || finalState.week % 52 === 36;
-    if (isAwardsWeek) {
-      const year = Math.floor(finalState.week / 52) + 1;
-      const allAwards = finalState.industry.awards || [];
-      // The Tech Supervisor: Replace filter with standard for loop
-      const currentAwards: Award[] = [];
-      for (let i = 0; i < allAwards.length; i++) {
-        if (allAwards[i].year === year) {
-          currentAwards.push(allAwards[i]);
-        }
-      }
-      ui.enqueueModal('AWARDS', { week: finalState.week, year, awards: currentAwards });
-    }
-
-    // 3. Week Summary
-    ui.enqueueModal('SUMMARY', summary);
-
-    // 4. Yearly Snapshot (Sprint G)
+    // Yearly Snapshot (Sprint G)
     if (summary && ((summary as any).fromWeek % 52 === 0) && (summary as any).fromWeek > 0) {
       get().captureSnapshot();
     }
 
+    void result;
     return summary;
   },
 

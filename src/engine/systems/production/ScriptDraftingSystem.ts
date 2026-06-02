@@ -1,5 +1,6 @@
 import { Project, ScriptEvent, CharacterArchetype, StateImpact } from '@/engine/types/index';
 import { RandomGenerator } from '../../utils/rng';
+import { ScriptMetricsCalculator } from './ScriptMetricsCalculator';
 
 /**
  * Studio Boss - Script Drafting System
@@ -80,6 +81,8 @@ export function tickScriptDevelopment(
     }
   }
 
+  const metrics = ScriptMetricsCalculator.calculateMetrics(p, p.weeksInPhase, p.scriptMetrics);
+
   impacts.push({
     type: 'PROJECT_UPDATED',
     payload: {
@@ -88,7 +91,8 @@ export function tickScriptDevelopment(
         scriptHeat: p.scriptHeat,
         activeRoles: p.activeRoles,
         scriptEvents: p.scriptEvents,
-        buzz: p.buzz
+        buzz: p.buzz,
+        scriptMetrics: metrics
       }
     }
   });

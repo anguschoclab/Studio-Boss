@@ -5,6 +5,7 @@ import { generateOpportunity } from '../generators/opportunities';
 import { clamp, secureRandom } from '../utils';
 import { isPlayerOwner } from '../utils/ownership';
 import { applyAwardBoostsToTalent } from './talentStats';
+import { calculateTalentTier } from '../utils/prestigeCalculator';
 
 /**
  * TalentSystem encapsulates all logic related to talent lifecycle, 
@@ -48,7 +49,9 @@ export class TalentSystem {
       const activeTalentIds = new Set<string>();
       const contractsMap = state.entities.contracts || {};
       for (const cId in contractsMap) {
-        if (isPlayerOwner(state, contractsMap[cId].ownerId)) activeTalentIds.add(contractsMap[cId].talentId);
+        const contract = contractsMap[cId];
+        const project = state.entities.projects[contract.projectId];
+        if (project && isPlayerOwner(state, project.ownerId)) activeTalentIds.add(contract.talentId);
       }
       const availableTalentIds: string[] = [];
       const talentsMap = state.entities.talents || {};
@@ -152,10 +155,12 @@ export class TalentSystem {
 
       const finalFeeMultiplier = feeMultiplier * talentAwardsFeeMultiplier;
       
+      const newPrestige = clamp(talent.prestige + prestigeChange + talentAwardsPrestigeBonus, 0, 100);
       const newTalent = {
         ...talent,
         draw: clamp(talent.draw + drawChange + talentAwardsDrawBonus, 0, 100),
-        prestige: clamp(talent.prestige + prestigeChange + talentAwardsPrestigeBonus, 0, 100),
+        prestige: newPrestige,
+        tier: calculateTalentTier(newPrestige),
         fee: Math.round(clamp(talent.fee * finalFeeMultiplier, 10000, 75000000)),
         ego: clamp((talent.psychology?.ego || 50) + talentAwardsEgoBoost, 0, 100)
       };

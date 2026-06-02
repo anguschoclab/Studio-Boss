@@ -523,6 +523,7 @@ export interface ScriptedProject extends ProjectBase {
   scriptHeat: number; // 0-100: Influences evolution events
   activeRoles: CharacterArchetype[];
   scriptEvents: ScriptEvent[];
+  scriptMetrics?: ScriptMetrics;
 }
 
 export interface UnscriptedProject extends ProjectBase {

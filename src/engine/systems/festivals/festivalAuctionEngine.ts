@@ -2,6 +2,7 @@ import { GameState, StateImpact, Project, RivalStudio } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 import { isPlayerOwner } from '../../utils/ownership';
 import { FestivalSubmission } from '@/engine/types/project.types';
+import { generateFestivalBid } from '../ai/RivalBiddingEngine';
 
 // Festival market weeks: Sundance (4), Cannes (20), TIFF (36)
 export const FESTIVAL_MARKET_WEEKS = [4, 20, 36] as const;
@@ -97,11 +98,16 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
       }
     });
 
-    // Add NPC rival bids
-    rivalsList.slice(0, 3).forEach(rival => {
-      const bid = generateNPCBid(project, rival.cash, rng);
-      if (bid) {
-        bids.push({ ...bid, bidderId: rival.id, bidderName: rival.name });
+    // Add rival studio bids using archetype-driven logic
+    rivalsList.slice(0, 5).forEach(rival => {
+      const bidAmount = generateFestivalBid(rival, project, rng);
+      if (bidAmount !== null) {
+        bids.push({
+          bidderId: rival.id,
+          bidderName: rival.name,
+          amount: bidAmount,
+          terms: (project.reviewScore ?? 60) > 75 ? 'theatrical + streaming rights' : 'streaming rights only',
+        });
       }
     });
 
@@ -150,11 +156,9 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
   impacts.push({
     type: 'NEWS_ADDED',
     payload: {
-      id: rng.uuid('NWS'),
       headline: `${festivalBody} market opens — acquisition frenzy underway`,
       description: `Buyers and sellers converge as distribution rights go up for grabs.`,
-      category: 'festival',
-      publication: 'Variety'
+      category: 'market'
     }
   });
 
