@@ -4,6 +4,7 @@ import { getStudioArchetype } from '../../data/aiArchetypes';
 export function shouldAttemptHostileTakeover(
   attacker: RivalStudio,
   target: RivalStudio,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   state: GameState
 ): boolean {
   if (attacker.id === target.id) return false;
