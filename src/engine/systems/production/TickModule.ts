@@ -152,10 +152,10 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
 
   for (const key in allProjects) {
     const project = allProjects[key];
-    const ownerId = project.ownerId || 'player';
+    const ownerId = project.ownerId || state.studio.id;
 
     let studioPrestige: number;
-    if (ownerId === 'player') {
+    if (ownerId === state.studio.id) {
       studioPrestige = state.studio.prestige;
     } else {
       studioPrestige = rivalPrestigeMap.get(ownerId) || 50;

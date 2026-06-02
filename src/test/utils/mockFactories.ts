@@ -103,7 +103,7 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
     scriptHeat: overrides.scriptHeat || 50,
     progress: overrides.progress || 0,
     accumulatedCost: overrides.accumulatedCost || 0,
-    ownerId: overrides.ownerId || 'player',
+    ownerId: overrides.ownerId || 'player-studio',
     reviewScore: overrides.reviewScore || 50,
     buzz: overrides.buzz || 50,
     genre: overrides.genre || 'Drama',

@@ -217,7 +217,7 @@ describe('FlopMechanics', () => {
         id: 'orphan-flop',
         state: 'released',
         releaseWeek: 10,
-        ownerId: 'PLAYER',
+        ownerId: 'orphaned-legacy-id',
         revenue: 0,
         budget: 1000
       });
@@ -226,7 +226,7 @@ describe('FlopMechanics', () => {
       const impacts = processFlops(state);
 
       const fundsDeducted = impacts.filter(i => i.type === 'FUNDS_DEDUCTED');
-      // Because 'PLAYER' !== state.studio.id, this should NOT deduct player funds
+      // Because 'orphaned-legacy-id' !== state.studio.id, this should NOT deduct player funds
       expect(fundsDeducted).toHaveLength(0);
     });
   });

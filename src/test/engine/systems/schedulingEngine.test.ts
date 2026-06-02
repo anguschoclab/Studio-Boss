@@ -40,7 +40,7 @@ describe('SchedulingEngine Hardening Tests', () => {
       fee: 1000000,
       role: 'actor',
       backendPercent: 0,
-      ownerId: 'player'
+      ownerId: 'player-studio'
     }
   ];
 

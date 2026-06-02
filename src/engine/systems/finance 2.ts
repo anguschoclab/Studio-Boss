@@ -23,7 +23,7 @@ export function calculateStudioNetWorth(state: GameState): number {
   // 2. Active Projects Inventory (Work in Progress value)
   // We value "Inventory" as 50% of the budget already spent
   Object.values(state.entities.projects).forEach(p => {
-    if (p.ownerId === 'player' && p.state !== 'released' && p.state !== 'archived') {
+    if (p.ownerId === state.studio.id && p.state !== 'released' && p.state !== 'archived') {
       netWorth += p.budget * 0.5;
     }
   });
@@ -39,8 +39,8 @@ export function generateWeeklyFinancialReport(
   state: GameState, 
   pendingImpacts: StateImpact[] = []
 ): { report: WeeklyFinancialReport; snapshot: FinancialSnapshot } {
-  const projects = Object.values(state.entities.projects).filter(p => p.ownerId === 'player');
-  const playerContracts = Object.values(state.entities.contracts).filter(c => c.ownerId === 'player');
+  const projects = Object.values(state.entities.projects).filter(p => p.ownerId === state.studio.id);
+  const playerContracts = Object.values(state.entities.contracts).filter(c => c.ownerId === state.studio.id);
   const studioLevel = (state.studio as any).level || 1;
   const market = state.finance.marketState || InterestRateSimulator.initialize();
 
@@ -179,7 +179,7 @@ export function calculateWeeklyRevenue(projects: Project[], buyers: Buyer[] = []
 }
 
 export function generateCashflowForecast(state: GameState, weeks: number = 12): { week: number; projected: number }[] {
-  const projects = Object.values(state.entities.projects).filter(p => p.ownerId === 'player');
+  const projects = Object.values(state.entities.projects).filter(p => p.ownerId === state.studio.id);
   const weeklyCosts = calculateWeeklyCosts(projects);
   const weeklyRevenue = calculateWeeklyRevenue(projects, state.market.buyers);
   const netPerWeek = weeklyRevenue - weeklyCosts;

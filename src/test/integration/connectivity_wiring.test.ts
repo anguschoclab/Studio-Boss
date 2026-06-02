@@ -42,7 +42,7 @@ describe('System Connectivity - Phase 3 Integration', () => {
             syndicationTier: 'NONE',
             totalEpisodes: 0,
             rightsExpirationWeek: 999,
-            ownerId: 'player'
+            ownerId: state.studio.id
         } as unknown as IPAsset];
 
         state.week = 52;

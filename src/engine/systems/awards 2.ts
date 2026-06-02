@@ -1,3 +1,4 @@
+// ⚠️ DEAD CODE: This file is not imported by any active module.
 import { AwardBody, AwardCategory, AwardsProfile, GameState, Project } from '@/engine/types';
 import { rand, generateId } from '../utils';
 import { StateImpact } from '../types/state.types';
@@ -47,7 +48,7 @@ export function generateAwardsProfile(project: Project): AwardsProfile {
 
 export function launchAwardsCampaign(state: GameState, projectId: string, budget: number): StateImpact | null {
   const project = state.entities.projects[projectId];
-  if (!project || project.ownerId !== 'player' || state.finance.cash < budget || !project.awardsProfile) return null;
+  if (!project || project.ownerId !== state.studio.id || state.finance.cash < budget || !project.awardsProfile) return null;
 
   const boost = (budget / 1_000_000) * 5;
   const newStrength = Math.min(100, project.awardsProfile.campaignStrength + boost);

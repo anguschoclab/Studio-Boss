@@ -11,7 +11,7 @@ import { StateImpact } from '../types/state.types';
 export function generateScandals(state: GameState): StateImpact[] {
   const impacts: StateImpact[] = [];
   
-  const contracts = Object.values(state.entities.contracts).filter(c => c.ownerId === 'player');
+  const contracts = Object.values(state.entities.contracts).filter(c => c.ownerId === state.studio.id);
   const talentToProjectMap = new Map<string, string>();
   for (const c of contracts) {
     talentToProjectMap.set(c.talentId, c.projectId);
@@ -115,7 +115,7 @@ export function advanceScandals(state: GameState): StateImpact[] {
     .filter(s => s.weeksRemaining > 1)
     .map(s => ({ ...s, weeksRemaining: s.weeksRemaining - 1 }));
 
-  const contracts = Object.values(state.entities.contracts).filter(c => c.ownerId === 'player');
+  const contracts = Object.values(state.entities.contracts).filter(c => c.ownerId === state.studio.id);
   const penalizedProjectIds = new Set<string>();
   for (const c of contracts) {
     if (activeScandalTalent.has(c.talentId)) {
