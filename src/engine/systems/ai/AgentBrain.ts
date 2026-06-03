@@ -99,7 +99,7 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
     // --- Rumor / Poach Pass ---
     if (agency.culture === 'shark' || agency.currentMotivation === 'THE_SHARK') {
       if (rng.next() < 0.1) {
-        const brands: any[] = [];
+        const brands: import('@/engine/types').RivalStudio[] = [];
         const rivalsObj = state.entities.rivals || {};
         for (const id in rivalsObj) {
           brands.push(rivalsObj[id]);
