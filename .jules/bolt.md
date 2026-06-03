@@ -45,3 +45,6 @@
 ## 2026-05-26 - Replace O(N log N) sorts and array chain allocations with O(N) single-pass maximum find
 **Learning:** Finding the maximum or best matching element (like finding a rescue acquirer in `DistressCascade`) using `Object.values().filter().sort()[0]` creates O(N) array allocations and an O(N log N) sort overhead on every tick.
 **Action:** Replace `Object.values().filter().sort()` chains when only the single top candidate is needed by using a direct `for...in` loop to track the maximum value in a single O(N) pass, reducing time complexity and eliminating GC pressure.
+## 2026-06-03 - Pre-group items in dictionary lookup to avoid O(N*M) loop performance overhead
+**Learning:** `tickAgencies` was performing an `Object.values(state.entities.talents)` allocation per tick, and then filtering that array per agency inside an inner loop. This resulted in O(Agencies * Talents) operations on every tick, causing significant garbage collection pressure.
+**Action:** Replace `Object.values` and inner `.filter()` array operations with a single-pass grouping `for...in` loop that clusters talents by `agencyId`. This drops the inner loop search to O(1) dictionary lookups for matching clients, drastically improving performance.
