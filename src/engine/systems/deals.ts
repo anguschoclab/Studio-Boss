@@ -21,7 +21,7 @@ export function evaluateFirstLookDeal(talent: Talent, state: GameState): boolean
   return rand() * 100 <= acceptanceChance;
 }
 
-export function offerFirstLookDeal(state: GameState, talentId: string, weeksRemaining: number, exclusivity: boolean = true): StateImpact[] {
+export function offerFirstLookDeal(state: GameState, talentId: string, weeksRemaining: number, _exclusivity: boolean = true): StateImpact[] {
   const talent = state.entities?.talents?.[talentId];
   if (!talent) return [];
   
@@ -70,13 +70,15 @@ export function advanceDeals(deals: FirstLookDeal[]): StateImpact[] {
   return [];
 }
 
-export function packageProject(project: Project, talentIds?: string[], agency?: Agency): { packageScore: number, synergies: string[] } {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function packageProject(project: Project, _talentIds?: string[], _agency?: Agency): { packageScore: number, synergies: string[] } {
   const score = project.buzz; 
   const synergies: string[] = [];
   return { packageScore: score, synergies };
 }
 
-export function evaluatePackageStrength(project: Project, attachedTalent: Talent[], agency?: Agency): { score: number, multipliers: string[] } {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function evaluatePackageStrength(project: Project, attachedTalent: Talent[], _agency?: Agency): { score: number, multipliers: string[] } {
   let score = 50 + (project.buzz * 0.5);
   const multipliers: string[] = [];
   

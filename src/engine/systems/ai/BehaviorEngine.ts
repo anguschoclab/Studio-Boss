@@ -4,7 +4,7 @@ import { getStudioArchetype } from '../../data/aiArchetypes';
 export function shouldAttemptHostileTakeover(
   attacker: RivalStudio,
   target: RivalStudio,
-  state: GameState
+  _state: GameState
 ): boolean {
   if (attacker.id === target.id) return false;
 
