@@ -69,10 +69,12 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
   // and avoided Object.values() O(N) allocation
   const talentsByAgency: Record<string, Talent[]> = {};
   for (const id in talentsObj) {
-    const t = talentsObj[id];
-    if (t.agencyId) {
-      if (!talentsByAgency[t.agencyId]) talentsByAgency[t.agencyId] = [];
-      talentsByAgency[t.agencyId].push(t);
+    if (Object.prototype.hasOwnProperty.call(talentsObj, id)) {
+      const t = talentsObj[id];
+      if (t.agencyId) {
+        if (!talentsByAgency[t.agencyId]) talentsByAgency[t.agencyId] = [];
+        talentsByAgency[t.agencyId].push(t);
+      }
     }
   }
 
