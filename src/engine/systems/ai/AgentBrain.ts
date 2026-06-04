@@ -63,12 +63,11 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
   const impacts: StateImpact[] = [];
 
   // ⚡ Bolt: Pre-group talents into O(1) lookups to avoid O(N*M) filtering inside the agency loop.
-  const allTalents: Talent[] = [];
+  const allTalents = Object.values(state.entities.talents || {});
   const talentsByAgency: Record<string, Talent[]> = {};
 
-  for (const tId in state.entities.talents || {}) {
-    const t = state.entities.talents[tId];
-    allTalents.push(t);
+  for (let i = 0; i < allTalents.length; i++) {
+    const t = allTalents[i];
     if (!talentsByAgency[t.agencyId]) talentsByAgency[t.agencyId] = [];
     talentsByAgency[t.agencyId].push(t);
   }
@@ -93,10 +92,7 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
   }
 
   // ⚡ Bolt: Cache array to avoid Object.values on every tick iteration
-  const brands: typeof state.entities.rivals[keyof typeof state.entities.rivals][] = [];
-  for (const rId in state.entities.rivals || {}) {
-    brands.push(state.entities.rivals[rId]);
-  }
+  const brands = Object.values(state.entities.rivals || {});
 
   state.industry.agencies.forEach(agency => {
     const archetype = getAgencyArchetype(agency);
