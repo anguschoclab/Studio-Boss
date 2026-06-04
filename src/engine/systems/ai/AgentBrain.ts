@@ -61,7 +61,18 @@ export function evaluatePackageOffer(
  */
 export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const allTalents = Object.values(state.entities.talents || {});
+
+  // ⚡ Bolt: Pre-group talents into O(1) lookups to avoid O(N*M) filtering inside the agency loop.
+  const allTalents: Talent[] = [];
+  const talentsByAgency: Record<string, Talent[]> = {};
+
+  for (const tId in state.entities.talents) {
+    const t = state.entities.talents[tId];
+    allTalents.push(t);
+    if (!talentsByAgency[t.agencyId]) talentsByAgency[t.agencyId] = [];
+    talentsByAgency[t.agencyId].push(t);
+  }
+
   const playerStudioId = state.studio.id;
 
   // Collect player project IDs for ownership checks
@@ -81,13 +92,18 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
     }
   }
 
+  // ⚡ Bolt: Cache array to avoid Object.values on every tick iteration
+  const brands: typeof state.entities.rivals[keyof typeof state.entities.rivals][] = [];
+  for (const rId in state.entities.rivals) {
+    brands.push(state.entities.rivals[rId]);
+  }
+
   state.industry.agencies.forEach(agency => {
     const archetype = getAgencyArchetype(agency);
 
     // --- Rumor / Poach Pass ---
     if (agency.culture === 'shark' || agency.currentMotivation === 'THE_SHARK') {
       if (rng.next() < 0.1) {
-        const brands = Object.values(state.entities.rivals || {});
         if (brands.length > 0) {
           let rival = rng.pick(brands);
 
@@ -111,8 +127,8 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
     // --- Package Deal Pass ---
     if (archetype.pact_aggression > 0 && rng.next() < archetype.pact_aggression) {
       // Find the highest-prestige player-contracted talent at this agency
-      const agencyPlayerTalents = allTalents
-        .filter(t => t.agencyId === agency.id && playerContractedTalentIds.has(t.id))
+      const agencyPlayerTalents = (talentsByAgency[agency.id] || [])
+        .filter(t => playerContractedTalentIds.has(t.id))
         .sort((a, b) => b.prestige - a.prestige);
 
       if (agencyPlayerTalents.length > 0) {
@@ -155,7 +171,8 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
   });
 
   // Rival production setbacks
-  Object.values(state.entities.rivals || {}).forEach(rival => {
+  // ⚡ Bolt: Reuse cached brands array instead of a new loop iteration over state.entities.rivals
+  brands.forEach(rival => {
     if (rival.currentMotivation === 'CASH_CRUNCH') return;
 
     if (rng.next() < 0.02) {

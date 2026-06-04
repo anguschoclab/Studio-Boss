@@ -45,3 +45,6 @@
 ## 2026-05-26 - Replace O(N log N) sorts and array chain allocations with O(N) single-pass maximum find
 **Learning:** Finding the maximum or best matching element (like finding a rescue acquirer in `DistressCascade`) using `Object.values().filter().sort()[0]` creates O(N) array allocations and an O(N log N) sort overhead on every tick.
 **Action:** Replace `Object.values().filter().sort()` chains when only the single top candidate is needed by using a direct `for...in` loop to track the maximum value in a single O(N) pass, reducing time complexity and eliminating GC pressure.
+## 2026-05-28 - Avoid O(N*M) nested array creation inside AgentBrain tick loop
+**Learning:** The `tickAgencies` function inside `src/engine/systems/ai/AgentBrain.ts` was doing `Object.values(state.entities.rivals || {})` and filtering all `allTalents` iteratively inside an `.forEach` loop over `state.industry.agencies`. This caused massive O(Agencies * Talents) and O(Agencies * Rivals) complexity and repeated array allocations inside a core game tick function.
+**Action:** Used `for...in` at the start of the function to group talents by `agencyId` (reducing lookups to O(1) hash map access per agency) and replaced `Object.values` chains inside and after the loop with `for...in` loops to directly access entities, eliminating high-frequency garbage collection spikes.
