@@ -76,7 +76,7 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
 
   // Collect player project IDs for ownership checks
   const playerProjectIds = new Set<string>();
-  for (const id in state.entities.projects || {}) {
+  for (const id in state.entities.projects) {
     if (state.entities.projects[id].ownerId === playerStudioId) {
       playerProjectIds.add(id);
     }
@@ -84,7 +84,7 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
 
   // Find talent currently under contract to player projects
   const playerContractedTalentIds = new Set<string>();
-  for (const cId in state.entities.contracts || {}) {
+  for (const cId in state.entities.contracts) {
     const contract = state.entities.contracts[cId];
     if (playerProjectIds.has(contract.projectId)) {
       playerContractedTalentIds.add(contract.talentId);
