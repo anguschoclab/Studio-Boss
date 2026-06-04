@@ -86,7 +86,7 @@ export function tickReleaseStrategy(state: GameState): StateImpact[] {
       !project.releaseStrategy
     ) {
       impacts.push({
-        type: 'MODAL_TRIGGERED' as any,
+        type: 'MODAL_TRIGGERED' as unknown as string,
         payload: {
           modalType: 'RELEASE_STRATEGY',
           priority: 90,

@@ -2,6 +2,7 @@ import { GameState, Project, Talent, Contract, ActiveCrisis } from "@/engine/typ
 type TalentProfile = Talent;
 type Crisis = ActiveCrisis;
 import { RandomGenerator } from "../utils/rng";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { pick, randRange, secureRandom, generateId } from "../utils";
 
 export interface DirectorDispute {
@@ -53,7 +54,7 @@ export function processDirectorDisputes(
   if (!director || !director.roles.includes("director")) return { updates, newCrises };
 
   // Auteurs and Visionaries cause more disputes
-  const archetype = (director as any).directorArchetype;
+  const archetype = (director as unknown as Record<string, unknown>).directorArchetype;
   const chance = archetype === "auteur" ? 0.05 : archetype === "visionary" ? 0.04 : 0.01;
 
   if (rng.next() < chance && !project.activeCrisis) {

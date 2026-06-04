@@ -1,4 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { GameState, FestivalSubmission, AwardBody, Project } from '@/engine/types';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { randRange, generateId, rand } from '../utils';
 import { StateImpact } from '../types/state.types';
 

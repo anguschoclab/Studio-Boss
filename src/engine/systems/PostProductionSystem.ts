@@ -67,7 +67,7 @@ export function tickPostProduction(
       });
 
       impacts.push({
-        type: 'MODAL_TRIGGERED' as any,
+        type: 'MODAL_TRIGGERED' as unknown as string,
         payload: {
           modalType: 'DIRECTORS_CUT_AVAILABLE',
           priority: 40,
