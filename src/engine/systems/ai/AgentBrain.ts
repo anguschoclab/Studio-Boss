@@ -66,7 +66,7 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
   const allTalents: Talent[] = [];
   const talentsByAgency: Record<string, Talent[]> = {};
 
-  for (const tId in state.entities.talents) {
+  for (const tId in state.entities.talents || {}) {
     const t = state.entities.talents[tId];
     allTalents.push(t);
     if (!talentsByAgency[t.agencyId]) talentsByAgency[t.agencyId] = [];
@@ -77,7 +77,7 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
 
   // Collect player project IDs for ownership checks
   const playerProjectIds = new Set<string>();
-  for (const id in state.entities.projects) {
+  for (const id in state.entities.projects || {}) {
     if (state.entities.projects[id].ownerId === playerStudioId) {
       playerProjectIds.add(id);
     }
@@ -85,7 +85,7 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
 
   // Find talent currently under contract to player projects
   const playerContractedTalentIds = new Set<string>();
-  for (const cId in state.entities.contracts) {
+  for (const cId in state.entities.contracts || {}) {
     const contract = state.entities.contracts[cId];
     if (playerProjectIds.has(contract.projectId)) {
       playerContractedTalentIds.add(contract.talentId);
@@ -94,7 +94,7 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
 
   // ⚡ Bolt: Cache array to avoid Object.values on every tick iteration
   const brands: typeof state.entities.rivals[keyof typeof state.entities.rivals][] = [];
-  for (const rId in state.entities.rivals) {
+  for (const rId in state.entities.rivals || {}) {
     brands.push(state.entities.rivals[rId]);
   }
 
