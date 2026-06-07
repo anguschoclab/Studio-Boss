@@ -1,4 +1,4 @@
-import { GameState, RivalStudio, Project, Opportunity } from '@/engine/types';
+import { GameState, RivalStudio } from '@/engine/types';
 import { generateId } from '../utils';
 
 export function evaluateAcquisitionTarget(target: RivalStudio, buyerCash: number): { viable: boolean; price: number; reason?: string } {
@@ -23,16 +23,26 @@ export function executeAcquisition(state: GameState, targetId: string): GameStat
   
   // Consolidation Logic: Deep-merge library and talent rosters
   const updatedProjects = { ...state.entities.projects };
-  const targetProjects = Object.values(state.entities.projects).filter(p => p.ownerId === targetId);
-  targetProjects.forEach(p => {
-      updatedProjects[p.id] = { ...p, ownerId: state.studio.id, isAcquired: true };
-  });
+  let targetProjectsCount = 0;
+  // ⚡ Bolt: Replaced Object.values().filter().forEach() with a single O(N) for...in pass to eliminate intermediate array allocations
+  for (const pid in state.entities.projects) {
+    const p = state.entities.projects[pid];
+    if (p.ownerId === targetId) {
+      updatedProjects[pid] = { ...p, ownerId: state.studio.id, isAcquired: true };
+      targetProjectsCount++;
+    }
+  }
 
   const updatedContracts = { ...state.entities.contracts };
-  const targetContracts = Object.values(state.entities.contracts).filter(c => c.ownerId === targetId);
-  targetContracts.forEach(c => {
-      updatedContracts[c.id] = { ...c, ownerId: state.studio.id };
-  });
+  let targetContractsCount = 0;
+  // ⚡ Bolt: Replaced Object.values().filter().forEach() with a single O(N) for...in pass to eliminate intermediate array allocations
+  for (const cid in state.entities.contracts) {
+    const c = state.entities.contracts[cid];
+    if (c.ownerId === targetId) {
+      updatedContracts[cid] = { ...c, ownerId: state.studio.id };
+      targetContractsCount++;
+    }
+  }
 
   const newPrestige = Math.min(100, state.studio.prestige + (target.strength * 0.2));
 
@@ -60,7 +70,7 @@ export function executeAcquisition(state: GameState, targetId: string): GameStat
           week: state.week,
           type: 'STUDIO_EVENT' as const,
           headline: `CONSOLIDATED: ${state.studio.name} absorbs ${target.name}!`,
-          description: `The acquisition is finalized. ${Object.keys(targetProjects).length} projects and ${targetContracts.length} talent contracts have been integrated into ${state.studio.name}.`,
+          description: `The acquisition is finalized. ${targetProjectsCount} projects and ${targetContractsCount} talent contracts have been integrated into ${state.studio.name}.`,
         },
         ...state.industry.newsHistory,
       ].slice(0, 50),
