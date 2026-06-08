@@ -29,9 +29,16 @@ export class HeadlessController {
     });
 
     // 0. Auto-Pitch New Projects (for headless simulation)
-    const activePlayerProjects = Object.values(state.entities.projects).filter(p => isPlayerOwner(state, p.ownerId) && p.state !== 'archived');
+    // ⚡ Bolt Optimization: Replaced Object.values().filter() with a for...in loop to avoid array allocations.
+    let activePlayerProjectCount = 0;
+    for (const pid in state.entities.projects) {
+      const p = state.entities.projects[pid];
+      if (isPlayerOwner(state, p.ownerId) && p.state !== 'archived') {
+        activePlayerProjectCount++;
+      }
+    }
     let newlyPitchedProject: unknown = null;
-    if (activePlayerProjects.length < 10 && rng.next() < 0.8) {
+    if (activePlayerProjectCount < 10 && rng.next() < 0.8) {
       const pitchResult = this.pitchNewProject(state, rng);
       if (pitchResult) {
         impacts.push(pitchResult);

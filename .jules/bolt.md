@@ -45,3 +45,6 @@
 ## 2026-05-26 - Replace O(N log N) sorts and array chain allocations with O(N) single-pass maximum find
 **Learning:** Finding the maximum or best matching element (like finding a rescue acquirer in `DistressCascade`) using `Object.values().filter().sort()[0]` creates O(N) array allocations and an O(N log N) sort overhead on every tick.
 **Action:** Replace `Object.values().filter().sort()` chains when only the single top candidate is needed by using a direct `for...in` loop to track the maximum value in a single O(N) pass, reducing time complexity and eliminating GC pressure.
+## 2026-05-28 - Optimize HeadlessController active project evaluation
+**Learning:** Checking active player projects using `Object.values(state.entities.projects).filter(...)` in `HeadlessController.tick` creates an unnecessary `O(N)` array allocation and iteration overhead per simulated tick. Since the simulation loop only checks the aggregate length (`< 10`), generating and filtering the array is extremely inefficient.
+**Action:** Replace `Object.values().filter()` chained methods with an in-place `for...in` loop and a simple counter to verify state without creating intermediate objects, reducing garbage collection spikes in hot loops.
