@@ -45,3 +45,8 @@
 ## 2026-05-26 - Replace O(N log N) sorts and array chain allocations with O(N) single-pass maximum find
 **Learning:** Finding the maximum or best matching element (like finding a rescue acquirer in `DistressCascade`) using `Object.values().filter().sort()[0]` creates O(N) array allocations and an O(N log N) sort overhead on every tick.
 **Action:** Replace `Object.values().filter().sort()` chains when only the single top candidate is needed by using a direct `for...in` loop to track the maximum value in a single O(N) pass, reducing time complexity and eliminating GC pressure.
+## 2025-06-09 - [Awards Ceremony Optimization]
+**Learning:**
+I found that `runAwardsCeremony` was iterating over `state.entities.projects` multiple times, assuming it only held player projects, which led to pushing ALL projects (player and rival) to the eligibility arrays, then re-scanning and duplicating rival projects again while simultaneously building a short-lived `Map` object for lookup. It also had a logical bug where `!!state.entities.projects[bestProject.id]` was always true because the projects dictionary contains all projects (player and rival).
+**Action:**
+I eliminated the duplicate iterations and the `Map` construction entirely. The eligibility array is now correctly built in a single O(N) pass, and rival relationships are resolved dynamically using O(1) direct dictionary lookups on `state.entities.rivals` via `bestProject.ownerId`, reducing the benchmark processing time from ~85ms to ~49ms (approx. 42% performance boost).

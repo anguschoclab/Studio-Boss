@@ -18,7 +18,6 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
 
   const eligibleFilm: Project[] = [];
   const eligibleTv: Project[] = [];
-  const projectToRivalMap = new Map<string, RivalStudio>();
   const projectToContractsMap = new Map<string, Contract[]>();
 
   const contracts = state.entities.contracts || {};
@@ -29,9 +28,10 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
     projectToContractsMap.set(c.projectId, list);
   }
 
-  const playerProjects = state.entities.projects || {};
-  for (const id in playerProjects) {
-    const p = playerProjects[id];
+  // ⚡ Bolt: Populate all eligible projects in a single pass, avoiding map duplication and O(N) overhead
+  const allProjects = state.entities.projects || {};
+  for (const id in allProjects) {
+    const p = allProjects[id];
     if ((p.state === 'released' || p.state === 'post_release' || p.state === 'archived') &&
         p.releaseWeek !== null &&
         p.releaseWeek > currentWeek - 52) {
@@ -43,31 +43,6 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   }
 
   const rivalsMap = state.entities.rivals || {};
-  const allProjects = state.entities.projects || {};
-
-  const rivalProjects: Project[] = [];
-  for (const id in allProjects) {
-    const p = allProjects[id];
-    if (p.ownerId && rivalsMap[p.ownerId]) {
-      rivalProjects.push(p);
-    }
-  }
-
-  for (const project of rivalProjects) {
-    if ((project.state === 'released' || project.state === 'post_release' || project.state === 'archived') &&
-        project.releaseWeek !== null &&
-        project.releaseWeek > currentWeek - 52) {
-
-      const rival = rivalsMap[project.ownerId];
-      if (rival) {
-        projectToRivalMap.set(project.id, rival);
-
-        const formatMatch = (project.format || '').toLowerCase();
-        if (formatMatch === 'film') eligibleFilm.push(project);
-        else if (formatMatch === 'tv' || formatMatch === 'series') eligibleTv.push(project);
-      }
-    }
-  }
 
   if (eligibleFilm.length === 0 && eligibleTv.length === 0) return [];
 
@@ -108,8 +83,9 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       const isWin = bestScore > 50; 
       const prestigeGain = isWin ? 15 : 3;
       
-      const isPlayer = !!state.entities.projects[bestProject.id];
-      const rival = isPlayer ? null : projectToRivalMap.get(bestProject.id);
+      // ⚡ Bolt: Use direct rival record lookup via ownerId, eliminating intermediate Map
+      const rival = bestProject.ownerId ? (rivalsMap[bestProject.ownerId] || null) : null;
+      const isPlayer = !rival;
 
       impacts.push({
         type: 'INDUSTRY_UPDATE',
