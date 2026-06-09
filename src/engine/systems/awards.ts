@@ -88,8 +88,9 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   const configsThisWeek = AWARD_CONFIGS.filter(config => bodiesThisWeek.includes(config.body));
   if (configsThisWeek.length === 0) return impact;
 
-  const eligibleFilm: Project[] = [];
-  const eligibleTv: Project[] = [];
+  type CandidateTuple = { p: Project; mult: number };
+  const eligibleFilm: CandidateTuple[] = [];
+  const eligibleTv: CandidateTuple[] = [];
 
   for (const projectId in state.entities.projects) {
     const p = state.entities.projects[projectId];
@@ -97,29 +98,44 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
         p.releaseWeek !== null &&
         p.releaseWeek > currentWeek - 52 &&
         p.awardsProfile !== undefined) {
-      if (p.format === 'film') eligibleFilm.push(p);
-      else if (p.format === 'tv') eligibleTv.push(p);
+      const mult = 1 + (p.awardsProfile.campaignStrength || 0) / 25;
+      if (p.format === 'film') eligibleFilm.push({ p, mult });
+      else if (p.format === 'tv') eligibleTv.push({ p, mult });
     }
   }
 
   if (eligibleFilm.length === 0 && eligibleTv.length === 0) return impact;
 
+  let combinedCandidates: CandidateTuple[] | null = null;
+
   for (const config of configsThisWeek) {
-    let candidates: Project[];
-    if (config.format === 'film') candidates = eligibleFilm;
-    else if (config.format === 'tv') candidates = eligibleTv;
-    else candidates = [...eligibleFilm, ...eligibleTv];
+    let candidates: CandidateTuple[];
+    if (config.format === 'film') {
+      candidates = eligibleFilm;
+    } else if (config.format === 'tv') {
+      candidates = eligibleTv;
+    } else {
+      if (!combinedCandidates) {
+        combinedCandidates = new Array(eligibleFilm.length + eligibleTv.length);
+        let idx = 0;
+        for (let i = 0; i < eligibleFilm.length; i++) combinedCandidates[idx++] = eligibleFilm[i];
+        for (let i = 0; i < eligibleTv.length; i++) combinedCandidates[idx++] = eligibleTv[i];
+      }
+      candidates = combinedCandidates;
+    }
 
     if (candidates.length === 0) continue;
 
-    let bestProject = candidates[0];
+    let bestProject = candidates[0].p;
     let bestScore = -1;
+    const evaluator = config.evaluator;
 
-    for (const p of candidates) {
-      const score = (config.evaluator(p) || 0) * (1 + (p.awardsProfile?.campaignStrength || 0) / 25);
+    for (let i = 0; i < candidates.length; i++) {
+      const candidate = candidates[i];
+      const score = (evaluator(candidate.p) || 0) * candidate.mult;
       if (score > bestScore) {
         bestScore = score;
-        bestProject = p;
+        bestProject = candidate.p;
       }
     }
 
