@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
-import { Talent } from '@/engine/types';
+import { Talent, Agency } from '@/engine/types';
 import { selectTalentPool } from '@/store/selectors';
 
 /**
@@ -26,13 +26,12 @@ export function useTalentMap(talentPool?: Talent[] | Record<string, Talent>): Ma
  * Hook to create a Map of agencies by ID for efficient lookups
  * @returns Map of agency ID to agency object
  */
-// Use unknown to fix any type error
-export function useAgencyMap(): Map<string, unknown> {
+export function useAgencyMap(): Map<string, Agency> {
   const gameState = useGameStore(s => s.gameState);
   
   return useMemo(() => {
     const agencies = gameState?.industry?.agencies || [];
     const agenciesArray = Array.isArray(agencies) ? agencies : Object.values(agencies);
-    return new Map(agenciesArray.map((a: unknown) => [(a as {id: string}).id, a]));
+    return new Map(agenciesArray.map((a: Agency) => [a.id, a]));
   }, [gameState?.industry?.agencies]);
 }
