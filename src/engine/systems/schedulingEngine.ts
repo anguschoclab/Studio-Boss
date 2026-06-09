@@ -60,23 +60,27 @@ export const SchedulingEngine = {
   ): { hasConflict: boolean; conflicts: string[] } {
     const conflicts: string[] = [];
     
-    for (const contract of projectContracts) {
+    const contractsLen = projectContracts.length;
+    for (let i = 0; i < contractsLen; i++) {
+      const contract = projectContracts[i];
       // Safety check in case unfiltered contracts are passed
       if (contract.projectId !== project.id) continue;
 
       const talent = talentPool[contract.talentId];
       if (!talent || !talent.commitments) continue;
 
+      const commitments = talent.commitments;
+      const commitmentsLen = commitments.length;
+
       // Find other active commitments that overlap with THE CURRENT WEEK
-      for (const commitment of talent.commitments) {
+      for (let j = 0; j < commitmentsLen; j++) {
+        const commitment = commitments[j];
+
+        // ⚡ Bolt: Fast integer bounds check BEFORE string/object property check
+        if (currentWeek < commitment.startWeek || currentWeek > commitment.endWeek) continue;
         if (commitment.projectId === project.id) continue;
 
-        // Deterministic check: Is the talent working on ANOTHER project THIS week?
-        const isWorkingElsewhere = currentWeek >= commitment.startWeek && currentWeek <= commitment.endWeek;
-        
-        if (isWorkingElsewhere) {
-          conflicts.push(`${talent.name} is currently filming "${commitment.projectTitle}" (Week ${currentWeek} overlap)`);
-        }
+        conflicts.push(`${talent.name} is currently filming "${commitment.projectTitle}" (Week ${currentWeek} overlap)`);
       }
     }
     return { hasConflict: conflicts.length > 0, conflicts };
