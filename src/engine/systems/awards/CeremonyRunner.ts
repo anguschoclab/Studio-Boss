@@ -85,7 +85,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       
       // ⚡ Bolt: Use direct rival record lookup via ownerId, eliminating intermediate Map
       const rival = bestProject.ownerId ? (rivalsMap[bestProject.ownerId] || null) : null;
-      const isPlayer = !rival;
+      const isPlayer = bestProject.ownerId === state.studio.id;
 
       impacts.push({
         type: 'INDUSTRY_UPDATE',
