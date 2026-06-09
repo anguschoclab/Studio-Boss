@@ -45,6 +45,3 @@
 ## 2026-05-26 - Replace O(N log N) sorts and array chain allocations with O(N) single-pass maximum find
 **Learning:** Finding the maximum or best matching element (like finding a rescue acquirer in `DistressCascade`) using `Object.values().filter().sort()[0]` creates O(N) array allocations and an O(N log N) sort overhead on every tick.
 **Action:** Replace `Object.values().filter().sort()` chains when only the single top candidate is needed by using a direct `for...in` loop to track the maximum value in a single O(N) pass, reducing time complexity and eliminating GC pressure.
-## 2026-05-28 - Pre-compute Shingle Deal Counts to avoid O(N*M) loop inside bidder loop
-**Learning:** Calling an O(N) array iteration function like `countDealsByStudio` inside an O(M) loop (like the loop over `bidders`) creates O(N*M) complexity. In `ShingleSystem.ts`, this caused excessive time spent reiterating all shingles for every bidder repeatedly in functions like `createPodShingle` and `createShingle`.
-**Action:** Replace the `countDealsByStudio` function with a single pass `getStudioDealCounts` function that pre-calculates the deal counts for all studios into a dictionary mapping before the bidder loops, effectively changing the complexity from O(N*M) to O(N + M).
