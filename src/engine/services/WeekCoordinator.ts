@@ -65,7 +65,7 @@ import { runFestivalMarket } from '../systems/festivals/festivalAuctionEngine';
 // IP Systems
 import { tickIPVault } from '../systems/ip/IPVaultManager';
 import { advanceIPRights } from '../systems/ipRetention';
-import { updateFranchiseHub } from '../systems/ip/franchiseCoordinator';
+import { updateFranchiseHub, updateFranchiseHubs } from '../systems/ip/franchiseCoordinator';
 import { AnnualScans } from './filters/AnnualScans';
 
 // Market Systems
@@ -133,11 +133,17 @@ export class WeekCoordinator {
 
     // 3.5 Check for franchise breakouts on newly released projects
     // ⚡ The Framerate Fanatic: Replaced Object.values().filter() with a direct for...in loop
+    // ⚡ The Framerate Fanatic: Batched processing to avoid O(N*M) dictionary cloning
+    const newlyReleasedProjects = [];
     for (const id in nextState.entities.projects) {
       const p = nextState.entities.projects[id];
       if (p.state === 'released' && (p.releaseWeek === context.week || p.releaseWeek === context.week - 1) && !p.franchiseId) {
-        nextState = updateFranchiseHub(nextState, p);
+        newlyReleasedProjects.push(p);
       }
+    }
+
+    if (newlyReleasedProjects.length > 0) {
+      nextState = updateFranchiseHubs(nextState, newlyReleasedProjects);
     }
 
     const finalizedState: GameState = {
