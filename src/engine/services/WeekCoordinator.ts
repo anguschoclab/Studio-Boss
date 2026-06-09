@@ -65,7 +65,7 @@ import { runFestivalMarket } from '../systems/festivals/festivalAuctionEngine';
 // IP Systems
 import { tickIPVault } from '../systems/ip/IPVaultManager';
 import { advanceIPRights } from '../systems/ipRetention';
-import { updateFranchiseHub, updateFranchiseHubs } from '../systems/ip/franchiseCoordinator';
+import { updateFranchiseHubs } from '../systems/ip/franchiseCoordinator';
 import { AnnualScans } from './filters/AnnualScans';
 
 // Market Systems
