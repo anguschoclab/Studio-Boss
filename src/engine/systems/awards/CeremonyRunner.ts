@@ -1,4 +1,4 @@
-import { GameState, Project, RivalStudio, StateImpact, Contract } from '@/engine/types';
+import { GameState, Project, StateImpact, Contract } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 import { BardResolver } from '../bardResolver';
 import { 
