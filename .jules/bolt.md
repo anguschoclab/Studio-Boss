@@ -45,3 +45,7 @@
 ## 2026-05-26 - Replace O(N log N) sorts and array chain allocations with O(N) single-pass maximum find
 **Learning:** Finding the maximum or best matching element (like finding a rescue acquirer in `DistressCascade`) using `Object.values().filter().sort()[0]` creates O(N) array allocations and an O(N log N) sort overhead on every tick.
 **Action:** Replace `Object.values().filter().sort()` chains when only the single top candidate is needed by using a direct `for...in` loop to track the maximum value in a single O(N) pass, reducing time complexity and eliminating GC pressure.
+
+## 2024-05-18 - [Optimize Shingle System Count Deals]
+**Learning:** Checking for entity counts inside deeply nested logic like bidder evaluations loops can degrade into O(N*M) or O(N^2) complexity, leading to enormous performance overhead in background simulations over hundreds of game ticks.
+**Action:** When a loop requires aggregating counts of an entity type (e.g., `countDealsByStudio`), pre-aggregate the counts into a dictionary (O(N)) before the loop, converting the subsequent lookups into O(1) accesses.
