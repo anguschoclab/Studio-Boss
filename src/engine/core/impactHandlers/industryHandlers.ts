@@ -66,6 +66,7 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
   // 4. Generic Deep-Path Updates (for dynamic events)
   const update = payload.update;
   if (update && typeof update === "object" && !Array.isArray(update)) {
+    const clonedRefs = new Set<unknown>([nextState]);
     for (const [path, value] of Object.entries(update)) {
       const parts = path.split('.');
       let current: Record<string, unknown> = nextState as unknown as Record<string, unknown>;
@@ -74,12 +75,16 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
         const part = parts[i];
         if (FORBIDDEN_KEYS.has(part)) break;
 
-        if (Array.isArray(current[part])) {
-          current[part] = [...current[part]];
-        } else if (typeof current[part] === "object" && current[part] !== null) {
-          current[part] = { ...current[part] };
-        } else {
-          current[part] = {};
+        const nextTarget = current[part];
+        if (!clonedRefs.has(nextTarget)) {
+          if (Array.isArray(nextTarget)) {
+            current[part] = [...nextTarget];
+          } else if (typeof nextTarget === "object" && nextTarget !== null) {
+            current[part] = { ...nextTarget };
+          } else {
+            current[part] = {};
+          }
+          clonedRefs.add(current[part]);
         }
         current = current[part];
       }
