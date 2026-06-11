@@ -26,11 +26,11 @@ export class RegulatorSystem {
 
     const totalSubs = state.market.buyers
       .filter(b => b.archetype === 'streamer')
-      .reduce((acc, b) => acc + ((b as any).subscribers || 0), 0);
+      .reduce((acc, b) => acc + ((b as unknown as import('../../types/studio.types').StreamerPlatform).subscribers || 0), 0);
     
     const studioSubs = state.market.buyers
       .filter(b => b.archetype === 'streamer' && b.ownerId === (isTargetPlayer ? playerStudioId : studioId))
-      .reduce((acc, b) => acc + ((b as any).subscribers || 0), 0);
+      .reduce((acc, b) => acc + ((b as unknown as import('../../types/studio.types').StreamerPlatform).subscribers || 0), 0);
 
     const prestigeShare = (studioPrestige / totalPrestige) * 100;
     const subShare = totalSubs > 0 ? (studioSubs / totalSubs) * 100 : 0;
@@ -70,7 +70,7 @@ export class RegulatorSystem {
   /**
    * Weekly Tick: Evaluates market conditions and potential anti-trust warnings.
    */
-  static tick(state: GameState, rng: any): import('../../types/state.types').StateImpact[] {
+  static tick(state: GameState, rng: import('../../utils/rng').RandomGenerator): import('../../types/state.types').StateImpact[] {
     const impacts: import('../../types/state.types').StateImpact[] = [];
     const playerShare = this.getMarketShare(state, 'player');
 
