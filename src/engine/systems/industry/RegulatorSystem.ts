@@ -11,11 +11,15 @@ export class RegulatorSystem {
    * Market share is a weighted average of prestige and subscriber counts.
    */
   static getMarketShare(state: GameState, studioId: string | 'player'): number {
-    const ALL_RIVALS = Object.values(state.entities.rivals);
     const playerStudioId = state.studio.id;
     const isTargetPlayer = studioId === 'player' || studioId === playerStudioId;
 
-    const totalPrestige = ALL_RIVALS.reduce((acc, r) => acc + r.prestige, state.studio.prestige);
+    let totalPrestige = state.studio.prestige;
+    const rivals = state.entities.rivals || {};
+    for (const rId in rivals) {
+      totalPrestige += rivals[rId].prestige || 0;
+    }
+
     const studioPrestige = isTargetPlayer 
       ? state.studio.prestige 
       : state.entities.rivals[studioId]?.prestige || 0;
