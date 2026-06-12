@@ -64,10 +64,14 @@ export const TalentLifecycleSystem = {
       }
     }
 
-    const talentPool = Object.values(state.entities.talents) as Talent[];
     const retiredIds: string[] = [];
+    let currentSize = 0;
 
-    talentPool.forEach(talent => {
+    // ⚡ Bolt Optimization: Replaced Object.values().forEach() with a direct for...in loop
+    // to prevent expensive O(N) array allocation containing ~2,500 talent objects every single tick.
+    for (const talentId in state.entities.talents || {}) {
+      const talent = state.entities.talents[talentId];
+      currentSize++;
       // 0. Medical leave expiry
       if (talent.onMedicalLeave && talent.medicalLeaveEndsWeek !== undefined && state.week >= talent.medicalLeaveEndsWeek) {
         impacts.push({
@@ -170,11 +174,11 @@ export const TalentLifecycleSystem = {
         });
         retiredIds.push(talent.id);
       }
-    });
+    }
 
     // 3. Replenishment (Maintain ~2,500 talent pool)
     const targetPoolSize = 2500;
-    const currentSize = talentPool.length - retiredIds.length;
+    currentSize = currentSize - retiredIds.length;
     const needsReplacement = Math.max(0, targetPoolSize - currentSize);
 
     if (needsReplacement > 0) {
