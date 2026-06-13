@@ -45,3 +45,7 @@
 ## 2026-05-26 - Replace O(N log N) sorts and array chain allocations with O(N) single-pass maximum find
 **Learning:** Finding the maximum or best matching element (like finding a rescue acquirer in `DistressCascade`) using `Object.values().filter().sort()[0]` creates O(N) array allocations and an O(N log N) sort overhead on every tick.
 **Action:** Replace `Object.values().filter().sort()` chains when only the single top candidate is needed by using a direct `for...in` loop to track the maximum value in a single O(N) pass, reducing time complexity and eliminating GC pressure.
+
+## 2024-06-13 - O(1) Pre-grouping in nested loops
+**Learning:** When iterating over a large dictionary (like projects) and simultaneously needing to filter another large dictionary (like contracts) based on a foreign key relationship (`projectId`), calling `Object.values().filter()` inside the loop creates an O(M*N) bottleneck.
+**Action:** Iterate through the child dictionary ONCE before the loop to group items into a map/record keyed by the foreign ID. This replaces the inner O(N) array allocation/filter with a fast O(1) property access, drastically reducing garbage collection and execution time.
