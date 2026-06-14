@@ -165,34 +165,39 @@ export function handleScandalAdded(state: GameState, impact: StateImpact): GameS
   const prestigeHit = Math.floor((scandal.severity / 5) * 3.0);
   newPrestige = Math.max(0, newPrestige - prestigeHit);
 
-  const projects = { ...state.entities.projects };
-
-  const projectIds: string[] = [];
-  const contractsRaw = state.entities.contracts;
+  const projectIds = new Set<string>();
+  const contractsRaw = state.entities.contracts || {};
+  const scandalTalentId = scandal.talentId;
   for (const key in contractsRaw) {
     if (Object.prototype.hasOwnProperty.call(contractsRaw, key)) {
       const c = contractsRaw[key];
-      if (c.talentId === scandal.talentId) {
-        projectIds.push(c.projectId);
+      if (c.talentId === scandalTalentId) {
+        projectIds.add(c.projectId);
       }
     }
   }
 
-  for (const pid of projectIds) {
-    const project = projects[pid];
-    if (project) {
-      const format = project.format;
-      const genre = project.genre ? project.genre.toLowerCase() : "";
-      if (format === "unscripted" || genre.includes("horror")) {
-        projects[pid] = {
-          ...project,
-          buzz: Math.min(100, (project.buzz || 0) + scandal.severity * 3.0),
-        };
-      } else {
-        projects[pid] = {
-          ...project,
-          buzz: Math.max(0, (project.buzz || 0) - Math.floor(scandal.severity)),
-        };
+  let projects = state.entities.projects;
+
+  if (projectIds.size > 0) {
+    projects = { ...projects };
+
+    for (const pid of projectIds) {
+      const project = projects[pid];
+      if (project) {
+        const format = project.format;
+        const genre = project.genre ? project.genre.toLowerCase() : "";
+        if (format === "unscripted" || genre.includes("horror")) {
+          projects[pid] = {
+            ...project,
+            buzz: Math.min(100, (project.buzz || 0) + scandal.severity * 3.0),
+          };
+        } else {
+          projects[pid] = {
+            ...project,
+            buzz: Math.max(0, (project.buzz || 0) - Math.floor(scandal.severity)),
+          };
+        }
       }
     }
   }
