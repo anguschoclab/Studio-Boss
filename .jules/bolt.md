@@ -48,3 +48,7 @@
 ## 2026-06-11 - Replace Object.values with for...in loops in RegulatorSystem
 **Learning:** The RegulatorSystem was computing market share using `Object.values(state.entities.rivals).reduce()`, which caused unnecessary array allocation per call.
 **Action:** Replaced `Object.values` with a direct `for...in` loop to iterate over the `state.entities.rivals` object and sum up the prestige, avoiding the O(N) intermediate array allocation and reducing GC overhead.
+
+## 2026-05-28 - Optimize HeadlessController active project evaluation
+**Learning:** Checking active player projects using `Object.values(state.entities.projects).filter(...)` in `HeadlessController.tick` creates an unnecessary `O(N)` array allocation and iteration overhead per simulated tick. Since the simulation loop only checks the aggregate length (`< 10`), generating and filtering the array is extremely inefficient.
+**Action:** Replace `Object.values().filter()` chained methods with an in-place `for...in` loop and a simple counter to verify state without creating intermediate objects, reducing garbage collection spikes in hot loops.
