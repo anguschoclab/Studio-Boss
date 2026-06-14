@@ -166,9 +166,9 @@ function buildUnlockImpacts(
 
   // Carry the achievement ID in a SYSTEM_TICK bag so the reducer can persist it
   impacts.push({
-    type: 'SYSTEM_TICK' as unknown as string,
+    type: 'SYSTEM_TICK',
     payload: { newAchievementId: achievement.id },
-  } as StateImpact);
+  } as unknown as StateImpact);
 
   return impacts;
 }

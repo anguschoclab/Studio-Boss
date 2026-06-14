@@ -1,7 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { GameState, FestivalSubmission, AwardBody, Project } from '@/engine/types';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { randRange, generateId, rand } from '../utils';
+import { GameState, FestivalSubmission, AwardBody } from '@/engine/types';
+import { randRange, generateId } from '../utils';
 import { StateImpact } from '../types/state.types';
 
 export const FESTIVALS: { body: AwardBody, name: string, weeks: number[], cost: number, prestigeNeeded: number, buzzReward: number }[] = [

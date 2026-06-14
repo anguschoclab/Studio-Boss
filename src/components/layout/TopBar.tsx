@@ -143,20 +143,22 @@ export const TopBar = () => {
       {/* Functional Actions */}
       <div className="flex items-center gap-4 ml-6">
         <button
+          type="button"
           onClick={handleSave}
           title="SAVE_SYSTEM_STATE"
           aria-label="Save system state"
-          className="h-12 w-12 rounded-none bg-white/[0.02] border border-white/5 flex items-center justify-center text-muted-foreground/40 hover:text-primary hover:bg-primary/10 hover:border-primary/40 transition-all duration-700 active:scale-90 shadow-2xl"
+          className="h-12 w-12 rounded-none bg-white/[0.02] border border-white/5 flex items-center justify-center text-muted-foreground/40 hover:text-primary hover:bg-primary/10 hover:border-primary/40 transition-all duration-700 active:scale-90 shadow-2xl focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none"
         >
-          <Save className="h-5 w-5" />
+          <Save className="h-5 w-5" aria-hidden="true" />
         </button>
 
         <button
+          type="button"
           onClick={handleAdvanceWeek}
-          className="h-12 px-10 rounded-none bg-primary text-black font-display font-black uppercase tracking-[0.3em] text-[10px] italic flex items-center gap-4 transition-all duration-700 shadow-[0_0_50px_rgba(var(--primary),0.2)] hover:shadow-[0_0_80px_rgba(var(--primary),0.4)] hover:scale-[1.02] active:scale-95 group overflow-hidden relative"
+          className="h-12 px-10 rounded-none bg-primary text-black font-display font-black uppercase tracking-[0.3em] text-[10px] italic flex items-center gap-4 transition-all duration-700 shadow-[0_0_50px_rgba(var(--primary),0.2)] hover:shadow-[0_0_80px_rgba(var(--primary),0.4)] hover:scale-[1.02] active:scale-95 group overflow-hidden relative focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-          <FastForward className="h-5 w-5" strokeWidth={3} />
+          <FastForward className="h-5 w-5" strokeWidth={3} aria-hidden="true" />
           ADVANCE_CYCLE
         </button>
       </div>

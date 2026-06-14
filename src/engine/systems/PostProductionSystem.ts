@@ -67,13 +67,13 @@ export function tickPostProduction(
       });
 
       impacts.push({
-        type: 'MODAL_TRIGGERED' as unknown as string,
+        type: 'MODAL_TRIGGERED',
         payload: {
           modalType: 'DIRECTORS_CUT_AVAILABLE',
           priority: 40,
           payload: { projectId: project.id, projectTitle: project.title },
         },
-      });
+      } as unknown as StateImpact);
     }
 
     // ── Decrement counter ────────────────────────────────────────────────────

@@ -86,13 +86,13 @@ export function tickReleaseStrategy(state: GameState): StateImpact[] {
       !project.releaseStrategy
     ) {
       impacts.push({
-        type: 'MODAL_TRIGGERED' as unknown as string,
+        type: 'MODAL_TRIGGERED',
         payload: {
           modalType: 'RELEASE_STRATEGY',
           priority: 90,
           payload: { projectId: project.id, projectTitle: project.title },
         },
-      });
+      } as unknown as StateImpact);
     }
   }
 

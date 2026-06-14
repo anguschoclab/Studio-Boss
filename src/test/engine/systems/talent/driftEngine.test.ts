@@ -39,7 +39,8 @@ describe('TalentDriftEngine', () => {
     });
 
     it('should have at least one transition for each personality', () => {
-      for (const [personality, transitions] of Object.entries(PERSONALITY_TRANSITIONS)) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      for (const [_personality, transitions] of Object.entries(PERSONALITY_TRANSITIONS)) {
         expect(transitions).toBeDefined();
         expect(transitions.length).toBeGreaterThan(0);
       }
