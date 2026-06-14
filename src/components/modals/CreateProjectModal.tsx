@@ -164,7 +164,7 @@ export const CreateProjectModal = () => {
                 aria-label="Generate Random Title"
                 className="h-11 w-11 shrink-0 bg-background/50 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all shadow-sm"
               >
-                <Dices className="h-5 w-5" />
+                <Dices className="h-5 w-5" aria-hidden="true" />
               </Button>
             </div>
           </div>
