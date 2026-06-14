@@ -61,8 +61,22 @@ export function evaluatePackageOffer(
  */
 export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const allTalents = Object.values(state.entities.talents || {});
   const playerStudioId = state.studio.id;
+
+  const talentsObj = state.entities.talents || {};
+
+  // ⚡ Bolt: Single pass clustering of talents by agency for faster lookup
+  // and avoided Object.values() O(N) allocation
+  const talentsByAgency: Record<string, Talent[]> = {};
+  for (const id in talentsObj) {
+    if (Object.prototype.hasOwnProperty.call(talentsObj, id)) {
+      const t = talentsObj[id];
+      if (t.agencyId) {
+        if (!talentsByAgency[t.agencyId]) talentsByAgency[t.agencyId] = [];
+        talentsByAgency[t.agencyId].push(t);
+      }
+    }
+  }
 
   // Collect player project IDs for ownership checks
   const playerProjectIds = new Set<string>();
@@ -87,7 +101,11 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
     // --- Rumor / Poach Pass ---
     if (agency.culture === 'shark' || agency.currentMotivation === 'THE_SHARK') {
       if (rng.next() < 0.1) {
-        const brands = Object.values(state.entities.rivals || {});
+        const brands: import('@/engine/types').RivalStudio[] = [];
+        const rivalsObj = state.entities.rivals || {};
+        for (const id in rivalsObj) {
+          brands.push(rivalsObj[id]);
+        }
         if (brands.length > 0) {
           let rival = rng.pick(brands);
 
@@ -111,14 +129,14 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
     // --- Package Deal Pass ---
     if (archetype.pact_aggression > 0 && rng.next() < archetype.pact_aggression) {
       // Find the highest-prestige player-contracted talent at this agency
-      const agencyPlayerTalents = allTalents
-        .filter(t => t.agencyId === agency.id && playerContractedTalentIds.has(t.id))
+      const agencyPlayerTalents = (talentsByAgency[agency.id] || [])
+        .filter(t => playerContractedTalentIds.has(t.id))
         .sort((a, b) => b.prestige - a.prestige);
 
       if (agencyPlayerTalents.length > 0) {
         const leadTalent = agencyPlayerTalents[0];
         const marketState = state.finance?.marketState ?? { baseRate: 0.045, savingsYield: 0.025, debtRate: 0.095, loanRate: 0.07, rateHistory: [] };
-        const result = evaluatePackageOffer(agency, leadTalent, allTalents, marketState, rng);
+        const result = evaluatePackageOffer(agency, leadTalent, talentsByAgency[agency.id] || [], marketState, rng);
 
         if (result.requiredTalentId) {
           const bundledTalent = state.entities.talents?.[result.requiredTalentId];
@@ -155,8 +173,10 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
   });
 
   // Rival production setbacks
-  Object.values(state.entities.rivals || {}).forEach(rival => {
-    if (rival.currentMotivation === 'CASH_CRUNCH') return;
+  const rivalsObj = state.entities.rivals || {};
+  for (const rId in rivalsObj) {
+    const rival = rivalsObj[rId];
+    if (rival.currentMotivation === 'CASH_CRUNCH') continue;
 
     if (rng.next() < 0.02) {
       const crisisCost = rival.cash * 0.05;
@@ -175,7 +195,7 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
         },
       });
     }
-  });
+  }
 
   return impacts;
 }

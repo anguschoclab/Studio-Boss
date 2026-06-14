@@ -71,3 +71,7 @@ I eliminated the duplicate iterations and the `Map` construction entirely. The e
 ## 2024-06-13 - O(1) Pre-grouping in nested loops
 **Learning:** When iterating over a large dictionary (like projects) and simultaneously needing to filter another large dictionary (like contracts) based on a foreign key relationship (`projectId`), calling `Object.values().filter()` inside the loop creates an O(M*N) bottleneck.
 **Action:** Iterate through the child dictionary ONCE before the loop to group items into a map/record keyed by the foreign ID. This replaces the inner O(N) array allocation/filter with a fast O(1) property access, drastically reducing garbage collection and execution time.
+
+## 2026-06-03 - Pre-group items in dictionary lookup to avoid O(N*M) loop performance overhead
+**Learning:** `tickAgencies` was performing an `Object.values(state.entities.talents)` allocation per tick, and then filtering that array per agency inside an inner loop. This resulted in O(Agencies * Talents) operations on every tick, causing significant garbage collection pressure.
+**Action:** Replace `Object.values` and inner `.filter()` array operations with a single-pass grouping `for...in` loop that clusters talents by `agencyId`. This drops the inner loop search to O(1) dictionary lookups for matching clients, drastically improving performance.
