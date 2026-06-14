@@ -54,7 +54,8 @@ export const NewsTicker: React.FC = () => {
                 <button
                   key={`${item.id}-${idx}`}
                   onClick={() => setSelectedHeadline(item)}
-                  className="flex items-center gap-6 group/item hover:opacity-100 transition-opacity"
+                  aria-label={`Read more about: ${item.text}`}
+                  className="flex items-center gap-6 group/item hover:opacity-100 transition-opacity focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm"
                 >
                   <div className="flex items-center gap-3">
                     <Icon className={cn("h-3.5 w-3.5", config.color)} />
