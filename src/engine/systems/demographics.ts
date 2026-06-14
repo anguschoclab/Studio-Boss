@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Project, AudienceQuadrant, DemographicGroup, GameState } from '@/engine/types';
+import { Project, AudienceQuadrant, GameState } from '@/engine/types';
 
 /**
  * Evaluates how strongly a project resonates with a specific marketing target audience.

@@ -1,9 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { GameState, StateImpact, Project, RivalStudio } from '@/engine/types';
+import { GameState, StateImpact, Project } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
-import { isPlayerOwner } from '../../utils/ownership';
 import { FestivalSubmission } from '@/engine/types/project.types';
-import { generateFestivalBid } from '../ai/RivalBiddingEngine';
 
 // Festival market weeks: Sundance (4), Cannes (20), TIFF (36)
 export const FESTIVAL_MARKET_WEEKS = [4, 20, 36] as const;
@@ -92,30 +89,25 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
 
     // Generate NPC bids from all buyers
     buyers.forEach(buyer => {
-      const buyerCash = (buyer as unknown as Record<string, number>).cash ?? 50_000_000;
+      const buyerCash = (buyer as unknown as { cash?: number }).cash ?? 50_000_000;
       const bid = generateNPCBid(project, buyerCash, rng);
       if (bid) {
         bids.push({ ...bid, bidderId: buyer.id, bidderName: buyer.name });
       }
     });
 
-    // Add rival studio bids using archetype-driven logic
-    rivalsList.slice(0, 5).forEach(rival => {
-      const bidAmount = generateFestivalBid(rival, project, rng);
-      if (bidAmount !== null) {
-        bids.push({
-          bidderId: rival.id,
-          bidderName: rival.name,
-          amount: bidAmount,
-          terms: (project.reviewScore ?? 60) > 75 ? 'theatrical + streaming rights' : 'streaming rights only',
-        });
+    // Add NPC rival bids
+    rivalsList.slice(0, 3).forEach(rival => {
+      const bid = generateNPCBid(project, rival.cash, rng);
+      if (bid) {
+        bids.push({ ...bid, bidderId: rival.id, bidderName: rival.name });
       }
     });
 
     bids.sort((a, b) => b.amount - a.amount);
     const winner = bids[0] ?? null;
 
-    const isPlayerProject = isPlayerOwner(state, project.ownerId) || !project.ownerId;
+    const isPlayerProject = project.ownerId === 'PLAYER' || !project.ownerId;
 
     auctionResults.push({
       projectId: project.id,
@@ -157,9 +149,11 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
   impacts.push({
     type: 'NEWS_ADDED',
     payload: {
+      id: rng.uuid('NWS'),
       headline: `${festivalBody} market opens — acquisition frenzy underway`,
       description: `Buyers and sellers converge as distribution rights go up for grabs.`,
-      category: 'market'
+      category: 'festival',
+      publication: 'Variety'
     }
   });
 

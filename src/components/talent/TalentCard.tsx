@@ -28,15 +28,10 @@ interface TalentCardProps {
 /**
  * A highly stylized card component for displaying a talent's key metrics and portrait.
  * Features a vertical star power bar, prestige indicators, and market ask details.
- * 
+ *
  * @param props - Component properties
  */
-export const TalentCard: React.FC<TalentCardProps> = ({
-  talent,
-  className,
-  onClick,
-  tooltip,
-}) => {
+export const TalentCard: React.FC<TalentCardProps> = ({ talent, className, onClick, tooltip }) => {
   const { selectTalent } = useUIStore();
   const gameState = useGameStore((s) => s.gameState);
   const currentWeek = gameState?.week ?? 1;
@@ -59,12 +54,19 @@ export const TalentCard: React.FC<TalentCardProps> = ({
         ? "♀"
         : "⚧";
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = (e: React.MouseEvent | React.KeyboardEvent) => {
     e.stopPropagation();
     if (onClick) {
       onClick(talent.id);
     } else {
       selectTalent(talent.id);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleClick(e);
     }
   };
 
@@ -74,9 +76,12 @@ export const TalentCard: React.FC<TalentCardProps> = ({
       side="top"
     >
       <div
+        role="button"
+        tabIndex={0}
         onClick={handleClick}
+        onKeyDown={handleKeyDown}
         className={cn(
-          "p-6 border rounded-none bg-white/[0.01] glass-card transition-all duration-700 group relative overflow-hidden cursor-pointer h-full flex flex-col shadow-2xl",
+          "p-6 border rounded-none bg-white/[0.01] glass-card transition-all duration-700 group relative overflow-hidden cursor-pointer h-full flex flex-col shadow-2xl focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none",
           talent.prestige >= 80
             ? "border-primary/30 bg-white/[0.03] shadow-[0_0_40px_rgba(var(--primary),0.05)]"
             : "border-white/5",

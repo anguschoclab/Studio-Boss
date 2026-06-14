@@ -321,9 +321,10 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
             <div className="bg-black/90 backdrop-blur-3xl border border-white/10 rounded-none shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden">
               {/* Search header */}
               <div className="flex items-center gap-6 px-8 py-8 border-b border-white/5 bg-white/[0.02]">
-                <Search className="w-5 h-5 text-primary" strokeWidth={3} />
+                <Search className="w-5 h-5 text-primary" strokeWidth={3} aria-hidden="true" />
                 <input
                   type="text"
+                  aria-label="Search commands and intelligence"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="SEARCH_COMMANDS_&_TAC_INTEL..."

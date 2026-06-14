@@ -45,3 +45,33 @@
 ## 2026-05-26 - Replace O(N log N) sorts and array chain allocations with O(N) single-pass maximum find
 **Learning:** Finding the maximum or best matching element (like finding a rescue acquirer in `DistressCascade`) using `Object.values().filter().sort()[0]` creates O(N) array allocations and an O(N log N) sort overhead on every tick.
 **Action:** Replace `Object.values().filter().sort()` chains when only the single top candidate is needed by using a direct `for...in` loop to track the maximum value in a single O(N) pass, reducing time complexity and eliminating GC pressure.
+## 2026-06-11 - Replace Object.values with for...in loops in RegulatorSystem
+**Learning:** The RegulatorSystem was computing market share using `Object.values(state.entities.rivals).reduce()`, which caused unnecessary array allocation per call.
+**Action:** Replaced `Object.values` with a direct `for...in` loop to iterate over the `state.entities.rivals` object and sum up the prestige, avoiding the O(N) intermediate array allocation and reducing GC overhead.
+
+## 2026-05-28 - Optimize HeadlessController active project evaluation
+**Learning:** Checking active player projects using `Object.values(state.entities.projects).filter(...)` in `HeadlessController.tick` creates an unnecessary `O(N)` array allocation and iteration overhead per simulated tick. Since the simulation loop only checks the aggregate length (`< 10`), generating and filtering the array is extremely inefficient.
+**Action:** Replace `Object.values().filter()` chained methods with an in-place `for...in` loop and a simple counter to verify state without creating intermediate objects, reducing garbage collection spikes in hot loops.
+
+## 2025-06-09 - [Awards Ceremony Optimization]
+**Learning:**
+I found that `runAwardsCeremony` was iterating over `state.entities.projects` multiple times, assuming it only held player projects, which led to pushing ALL projects (player and rival) to the eligibility arrays, then re-scanning and duplicating rival projects again while simultaneously building a short-lived `Map` object for lookup. It also had a logical bug where `!!state.entities.projects[bestProject.id]` was always true because the projects dictionary contains all projects (player and rival).
+**Action:**
+I eliminated the duplicate iterations and the `Map` construction entirely. The eligibility array is now correctly built in a single O(N) pass, and rival relationships are resolved dynamically using O(1) direct dictionary lookups on `state.entities.rivals` via `bestProject.ownerId`, reducing the benchmark processing time from ~85ms to ~49ms (approx. 42% performance boost).
+
+## 2026-05-27 - Delay Cloning Expensive State Objects Until Affected Elements Are Found
+**Learning:** `handleScandalAdded` in `industryHandlers.ts` was doing a shallow clone of the entire `state.entities.projects` dictionary unconditionally, even if the scandal involved a talent with zero active contracts. This caused huge memory allocation/GC overhead per scandal impact. Furthermore, iterating contracts to collect duplicate project IDs, followed by re-iterating project IDs, is inefficient.
+**Action:** Replaced `Object.values` and unneeded full object clones by using a `for...in` loop to collect affected project IDs in a `Set`. `projects` is only cloned if `projectIds.size > 0`. This optimization dropped execution time for unmatched scandals from ~1222ms to ~796ms, and from ~2223ms to ~1154ms for matched scandals in benchmarks.
+
+## 2024-05-18 - [Optimize Deep Path Update Cloning]
+
+**Learning:** Deeply nested updates using string paths (e.g. `a.b.c.d`) were causing an excessive number of array/object spreads when many paths shared the same prefix. The old handler looped over paths and unconditionally cloned the hierarchy for every path, leading to O(N * D) clones and high garbage collection overhead.
+**Action:** Introduced a `clonedRefs = new Set<unknown>([nextState])` cache locally within the batch update scope to check `!clonedRefs.has(nextTarget)` before spreading, reducing the allocations to O(N + D) for clustered path updates while maintaining strict immutability.
+
+## 2024-06-13 - O(1) Pre-grouping in nested loops
+**Learning:** When iterating over a large dictionary (like projects) and simultaneously needing to filter another large dictionary (like contracts) based on a foreign key relationship (`projectId`), calling `Object.values().filter()` inside the loop creates an O(M*N) bottleneck.
+**Action:** Iterate through the child dictionary ONCE before the loop to group items into a map/record keyed by the foreign ID. This replaces the inner O(N) array allocation/filter with a fast O(1) property access, drastically reducing garbage collection and execution time.
+
+## 2026-06-03 - Pre-group items in dictionary lookup to avoid O(N*M) loop performance overhead
+**Learning:** `tickAgencies` was performing an `Object.values(state.entities.talents)` allocation per tick, and then filtering that array per agency inside an inner loop. This resulted in O(Agencies * Talents) operations on every tick, causing significant garbage collection pressure.
+**Action:** Replace `Object.values` and inner `.filter()` array operations with a single-pass grouping `for...in` loop that clusters talents by `agencyId`. This drops the inner loop search to O(1) dictionary lookups for matching clients, drastically improving performance.

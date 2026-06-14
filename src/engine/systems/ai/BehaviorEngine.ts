@@ -5,7 +5,7 @@ export function shouldAttemptHostileTakeover(
   attacker: RivalStudio,
   target: RivalStudio,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  state: GameState
+  _state: GameState
 ): boolean {
   if (attacker.id === target.id) return false;
 

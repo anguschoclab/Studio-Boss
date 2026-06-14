@@ -17,3 +17,7 @@
 ## 2024-05-19 - Accessible Inputs Without Labels
 **Learning:** In complex hub dashboards (like TalentHub and ProductionHub), search and filter inputs are often styled cleanly without explicit <label> tags. Screen readers cannot deduce the input's purpose without one.
 **Action:** Always provide an aria-label attribute on <input> elements that lack an associated visible <label>, ensuring screen reader users understand the field's purpose (e.g., "Search talent" or "Filter slate").
+
+## 2025-06-11 - Custom Focus Offset for Black Backgrounds
+**Learning:** When adding focus states to interactive elements rendered on top of very dark or pitch-black backgrounds (like the `NewsTicker`), standard `focus-visible:ring-offset-2` can sometimes create visual bleed or poor contrast.
+**Action:** When working in ultra-dark theme areas, verify if the focus ring offset color should explicitly be set to black using `focus-visible:ring-offset-black` to preserve clean UI boundaries.

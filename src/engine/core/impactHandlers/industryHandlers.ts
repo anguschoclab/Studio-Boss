@@ -66,6 +66,7 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
   // 4. Generic Deep-Path Updates (for dynamic events)
   const update = payload.update;
   if (update && typeof update === "object" && !Array.isArray(update)) {
+    const clonedRefs = new Set<unknown>([nextState]);
     for (const [path, value] of Object.entries(update)) {
       const parts = path.split('.');
       let current: Record<string, unknown> = nextState as unknown as Record<string, unknown>;
@@ -74,12 +75,16 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
         const part = parts[i];
         if (FORBIDDEN_KEYS.has(part)) break;
 
-        if (Array.isArray(current[part])) {
-          current[part] = [...current[part]];
-        } else if (typeof current[part] === "object" && current[part] !== null) {
-          current[part] = { ...current[part] };
-        } else {
-          current[part] = {};
+        const nextTarget = current[part];
+        if (!clonedRefs.has(nextTarget)) {
+          if (Array.isArray(nextTarget)) {
+            current[part] = [...nextTarget];
+          } else if (typeof nextTarget === "object" && nextTarget !== null) {
+            current[part] = { ...nextTarget };
+          } else {
+            current[part] = {};
+          }
+          clonedRefs.add(current[part]);
         }
         current = current[part];
       }
@@ -165,34 +170,39 @@ export function handleScandalAdded(state: GameState, impact: StateImpact): GameS
   const prestigeHit = Math.floor((scandal.severity / 5) * 3.0);
   newPrestige = Math.max(0, newPrestige - prestigeHit);
 
-  const projects = { ...state.entities.projects };
-
-  const projectIds: string[] = [];
-  const contractsRaw = state.entities.contracts;
+  const projectIds = new Set<string>();
+  const contractsRaw = state.entities.contracts || {};
+  const scandalTalentId = scandal.talentId;
   for (const key in contractsRaw) {
     if (Object.prototype.hasOwnProperty.call(contractsRaw, key)) {
       const c = contractsRaw[key];
-      if (c.talentId === scandal.talentId) {
-        projectIds.push(c.projectId);
+      if (c.talentId === scandalTalentId) {
+        projectIds.add(c.projectId);
       }
     }
   }
 
-  for (const pid of projectIds) {
-    const project = projects[pid];
-    if (project) {
-      const format = project.format;
-      const genre = project.genre ? project.genre.toLowerCase() : "";
-      if (format === "unscripted" || genre.includes("horror")) {
-        projects[pid] = {
-          ...project,
-          buzz: Math.min(100, (project.buzz || 0) + scandal.severity * 3.0),
-        };
-      } else {
-        projects[pid] = {
-          ...project,
-          buzz: Math.max(0, (project.buzz || 0) - Math.floor(scandal.severity)),
-        };
+  let projects = state.entities.projects;
+
+  if (projectIds.size > 0) {
+    projects = { ...projects };
+
+    for (const pid of projectIds) {
+      const project = projects[pid];
+      if (project) {
+        const format = project.format;
+        const genre = project.genre ? project.genre.toLowerCase() : "";
+        if (format === "unscripted" || genre.includes("horror")) {
+          projects[pid] = {
+            ...project,
+            buzz: Math.min(100, (project.buzz || 0) + scandal.severity * 3.0),
+          };
+        } else {
+          projects[pid] = {
+            ...project,
+            buzz: Math.max(0, (project.buzz || 0) - Math.floor(scandal.severity)),
+          };
+        }
       }
     }
   }

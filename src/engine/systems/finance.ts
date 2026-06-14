@@ -1,4 +1,4 @@
-import { Project, GameState, WeeklyFinancialReport, Contract, Buyer } from '@/engine/types';
+import { Project, GameState, WeeklyFinancialReport, Buyer } from '@/engine/types';
 import { StateImpact, FinancialSnapshot } from '../types/state.types';
 import { RevenueProcessor } from './finance/RevenueProcessor';
 import { ExpenseProcessor } from './finance/ExpenseProcessor';
@@ -39,7 +39,7 @@ export function generateWeeklyFinancialReport(
   pendingImpacts: StateImpact[] = []
 ): { report: WeeklyFinancialReport; snapshot: FinancialSnapshot } {
   const projects = Object.values(state.studio?.internal?.projects || {});
-  const studioLevel = (state.studio as any).level || 1;
+  const studioLevel = (state.studio as unknown as { level?: number }).level || 1;
   const market = state.finance.marketState || InterestRateSimulator.initialize();
 
   // Track causality for financial changes
@@ -81,7 +81,7 @@ export function generateWeeklyFinancialReport(
 
       // Theatrical vs Streaming
       if (p.distributionStatus === 'theatrical') {
-        weeklyGross = RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.35); // The Studio Comptroller: Severely increased theatrical decay to 0.35 to accurately model modern front-loaded box office drops.
+        weeklyGross = RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.35) * trendMultiplier; // The Studio Comptroller: Severely increased theatrical decay to 0.35 to accurately model modern front-loaded box office drops.
         boxOffice += weeklyGross;
 
         // Track theatrical decay causality
@@ -157,7 +157,7 @@ export function generateWeeklyFinancialReport(
 
   pendingImpacts.forEach(impact => {
     if (impact.type === 'FINANCE_TRANSACTION' && impact.payload) {
-      const amount = (impact.payload as any).amount || 0;
+      const amount = (impact.payload as { amount?: number }).amount || 0;
       if (amount > 0) otherRevenue += amount;
       else otherExpenses += Math.abs(amount);
     } else if (impact.cashChange) {
@@ -220,6 +220,7 @@ export function calculateWeeklyCosts(projects: Project[]): number {
   return production + marketing + overhead;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function calculateWeeklyRevenue(projects: Project[], buyers: Buyer[] = [], _legacyContext?: unknown): number {
   let boxOffice = 0;
   let distribution = 0;
