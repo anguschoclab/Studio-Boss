@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Search, Users, Star, Database } from 'lucide-react';
+import { Search, Users, Star, Database, Bookmark } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { EmptyState } from '@/components/shared/EmptyState';
 
@@ -32,11 +32,19 @@ export const TalentHub = () => {
   const [roleFilter, setRoleFilter] = useState<string>("all");
   const [tierFilter, setTierFilter] = useState<string>("all");
 
+  // Bookmark filter
+  const [showBookmarksOnly, setShowBookmarksOnly] = useState(false);
+  const isBookmarked = useGameStore((s) => s.isBookmarked);
+
   const filteredRoster = useMemo(() => {
     return talentPool.filter(
-      (t) => rosterFilter === "all" || t.roles.includes(rosterFilter as TalentRole)
+      (t) => {
+        const matchesRole = rosterFilter === "all" || t.roles.includes(rosterFilter as TalentRole);
+        const matchesBookmark = !showBookmarksOnly || isBookmarked(t.id, 'talent');
+        return matchesRole && matchesBookmark;
+      }
     );
-  }, [talentPool, rosterFilter]);
+  }, [talentPool, rosterFilter, showBookmarksOnly, isBookmarked]);
 
   const filteredSBDB = useMemo(() => {
     return talentPool
@@ -51,10 +59,11 @@ export const TalentHub = () => {
           else if (tierFilter === "rising") matchesTier = prestige >= 40 && prestige < 60;
           else if (tierFilter === "undiscovered") matchesTier = prestige < 40;
         }
-        return matchesSearch && matchesRole && matchesTier;
+        const matchesBookmark = !showBookmarksOnly || isBookmarked(t.id, 'talent');
+        return matchesSearch && matchesRole && matchesTier && matchesBookmark;
       })
       .sort((a, b) => (b.starMeter || 0) - (a.starMeter || 0));
-  }, [talentPool, search, roleFilter, tierFilter]);
+  }, [talentPool, search, roleFilter, tierFilter, showBookmarksOnly, isBookmarked]);
 
   if (!state) return null;
 
@@ -117,6 +126,20 @@ export const TalentHub = () => {
                 </button>
               )
             )}
+            <button
+              type="button"
+              aria-pressed={showBookmarksOnly}
+              aria-label="Show bookmarks only"
+              onClick={() => setShowBookmarksOnly((v) => !v)}
+              className={cn(
+                "h-12 w-12 flex items-center justify-center border transition-all duration-700 rounded-none",
+                showBookmarksOnly
+                  ? "bg-secondary/10 border-secondary/40 text-secondary shadow-[0_0_15px_rgba(var(--secondary),0.2)]"
+                  : "bg-white/[0.02] text-muted-foreground/30 border-white/5 hover:bg-white/[0.05] hover:text-foreground hover:border-white/20"
+              )}
+            >
+              <Bookmark className="h-5 w-5" strokeWidth={2} />
+            </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 overflow-y-auto pb-20 custom-scrollbar pr-6">
@@ -227,6 +250,20 @@ export const TalentHub = () => {
                   </SelectItem>
                 </SelectContent>
               </Select>
+              <button
+                type="button"
+                aria-pressed={showBookmarksOnly}
+                aria-label="Show bookmarks only"
+                onClick={() => setShowBookmarksOnly((v) => !v)}
+                className={cn(
+                  "h-14 w-14 flex items-center justify-center border transition-all duration-700 rounded-none",
+                  showBookmarksOnly
+                    ? "bg-primary/10 border-primary/40 text-primary shadow-[0_0_15px_rgba(var(--primary),0.2)]"
+                    : "bg-black/60 border-white/10 text-muted-foreground/40 hover:text-primary hover:border-primary/40"
+                )}
+              >
+                <Bookmark className="h-5 w-5" strokeWidth={2} />
+              </button>
             </div>
           </div>
 

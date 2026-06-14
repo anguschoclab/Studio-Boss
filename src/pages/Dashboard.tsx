@@ -12,6 +12,7 @@ import { DiscoveryBoard } from '@/components/discovery/DiscoveryBoard';
 import { RivalsPanel } from '@/components/rivals/RivalsPanel';
 import { IPVault } from '@/components/ip/IPVault';
 import { DistributionHub } from '@/components/distribution/DistributionHub';
+import { BookmarksBoard } from '@/components/bookmarks/BookmarksBoard';
 import { AnimatePresence, motion } from 'framer-motion';
 
 // Modals
@@ -33,6 +34,7 @@ const TAB_CONTENT: Record<TabId, React.ReactNode> = {
   talent: <TalentHub key="talent" />,
   finance: <FinancePanel key="finance" />,
   trades: <DiscoveryBoard key="trades" />,
+  bookmarks: <BookmarksBoard key="bookmarks" />,
 };
 
 const Dashboard: React.FC = () => {

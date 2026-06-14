@@ -89,6 +89,7 @@ export interface GameState {
     // Achievement tracking (array of unlocked achievement IDs)
     achievements?: string[];
     resolvedCrisesCount?: number;
+    bookmarks?: Bookmark[];
   };
   market: {
     opportunities: Opportunity[];
@@ -173,6 +174,12 @@ export interface StreamerPlatform extends BuyerBase {
 }
 
 export type Buyer = NetworkPlatform | PremiumPlatform | StreamerPlatform;
+
+export interface Bookmark {
+  id: string;
+  type: 'project' | 'talent';
+  createdAtWeek: number;
+}
 
 export interface StudioSnapshot {
   year: number;

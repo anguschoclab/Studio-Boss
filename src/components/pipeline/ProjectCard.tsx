@@ -4,7 +4,7 @@ import { useGameStore } from '@/store/gameStore';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { Button } from '@/components/ui/button';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
-import { AlertTriangle, Activity, Zap, DollarSign, Target } from 'lucide-react';
+import { AlertTriangle, Activity, Zap, DollarSign, Target, Bookmark, BookmarkCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatMoney } from '@/engine/utils';
 import { DistributionBadge } from '../shared/DistributionBadge';
@@ -28,6 +28,8 @@ interface ProjectCardProps {
 export const ProjectCard = ({ project }: ProjectCardProps) => {
   const { selectProject, openPitchProject, openCrisisModal } = useUIStore();
   const gameState = useGameStore((s) => s.gameState);
+  const toggleBookmark = useGameStore((s) => s.toggleBookmark);
+  const isBookmarked = useGameStore((s) => s.isBookmarked);
   const tier = BUDGET_TIERS[project.budgetTier];
 
   // Find buyer name for distribution badge
@@ -98,8 +100,30 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
               </span>
             </div>
           </div>
-          <div className="px-3 py-1 bg-white/5 border border-white/10 text-[9px] uppercase tracking-[0.3em] font-black h-fit rounded-none text-muted-foreground/60 group-hover:border-white/30 group-hover:text-foreground transition-all duration-700 italic">
-            {displayFormat}
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              aria-label={isBookmarked(project.id, 'project') ? 'Remove bookmark' : 'Add bookmark'}
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleBookmark(project.id, 'project');
+              }}
+              className={cn(
+                "h-8 w-8 flex items-center justify-center border transition-all duration-700 rounded-none",
+                isBookmarked(project.id, 'project')
+                  ? "bg-primary/10 border-primary/40 text-primary shadow-[0_0_15px_rgba(var(--primary),0.2)]"
+                  : "bg-white/5 border-white/10 text-muted-foreground/40 hover:text-primary hover:border-primary/40"
+              )}
+            >
+              {isBookmarked(project.id, 'project') ? (
+                <BookmarkCheck className="h-4 w-4" strokeWidth={3} />
+              ) : (
+                <Bookmark className="h-4 w-4" strokeWidth={2} />
+              )}
+            </button>
+            <div className="px-3 py-1 bg-white/5 border border-white/10 text-[9px] uppercase tracking-[0.3em] font-black h-fit rounded-none text-muted-foreground/60 group-hover:border-white/30 group-hover:text-foreground transition-all duration-700 italic">
+              {displayFormat}
+            </div>
           </div>
         </div>
 

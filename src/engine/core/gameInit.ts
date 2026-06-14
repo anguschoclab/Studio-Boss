@@ -237,6 +237,7 @@ export function initializeGame(
         firstLookDeals: [],
       },
       ownedPlatforms: playerOwnedPlatforms,
+      bookmarks: [],
     },
     market: {
       opportunities: Array.from({ length: 4 }, () => generateOpportunity(Object.keys(talentPool))),

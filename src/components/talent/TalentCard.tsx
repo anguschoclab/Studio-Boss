@@ -1,5 +1,5 @@
 import React from "react";
-import { Package } from "lucide-react";
+import { Package, Bookmark, BookmarkCheck } from "lucide-react";
 import { Talent } from "@/engine/types";
 import { formatMoney } from "@/engine/utils";
 import { AGENCY_ARCHETYPES } from "@/engine/data/archetypes";
@@ -34,6 +34,8 @@ interface TalentCardProps {
 export const TalentCard: React.FC<TalentCardProps> = ({ talent, className, onClick, tooltip }) => {
   const { selectTalent } = useUIStore();
   const gameState = useGameStore((s) => s.gameState);
+  const toggleBookmark = useGameStore((s) => s.toggleBookmark);
+  const isBookmarked = useGameStore((s) => s.isBookmarked);
   const currentWeek = gameState?.week ?? 1;
   const agencyMap = useAgencyMap();
   const agency = talent.agencyId ? agencyMap.get(talent.agencyId) : null;
@@ -118,6 +120,26 @@ export const TalentCard: React.FC<TalentCardProps> = ({ talent, className, onCli
                 <h4 className="font-display font-black text-xl text-foreground/90 tracking-tighter uppercase italic leading-none group-hover:text-primary transition-all duration-700 truncate drop-shadow-[0_0_10px_rgba(255,255,255,0.05)]">
                   {talent.name}
                 </h4>
+                <button
+                  type="button"
+                  aria-label={isBookmarked(talent.id, 'talent') ? 'Remove bookmark' : 'Add bookmark'}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleBookmark(talent.id, 'talent');
+                  }}
+                  className={cn(
+                    "shrink-0 h-7 w-7 flex items-center justify-center border transition-all duration-700 rounded-none",
+                    isBookmarked(talent.id, 'talent')
+                      ? "bg-secondary/10 border-secondary/40 text-secondary shadow-[0_0_15px_rgba(var(--secondary),0.2)]"
+                      : "bg-white/5 border-white/10 text-muted-foreground/40 hover:text-secondary hover:border-secondary/40"
+                  )}
+                >
+                  {isBookmarked(talent.id, 'talent') ? (
+                    <BookmarkCheck className="h-3.5 w-3.5" strokeWidth={3} />
+                  ) : (
+                    <Bookmark className="h-3.5 w-3.5" strokeWidth={2} />
+                  )}
+                </button>
               </div>
 
               <div className="flex items-center gap-3">

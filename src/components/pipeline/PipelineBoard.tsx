@@ -2,7 +2,8 @@ import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { ProjectCard } from './ProjectCard';
 import { Button } from '@/components/ui/button';
-import { Plus, ListFilter, Search, Clapperboard, Layers } from 'lucide-react';
+import { useState } from 'react';
+import { Plus, ListFilter, Search, Clapperboard, Layers, Bookmark } from 'lucide-react';
 import { ProjectStatus } from '@/engine/types';
 import { selectProjects } from '@/store/selectors';
 import { Input } from '@/components/ui/input';
@@ -20,6 +21,12 @@ const COLUMNS: { status: ProjectStatus[]; title: string; color: string; descript
 export const PipelineBoard = () => {
   const projects = useGameStore(useShallow(s => selectProjects(s.gameState)));
   const { openCreateProject } = useUIStore();
+  const isBookmarked = useGameStore((s) => s.isBookmarked);
+  const [showBookmarksOnly, setShowBookmarksOnly] = useState(false);
+
+  const visibleProjects = showBookmarksOnly
+    ? projects.filter((p) => isBookmarked(p.id, 'project'))
+    : projects;
 
   return (
     <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 h-full flex flex-col">
@@ -35,7 +42,7 @@ export const PipelineBoard = () => {
             <p className="text-[10px] font-black uppercase text-muted-foreground/20 tracking-[0.4em] flex items-center gap-4 italic">
               OPERATIONAL OVERVIEW 
               <span className="w-1.5 h-1.5 bg-white/10" /> 
-              <span className="text-foreground/40 font-display">{projects.length} TOTAL ASSETS</span>
+              <span className="text-foreground/40 font-display">{visibleProjects.length} TOTAL ASSETS</span>
             </p>
           </div>
         </div>
@@ -52,6 +59,20 @@ export const PipelineBoard = () => {
           <Button variant="ghost" size="icon" aria-label="Filter production slate" tooltip="Filter" className="h-12 w-12 rounded-none bg-white/5 border border-white/5 text-muted-foreground/40 hover:text-primary hover:border-primary/40 transition-all duration-700">
             <ListFilter className="h-5 w-5" aria-hidden="true" />
           </Button>
+          <button
+            type="button"
+            aria-pressed={showBookmarksOnly}
+            aria-label="Show bookmarks only"
+            onClick={() => setShowBookmarksOnly((v) => !v)}
+            className={cn(
+              "h-12 w-12 flex items-center justify-center border transition-all duration-700 rounded-none",
+              showBookmarksOnly
+                ? "bg-primary/10 border-primary/40 text-primary shadow-[0_0_15px_rgba(var(--primary),0.2)]"
+                : "bg-white/5 border-white/5 text-muted-foreground/40 hover:text-primary hover:border-primary/40"
+            )}
+          >
+            <Bookmark className="h-5 w-5" strokeWidth={2} />
+          </button>
           <Button 
             onClick={openCreateProject} 
             className="h-12 px-10 font-display font-black uppercase tracking-[0.3em] text-[10px] gap-4 bg-primary text-black hover:bg-white transition-all duration-700 rounded-none shadow-[0_0_30px_rgba(var(--primary),0.2)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)]"
@@ -65,8 +86,8 @@ export const PipelineBoard = () => {
       {/* Production Lanes */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 flex-1 min-h-0">
         {(() => {
-          const projectsByStatus = new Map<ProjectStatus, typeof projects>();
-          for (const project of projects) {
+          const projectsByStatus = new Map<ProjectStatus, typeof visibleProjects>();
+          for (const project of visibleProjects) {
             const list = projectsByStatus.get(project.state);
             if (list) {
               list.push(project);

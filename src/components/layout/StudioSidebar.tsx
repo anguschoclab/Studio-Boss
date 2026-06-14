@@ -17,6 +17,7 @@ import {
   Settings,
   Star,
   Zap,
+  Bookmark,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -72,6 +73,12 @@ const NAV_ITEMS: NavItem[] = [
     label: "FINANCE_COMMAND",
     icon: DollarSign,
     tooltip: "PL_STATEMENTS_REVENUE_STREAMS_CASH_FLOW",
+  },
+  {
+    id: "bookmarks",
+    label: "WATCHLIST",
+    icon: Bookmark,
+    tooltip: "BOOKMARKED_PROJECTS_AND_TALENT",
   },
 ];
 
