@@ -214,17 +214,18 @@ function proposeDealType(
   return null;
 }
 
-function countDealsByStudio(state: GameState, studioId: string): number {
-  // ⚡ The Framerate Fanatic: Replaced Object.values().filter() with a direct for...in loop
-  let count = 0;
+
+function getStudioDealCounts(state: GameState): Record<string, number> {
+  const counts: Record<string, number> = {};
   const shingles = state.entities.shingles || {};
   for (const id in shingles) {
-    if (shingles[id].baseStudioId === studioId) {
-      count++;
-    }
+    const baseId = shingles[id].baseStudioId;
+    if (baseId) counts[baseId] = (counts[baseId] || 0) + 1;
   }
-  return count;
+  return counts;
 }
+
+
 
 function createShingle(
   state: GameState,
@@ -265,9 +266,10 @@ function createShingle(
     }
   }
 
+  const dealCounts = getStudioDealCounts(state);
   for (const b of bidders) {
     if (medium === 'TV' && b.archetype === 'indie') continue;
-    const existing = countDealsByStudio(state, b.id);
+    const existing = dealCounts[b.id] || 0;
     let dealType = proposeDealType(b.archetype as 'major' | 'mid-tier' | 'indie', b.cash, b.prestige, owner.prestige || 0, existing, rng);
     if (medium === 'TV') {
       // TV showrunner deals skew overall/first-look. Reroll toward OVERALL for high-prestige owners.
@@ -302,9 +304,10 @@ function createShingle(
   const topTierOfferExists = offers.some(o => o.dealType === 'OVERALL' || o.dealType === 'FIRST_LOOK');
   const wantsFallback = medium === 'FILM' && (owner.prestige || 0) < 60 && (offers.length === 0 || !topTierOfferExists);
   if (wantsFallback) {
+    const dealCounts = getStudioDealCounts(state);
     for (const b of bidders) {
       if (b.cash < 20_000_000) continue;
-      if (countDealsByStudio(state, b.id) >= 4) continue;
+      if ((dealCounts[b.id] || 0) >= 4) continue;
       if (rng.next() > 0.55) continue;
       const overhead = rollOverhead(rng, 'HOUSEKEEPING', owner.prestige || 0, 'FILM');
       if (overhead * 3 > b.cash) continue;
@@ -405,9 +408,10 @@ function handleExpiry(state: GameState, s: ProducerShingle, rng: RandomGenerator
   const medium: ShingleMedium = (s as unknown as { medium?: string }).medium === 'TV' ? 'TV' : 'FILM';
   type Offer = { id: string; dealType: ShingleDealType; overhead: number; score: number };
   const offers: Offer[] = [];
+  const dealCounts = getStudioDealCounts(state);
   for (const b of bidders) {
     if (medium === 'TV' && b.archetype === 'indie') continue;
-    const existing = countDealsByStudio(state, b.id);
+    const existing = dealCounts[b.id] || 0;
     let dealType = proposeDealType(b.archetype as 'major' | 'mid-tier' | 'indie', b.cash, b.prestige, owner.prestige || 0, existing, rng);
     // Home studio gets a guaranteed renewal bid — real studios rarely let an overhead deal lapse silently.
     if (!dealType && b.id === s.baseStudioId && b.cash > s.overheadPerYear * 3) dealType = s.dealType;
@@ -575,10 +579,11 @@ function createPodShingle(state: GameState, owner: Talent, rng: RandomGenerator,
   const bidders = rankBidders(state);
   type Offer = { id: string; overhead: number; score: number };
   const offers: Offer[] = [];
+  const dealCounts = getStudioDealCounts(state);
   for (const b of bidders) {
     if (b.archetype === 'indie') continue;
     if (b.cash < 30_000_000) continue;
-    if (countDealsByStudio(state, b.id) >= 5) continue;
+    if ((dealCounts[b.id] || 0) >= 5) continue;
     if (rng.next() > 0.5) continue;
     const overhead = rollOverhead(rng, 'POD', owner.prestige || 0, 'FILM');
     if (overhead * 3 > b.cash) continue;
@@ -631,9 +636,10 @@ function createHousekeepingShingle(state: GameState, owner: Talent, rng: RandomG
   const bidders = rankBidders(state);
   type Offer = { id: string; overhead: number; score: number };
   const offers: Offer[] = [];
+  const dealCounts = getStudioDealCounts(state);
   for (const b of bidders) {
     if (b.cash < 20_000_000) continue;
-    if (countDealsByStudio(state, b.id) >= 4) continue;
+    if ((dealCounts[b.id] || 0) >= 4) continue;
     if (rng.next() > 0.4) continue;
     const overhead = rollOverhead(rng, 'HOUSEKEEPING', owner.prestige || 0, 'FILM');
     if (overhead * 3 > b.cash) continue;
