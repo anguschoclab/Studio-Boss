@@ -125,8 +125,9 @@ export function checkTalentWillingness(
 
   const alternativeTalentIds: string[] = [];
   if (!result.willing) {
-    const allTalents = Object.values(state.entities.talents || {});
-    for (const other of allTalents) {
+    // ⚡ Bolt Optimization: Replaced Object.values() array allocation with direct for...in loop
+    for (const id in state.entities.talents || {}) {
+      const other = state.entities.talents![id];
       if (other.id === talent.id) continue;
       const otherComfort = other.comfortLevel || generateTalentComfortLevel(other, rng).comfort;
       const otherRates = other.comfortPremiumRates || generateTalentComfortLevel(other, rng).rates;
@@ -159,8 +160,9 @@ export function generateRequirementsFromNotes(
   const requirements: ScriptRequirement[] = [];
   const notes = state.relationships.productionEnhancements?.screenplayNotes || {};
 
-  for (const note of Object.values(notes)) {
-    const n = note as import('../../types/state.types').ScreenplayNote;
+  // ⚡ Bolt Optimization: Replaced Object.values() array allocation with direct for...in loop
+  for (const id in notes) {
+    const n = notes[id] as import('../../types/state.types').ScreenplayNote;
     if (n.projectId !== project.id || n.status !== 'implemented') continue;
 
     if (n.type === 'emotional_beat' && n.intensity === 'high') {
@@ -260,9 +262,18 @@ export function tickCastingConstraintSystem(
   rng: RandomGenerator
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const projects = Object.values(state.entities.projects || {});
 
-  for (const project of projects) {
+  // ⚡ Bolt Optimization: Pre-group contracts by projectId to avoid O(N) filters inside the loop
+  const contractsByProject: Record<string, import('../../types').Contract[]> = {};
+  for (const id in state.entities.contracts || {}) {
+    const c = state.entities.contracts![id];
+    if (!contractsByProject[c.projectId]) contractsByProject[c.projectId] = [];
+    contractsByProject[c.projectId].push(c);
+  }
+
+  // ⚡ Bolt Optimization: Replaced Object.values() array allocation with direct for...in loop
+  for (const projectId in state.entities.projects || {}) {
+    const project = state.entities.projects![projectId];
     const projectState = project.state;
     if (!['PRE_PRODUCTION', 'IN_PRODUCTION', 'scripting', 'casting', 'production'].some(s =>
       projectState?.toLowerCase().includes(s.toLowerCase())
@@ -271,8 +282,7 @@ export function tickCastingConstraintSystem(
     }
 
     const requirements = generateRequirementsFromNotes(project, state, rng);
-    const contracts = Object.values(state.entities.contracts || {})
-      .filter(c => c.projectId === project.id);
+    const contracts = contractsByProject[project.id] || [];
     const talentIds = contracts.map(c => c.talentId);
 
     for (const requirement of requirements) {

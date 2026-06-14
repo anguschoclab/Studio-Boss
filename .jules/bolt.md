@@ -67,3 +67,7 @@ I eliminated the duplicate iterations and the `Map` construction entirely. The e
 
 **Learning:** Deeply nested updates using string paths (e.g. `a.b.c.d`) were causing an excessive number of array/object spreads when many paths shared the same prefix. The old handler looped over paths and unconditionally cloned the hierarchy for every path, leading to O(N * D) clones and high garbage collection overhead.
 **Action:** Introduced a `clonedRefs = new Set<unknown>([nextState])` cache locally within the batch update scope to check `!clonedRefs.has(nextTarget)` before spreading, reducing the allocations to O(N + D) for clustered path updates while maintaining strict immutability.
+
+## 2024-06-13 - O(1) Pre-grouping in nested loops
+**Learning:** When iterating over a large dictionary (like projects) and simultaneously needing to filter another large dictionary (like contracts) based on a foreign key relationship (`projectId`), calling `Object.values().filter()` inside the loop creates an O(M*N) bottleneck.
+**Action:** Iterate through the child dictionary ONCE before the loop to group items into a map/record keyed by the foreign ID. This replaces the inner O(N) array allocation/filter with a fast O(1) property access, drastically reducing garbage collection and execution time.
