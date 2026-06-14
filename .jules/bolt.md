@@ -45,3 +45,6 @@
 ## 2026-05-26 - Replace O(N log N) sorts and array chain allocations with O(N) single-pass maximum find
 **Learning:** Finding the maximum or best matching element (like finding a rescue acquirer in `DistressCascade`) using `Object.values().filter().sort()[0]` creates O(N) array allocations and an O(N log N) sort overhead on every tick.
 **Action:** Replace `Object.values().filter().sort()` chains when only the single top candidate is needed by using a direct `for...in` loop to track the maximum value in a single O(N) pass, reducing time complexity and eliminating GC pressure.
+## 2026-06-11 - Replace Object.values with for...in loops in RegulatorSystem
+**Learning:** The RegulatorSystem was computing market share using `Object.values(state.entities.rivals).reduce()`, which caused unnecessary array allocation per call.
+**Action:** Replaced `Object.values` with a direct `for...in` loop to iterate over the `state.entities.rivals` object and sum up the prestige, avoiding the O(N) intermediate array allocation and reducing GC overhead.

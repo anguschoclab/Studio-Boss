@@ -11,22 +11,26 @@ export class RegulatorSystem {
    * Market share is a weighted average of prestige and subscriber counts.
    */
   static getMarketShare(state: GameState, studioId: string | 'player'): number {
-    const ALL_RIVALS = Object.values(state.entities.rivals);
     const playerStudioId = state.studio.id;
     const isTargetPlayer = studioId === 'player' || studioId === playerStudioId;
 
-    const totalPrestige = ALL_RIVALS.reduce((acc, r) => acc + r.prestige, state.studio.prestige);
+    let totalPrestige = state.studio.prestige;
+    const rivals = state.entities.rivals || {};
+    for (const rId in rivals) {
+      totalPrestige += rivals[rId].prestige || 0;
+    }
+
     const studioPrestige = isTargetPlayer 
       ? state.studio.prestige 
       : state.entities.rivals[studioId]?.prestige || 0;
 
     const totalSubs = state.market.buyers
       .filter(b => b.archetype === 'streamer')
-      .reduce((acc, b) => acc + ((b as any).subscribers || 0), 0);
+      .reduce((acc, b) => acc + ((b as unknown as import('../../types/studio.types').StreamerPlatform).subscribers || 0), 0);
     
     const studioSubs = state.market.buyers
       .filter(b => b.archetype === 'streamer' && b.ownerId === (isTargetPlayer ? playerStudioId : studioId))
-      .reduce((acc, b) => acc + ((b as any).subscribers || 0), 0);
+      .reduce((acc, b) => acc + ((b as unknown as import('../../types/studio.types').StreamerPlatform).subscribers || 0), 0);
 
     const prestigeShare = (studioPrestige / totalPrestige) * 100;
     const subShare = totalSubs > 0 ? (studioSubs / totalSubs) * 100 : 0;
@@ -66,7 +70,7 @@ export class RegulatorSystem {
   /**
    * Weekly Tick: Evaluates market conditions and potential anti-trust warnings.
    */
-  static tick(state: GameState, rng: any): import('../../types/state.types').StateImpact[] {
+  static tick(state: GameState, rng: import('../../utils/rng').RandomGenerator): import('../../types/state.types').StateImpact[] {
     const impacts: import('../../types/state.types').StateImpact[] = [];
     const playerShare = this.getMarketShare(state, 'player');
 
