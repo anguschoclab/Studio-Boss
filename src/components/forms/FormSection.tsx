@@ -31,7 +31,7 @@ export const FormSection: React.FC<FormSectionProps> = ({
       <div
         className={cn(
           'flex items-center justify-between',
-          collapsible && 'cursor-pointer'
+          collapsible && 'cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md'
         )}
         role={collapsible ? "button" : undefined} aria-expanded={collapsible ? isOpen : undefined} aria-label={collapsible ? `Toggle ${title}` : undefined}
         tabIndex={collapsible ? 0 : undefined}
