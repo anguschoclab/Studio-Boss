@@ -62,3 +62,8 @@ I eliminated the duplicate iterations and the `Map` construction entirely. The e
 ## 2026-05-27 - Delay Cloning Expensive State Objects Until Affected Elements Are Found
 **Learning:** `handleScandalAdded` in `industryHandlers.ts` was doing a shallow clone of the entire `state.entities.projects` dictionary unconditionally, even if the scandal involved a talent with zero active contracts. This caused huge memory allocation/GC overhead per scandal impact. Furthermore, iterating contracts to collect duplicate project IDs, followed by re-iterating project IDs, is inefficient.
 **Action:** Replaced `Object.values` and unneeded full object clones by using a `for...in` loop to collect affected project IDs in a `Set`. `projects` is only cloned if `projectIds.size > 0`. This optimization dropped execution time for unmatched scandals from ~1222ms to ~796ms, and from ~2223ms to ~1154ms for matched scandals in benchmarks.
+
+## 2024-05-18 - [Optimize Deep Path Update Cloning]
+
+**Learning:** Deeply nested updates using string paths (e.g. `a.b.c.d`) were causing an excessive number of array/object spreads when many paths shared the same prefix. The old handler looped over paths and unconditionally cloned the hierarchy for every path, leading to O(N * D) clones and high garbage collection overhead.
+**Action:** Introduced a `clonedRefs = new Set<unknown>([nextState])` cache locally within the batch update scope to check `!clonedRefs.has(nextTarget)` before spreading, reducing the allocations to O(N + D) for clustered path updates while maintaining strict immutability.
