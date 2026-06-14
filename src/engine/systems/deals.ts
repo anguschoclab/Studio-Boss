@@ -21,6 +21,7 @@ export function evaluateFirstLookDeal(talent: Talent, state: GameState): boolean
   return rand() * 100 <= acceptanceChance;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function offerFirstLookDeal(state: GameState, talentId: string, weeksRemaining: number, _exclusivity: boolean = true): StateImpact[] {
   const talent = state.entities?.talents?.[talentId];
   if (!talent) return [];
@@ -77,8 +78,7 @@ export function packageProject(project: Project, _talentIds?: string[], _agency?
   return { packageScore: score, synergies };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function evaluatePackageStrength(project: Project, attachedTalent: Talent[], _agency?: Agency): { score: number, multipliers: string[] } {
+export function evaluatePackageStrength(project: Project, attachedTalent: Talent[], agency?: Agency): { score: number, multipliers: string[] } {
   let score = 50 + (project.buzz * 0.5);
   const multipliers: string[] = [];
   

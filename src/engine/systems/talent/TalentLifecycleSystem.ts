@@ -132,7 +132,7 @@ export const TalentLifecycleSystem = {
         if (weeksSinceLastRelease > 52) {
           decay = talent.tier === 1 ? -1 : -0.5;
         }
-        const legacy = (talent as any).legacyPrestige || 0;
+        const legacy = (talent as unknown as { legacyPrestige?: number }).legacyPrestige || 0;
         const raw = (talent.prestige || 50) + decay;
         const nextPrestige = Math.max(legacy, Math.max(0, raw));
 
