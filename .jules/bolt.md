@@ -75,3 +75,15 @@ I eliminated the duplicate iterations and the `Map` construction entirely. The e
 ## 2026-06-03 - Pre-group items in dictionary lookup to avoid O(N*M) loop performance overhead
 **Learning:** `tickAgencies` was performing an `Object.values(state.entities.talents)` allocation per tick, and then filtering that array per agency inside an inner loop. This resulted in O(Agencies * Talents) operations on every tick, causing significant garbage collection pressure.
 **Action:** Replace `Object.values` and inner `.filter()` array operations with a single-pass grouping `for...in` loop that clusters talents by `agencyId`. This drops the inner loop search to O(1) dictionary lookups for matching clients, drastically improving performance.
+
+## 2026-05-28 - Avoid O(N*M) nested array creation inside AgentBrain tick loop
+**Learning:** The `tickAgencies` function inside `src/engine/systems/ai/AgentBrain.ts` was doing `Object.values(state.entities.rivals || {})` and filtering all `allTalents` iteratively inside an `.forEach` loop over `state.industry.agencies`. This caused massive O(Agencies * Talents) and O(Agencies * Rivals) complexity and repeated array allocations inside a core game tick function.
+**Action:** Pre-grouped talents by `agencyId` at the start of the function and cached `brands` array outside the agency loop. This avoids the O(N*M) penalty of regenerating arrays inside high-frequency iterations.
+
+## 2024-05-18 - [Optimize Shingle System Count Deals]
+**Learning:** Checking for entity counts inside deeply nested logic like bidder evaluations loops can degrade into O(N*M) or O(N^2) complexity, leading to enormous performance overhead in background simulations over hundreds of game ticks.
+**Action:** When a loop requires aggregating counts of an entity type (e.g., `countDealsByStudio`), pre-aggregate the counts into a dictionary (O(N)) before the loop, converting the subsequent lookups into O(1) accesses.
+
+## 2026-05-28 - Replace Object.values arrays with for...in loops in MetricsCollector and SimulationHarness
+**Learning:** High-frequency metrics and snapshot reporting loops (like `MetricsCollector.record` and `SimulationHarness.run`) cause significant garbage collection pressure when calling `Object.values()` coupled with array methods (`filter`, `reduce`, `map`) to iterate over GameState entities, creating intermediate O(N) array allocation overhead per tick.
+**Action:** Replace `Object.values` chained functions with direct `for...in` loops to iterate over state entities (`rivals`, `talents`, `projects`) efficiently without creating intermediate arrays, reducing time complexity and eliminating GC pressure.
