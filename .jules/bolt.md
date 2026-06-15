@@ -87,3 +87,6 @@ I eliminated the duplicate iterations and the `Map` construction entirely. The e
 ## 2026-05-28 - Replace Object.values arrays with for...in loops in MetricsCollector and SimulationHarness
 **Learning:** High-frequency metrics and snapshot reporting loops (like `MetricsCollector.record` and `SimulationHarness.run`) cause significant garbage collection pressure when calling `Object.values()` coupled with array methods (`filter`, `reduce`, `map`) to iterate over GameState entities, creating intermediate O(N) array allocation overhead per tick.
 **Action:** Replace `Object.values` chained functions with direct `for...in` loops to iterate over state entities (`rivals`, `talents`, `projects`) efficiently without creating intermediate arrays, reducing time complexity and eliminating GC pressure.
+## 2026-06-21 - [Optimize Object.values and findIndex lookup]
+**Learning:** Checking for the existence of an item in a dictionary using `Object.values().findIndex()` is an O(N) operation that creates an intermediate array and iterates through it, causing unnecessary GC pressure and slowing down the operation, especially as the number of items grows.
+**Action:** Replace `Object.values().findIndex()` with direct O(1) dictionary property access to instantly retrieve the item.
