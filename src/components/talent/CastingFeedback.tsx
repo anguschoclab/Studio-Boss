@@ -30,7 +30,7 @@ export const CastingFeedback: React.FC<CastingFeedbackProps> = ({ talent, projec
         <div className="flex items-center gap-4">
           <Brain className="w-4 h-4 text-primary" strokeWidth={3} />
           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">
-            PSYCHOLOGICAL_FIT_ANALYSIS
+            PSYCHOLOGICAL FIT ANALYSIS
           </span>
         </div>
         <div
@@ -78,12 +78,12 @@ export const CastingFeedback: React.FC<CastingFeedbackProps> = ({ talent, projec
         ) : (
           <AlertCircle className="w-4 h-4" />
         )}
-        <span className="opacity-50">FINAL_VERDICT:</span>
+        <span className="opacity-50">FINAL VERDICT:</span>
         {feedback.finalVerdict === "willing"
           ? "ATTACHED_&_AGGRESSIVE"
           : feedback.finalVerdict === "hesitant"
-            ? "NEGOTIATION_REQUIRED"
-            : "CONTRACT_REJECTED"}
+            ? "NEGOTIATION REQUIRED"
+            : "CONTRACT REJECTED"}
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ describe('NewsTicker', () => {
       (selector as (state: unknown) => unknown)({ news: { headlines: [] } })
     );
     render(<NewsTicker />);
-    expect(screen.getAllByText((c) => c.includes('ESTABLISHING_UPLINK') || c.includes('THE_TRADES') || c.includes('UPLINK')).length).toBeGreaterThan(0);
+    expect(screen.getAllByText((c) => c.includes('ESTABLISHING UPLINK') || c.includes('THE TRADES') || c.includes('UPLINK')).length).toBeGreaterThan(0);
   });
 
   it('displays active news items from the store (doubled for marquee)', () => {

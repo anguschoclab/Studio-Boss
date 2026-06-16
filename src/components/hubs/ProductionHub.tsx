@@ -72,7 +72,7 @@ const DevelopmentPanel = () => {
         <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl -mr-16 -mt-16" />
         
         <Stack direction="vertical" gap="sm" className="relative z-10">
-          <h3 className="text-xl font-display font-black uppercase italic tracking-tight text-foreground">DEVELOPMENT_QUEUE</h3>
+          <h3 className="text-xl font-display font-black uppercase italic tracking-tight text-foreground">DEVELOPMENT QUEUE</h3>
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
             {developmentProjects.length} PROJECTS IN DEVELOPMENT • {needsGreenlight} AWAITING GREENLIGHT
           </p>
@@ -82,7 +82,7 @@ const DevelopmentPanel = () => {
           className="h-14 px-10 bg-primary text-black hover:bg-primary/90 font-black uppercase italic tracking-[0.2em] text-[10px] rounded-none shadow-[0_0_20px_rgba(var(--primary),0.2)] group transition-all duration-700"
         >
           <Plus className="h-4 w-4 mr-3 group-hover:rotate-90 transition-transform" strokeWidth={3} />
-          NEW_IP_CONCEPT
+          NEW IP CONCEPT
         </Button>
       </div>
 
@@ -106,7 +106,7 @@ const DevelopmentPanel = () => {
 
       {/* Script Pipeline */}
       <Section
-        title="SCRIPT_DEVELOPMENT_PIPELINE"
+        title="SCRIPT DEVELOPMENT PIPELINE"
         subtitle="TRACK SCRIPTS FROM CONCEPT TO FINAL DRAFT"
         icon={Film}
       >
@@ -117,7 +117,7 @@ const DevelopmentPanel = () => {
 
       {/* Greenlight Queue */}
       <Section
-        title="GREENLIGHT_QUEUE"
+        title="GREENLIGHT QUEUE"
         subtitle={`${needsGreenlight} PROJECT${needsGreenlight > 1 ? 'S' : ''} AWAITING APPROVAL`}
         icon={CheckCircle2}
       >
@@ -182,7 +182,7 @@ const SlatePanel = () => {
           onClick={() => setShowLocations(v => !v)}
         >
           <Target className="h-4 w-4" strokeWidth={3} />
-          {showLocations ? 'CLOSE' : 'OPEN'} LOCATION_SCOUT_MODULE
+          {showLocations ? 'CLOSE' : 'OPEN'} LOCATION SCOUT MODULE
         </button>
         {showLocations && <LocationScoutPanel locations={[]} selectedLocations={[]} />}
       </div>
@@ -319,7 +319,7 @@ export const ProductionHub: React.FC = () => {
               className="h-12 px-8 bg-primary text-black hover:bg-primary/90 font-display font-black uppercase italic tracking-[0.2em] text-[10px] rounded-none shadow-[0_0_30px_rgba(var(--primary),0.2)] group transition-all duration-700"
             >
               <Plus className="h-4 w-4 mr-3 group-hover:rotate-90 transition-transform" strokeWidth={3} />
-              NEW_PROJECT
+              NEW PROJECT
             </Button>
           )
         };
@@ -375,7 +375,7 @@ export const ProductionHub: React.FC = () => {
             <input 
               type="text" 
               aria-label="Filter slate"
-              placeholder="FILTER_SLATE..."
+              placeholder="FILTER SLATE..."
               className="w-full h-12 pl-12 pr-4 text-[10px] bg-black/40 border border-white/10 rounded-none uppercase font-black tracking-[0.2em] italic focus:outline-none focus:border-primary/50 transition-all duration-700 placeholder:text-muted-foreground/5"
             />
           </div>

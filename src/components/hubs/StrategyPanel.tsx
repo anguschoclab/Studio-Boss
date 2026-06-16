@@ -8,7 +8,7 @@ export const StrategyPanel: React.FC = () => {
 
   const prestige = gameState?.studio?.prestige ?? 0;
   const prestigeGoal = prestige >= 80 ? 100 : 80;
-  const prestigeLabel = (prestige >= 80 ? 'BUILD_PRESTIGE_TO_100' : 'BUILD_PRESTIGE_TO_80+').toUpperCase();
+  const prestigeLabel = (prestige >= 80 ? 'BUILD PRESTIGE TO 100' : 'BUILD PRESTIGE TO 80+').toUpperCase();
 
   const currentYear = Math.floor((gameState?.week ?? 0) / 52);
   const releasedThisYear = useMemo(() => {
@@ -18,7 +18,7 @@ export const StrategyPanel: React.FC = () => {
   }, [gameState, currentYear]);
   const releaseGoal = 3;
 
-  const tier = (prestige >= 90 ? 'TIER_1_STUDIO' : prestige >= 70 ? 'TIER_2_STUDIO' : prestige >= 50 ? 'TIER_3_STUDIO' : 'EMERGING_STUDIO').toUpperCase();
+  const tier = (prestige >= 90 ? 'TIER 1 STUDIO' : prestige >= 70 ? 'TIER 2 STUDIO' : prestige >= 50 ? 'TIER 3 STUDIO' : 'EMERGING STUDIO').toUpperCase();
   const tierDesc = (prestige >= 90 ? 'INDUSTRY LEADER' : prestige >= 70 ? 'RISING COMPETITOR' : prestige >= 50 ? 'BUILDING REPUTATION' : 'ESTABLISHING FOOTHOLD').toUpperCase();
 
   return (
@@ -30,7 +30,7 @@ export const StrategyPanel: React.FC = () => {
           </div>
           <div className="flex items-center gap-4 mb-6">
             <Target className="h-4 w-4 text-primary" strokeWidth={3} />
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">CURRENT_OBJECTIVE</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">CURRENT OBJECTIVE</span>
           </div>
           <p className="font-display font-black text-lg tracking-tight italic text-foreground mb-2 leading-none">{prestigeLabel}</p>
           <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
@@ -50,9 +50,9 @@ export const StrategyPanel: React.FC = () => {
           </div>
           <div className="flex items-center gap-4 mb-6">
             <Award className="h-4 w-4 text-secondary" strokeWidth={3} />
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">OPERATIONAL_MILESTONE</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">OPERATIONAL MILESTONE</span>
           </div>
-          <p className="font-display font-black text-lg tracking-tight italic text-foreground mb-2 leading-none uppercase">RELEASE {releaseGoal} SLATES_FY</p>
+          <p className="font-display font-black text-lg tracking-tight italic text-foreground mb-2 leading-none uppercase">RELEASE {releaseGoal} SLATES FY</p>
           <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
             COMPLETED: {releasedThisYear} / {releaseGoal} UNITS
           </p>
@@ -70,7 +70,7 @@ export const StrategyPanel: React.FC = () => {
           </div>
           <div className="flex items-center gap-4 mb-6">
             <TrendingUp className="h-4 w-4 text-amber-500" strokeWidth={3} />
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">MARKET_POSITION</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">MARKET POSITION</span>
           </div>
           <p className="font-display font-black text-lg tracking-tight italic text-foreground mb-2 leading-none">{tier}</p>
           <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic leading-none">{tierDesc}</p>
@@ -83,7 +83,7 @@ export const StrategyPanel: React.FC = () => {
         </div>
         <h4 className="text-sm font-black uppercase italic tracking-[0.4em] text-primary/60 mb-10 flex items-center gap-4">
           <Zap className="h-5 w-5" strokeWidth={3} />
-          STRATEGIC_INTELLIGENCE_REPORT
+          STRATEGIC INTELLIGENCE REPORT
         </h4>
         <div className="space-y-6 relative z-10">
           {prestige < 80 && (
@@ -92,7 +92,7 @@ export const StrategyPanel: React.FC = () => {
                 <Trophy className="h-6 w-6 text-primary" strokeWidth={2} />
               </div>
               <div className="space-y-2">
-                <p className="text-lg font-display font-black uppercase italic tracking-tight text-foreground leading-none">PRIORITIZE_PRESTIGE_ASSETS</p>
+                <p className="text-lg font-display font-black uppercase italic tracking-tight text-foreground leading-none">PRIORITIZE PRESTIGE ASSETS</p>
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic leading-relaxed max-w-2xl">
                   CURRENT PRESTIGE: {prestige}. INITIALIZE 2-3 HIGH-FIDELITY DRAMATIC PROJECTS TO SECURE TIER-2 STATUS.
                 </p>
@@ -106,7 +106,7 @@ export const StrategyPanel: React.FC = () => {
                 <Zap className="h-6 w-6 text-secondary" strokeWidth={2} />
               </div>
               <div className="space-y-2">
-                <p className="text-lg font-display font-black uppercase italic tracking-tight text-foreground leading-none">ACCELERATE_PRODUCTION_CYCLES</p>
+                <p className="text-lg font-display font-black uppercase italic tracking-tight text-foreground leading-none">ACCELERATE PRODUCTION CYCLES</p>
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic leading-relaxed max-w-2xl">
                   {releaseGoal - releasedThisYear} ADDITIONAL UNITS REQUIRED FOR ANNUAL QUOTA. AUDIT PRODUCTION PIPELINE IMMEDIATELY.
                 </p>
@@ -119,7 +119,7 @@ export const StrategyPanel: React.FC = () => {
               <ChevronRight className="h-6 w-6 text-muted-foreground" strokeWidth={2} />
             </div>
             <div className="space-y-2">
-              <p className="text-lg font-display font-black uppercase italic tracking-tight text-foreground leading-none">ACQUIRE_A_LIST_ASSETS</p>
+              <p className="text-lg font-display font-black uppercase italic tracking-tight text-foreground leading-none">ACQUIRE A LIST ASSETS</p>
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic leading-relaxed max-w-2xl">
                 TALENT WITH 80+ PRECISION RATING CRITICAL FOR BLOCKBUSTER VELOCITY. MONITOR MARKETPLACE FOR CONTRACT OPPORTUNITIES.
               </p>

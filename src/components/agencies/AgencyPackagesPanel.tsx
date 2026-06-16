@@ -31,9 +31,9 @@ export const AgencyPackagesPanel: React.FC<AgencyPackagesPanelProps> = ({
     return (
       <div className={cn('text-center py-20 bg-white/[0.01] border border-white/5 border-dashed rounded-none')}>
         <Building2 className="h-16 w-16 mx-auto mb-6 text-primary/20" strokeWidth={1} />
-        <p className="text-sm font-black uppercase italic tracking-[0.3em] text-muted-foreground/40 leading-none">NO_AGENCY_DATA_DETECTED</p>
+        <p className="text-sm font-black uppercase italic tracking-[0.3em] text-muted-foreground/40 leading-none">NO AGENCY DATA DETECTED</p>
         <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/20 mt-4 italic">
-          ESTABLISH_RELATIONSHIPS_TO_POPULATE_ARRAYS
+          ESTABLISH RELATIONSHIPS TO POPULATE ARRAYS
         </p>
       </div>
     );
@@ -45,9 +45,9 @@ export const AgencyPackagesPanel: React.FC<AgencyPackagesPanelProps> = ({
       <div className="space-y-6">
         <div className="flex items-center justify-between border-l-4 border-primary pl-6 py-2">
           <div>
-            <h3 className="text-xl font-display font-black uppercase italic tracking-tighter text-foreground leading-none mb-2">AGENCY_RELATIONSHIP_MATRIX</h3>
+            <h3 className="text-xl font-display font-black uppercase italic tracking-tighter text-foreground leading-none mb-2">AGENCY RELATIONSHIP MATRIX</h3>
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
-              {agencies.length} MAJOR_INSTITUTIONS • {packages.length} ACTIVE_NEGOTIATIONS
+              {agencies.length} MAJOR INSTITUTIONS • {packages.length} ACTIVE NEGOTIATIONS
             </p>
           </div>
           <button 
@@ -55,7 +55,7 @@ export const AgencyPackagesPanel: React.FC<AgencyPackagesPanelProps> = ({
             className="px-6 py-3 bg-primary text-black font-black uppercase italic text-[10px] tracking-[0.2em] rounded-none shadow-2xl hover:bg-primary/80 transition-all flex items-center gap-3"
           >
             <Package className="h-4 w-4" />
-            INITIALIZE_PACKAGE
+            INITIALIZE PACKAGE
           </button>
         </div>
 
@@ -76,7 +76,7 @@ export const AgencyPackagesPanel: React.FC<AgencyPackagesPanelProps> = ({
                 {agency.firstLookActive && (
                   <div className="bg-primary text-black px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.2em] italic shadow-lg flex items-center gap-1">
                     <Eye className="h-3 w-3" strokeWidth={3} />
-                    FIRST_LOOK
+                    FIRST LOOK
                   </div>
                 )}
               </div>
@@ -116,9 +116,9 @@ export const AgencyPackagesPanel: React.FC<AgencyPackagesPanelProps> = ({
         <div className="flex items-center gap-4 border-l-4 border-secondary pl-6 py-2">
           <Package className="h-6 w-6 text-secondary" strokeWidth={2} />
           <div>
-            <h3 className="text-xl font-display font-black uppercase italic tracking-tighter text-foreground leading-none mb-2">AVAILABLE_TALENT_PACKAGES</h3>
+            <h3 className="text-xl font-display font-black uppercase italic tracking-tighter text-foreground leading-none mb-2">AVAILABLE TALENT PACKAGES</h3>
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
-              {packages.length} STRATEGIC_OFFERS_ON_MARKET
+              {packages.length} STRATEGIC OFFERS ON MARKET
             </p>
           </div>
         </div>
@@ -127,7 +127,7 @@ export const AgencyPackagesPanel: React.FC<AgencyPackagesPanelProps> = ({
           <div className={cn('text-center py-16 bg-white/[0.01] border border-white/5 border-dashed rounded-none')}>
             <Package className="h-12 w-12 mx-auto mb-6 text-secondary/20" strokeWidth={1} />
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/20 italic">
-              NO_TALENT_PACKAGES_CURRENTLY_AVAILABLE
+              NO TALENT PACKAGES CURRENTLY AVAILABLE
             </p>
           </div>
         ) : (
@@ -176,7 +176,7 @@ export const AgencyPackagesPanel: React.FC<AgencyPackagesPanelProps> = ({
                     <div className="flex items-center gap-2">
                       <DollarSign className="h-4 w-4 text-emerald-500" strokeWidth={3} />
                       <span className="text-emerald-500">
-                        ${(pkg.costToAcquire / 1000000).toFixed(1)}M_ASK
+                        ${(pkg.costToAcquire / 1000000).toFixed(1)}M ASK
                       </span>
                     </div>
                     <span className="text-muted-foreground/30 flex items-center gap-2">
@@ -196,7 +196,7 @@ export const AgencyPackagesPanel: React.FC<AgencyPackagesPanelProps> = ({
                       onClick={() => onBidPackage?.(pkg.id)}
                       className="px-6 py-2 bg-secondary text-black text-[9px] font-black uppercase italic tracking-[0.2em] hover:bg-secondary/80 transition-all shadow-xl"
                     >
-                      INITIALIZE_BID
+                      INITIALIZE BID
                     </button>
                   </div>
                 </div>

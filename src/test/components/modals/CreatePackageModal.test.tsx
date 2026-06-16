@@ -65,14 +65,14 @@ describe('CreatePackageModal', () => {
         id: 'talent-1',
         name: 'Actor One',
         roles: ['actor'],
-        tier: 'A_LIST',
+        tier: 'A LIST',
         agencyId: 'agency-1',
       },
       'talent-2': {
         id: 'talent-2',
         name: 'Actor Two',
         roles: ['actor'],
-        tier: 'B_LIST',
+        tier: 'B LIST',
         agencyId: 'agency-2',
       },
     };
@@ -108,7 +108,7 @@ describe('CreatePackageModal', () => {
         id: 'talent-1',
         name: 'Actor One',
         roles: ['actor'],
-        tier: 'A_LIST',
+        tier: 'A LIST',
         agencyId: 'agency-1',
       },
     };
@@ -153,7 +153,7 @@ describe('CreatePackageModal', () => {
         id: 'talent-1',
         name: 'Actor One',
         roles: ['actor'],
-        tier: 'A_LIST',
+        tier: 'A LIST',
         agencyId: 'agency-1',
       },
     };
@@ -182,12 +182,12 @@ describe('CreatePackageModal', () => {
 
     const mockAgencies = [{ id: 'agency-1', name: 'CAA', leverage: 80, archetype: 'major' }];
     const mockTalents = {
-      'talent-1': { id: 'talent-1', name: 'Actor One', roles: ['actor'], tier: 'A_LIST', agencyId: 'agency-1' },
-      'talent-2': { id: 'talent-2', name: 'Actor Two', roles: ['actor'], tier: 'B_LIST', agencyId: 'agency-1' },
-      'talent-3': { id: 'talent-3', name: 'Actor Three', roles: ['actor'], tier: 'C_LIST', agencyId: 'agency-1' },
-      'talent-4': { id: 'talent-4', name: 'Actor Four', roles: ['actor'], tier: 'A_LIST', agencyId: 'agency-1' },
-      'talent-5': { id: 'talent-5', name: 'Actor Five', roles: ['actor'], tier: 'B_LIST', agencyId: 'agency-1' },
-      'talent-6': { id: 'talent-6', name: 'Actor Six', roles: ['actor'], tier: 'C_LIST', agencyId: 'agency-1' },
+      'talent-1': { id: 'talent-1', name: 'Actor One', roles: ['actor'], tier: 'A LIST', agencyId: 'agency-1' },
+      'talent-2': { id: 'talent-2', name: 'Actor Two', roles: ['actor'], tier: 'B LIST', agencyId: 'agency-1' },
+      'talent-3': { id: 'talent-3', name: 'Actor Three', roles: ['actor'], tier: 'C LIST', agencyId: 'agency-1' },
+      'talent-4': { id: 'talent-4', name: 'Actor Four', roles: ['actor'], tier: 'A LIST', agencyId: 'agency-1' },
+      'talent-5': { id: 'talent-5', name: 'Actor Five', roles: ['actor'], tier: 'B LIST', agencyId: 'agency-1' },
+      'talent-6': { id: 'talent-6', name: 'Actor Six', roles: ['actor'], tier: 'C LIST', agencyId: 'agency-1' },
     };
 
     render(<CreatePackageModal agencies={mockAgencies as any[]} talents={mockTalents as any} />);

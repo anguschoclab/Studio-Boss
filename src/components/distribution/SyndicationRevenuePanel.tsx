@@ -34,7 +34,7 @@ export const SyndicationRevenuePanel: React.FC<SyndicationRevenuePanelProps> = (
               <Globe className="h-6 w-6 text-primary group-hover:text-black transition-colors" />
             </div>
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic mb-2">TOTAL_REVENUE</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic mb-2">TOTAL REVENUE</p>
               <p className="text-3xl font-display font-black italic tracking-tighter text-foreground group-hover:text-primary transition-colors">{formatCompactCurrency(totalRevenue)}</p>
             </div>
           </div>
@@ -46,7 +46,7 @@ export const SyndicationRevenuePanel: React.FC<SyndicationRevenuePanelProps> = (
               <Tv className="h-6 w-6 text-emerald-500 group-hover:text-black transition-colors" />
             </div>
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic mb-2">ACTIVE_DEALS</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic mb-2">ACTIVE DEALS</p>
               <p className="text-3xl font-display font-black italic tracking-tighter text-foreground group-hover:text-emerald-500 transition-colors">{totalDeals}</p>
             </div>
           </div>
@@ -58,7 +58,7 @@ export const SyndicationRevenuePanel: React.FC<SyndicationRevenuePanelProps> = (
               <TrendingUp className="h-6 w-6 text-amber-500 group-hover:text-black transition-colors" />
             </div>
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic mb-2">TOP_PERFORMING_REGION</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic mb-2">TOP PERFORMING REGION</p>
               <p className="text-3xl font-display font-black italic tracking-tighter text-foreground group-hover:text-amber-500 transition-colors">{topPerformingRegion.toUpperCase() || 'NULL'}</p>
             </div>
           </div>
@@ -70,9 +70,9 @@ export const SyndicationRevenuePanel: React.FC<SyndicationRevenuePanelProps> = (
         <div className="flex items-center gap-4 border-l-4 border-primary pl-6 py-2">
           <Globe className="h-6 w-6 text-primary" strokeWidth={2} />
           <div>
-            <h3 className="text-xl font-display font-black uppercase italic tracking-tighter text-foreground leading-none mb-2">REGIONAL_SYNDICATION_ARRAYS</h3>
+            <h3 className="text-xl font-display font-black uppercase italic tracking-tighter text-foreground leading-none mb-2">REGIONAL SYNDICATION ARRAYS</h3>
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
-              GLOBAL_REVENUE_DISTRIBUTION_BY_MARKET_NODE
+              GLOBAL REVENUE DISTRIBUTION BY MARKET NODE
             </p>
           </div>
         </div>
@@ -81,7 +81,7 @@ export const SyndicationRevenuePanel: React.FC<SyndicationRevenuePanelProps> = (
           <div className={cn('text-center py-20 bg-white/[0.01] border border-white/5 border-dashed rounded-none')}>
             <Globe className="h-16 w-16 mx-auto mb-6 text-primary/20" strokeWidth={1} />
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/20 italic">
-              NO_SYNDICATION_DEALS_ACTIVE_IN_BUFFER
+              NO SYNDICATION DEALS ACTIVE IN BUFFER
             </p>
           </div>
         ) : (
@@ -117,8 +117,8 @@ export const SyndicationRevenuePanel: React.FC<SyndicationRevenuePanelProps> = (
                       market.trend === 'down' ? 'text-rose-500' : 'text-muted-foreground/30'
                     )}>
                       {market.trend === 'up' && <Zap className="h-3 w-3 fill-current" />}
-                      {market.trend === 'up' ? 'STATUS_GROWING' :
-                       market.trend === 'down' ? 'STATUS_DECLINING' : 'STATUS_STABLE'}
+                      {market.trend === 'up' ? 'STATUS GROWING' :
+                       market.trend === 'down' ? 'STATUS DECLINING' : 'STATUS STABLE'}
                       <ChevronRight className="h-3 w-3" />
                     </p>
                   </div>

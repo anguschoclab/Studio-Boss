@@ -112,6 +112,6 @@ describe('StudioSidebar', () => {
 
     renderSidebar();
     expect(screen.getByText('BOSS')).toBeDefined();
-    expect(screen.getByText((c) => c.includes('CASH_RESERVES') || c.includes('CASH'))).toBeDefined();
+    expect(screen.getByText((c) => c.includes('CASH RESERVES') || c.includes('CASH'))).toBeDefined();
   });
 });

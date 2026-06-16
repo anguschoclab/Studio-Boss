@@ -35,7 +35,7 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
 
   const [domesticBudget, setDomesticBudget] = useState(project?.marketingCampaign?.domesticBudget || 0);
   const [foreignBudget, setForeignBudget] = useState(project?.marketingCampaign?.foreignBudget || 0);
-  const [angle, setAngle] = useState<MarketingAngle>(project?.marketingCampaign?.primaryAngle || 'SELL_THE_STORY');
+  const [angle, setAngle] = useState<MarketingAngle>(project?.marketingCampaign?.primaryAngle || 'SELL THE STORY');
 
   const totalMarketingBudget = domesticBudget + foreignBudget;
   const isOverBudget = totalMarketingBudget > studioCash;
@@ -131,11 +131,11 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
                   <SelectValue placeholder="Select Angle" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="SELL_THE_SPECTACLE">Sell the Spectacle</SelectItem>
-                  <SelectItem value="SELL_THE_STORY">Sell the Story</SelectItem>
-                  <SelectItem value="SELL_THE_STARS">Sell the Stars</SelectItem>
-                  <SelectItem value="FAMILY_ADVENTURE">Family Adventure</SelectItem>
-                  <SelectItem value="AWARDS_PUSH">Awards Push</SelectItem>
+                  <SelectItem value="SELL THE SPECTACLE">Sell the Spectacle</SelectItem>
+                  <SelectItem value="SELL THE STORY">Sell the Story</SelectItem>
+                  <SelectItem value="SELL THE STARS">Sell the Stars</SelectItem>
+                  <SelectItem value="FAMILY ADVENTURE">Family Adventure</SelectItem>
+                  <SelectItem value="AWARDS PUSH">Awards Push</SelectItem>
                 </SelectContent>
               </Select>
             </div>

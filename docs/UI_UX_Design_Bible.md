@@ -1,9 +1,18 @@
 # Studio Boss — UI/UX Design Bible
 
-**Version:** 1.0  
+**Version:** 1.1  
 **Status:** Living Design Document  
 **Scope:** All screens, components, data visualizations, modals, and future UI extensions  
-**Last Updated:** 2026-04-22
+**Last Updated:** 2026-06-16
+
+> **Changelog — v1.1 (2026-06-16): "Clarity over chrome" pass.** Reaffirmed the
+> legibility-first principles the codebase had drifted away from. Key changes:
+> the global `italic` treatment on headings is **deprecated** (numbers and labels
+> are upright); label letter-spacing is **capped at `0.15em`** (the `0.3em–0.6em`
+> drift is banned); the KPI Stat Card loses its ambient glow blob in favour of a
+> single left accent bar with upright `tabular-nums` values; and a new **Data
+> Integrity** rule (§16.5) prohibits fabricated/decorative on-screen strings —
+> every displayed value must map to real game state. See §4.3, §8.1, §11.3, §16.5.
 
 ---
 
@@ -166,10 +175,12 @@ Both fonts are loaded from Google Fonts in `index.css`. Use `.font-display` and 
 ### 4.3 Typography Rules
 
 - **Headlines are UPPERCASE** — all screen titles, panel headers, and KPI labels use `uppercase`. This is non-negotiable; it is a core part of the editorial identity.
-- **Numbers use the Display font** — any KPI, stat, or financial figure uses Montserrat Black. Numbers in body copy or tables may use Inter.
+- **Numbers use the Display font, upright** — any KPI, stat, or financial figure uses Montserrat Black with `not-italic normal-case tabular-nums`. Figures must stay vertically aligned and column-comparable; never italicize or letter-space a number. Numbers in body copy or tables may use Inter.
+- **Italic is deprecated.** Do **not** apply `italic` as a blanket treatment to headings, labels, or values. The former global `h1–h6 { italic }` rule is removed — it hurt number legibility and gave numeric dashboards a "sci-fi HUD" feel at odds with a data-driven management game. Reserve italic for genuinely editorial pull-quotes only, never for UI chrome.
+- **Cap letter-spacing at `0.15em`.** Section/micro labels use `tracking-[0.15em]` at most. The drifted `tracking-[0.3em]`–`tracking-[0.6em]` values are banned — extreme tracking on tiny text is decorative, not legible.
 - **Never mix weights on one line** — if you need emphasis in a label, use color contrast, not weight variation on the same line.
 - **Avoid full sentences in all-caps** — use uppercase only for titles, labels, and badges (≤5 words). Running text in uppercase is inaccessible.
-- **Gradient text for hero values** — the screen-level studio title uses `bg-gradient-to-br from-foreground to-foreground/50 bg-clip-text text-transparent`. Use this sparingly — only once per screen, at the top of the hierarchy.
+- **Hero value treatment is optional, not gradient-by-default.** A screen-level title may use a subtle `from-foreground to-foreground/50` gradient clip, but a solid `text-foreground` is equally valid and often more legible. Use at most once per screen, at the top of the hierarchy — and only when it does not compromise readability.
 
 ---
 
@@ -343,19 +354,22 @@ Optional enhancements:
 **Anatomy:**
 ```
 ┌─────────────────────────────┐
-│ LABEL          [icon]       │  ← text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground
-│                             │
-│ 42                          │  ← text-3xl font-black tracking-tighter
-│ Sub-label or sparkline      │  ← text-[11px] text-muted-foreground
+║ LABEL          [icon]       │  ← LABEL: text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground (not-italic)
+║                             │  ← left edge ║ = 3px accent bar in the KPI's semantic color (40% opacity → 100% on hover)
+║ 42                          │  ← VALUE: text-4xl font-bold not-italic normal-case tracking-tight tabular-nums
+║ ▲ 12%  SUB-LABEL            │  ← trend pill (semantic color) + sub-label: text-[11px] tracking-[0.1em] text-muted-foreground/50
 └─────────────────────────────┘
 ```
 
 **Rules:**
-- Icon always top-right, colored with the KPI's semantic color
-- Value: always the largest element on the card
-- Use a sparkline only when trend matters more than absolute value
-- The ambient glow blob color matches the semantic color of the KPI (primary, secondary, destructive, success)
-- No more than 4 KPI cards in a row; if 5+ are needed, break into two rows with a visual separator
+- Identity comes from a **single 3px left accent bar** in the KPI's semantic color — not an ambient glow blob. The old `blur-[100px]` glow array is removed; it competed with the numbers for attention.
+- Icon always top-right, tinted with the KPI's semantic color at ~50% opacity (full on hover).
+- Value: always the largest element on the card. Upright, `tabular-nums`, never italic or uppercased — figures must stay column-comparable across cards.
+- Hover is a quiet state change (border + background lift over ~200ms), not a glow/scale/translate spectacle.
+- Optional trend pill (`▲`/`▼` + value) in emerald (positive) or rose (negative). Use a sparkline only when trend matters more than the absolute value.
+- No more than 4 KPI cards in a row; if 5+ are needed, break into two rows with a visual separator.
+
+> Implementation: `src/components/shared/KPIStatCard.tsx`. Variants: `primary` (gold), `secondary` (cyan), `success` (emerald), `destructive` (rose), `muted` (foreground).
 
 ### 8.2 Badges & Tags
 
@@ -651,23 +665,30 @@ The Finance Panel has the highest data complexity in the game. These rules gover
 ### 11.3 Command Center (HQ)
 
 **Purpose:** Executive overview — the game's "Monday morning briefing"  
-**First visible on tab selection:** KPI row + Financial Overview + Demographics  
+**First visible on tab selection:** Studio header + KPI row + Financial Overview + Demographics  
 **Information priority order:**
-1. KPI row (pipeline count, talent, rivals, prestige) — highest; visible without scrolling
-2. Financial Overview widget — critical at all times
-3. Demographics widget — strategic, needed for targeting decisions
-4. Intelligence Feed — situational; can scroll to
+1. Studio header with **market position** — highest; identifies who you are and where you stand
+2. KPI row (cash, pipeline, capital share, prestige) — visible without scrolling
+3. Financial Overview widget — critical at all times
+4. Demographics widget — strategic, needed for targeting decisions
+5. Industry News — situational; can scroll to
+
+**Studio Header Rules:**
+- Studio name as the screen title (upright, not italic), with the archetype badge (`MAJOR` / `MID-TIER` / `INDIE`) drawn from real studio state.
+- **Market position must be derived, never hardcoded.** Show the studio's real standing: a descriptor (`Market Leader` / `Major Player` / `Established Studio` / `Challenger`) computed from rank, plus the literal `Rank #X of Y · Z% capital`. Capital share is the studio's share of total industry cash — the same metric the engine's antitrust system uses to gauge dominance. A static label like "MAJOR CHALLENGER" that ignores actual state is prohibited (see §16.5).
 
 **KPI Row Rules:**
-- Exactly 4 cards: Active Pipeline, Talent Roster, Industry Rivals, Prestige XP
-- Never add a 5th KPI to this row — create a second row below if expansion is needed
-- Each card gets one glow blob matching its semantic color
+- Exactly 4 cards: **Cash on Hand**, **Active Pipeline**, **Capital Share**, **Prestige** — every value sourced from live state, formatted per §16.3.
+- Cash uses the `destructive` variant when negative (e.g. after a loan), `primary` (gold) otherwise.
+- Never add a 5th KPI to this row — create a second row below if expansion is needed.
+- Each card carries its semantic accent bar (per §8.1); no glow blobs.
 
-**Intelligence Feed:**
-- Latest 5–8 news items
-- Each item: headline text (font-medium) + timestamp (text-[11px] text-muted-foreground) + category badge
-- Clickable to open a `NewsStoryModal`
-- Items that represent crises or urgent events: left-border `border-l-2 border-destructive`
+**Industry News (formerly "Intelligence Feed"):**
+- Plain, honest section label — **no surveillance/HUD theatre** ("LIVE SECURE", "GLOBAL SURVEILLANCE", "SECTOR ALPHA-1" and similar fabricated chrome are banned, §16.5).
+- Latest 5–8 news items, newest first; the lead item may span the full width.
+- Each item: week tag + headline (`font-bold`, upright) + description (`text-sm text-muted-foreground`).
+- Empty state is honest and actionable: "No industry activity yet. Advance the week to generate headlines."
+- Items representing crises or urgent events: left-border `border-l-2 border-destructive`.
 
 ### 11.4 Production Pipeline
 
@@ -1054,6 +1075,18 @@ Use these terms consistently throughout the UI:
 | Fiscal Year / FY | The game's annual accounting period | "Year" alone (in financial contexts) |
 | Advance Week | Progress the simulation one week forward | "Next turn", "End week" |
 | Prestige | The studio's reputation score | "Fame", "Reputation" |
+
+### 16.5 Data Integrity — No Fabricated Chrome
+
+**Every string and value on screen must map to real game state.** Studio Boss is a numbers game; the UI's credibility depends on never showing the player something untrue.
+
+- **No hardcoded status that pretends to be live.** A label like "MAJOR CHALLENGER" or "MARKET POSITION: STABLE" baked into JSX — shown regardless of the studio's actual standing — is a lie to the player and is prohibited. Derive it, or don't show it.
+- **No decorative system theatre.** Invented sci-fi/ops-room flavour text — `SECTOR ALPHA-1`, `LIVE SECURE`, `GLOBAL INDUSTRY SURVEILLANCE`, `REAL-TIME FEEDS`, fake telemetry, blinking "secure" indicators — adds zero information and undermines trust. Don't ship it.
+- **Placeholder ≠ production.** Mock/sample numbers used during development must be replaced with a real selector or an explicit, honest empty state before merge.
+- **Honest empty states.** When there's no data, say so plainly and point to the action that produces it ("Advance the week to generate headlines") — never fill the space with fake rows or ambient noise.
+- **Label what the number actually is.** If a figure is capital/cash share, call it "Capital Share", not "Market Share". Precision in labels is part of data integrity.
+
+> Rationale: atmosphere should come from typography, colour, spacing, and motion — never from inventing facts. If a decorative string would mislead a player about the state of their studio, it fails this rule.
 
 ---
 

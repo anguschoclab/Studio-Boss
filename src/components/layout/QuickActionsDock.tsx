@@ -49,7 +49,7 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({
       {
         id: 'new-project',
         icon: Plus,
-        label: 'INITIATE_PROJECT',
+        label: 'INITIATE PROJECT',
         shortcut: '⌘N',
         action: () => openCreateProject(),
         variant: 'primary',
@@ -57,7 +57,7 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({
       {
         id: 'advance-week',
         icon: Clock,
-        label: 'ADVANCE_CYCLE',
+        label: 'ADVANCE CYCLE',
         action: () => { doAdvanceWeek(); },
         variant: 'secondary',
       },
@@ -68,7 +68,7 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({
         {
           id: 'studio-marketing',
           icon: Settings,
-          label: 'MARKETING_INTEL',
+          label: 'MARKETING INTEL',
           action: () => { setActiveHub('hq', 'marketing'); },
         },
       ],
@@ -76,7 +76,7 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({
         {
           id: 'pipeline-view',
           icon: Film,
-          label: 'PRODUCTION_SLATE',
+          label: 'PRODUCTION SLATE',
           action: () => { setActiveHub('production', 'slate'); },
         },
       ],
@@ -84,7 +84,7 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({
         {
           id: 'discover-talent',
           icon: Users,
-          label: 'TALENT_ACQUISITION',
+          label: 'TALENT ACQUISITION',
           action: () => { setActiveHub('talent', 'marketplace'); },
         },
       ],
@@ -92,7 +92,7 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({
         {
           id: 'market-analysis',
           icon: TrendingUp,
-          label: 'MARKET_ANALYSIS',
+          label: 'MARKET ANALYSIS',
           action: () => { setActiveHub('intelligence', 'market'); },
         },
       ],
@@ -184,7 +184,7 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({
       >
         <Zap className={cn("w-5 h-5 transition-transform duration-700", isExpanded && "rotate-180")} strokeWidth={3} />
         <span className="text-xs font-black uppercase tracking-[0.4em] italic">
-          {isExpanded ? 'CLOSE_MODULE' : 'QUICK_COMMAND'}
+          {isExpanded ? 'CLOSE MODULE' : 'QUICK COMMAND'}
         </span>
         {isExpanded ? (
           <ChevronDown className="w-5 h-5" strokeWidth={3} />

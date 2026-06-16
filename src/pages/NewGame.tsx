@@ -119,14 +119,14 @@ const NewGame = () => {
               onClick={() => navigate({ to: "/" })}
               className="h-16 px-10 text-[10px] font-black uppercase tracking-[0.4em] italic rounded-none border-white/10 bg-white/[0.01] hover:bg-white/[0.05] hover:border-white/20 transition-all duration-700 flex-1"
             >
-              ABORT_SESSION
+              ABORT SESSION
             </Button>
             <Button
               onClick={handleLaunch}
               disabled={!studioName.trim() || !selectedArchetype}
               className="h-16 px-16 text-[10px] font-black uppercase tracking-[0.4em] italic rounded-none bg-primary text-black hover:bg-primary/90 shadow-[0_0_30px_rgba(var(--primary),0.2)] flex-[2] group transition-all duration-700 active:scale-95"
             >
-              INITIALIZE_STUDIO{" "}
+              INITIALIZE STUDIO{" "}
               <ArrowRight
                 className="ml-4 h-4 w-4 group-hover:translate-x-2 transition-transform"
                 strokeWidth={3}

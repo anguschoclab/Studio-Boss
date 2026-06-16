@@ -6,12 +6,12 @@ import { cn } from "@/lib/utils";
 import { NewsStoryModal } from "@/components/modals/NewsStoryModal";
 
 const eventTypeConfig: Record<string, { icon: React.ElementType; color: string; label: string }> = {
-  AWARD: { icon: Trophy, color: "text-amber-400", label: "AWARD_INTEL" },
-  CRISIS: { icon: AlertTriangle, color: "text-rose-500", label: "CRITICAL_ALERT" },
-  RELEASE: { icon: TrendingUp, color: "text-emerald-500", label: "MARKET_RELEASE" },
-  STUDIO_EVENT: { icon: History, color: "text-blue-500", label: "INTERNAL_OPS" },
-  RIVAL: { icon: Zap, color: "text-primary", label: "COMPETITIVE_INTEL" },
-  GENERAL: { icon: Newspaper, color: "text-muted-foreground/40", label: "INDUSTRY_PULSE" },
+  AWARD: { icon: Trophy, color: "text-amber-400", label: "AWARD INTEL" },
+  CRISIS: { icon: AlertTriangle, color: "text-rose-500", label: "CRITICAL ALERT" },
+  RELEASE: { icon: TrendingUp, color: "text-emerald-500", label: "MARKET RELEASE" },
+  STUDIO_EVENT: { icon: History, color: "text-blue-500", label: "INTERNAL OPS" },
+  RIVAL: { icon: Zap, color: "text-primary", label: "COMPETITIVE INTEL" },
+  GENERAL: { icon: Newspaper, color: "text-muted-foreground/40", label: "INDUSTRY PULSE" },
 };
 
 export const NewsTicker: React.FC = () => {
@@ -23,8 +23,8 @@ export const NewsTicker: React.FC = () => {
       <div className="flex-1 flex items-center gap-4 px-6 py-2 bg-white/[0.01] rounded-none border border-white/5 overflow-hidden backdrop-blur-3xl">
         <Newspaper className="h-4 w-4 text-primary shrink-0 drop-shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
         <span className="text-[10px] font-black text-muted-foreground/20 italic tracking-[0.2em] uppercase truncate">
-          <span className="text-primary font-black mr-4">THE_TRADES:</span>
-          ESTABLISHING_UPLINK_TO_INDUSTRY_DATABASE...
+          <span className="text-primary font-black mr-4">THE TRADES:</span>
+          ESTABLISHING UPLINK TO INDUSTRY DATABASE...
         </span>
       </div>
     );
@@ -39,7 +39,7 @@ export const NewsTicker: React.FC = () => {
         <div className="flex items-center gap-3 bg-black/90 px-6 z-20 border-r border-white/10 h-full shrink-0">
           <Newspaper className="h-4 w-4 text-primary shrink-0" />
           <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary italic drop-shadow-[0_0_15px_rgba(var(--primary),0.6)]">
-            THE_TRADES
+            THE TRADES
           </span>
         </div>
 

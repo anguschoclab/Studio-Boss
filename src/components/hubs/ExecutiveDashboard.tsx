@@ -66,7 +66,7 @@ export const ExecutiveDashboard: React.FC = () => {
         title: `${needsGreenlight} PROJECT${needsGreenlight > 1 ? 'S' : ''}_READY_FOR_GREENLIGHT`,
         description: 'REVIEW AND APPROVE PROJECTS TO BEGIN PRODUCTION',
         action: {
-          label: 'REVIEW_QUEUE',
+          label: 'REVIEW QUEUE',
           onClick: () => {
             setActiveHub('production');
             setActiveSubTab('slate');
@@ -86,7 +86,7 @@ export const ExecutiveDashboard: React.FC = () => {
         title: `${overBudget} PROJECT${overBudget > 1 ? 'S' : ''}_OVER_BUDGET`,
         description: 'BUDGET OVERRUNS DETECTED - IMMEDIATE ACTION REQUIRED',
         action: {
-          label: 'VIEW_DETAILS',
+          label: 'VIEW DETAILS',
           onClick: () => {
             setActiveHub('production');
             setActiveSubTab('development');
@@ -103,10 +103,10 @@ export const ExecutiveDashboard: React.FC = () => {
         id: 'morale',
         type: 'warning',
         icon: <Activity className="h-4 w-4 text-amber-500" />,
-        title: `${lowMorale} TALENT_MEMBER${lowMorale > 1 ? 'S' : ''}_AT_RISK`,
+        title: `${lowMorale} TALENT MEMBER${lowMorale > 1 ? 'S' : ''}_AT_RISK`,
         description: 'TALENT MORALE IS CRITICALLY LOW - CHECK ROSTER',
         action: {
-          label: 'CHECK_ROSTER',
+          label: 'CHECK ROSTER',
           onClick: () => {
             setActiveHub('talent');
             setActiveSubTab('roster');
@@ -136,26 +136,26 @@ export const ExecutiveDashboard: React.FC = () => {
       {/* KPI Command Bar */}
       <div className="grid grid-cols-4 gap-8">
         <KPIStatCard 
-          label="LIQUID_CAPITAL" 
+          label="LIQUID CAPITAL" 
           value={`$${((gameState?.finance?.cash || 0) / 1000000).toFixed(1)}M`}
           subValue="FISCAL RESERVES"
           icon={DollarSign}
           variant="secondary"
         />
         <KPIStatCard 
-          label="ACTIVE_SLATE" 
+          label="ACTIVE SLATE" 
           value={selectProjects(gameState).length.toString()}
           subValue="LIVE PRODUCTIONS"
           icon={Monitor}
         />
         <KPIStatCard 
-          label="HUMAN_CAPITAL" 
+          label="HUMAN CAPITAL" 
           value={selectTalentPool(gameState).length.toString()}
           subValue="CONTRACTED ASSETS"
           icon={Activity}
         />
         <KPIStatCard 
-          label="FISCAL_WEEK" 
+          label="FISCAL WEEK" 
           value={gameState?.week || 1}
           subValue="CURRENT PERIOD"
           icon={TrendingUp}
@@ -164,7 +164,7 @@ export const ExecutiveDashboard: React.FC = () => {
 
       {/* Critical Alert Stack */}
       {alerts.length > 0 && (
-        <Section title="EXECUTIVE_ALERTS" icon={AlertTriangle}>
+        <Section title="EXECUTIVE ALERTS" icon={AlertTriangle}>
           <div className="space-y-4">
             {alerts.map((alert) => (
               <div
@@ -206,13 +206,13 @@ export const ExecutiveDashboard: React.FC = () => {
         {/* Market Surveillance Column */}
         <div className="col-span-4 space-y-10">
           <div className="bg-white/[0.01] border border-white/5 p-8 rounded-none backdrop-blur-3xl shadow-2xl">
-            <React.Suspense fallback={<div className="h-64 flex items-center justify-center font-display font-black text-muted-foreground/10 uppercase tracking-widest italic animate-pulse">SURVEILLANCE_RADAR_INITIALIZING...</div>}>
+            <React.Suspense fallback={<div className="h-64 flex items-center justify-center font-display font-black text-muted-foreground/10 uppercase tracking-widest italic animate-pulse">SURVEILLANCE RADAR INITIALIZING...</div>}>
               <StudioHealthRadar className="h-full" />
             </React.Suspense>
           </div>
 
           <div className="bg-white/[0.01] border border-white/5 p-8 rounded-none backdrop-blur-3xl shadow-2xl">
-            <React.Suspense fallback={<div className="h-40 flex items-center justify-center font-display font-black text-muted-foreground/10 uppercase tracking-widest italic animate-pulse">SENTIMENT_ANALYSIS_RUNNING...</div>}>
+            <React.Suspense fallback={<div className="h-40 flex items-center justify-center font-display font-black text-muted-foreground/10 uppercase tracking-widest italic animate-pulse">SENTIMENT ANALYSIS RUNNING...</div>}>
               <MarketSentimentGauge
                 sentiment={marketMetrics.sentiment}
                 trend={marketMetrics.cycle === 'BOOM' || marketMetrics.cycle === 'RECOVERY' ? 'bullish' : 
@@ -223,7 +223,7 @@ export const ExecutiveDashboard: React.FC = () => {
           </div>
 
           <div className="bg-white/[0.01] border border-white/5 p-8 rounded-none backdrop-blur-3xl shadow-2xl">
-            <React.Suspense fallback={<div className="h-40 flex items-center justify-center font-display font-black text-muted-foreground/10 uppercase tracking-widest italic animate-pulse">CRISIS_MODELS_LOADING...</div>}>
+            <React.Suspense fallback={<div className="h-40 flex items-center justify-center font-display font-black text-muted-foreground/10 uppercase tracking-widest italic animate-pulse">CRISIS MODELS LOADING...</div>}>
               <CrisisRiskMeter />
             </React.Suspense>
           </div>
@@ -233,14 +233,14 @@ export const ExecutiveDashboard: React.FC = () => {
         <div className="col-span-8 space-y-10">
           <div className="grid grid-cols-2 gap-10">
             <div className="bg-white/[0.01] border border-white/5 p-8 rounded-none backdrop-blur-3xl shadow-2xl">
-              <React.Suspense fallback={<div className="h-64 flex items-center justify-center font-display font-black text-muted-foreground/10 uppercase tracking-widest italic animate-pulse">CASH_FLOW_PROJECTION...</div>}>
+              <React.Suspense fallback={<div className="h-64 flex items-center justify-center font-display font-black text-muted-foreground/10 uppercase tracking-widest italic animate-pulse">CASH FLOW PROJECTION...</div>}>
                 <CashFlowChart weeks={6} />
               </React.Suspense>
             </div>
 
             <div className="bg-white/[0.01] border border-white/5 p-8 rounded-none backdrop-blur-3xl shadow-2xl">
-              <React.Suspense fallback={<div className="h-64 flex items-center justify-center font-display font-black text-muted-foreground/10 uppercase tracking-widest italic animate-pulse">REVENUE_ANALYTICS...</div>}>
-                <WeeklyRevenueSpark label="WEEKLY_PERFORMANCE" />
+              <React.Suspense fallback={<div className="h-64 flex items-center justify-center font-display font-black text-muted-foreground/10 uppercase tracking-widest italic animate-pulse">REVENUE ANALYTICS...</div>}>
+                <WeeklyRevenueSpark label="WEEKLY PERFORMANCE" />
               </React.Suspense>
             </div>
           </div>
@@ -252,7 +252,7 @@ export const ExecutiveDashboard: React.FC = () => {
             </div>
             <div className="flex items-center gap-4 mb-10 relative z-10">
               <Target className="h-6 w-6 text-primary" strokeWidth={3} /> 
-              <h4 className="text-sm font-black uppercase tracking-[0.4em] italic text-primary/60">STRATEGIC_VECTOR_OVERRIDE</h4>
+              <h4 className="text-sm font-black uppercase tracking-[0.4em] italic text-primary/60">STRATEGIC VECTOR OVERRIDE</h4>
             </div>
             
             <div className="grid grid-cols-4 gap-8 relative z-10">
@@ -262,7 +262,7 @@ export const ExecutiveDashboard: React.FC = () => {
                 onClick={openCreateProject}
               >
                 <Plus className="h-8 w-8 text-primary group-hover:scale-110 transition-transform duration-700" strokeWidth={3} />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 group-hover:text-primary transition-colors italic">NEW_PROJECT</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 group-hover:text-primary transition-colors italic">NEW PROJECT</span>
               </Button>
               <Button
                 variant="outline"
@@ -273,7 +273,7 @@ export const ExecutiveDashboard: React.FC = () => {
                 }}
               >
                 <Zap className="h-8 w-8 text-emerald-400 group-hover:scale-110 transition-transform duration-700" strokeWidth={3} />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 group-hover:text-emerald-400 transition-colors italic">GREENLIGHT_CMD</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 group-hover:text-emerald-400 transition-colors italic">GREENLIGHT CMD</span>
               </Button>
               <Button
                 variant="outline"
@@ -284,7 +284,7 @@ export const ExecutiveDashboard: React.FC = () => {
                 }}
               >
                 <TrendingUp className="h-8 w-8 text-secondary group-hover:scale-110 transition-transform duration-700" strokeWidth={3} />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 group-hover:text-secondary transition-colors italic">MARKET_PULSE</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 group-hover:text-secondary transition-colors italic">MARKET PULSE</span>
               </Button>
               <Button
                 variant="outline"
@@ -295,7 +295,7 @@ export const ExecutiveDashboard: React.FC = () => {
                 }}
               >
                 <BarChart3 className="h-8 w-8 text-blue-400 group-hover:scale-110 transition-transform duration-700" strokeWidth={3} />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 group-hover:text-blue-400 transition-colors italic">FISCAL_AUDIT</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 group-hover:text-blue-400 transition-colors italic">FISCAL AUDIT</span>
               </Button>
             </div>
           </div>

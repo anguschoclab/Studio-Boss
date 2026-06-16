@@ -60,7 +60,7 @@ export const CrisisTriageDashboard: React.FC = () => {
         id: 'budget-crisis',
         type: 'financial',
         severity: 'critical',
-        title: 'BUDGET_OVERRUNS',
+        title: 'BUDGET OVERRUNS',
         description: `${overBudget.length} PROJECTS EXCEEDING ALLOCATED BUDGETS`,
         affectedCount: overBudget.length,
         estimatedImpact: `$${(totalOverrun / 1000000).toFixed(1)}M OVER BUDGET`,
@@ -78,7 +78,7 @@ export const CrisisTriageDashboard: React.FC = () => {
         id: 'greenlight-crisis',
         type: 'production',
         severity: 'high',
-        title: 'GREENLIGHT_QUEUE_BACKUP',
+        title: 'GREENLIGHT QUEUE BACKUP',
         description: 'PROJECTS WAITING APPROVAL ARE INCURRING HOLDING COSTS',
         affectedCount: needsGreenlight.length,
         estimatedImpact: 'DELAYED REVENUE, TEAM IDLE TIME',
@@ -95,7 +95,7 @@ export const CrisisTriageDashboard: React.FC = () => {
         id: 'morale-crisis',
         type: 'talent',
         severity: 'high',
-        title: 'TALENT_RELATIONS_AT_RISK',
+        title: 'TALENT RELATIONS AT RISK',
         description: 'MULTIPLE TALENT MEMBERS SHOWING DISSATISFACTION',
         affectedCount: lowMorale.length,
         estimatedImpact: 'WALKOUTS, CONTRACT DISPUTES, PR ISSUES',
@@ -113,7 +113,7 @@ export const CrisisTriageDashboard: React.FC = () => {
         id: 'production-crisis',
         type: 'production',
         severity: 'critical',
-        title: 'ACTIVE_PRODUCTION_CRISES',
+        title: 'ACTIVE PRODUCTION CRISES',
         description: 'PROJECTS HALTED OR DELAYED DUE TO ON-SET ISSUES',
         affectedCount: productionCrises.length,
         estimatedImpact: 'SCHEDULE DELAYS, COST OVERRUNS',
@@ -197,8 +197,8 @@ export const CrisisTriageDashboard: React.FC = () => {
                 criticalCount > 0 ? 'text-red-500 drop-shadow-[0_0_20px_rgba(239,68,68,0.3)]' : 'text-amber-500 drop-shadow-[0_0_20px_rgba(245,158,11,0.3)]'
               )}>
                 {criticalCount > 0 
-                  ? `${criticalCount} CRITICAL_ISSUES_REQUIRE_IMMEDIATE_ACTION`
-                  : `${crises.length} ISSUES_NEED_YOUR_ATTENTION`
+                  ? `${criticalCount} CRITICAL ISSUES REQUIRE IMMEDIATE ACTION`
+                  : `${crises.length} ISSUES NEED YOUR ATTENTION`
                 }
               </h3>
               <p className="text-[10px] font-black uppercase text-muted-foreground/30 tracking-[0.4em] italic">
@@ -214,7 +214,7 @@ export const CrisisTriageDashboard: React.FC = () => {
               )}
               {highCount > 0 && (
                 <Badge className="bg-amber-500 text-black px-6 py-2 rounded-none font-black uppercase italic tracking-widest text-[10px] shadow-[0_0_20px_rgba(245,158,11,0.2)]">
-                  {highCount} HIGH_PRIORITY
+                  {highCount} HIGH PRIORITY
                 </Badge>
               )}
             </div>
@@ -232,14 +232,14 @@ export const CrisisTriageDashboard: React.FC = () => {
             <div className="absolute inset-0 bg-emerald-500/2 blur-2xl" />
             <Shield className="h-10 w-10 text-emerald-500 relative z-10" strokeWidth={1} />
           </div>
-          <h3 className="text-2xl font-display font-black text-emerald-500 uppercase tracking-tight italic leading-none mb-3">ALL_SYSTEMS_OPERATIONAL</h3>
+          <h3 className="text-2xl font-display font-black text-emerald-500 uppercase tracking-tight italic leading-none mb-3">ALL SYSTEMS OPERATIONAL</h3>
           <p className="text-[10px] font-black uppercase text-muted-foreground/20 tracking-[0.4em] italic">
             NO CRISES REQUIRING YOUR ATTENTION AT THIS TIMESTAMP
           </p>
         </div>
       ) : (
         <Section
-          title="ACTIVE_TRIAGE_QUEUE"
+          title="ACTIVE TRIAGE QUEUE"
           subtitle="PRIORITIZED BY SEVERITY AND IMPACT"
           icon={AlertTriangle}
         >
@@ -273,15 +273,15 @@ export const CrisisTriageDashboard: React.FC = () => {
                         </p>
                         <div className="flex flex-wrap gap-10 text-[9px] font-black uppercase tracking-[0.2em] italic">
                           <div className="flex flex-col gap-1">
-                            <span className="text-muted-foreground/20">ESTIMATED_IMPACT</span>
+                            <span className="text-muted-foreground/20">ESTIMATED IMPACT</span>
                             <span className="text-foreground">{crisis.estimatedImpact}</span>
                           </div>
                           <div className="flex flex-col gap-1">
-                            <span className="text-muted-foreground/20">RESOLUTION_WINDOW</span>
+                            <span className="text-muted-foreground/20">RESOLUTION WINDOW</span>
                             <span className="text-foreground">{crisis.timeToResolve}</span>
                           </div>
                           <div className="flex flex-col gap-1">
-                            <span className="text-muted-foreground/20">AFFECTED_UNITS</span>
+                            <span className="text-muted-foreground/20">AFFECTED UNITS</span>
                             <span className="text-foreground">{crisis.affectedCount} UNIT{crisis.affectedCount > 1 ? 'S' : ''}</span>
                           </div>
                         </div>
@@ -293,7 +293,7 @@ export const CrisisTriageDashboard: React.FC = () => {
                       className="h-12 px-8 rounded-none font-black uppercase italic tracking-widest text-[10px] border-white/10 hover:border-primary/40 hover:bg-primary/5 transition-all duration-700"
                       onClick={() => navigateToCrisis(crisis.type)}
                     >
-                      INITIALIZE_RESOLUTION
+                      INITIALIZE RESOLUTION
                       <ArrowRight className="h-4 w-4 ml-3" strokeWidth={3} />
                     </Button>
                   </div>
@@ -307,14 +307,14 @@ export const CrisisTriageDashboard: React.FC = () => {
       {/* Crisis Management Components */}
       {crises.length > 0 && (
         <div className="grid grid-cols-2 gap-8">
-          <React.Suspense fallback={<div className="h-64 flex items-center justify-center font-display font-black text-muted-foreground/10 uppercase tracking-widest italic animate-pulse">INITIALIZING_CRISIS_DATA...</div>}>
+          <React.Suspense fallback={<div className="h-64 flex items-center justify-center font-display font-black text-muted-foreground/10 uppercase tracking-widest italic animate-pulse">INITIALIZING CRISIS DATA...</div>}>
             <CrisisAlertPanel
               activeCrises={[]}
               crisisHistory={[]}
             />
           </React.Suspense>
 
-          <React.Suspense fallback={<div className="h-64 flex items-center justify-center font-display font-black text-muted-foreground/10 uppercase tracking-widest italic animate-pulse">INITIALIZING_FISCAL_DATA...</div>}>
+          <React.Suspense fallback={<div className="h-64 flex items-center justify-center font-display font-black text-muted-foreground/10 uppercase tracking-widest italic animate-pulse">INITIALIZING FISCAL DATA...</div>}>
             <BudgetOverrunAlert
               alerts={[]}
             />
@@ -330,24 +330,24 @@ export const CrisisTriageDashboard: React.FC = () => {
           </div>
           <h4 className="text-sm font-black uppercase italic tracking-[0.3em] text-red-500 mb-8 flex items-center gap-4 leading-none">
             <ShieldAlert className="h-5 w-5" strokeWidth={3} />
-            EMERGENCY_OVERRIDE_ACTIONS
+            EMERGENCY OVERRIDE ACTIONS
           </h4>
           <div className="grid grid-cols-4 gap-4 relative z-10">
             <Button variant="outline" className="h-16 rounded-none font-black uppercase italic tracking-widest text-[10px] border-red-500/20 hover:bg-red-500/10 hover:border-red-500/40 transition-all duration-700">
               <DollarSign className="h-4 w-4 mr-3 text-red-500" strokeWidth={3} />
-              EMERGENCY_FUNDS
+              EMERGENCY FUNDS
             </Button>
             <Button variant="outline" className="h-16 rounded-none font-black uppercase italic tracking-widest text-[10px] border-red-500/20 hover:bg-red-500/10 hover:border-red-500/40 transition-all duration-700">
               <Users className="h-4 w-4 mr-3 text-red-500" strokeWidth={3} />
-              CRISIS_PR_PROTOCOL
+              CRISIS PR PROTOCOL
             </Button>
             <Button variant="outline" className="h-16 rounded-none font-black uppercase italic tracking-widest text-[10px] border-red-500/20 hover:bg-red-500/10 hover:border-red-500/40 transition-all duration-700">
               <Zap className="h-4 w-4 mr-3 text-red-500" strokeWidth={3} />
-              FAST_TRACK_CLEARANCE
+              FAST TRACK CLEARANCE
             </Button>
             <Button variant="destructive" className="h-16 rounded-none font-black uppercase italic tracking-widest text-[10px] shadow-[0_0_20px_rgba(239,68,68,0.2)]">
               <XCircle className="h-4 w-4 mr-3" strokeWidth={3} />
-              CANCEL_PROJECT
+              CANCEL PROJECT
             </Button>
           </div>
         </div>

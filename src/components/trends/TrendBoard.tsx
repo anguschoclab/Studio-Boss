@@ -12,10 +12,10 @@ export function TrendBoard() {
       <Card className="rounded-none border-white/5 bg-white/[0.01] backdrop-blur-3xl shadow-2xl">
         <CardHeader>
           <CardTitle className="font-display font-black uppercase italic tracking-[0.2em] text-primary/60">
-            MARKET_SENTIMENT_SCAN
+            MARKET SENTIMENT SCAN
           </CardTitle>
           <CardDescription className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/30 italic">
-            AUDIENCE_TASTES_CURRENTLY_UNPREDICTABLE.
+            AUDIENCE TASTES CURRENTLY UNPREDICTABLE.
           </CardDescription>
         </CardHeader>
       </Card>
@@ -87,7 +87,7 @@ export function TrendBoard() {
       </div>
       <CardHeader className="pb-6 border-b border-white/5 relative z-10">
         <CardTitle className="text-sm font-display font-black uppercase italic tracking-[0.4em] text-primary/60 flex items-center gap-4">
-          <Zap className="w-4 h-4 text-primary fill-current" strokeWidth={3} /> MARKET_PULSE_ARRAY
+          <Zap className="w-4 h-4 text-primary fill-current" strokeWidth={3} /> MARKET PULSE ARRAY
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-8 relative z-10">

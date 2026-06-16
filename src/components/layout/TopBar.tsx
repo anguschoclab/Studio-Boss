@@ -1,7 +1,7 @@
 import { useGameStore } from "@/store/gameStore";
 import { useUIStore } from "@/store/uiStore";
 import { formatMoney, getWeekDisplay } from "@/engine/utils";
-import { Save, FastForward, Activity } from "lucide-react";
+import { Save, FastForward, Activity, Star } from "lucide-react";
 import { selectActiveProjects } from "@/store/selectors";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { NewsTicker } from "./NewsTicker";
@@ -43,7 +43,7 @@ export const TopBar = () => {
         <div className="flex items-center gap-6 cursor-default group">
           <div className="flex flex-col">
             <span className="text-[9px] text-muted-foreground/30 font-black uppercase tracking-[0.4em] leading-none mb-2 italic group-hover:text-primary transition-colors">
-              FISCAL_PERIOD
+              FISCAL PERIOD
             </span>
             <div className="flex items-center gap-3">
               <span className="font-display font-black text-xl tracking-tighter uppercase italic text-foreground">
@@ -78,7 +78,7 @@ export const TopBar = () => {
         <TooltipWrapper tooltip="Total liquid capital available for acquisitions and project funding.">
           <div className="flex flex-col items-end cursor-default group">
             <span className="text-[9px] text-muted-foreground/30 font-black uppercase tracking-[0.4em] leading-none mb-2 italic group-hover:text-primary transition-colors">
-              LIQUID_CAPITAL
+              LIQUID CAPITAL
             </span>
             <div className="flex items-center gap-3">
               {cashDelta !== 0 && (
@@ -128,7 +128,7 @@ export const TopBar = () => {
         <TooltipWrapper tooltip="Total number of properties currently in active development or production phases.">
           <div className="flex flex-col items-end cursor-default group">
             <span className="text-[9px] text-muted-foreground/30 font-black uppercase tracking-[0.4em] leading-none mb-2 italic group-hover:text-foreground transition-colors">
-              ACTIVE_SLATE
+              ACTIVE SLATE
             </span>
             <div className="flex items-center gap-3">
               <Activity className="h-4 w-4 text-muted-foreground/20 group-hover:text-foreground transition-colors" />
@@ -145,7 +145,7 @@ export const TopBar = () => {
         <button
           type="button"
           onClick={handleSave}
-          title="SAVE_SYSTEM_STATE"
+          title="SAVE SYSTEM STATE"
           aria-label="Save system state"
           className="h-12 w-12 rounded-none bg-white/[0.02] border border-white/5 flex items-center justify-center text-muted-foreground/40 hover:text-primary hover:bg-primary/10 hover:border-primary/40 transition-all duration-700 active:scale-90 shadow-2xl focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none"
         >
@@ -159,7 +159,7 @@ export const TopBar = () => {
         >
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
           <FastForward className="h-5 w-5" strokeWidth={3} aria-hidden="true" />
-          ADVANCE_CYCLE
+          ADVANCE CYCLE
         </button>
       </div>
     </header>

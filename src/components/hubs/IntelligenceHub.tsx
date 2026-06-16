@@ -132,36 +132,36 @@ const FinancialsPanel = () => {
     <div className="h-full overflow-y-auto custom-scrollbar space-y-12 pb-20 pr-6 animate-in fade-in duration-700">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
         <KPIStatCard 
-          label="LIQUID_CAPITAL" 
+          label="LIQUID CAPITAL" 
           value={formatMoney(cash)} 
-          subValue="FISCAL_RESERVES"
+          subValue="FISCAL RESERVES"
           icon={DollarSign} 
           variant={cash > 10000000 ? 'secondary' : 'destructive'} 
         />
         <KPIStatCard 
-          label="BRAND_PRESTIGE" 
+          label="BRAND PRESTIGE" 
           value={prestige.toString()} 
-          subValue="INDUSTRY_STANDING"
+          subValue="INDUSTRY STANDING"
           icon={Trophy} 
         />
         <KPIStatCard 
-          label="MARKET_PULSE" 
+          label="MARKET PULSE" 
           value={`${gameState?.finance?.marketState?.sentiment || 50}%`} 
           subValue={gameState?.finance?.marketState?.cycle?.toUpperCase() || 'STABLE'}
           icon={Activity} 
           variant="secondary"
         />
         <KPIStatCard 
-          label="STUDIO_OUTPUT" 
+          label="STUDIO OUTPUT" 
           value={selectActiveProjects(gameState).length.toString()} 
-          subValue="ACTIVE_SLATES"
+          subValue="ACTIVE SLATES"
           icon={BarChart3} 
         />
       </div>
       
       <div className="p-10 bg-white/[0.01] border border-white/5 rounded-none backdrop-blur-3xl shadow-2xl relative overflow-hidden group">
         <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl -mr-16 -mt-16" />
-        <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/30 mb-10 italic">FISCAL_FLOW_HISTORY</h4>
+        <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/30 mb-10 italic">FISCAL FLOW HISTORY</h4>
         <div className="h-64 flex items-end gap-3 px-4">
           {weeklyHistory.slice(-16).map((week, i) => {
             const maxCash = Math.max(...weeklyHistory.slice(-16).map(w => Math.abs(w.cash)), 1);
@@ -191,7 +191,7 @@ const FinancialsPanel = () => {
              <ShieldAlert className="h-6 w-6 text-primary" />
           </div>
           <div className="space-y-4">
-            <h5 className="text-sm font-black uppercase tracking-[0.3em] text-primary italic leading-none">STRATEGIC_ADVISORY</h5>
+            <h5 className="text-sm font-black uppercase tracking-[0.3em] text-primary italic leading-none">STRATEGIC ADVISORY</h5>
             <p className="text-xs text-muted-foreground/60 italic uppercase tracking-wider leading-relaxed border-l-2 border-primary/20 pl-6 py-2 max-w-3xl">
               INTELLIGENCE SUGGESTS M&A ACTIVITY IS COOLING AS MACRO CONDITIONS STABILIZE. 
               EXECUTIVE PRIORITY SHOULD SHIFT TOWARD SECURING RISING TALENT AGENCIES BEFORE THE NEXT FISCAL CYCLE.

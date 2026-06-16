@@ -33,7 +33,7 @@ export const NewsFeed = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <History className="h-4 w-4 text-primary" strokeWidth={3} />
-            <h3 className="font-display text-xs font-black uppercase tracking-[0.4em] text-foreground italic leading-none">INDUSTRY_HISTORY</h3>
+            <h3 className="font-display text-xs font-black uppercase tracking-[0.4em] text-foreground italic leading-none">INDUSTRY HISTORY</h3>
           </div>
           <Badge variant="outline" className="text-[9px] font-black border-white/10 bg-white/5 text-muted-foreground/60 rounded-md italic">
             {history.length} EVENTS

@@ -59,12 +59,12 @@ function generateArticleContent(headline: Headline): string[] {
 }
 
 const CATEGORY_STYLES: Record<string, { color: string; label: string }> = {
-  market: { color: 'text-blue-500 border-blue-500/20 bg-blue-500/5', label: 'MARKET_ANALYSIS' },
-  talent: { color: 'text-violet-500 border-violet-500/20 bg-violet-500/5', label: 'TALENT_REPORT' },
-  rival: { color: 'text-rose-500 border-rose-500/20 bg-rose-500/5', label: 'RIVAL_INTEL' },
-  awards: { color: 'text-amber-500 border-amber-500/20 bg-amber-500/5', label: 'AWARDS_DESK' },
-  general: { color: 'text-emerald-500 border-emerald-500/20 bg-emerald-500/5', label: 'BREAKING_NEWS' },
-  rumor: { color: 'text-primary border-primary/20 bg-primary/5', label: 'INDUSTRY_RUMOR' },
+  market: { color: 'text-blue-500 border-blue-500/20 bg-blue-500/5', label: 'MARKET ANALYSIS' },
+  talent: { color: 'text-violet-500 border-violet-500/20 bg-violet-500/5', label: 'TALENT REPORT' },
+  rival: { color: 'text-rose-500 border-rose-500/20 bg-rose-500/5', label: 'RIVAL INTEL' },
+  awards: { color: 'text-amber-500 border-amber-500/20 bg-amber-500/5', label: 'AWARDS DESK' },
+  general: { color: 'text-emerald-500 border-emerald-500/20 bg-emerald-500/5', label: 'BREAKING NEWS' },
+  rumor: { color: 'text-primary border-primary/20 bg-primary/5', label: 'INDUSTRY RUMOR' },
 };
 
 export const NewsStoryModal: React.FC<NewsStoryModalProps> = ({ headline, open, onClose }) => {
@@ -86,7 +86,7 @@ export const NewsStoryModal: React.FC<NewsStoryModalProps> = ({ headline, open, 
                 {style.label}
               </div>
               <div className="h-4 w-px bg-white/10" />
-              <span className="text-[10px] font-black font-mono text-muted-foreground/40 italic tracking-widest uppercase">CYCLE_W{headline.week}_UPLINK</span>
+              <span className="text-[10px] font-black font-mono text-muted-foreground/40 italic tracking-widest uppercase">CYCLE W{headline.week}_UPLINK</span>
             </div>
             <Newspaper className="h-5 w-5 text-primary/20" />
           </div>
@@ -97,7 +97,7 @@ export const NewsStoryModal: React.FC<NewsStoryModalProps> = ({ headline, open, 
           
           <div className="flex items-center gap-3">
              <div className="w-2 h-2 bg-primary rotate-45 shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
-             <p className="text-[11px] font-black uppercase tracking-[0.3em] text-primary italic">THE_TRADES // EXCLUSIVE_INTEL_STREAM</p>
+             <p className="text-[11px] font-black uppercase tracking-[0.3em] text-primary italic">THE TRADES // EXCLUSIVE INTEL STREAM</p>
           </div>
         </div>
         
@@ -116,7 +116,7 @@ export const NewsStoryModal: React.FC<NewsStoryModalProps> = ({ headline, open, 
             <div className="pt-8 border-t border-white/5 flex items-center gap-4">
               <Terminal className="h-4 w-4 text-primary/20" />
               <p className="text-[10px] text-muted-foreground/20 italic uppercase tracking-[0.3em] font-black">
-                STATUS: DATA_UPLINK_ONGOING... REMAIN_STATIONARY_FOR_UPDATES...
+                STATUS: DATA UPLINK ONGOING... REMAIN STATIONARY FOR UPDATES...
               </p>
             </div>
           </div>
@@ -127,7 +127,7 @@ export const NewsStoryModal: React.FC<NewsStoryModalProps> = ({ headline, open, 
             onClick={onClose} 
             className="h-12 px-8 bg-white/5 border border-white/10 text-muted-foreground hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-all duration-700 font-black uppercase tracking-[0.4em] italic text-[10px] rounded-none group flex items-center gap-4"
           >
-            DISMISS_INTEL
+            DISMISS INTEL
             <ArrowRight className="h-4 w-4 group-hover:translate-x-2 transition-transform duration-700" />
           </button>
         </div>

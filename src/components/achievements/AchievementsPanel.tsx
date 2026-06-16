@@ -6,6 +6,10 @@ import { cn } from '@/lib/utils';
 
 type Category = 'all' | 'financial' | 'creative' | 'talent' | 'empire';
 
+// Stable reference so the zustand selector doesn't return a new array each render
+// (which triggers "getSnapshot should be cached" → infinite update loop).
+const EMPTY_IDS: string[] = [];
+
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
   financial: <DollarSign className="w-3.5 h-3.5" />,
   creative: <Star className="w-3.5 h-3.5" />,
@@ -22,7 +26,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 export const AchievementsPanel: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const unlockedIds: string[] = useGameStore(s => (s.gameState?.studio as any)?.achievements ?? []);
+  const unlockedIds: string[] = useGameStore(s => (s.gameState?.studio as any)?.achievements ?? EMPTY_IDS);
   const [activeCategory, setActiveCategory] = useState<Category>('all');
 
   const enriched: (Achievement & { earned: boolean })[] = useMemo(() => {

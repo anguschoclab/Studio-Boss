@@ -69,7 +69,7 @@ export const BuzzMeter: React.FC<BuzzMeterProps> = ({
         
         <div className="flex items-center justify-between mb-10 relative z-10">
           <div>
-            <h3 className="text-xl font-display font-black uppercase italic tracking-tight text-foreground leading-none mb-3">STUDIO_BUZZ_INDEX</h3>
+            <h3 className="text-xl font-display font-black uppercase italic tracking-tight text-foreground leading-none mb-3">STUDIO BUZZ INDEX</h3>
             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/30 italic">
               INDUSTRY_RANK: #{industryRank}
             </p>
@@ -79,7 +79,7 @@ export const BuzzMeter: React.FC<BuzzMeterProps> = ({
               <Zap className="h-8 w-8 text-primary drop-shadow-[0_0_15px_rgba(var(--primary),0.4)]" strokeWidth={3} />
               <span className="text-6xl font-display font-black italic tracking-tighter text-primary drop-shadow-[0_0_30px_rgba(var(--primary),0.2)]">{studioBuzz}</span>
             </div>
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/10 italic">OUT_OF_100</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/10 italic">OUT OF 100</p>
           </div>
         </div>
 
@@ -93,22 +93,22 @@ export const BuzzMeter: React.FC<BuzzMeterProps> = ({
         <div className="grid grid-cols-3 gap-10 text-center relative z-10">
           <div className="p-4 bg-white/[0.02] border border-white/5 rounded-none">
             <p className="text-3xl font-display font-black text-red-500 italic tracking-tighter mb-1">{hotProjects.length}</p>
-            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">HOT_PROJECTS</p>
+            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">HOT PROJECTS</p>
           </div>
           <div className="p-4 bg-white/[0.02] border border-white/5 rounded-none">
             <p className="text-3xl font-display font-black text-emerald-500 italic tracking-tighter mb-1">{trendingUp.length}</p>
-            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">TRENDING_UP</p>
+            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">TRENDING UP</p>
           </div>
           <div className="p-4 bg-white/[0.02] border border-white/5 rounded-none">
             <p className="text-3xl font-display font-black text-red-500 italic tracking-tighter mb-1">{trendingDown.length}</p>
-            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">TRENDING_DOWN</p>
+            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">TRENDING DOWN</p>
           </div>
         </div>
       </div>
 
       {/* Project Buzz Rankings */}
       <Section
-        title="PROJECT_BUZZ_RANKINGS"
+        title="PROJECT BUZZ RANKINGS"
         subtitle="PUBLIC AWARENESS AND ANTICIPATION LEVELS"
         icon={Zap}
       >
@@ -116,7 +116,7 @@ export const BuzzMeter: React.FC<BuzzMeterProps> = ({
           <div className="text-center py-20 bg-white/[0.01] border-2 border-dashed border-white/5 rounded-none">
             <Zap className="h-12 w-12 mx-auto mb-6 opacity-5" strokeWidth={1} />
             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/20 italic">
-              NO_ACTIVE_PROJECTS_GENERATING_BUZZ
+              NO ACTIVE PROJECTS GENERATING BUZZ
             </p>
           </div>
         ) : (
@@ -146,7 +146,7 @@ export const BuzzMeter: React.FC<BuzzMeterProps> = ({
                           {project.audienceSentiment} SENTIMENT
                         </Badge>
                         <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/30 italic">
-                          {project.pressCoverage} PRESS_MENTIONS
+                          {project.pressCoverage} PRESS MENTIONS
                         </span>
                       </div>
                     </div>
@@ -159,7 +159,7 @@ export const BuzzMeter: React.FC<BuzzMeterProps> = ({
                     )}>
                       {project.totalBuzz}
                     </p>
-                    <p className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/10 italic">BUZZ_SCORE</p>
+                    <p className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/10 italic">BUZZ SCORE</p>
                   </div>
                 </div>
 

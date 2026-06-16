@@ -166,7 +166,7 @@ const TitleScreen = () => {
           </div>
           
           <div className="p-6 bg-white/[0.02] border-t border-white/5 flex justify-end">
-             <Button variant="ghost" onClick={() => setShowLoad(false)} className="text-[9px] font-black uppercase tracking-[0.4em] italic text-muted-foreground/40 hover:text-white transition-colors">CANCEL_ACCESS</Button>
+             <Button variant="ghost" onClick={() => setShowLoad(false)} className="text-[9px] font-black uppercase tracking-[0.4em] italic text-muted-foreground/40 hover:text-white transition-colors">CANCEL ACCESS</Button>
           </div>
         </DialogContent>
       </Dialog>

@@ -71,11 +71,11 @@ export const GameOverModal = () => {
           </div>
 
           <h1 className="font-display font-black text-8xl uppercase tracking-tighter text-rose-500 italic leading-none drop-shadow-[0_0_40px_rgba(244,63,94,0.6)]">
-            SYSTEM_TERMINATED
+            SYSTEM TERMINATED
           </h1>
 
           <div className="max-w-2xl mx-auto space-y-4">
-            <p className="text-[11px] font-black uppercase tracking-[0.5em] text-rose-500/60 italic">CRITICAL_FISCAL_FAILURE // UPLINK_OFFLINE</p>
+            <p className="text-[11px] font-black uppercase tracking-[0.5em] text-rose-500/60 italic">CRITICAL FISCAL FAILURE // UPLINK OFFLINE</p>
             <p className="text-sm font-medium text-muted-foreground/40 italic leading-relaxed uppercase tracking-tight">
               THE CREDITORS HAVE SEIZED ALL ASSETS. PRODUCTION SLATE DISSOLVED. THE HOLLYWOOD DREAM HAS REACHED TERMINAL STATUS.
             </p>
@@ -88,7 +88,7 @@ export const GameOverModal = () => {
         <div className="rounded-none border border-primary/20 bg-primary/5 p-12 relative overflow-hidden shadow-2xl group">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-50" />
           <div className="relative z-10">
-            <p className="text-[11px] font-black uppercase tracking-[0.6em] text-primary italic mb-6">HISTORICAL_LEGACY_SCORE</p>
+            <p className="text-[11px] font-black uppercase tracking-[0.6em] text-primary italic mb-6">HISTORICAL LEGACY SCORE</p>
             <p className="font-display font-black text-9xl text-primary italic drop-shadow-[0_0_50px_rgba(var(--primary),0.5)] transition-all duration-1000 group-hover:scale-105">
               {stats.legacyScore.toLocaleString()}
             </p>
@@ -109,19 +109,19 @@ export const GameOverModal = () => {
           {[
             {
               icon: <Star className="h-5 w-5" strokeWidth={3} />,
-              label: 'PEAK_CAPITAL',
+              label: 'PEAK CAPITAL',
               value: formatMoney(stats.peakCash).toUpperCase(),
               color: 'text-primary border-primary/20 bg-primary/5',
             },
             {
               icon: <Trophy className="h-5 w-5" strokeWidth={3} />,
-              label: 'MAGNUM_OPUS',
-              value: (stats.bestProject?.title ?? 'NONE_RECORDED').toUpperCase(),
+              label: 'MAGNUM OPUS',
+              value: (stats.bestProject?.title ?? 'NONE RECORDED').toUpperCase(),
               color: 'text-emerald-500 border-emerald-500/20 bg-emerald-500/5',
             },
             {
               icon: <BarChart3 className="h-5 w-5" strokeWidth={3} />,
-              label: 'MAX_PRESTIGE',
+              label: 'MAX PRESTIGE',
               value: `${stats.prestige}`,
               color: 'text-amber-500 border-amber-500/20 bg-amber-500/5',
             },
@@ -151,16 +151,16 @@ export const GameOverModal = () => {
           <div className="rounded-none border border-white/10 bg-black/40 p-12 text-left space-y-10 animate-in slide-in-from-bottom-10 duration-700">
             <div>
               <p className="mb-8 text-[11px] font-black uppercase tracking-[0.5em] text-primary italic border-b border-primary/20 pb-4">
-                FULL_METRIC_BREAKDOWN
+                FULL METRIC BREAKDOWN
               </p>
               <div className="space-y-6">
                 {[
-                  { label: 'FINAL_CASH_POSITION', value: formatMoney(stats.currentCash).toUpperCase(), color: 'text-rose-500' },
-                  { label: 'PEAK_CASH_RESERVE', value: formatMoney(stats.peakCash).toUpperCase(), color: 'text-primary' },
-                  { label: 'PROPERTIES_RELEASED', value: stats.releasedCount, color: 'text-foreground' },
-                  { label: 'TOP_PROJECT_REVENUE', value: stats.bestProject ? formatMoney(stats.bestProject.revenue ?? 0).toUpperCase() : 'N/A', color: 'text-emerald-500' },
-                  { label: 'TERMINAL_PRESTIGE', value: stats.prestige, color: 'text-amber-500' },
-                  { label: 'TOTAL_CYCLES_ACTIVE', value: stats.weeksSurvived, color: 'text-secondary' },
+                  { label: 'FINAL CASH POSITION', value: formatMoney(stats.currentCash).toUpperCase(), color: 'text-rose-500' },
+                  { label: 'PEAK CASH RESERVE', value: formatMoney(stats.peakCash).toUpperCase(), color: 'text-primary' },
+                  { label: 'PROPERTIES RELEASED', value: stats.releasedCount, color: 'text-foreground' },
+                  { label: 'TOP PROJECT REVENUE', value: stats.bestProject ? formatMoney(stats.bestProject.revenue ?? 0).toUpperCase() : 'N/A', color: 'text-emerald-500' },
+                  { label: 'TERMINAL PRESTIGE', value: stats.prestige, color: 'text-amber-500' },
+                  { label: 'TOTAL CYCLES ACTIVE', value: stats.weeksSurvived, color: 'text-secondary' },
                 ].map((item) => (
                   <div key={item.label} className="flex justify-between items-center group">
                     <span className="text-[10px] font-black text-muted-foreground/30 uppercase tracking-[0.4em] italic group-hover:text-muted-foreground transition-colors">{item.label}</span>
@@ -177,7 +177,7 @@ export const GameOverModal = () => {
             <div className="mt-12 p-8 rounded-none border border-white/5 bg-white/[0.01]">
               <p className="mb-6 text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 italic flex items-center gap-3">
                 <Terminal className="h-3 w-3" />
-                LEGACY_CALCULATION_ALGORITHM
+                LEGACY CALCULATION ALGORITHM
               </p>
               <div className="flex flex-wrap items-center gap-6">
                 <div className="px-4 py-2 border border-primary/20 bg-primary/5 text-primary text-sm font-black italic tracking-widest">
@@ -206,7 +206,7 @@ export const GameOverModal = () => {
             onClick={() => setShowBreakdown((v) => !v)}
             className="h-16 px-12 bg-white/5 border border-white/10 text-muted-foreground hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-all duration-700 font-black uppercase tracking-[0.5em] italic text-xs rounded-none group flex items-center gap-4"
           >
-            {showBreakdown ? 'CLOSE_METRICS' : 'REVIEW_METRICS'}
+            {showBreakdown ? 'CLOSE METRICS' : 'REVIEW METRICS'}
             <ArrowRight className={cn("h-4 w-4 transition-transform duration-700", showBreakdown ? "rotate-90" : "")} />
           </button>
 
@@ -215,7 +215,7 @@ export const GameOverModal = () => {
             className="h-16 px-16 bg-rose-600 text-black font-display font-black uppercase tracking-[0.6em] italic text-xs hover:bg-rose-500 hover:shadow-[0_0_80px_rgba(244,63,94,0.5)] hover:scale-[1.05] active:scale-95 transition-all duration-700 group relative overflow-hidden"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-            INITIATE_NEW_TIMELINE
+            INITIATE NEW TIMELINE
           </button>
         </div>
       </div>

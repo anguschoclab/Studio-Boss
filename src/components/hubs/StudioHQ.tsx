@@ -62,7 +62,7 @@ const MarketingPanel = () => {
       {activeProjects.length > 0 && (
         <div className="pt-10 border-t border-white/5">
           <div className="flex items-center gap-6 mb-8">
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">SELECT_PROJECT_MODULE</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">SELECT PROJECT MODULE</span>
             <select
               className="text-[10px] font-black uppercase tracking-widest italic bg-black/40 border border-white/10 rounded-none px-6 py-2 focus:outline-none focus:border-primary/40 transition-all duration-700"
               value={selectedProjectId || activeProjects[0]?.id || ''}
@@ -87,13 +87,13 @@ const NewsPanel = () => {
     <div className="h-full flex flex-col animate-in fade-in duration-700">
       <div className="flex items-center gap-4 mb-8">
         <Newspaper className="h-5 w-5 text-primary" strokeWidth={3} />
-        <h3 className="text-sm font-black uppercase tracking-[0.3em] italic">INDUSTRY_INTELLIGENCE_FEED</h3>
+        <h3 className="text-sm font-black uppercase tracking-[0.3em] italic">INDUSTRY INTELLIGENCE FEED</h3>
         <Badge className="text-[9px] bg-primary text-black px-4 py-1 rounded-none font-black uppercase italic tracking-widest border-none shadow-[0_0_15px_rgba(var(--primary),0.2)]">
-          LIVE_WIRE
+          LIVE WIRE
         </Badge>
       </div>
       <div className="flex-1 bg-white/[0.01] rounded-none border border-white/5 overflow-hidden backdrop-blur-3xl shadow-2xl">
-        <React.Suspense fallback={<div className="p-20 text-center font-display font-black text-muted-foreground/10 uppercase tracking-[0.5em] italic animate-pulse">INITIALIZING_FEED...</div>}>
+        <React.Suspense fallback={<div className="p-20 text-center font-display font-black text-muted-foreground/10 uppercase tracking-[0.5em] italic animate-pulse">INITIALIZING FEED...</div>}>
           <NewsFeed />
         </React.Suspense>
       </div>
@@ -183,7 +183,7 @@ export const StudioHQ: React.FC = () => {
       case 'overview':
         return {
           icon: <LayoutDashboard className="h-8 w-8 text-primary" />,
-          title: (gameState.studio?.name || 'STUDIO_HQ').toUpperCase(),
+          title: (gameState.studio?.name || 'STUDIO HQ').toUpperCase(),
           subtitle: 'EXECUTIVE DASHBOARD AND STUDIO PULSE'
         };
       case 'operations':
@@ -242,7 +242,7 @@ export const StudioHQ: React.FC = () => {
         
         <div className="flex flex-wrap gap-4 relative z-10">
           <div className="px-6 py-4 bg-black/40 backdrop-blur-3xl rounded-none border border-white/10 shadow-2xl group hover:border-primary/20 transition-all duration-700">
-            <span className="text-[9px] uppercase font-black text-muted-foreground/20 tracking-[0.2em] italic mb-1 block">LIQUID_CAPITAL</span>
+            <span className="text-[9px] uppercase font-black text-muted-foreground/20 tracking-[0.2em] italic mb-1 block">LIQUID CAPITAL</span>
             <p className={cn(
               "text-lg font-display font-black italic tracking-tight leading-none",
               gameState.finance?.cash && gameState.finance.cash < 0 ? "text-red-500" : "text-primary"
@@ -251,13 +251,13 @@ export const StudioHQ: React.FC = () => {
             </p>
           </div>
           <div className="px-6 py-4 bg-black/40 backdrop-blur-3xl rounded-none border border-white/10 shadow-2xl group hover:border-secondary/20 transition-all duration-700">
-            <span className="text-[9px] uppercase font-black text-muted-foreground/20 tracking-[0.2em] italic mb-1 block">STUDIO_PRESTIGE</span>
+            <span className="text-[9px] uppercase font-black text-muted-foreground/20 tracking-[0.2em] italic mb-1 block">STUDIO PRESTIGE</span>
             <p className="text-lg font-display font-black text-secondary italic tracking-tight leading-none">
               {gameState.studio?.prestige || 0}
             </p>
           </div>
           <div className="px-6 py-4 bg-black/40 backdrop-blur-3xl rounded-none border border-white/10 shadow-2xl group hover:border-white/20 transition-all duration-700">
-            <span className="text-[9px] uppercase font-black text-muted-foreground/20 tracking-[0.2em] italic mb-1 block">ACTIVE_SLATES</span>
+            <span className="text-[9px] uppercase font-black text-muted-foreground/20 tracking-[0.2em] italic mb-1 block">ACTIVE SLATES</span>
             <p className="text-lg font-display font-black text-foreground italic tracking-tight leading-none">
               {projects.filter(p => p.state !== 'released' && p.state !== 'archived').length}
             </p>
@@ -277,7 +277,7 @@ export const StudioHQ: React.FC = () => {
       
       {/* Content Area */}
       <div className="flex-1 min-h-0 overflow-hidden">
-        <React.Suspense fallback={<div className="flex items-center justify-center h-64 font-display font-black text-muted-foreground/10 uppercase tracking-[0.5em] italic animate-pulse">INITIALIZING_MODULE...</div>}>
+        <React.Suspense fallback={<div className="flex items-center justify-center h-64 font-display font-black text-muted-foreground/10 uppercase tracking-[0.5em] italic animate-pulse">INITIALIZING MODULE...</div>}>
           {activeSubTab === 'overview' && <ExecutiveDashboard />}
           {activeSubTab === 'operations' && <CrisisTriageDashboard />}
           {activeSubTab === 'strategy' && <StrategyPanel />}

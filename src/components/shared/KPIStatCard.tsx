@@ -16,6 +16,22 @@ interface KPIStatCardProps {
   className?: string;
 }
 
+const ACCENT = {
+  primary: 'text-primary',
+  secondary: 'text-secondary',
+  success: 'text-emerald-400',
+  destructive: 'text-rose-400',
+  muted: 'text-foreground',
+} as const;
+
+const BAR = {
+  primary: 'bg-primary',
+  secondary: 'bg-secondary',
+  success: 'bg-emerald-400',
+  destructive: 'bg-rose-400',
+  muted: 'bg-white/30',
+} as const;
+
 export const KPIStatCard: React.FC<KPIStatCardProps> = ({
   label,
   value,
@@ -24,79 +40,67 @@ export const KPIStatCard: React.FC<KPIStatCardProps> = ({
   trend,
   variant = 'muted',
   tooltip,
-  className
+  className,
 }) => {
-  const variantStyles = {
-    primary: 'text-primary drop-shadow-[0_0_30px_rgba(var(--primary),0.4)]',
-    secondary: 'text-secondary drop-shadow-[0_0_30px_rgba(var(--secondary),0.4)]',
-    success: 'text-emerald-500 drop-shadow-[0_0_30px_rgba(16,185,129,0.4)]',
-    destructive: 'text-rose-500 drop-shadow-[0_0_30px_rgba(244,63,94,0.4)]',
-    muted: 'text-foreground'
-  };
-
-  const glowStyles = {
-    primary: 'bg-primary/10',
-    secondary: 'bg-secondary/10',
-    success: 'bg-emerald-500/10',
-    destructive: 'bg-rose-500/10',
-    muted: 'bg-white/5'
-  };
-
   return (
     <TooltipWrapper tooltip={tooltip}>
-      <div className={cn(
-        "glass-card p-12 group transition-all duration-1000 relative overflow-hidden rounded-none border-white/5 bg-white/[0.01] backdrop-blur-3xl hover:bg-white/[0.04] hover:border-primary/40 shadow-[0_0_100px_rgba(0,0,0,0.8)]",
-        className
-      )}>
-        {/* Architectural Glow Array */}
-        <div className={cn(
-          "absolute -top-32 -right-32 w-64 h-64 blur-[100px] opacity-0 group-hover:opacity-80 transition-opacity duration-1000 rotate-45",
-          glowStyles[variant]
-        )} />
-        
-        <div className="absolute top-0 right-0 w-16 h-1 w-full bg-gradient-to-l from-white/10 to-transparent group-hover:from-primary/40 transition-all duration-1000" />
-        <div className="absolute bottom-0 left-0 w-16 h-1 w-full bg-gradient-to-r from-white/10 to-transparent group-hover:from-primary/40 transition-all duration-1000" />
+      <div
+        className={cn(
+          'group relative overflow-hidden rounded-none border border-white/10 bg-white/[0.015]',
+          'p-6 transition-colors duration-200 hover:border-white/25 hover:bg-white/[0.03]',
+          className
+        )}
+      >
+        {/* Single thin accent bar — brightens on hover. No glow blobs. */}
+        <div
+          className={cn(
+            'absolute left-0 top-0 h-full w-[3px] opacity-40 transition-opacity duration-200 group-hover:opacity-100',
+            BAR[variant]
+          )}
+        />
 
-        <div className="flex flex-col h-full justify-between relative z-10 space-y-12">
-          <div className="flex justify-between items-start">
-            <span className="text-[10px] font-black uppercase tracking-[0.6em] text-muted-foreground/30 leading-none italic group-hover:text-primary transition-colors duration-700">
-              {label.toUpperCase()}
-            </span>
-            {icon && (
-              <div className="text-muted-foreground/10 group-hover:text-primary transition-all duration-700 group-hover:scale-110">
-                {icon}
-              </div>
-            )}
-          </div>
-
-          <div className="space-y-6">
-            <div className={cn(
-              "text-7xl font-display font-black tracking-tighter uppercase leading-none italic transition-all duration-1000 group-hover:translate-x-2 group-hover:scale-[1.02] origin-left",
-              variantStyles[variant]
-            )}>
-              {value}
+        <div className="flex items-start justify-between gap-4">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground not-italic">
+            {label}
+          </span>
+          {icon && (
+            <div className={cn('shrink-0 opacity-50 transition-opacity duration-200 group-hover:opacity-100', ACCENT[variant])}>
+              {icon}
             </div>
-            
-            {(subLabel || trend) && (
-              <div className="flex items-center gap-8">
-                {trend && (
-                  <div className={cn(
-                    "px-4 py-1.5 border border-white/5 bg-white/[0.02] text-[10px] font-black tracking-[0.2em] uppercase italic flex items-center gap-3 shadow-2xl",
-                    trend.isPositive ? 'text-emerald-500 border-emerald-500/20' : 'text-rose-500 border-rose-500/20'
-                  )}>
-                    <span className="text-lg leading-none">{trend.isPositive ? '▲' : '▼'}</span>
-                    <span>{trend.value}</span>
-                  </div>
+          )}
+        </div>
+
+        <div
+          className={cn(
+            'mt-4 font-display text-4xl font-bold not-italic normal-case tracking-tight tabular-nums leading-none',
+            ACCENT[variant]
+          )}
+        >
+          {value}
+        </div>
+
+        {(subLabel || trend) && (
+          <div className="mt-3 flex items-center gap-3">
+            {trend && (
+              <span
+                className={cn(
+                  'inline-flex items-center gap-1 text-xs font-semibold tabular-nums not-italic',
+                  trend.isPositive ? 'text-emerald-400' : 'text-rose-400'
                 )}
-                {subLabel && (
-                  <span className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/20 italic group-hover:text-muted-foreground/40 transition-colors">
-                    {subLabel.toUpperCase()}
-                  </span>
-                )}
-              </div>
+              >
+                <span aria-hidden className="text-[10px] leading-none">
+                  {trend.isPositive ? '▲' : '▼'}
+                </span>
+                {trend.value}
+              </span>
+            )}
+            {subLabel && (
+              <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground/50 not-italic">
+                {subLabel}
+              </span>
             )}
           </div>
-        </div>
+        )}
       </div>
     </TooltipWrapper>
   );

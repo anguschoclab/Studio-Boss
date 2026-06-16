@@ -60,7 +60,7 @@ export const PostProductionModal: React.FC = () => {
       const applyPrestige = gameState?.studio?.prestige !== undefined;
       if (applyPrestige) {
         // The parent store will handle prestige on the next tick via the
-        // PRESTIGE_CHANGED mechanism; for now we note it via project buzz.
+        // PRESTIGE CHANGED mechanism; for now we note it via project buzz.
       }
     }
 

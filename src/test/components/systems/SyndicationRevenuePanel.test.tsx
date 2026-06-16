@@ -24,11 +24,11 @@ describe('SyndicationRevenuePanel', () => {
 
     render(<SyndicationRevenuePanel syndicationData={syndicationData} />);
 
-    expect(screen.getByText((c) => c.includes('TOTAL_REVENUE') || c.includes('Total Revenue'))).toBeInTheDocument();
+    expect(screen.getByText((c) => c.includes('TOTAL REVENUE') || c.includes('Total Revenue'))).toBeInTheDocument();
     expect(screen.getByText('$5.0M')).toBeInTheDocument();
-    expect(screen.getByText((c) => c.includes('ACTIVE_DEALS') || c.includes('Active Deals'))).toBeInTheDocument();
+    expect(screen.getByText((c) => c.includes('ACTIVE DEALS') || c.includes('Active Deals'))).toBeInTheDocument();
     expect(screen.getByText('12')).toBeInTheDocument();
-    expect(screen.getByText((c) => c.includes('TOP_PERFORMING_REGION') || c.includes('Top Region'))).toBeInTheDocument();
+    expect(screen.getByText((c) => c.includes('TOP PERFORMING REGION') || c.includes('Top Region'))).toBeInTheDocument();
     expect(screen.getByText('EUROPE')).toBeInTheDocument();
   });
 
@@ -63,7 +63,7 @@ describe('SyndicationRevenuePanel', () => {
     expect(getAllByText('Latin America').length).toBeGreaterThan(0);
     expect(getAllByText('$2.0M').length).toBeGreaterThan(0);
     expect(getAllByText('$1.5M').length).toBeGreaterThan(0);
-    expect(getAllByText('5_ACTIVE_UNITS').length).toBeGreaterThan(0);
+    expect(getAllByText('5 ACTIVE UNITS').length).toBeGreaterThan(0);
   });
 
   it('shows empty state when no syndication data', () => {

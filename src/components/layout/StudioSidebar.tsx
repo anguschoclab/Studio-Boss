@@ -33,52 +33,52 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   {
     id: "command",
-    label: "COMMAND_CENTER",
+    label: "COMMAND CENTER",
     icon: Building2,
-    tooltip: "STUDIO_OVERVIEW_ALERTS_TOPLINE_METRICS",
+    tooltip: "STUDIO OVERVIEW ALERTS TOPLINE METRICS",
   },
   {
     id: "pipeline",
-    label: "PRODUCTION_PIPELINE",
+    label: "PRODUCTION PIPELINE",
     icon: Clapperboard,
-    tooltip: "ACTIVE_PROJECTS_FROM_DEVELOPMENT_THRU_RELEASE",
+    tooltip: "ACTIVE PROJECTS FROM DEVELOPMENT THRU RELEASE",
   },
   {
     id: "trades",
-    label: "THE_TRADES",
+    label: "THE TRADES",
     icon: Newspaper,
-    tooltip: "IP_OPPORTUNITIES_INDUSTRY_NEWS_MARKET_TRENDS",
+    tooltip: "IP OPPORTUNITIES INDUSTRY NEWS MARKET TRENDS",
   },
   {
     id: "talent",
-    label: "TALENT_HUB",
+    label: "TALENT HUB",
     icon: Users,
-    tooltip: "TALENT_ROSTER_INDUSTRY_DATABASE_SBDB",
+    tooltip: "TALENT ROSTER INDUSTRY DATABASE SBDB",
   },
   {
     id: "distribution",
-    label: "DISTRIBUTION_HUB",
+    label: "DISTRIBUTION HUB",
     icon: Tv2,
-    tooltip: "DEALS_DESK_STREAMING_NIELSEN_RATINGS",
+    tooltip: "DEALS DESK STREAMING NIELSEN RATINGS",
   },
-  { id: "ip", label: "IP_VAULT", icon: Archive, tooltip: "OWNED_IP_FRANCHISES_LIBRARY_RIGHTS" },
+  { id: "ip", label: "IP VAULT", icon: Archive, tooltip: "OWNED IP FRANCHISES LIBRARY RIGHTS" },
   {
     id: "industry",
-    label: "INDUSTRY_INTELLIGENCE",
+    label: "INDUSTRY INTELLIGENCE",
     icon: TrendingUp,
-    tooltip: "RIVAL_STUDIOS_M&A_MARKET_INTELLIGENCE",
+    tooltip: "RIVAL STUDIOS M&A MARKET INTELLIGENCE",
   },
   {
     id: "finance",
-    label: "FINANCE_COMMAND",
+    label: "FINANCE COMMAND",
     icon: DollarSign,
-    tooltip: "PL_STATEMENTS_REVENUE_STREAMS_CASH_FLOW",
+    tooltip: "PL STATEMENTS REVENUE STREAMS CASH FLOW",
   },
   {
     id: "bookmarks",
     label: "WATCHLIST",
     icon: Bookmark,
-    tooltip: "BOOKMARKED_PROJECTS_AND_TALENT",
+    tooltip: "BOOKMARKED PROJECTS AND TALENT",
   },
 ];
 
@@ -92,7 +92,7 @@ export const StudioSidebar = () => {
   if (!gameState) return null;
 
   const handleExit = () => {
-    if (window.confirm("TERMINATE_SESSION_AND_EXIT_TO_MENU?")) {
+    if (window.confirm("TERMINATE SESSION AND EXIT TO MENU?")) {
       clearGame();
       navigate({ to: "/" });
     }
@@ -196,7 +196,7 @@ export const StudioSidebar = () => {
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/20 italic">
               <span className="flex items-center gap-2">
-                <DollarSign className="h-3 w-3" /> CASH_RESERVES
+                <DollarSign className="h-3 w-3" /> CASH RESERVES
               </span>
               <span
                 className={cn(
@@ -231,7 +231,7 @@ export const StudioSidebar = () => {
               </span>
               <span className="text-lg font-display font-black text-foreground italic leading-none">
                 {
-                  Object.values(gameState.studio.internal.projects).filter(
+                  Object.values(gameState.studio.internal?.projects || {}).filter(
                     (p) =>
                       p.state !== "released" && p.state !== "post_release" && p.state !== "archived"
                   ).length
@@ -279,7 +279,7 @@ export const StudioSidebar = () => {
               <LogOut aria-hidden="true" className="h-5 w-5 shrink-0" />
               {!isCollapsed && (
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] italic">
-                  TERMINATE_SESSION
+                  TERMINATE SESSION
                 </span>
               )}
             </button>
@@ -288,7 +288,7 @@ export const StudioSidebar = () => {
             side="right"
             className="rounded-none font-black text-[10px] uppercase tracking-[0.3em] bg-rose-500 text-black italic px-4 py-2 shadow-2xl z-[100]"
           >
-            RETURN_TO_MAIN_COMMAND
+            RETURN TO MAIN COMMAND
           </TooltipContent>
         </Tooltip>
 

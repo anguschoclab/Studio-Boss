@@ -2,96 +2,126 @@ import React from 'react';
 import { FinancialOverviewWidget } from './FinancialOverviewWidget';
 import { DemographicsWidget } from './DemographicsWidget';
 import { useGameStore } from '@/store/gameStore';
-import { Clapperboard, Users, Building2, TrendingUp, Star, Zap, ShieldCheck } from 'lucide-react';
+import { Clapperboard, Users, PieChart, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { KPIStatCard } from '@/components/shared/KPIStatCard';
 import { StudioIdentityPanel } from '@/components/studio/StudioIdentityPanel';
 import { AchievementsPanel } from '@/components/achievements/AchievementsPanel';
 
+/** Compact currency that handles billions and negatives (cash can go red on loans). */
+function formatCash(value: number): string {
+  const sign = value < 0 ? '-' : '';
+  const abs = Math.abs(value);
+  if (abs >= 1_000_000_000) return `${sign}$${(abs / 1_000_000_000).toFixed(2)}B`;
+  if (abs >= 1_000_000) return `${sign}$${(abs / 1_000_000).toFixed(0)}M`;
+  if (abs >= 1_000) return `${sign}$${(abs / 1_000).toFixed(0)}K`;
+  return `${sign}$${abs}`;
+}
+
+/** Honest descriptor derived from real rank + share — no hardcoded label. */
+function marketPositionLabel(rank: number, total: number, share: number): string {
+  if (total <= 1) return 'Sole Studio';
+  if (rank === 1) return 'Market Leader';
+  if (rank <= 3 || share >= 15) return 'Major Player';
+  if (share >= 5) return 'Established Studio';
+  return 'Challenger';
+}
+
 export const CommandCenter: React.FC = () => {
   const gameState = useGameStore((state) => state.gameState);
   if (!gameState) return null;
 
-  const { studio, industry, entities } = gameState;
+  const { studio, industry, entities, finance } = gameState;
   const projects = Object.values(entities?.projects || {});
-  const { newsHistory } = industry || {};
-  const talentPool = entities?.talents || {};
+  const newsHistory = industry?.newsHistory ?? [];
   const rivals = Object.values(entities?.rivals || {});
 
-  const activeProjectsCount = projects.filter(p => p.state !== 'released' && p.state !== 'post_release' && p.state !== 'archived').length;
-  const talentCount = Object.keys(talentPool).length;
-  const rivalCount = rivals.length;
+  const activeProjectsCount = projects.filter(
+    (p) => p.state !== 'released' && p.state !== 'post_release' && p.state !== 'archived'
+  ).length;
+
+  const cash = finance?.cash ?? 0;
+
+  // Real market standing — replaces the old hardcoded "MAJOR CHALLENGER".
+  // Ranked by capital, matching the engine's own Antitrust concentration metric
+  // (which measures dominance by top-1 / top-3 share of industry cash).
+  const rivalCash = rivals.map((r) => r.cash || 0);
+  const totalStudios = rivals.length + 1;
+  const positiveCapital = Math.max(0, cash) + rivalCash.reduce((sum, c) => sum + Math.max(0, c), 0);
+  const myShare = positiveCapital > 0 ? (Math.max(0, cash) / positiveCapital) * 100 : 0;
+  const myRank = 1 + rivalCash.filter((c) => c > cash).length;
+  const positionLabel = marketPositionLabel(myRank, totalStudios, myShare);
 
   return (
-    <div className="space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-      {/* Studio Executive Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 pb-12 border-b border-white/5">
-        <div className="space-y-4">
-          <div className="flex items-center gap-6">
-            <h1 className="text-7xl font-display font-black tracking-tighter uppercase italic leading-none drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]">{studio.name}</h1>
-            <div className="bg-primary text-black border-none uppercase tracking-[0.3em] text-[10px] font-black h-6 px-4 flex items-center rounded-none shadow-[0_0_20px_rgba(var(--primary),0.3)]">
-              {studio.archetype.replace('-', ' ').toUpperCase()}
-            </div>
+    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      {/* Studio header — legible title, real standing */}
+      <header className="flex flex-col gap-6 border-b border-white/10 pb-8 md:flex-row md:items-end md:justify-between">
+        <div className="space-y-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="font-display text-5xl font-black not-italic uppercase tracking-tight leading-none">
+              {studio.name}
+            </h1>
+            <span className="inline-flex h-6 items-center bg-primary px-3 text-[11px] font-bold uppercase tracking-[0.1em] text-primary-foreground">
+              {studio.archetype.replace('-', ' ')}
+            </span>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-white/[0.02] rounded-none border border-white/10">
-              <Star className="h-3.5 w-3.5 text-secondary" strokeWidth={2.5} />
-              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 italic">COMMAND CENTER</span>
-            </div>
-            <div className="h-1 w-1 rounded-none bg-white/10" />
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/20 italic">STUDIO OPERATIONAL OVERVIEW • SECTOR ALPHA-1</span>
-          </div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/60 not-italic">
+            Command Center · Week {gameState.week}
+          </p>
         </div>
-        
-        <div className="flex gap-6">
-          <div className="px-8 py-5 bg-white/[0.01] rounded-none border border-white/5 flex flex-col items-end min-w-[200px] transition-all duration-700 hover:bg-white/[0.03]">
-            <span className="text-[10px] uppercase font-black text-muted-foreground/20 tracking-[0.3em] leading-none mb-4 italic">MARKET POSITION</span>
-            <div className="flex items-center gap-3">
-              <div className="w-2.5 h-2.5 rounded-none bg-primary shadow-[0_0_15px_rgba(var(--primary),0.5)] animate-pulse" />
-              <span className="text-sm font-display font-black uppercase tracking-tight italic text-foreground">MAJOR CHALLENGER</span>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      {/* High-Impact KPI Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-        <KPIStatCard 
-          label="ACTIVE PIPELINE" 
-          value={activeProjectsCount} 
-          subLabel="LIVE PROJECTS" 
-          icon={<Clapperboard className="h-5 w-5" strokeWidth={1.5} />} 
-          variant="primary"
-          tooltip="Total number of projects currently in the production funnel."
+        {/* Market position: derived from actual capital share, not a fixed string */}
+        <div className="flex min-w-[220px] flex-col items-start gap-1 border-l-2 border-primary/60 bg-white/[0.015] px-5 py-4 md:items-end md:text-right">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/60 not-italic">
+            Market Position
+          </span>
+          <span className="font-display text-xl font-bold not-italic uppercase tracking-tight text-foreground">
+            {positionLabel}
+          </span>
+          <span className="text-xs font-medium tabular-nums text-muted-foreground">
+            Rank #{myRank} of {totalStudios} · {myShare.toFixed(1)}% capital
+          </span>
+        </div>
+      </header>
+
+      {/* KPI row — real figures */}
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <KPIStatCard
+          label="Cash on Hand"
+          value={formatCash(cash)}
+          subLabel="Operating Balance"
+          icon={<TrendingUp className="h-5 w-5" strokeWidth={1.75} />}
+          variant={cash < 0 ? 'destructive' : 'primary'}
+          tooltip="Current liquid funds available to the studio."
         />
-        <KPIStatCard 
-          label="TALENT ROSTER" 
-          value={talentCount} 
-          subLabel="INDUSTRY DATABASE" 
-          icon={<Users className="h-5 w-5" strokeWidth={1.5} />} 
+        <KPIStatCard
+          label="Active Pipeline"
+          value={activeProjectsCount}
+          subLabel="Live Projects"
+          icon={<Clapperboard className="h-5 w-5" strokeWidth={1.75} />}
           variant="secondary"
-          tooltip="Total volume of actors, directors, and writers in the SBDB."
+          tooltip="Projects currently in development or production."
         />
-        <KPIStatCard 
-          label="INDUSTRY RIVALS" 
-          value={rivalCount} 
-          subLabel="ACTIVE COMPETITORS" 
-          icon={<Building2 className="h-5 w-5" strokeWidth={1.5} />} 
-          variant="destructive"
-          tooltip="Number of rival studios competing for market share."
-        />
-        <KPIStatCard 
-          label="PRESTIGE SCORE" 
-          value={studio.prestige} 
-          subLabel="STUDIO REPUTATION" 
-          icon={<TrendingUp className="h-5 w-5" strokeWidth={1.5} />} 
+        <KPIStatCard
+          label="Capital Share"
+          value={`${myShare.toFixed(1)}%`}
+          subLabel={`of ${totalStudios} studios`}
+          icon={<PieChart className="h-5 w-5" strokeWidth={1.75} />}
           variant="success"
-          tooltip="Global reputation level. Affects talent rates and box office leverage."
+          tooltip="Your share of total industry cash — the metric the engine's antitrust system uses to gauge market dominance."
+        />
+        <KPIStatCard
+          label="Prestige"
+          value={studio.prestige}
+          subLabel="Studio Reputation"
+          icon={<Users className="h-5 w-5" strokeWidth={1.75} />}
+          variant="muted"
+          tooltip="Reputation level. Affects talent rates and deal leverage."
         />
       </div>
 
-      {/* Strategic Visualization Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+      {/* Strategic visualizations */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <FinancialOverviewWidget />
         </div>
@@ -99,61 +129,65 @@ export const CommandCenter: React.FC = () => {
           <DemographicsWidget />
         </div>
       </div>
-      
-      {/* Studio Identity & Achievements Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        <div className="glass-card p-12 bg-black/40 border border-white/5 rounded-none shadow-2xl">
+
+      {/* Studio identity & achievements */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="border border-white/10 bg-white/[0.015] p-8">
           <StudioIdentityPanel culture={studio.culture} />
         </div>
-        <div className="glass-card p-12 bg-black/40 border border-white/5 rounded-none shadow-2xl">
+        <div className="border border-white/10 bg-white/[0.015] p-8">
           <AchievementsPanel />
         </div>
       </div>
 
-      {/* Recent Industry Intelligence */}
-      <div className="glass-card p-12 bg-gradient-to-br from-white/[0.03] to-transparent relative overflow-hidden rounded-none border border-white/5">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-none blur-[150px] pointer-events-none -mr-48 -mt-48 opacity-50" />
-        
-        <div className="flex items-center justify-between mb-12 pb-6 border-b border-white/5 relative z-10">
-          <div className="flex items-center gap-6">
-            <div className="w-16 h-16 rounded-none bg-primary/5 border border-primary/20 flex items-center justify-center shadow-[0_0_30px_rgba(var(--primary),0.1)]">
-               <Zap className="h-8 w-8 text-primary" strokeWidth={1} />
-            </div>
-            <div className="space-y-2">
-              <h3 className="text-3xl font-display font-black tracking-tight uppercase italic leading-none drop-shadow-[0_0_20px_rgba(255,255,255,0.05)]">RECENT INTELLIGENCE</h3>
-              <p className="text-[10px] font-black uppercase text-muted-foreground/20 tracking-[0.4em] italic">GLOBAL INDUSTRY SURVEILLANCE • REAL-TIME FEEDS</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 px-5 py-2 border border-emerald-400/20 bg-emerald-400/5 rounded-none shadow-[0_0_20px_rgba(16,185,129,0.1)]">
-            <ShieldCheck className="h-3 w-3 text-emerald-400" />
-            <span className="text-[9px] font-black text-emerald-400 tracking-[0.3em] uppercase italic">LIVE SECURE</span>
-          </div>
+      {/* Industry news — honest label, no surveillance theatre */}
+      <section className="border border-white/10 bg-white/[0.015]">
+        <div className="flex items-center justify-between border-b border-white/10 px-8 py-5">
+          <h2 className="font-display text-lg font-bold not-italic uppercase tracking-tight">
+            Industry News
+          </h2>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/50 not-italic">
+            Latest headlines
+          </span>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
-          {newsHistory && newsHistory.length > 0 ? (
+
+        <div className="grid grid-cols-1 gap-px bg-white/5 md:grid-cols-2">
+          {newsHistory.length > 0 ? (
             newsHistory.slice(0, 6).map((news, i) => (
-              <div key={news.id} className={cn(
-                "flex items-center gap-6 p-6 rounded-none border border-white/5 bg-white/[0.01] hover:bg-white/[0.03] hover:border-white/20 transition-all duration-700 group cursor-default",
-                i === 0 && "border-primary/20 bg-primary/5 hover:border-primary/40"
-              )}>
-                <div className="w-16 h-16 rounded-none bg-white/[0.02] border border-white/10 flex flex-col items-center justify-center font-display text-[10px] font-black text-muted-foreground/40 group-hover:text-primary transition-all duration-700 uppercase italic tracking-tighter">
-                  <span className="text-muted-foreground/10 text-[8px] tracking-[0.2em] mb-1">WEEK</span>
-                  <span className="text-xl leading-none">{news.week}</span>
+              <article
+                key={news.id}
+                className={cn(
+                  'flex items-start gap-4 bg-background p-5 transition-colors duration-200 hover:bg-white/[0.03]',
+                  i === 0 && 'md:col-span-2'
+                )}
+              >
+                <div className="flex shrink-0 flex-col items-center justify-center border border-white/10 px-3 py-2 text-center">
+                  <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/40">
+                    Wk
+                  </span>
+                  <span className="font-display text-base font-bold tabular-nums leading-none not-italic">
+                    {news.week}
+                  </span>
                 </div>
-                <div className="flex-1 min-w-0 space-y-2">
-                  <p className="text-lg font-display font-black uppercase tracking-tight leading-none truncate group-hover:text-foreground transition-all duration-700 italic drop-shadow-[0_0_10px_rgba(255,255,255,0.05)]">{news.headline}</p>
-                  <p className="text-[10px] font-black text-muted-foreground/20 uppercase tracking-[0.2em] line-clamp-1 group-hover:text-muted-foreground/60 transition-all duration-700 italic">{news.description}</p>
+                <div className="min-w-0 flex-1 space-y-1">
+                  <p className="font-display text-base font-bold not-italic leading-snug text-foreground">
+                    {news.headline}
+                  </p>
+                  {news.description && (
+                    <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                      {news.description}
+                    </p>
+                  )}
                 </div>
-              </div>
+              </article>
             ))
           ) : (
-            <div className="col-span-full py-24 text-center text-muted-foreground/10 uppercase font-black tracking-[0.5em] italic text-xs">
-              NO RECENT INDUSTRY ACTIVITY LOGGED IN SECTOR.
+            <div className="col-span-full bg-background py-16 text-center text-sm text-muted-foreground/40">
+              No industry activity yet. Advance the week to generate headlines.
             </div>
           )}
         </div>
-      </div>
+      </section>
     </div>
   );
 };

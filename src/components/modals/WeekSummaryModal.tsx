@@ -63,10 +63,10 @@ export const WeekSummaryModal = () => {
                       : "text-primary drop-shadow-[0_0_20px_rgba(var(--primary),0.4)]"
                   )}
                 >
-                  {isYearEnd ? "ANNUAL_FISCAL_REPORT" : `CYCLE_W${toWeek}_REPORT`}
+                  {isYearEnd ? "ANNUAL FISCAL REPORT" : `CYCLE W${toWeek}_REPORT`}
                 </DialogTitle>
                 <div className="px-4 py-2 bg-white/5 border border-white/10 text-[10px] font-black tracking-[0.4em] uppercase italic text-muted-foreground/40">
-                  {isYearEnd ? "YEAR_COMPLETED" : "UPLINK_STABLE"}
+                  {isYearEnd ? "YEAR COMPLETED" : "UPLINK STABLE"}
                 </div>
               </div>
             </DialogHeader>
@@ -79,7 +79,7 @@ export const WeekSummaryModal = () => {
                   <div className="relative z-10 flex justify-between items-end">
                     <div>
                       <p className="text-[11px] text-amber-500/40 uppercase font-black tracking-[0.4em] mb-4 italic">
-                        ANNUAL_NET_YIELD
+                        ANNUAL NET YIELD
                       </p>
                       <p
                         className={cn(
@@ -95,7 +95,7 @@ export const WeekSummaryModal = () => {
                     </div>
                     <div className="text-right">
                       <p className="text-[11px] text-amber-500/40 uppercase font-black tracking-[0.4em] mb-4 italic">
-                        FISCAL_YEAR
+                        FISCAL YEAR
                       </p>
                       <p className="text-5xl font-display font-black text-foreground italic drop-shadow-2xl">
                         {Math.floor((toWeek - 2) / 52) + 1}
@@ -111,7 +111,7 @@ export const WeekSummaryModal = () => {
                   <div className="flex items-center gap-4 mb-4">
                     <MessageSquare className="h-5 w-5 text-muted-foreground/40" />
                     <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 italic">
-                      WEEKLY_BRIEFING
+                      WEEKLY BRIEFING
                     </h4>
                   </div>
                   <p className="text-sm text-muted-foreground/60 italic leading-relaxed">
@@ -129,7 +129,7 @@ export const WeekSummaryModal = () => {
                   <div className="flex items-center gap-4">
                     <Trophy className="h-4 w-4 text-emerald-500" />
                     <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-emerald-500 italic">
-                      THE_HITS
+                      THE HITS
                     </h4>
                     <div className="h-px bg-emerald-500/20 flex-1" />
                   </div>
@@ -179,7 +179,7 @@ export const WeekSummaryModal = () => {
                   <div className="flex items-center gap-4">
                     <AlertTriangle className="h-4 w-4 text-amber-500" />
                     <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-amber-500 italic">
-                      REQUIRES_ATTENTION
+                      REQUIRES ATTENTION
                     </h4>
                     <div className="h-px bg-amber-500/20 flex-1" />
                   </div>
@@ -227,7 +227,7 @@ export const WeekSummaryModal = () => {
                   <div className="flex items-center gap-4">
                     <MessageSquare className="h-4 w-4 text-secondary" />
                     <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-secondary italic">
-                      STAFF_CHATTER
+                      STAFF CHATTER
                     </h4>
                     <div className="h-px bg-secondary/20 flex-1" />
                   </div>
@@ -252,7 +252,7 @@ export const WeekSummaryModal = () => {
                 <div className="flex items-center gap-4">
                   <DollarSign className="h-4 w-4 text-primary" />
                   <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-primary italic">
-                    FINANCIAL_SUMMARY
+                    FINANCIAL SUMMARY
                   </h4>
                   <div className="h-px bg-primary/20 flex-1" />
                 </div>
@@ -260,7 +260,7 @@ export const WeekSummaryModal = () => {
                 <div className="grid grid-cols-3 gap-6">
                   <div className="p-6 rounded-none border border-white/5 bg-white/[0.02] backdrop-blur-3xl shadow-2xl">
                     <p className="text-[10px] text-muted-foreground/30 font-black uppercase tracking-[0.2em] mb-3 italic">
-                      GROSS_REVENUE
+                      GROSS REVENUE
                     </p>
                     <p className="text-2xl font-display font-black text-emerald-500 italic tracking-tighter">
                       +{formatMoney(totalRevenue).toUpperCase()}
@@ -268,7 +268,7 @@ export const WeekSummaryModal = () => {
                   </div>
                   <div className="p-6 rounded-none border border-white/5 bg-white/[0.02] backdrop-blur-3xl shadow-2xl">
                     <p className="text-[10px] text-muted-foreground/30 font-black uppercase tracking-[0.2em] mb-3 italic">
-                      OPERATING_COSTS
+                      OPERATING COSTS
                     </p>
                     <p className="text-2xl font-display font-black text-rose-500 italic tracking-tighter">
                       -{formatMoney(totalCosts).toUpperCase()}
@@ -276,7 +276,7 @@ export const WeekSummaryModal = () => {
                   </div>
                   <div className="p-6 rounded-none border border-white/5 bg-white/[0.02] backdrop-blur-3xl shadow-2xl">
                     <p className="text-[10px] text-muted-foreground/30 font-black uppercase tracking-[0.2em] mb-3 italic">
-                      NET_CASH_FLOW
+                      NET CASH FLOW
                     </p>
                     <p
                       className={cn(
@@ -322,7 +322,7 @@ export const WeekSummaryModal = () => {
                   <div className="flex items-center gap-4">
                     <Newspaper className="h-4 w-4 text-muted-foreground/40" />
                     <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 italic">
-                      THE_TRADES_SUMMARY
+                      THE TRADES SUMMARY
                     </h4>
                     <div className="h-px bg-white/5 flex-1" />
                   </div>
@@ -349,7 +349,7 @@ export const WeekSummaryModal = () => {
               className="w-full h-16 bg-primary text-black font-display font-black uppercase tracking-[0.5em] italic text-xs hover:shadow-[0_0_80px_rgba(var(--primary),0.5)] hover:scale-[1.02] active:scale-95 transition-all duration-700 group relative overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-              CONFIRM_REPORT_AND_CONTINUE
+              CONFIRM REPORT AND CONTINUE
             </button>
           </DialogFooter>
         </DialogContent>

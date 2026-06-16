@@ -42,7 +42,7 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
     project?.targetDemographic || "four_quadrant"
   );
   const [selectedAngle, setSelectedAngle] = useState<MarketingAngle>(
-    (project?.marketingCampaign?.primaryAngle as MarketingAngle) || "SELL_THE_STORY"
+    (project?.marketingCampaign?.primaryAngle as MarketingAngle) || "SELL THE STORY"
   );
 
   const resonanceScores = useMemo(() => {
@@ -85,17 +85,17 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
             </div>
             <div>
               <h3 className="text-4xl font-display font-black uppercase italic tracking-tighter leading-none mb-3 drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]">
-                CAMPAIGN_COMMAND_CENTER
+                CAMPAIGN COMMAND CENTER
               </h3>
               <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/30 italic mt-1">
-                STRATEGIC_OVERRIDE • {project.title.toUpperCase()}
+                STRATEGIC OVERRIDE • {project.title.toUpperCase()}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-10">
             <div className="text-right">
               <p className="text-[9px] font-black uppercase text-muted-foreground/20 tracking-[0.2em] italic mb-1">
-                AVAILABLE_LIQUIDITY
+                AVAILABLE LIQUIDITY
               </p>
               <p className="text-2xl font-display font-black italic tracking-tighter text-primary drop-shadow-[0_0_20px_rgba(var(--primary),0.3)]">
                 {formatCurrency(studioCash)}
@@ -123,7 +123,7 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
           <div className="col-span-7 space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <div className="space-y-4">
               <label className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/30 flex items-center gap-3 italic">
-                <Users className="w-3.5 h-3.5" strokeWidth={3} /> CAMPAIGN_OBJECTIVE
+                <Users className="w-3.5 h-3.5" strokeWidth={3} /> CAMPAIGN OBJECTIVE
               </label>
               <div className="grid grid-cols-2 gap-4">
                 <Button
@@ -139,7 +139,7 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
                     setSelectedTier("Standard");
                   }}
                 >
-                  <DollarSign className="w-4 h-4 mr-3" strokeWidth={3} /> REVENUE_GENERATION
+                  <DollarSign className="w-4 h-4 mr-3" strokeWidth={3} /> REVENUE GENERATION
                 </Button>
                 <Button
                   variant={campaignType === "awards" ? "default" : "outline"}
@@ -154,21 +154,21 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
                     setSelectedTier("Grassroots");
                   }}
                 >
-                  <Sparkles className="w-4 h-4 mr-3" strokeWidth={3} /> PRESTIGE_MAXIMIZATION
+                  <Sparkles className="w-4 h-4 mr-3" strokeWidth={3} /> PRESTIGE MAXIMIZATION
                 </Button>
               </div>
             </div>
 
             <div className="space-y-4">
               <label className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/30 flex items-center gap-3 italic">
-                <TrendingUp className="w-3.5 h-3.5" strokeWidth={3} /> ALLOCATION_SCALE
+                <TrendingUp className="w-3.5 h-3.5" strokeWidth={3} /> ALLOCATION SCALE
               </label>
               <Select value={selectedTier} onValueChange={setSelectedTier}>
                 <SelectTrigger
                   aria-label="Select Allocation Tier"
                   className="h-16 bg-black/40 border-white/10 rounded-none font-black uppercase tracking-widest italic text-xs"
                 >
-                  <SelectValue placeholder="SELECT_TIER" />
+                  <SelectValue placeholder="SELECT TIER" />
                 </SelectTrigger>
                 <SelectContent className="rounded-none bg-black/95 border-white/10">
                   {campaignType === "marketing" ? (
@@ -221,7 +221,7 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
             {campaignType === "marketing" && (
               <div className="space-y-4">
                 <label className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/30 flex items-center gap-3 italic">
-                  <Target className="w-3.5 h-3.5" strokeWidth={3} /> CREATIVE_VECTOR
+                  <Target className="w-3.5 h-3.5" strokeWidth={3} /> CREATIVE VECTOR
                 </label>
                 <Select
                   value={selectedAngle}
@@ -231,38 +231,38 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
                     aria-label="Select Creative Vector"
                     className="h-16 bg-black/40 border-white/10 rounded-none font-black uppercase tracking-widest italic text-xs"
                   >
-                    <SelectValue placeholder="SELECT_VECTOR" />
+                    <SelectValue placeholder="SELECT VECTOR" />
                   </SelectTrigger>
                   <SelectContent className="rounded-none bg-black/95 border-white/10">
                     <SelectItem
-                      value="SELL_THE_SPECTACLE"
+                      value="SELL THE SPECTACLE"
                       className="font-black uppercase tracking-widest italic text-[10px] py-4"
                     >
-                      SELL_THE_SPECTACLE
+                      SELL THE SPECTACLE
                     </SelectItem>
                     <SelectItem
-                      value="SELL_THE_STORY"
+                      value="SELL THE STORY"
                       className="font-black uppercase tracking-widest italic text-[10px] py-4"
                     >
-                      SELL_THE_STORY
+                      SELL THE STORY
                     </SelectItem>
                     <SelectItem
-                      value="SELL_THE_STARS"
+                      value="SELL THE STARS"
                       className="font-black uppercase tracking-widest italic text-[10px] py-4"
                     >
-                      SELL_THE_STARS
+                      SELL THE STARS
                     </SelectItem>
                     <SelectItem
-                      value="FAMILY_ADVENTURE"
+                      value="FAMILY ADVENTURE"
                       className="font-black uppercase tracking-widest italic text-[10px] py-4"
                     >
-                      FAMILY_ADVENTURE
+                      FAMILY ADVENTURE
                     </SelectItem>
                     <SelectItem
                       value="CONTROVERSY"
                       className="font-black uppercase tracking-widest italic text-[10px] py-4"
                     >
-                      CONTROVERSY_STIMULATION
+                      CONTROVERSY STIMULATION
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -276,7 +276,7 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
 
             <div className="space-y-6 relative z-10">
               <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary italic mb-6">
-                AUDIENCE_INTELLIGENCE
+                AUDIENCE INTELLIGENCE
               </h4>
               <div className="grid grid-cols-2 gap-4">
                 {QUADRANTS.map((q) => {
@@ -339,7 +339,7 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
             <div className="space-y-6 pt-10 border-t border-white/5 relative z-10">
               <div className="flex justify-between items-center mb-4">
                 <span className="text-[10px] font-black uppercase text-muted-foreground/20 tracking-[0.3em] italic">
-                  EFFICIENCY_RATING
+                  EFFICIENCY RATING
                 </span>
                 <span
                   className={cn(
@@ -363,10 +363,10 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
               </div>
               <p className="text-[10px] leading-relaxed text-muted-foreground/40 italic uppercase tracking-wider border-l-2 border-white/5 pl-6 py-2">
                 {currentResonance > 1.3
-                  ? "OPTIMAL_ALIGNMENT_DETECTED. EVERY FISCAL UNIT WILL YIELD MAXIMUM BUZZ_RETURNS."
+                  ? "OPTIMAL ALIGNMENT DETECTED. EVERY FISCAL UNIT WILL YIELD MAXIMUM BUZZ RETURNS."
                   : currentResonance > 0.9
-                    ? "NOMINAL_PRESENCE_CONFIRMED. STANDARD EFFICIENCY PROJECTED FOR THIS VECTOR."
-                    : "SUB_OPTIMAL_STRATEGY. AUDIENCE RESISTANCE WILL DEGRADE CAMPAIGN IMPACT."}
+                    ? "NOMINAL PRESENCE CONFIRMED. STANDARD EFFICIENCY PROJECTED FOR THIS VECTOR."
+                    : "SUB OPTIMAL STRATEGY. AUDIENCE RESISTANCE WILL DEGRADE CAMPAIGN IMPACT."}
               </p>
             </div>
           </div>
@@ -376,7 +376,7 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
       <div className="bg-white/[0.02] border-t border-white/5 p-10 flex justify-between items-center">
         <div className="space-y-2">
           <span className="text-[10px] font-black uppercase text-muted-foreground/20 tracking-[0.4em] italic leading-none">
-            TOTAL_STRATEGIC_SPEND
+            TOTAL STRATEGIC SPEND
           </span>
           <div className="text-5xl font-display font-black italic tracking-tighter text-foreground drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
             {formatCurrency(0).toUpperCase()}
@@ -387,7 +387,7 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
             className="h-16 px-16 bg-primary text-black font-black uppercase italic tracking-[0.2em] text-[10px] rounded-none shadow-[0_0_30px_rgba(var(--primary),0.2)] hover:scale-105 transition-all duration-700"
             onClick={handleLaunch}
           >
-            EXECUTE_STRATEGY
+            EXECUTE STRATEGY
           </Button>
         </div>
       </div>

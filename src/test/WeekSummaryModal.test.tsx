@@ -68,10 +68,10 @@ describe('WeekSummaryModal', () => {
     render(<WeekSummaryModal />);
 
     // Title uses new format
-    expect(screen.getByText('CYCLE_W2_REPORT')).toBeDefined();
+    expect(screen.getByText('CYCLE W2 REPORT')).toBeDefined();
 
     // Financial section header
-    expect(screen.getByText('FINANCIAL_SUMMARY')).toBeDefined();
+    expect(screen.getByText('FINANCIAL SUMMARY')).toBeDefined();
 
     // Revenue and costs use uppercase formatted money
     expect(screen.getByText(`+${formatMoney(1500).toUpperCase()}`)).toBeDefined();
@@ -125,10 +125,10 @@ describe('WeekSummaryModal', () => {
     render(<WeekSummaryModal />);
 
     // Financial section always renders
-    expect(screen.getByText('FINANCIAL_SUMMARY')).toBeDefined();
+    expect(screen.getByText('FINANCIAL SUMMARY')).toBeDefined();
 
     // Headlines section renders when headlines exist
-    expect(screen.getByText('THE_TRADES_SUMMARY')).toBeDefined();
+    expect(screen.getByText('THE TRADES SUMMARY')).toBeDefined();
     expect(screen.getByText('Studio hit with major controversy')).toBeDefined();
   });
 
@@ -153,7 +153,7 @@ describe('WeekSummaryModal', () => {
 
     render(<WeekSummaryModal />);
 
-    const button = screen.getByText('CONFIRM_REPORT_AND_CONTINUE');
+    const button = screen.getByText('CONFIRM REPORT AND CONTINUE');
     fireEvent.click(button);
 
     expect(mockCloseSummary).toHaveBeenCalledTimes(1);

@@ -67,156 +67,156 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
       {
         id: 'nav-hq',
         title: 'STUDIO HQ',
-        subtitle: 'OVERVIEW_OPERATIONS_STRATEGY',
+        subtitle: 'OVERVIEW OPERATIONS STRATEGY',
         icon: LayoutDashboard,
         shortcut: '⌘1',
         action: () => setActiveHub('hq'),
-        section: 'NAVIGATION_HUB',
+        section: 'NAVIGATION HUB',
       },
       {
         id: 'nav-production',
-        title: 'PRODUCTION_CONTROL',
-        subtitle: 'SLATE_DEVELOPMENT_DISTRIBUTION',
+        title: 'PRODUCTION CONTROL',
+        subtitle: 'SLATE DEVELOPMENT DISTRIBUTION',
         icon: Film,
         shortcut: '⌘2',
         action: () => setActiveHub('production'),
-        section: 'NAVIGATION_HUB',
+        section: 'NAVIGATION HUB',
       },
       {
         id: 'nav-talent',
         title: 'TALENT_&_DEALS',
-        subtitle: 'ROSTER_MARKETPLACE_AGENCIES',
+        subtitle: 'ROSTER MARKETPLACE AGENCIES',
         icon: Users,
         shortcut: '⌘3',
         action: () => setActiveHub('talent'),
-        section: 'NAVIGATION_HUB',
+        section: 'NAVIGATION HUB',
       },
       {
         id: 'nav-intelligence',
-        title: 'STRATEGIC_INTELLIGENCE',
-        subtitle: 'RIVALS_AWARDS_MARKET_FINANCIALS',
+        title: 'STRATEGIC INTELLIGENCE',
+        subtitle: 'RIVALS AWARDS MARKET FINANCIALS',
         icon: Globe,
         shortcut: '⌘4',
         action: () => setActiveHub('intelligence'),
-        section: 'NAVIGATION_HUB',
+        section: 'NAVIGATION HUB',
       },
       // Actions
       {
         id: 'action-new-project',
-        title: 'INITIALIZE_NEW_PROJECT',
-        subtitle: 'CREATE_A_NEW_FILM_OR_TV_PROJECT',
+        title: 'INITIALIZE NEW PROJECT',
+        subtitle: 'CREATE A NEW FILM OR TV PROJECT',
         icon: Sparkles,
         shortcut: '⌘N',
         action: () => openCreateProject(),
-        section: 'TACTICAL_ACTIONS',
+        section: 'TACTICAL ACTIONS',
       },
       {
         id: 'action-week',
-        title: 'ADVANCE_WEEKLY_CYCLE',
-        subtitle: 'PROGRESS_TO_NEXT_PRODUCTION_WEEK',
+        title: 'ADVANCE WEEKLY CYCLE',
+        subtitle: 'PROGRESS TO NEXT PRODUCTION WEEK',
         icon: Clock,
         action: () => { doAdvanceWeek(); },
-        section: 'TACTICAL_ACTIONS',
+        section: 'TACTICAL ACTIONS',
       },
       // Crisis Management
       {
         id: 'crisis-dashboard',
-        title: 'CRISIS_COMMAND_DASHBOARD',
-        subtitle: 'VIEW_ALL_ACTIVE_CRISES_AND_ISSUES',
+        title: 'CRISIS COMMAND DASHBOARD',
+        subtitle: 'VIEW ALL ACTIVE CRISES AND ISSUES',
         icon: AlertTriangle,
         shortcut: '⌘⇧C',
         action: () => {
           setActiveHub('hq');
           setActiveSubTab('operations');
         },
-        section: 'CRISIS_MANAGEMENT',
+        section: 'CRISIS MANAGEMENT',
         keywords: ['emergency', 'problems', 'issues', 'alerts'],
       },
       {
         id: 'greenlight-queue',
-        title: 'GREENLIGHT_QUEUE_AUDIT',
-        subtitle: 'REVIEW_PROJECTS_AWAITING_APPROVAL',
+        title: 'GREENLIGHT QUEUE AUDIT',
+        subtitle: 'REVIEW PROJECTS AWAITING APPROVAL',
         icon: Zap,
         action: () => {
           setActiveHub('production');
           setActiveSubTab('slate');
         },
-        section: 'CRISIS_MANAGEMENT',
+        section: 'CRISIS MANAGEMENT',
         keywords: ['approve', 'projects', 'slate'],
       },
       // Intelligence Views
       {
         id: 'market-trends',
-        title: 'MARKET_TREND_ANALYSIS',
-        subtitle: 'VIEW_GENRE_TRENDS_AND_MARKET_SENTIMENT',
+        title: 'MARKET TREND ANALYSIS',
+        subtitle: 'VIEW GENRE TRENDS AND MARKET SENTIMENT',
         icon: TrendingUp,
         action: () => {
           setActiveHub('intelligence');
           setActiveSubTab('market');
         },
-        section: 'INTELLIGENCE_REPORTS',
+        section: 'INTELLIGENCE REPORTS',
         keywords: ['genres', 'trends', 'market', 'analysis'],
       },
       {
         id: 'studio-health',
-        title: 'STUDIO_HEALTH_AUDIT',
-        subtitle: 'CHECK_OVERALL_STUDIO_PERFORMANCE_METRICS',
+        title: 'STUDIO HEALTH AUDIT',
+        subtitle: 'CHECK OVERALL STUDIO PERFORMANCE METRICS',
         icon: Activity,
         action: () => {
           setActiveHub('hq');
           setActiveSubTab('overview');
         },
-        section: 'INTELLIGENCE_REPORTS',
+        section: 'INTELLIGENCE REPORTS',
         keywords: ['health', 'metrics', 'performance', 'dashboard'],
       },
       // Talent Views  
       {
         id: 'talent-morale',
-        title: 'TALENT_MORALE_MONITOR',
-        subtitle: 'CHECK_ROSTER_SATISFACTION_LEVELS',
+        title: 'TALENT MORALE MONITOR',
+        subtitle: 'CHECK ROSTER SATISFACTION LEVELS',
         icon: Users,
         action: () => {
           setActiveHub('talent');
           setActiveSubTab('roster');
         },
-        section: 'TALENT_MANAGEMENT',
+        section: 'TALENT MANAGEMENT',
         keywords: ['morale', 'happiness', 'satisfaction', 'roster'],
       },
       {
         id: 'deal-history',
-        title: 'DEAL_HISTORY_LOG',
-        subtitle: 'VIEW_NEGOTIATION_HISTORY_AND_OFFERS',
+        title: 'DEAL HISTORY LOG',
+        subtitle: 'VIEW NEGOTIATION HISTORY AND OFFERS',
         icon: Briefcase,
         action: () => {
           setActiveHub('talent');
           setActiveSubTab('negotiations');
         },
-        section: 'TALENT_MANAGEMENT',
+        section: 'TALENT MANAGEMENT',
         keywords: ['offers', 'negotiations', 'deals', 'history'],
       },
       // Financial Views
       {
         id: 'budget-burn',
-        title: 'BUDGET_BURN_RATE_AUDIT',
-        subtitle: 'MONITOR_PRODUCTION_SPENDING_VS_PLANNED',
+        title: 'BUDGET BURN RATE AUDIT',
+        subtitle: 'MONITOR PRODUCTION SPENDING VS PLANNED',
         icon: Flame,
         action: () => {
           setActiveHub('production');
           setActiveSubTab('development');
         },
-        section: 'FINANCIAL_INTELLIGENCE',
+        section: 'FINANCIAL INTELLIGENCE',
         keywords: ['budget', 'spending', 'overrun', 'costs'],
       },
       {
         id: 'cash-flow',
-        title: 'CASH_FLOW_ANALYSIS',
-        subtitle: 'VIEW_REVENUE_AND_EXPENSE_TRENDS',
+        title: 'CASH FLOW ANALYSIS',
+        subtitle: 'VIEW REVENUE AND EXPENSE TRENDS',
         icon: DollarSign,
         action: () => {
           setActiveHub('intelligence');
           setActiveSubTab('financials');
         },
-        section: 'FINANCIAL_INTELLIGENCE',
+        section: 'FINANCIAL INTELLIGENCE',
         keywords: ['cash', 'revenue', 'expenses', 'financials'],
       },
     ];
@@ -340,9 +340,9 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
               <div className="max-h-[500px] overflow-y-auto py-4 custom-scrollbar">
                 {flatCommands.length === 0 ? (
                   <div className="px-8 py-16 text-center">
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic">NULL_RESULT_DETECTED</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic">NULL RESULT DETECTED</p>
                     <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/20 mt-2 italic">
-                      SYSTEM_SCAN_FAILED: TRY_ALTERNATIVE_QUERY
+                      SYSTEM_SCAN_FAILED: TRY ALTERNATIVE QUERY
                     </p>
                   </div>
                 ) : (
@@ -410,13 +410,13 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
               <div className="px-8 py-4 bg-white/[0.02] border-t border-white/5 flex items-center justify-between text-[8px] font-black text-muted-foreground/30 uppercase tracking-[0.3em] italic">
                 <div className="flex items-center gap-8">
                   <span className="flex items-center gap-2">
-                    <ArrowRight className="w-3 h-3 text-primary" strokeWidth={3} /> SELECT_NODE
+                    <ArrowRight className="w-3 h-3 text-primary" strokeWidth={3} /> SELECT NODE
                   </span>
                   <span className="flex items-center gap-2">
                     <kbd className="px-2 py-0.5 bg-white/5 border border-white/10 rounded-none text-[8px]">
                       ENTER
                     </kbd>
-                    INITIALIZE_LINK
+                    INITIALIZE LINK
                   </span>
                 </div>
                 <span>{flatCommands.length}_TAC_NODES_FOUND</span>
