@@ -155,7 +155,7 @@ export const AgencyPackagesPanel: React.FC<AgencyPackagesPanelProps> = ({
                   </div>
                   <div className="bg-secondary/10 border border-secondary/20 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-secondary italic shadow-xl flex items-center gap-2">
                     <Star className="h-3.5 w-3.5 fill-current" />
-                    +{pkg.qualityBonus || 0}_QUALITY_MOD
+                    +{pkg.qualityBonus || 0} QUALITY MOD
                   </div>
                 </div>
 
@@ -181,7 +181,7 @@ export const AgencyPackagesPanel: React.FC<AgencyPackagesPanelProps> = ({
                     </div>
                     <span className="text-muted-foreground/30 flex items-center gap-2">
                       <ChevronRight className="h-3 w-3" />
-                      {pkg.weeksUntilExpiry || 0}_WEEKS_REMAINING
+                      {pkg.weeksUntilExpiry || 0} WEEKS REMAINING
                     </span>
                   </div>
                   

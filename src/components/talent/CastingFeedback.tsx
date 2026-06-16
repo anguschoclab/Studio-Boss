@@ -43,7 +43,7 @@ export const CastingFeedback: React.FC<CastingFeedbackProps> = ({ talent, projec
                 : "bg-rose-500/10 text-rose-500 border-rose-500/30"
           )}
         >
-          {score}%_CONTRACT_VELOCITY
+          {score}% CONTRACT_VELOCITY
         </div>
       </div>
 
@@ -80,7 +80,7 @@ export const CastingFeedback: React.FC<CastingFeedbackProps> = ({ talent, projec
         )}
         <span className="opacity-50">FINAL VERDICT:</span>
         {feedback.finalVerdict === "willing"
-          ? "ATTACHED_&_AGGRESSIVE"
+          ? "ATTACHED & AGGRESSIVE"
           : feedback.finalVerdict === "hesitant"
             ? "NEGOTIATION REQUIRED"
             : "CONTRACT REJECTED"}

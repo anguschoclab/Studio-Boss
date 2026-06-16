@@ -84,7 +84,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
       },
       {
         id: 'nav-talent',
-        title: 'TALENT_&_DEALS',
+        title: 'TALENT & DEALS',
         subtitle: 'ROSTER MARKETPLACE AGENCIES',
         icon: Users,
         shortcut: '⌘3',
@@ -327,7 +327,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
                   aria-label="Search commands and intelligence"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="SEARCH_COMMANDS_&_TAC_INTEL..."
+                  placeholder="SEARCH COMMANDS & TAC INTEL..."
                   className="flex-1 bg-transparent border-none outline-none text-sm font-black uppercase tracking-[0.2em] placeholder:text-muted-foreground/30 italic"
                   autoFocus
                 />
@@ -342,7 +342,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
                   <div className="px-8 py-16 text-center">
                     <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic">NULL RESULT DETECTED</p>
                     <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/20 mt-2 italic">
-                      SYSTEM_SCAN_FAILED: TRY ALTERNATIVE QUERY
+                      SYSTEM SCAN FAILED: TRY ALTERNATIVE QUERY
                     </p>
                   </div>
                 ) : (
@@ -419,7 +419,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
                     INITIALIZE LINK
                   </span>
                 </div>
-                <span>{flatCommands.length}_TAC_NODES_FOUND</span>
+                <span>{flatCommands.length} TAC NODES FOUND</span>
               </div>
             </div>
           </motion.div>

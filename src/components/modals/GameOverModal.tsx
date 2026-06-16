@@ -95,7 +95,7 @@ export const GameOverModal = () => {
             <div className="mt-8 flex items-center justify-center gap-6">
                <div className="h-px bg-primary/20 w-12" />
                <p className="text-[10px] font-black text-primary/40 uppercase tracking-[0.3em] italic">
-                 PRESTIGE [{stats.prestige}] × 100 + CYCLES_SURVIVED [{stats.weeksSurvived}] × 10
+                 PRESTIGE [{stats.prestige}] × 100 + CYCLES SURVIVED [{stats.weeksSurvived}] × 10
                </p>
                <div className="h-px bg-primary/20 w-12" />
             </div>
@@ -127,7 +127,7 @@ export const GameOverModal = () => {
             },
             {
               icon: <RefreshCw className="h-5 w-5" strokeWidth={3} />,
-              label: 'CYCLES_SURVIVED',
+              label: 'CYCLES SURVIVED',
               value: `${stats.weeksSurvived}`,
               color: 'text-secondary border-secondary/20 bg-secondary/5',
             },

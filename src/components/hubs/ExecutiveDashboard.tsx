@@ -63,7 +63,7 @@ export const ExecutiveDashboard: React.FC = () => {
         id: 'greenlight',
         type: 'warning',
         icon: <Zap className="h-4 w-4 text-amber-500" />,
-        title: `${needsGreenlight} PROJECT${needsGreenlight > 1 ? 'S' : ''}_READY_FOR_GREENLIGHT`,
+        title: `${needsGreenlight} PROJECT${needsGreenlight > 1 ? 'S' : ''} READY FOR GREENLIGHT`,
         description: 'REVIEW AND APPROVE PROJECTS TO BEGIN PRODUCTION',
         action: {
           label: 'REVIEW QUEUE',
@@ -83,7 +83,7 @@ export const ExecutiveDashboard: React.FC = () => {
         id: 'budget',
         type: 'critical',
         icon: <AlertOctagon className="h-4 w-4 text-red-500" />,
-        title: `${overBudget} PROJECT${overBudget > 1 ? 'S' : ''}_OVER_BUDGET`,
+        title: `${overBudget} PROJECT${overBudget > 1 ? 'S' : ''} OVER BUDGET`,
         description: 'BUDGET OVERRUNS DETECTED - IMMEDIATE ACTION REQUIRED',
         action: {
           label: 'VIEW DETAILS',
@@ -103,7 +103,7 @@ export const ExecutiveDashboard: React.FC = () => {
         id: 'morale',
         type: 'warning',
         icon: <Activity className="h-4 w-4 text-amber-500" />,
-        title: `${lowMorale} TALENT MEMBER${lowMorale > 1 ? 'S' : ''}_AT_RISK`,
+        title: `${lowMorale} TALENT MEMBER${lowMorale > 1 ? 'S' : ''} AT RISK`,
         description: 'TALENT MORALE IS CRITICALLY LOW - CHECK ROSTER',
         action: {
           label: 'CHECK ROSTER',

@@ -117,7 +117,7 @@ export const StudioSidebar = () => {
                 BOSS
               </span>
               <span className="text-[8px] font-black tracking-[0.4em] text-primary mt-1 italic">
-                V1.0_PRO_EDITION
+                V1.0 PRO EDITION
               </span>
             </div>
           </div>
@@ -264,7 +264,7 @@ export const StudioSidebar = () => {
             side="right"
             className="rounded-none font-black text-[10px] uppercase tracking-[0.3em] bg-black border border-white/20 text-foreground italic px-4 py-2 shadow-2xl z-[100]"
           >
-            STUDIO_CONFIGURATION_&_PREFERENCES
+            STUDIO CONFIGURATION & PREFERENCES
           </TooltipContent>
         </Tooltip>
 

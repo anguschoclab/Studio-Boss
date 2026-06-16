@@ -86,7 +86,7 @@ export const NewsStoryModal: React.FC<NewsStoryModalProps> = ({ headline, open, 
                 {style.label}
               </div>
               <div className="h-4 w-px bg-white/10" />
-              <span className="text-[10px] font-black font-mono text-muted-foreground/40 italic tracking-widest uppercase">CYCLE W{headline.week}_UPLINK</span>
+              <span className="text-[10px] font-black font-mono text-muted-foreground/40 italic tracking-widest uppercase">CYCLE W{headline.week} UPLINK</span>
             </div>
             <Newspaper className="h-5 w-5 text-primary/20" />
           </div>

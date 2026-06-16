@@ -63,7 +63,7 @@ export const WeekSummaryModal = () => {
                       : "text-primary drop-shadow-[0_0_20px_rgba(var(--primary),0.4)]"
                   )}
                 >
-                  {isYearEnd ? "ANNUAL FISCAL REPORT" : `CYCLE W${toWeek}_REPORT`}
+                  {isYearEnd ? "ANNUAL FISCAL REPORT" : `CYCLE W${toWeek} REPORT`}
                 </DialogTitle>
                 <div className="px-4 py-2 bg-white/5 border border-white/10 text-[10px] font-black tracking-[0.4em] uppercase italic text-muted-foreground/40">
                   {isYearEnd ? "YEAR COMPLETED" : "UPLINK STABLE"}
@@ -293,7 +293,7 @@ export const WeekSummaryModal = () => {
                 <div className="flex items-center justify-center gap-8 py-4 bg-black/40 border-y border-white/5">
                   <div className="flex items-center gap-4">
                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/20 italic">
-                      OPENING_CASH:
+                      OPENING CASH:
                     </span>
                     <span className="text-sm font-black text-muted-foreground/40 italic">
                       {formatMoney(cashBefore).toUpperCase()}
@@ -302,7 +302,7 @@ export const WeekSummaryModal = () => {
                   <ArrowRight className="h-4 w-4 text-white/5" />
                   <div className="flex items-center gap-4">
                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40 italic">
-                      CLOSING_CASH:
+                      CLOSING CASH:
                     </span>
                     <span
                       className={cn(

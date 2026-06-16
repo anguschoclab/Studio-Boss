@@ -177,19 +177,19 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
                         value="Standard"
                         className="font-black uppercase tracking-widest italic text-[10px] py-4"
                       >
-                        STANDARD_ALLOCATION ($2.0M)
+                        STANDARD ALLOCATION ($2.0M)
                       </SelectItem>
                       <SelectItem
                         value="Tentpole"
                         className="font-black uppercase tracking-widest italic text-[10px] py-4"
                       >
-                        TENTPOLE_ALLOCATION ($10.0M)
+                        TENTPOLE ALLOCATION ($10.0M)
                       </SelectItem>
                       <SelectItem
                         value="Saturation"
                         className="font-black uppercase tracking-widest italic text-[10px] py-4"
                       >
-                        SATURATION_ALLOCATION ($50.0M)
+                        SATURATION ALLOCATION ($50.0M)
                       </SelectItem>
                     </>
                   ) : (
@@ -198,19 +198,19 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
                         value="Grassroots"
                         className="font-black uppercase tracking-widest italic text-[10px] py-4"
                       >
-                        GRASSROOTS_EFFORT ($0.25M)
+                        GRASSROOTS EFFORT ($0.25M)
                       </SelectItem>
                       <SelectItem
                         value="Trade"
                         className="font-black uppercase tracking-widest italic text-[10px] py-4"
                       >
-                        TRADE_CAMPAIGN ($1.0M)
+                        TRADE CAMPAIGN ($1.0M)
                       </SelectItem>
                       <SelectItem
                         value="Blitz"
                         className="font-black uppercase tracking-widest italic text-[10px] py-4"
                       >
-                        BLITZ_CAMPAIGN ($5.0M)
+                        BLITZ CAMPAIGN ($5.0M)
                       </SelectItem>
                     </>
                   )}

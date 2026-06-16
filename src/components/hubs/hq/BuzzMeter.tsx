@@ -71,7 +71,7 @@ export const BuzzMeter: React.FC<BuzzMeterProps> = ({
           <div>
             <h3 className="text-xl font-display font-black uppercase italic tracking-tight text-foreground leading-none mb-3">STUDIO BUZZ INDEX</h3>
             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/30 italic">
-              INDUSTRY_RANK: #{industryRank}
+              INDUSTRY RANK: #{industryRank}
             </p>
           </div>
           <div className="text-right">

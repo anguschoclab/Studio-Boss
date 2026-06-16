@@ -10,9 +10,11 @@
 > the global `italic` treatment on headings is **deprecated** (numbers and labels
 > are upright); label letter-spacing is **capped at `0.15em`** (the `0.3em–0.6em`
 > drift is banned); the KPI Stat Card loses its ambient glow blob in favour of a
-> single left accent bar with upright `tabular-nums` values; and a new **Data
+> single left accent bar with upright `tabular-nums` values; a new **Data
 > Integrity** rule (§16.5) prohibits fabricated/decorative on-screen strings —
-> every displayed value must map to real game state. See §4.3, §8.1, §11.3, §16.5.
+> every displayed value must map to real game state; and **underscores are banned
+> from all display copy** (`COMMAND_CENTER` → `COMMAND CENTER`) as they reinforce
+> the sci-fi-HUD affect being removed. See §4.3, §8.1, §11.3, §16.2, §16.5.
 
 ---
 
@@ -178,6 +180,7 @@ Both fonts are loaded from Google Fonts in `index.css`. Use `.font-display` and 
 - **Numbers use the Display font, upright** — any KPI, stat, or financial figure uses Montserrat Black with `not-italic normal-case tabular-nums`. Figures must stay vertically aligned and column-comparable; never italicize or letter-space a number. Numbers in body copy or tables may use Inter.
 - **Italic is deprecated.** Do **not** apply `italic` as a blanket treatment to headings, labels, or values. The former global `h1–h6 { italic }` rule is removed — it hurt number legibility and gave numeric dashboards a "sci-fi HUD" feel at odds with a data-driven management game. Reserve italic for genuinely editorial pull-quotes only, never for UI chrome.
 - **Cap letter-spacing at `0.15em`.** Section/micro labels use `tracking-[0.15em]` at most. The drifted `tracking-[0.3em]`–`tracking-[0.6em]` values are banned — extreme tracking on tiny text is decorative, not legible.
+- **No underscores in display copy.** Visible labels, headers, titles, tooltips, placeholders, badges, and button text use real words separated by **spaces** — never `SNAKE_CASE` (`COMMAND_CENTER`, `FISCAL_PERIOD`, `TERMINATE_SESSION`). Underscores read as code/terminal output and reinforce the "sci-fi HUD" affect we are explicitly avoiding. Write `COMMAND CENTER`, `FISCAL PERIOD`, `TERMINATE SESSION`. Underscores belong only in code identifiers, enum/state values, and object keys — never in a string a player sees. The `{value}_LABEL` idiom (e.g. `{count}_ACTIVE_UNITS`) is likewise banned; use `{count} ACTIVE UNITS`.
 - **Never mix weights on one line** — if you need emphasis in a label, use color contrast, not weight variation on the same line.
 - **Avoid full sentences in all-caps** — use uppercase only for titles, labels, and badges (≤5 words). Running text in uppercase is inaccessible.
 - **Hero value treatment is optional, not gradient-by-default.** A screen-level title may use a subtle `from-foreground to-foreground/50` gradient clip, but a solid `text-foreground` is equally valid and often more legible. Use at most once per screen, at the top of the hierarchy — and only when it does not compromise readability.
@@ -1045,6 +1048,8 @@ Studio Boss speaks with the confidence and urgency of a Hollywood trades publica
 | Body text | Sentence case | `This project enters post-production.` |
 | Badges and chips | ALL CAPS (≤2 words) | `A-LIST`, `MAJOR STUDIO` |
 | Placeholder text | Sentence case | `Search talent by name...` |
+
+**Words are separated by spaces, never underscores.** `SNAKE_CASE` in any visible string — title, label, tooltip, badge, button, placeholder, confirm dialog — is prohibited (it reads as code and feeds the sci-fi-HUD affect we avoid; see §4.3). Use `COMMAND CENTER`, not `COMMAND_CENTER`. Underscores are for code only.
 
 ### 16.3 Number Formatting Standards
 

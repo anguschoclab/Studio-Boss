@@ -100,10 +100,10 @@ export const SyndicationRevenuePanel: React.FC<SyndicationRevenuePanelProps> = (
                       <h4 className="font-display font-black text-lg uppercase italic tracking-tight text-foreground group-hover/row:text-primary transition-colors leading-none mb-2">{market.region}</h4>
                       <div className="flex items-center gap-6">
                         <div className="px-2 py-0.5 border border-white/10 text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
-                          {market.deals}_ACTIVE_UNITS
+                          {market.deals} ACTIVE UNITS
                         </div>
                         <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/30 italic">
-                          {market.growth > 0 ? '+' : ''}{market.growth}%_DELTA_VS_PERIOD_PREV
+                          {market.growth > 0 ? '+' : ''}{market.growth}% DELTA VS PERIOD PREV
                         </span>
                       </div>
                     </div>
