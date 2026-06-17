@@ -8,8 +8,12 @@ vi.mock('@/store/gameStore');
 
 describe('TalentPanel', () => {
   beforeEach(() => {
-    vi.mocked(useGameStore).mockImplementation((selector) => {
+    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+      if (selector?.name === 'isBookmarked' || selector.toString().includes('isBookmarked')) {
+          return () => false;
+      }
       const state = {
+        isBookmarked: () => false,
         gameState: {
           week: 1,
           industry: {

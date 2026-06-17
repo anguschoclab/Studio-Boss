@@ -39,6 +39,7 @@ vi.mock('lucide-react', () => {
     Film: () => <div data-testid="icon" />,
     Library: () => <div data-testid="icon" />,
     Globe: () => <div data-testid="icon" />,
+    Bookmark: () => <div data-testid="icon" />,
     Users: () => <div data-testid="icon" />,
     Briefcase: () => <div data-testid="icon" />,
     Newspaper: () => <div data-testid="icon" />,
