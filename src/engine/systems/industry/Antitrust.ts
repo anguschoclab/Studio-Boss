@@ -38,14 +38,20 @@ export function resetAntitrustState() {
 }
 
 function computeConcentration(state: GameState) {
-  const rivals = Object.values(state.entities.rivals || {});
+  // ⚡ Bolt: Replaced Object.values and .map with a direct for...in loop
+  const rivalsDict = state.entities.rivals || {};
   // Floor at $10M so insolvents don't inflate the leader's share to 100%.
   const FLOOR = 10_000_000;
   const playerCash = Math.max(FLOOR, state.finance?.cash || 0);
   const entries: { id: string; name: string; cash: number; positive: boolean }[] = [
-    { id: 'PLAYER', name: state.studio?.name || 'Player', cash: playerCash, positive: (state.finance?.cash || 0) > 0 },
-    ...rivals.map(r => ({ id: r.id, name: r.name, cash: Math.max(FLOOR, r.cash || 0), positive: (r.cash || 0) > 0 }))
+    { id: 'PLAYER', name: state.studio?.name || 'Player', cash: playerCash, positive: (state.finance?.cash || 0) > 0 }
   ];
+
+  for (const id in rivalsDict) {
+    const r = rivalsDict[id];
+    entries.push({ id: r.id, name: r.name, cash: Math.max(FLOOR, r.cash || 0), positive: (r.cash || 0) > 0 });
+  }
+
   const positiveCount = entries.filter(e => e.positive).length;
   const total = entries.reduce((s, e) => s + e.cash, 0);
   entries.sort((a, b) => b.cash - a.cash);

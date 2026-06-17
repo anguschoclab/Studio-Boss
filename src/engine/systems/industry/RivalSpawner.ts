@@ -20,7 +20,11 @@ const DISRUPTOR_SUFFIX_EARLY = ['Digital', 'Media', 'Entertainment', 'Networks']
 const DISRUPTOR_SUFFIX_AI = ['AI Studios', 'Neural', 'Synth Media', 'AI Films'];
 
 function activeRivalCount(state: GameState): number {
-  return Object.values(state.entities.rivals || {}).length;
+  // ⚡ Bolt: Replace Object.values().length with direct count to avoid array allocation
+  let count = 0;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  for (const _id in state.entities.rivals || {}) count++;
+  return count;
 }
 
 function chooseName(usedNames: Set<string>, pool: string[], suffixPool: string[]): string {
@@ -104,7 +108,11 @@ export function tickRivalSpawner(state: GameState): StateImpact[] {
   indieWeight = Math.max(0.1, Math.min(0.9, indieWeight));
 
   const usedNames = new Set<string>();
-  Object.values(state.entities.rivals || {}).forEach(r => usedNames.add(r.name));
+  // ⚡ Bolt: Replace Object.values().forEach with direct for...in loop
+  const rivalsDict = state.entities.rivals || {};
+  for (const id in rivalsDict) {
+    usedNames.add(rivalsDict[id].name);
+  }
   state.market.buyers.forEach(b => usedNames.add(b.name));
 
   const isIndie = secureRandom() < indieWeight;
@@ -134,11 +142,18 @@ export function tickRivalSpawner(state: GameState): StateImpact[] {
 
 export function tickHardBankruptcy(state: GameState): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const rivals = Object.values(state.entities.rivals || {});
-  // Protect against collapse below the floor — if at floor, soft-flagged rivals linger.
-  if (rivals.length <= MIN_FLOOR) return impacts;
 
-  for (const r of rivals) {
+  // ⚡ Bolt: Replace Object.values with direct for...in loop
+  const rivalsDict = state.entities.rivals || {};
+  let count = 0;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  for (const _id in rivalsDict) count++;
+
+  // Protect against collapse below the floor — if at floor, soft-flagged rivals linger.
+  if (count <= MIN_FLOOR) return impacts;
+
+  for (const id in rivalsDict) {
+    const r = rivalsDict[id];
     const deeplyInsolvent = (r.cash || 0) < -300_000_000 && r.strength < 25;
     if (!deeplyInsolvent) continue;
     // 8% weekly conversion from flagged to hard-bankrupt once truly in distress.
