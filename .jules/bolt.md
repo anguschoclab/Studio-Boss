@@ -87,3 +87,7 @@ I eliminated the duplicate iterations and the `Map` construction entirely. The e
 ## 2026-05-28 - Replace Object.values arrays with for...in loops in MetricsCollector and SimulationHarness
 **Learning:** High-frequency metrics and snapshot reporting loops (like `MetricsCollector.record` and `SimulationHarness.run`) cause significant garbage collection pressure when calling `Object.values()` coupled with array methods (`filter`, `reduce`, `map`) to iterate over GameState entities, creating intermediate O(N) array allocation overhead per tick.
 **Action:** Replace `Object.values` chained functions with direct `for...in` loops to iterate over state entities (`rivals`, `talents`, `projects`) efficiently without creating intermediate arrays, reducing time complexity and eliminating GC pressure.
+
+## 2026-06-18 - Replacing Object.values spread with for...in
+**Learning:** `Math.max(...Object.values(obj).map(...))` creates two intermediate arrays and places them into the spread operator arguments array, causing massive GC overhead during tight game simulation loops (like bidding ticks).
+**Action:** Always refactor dictionary aggregate loops in game engine modules to use direct `for...in` manual aggregation to maintain O(N) speed with O(1) memory.
