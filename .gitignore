@@ -55,3 +55,25 @@ benchmark*.ts
 test_benchmark.ts
 test_mock.ts
 test_textcontent.html
+
+# Throwaway analysis/scratch output (do not commit)
+simulation-results*.txt
+sim-reports/
+fix_*.cjs
+fix_*.ts
+fix_*.js
+fix_*.sh
+fix_*.patch
+benchmark*.ts
+lint_*.txt
+lint_*.json
+lint_report.json
+test_*.txt
+*_test_results.txt
+*_test_results.json
+full_test_results.txt
+final*test*.txt
+failures.log
+all_files.txt
+vitest.json
+vitest_output.txt
