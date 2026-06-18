@@ -17,12 +17,13 @@ import { createNewsSlice, NewsSlice } from './slices/newsSlice';
 import { createSnapshotSlice, SnapshotSlice } from './slices/snapshotSlice';
 import { createLoanSlice, LoanSlice } from './slices/loanSlice';
 import { createBookmarkSlice, BookmarkSlice } from './slices/bookmarkSlice';
+import { createDistressSlice, DistressSlice } from './slices/distressSlice';
 
 /**
  * The main game store interface, combining multiple slices for state management.
  * Manages the top-level game state, week advancement, and persistence.
  */
-export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, RivalSlice, NewsSlice, SnapshotSlice, LoanSlice, BookmarkSlice {
+export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, RivalSlice, NewsSlice, SnapshotSlice, LoanSlice, BookmarkSlice, DistressSlice {
   /** The current game state object. Null if no game is in progress. */
   gameState: GameState | null;
   /** Initializes a new game with the given studio name and archetype. */
@@ -71,6 +72,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   ...createSnapshotSlice(set, get, ...args),
   ...createLoanSlice(set, get, ...args),
   ...createBookmarkSlice(set, get, ...args),
+  ...createDistressSlice(set, get, ...args),
 
   newGame: async (studioName, archetype) => {
     const gameState = initializeGame(studioName, archetype, Date.now()); // Added seed
