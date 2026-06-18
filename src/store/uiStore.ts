@@ -17,7 +17,8 @@ export type ModalType =
   | 'UPFRONTS'
   | 'BIDDING_WAR'
   | 'BREAKOUT_BIDDING_WAR'
-  | 'REBOOT_OPPORTUNITY';
+  | 'REBOOT_OPPORTUNITY'
+  | 'DISTRESSED_ASSET_OFFER';
 
 let modalIdCounter = 0;
 

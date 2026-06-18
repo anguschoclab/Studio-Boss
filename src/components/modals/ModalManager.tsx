@@ -17,6 +17,7 @@ const ReleaseStrategyModal = React.lazy(() => import('./ReleaseStrategyModal').t
 const PostProductionModal = React.lazy(() => import('./PostProductionModal').then(m => ({ default: m.PostProductionModal })));
 const AchievementUnlockedModal = React.lazy(() => import('./AchievementUnlockedModal').then(m => ({ default: m.AchievementUnlockedModal })));
 const PackageDealOfferedModal = React.lazy(() => import('./PackageDealOfferedModal').then(m => ({ default: m.PackageDealOfferedModal })));
+const DistressedAssetOfferModal = React.lazy(() => import('./DistressedAssetOfferModal').then(m => ({ default: m.DistressedAssetOfferModal })));
 
 /**
  * Unified Modal Manager.
@@ -63,6 +64,8 @@ export const ModalManager: React.FC = () => {
             return <AchievementUnlockedModal key={activeModal.id} payload={activeModal.payload} />;
           case 'PACKAGE_DEAL_OFFERED':
             return <PackageDealOfferedModal key={activeModal.id} />;
+          case 'DISTRESSED_ASSET_OFFER':
+            return <DistressedAssetOfferModal key={activeModal.id} />;
           default:
             return null;
         }
