@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { AlertTriangle, Download, Lock } from 'lucide-react';
+import { AlertTriangle, Download, Lock, Globe } from 'lucide-react';
 import { Section } from '@/components/layout/Section';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Target, TrendingUp, Sparkles, DollarSign, X } from "lucide-react";
+import { Target, TrendingUp, Sparkles, DollarSign, X, Users } from "lucide-react";
 import { calculateAudienceIndex } from "@/engine/systems/demographics";
 import { formatCurrency } from "@/lib/utils";
 import { cn } from "@/lib/utils";
