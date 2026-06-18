@@ -31,6 +31,8 @@ export interface DistressEvent {
 
 export const distressEventLog: DistressEvent[] = [];
 
+const OFFER_WINDOW_WEEKS = 2; // weeks the player has to decide before the AI buyer takes it
+
 // Track consecutive-weeks-negative per rival (module-level — rival objects are replaced each tick).
 const negativeStreak: Record<string, number> = {};
 // Cooldown between stage actions on the same rival; prevents one studio burning through
@@ -171,7 +173,7 @@ export function completeFireSale(
   return impacts;
 }
 
-function stage1IPFireSale(
+export function stage1IPFireSale(
   state: GameState,
   seller: RivalStudio
 ): StateImpact[] {
@@ -195,56 +197,72 @@ function stage1IPFireSale(
   const basePrice = Math.max(50_000_000, franchiseProxy * 0.5 * heat);
   const price = Math.round(basePrice * 0.7);
 
-  let franchiseName: string;
+  // Build the offer (asset id/label + AI fallback buyer + price are already chosen above).
+  let assetKind: 'franchise' | 'vault';
+  let assetId: string;
+  let assetLabel: string;
   if (ownedFranchises.length > 0) {
     const franchise: any = pick(ownedFranchises);
-    franchiseName = `franchise '${franchise.name}'`;
-    impacts.push({
-      type: 'FRANCHISE_UPDATED',
-      payload: { franchiseId: franchise.id, update: { ownerId: buyer.id } } as any
-    });
+    assetKind = 'franchise';
+    assetId = franchise.id;
+    assetLabel = `franchise '${franchise.name}'`;
   } else {
-    // Only sell named vault assets. If the asset has no real title, skip —
-    // we refuse to emit phantom "catalog rights" labels.
-    const named = ownedAssets.filter(a => {
+    const named = ownedAssets.filter((a) => {
       const t = (a as any).title || (a as any).name;
       return typeof t === 'string' && t.trim().length > 0;
     });
     if (named.length === 0) return [];
-    const asset = pick(named);
-    const newVault = (state.ip.vault || []).map(a =>
-      a.id === asset.id ? { ...a, ownerStudioId: buyer.id as any } : a
-    );
-    impacts.push({ type: 'INDUSTRY_UPDATE', payload: { update: { 'ip.vault': newVault } } as any });
-    franchiseName = `'${(asset as any).title || (asset as any).name}'`;
+    const asset: any = pick(named);
+    assetKind = 'vault';
+    assetId = asset.id;
+    assetLabel = `'${asset.title || asset.name}'`;
   }
 
-  impacts.push({
-    type: 'RIVAL_UPDATED',
-    payload: { rivalId: seller.id, update: { cash: (seller.cash || 0) + price, prestige: Math.max(0, (seller.prestige || 0) - 5) } } as any
-  });
-  impacts.push({
-    type: 'RIVAL_UPDATED',
-    payload: { rivalId: buyer.id, update: { cash: (buyer.cash || 0) - price } } as any
-  });
+  const offer: import('@/engine/types/distress.types').DistressedAssetOffer = {
+    id: `distress-${seller.id}-${state.week}`,
+    sellerId: seller.id,
+    sellerName: seller.name,
+    assetKind,
+    assetId,
+    assetLabel,
+    price,
+    aiBuyerId: buyer.id,
+    aiBuyerName: buyer.name,
+    createdWeek: state.week,
+    expiresWeek: state.week + OFFER_WINDOW_WEEKS,
+  };
 
-  impacts.push({
-    type: 'NEWS_ADDED',
-    payload: {
-      headline: `FIRE SALE: ${seller.name} sells ${franchiseName} to ${buyer.name} for $${(price / 1e6).toFixed(0)}M`,
-      description: `Facing sustained losses, ${seller.name} has offloaded ${franchiseName} in a distressed IP sale.`,
-      category: 'market'
-    }
-  });
+  counts(seller.id).s1++;
 
+  // Player gets first right of refusal only if solvent enough to buy.
+  const playerCanAfford = (state.finance?.cash ?? 0) >= price;
+  if (playerCanAfford) {
+    const existing = state.industry?.distressedOffers ?? [];
+    impacts.push({
+      type: 'INDUSTRY_UPDATE',
+      payload: { update: { 'industry.distressedOffers': [...existing, offer] } },
+    } as unknown as StateImpact);
+    impacts.push({
+      type: 'MODAL_TRIGGERED',
+      payload: { modalType: 'DISTRESSED_ASSET_OFFER', offerId: offer.id },
+    } as unknown as StateImpact);
+    logEvent({
+      week: state.week, year: Math.floor(state.week / 52) + 1975,
+      stage: 1, kind: 'ip-sale', studioId: seller.id, studioName: seller.name,
+      counterpartyId: 'player', counterpartyName: state.studio.name,
+      amount: price, note: `Offered ${assetLabel} to player`,
+    });
+    return impacts;
+  }
+
+  // Player can't afford it — AI buyer completes immediately (original behavior).
+  impacts.push(...completeFireSale(state, offer, buyer.id));
   logEvent({
     week: state.week, year: Math.floor(state.week / 52) + 1975,
-    stage: 1, kind: 'ip-sale',
-    studioId: seller.id, studioName: seller.name,
+    stage: 1, kind: 'ip-sale', studioId: seller.id, studioName: seller.name,
     counterpartyId: buyer.id, counterpartyName: buyer.name,
-    amount: price, note: `Sold ${franchiseName}`
+    amount: price, note: `Sold ${assetLabel}`,
   });
-  counts(seller.id).s1++;
   return impacts;
 }
 
