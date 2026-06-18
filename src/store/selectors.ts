@@ -138,6 +138,45 @@ export const selectRecoupmentStatus = createSelector(
   }))
 );
 
+/**
+ * The most recent weekly financial snapshot, or null if none recorded yet.
+ * Consumed by chartSelectors.selectRevenueBreakdown.
+ */
+export const selectLatestSnapshot = (state: GameState | null) => {
+  const history = state?.finance?.weeklyHistory ?? [];
+  return history.length > 0 ? history[history.length - 1] : null;
+};
+
+/**
+ * Map of released-project id -> recoup percentage (revenue / cost * 100).
+ * The pre-refactor snapshot.projectRecoupment field no longer exists, so this
+ * is derived directly from current project state.
+ */
+export const selectRecoupmentMap = (state: GameState | null): Record<string, number> => {
+  const projects = Object.values(state?.entities?.projects ?? {});
+  const map: Record<string, number> = {};
+  for (const p of projects) {
+    if (p.state === 'released' && (p.accumulatedCost ?? 0) > 0) {
+      map[p.id] = ((p.revenue ?? 0) / p.accumulatedCost) * 100;
+    }
+  }
+  return map;
+};
+
+/**
+ * Macro market metrics for studio-health scoring. MarketState no longer carries
+ * a sentiment/cycle signal, so sentiment defaults to 0 (neutral) until a real
+ * sentiment source is wired; debtRate/savingsRate are the live values.
+ */
+export const selectMarketMetrics = (state: GameState | null) => {
+  const m = state?.finance?.marketState;
+  return {
+    sentiment: 0,
+    debtRate: m?.debtRate ?? 0,
+    savingsRate: m?.savingsYield ?? 0,
+  };
+};
+
 export const selectBudgetBurnData = (state: GameState, projectId: string) => {
   const project = state.entities.projects[projectId];
   if (!project) return null;
