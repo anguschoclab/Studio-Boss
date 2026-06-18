@@ -173,6 +173,29 @@ export function completeFireSale(
   return impacts;
 }
 
+/**
+ * Weekly: any distressed offer the player let expire is completed to its AI
+ * fallback buyer and removed from the offer list.
+ */
+export function tickDistressedOffers(state: GameState): StateImpact[] {
+  const offers = state.industry?.distressedOffers ?? [];
+  if (offers.length === 0) return [];
+
+  const expired = offers.filter((o) => state.week >= o.expiresWeek);
+  if (expired.length === 0) return [];
+
+  const impacts: StateImpact[] = [];
+  for (const offer of expired) {
+    impacts.push(...completeFireSale(state, offer, offer.aiBuyerId));
+  }
+  const remaining = offers.filter((o) => state.week < o.expiresWeek);
+  impacts.push({
+    type: 'INDUSTRY_UPDATE',
+    payload: { update: { 'industry.distressedOffers': remaining } },
+  } as unknown as StateImpact);
+  return impacts;
+}
+
 export function stage1IPFireSale(
   state: GameState,
   seller: RivalStudio

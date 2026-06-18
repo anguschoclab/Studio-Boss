@@ -24,7 +24,7 @@ import { tickIndustryUpstarts } from '../systems/industry/IndustryUpstarts';
 import { tickConsolidation } from '../systems/industry/ConsolidationEngine';
 import { tickRivalSpawner, tickHardBankruptcy } from '../systems/industry/RivalSpawner';
 import { tickAntitrust } from '../systems/industry/Antitrust';
-import { tickDistressCascade } from '../systems/industry/DistressCascade';
+import { tickDistressCascade, tickDistressedOffers } from '../systems/industry/DistressCascade';
 import { tickShingleSystem } from '../systems/deals/ShingleSystem';
 import { tickShinglePitchRouter } from '../systems/deals/ShinglePitchRouter';
 import { InterestRateSimulator } from '../systems/market/InterestRateSimulator';
@@ -174,6 +174,7 @@ export class WeekCoordinator {
     context.impacts.push(...tickConsolidation(state));
     context.impacts.push(...tickRivalSpawner(state));
     context.impacts.push(...tickDistressCascade(state));
+    context.impacts.push(...tickDistressedOffers(state));
     context.impacts.push(...tickShingleSystem(state, context.rng));
     context.impacts.push(...tickShinglePitchRouter(state, context.rng));
     context.impacts.push(...tickHardBankruptcy(state));
