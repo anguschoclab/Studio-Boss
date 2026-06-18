@@ -3,6 +3,8 @@ import { pick, secureRandom } from '../../utils';
 import { getMarketHeat } from './MacroCycle';
 import { isAcquirerBlockedByAntitrust } from './Antitrust';
 import { cancelHighestOverheadDeal } from '../deals/ShingleSystem';
+import type { DistressedAssetOffer } from '@/engine/types/distress.types';
+import { getPlayerId } from '@/engine/utils/ownership';
 
 /**
  * DistressCascade — stepwise collapse ladder for insolvent rivals.
@@ -99,6 +101,74 @@ function classifyStage(r: RivalStudio): 0 | 1 | 2 | 3 | 4 {
 
 function logEvent(e: DistressEvent) {
   distressEventLog.push(e);
+}
+
+/**
+ * Move a distressed asset to `buyerId` (rival OR the player) and settle cash.
+ * Pure: returns the impacts; callers apply them. Reused by the AI fallback and
+ * by the player's Acquire action.
+ */
+export function completeFireSale(
+  state: GameState,
+  offer: DistressedAssetOffer,
+  buyerId: string
+): StateImpact[] {
+  const impacts: StateImpact[] = [];
+  const isPlayerBuyer = buyerId === getPlayerId(state);
+  const seller = state.entities.rivals?.[offer.sellerId];
+
+  // 1. Transfer ownership.
+  if (offer.assetKind === 'franchise') {
+    impacts.push({
+      type: 'FRANCHISE_UPDATED',
+      payload: { franchiseId: offer.assetId, update: { ownerId: buyerId } },
+    } as unknown as StateImpact);
+  } else {
+    const newVault = (state.ip.vault || []).map((a) =>
+      a.id === offer.assetId ? { ...a, ownerStudioId: buyerId as any } : a
+    );
+    impacts.push({
+      type: 'INDUSTRY_UPDATE',
+      payload: { update: { 'ip.vault': newVault } },
+    } as unknown as StateImpact);
+  }
+
+  // 2. Credit the seller (and the standard -5 prestige hit for a distressed sale).
+  if (seller) {
+    impacts.push({
+      type: 'RIVAL_UPDATED',
+      payload: {
+        rivalId: offer.sellerId,
+        update: { cash: (seller.cash || 0) + offer.price, prestige: Math.max(0, (seller.prestige || 0) - 5) },
+      },
+    } as unknown as StateImpact);
+  }
+
+  // 3. Debit the buyer.
+  if (isPlayerBuyer) {
+    impacts.push({ type: 'FUNDS_DEDUCTED', payload: { amount: offer.price } } as unknown as StateImpact);
+  } else {
+    const buyer = state.entities.rivals?.[buyerId];
+    if (buyer) {
+      impacts.push({
+        type: 'RIVAL_UPDATED',
+        payload: { rivalId: buyerId, update: { cash: (buyer.cash || 0) - offer.price } },
+      } as unknown as StateImpact);
+    }
+  }
+
+  // 4. News.
+  const buyerName = isPlayerBuyer ? state.studio.name : (state.entities.rivals?.[buyerId]?.name ?? 'a rival');
+  impacts.push({
+    type: 'NEWS_ADDED',
+    payload: {
+      headline: `FIRE SALE: ${offer.sellerName} sells ${offer.assetLabel} to ${buyerName} for $${(offer.price / 1e6).toFixed(0)}M`,
+      description: `Facing sustained losses, ${offer.sellerName} has offloaded ${offer.assetLabel} in a distressed IP sale.`,
+      category: 'market',
+    },
+  } as unknown as StateImpact);
+
+  return impacts;
 }
 
 function stage1IPFireSale(
