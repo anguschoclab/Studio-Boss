@@ -106,6 +106,7 @@ export interface GameState {
     rumors?: Rumor[];
     scandals?: Scandal[];
     newsHistory: NewsEvent[];
+    distressedOffers?: import('./distress.types').DistressedAssetOffer[];
   };
   // UI Data Vis Extensions (Epic 4)
   culture: {

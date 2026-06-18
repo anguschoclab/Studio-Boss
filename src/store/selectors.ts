@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect';
 import { GameState, Project, RivalStudio, Talent, GameEvent } from '../engine/types';
+import type { DistressedAssetOffer } from '@/engine/types/distress.types';
 
 const EMPTY_PROJECTS = {};
 const EMPTY_FINANCE = { cash: 0, ledger: [] };
@@ -7,6 +8,7 @@ const EMPTY_MARKET = { buyers: [], opportunities: [], trends: [], activeMarketEv
 const EMPTY_TALENT_POOL = {};
 const EMPTY_RIVALS: Record<string, RivalStudio> = {}; // Records in Phase 7
 const EMPTY_EVENT_HISTORY: GameEvent[] = [];
+const EMPTY_OFFERS: DistressedAssetOffer[] = [];
 
 /**
  * Standard Root Selectors
@@ -83,6 +85,15 @@ export const selectIndustry = createSelector(
   [selectGameState],
   (state): GameState['industry'] | null => state?.industry || null
 );
+
+export const selectDistressedOffers = (state: GameState | null): DistressedAssetOffer[] =>
+  state?.industry?.distressedOffers ?? EMPTY_OFFERS;
+
+export const selectDistressedOffer = (
+  state: GameState | null,
+  offerId: string
+): DistressedAssetOffer | undefined =>
+  selectDistressedOffers(state).find((o) => o.id === offerId);
 
 export const selectRivalsRaw = createSelector(
   [selectGameState],
