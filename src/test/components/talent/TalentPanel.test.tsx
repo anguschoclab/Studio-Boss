@@ -4,12 +4,16 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { TalentPanel } from '@/components/talent/TalentPanel';
 import { useGameStore } from '@/store/gameStore';
 
-vi.mock('@/store/gameStore');
+vi.mock('@/store/gameStore', () => ({
+  useGameStore: vi.fn(),
+}));
 
 describe('TalentPanel', () => {
   beforeEach(() => {
     vi.mocked(useGameStore).mockImplementation((selector) => {
       const state = {
+        isBookmarked: () => false,
+        toggleBookmark: vi.fn(),
         gameState: {
           week: 1,
           industry: {

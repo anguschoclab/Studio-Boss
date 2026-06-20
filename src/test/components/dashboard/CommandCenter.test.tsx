@@ -82,7 +82,7 @@ describe('CommandCenter', () => {
     );
 
     expect(screen.getByText('Acme Studios')).toBeInTheDocument();
-    expect(screen.getByText('BOUTIQUE INDIE')).toBeInTheDocument();
+    expect(screen.getByText('boutique indie')).toBeInTheDocument();
 
     // Active projects = 2 (p1, p2)
     const valueElements = screen.getAllByText(/2/);
@@ -131,6 +131,6 @@ describe('CommandCenter', () => {
         <CommandCenter />
       </TooltipProvider>
     );
-    expect(screen.getByText('NO RECENT INDUSTRY ACTIVITY LOGGED IN SECTOR.')).toBeInTheDocument();
+    expect(screen.getByText('No industry activity yet. Advance the week to generate headlines.')).toBeInTheDocument();
   });
 });

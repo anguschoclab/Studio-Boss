@@ -5,7 +5,14 @@ import { useUIStore } from '@/store/uiStore';
 import { Project } from '@/engine/types';
 
 vi.mock('@/store/gameStore', () => ({
-  useGameStore: vi.fn(() => null),
+  useGameStore: vi.fn((selector) => {
+    const state = {
+      gameState: null,
+      isBookmarked: () => false,
+      toggleBookmark: vi.fn(),
+    };
+    return selector ? selector(state) : state;
+  }),
 }));
 
 // Mock the uiStore
@@ -64,7 +71,7 @@ describe('ProjectCard', () => {
   it('calls selectProject when the main card is clicked', () => {
     render(<ProjectCard project={baseProject} />);
 
-    const card = screen.getByRole('button');
+    const card = screen.getByTestId('project-card-test-project-1');
     fireEvent.click(card);
 
     expect(mockSelectProject).toHaveBeenCalledWith('test-project-1');
