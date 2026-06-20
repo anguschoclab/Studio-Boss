@@ -12,7 +12,16 @@ interface OpportunityCardProps {
 }
 
 export const OpportunityCard = ({ opportunity: opp, onEnterAuction }: OpportunityCardProps) => {
-  const maxBid = Math.max(...Object.values(opp.bids || {}).map(bid => bid.amount), opp.costToAcquire);
+  // ⚡ Bolt: Replace Object.values().map() chain with direct for...in loop for O(1) GC overhead max find
+  let maxBid = opp.costToAcquire;
+  if (opp.bids) {
+    for (const bidId in opp.bids) {
+      if (opp.bids[bidId].amount > maxBid) {
+        maxBid = opp.bids[bidId].amount;
+      }
+    }
+  }
+
   const highestBid = opp.highestBidderId ? (opp.highestBidderId === 'PLAYER' ? 'YOU' : 'CONGLOMERATE') : 'STARTING';
   
   return (
