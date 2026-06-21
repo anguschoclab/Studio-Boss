@@ -5,8 +5,6 @@ const WeekSummaryModal = React.lazy(() => import('./WeekSummaryModal').then(m =>
 const CrisisModal = React.lazy(() => import('./CrisisModal').then(m => ({ default: m.CrisisModal })));
 const AwardsCeremonyModal = React.lazy(() => import('./AwardsCeremonyModal').then(m => ({ default: m.AwardsCeremonyModal })));
 const FestivalMarketModal = React.lazy(() => import('./FestivalMarketModal').then(m => ({ default: m.FestivalMarketModal })));
-const CreatePackageModal = React.lazy(() => import('./CreatePackageModal').then(m => ({ default: m.CreatePackageModal })));
-const PackageDetailModal = React.lazy(() => import('./PackageDetailModal').then(m => ({ default: m.PackageDetailModal })));
 const DirectorsCutModal = React.lazy(() => import('./DirectorsCutModal').then(m => ({ default: m.DirectorsCutModal })));
 const UpfrontsModal = React.lazy(() => import('./UpfrontsModal').then(m => ({ default: m.UpfrontsModal })));
 const BiddingWarModal = React.lazy(() => import('./BiddingWarModal').then(m => ({ default: m.BiddingWarModal })));
@@ -40,10 +38,6 @@ export const ModalManager: React.FC = () => {
             return <AwardsCeremonyModal key={activeModal.id} />;
           case 'FESTIVAL_MARKET':
             return <FestivalMarketModal key={activeModal.id} />;
-          case 'CREATE_PACKAGE':
-            return <CreatePackageModal key={activeModal.id} {...(activeModal.payload as unknown as Record<string, unknown>)} />;
-          case 'PACKAGE_DETAIL':
-            return <PackageDetailModal key={activeModal.id} />;
           case 'DIRECTORS_CUT_AVAILABLE':
             return <DirectorsCutModal key={activeModal.id} />;
           case 'UPFRONTS':
