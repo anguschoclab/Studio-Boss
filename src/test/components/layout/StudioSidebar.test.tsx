@@ -44,6 +44,7 @@ vi.mock('lucide-react', () => {
     Newspaper: () => <div data-testid="icon" />,
     Building2: () => <div data-testid="icon" />,
     ChevronLeft: () => <div data-testid="icon" />,
+    Bookmark: () => <div data-testid="icon" />,
     ChevronRight: () => <div data-testid="icon" />,
     LogOut: () => <div data-testid="icon" />,
     Settings: () => <div data-testid="icon" />,

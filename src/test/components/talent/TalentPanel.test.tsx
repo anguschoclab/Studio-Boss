@@ -10,6 +10,12 @@ describe('TalentPanel', () => {
   beforeEach(() => {
     vi.mocked(useGameStore).mockImplementation((selector) => {
       const state = {
+        isBookmarked: vi.fn(() => false),
+        toggleBookmark: vi.fn(),
+        isBookmarked: vi.fn(() => false),
+        toggleBookmark: vi.fn(),
+        isBookmarked: vi.fn(() => false),
+        toggleBookmark: vi.fn(),
         gameState: {
           week: 1,
           industry: {
