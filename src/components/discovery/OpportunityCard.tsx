@@ -12,7 +12,14 @@ interface OpportunityCardProps {
 }
 
 export const OpportunityCard = ({ opportunity: opp, onEnterAuction }: OpportunityCardProps) => {
-  const maxBid = Math.max(...Object.values(opp.bids || {}).map(bid => bid.amount), opp.costToAcquire);
+  let maxBid = opp.costToAcquire;
+  if (opp.bids) {
+    for (const key in opp.bids) {
+      if (opp.bids[key].amount > maxBid) {
+        maxBid = opp.bids[key].amount;
+      }
+    }
+  }
   const highestBid = opp.highestBidderId ? (opp.highestBidderId === 'PLAYER' ? 'YOU' : 'CONGLOMERATE') : 'STARTING';
   
   return (

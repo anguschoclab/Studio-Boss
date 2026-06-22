@@ -147,7 +147,14 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       
       // Auction requirement: Only acquire if player is highest bidder and auction expired
       // OR if it's a non-auction acquisition (costToAcquire > 0)
-      const currentHighest = Object.values(opp.bids || {}).reduce((max: number, b) => Math.max(max, (b as any).amount || 0), 0);
+      let currentHighest = 0;
+      if (opp.bids) {
+        for (const bidId in opp.bids) {
+          if ((opp.bids[bidId] as any).amount > currentHighest) {
+            currentHighest = (opp.bids[bidId] as any).amount;
+          }
+        }
+      }
       const isWinner = opp.highestBidderId === state.studio.id || opp.highestBidderId === 'PLAYER';
       const isExpired = state.week >= opp.expirationWeek;
 

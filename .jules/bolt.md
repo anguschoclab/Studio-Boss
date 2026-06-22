@@ -87,3 +87,7 @@ I eliminated the duplicate iterations and the `Map` construction entirely. The e
 ## 2026-05-28 - Replace Object.values arrays with for...in loops in MetricsCollector and SimulationHarness
 **Learning:** High-frequency metrics and snapshot reporting loops (like `MetricsCollector.record` and `SimulationHarness.run`) cause significant garbage collection pressure when calling `Object.values()` coupled with array methods (`filter`, `reduce`, `map`) to iterate over GameState entities, creating intermediate O(N) array allocation overhead per tick.
 **Action:** Replace `Object.values` chained functions with direct `for...in` loops to iterate over state entities (`rivals`, `talents`, `projects`) efficiently without creating intermediate arrays, reducing time complexity and eliminating GC pressure.
+
+## 2026-06-22 - Replace Object.values with for...in loops for max bid calculations
+**Learning:** Using `Math.max(...Object.values(opp.bids).map(b => b.amount))` or `.reduce` creates unnecessary intermediate arrays and spread overhead inside UI render loops and engine ticks, leading to high garbage collection spikes during auctions.
+**Action:** Replaced these chains with direct `for...in` loops to evaluate the maximum value directly, avoiding array allocations.
