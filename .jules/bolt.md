@@ -91,3 +91,7 @@ I eliminated the duplicate iterations and the `Map` construction entirely. The e
 ## 2026-06-18 - Replacing Object.values spread with for...in
 **Learning:** `Math.max(...Object.values(obj).map(...))` creates two intermediate arrays and places them into the spread operator arguments array, causing massive GC overhead during tight game simulation loops (like bidding ticks).
 **Action:** Always refactor dictionary aggregate loops in game engine modules to use direct `for...in` manual aggregation to maintain O(N) speed with O(1) memory.
+
+## 2024-05-18 - Optimize Nested O(N * Genres * Quarters) Object.values Loops in React Heatmaps
+**Learning:** React components (like `MarketTrendsHeatmap`) sometimes perform repetitive `Object.values().filter().reduce()` loops over huge entity dictionaries (projects, rivals) inside deeply nested structure loops (e.g., `GENRES.forEach` -> `QUARTERS.forEach`). This runs on every render/memoization trigger, creating an O(N * G * Q) bottleneck and generating massive amounts of throwaway intermediate arrays that stall the main thread during garbage collection.
+**Action:** When calculating grouped UI aggregations (like project counts by genre), always hoist the calculation outside the nested loops using a single-pass O(N) `for...in` loop to build a pre-aggregated map (`Record<string, number>`). Additionally, move any static calculations that only depend on the outer loop variable (e.g., `genre`) out of the inner loop (e.g., `quarter`) to avoid redundant calculations.
