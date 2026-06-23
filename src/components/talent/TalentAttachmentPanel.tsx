@@ -174,6 +174,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
               <Button
                 variant={showMatchesOnly ? "default" : "outline"}
                 size="sm"
+                aria-pressed={showMatchesOnly}
                 onClick={() => setShowMatchesOnly(!showMatchesOnly)}
                 className={cn(
                   "h-9 text-[10px] font-black uppercase tracking-tighter",
