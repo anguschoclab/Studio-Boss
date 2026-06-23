@@ -46,7 +46,8 @@ describe('TalentPanel', () => {
               { id: 'a2', name: 'WME' }
             ]
           }
-        }
+        },
+        isBookmarked: vi.fn(() => false),
       };
       return selector(state as any);
     });

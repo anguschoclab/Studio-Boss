@@ -55,7 +55,8 @@ vi.mock('lucide-react', () => {
     TrendingDown: () => <div data-testid="icon" />,
     Award: () => <div data-testid="icon" />,
     Zap: () => <div data-testid="icon" />,
-    Archive: () => <div data-testid="icon" />
+    Archive: () => <div data-testid="icon" />,
+    Bookmark: () => <div data-testid="icon" />
   };
 });
 
