@@ -38,19 +38,36 @@ export function resetAntitrustState() {
 }
 
 function computeConcentration(state: GameState) {
-  const rivals = Object.values(state.entities.rivals || {});
-  // Floor at $10M so insolvents don't inflate the leader's share to 100%.
+  // ⚡ Bolt: Replaced Object.values + array methods with single-pass for...in loop
   const FLOOR = 10_000_000;
   const playerCash = Math.max(FLOOR, state.finance?.cash || 0);
+
   const entries: { id: string; name: string; cash: number; positive: boolean }[] = [
-    { id: 'PLAYER', name: state.studio?.name || 'Player', cash: playerCash, positive: (state.finance?.cash || 0) > 0 },
-    ...rivals.map(r => ({ id: r.id, name: r.name, cash: Math.max(FLOOR, r.cash || 0), positive: (r.cash || 0) > 0 }))
+    { id: 'PLAYER', name: state.studio?.name || 'Player', cash: playerCash, positive: (state.finance?.cash || 0) > 0 }
   ];
-  const positiveCount = entries.filter(e => e.positive).length;
-  const total = entries.reduce((s, e) => s + e.cash, 0);
+
+  let positiveCount = entries[0].positive ? 1 : 0;
+  let total = entries[0].cash;
+
+  const rivals = state.entities.rivals || {};
+  for (const id in rivals) {
+    if (Object.prototype.hasOwnProperty.call(rivals, id)) {
+      const r = rivals[id];
+      const cash = Math.max(FLOOR, r.cash || 0);
+      const positive = (r.cash || 0) > 0;
+
+      entries.push({ id: r.id, name: r.name, cash, positive });
+
+      if (positive) positiveCount++;
+      total += cash;
+    }
+  }
+
   entries.sort((a, b) => b.cash - a.cash);
+
   const top1 = entries[0].cash / total;
   const top3 = entries.slice(0, 3).reduce((s, e) => s + e.cash, 0) / total;
+
   return { top1, top3, leader: entries[0], sorted: entries, total, positiveCount };
 }
 
@@ -92,7 +109,7 @@ export function tickAntitrust(state: GameState): StateImpact[] {
       id: `divest-${week}-${Math.floor(secureRandom() * 1e6)}`,
       name: spinoffName,
       motto: 'Independence restored.',
-      archetype: 'indie' as any,
+      archetype: 'indie' as unknown as import('../../types').StudioArchetype,
       foundedWeek: week,
       parentBrand: spinoffName.split(' ')[0],
       strength: 40,
@@ -103,20 +120,20 @@ export function tickAntitrust(state: GameState): StateImpact[] {
       contracts: [],
       projectCount: 0,
       motivationProfile: { financial: 50, prestige: 70, legacy: 50, aggression: 50 },
-      currentMotivation: 'PRESTIGE_BUILDING' as any,
+      currentMotivation: 'PRESTIGE_BUILDING' as unknown as import('../../types').AITalentMotivation,
       ownedPlatforms: []
     };
     impacts.push({
       type: 'INDUSTRY_UPDATE',
       payload: {
         update: {},
-        rival: { rivalId: spinoff.id, update: spinoff as any }
-      } as any
+        rival: { rivalId: spinoff.id, update: spinoff as unknown as Partial<RivalStudio> }
+      }
     });
     // Penalize dominant: lose divested cash.
     impacts.push({
       type: 'RIVAL_UPDATED',
-      payload: { rivalId: leader.id, update: { cash: leader.cash - spinoffCash } } as any
+      payload: { rivalId: leader.id, update: { cash: leader.cash - spinoffCash } }
     });
     impacts.push({
       type: 'NEWS_ADDED',
@@ -132,10 +149,10 @@ export function tickAntitrust(state: GameState): StateImpact[] {
     if (leader.id !== 'PLAYER') {
       impacts.push({
         type: 'RIVAL_UPDATED',
-        payload: { rivalId: leader.id, update: { cash: leader.cash - fine } } as any
+        payload: { rivalId: leader.id, update: { cash: leader.cash - fine } }
       });
     } else {
-      impacts.push({ type: 'FUNDS_CHANGED', payload: { amount: -fine } } as any);
+      impacts.push({ type: 'FUNDS_CHANGED', payload: { amount: -fine } });
     }
     impacts.push({
       type: 'NEWS_ADDED',

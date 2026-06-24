@@ -91,3 +91,7 @@ I eliminated the duplicate iterations and the `Map` construction entirely. The e
 ## 2026-06-18 - Replacing Object.values spread with for...in
 **Learning:** `Math.max(...Object.values(obj).map(...))` creates two intermediate arrays and places them into the spread operator arguments array, causing massive GC overhead during tight game simulation loops (like bidding ticks).
 **Action:** Always refactor dictionary aggregate loops in game engine modules to use direct `for...in` manual aggregation to maintain O(N) speed with O(1) memory.
+
+## 2026-06-24 - Replace Object.values().map() chain with direct for...in loop in Antitrust.ts
+**Learning:** `computeConcentration` in `Antitrust.ts` used `Object.values().map()` to iterate over rivals, creating intermediate arrays inside a function called frequently in engine simulation loops. Simply replacing `Object.values` with a `for...in` array builder is an anti-pattern; the real optimization is eliminating the multi-pass array iterations.
+**Action:** Replaced the chained array operations with a single-pass `for...in` loop that manually iterates the rival objects and calculates `positiveCount` and `total` without generating intermediate mapped arrays, reducing GC pressure.
