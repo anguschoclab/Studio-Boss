@@ -22,7 +22,14 @@ export const createTalentMarketplaceSlice: StateCreator<GameStore, [], [], Talen
 
       const opp = state.market.opportunities[oppIndex];
       const rng = new RandomGenerator(state.rngState);
-      const currentHighest = Object.values(opp.bids || {}).reduce((max: number, b) => Math.max(max, b.amount || 0), 0);
+      let currentHighest = 0;
+      if (opp.bids) {
+        for (const bidId in opp.bids) {
+          if (opp.bids[bidId].amount > currentHighest) {
+            currentHighest = opp.bids[bidId].amount;
+          }
+        }
+      }
       const isWinner = opp.highestBidderId === 'PLAYER';
       const isExpired = state.week >= opp.expirationWeek;
 

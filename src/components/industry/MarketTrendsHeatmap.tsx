@@ -26,38 +26,53 @@ export const MarketTrendsHeatmap: React.FC<MarketTrendsHeatmapProps> = ({ classN
 
     const data: { id: string; row: string; col: string; value: number; tooltip: string }[] = [];
 
+    // Pre-calculate project counts by genre to avoid O(N * Genres * Quarters) bottleneck
+    const playerProjectCounts: Record<string, number> = {};
+    const rivalProjectCounts: Record<string, number> = {};
+
+    for (const projectId in gameState.entities.projects) {
+      const p = gameState.entities.projects[projectId];
+      if (p.state !== 'archived' && p.state !== 'post_release' && p.genre) {
+        const g = p.genre.toLowerCase();
+        playerProjectCounts[g] = (playerProjectCounts[g] || 0) + 1;
+      }
+    }
+
+    for (const rivalId in gameState.entities.rivals) {
+      const rival = gameState.entities.rivals[rivalId];
+      if (rival.projects) {
+        for (const projectId in rival.projects) {
+          const p = rival.projects[projectId];
+          if (p.genre) {
+            const g = p.genre.toLowerCase();
+            rivalProjectCounts[g] = (rivalProjectCounts[g] || 0) + 1;
+          }
+        }
+      }
+    }
+
     GENRES.forEach(genre => {
+      const genreLower = genre.toLowerCase();
+      // Move static genre calculations outside the quarter loop
+      const trendData = trends.find(t => t.genre.toLowerCase() === genreLower);
+      const popularity = genrePopularity[genre as keyof typeof genrePopularity] || 50;
+      const heat = trendData?.heat || 50;
+
+      const genreProjects = playerProjectCounts[genreLower] || 0;
+      const rivalProjects = rivalProjectCounts[genreLower] || 0;
+      const saturation = Math.min(100, (genreProjects + rivalProjects) * 10);
+
+      const opportunity = Math.max(0, Math.min(100,
+        (popularity * 0.3) + (heat * 0.4) - (saturation * 0.3) + (marketSentiment * 0.1)
+      ));
+
+      let status = 'Stable';
+      if (opportunity > 70) status = 'Hot';
+      else if (opportunity > 50) status = 'Growing';
+      else if (opportunity < 30) status = 'Cooling';
+      else if (saturation > 70) status = 'Oversaturated';
+
       QUARTERS.forEach(quarter => {
-        // Calculate opportunity score based on multiple factors
-        const trendData = trends.find(t => t.genre.toLowerCase() === genre.toLowerCase());
-        const popularity = genrePopularity[genre as keyof typeof genrePopularity] || 50;
-
-        // Count active projects in this genre
-        const genreProjects = Object.values(gameState.entities.projects).filter(
-          p => p.genre.toLowerCase() === genre.toLowerCase() &&
-               p.state !== 'archived' && p.state !== 'post_release'
-        ).length;
-
-        // Calculate saturation (how crowded the market is)
-        const rivalProjects = Object.values(gameState.entities.rivals).reduce(
-          (sum, rival) => sum + Object.values(rival.projects || {})
-            .filter(p => p.genre?.toLowerCase() === genre.toLowerCase()).length,
-          0
-        );
-        const saturation = Math.min(100, (genreProjects + rivalProjects) * 10);
-
-        // Combine factors for opportunity score
-        const heat = trendData?.heat || 50;
-        const opportunity = Math.max(0, Math.min(100,
-          (popularity * 0.3) + (heat * 0.4) - (saturation * 0.3) + (marketSentiment * 0.1)
-        ));
-
-        let status = 'Stable';
-        if (opportunity > 70) status = 'Hot';
-        else if (opportunity > 50) status = 'Growing';
-        else if (opportunity < 30) status = 'Cooling';
-        else if (saturation > 70) status = 'Oversaturated';
-
         data.push({
           id: `${genre}-${quarter}`,
           row: genre,

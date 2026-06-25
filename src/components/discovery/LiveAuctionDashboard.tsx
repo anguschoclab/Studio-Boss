@@ -27,7 +27,15 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
   const playerStudioId = gameState?.studio?.id;
   
   const currentHighest = useMemo(() => {
-    return Object.values(opp.bids || {}).reduce((max, b) => Math.max(max, b.amount), 0);
+    let max = 0;
+    if (opp.bids) {
+      for (const key in opp.bids) {
+        if (opp.bids[key].amount > max) {
+          max = opp.bids[key].amount;
+        }
+      }
+    }
+    return max;
   }, [opp.bids]);
 
   const isPlayerWinning = opp.highestBidderId === playerStudioId || opp.highestBidderId === 'PLAYER';

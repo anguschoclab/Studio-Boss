@@ -1,7 +1,6 @@
-import { GameState, RivalStudio, StateImpact, Buyer, StreamerPlatform } from '@/engine/types';
+import { GameState, StateImpact, StreamerPlatform, RivalStudio } from '@/engine/types';
 import { RegulatorSystem } from './RegulatorSystem';
-import { pick, secureRandom, randRange } from '../../utils';
-import { getMarketHeat } from './MacroCycle';
+import { pick, secureRandom } from '../../utils';
 import { isAcquirerBlockedByAntitrust } from './Antitrust';
 
 export interface ConsolidationEvent {
@@ -24,14 +23,21 @@ export function resetConsolidationState() { consolidationEventLog.length = 0; }
  */
 export function tickConsolidation(state: GameState): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const rivals = Object.values(state.entities.rivals || {});
+  const rivalsDict = state.entities.rivals || {};
   const buyers = state.market.buyers;
+
+  // Replace Object.values().filter() chains with single for...in loop
+  const majors: RivalStudio[] = [];
+  for (const id in rivalsDict) {
+    const r = rivalsDict[id];
+    if (r.archetype === 'major' && r.cash > 250_000_000) {
+      majors.push(r);
+    }
+  }
 
   // REMOVED: Financial stress simulation (ineffective and unrealistic)
   // Rivals now deploy capital proactively via FlopMechanics and other systems
 
-  // Potential Acquirers: Majors with surplus cash
-  const majors = rivals.filter(r => r.archetype === 'major' && r.cash > 250_000_000);
   // Reduced skip probability for headless simulation (20% vs 60%)
   if (majors.length === 0 || secureRandom() < 0.20) return [];
 
@@ -57,12 +63,18 @@ export function tickConsolidation(state: GameState): StateImpact[] {
   // are real-world acquisition targets (Disney/Fox, Amazon/MGM). Distress cascade
   // handles <$0 cash cases separately. Skip targets the acquirer can't afford.
   const STRATEGIC_CEILING = 2_000_000_000;
-  const targets = rivals.filter(r =>
-    r.id !== acquirer.id &&
-    r.cash > 0 && r.cash < STRATEGIC_CEILING &&
-    r.strength < 75 &&
-    acquirer.cash > r.cash + (r.strength * 2_000_000)
-  );
+  const targets: RivalStudio[] = [];
+  for (const id in rivalsDict) {
+    const r = rivalsDict[id];
+    if (
+      r.id !== acquirer.id &&
+      r.cash > 0 && r.cash < STRATEGIC_CEILING &&
+      r.strength < 75 &&
+      acquirer.cash > r.cash + (r.strength * 2_000_000)
+    ) {
+      targets.push(r);
+    }
+  }
 
   // Target: unowned Streaming Platform
   const platforms = buyers.filter(b => 

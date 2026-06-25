@@ -41,10 +41,16 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({
   }, []);
 
   const currentMaxBid = useMemo(() => {
-    return Math.max(
-      ...Object.values(opportunity.bids || {}).map((bid) => bid.amount),
-      opportunity.costToAcquire
-    );
+    // Replace Object.values().map() chain with direct for...in loop for O(1) GC overhead max find
+    let maxBid = opportunity.costToAcquire;
+    if (opportunity.bids) {
+      for (const bidId in opportunity.bids) {
+        if (opportunity.bids[bidId].amount > maxBid) {
+          maxBid = opportunity.bids[bidId].amount;
+        }
+      }
+    }
+    return maxBid;
   }, [opportunity.bids, opportunity.costToAcquire]);
 
   const recommendedBid = useMemo(() => {

@@ -91,3 +91,7 @@ I eliminated the duplicate iterations and the `Map` construction entirely. The e
 ## 2026-06-18 - Replacing Object.values spread with for...in
 **Learning:** `Math.max(...Object.values(obj).map(...))` creates two intermediate arrays and places them into the spread operator arguments array, causing massive GC overhead during tight game simulation loops (like bidding ticks).
 **Action:** Always refactor dictionary aggregate loops in game engine modules to use direct `for...in` manual aggregation to maintain O(N) speed with O(1) memory.
+
+## 2026-06-15 - Replace Object.values arrays with for...in loops in getLiveCounterBid
+**Learning:** `getLiveCounterBid` iterates over opportunity bids by creating arrays with `Object.values(opportunity.bids || {}).map(...)` and `Math.max(...)`. When called frequently inside the auction tick loops, this creates compounding garbage collection spikes.
+**Action:** Replace `Object.values().map()` chains with direct `for...in` loops to iterate over opportunity bids efficiently without creating intermediate arrays.
