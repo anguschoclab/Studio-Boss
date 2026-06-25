@@ -44,6 +44,7 @@ describe('TV Awards Filtering & Taxonomy', () => {
   const baseState = (projects: Record<string, any>): GameState => {
     const state = createMockGameState({ week: 37 }); // Primetime Emmy Week
     state.entities.projects = projects;
+    state.entities.releasedProjectIds = Object.keys(projects);
     return state;
   };
 

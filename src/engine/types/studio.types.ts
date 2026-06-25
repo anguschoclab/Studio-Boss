@@ -59,6 +59,7 @@ export interface GameState {
   week: number;
   gameSeed: number;
   tickCount: number;
+  rngState?: number;
   game: {
     currentWeek: number;
   };
@@ -82,6 +83,8 @@ export interface GameState {
     internal: {
       projectHistory: string[]; // List of project IDs
       firstLookDeals?: FirstLookDeal[];
+      projects: Record<string, Project>;
+      contracts: Contract[];
     };
     ownedPlatforms?: string[];
     // Loan system
@@ -91,6 +94,8 @@ export interface GameState {
     achievements?: string[];
     resolvedCrisesCount?: number;
     bookmarks?: Bookmark[];
+    snapshotHistory?: unknown[];
+    activeCampaigns?: Record<string, unknown>;
   };
   market: {
     opportunities: Opportunity[];
@@ -115,6 +120,9 @@ export interface GameState {
   };
   history: StudioSnapshot[];
   eventHistory: GameEvent[];
+  deals?: { activeDeals: unknown[]; pendingOffers: unknown[]; expiredDeals: unknown[] };
+  talentAgentRelationships?: Record<string, unknown>;
+  relationships?: { relationships: Record<string, unknown> };
   tvRecommendations?: {
     recommendations: Record<string, import('./tv-recommendations.types').TVShowRecommendation>;
   };

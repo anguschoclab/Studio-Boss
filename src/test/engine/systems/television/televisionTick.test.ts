@@ -9,6 +9,7 @@ describe("Television Tick System (Guild Auditor)", () => {
       week: 1,
       entities: {
         projects: {},
+        releasedProjectIds: [],
         talents: {},
         contracts: {},
         rivals: {},

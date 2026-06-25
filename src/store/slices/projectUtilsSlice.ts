@@ -14,12 +14,17 @@ export const createProjectUtilsSlice: StateCreator<GameStore, [], [], ProjectUti
   addProject: (project) => {
     set((s) => {
       if (!s.gameState) return s;
+      const isReleasedTier = project.state === 'released' || project.state === 'post_release' || project.state === 'archived';
+      const releasedProjectIds = isReleasedTier && !s.gameState.entities.releasedProjectIds.includes(project.id)
+        ? [...s.gameState.entities.releasedProjectIds, project.id]
+        : s.gameState.entities.releasedProjectIds;
       return {
         gameState: {
           ...s.gameState,
           entities: {
             ...s.gameState.entities,
-            projects: { ...s.gameState.entities.projects, [project.id as ProjectId]: project }
+            projects: { ...s.gameState.entities.projects, [project.id as ProjectId]: project },
+            releasedProjectIds
           }
         }
       };

@@ -8,6 +8,7 @@ describe('Pilot Evaluator (Guild Auditor)', () => {
     week: 1,
     entities: {
       projects: {},
+      releasedProjectIds: [],
       talents: {},
       contracts: {},
       rivals: {}

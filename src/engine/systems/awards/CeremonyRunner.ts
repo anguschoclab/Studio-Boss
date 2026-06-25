@@ -28,18 +28,15 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
     projectToContractsMap.set(c.projectId, list);
   }
 
-  // ⚡ Bolt: Populate all eligible projects in a single pass, avoiding map duplication and O(N) overhead
-  const allProjects = state.entities.projects || {};
-  for (const id in allProjects) {
-    const p = allProjects[id];
-    if ((p.state === 'released' || p.state === 'post_release' || p.state === 'archived') &&
-        p.releaseWeek !== null &&
-        p.releaseWeek > currentWeek - 52) {
-      
-      const formatMatch = (p.format || '').toLowerCase();
-      if (formatMatch === 'film') eligibleFilm.push(p);
-      else if (formatMatch === 'tv' || formatMatch === 'series') eligibleTv.push(p);
-    }
+  // ⚡ Bolt: Populate all eligible projects from releasedProjectIds index, avoiding full scan
+  const releasedIds = state.entities.releasedProjectIds;
+  for (let i = 0; i < releasedIds.length; i++) {
+    const p = state.entities.projects[releasedIds[i]];
+    if (!p || p.releaseWeek === null || p.releaseWeek <= currentWeek - 52) continue;
+
+    const formatMatch = (p.format || '').toLowerCase();
+    if (formatMatch === 'film') eligibleFilm.push(p);
+    else if (formatMatch === 'tv' || formatMatch === 'series') eligibleTv.push(p);
   }
 
   const rivalsMap = state.entities.rivals || {};
@@ -90,20 +87,22 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       impacts.push({
         type: 'INDUSTRY_UPDATE',
         payload: {
-          [`industry.awards.${rng.uuid('AWD')}`]: {
-            id: rng.uuid('AWD'),
-            projectId: bestProject.id,
-            name: config.category,
-            category: config.category,
-            body: config.body,
-            status: isWin ? 'won' : 'nominated',
-            year
+          update: {
+            [`industry.awards.${rng.uuid('AWD')}`]: {
+              id: rng.uuid('AWD'),
+              projectId: bestProject.id,
+              name: config.category,
+              category: config.category,
+              body: config.body,
+              status: isWin ? 'won' : 'nominated',
+              year
+            }
           }
         }
       });
 
       if (isPlayer) {
-        impacts.push({ type: 'PRESTIGE_CHANGED', payload: prestigeGain });
+        impacts.push({ type: 'PRESTIGE_CHANGED', payload: { amount: prestigeGain } });
       } else if (rival) {
         impacts.push({ 
           type: 'RIVAL_UPDATED', 
@@ -118,8 +117,6 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
         impacts.push({
             type: 'NEWS_ADDED',
             payload: {
-                id: rng.uuid('NWS'),
-                week: currentWeek,
             headline: `AWARDS: ${bestProject.title}`,
             description: BardResolver.resolve({
                 domain: 'Industry',

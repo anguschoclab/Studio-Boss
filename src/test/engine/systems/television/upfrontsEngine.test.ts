@@ -8,6 +8,7 @@ describe('Upfronts Engine (Guild Auditor)', () => {
     week: 20,
     entities: {
       projects: {},
+      releasedProjectIds: [],
       talents: {},
       contracts: {},
       rivals: {}

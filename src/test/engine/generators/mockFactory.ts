@@ -26,6 +26,7 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
     ip: { vault: [], franchises: {} },
     entities: {
       projects: {},
+      releasedProjectIds: [],
       talents: {},
       contracts: {},
       rivals: {}
@@ -38,6 +39,8 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
       internal: {
         projectHistory: [],
         firstLookDeals: [],
+        projects: {},
+        contracts: [],
       }
     },
     market: {
@@ -125,7 +128,7 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
     title: 'Test Project',
     genre: 'Drama',
     format: 'movie',
-    status: 'Development',
+    state: 'development',
     budget: 50_000_000,
     spent: 0,
     targetQuality: 70,
@@ -135,7 +138,7 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
     estimatedWeeks: 10,
     talents: [],
     ...overrides
-  } as Project;
+  } as unknown as Project;
 };
 
 export const createMockBuyer = (overrides: Partial<Buyer> = {}): Buyer => {
@@ -155,10 +158,8 @@ export const createMockContract = (overrides: Partial<Contract> = {}): Contract 
     id: 'CON-1',
     projectId: 'PRJ-1',
     talentId: 'TAL-1',
-    type: 'acting',
-    status: 'active',
     fee: 1_000_000,
-    weeksRemaining: 10,
+    backendPercent: 0,
     ...overrides
-  };
+  } as Contract;
 };

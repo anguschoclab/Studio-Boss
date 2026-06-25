@@ -41,6 +41,7 @@ function createMockState(): GameState {
     week: 10,
     entities: {
       projects,
+      releasedProjectIds: [],
       contracts,
       talents,
     }

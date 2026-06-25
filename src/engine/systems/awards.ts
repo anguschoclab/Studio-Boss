@@ -92,16 +92,13 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   const eligibleFilm: CandidateTuple[] = [];
   const eligibleTv: CandidateTuple[] = [];
 
-  for (const projectId in state.entities.projects) {
-    const p = state.entities.projects[projectId];
-    if ((p.state === 'released' || p.state === 'post_release' || p.state === 'archived') &&
-        p.releaseWeek !== null &&
-        p.releaseWeek > currentWeek - 52 &&
-        p.awardsProfile !== undefined) {
-      const mult = 1 + (p.awardsProfile.campaignStrength || 0) / 25;
-      if (p.format === 'film') eligibleFilm.push({ p, mult });
-      else if (p.format === 'tv') eligibleTv.push({ p, mult });
-    }
+  const releasedIds = state.entities.releasedProjectIds;
+  for (let i = 0; i < releasedIds.length; i++) {
+    const p = state.entities.projects[releasedIds[i]];
+    if (!p || p.releaseWeek === null || p.releaseWeek <= currentWeek - 52 || !p.awardsProfile) continue;
+    const mult = 1 + (p.awardsProfile.campaignStrength || 0) / 25;
+    if (p.format === 'film') eligibleFilm.push({ p, mult });
+    else if (p.format === 'tv') eligibleTv.push({ p, mult });
   }
 
   if (eligibleFilm.length === 0 && eligibleTv.length === 0) return impact;
@@ -221,8 +218,10 @@ export function processRazzies(state: GameState, week: number): StateImpact {
   };
 
   const eligibleProjects: Project[] = [];
-  for (const projectId in state.entities.projects) {
-    const p = state.entities.projects[projectId];
+  const releasedIds = state.entities.releasedProjectIds;
+  for (let i = 0; i < releasedIds.length; i++) {
+    const p = state.entities.projects[releasedIds[i]];
+    if (!p) continue;
     if (p.state === 'released' && p.budget >= 50_000_000 && (p.reviewScore !== undefined && p.reviewScore <= 30)) {
       eligibleProjects.push(p);
     }

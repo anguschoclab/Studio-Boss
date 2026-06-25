@@ -41,7 +41,7 @@ describe('financeSlice — launchMarketingCampaign', () => {
             contracts: [],
           },
         },
-        entities: { projects: {}, talents: {}, contracts: {}, rivals: {} },
+        entities: { projects: {}, releasedProjectIds: [], talents: {}, contracts: {}, rivals: {} },
         market: { opportunities: [], trends: [], activeMarketEvents: [], buyers: [] },
         industry: { families: [], agencies: [], agents: [], awards: [], newsHistory: [], rumors: [], scandals: [], talentPool: {} },
         culture: { genrePopularity: {} },

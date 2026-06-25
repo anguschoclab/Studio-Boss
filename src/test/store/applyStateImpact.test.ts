@@ -6,6 +6,7 @@ describe("applyStateImpact utility", () => {
   const getInitialMockState = (): GameState => ({
     week: 1,
     entities: {
+      releasedProjectIds: [],
       projects: { 
         "proj-1": {
           id: "proj-1",

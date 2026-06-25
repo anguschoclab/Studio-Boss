@@ -390,6 +390,10 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
   addProject: (project) => {
     set((s) => {
       if (!s.gameState) return s;
+      const isReleasedTier = project.state === 'released' || project.state === 'post_release' || project.state === 'archived';
+      const releasedProjectIds = isReleasedTier && !s.gameState.entities.releasedProjectIds.includes(project.id)
+        ? [...s.gameState.entities.releasedProjectIds, project.id]
+        : s.gameState.entities.releasedProjectIds;
       return {
         gameState: {
           ...s.gameState,
@@ -402,7 +406,8 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
           },
           entities: {
             ...s.gameState.entities,
-            projects: { ...s.gameState.entities.projects, [project.id]: project }
+            projects: { ...s.gameState.entities.projects, [project.id]: project },
+            releasedProjectIds
           }
         }
       };

@@ -6,7 +6,6 @@ import { createMockGameState } from '../generators/mockFactory';
 describe('Week Advance Pipeline (Target A4)', () => {
   const mockState = createMockGameState({
     week: 1,
-    studioName: 'Player Studio'
   });
 
   it('should process the week and return a summarized result', () => {
@@ -34,6 +33,7 @@ describe('Week Advance Pipeline (Target A4)', () => {
       },
       entities: {
         projects: {},
+        releasedProjectIds: [],
         talents: {},
         contracts: {},
         rivals: {}

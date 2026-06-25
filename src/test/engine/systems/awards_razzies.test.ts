@@ -47,6 +47,7 @@ describe('Razzies Award System', () => {
           cheap: cheapFlop, 
           big: bigFlop 
         },
+        releasedProjectIds: ['good', 'cheap', 'big'],
         talents: {},
         contracts: {},
         rivals: {},
@@ -68,6 +69,7 @@ describe('Razzies Award System', () => {
       week: 4,
       entities: {
         projects: { absurd: absurdFlop },
+        releasedProjectIds: ['absurd'],
         talents: {},
         contracts: {},
         rivals: {},

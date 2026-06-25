@@ -15,6 +15,7 @@ describe("awards system", () => {
     ip: { vault: [], franchises: {} },
     entities: {
       projects: {},
+      releasedProjectIds: [],
       talents: {},
       contracts: {},
       rivals: {}
@@ -93,6 +94,7 @@ describe("awards system", () => {
     it("awards 'won' status for high scores at Critics Choice Awards (Week 4)", () => {
       const state = getInitialState();
       state.entities.projects = { [eligibleProject.id]: eligibleProject };
+      state.entities.releasedProjectIds = [eligibleProject.id];
       state.week = 4;
       state.week = 4;
 
@@ -106,6 +108,7 @@ describe("awards system", () => {
     it("accumulates prestige change for high-scoring project", () => {
       const state = getInitialState();
       state.entities.projects = { [eligibleProject.id]: eligibleProject };
+      state.entities.releasedProjectIds = [eligibleProject.id];
       state.week = 4;
       state.week = 4;
 
@@ -128,6 +131,7 @@ describe("awards system", () => {
           } as Project;
           const state = getInitialState();
           state.entities.projects = { [badFilm.id]: badFilm };
+          state.entities.releasedProjectIds = [badFilm.id];
           state.week = 4;
           state.week = 4;
 

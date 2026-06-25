@@ -17,7 +17,7 @@ function makeState(over: Partial<any> = {}): GameState {
       marketState: { baseRate: 0.04, savingsYield: 0.03, debtRate: 0.06, loanRate: 0.08, rateHistory: [] },
       ledger: [],
     },
-    entities: { projects: {} },
+    entities: { projects: {}, releasedProjectIds: [] },
     ...over,
   } as unknown as GameState;
 }

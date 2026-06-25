@@ -6,9 +6,10 @@ export function processRazzies(state: GameState, week: number, rng: RandomGenera
   const impacts: StateImpact[] = [];
   
   const eligibleProjects = [];
-  const projects = state.entities.projects || {};
-  for (const id in projects) {
-    const p = projects[id];
+  const releasedIds = state.entities.releasedProjectIds;
+  for (let i = 0; i < releasedIds.length; i++) {
+    const p = state.entities.projects[releasedIds[i]];
+    if (!p) continue;
     const score = p.reviewScore || 100;
     const budget = p.budget || 0;
     if (p.state === 'released' && budget >= 50_000_000 && score <= 30 && p.releaseWeek !== null) {
@@ -28,12 +29,13 @@ export function processRazzies(state: GameState, week: number, rng: RandomGenera
 
   for (const project of nominees) {
     const score = project.reviewScore || 30;
-    const isPlayer = !!state.entities.projects[project.id];
+    const isPlayer = project.ownerId === state.studio.id;
     
     const flavor = (project.flavor || '').toLowerCase();
     const isAbsurd = flavor.includes('absurd') || flavor.includes('bizarre') || flavor.includes('mess');
     
     const prestigePenalty = score <= 10 ? -15 : score <= 20 ? -10 : -5;
+    const razzieCategory = score <= 10 ? 'Worst Picture' : score <= 20 ? 'Worst Director' : 'Worst Screenplay';
     
     impacts.push({
       type: 'PROJECT_UPDATED',
@@ -41,7 +43,7 @@ export function processRazzies(state: GameState, week: number, rng: RandomGenera
         projectId: project.id,
         update: {
           razzieWinner: true,
-          razzieCategory: score <= 10 ? 'Worst Picture' : score <= 20 ? 'Worst Director' : 'Worst Screenplay'
+          razzieCategory
         } as unknown as Partial<Project>
       }
     });
@@ -60,7 +62,6 @@ export function processRazzies(state: GameState, week: number, rng: RandomGenera
       });
     }
 
-    const razzieCategory = score <= 10 ? 'Worst Picture' : score <= 20 ? 'Worst Director' : 'Worst Screenplay';
     impacts.push({
       type: 'NEWS_ADDED',
       payload: {

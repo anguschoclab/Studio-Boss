@@ -57,7 +57,7 @@ describe('talentSlice — acquireOpportunity currentHighest', () => {
           prestige: 50,
           internal: { projectHistory: [], firstLookDeals: [], projects: {}, contracts: [] },
         },
-        entities: { projects: {}, talents: {}, contracts: {}, rivals: {} },
+        entities: { projects: {}, releasedProjectIds: [], talents: {}, contracts: {}, rivals: {} },
         market: { opportunities: [], trends: [], activeMarketEvents: [], buyers: [] },
         industry: { families: [], agencies: [], agents: [], awards: [], newsHistory: [], rumors: [], scandals: [] },
         culture: { genrePopularity: {} },

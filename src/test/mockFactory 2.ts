@@ -10,6 +10,7 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
   game: { currentWeek: 10 },
   entities: {
     projects: {},
+    releasedProjectIds: [],
     contracts: {},
     talents: {},
     rivals: {},
@@ -33,7 +34,7 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
     name: 'Test Studio',
     archetype: 'mid-tier',
     prestige: 75,
-    internal: { projectHistory: [] },
+    internal: { projectHistory: [], projects: {}, contracts: [] },
   },
   market: {
     opportunities: [],

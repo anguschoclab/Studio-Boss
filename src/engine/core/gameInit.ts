@@ -236,6 +236,8 @@ export function initializeGame(
       internal: {
         projectHistory: [],
         firstLookDeals: [],
+        projects: {},
+        contracts: [],
       },
       ownedPlatforms: playerOwnedPlatforms,
       bookmarks: [],

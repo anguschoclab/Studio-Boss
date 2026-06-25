@@ -53,6 +53,8 @@ export interface MarketState {
   debtRate: number;
   loanRate: number;
   rateHistory: { week: number; rate: number }[];
+  sentiment?: number;
+  cycle?: string;
 }
 
 export interface LoanRecord {
