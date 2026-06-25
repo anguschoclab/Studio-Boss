@@ -95,3 +95,6 @@ I eliminated the duplicate iterations and the `Map` construction entirely. The e
 ## 2026-06-15 - Replace Object.values arrays with for...in loops in getLiveCounterBid
 **Learning:** `getLiveCounterBid` iterates over opportunity bids by creating arrays with `Object.values(opportunity.bids || {}).map(...)` and `Math.max(...)`. When called frequently inside the auction tick loops, this creates compounding garbage collection spikes.
 **Action:** Replace `Object.values().map()` chains with direct `for...in` loops to iterate over opportunity bids efficiently without creating intermediate arrays.
+## 2026-06-21 - Replace Object.values with for...in loops in TalentDiscoverySystem
+**Learning:** `tickTalentDiscoverySystem` was generating arrays on every game tick by calling `Object.values()` coupled with array methods (`filter`, `map`) on state records (like `projects`, `contracts`, `talents`, and `guestStarBookings`). Iterating and filtering the `contracts` array for every project inside an outer loop caused an O(N*M) nested bottleneck that generated severe garbage collection spikes.
+**Action:** Replaced `Object.values().filter()` chains with direct `for...in` loops. Additionally, pre-grouped `contracts` by `projectId` before entering the projects loop to convert O(N) internal array filters into O(1) dictionary lookups.
