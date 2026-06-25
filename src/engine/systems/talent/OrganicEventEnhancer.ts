@@ -9,6 +9,22 @@ import { Clique } from '../../types/clique.types';
  * Generates social-drama-based events that arise from the WSE simulation.
  */
 
+const PRODUCTION_STATES = ['IN_PRODUCTION', 'production', 'filming'];
+
+function getProjectTalentIds(state: GameState, projectId: string): string[] {
+  const contractsMap = state.entities.contracts || {};
+  const ids: string[] = [];
+  for (const cId in contractsMap) {
+    if (contractsMap[cId].projectId === projectId) ids.push(contractsMap[cId].talentId);
+  }
+  return ids;
+}
+
+function getRelationships(state: GameState): TalentRelationship[] {
+  const relMap = (state as unknown as { relationships?: { relationships?: Record<string, TalentRelationship> } })?.relationships?.relationships || {};
+  return Object.values(relMap);
+}
+
 /**
  * Check for relationship-based crises on a project
  */
@@ -17,23 +33,17 @@ export function checkRelationshipCrises(
   state: GameState,
   rng: RandomGenerator
 ): StateImpact | null {
-  // Get cast members
-  const contractsMap = state.entities.contracts || {};
-  const talentIds: string[] = [];
-  for (const cId in contractsMap) {
-    if (contractsMap[cId].projectId === project.id) talentIds.push(contractsMap[cId].talentId);
-  }
-
+  const talentIds = getProjectTalentIds(state, project.id);
   if (talentIds.length < 2) return null;
 
-  // Check for feuds among cast
-  const relMap = (state as unknown as { relationships?: { relationships?: Record<string, { talentAId: string; talentBId: string; type: string; strength: number }> } })?.relationships?.relationships || {};
-  const relationships = Object.values(relMap)
-    .filter((r) =>
-      talentIds.includes(r.talentAId) && talentIds.includes(r.talentBId)
-    );
+  const talentIdSet = new Set(talentIds);
 
-  const feuds = relationships.filter(r => r.type === 'rival' || r.type === 'enemy');
+  const feuds: TalentRelationship[] = [];
+  for (const r of getRelationships(state)) {
+    if (talentIdSet.has(r.talentAId) && talentIdSet.has(r.talentBId)) {
+      if (r.type === 'rival' || r.type === 'enemy') feuds.push(r);
+    }
+  }
 
   if (feuds.length > 0 && rng.next() < 0.15) { // 15% chance if feuds exist
     const feud = rng.pick(feuds);
@@ -96,16 +106,11 @@ export function checkCliqueCrises(
   state: GameState,
   rng: RandomGenerator
 ): StateImpact | null {
-  const contractsMap2 = state.entities.contracts || {};
-  const talentIds: string[] = [];
-  for (const cId in contractsMap2) {
-    if (contractsMap2[cId].projectId === project.id) talentIds.push(contractsMap2[cId].talentId);
-  }
-
+  const talentIds = getProjectTalentIds(state, project.id);
   if (talentIds.length < 3) return null;
 
-  const cliques = state.relationships?.cliques?.cliques || {};
-  const memberCliqueMap = state.relationships?.cliques?.memberCliqueMap || {};
+  const cliques = (state as any).relationships?.cliques?.cliques || {};
+  const memberCliqueMap = (state as any).relationships?.cliques?.memberCliqueMap || {};
 
   // Find cliques that have multiple members on this project
   const cliquePresence: Record<string, number> = {};
@@ -121,12 +126,8 @@ export function checkCliqueCrises(
     if (count < 2) continue;
 
     const clique = cliques[cliqueId] as Clique;
-    if (!clique || clique.reputation === 'toxic') {
+    if (clique && clique.reputation === 'toxic') {
       if (rng.next() < 0.1) { // 10% chance
-        const members = talentIds.filter(id =>
-          (memberCliqueMap[id] || []).includes(cliqueId)
-        );
-
         return {
           type: 'NEWS_ADDED',
           payload: {
@@ -135,8 +136,8 @@ export function checkCliqueCrises(
             description: `Members of the ${clique?.name || 'controversial group'} are reportedly creating tension with other cast members.`,
             category: 'talent',
             publication: 'Page Six',
-          },
-        };
+          } as any,
+        } as any;
       }
     }
   }
@@ -153,13 +154,17 @@ export function generateRelationshipScandals(
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
 
-  const relMap2 = (state as unknown as { relationships?: { relationships?: Record<string, { talentAId: string; talentBId: string; type: string; isPublic?: boolean; strength: number }> } })?.relationships?.relationships || {};
-  const relationships = Object.values(relMap2);
+  const relationships = getRelationships(state);
 
-  // Check for affair scandals (secret romantic relationships becoming public)
-  const secretRomances = relationships.filter(r =>
-    r.type === 'romantic' && !r.isPublic && r.strength > 60
-  );
+  // Single-pass partition into secret and public romances
+  const secretRomances: TalentRelationship[] = [];
+  const publicRomances: TalentRelationship[] = [];
+  for (const r of relationships) {
+    if (r.type === 'romantic') {
+      if (!r.isPublic && r.strength > 60) secretRomances.push(r);
+      else if (r.isPublic) publicRomances.push(r);
+    }
+  }
 
   for (const romance of secretRomances) {
     if (rng.next() < 0.05) { // 5% chance per secret romance
@@ -169,8 +174,8 @@ export function generateRelationshipScandals(
       if (!talentA || !talentB) continue;
 
       // Check if either has a spouse
-      const spouseA = talentA.spouseId ? state.entities.talents?.[talentA.spouseId] : null;
-      const spouseB = talentB.spouseId ? state.entities.talents?.[talentB.spouseId] : null;
+      const spouseA = (talentA as any).spouseId ? state.entities.talents?.[(talentA as any).spouseId] : null;
+      const spouseB = (talentB as any).spouseId ? state.entities.talents?.[(talentB as any).spouseId] : null;
 
       if (spouseA || spouseB) {
         // AFFAIR SCANDAL
@@ -186,9 +191,9 @@ export function generateRelationshipScandals(
               severity: 'high',
               publicAwareness: 70,
               careerImpact: -8,
-            },
+            } as any,
           },
-        });
+        } as any);
 
         // Also add scandal for other party
         impacts.push({
@@ -203,18 +208,18 @@ export function generateRelationshipScandals(
               severity: 'high',
               publicAwareness: 70,
               careerImpact: -8,
-            },
+            } as any,
           },
-        });
+        } as any);
 
         // Make relationship public
         impacts.push({
-          type: 'RELATIONSHIP_UPDATED',
+          type: 'RELATIONSHIP_UPDATED' as any,
           payload: {
             relationshipId: romance.id,
             update: { isPublic: true },
           },
-        });
+        } as any);
 
         // News
         impacts.push({
@@ -225,24 +230,21 @@ export function generateRelationshipScandals(
             description: `${talentA.name} and ${talentB.name} caught in explosive affair revelation.`,
             category: 'talent',
             publication: 'TMZ',
-          },
-        });
+          } as any,
+        } as any);
       }
     }
   }
 
-  // Check for public breakups
-  const publicRomances = relationships.filter(r =>
-    r.type === 'romantic' && r.isPublic
-  );
-
   for (const romance of publicRomances) {
-    // Check for negative events in history
-    const breakupEvent = romance.history.find(h =>
-      h.type === 'breakup' && h.week > state.week - 4
-    );
+    // Check for negative events in history (reverse iteration — history is sorted ascending)
+    let hasRecentBreakup = false;
+    for (let i = romance.history.length - 1; i >= 0; i--) {
+      const h = romance.history[i];
+      if (h.type === 'breakup' && h.week > state.week - 4) { hasRecentBreakup = true; break; }
+    }
 
-    if (breakupEvent) {
+    if (hasRecentBreakup) {
       const talentA = state.entities.talents?.[romance.talentAId];
       const talentB = state.entities.talents?.[romance.talentBId];
 
@@ -255,8 +257,8 @@ export function generateRelationshipScandals(
             description: `${talentA.name} and ${talentB.name} have ended their high-profile relationship.`,
             category: 'talent',
             publication: 'People Magazine',
-          },
-        });
+          } as any,
+        } as any);
       }
     }
   }
@@ -278,7 +280,7 @@ export function tickOrganicEvents(
   for (const projId in projectsMap) {
     const project = projectsMap[projId];
     const projectState = project.state;
-    if (['IN_PRODUCTION', 'production', 'filming'].some(s =>
+    if (PRODUCTION_STATES.some(s =>
       projectState?.toLowerCase().includes(s.toLowerCase())
     )) {
       const relationshipCrisis = checkRelationshipCrises(project, state, rng);
@@ -309,28 +311,22 @@ export function calculateSocialCrisisModifier(
 ): number {
   let modifier = 1.0;
 
-  // Get cast
-  const contractsMap3 = state.entities.contracts || {};
-  const talentIds: string[] = [];
-  for (const cId in contractsMap3) {
-    if (contractsMap3[cId].projectId === projectId) talentIds.push(contractsMap3[cId].talentId);
-  }
-
+  const talentIds = getProjectTalentIds(state, projectId);
   if (talentIds.length < 2) return modifier;
 
-  // Check for feuds
-  const relMap3 = (state as unknown as { relationships?: { relationships?: Record<string, { talentAId: string; talentBId: string; type: string; strength: number }> } })?.relationships?.relationships || {};
-  const relationships = Object.values(relMap3)
-    .filter((r) =>
-      talentIds.includes(r.talentAId) && talentIds.includes(r.talentBId)
-    );
+  const talentIdSet = new Set(talentIds);
 
-  const feuds = relationships.filter(r => r.type === 'rival' || r.type === 'enemy');
-  modifier += feuds.length * 0.15; // +15% per feud
+  let feudCount = 0;
+  for (const r of getRelationships(state)) {
+    if (talentIdSet.has(r.talentAId) && talentIdSet.has(r.talentBId)) {
+      if (r.type === 'rival' || r.type === 'enemy') feudCount++;
+    }
+  }
+  modifier += feudCount * 0.15; // +15% per feud
 
   // Check for toxic cliques
-  const memberCliqueMap = state.relationships?.cliques?.memberCliqueMap || {};
-  const cliques = state.relationships?.cliques?.cliques || {};
+  const memberCliqueMap = (state as any).relationships?.cliques?.memberCliqueMap || {};
+  const cliques = (state as any).relationships?.cliques?.cliques || {};
 
   const toxicCliqueMembers = talentIds.filter(id => {
     const talentCliques = memberCliqueMap[id] || [];

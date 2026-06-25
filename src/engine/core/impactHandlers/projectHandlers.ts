@@ -5,6 +5,8 @@ import { GameState, StateImpact } from '@/engine/types';
  * Pure functions that apply project-related state impacts
  */
 
+const RELEASED_STATES = new Set<string>(['released', 'post_release', 'archived']);
+
 export function handleProjectUpdated(state: GameState, impact: StateImpact): GameState {
   const { projectId, update } = impact.payload;
   if (!state.entities?.projects) return state;
@@ -13,11 +15,26 @@ export function handleProjectUpdated(state: GameState, impact: StateImpact): Gam
   if (project) {
     projects[projectId] = { ...project, ...update };
   }
+
+  let releasedProjectIds = state.entities.releasedProjectIds;
+  if (update && typeof update.state === 'string') {
+    const newState = update.state as string;
+    const isInIndex = releasedProjectIds.indexOf(projectId) !== -1;
+    if (RELEASED_STATES.has(newState)) {
+      if (!isInIndex) {
+        releasedProjectIds = [...releasedProjectIds, projectId];
+      }
+    } else if (isInIndex) {
+      releasedProjectIds = releasedProjectIds.filter(id => id !== projectId);
+    }
+  }
+
   return {
     ...state,
     entities: {
       ...state.entities,
-      projects
+      projects,
+      releasedProjectIds
     }
   };
 }
@@ -27,11 +44,13 @@ export function handleProjectRemoved(state: GameState, impact: StateImpact): Gam
   if (!state.entities?.projects) return state;
   const projects = { ...state.entities.projects };
   delete projects[projectId];
+  const releasedProjectIds = state.entities.releasedProjectIds.filter(id => id !== projectId);
   return {
     ...state,
     entities: {
       ...state.entities,
-      projects
+      projects,
+      releasedProjectIds
     }
   };
 }

@@ -67,6 +67,7 @@ export interface GameState {
   ip: IPState;
   entities: {
     projects: Record<string, Project>;
+    releasedProjectIds: string[];
     talents: Record<string, Talent>;
     contracts: Record<string, Contract>;
     rivals: Record<string, RivalStudio>;

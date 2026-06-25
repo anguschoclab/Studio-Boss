@@ -222,6 +222,7 @@ export function initializeGame(
     },
     entities: {
       projects: {},
+      releasedProjectIds: [],
       talents: talentPool,
       contracts: {},
       rivals: rivalsRecord,
