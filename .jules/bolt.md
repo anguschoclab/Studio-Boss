@@ -95,3 +95,6 @@ I eliminated the duplicate iterations and the `Map` construction entirely. The e
 ## 2026-06-15 - Replace Object.values arrays with for...in loops in getLiveCounterBid
 **Learning:** `getLiveCounterBid` iterates over opportunity bids by creating arrays with `Object.values(opportunity.bids || {}).map(...)` and `Math.max(...)`. When called frequently inside the auction tick loops, this creates compounding garbage collection spikes.
 **Action:** Replace `Object.values().map()` chains with direct `for...in` loops to iterate over opportunity bids efficiently without creating intermediate arrays.
+## 2026-06-26 - Eliminate Object.values chained allocations in Zustand slices
+**Learning:** Checking aggregate conditions in Zustand store slices (like finding genre saturation, aggressive rivals, or project contracts) by using `Object.values(state).filter()` creates unnecessary O(N) array allocation.
+**Action:** Replace `Object.values().filter()` chained methods with in-place `for...in` loops to evaluate state without creating intermediate arrays, reducing garbage collection spikes.

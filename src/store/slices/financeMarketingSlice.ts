@@ -28,7 +28,13 @@ export const createFinanceMarketingSlice: StateCreator<GameStore, [], [], Financ
         primaryAngle: angle as any,
       });
 
-      const projectContracts: Contract[] = Object.values(state.entities.contracts).filter(c => c.projectId === p.id);
+      // ⚡ Bolt: Replaced Object.values().filter() with a single O(N) for...in pass
+      const projectContracts: Contract[] = [];
+      for (const cId in state.entities.contracts) {
+        if (state.entities.contracts[cId].projectId === p.id) {
+          projectContracts.push(state.entities.contracts[cId]);
+        }
+      }
 
       const talentPool = state.entities.talents;
       const talentMap: Record<string, Talent> = {};
