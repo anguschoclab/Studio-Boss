@@ -204,14 +204,25 @@ export function stage1IPFireSale(
 
   // Need either a named franchise or vault asset to sell. Otherwise skip Stage 1 —
   // distressed rivals with no concrete IP fall through to Stage 2 liquidation.
-  const ownedFranchises = Object.values(state.ip?.franchises || {}).filter(
-    (f: any) => f.ownerId === seller.id
-  );
+  const ownedFranchises: any[] = [];
+  const franchises = state.ip?.franchises || {};
+  for (const id in franchises) {
+    if (Object.prototype.hasOwnProperty.call(franchises, id) && (franchises as any)[id].ownerId === seller.id) {
+      ownedFranchises.push((franchises as any)[id]);
+    }
+  }
+
   const ownedAssets = (state.ip?.vault || []).filter(a => a.ownerStudioId === (seller.id as any));
   if (ownedFranchises.length === 0 && ownedAssets.length === 0) return impacts;
 
-  const rivals = Object.values(state.entities.rivals || {});
-  const buyers = rivals.filter(r => r.id !== seller.id && (r.cash || 0) > 500_000_000);
+  const buyers: RivalStudio[] = [];
+  const rivalsObj = state.entities.rivals || {};
+  for (const id in rivalsObj) {
+    if (Object.prototype.hasOwnProperty.call(rivalsObj, id)) {
+      const r = rivalsObj[id];
+      if (r.id !== seller.id && (r.cash || 0) > 500_000_000) buyers.push(r);
+    }
+  }
   if (buyers.length === 0) return impacts;
 
   const buyer = pick(buyers);
@@ -437,8 +448,15 @@ function stage2AssetLiquidation(state: GameState, seller: RivalStudio): StateImp
     // to a rival or financial buyer for a lump sum. Those IP assets transfer ownership.
     const ownedAssets = (state.ip?.vault || []).filter(a => a.ownerStudioId === (seller.id as any));
     if (ownedAssets.length >= 2) {
-      const rivals = Object.values(state.entities.rivals || {});
-      const buyers = rivals.filter(r => r.id !== seller.id && (r.cash || 0) > 300_000_000);
+      const buyers: RivalStudio[] = [];
+      const rivalsObj = state.entities.rivals || {};
+      for (const id in rivalsObj) {
+        if (Object.prototype.hasOwnProperty.call(rivalsObj, id)) {
+          const r = rivalsObj[id];
+          if (r.id !== seller.id && (r.cash || 0) > 300_000_000) buyers.push(r);
+        }
+      }
+
       const buyer = buyers.length > 0 ? pick(buyers) : undefined;
       const bundleSize = Math.min(ownedAssets.length, 3 + Math.floor(secureRandom() * 4));
       const bundle = ownedAssets.slice(0, bundleSize);
