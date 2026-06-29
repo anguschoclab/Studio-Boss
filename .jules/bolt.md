@@ -95,3 +95,7 @@ I eliminated the duplicate iterations and the `Map` construction entirely. The e
 ## 2026-06-15 - Replace Object.values arrays with for...in loops in getLiveCounterBid
 **Learning:** `getLiveCounterBid` iterates over opportunity bids by creating arrays with `Object.values(opportunity.bids || {}).map(...)` and `Math.max(...)`. When called frequently inside the auction tick loops, this creates compounding garbage collection spikes.
 **Action:** Replace `Object.values().map()` chains with direct `for...in` loops to iterate over opportunity bids efficiently without creating intermediate arrays.
+
+## 2026-06-25 - Prevent nested array allocations during distress cascades
+**Learning:** `DistressCascade` heavily filters entities to find buyers for assets during bankruptcy events (e.g. `stage1IPFireSale`, `stage2Liquidation`). Calling `Object.values(state.entities.rivals).filter()` sequentially creates multiple intermediate array garbage overheads. During game simulation loops, these allocations cause performance spikes.
+**Action:** Replace `Object.values().filter()` chains with direct `for...in` loops to gather eligible entities (like buyers) into a single targeted array. Always wrap the logic inside an `Object.prototype.hasOwnProperty.call()` check to avoid prototype pollution and comply with static analysis.
