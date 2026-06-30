@@ -145,6 +145,7 @@ export const PostProductionModal: React.FC = () => {
             {/* Rush */}
             <button
               type="button"
+              aria-pressed={choice === 'rush'}
               onClick={() => setChoice(choice === 'rush' ? 'none' : 'rush')}
               className={cn(
                 'w-full glass-card hover-glow cursor-pointer p-3 rounded-none border-2 text-left transition-all duration-200',
@@ -168,6 +169,7 @@ export const PostProductionModal: React.FC = () => {
             {/* Extended cut */}
             <button
               type="button"
+              aria-pressed={choice === 'extended'}
               onClick={() => setChoice(choice === 'extended' ? 'none' : 'extended')}
               className={cn(
                 'w-full glass-card hover-glow cursor-pointer p-3 rounded-none border-2 text-left transition-all duration-200',

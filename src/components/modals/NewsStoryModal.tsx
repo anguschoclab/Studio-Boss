@@ -124,11 +124,12 @@ export const NewsStoryModal: React.FC<NewsStoryModalProps> = ({ headline, open, 
         
         <div className="p-8 border-t border-white/5 flex justify-end bg-black/40">
           <button 
+            aria-label="Dismiss intel and close window"
             onClick={onClose} 
             className="h-12 px-8 bg-white/5 border border-white/10 text-muted-foreground hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-all duration-700 font-black uppercase tracking-[0.4em] italic text-[10px] rounded-none group flex items-center gap-4"
           >
             DISMISS INTEL
-            <ArrowRight className="h-4 w-4 group-hover:translate-x-2 transition-transform duration-700" />
+            <ArrowRight aria-hidden="true" className="h-4 w-4 group-hover:translate-x-2 transition-transform duration-700" />
           </button>
         </div>
       </DialogContent>

@@ -133,6 +133,7 @@ export const ReleaseStrategyModal: React.FC = () => {
               <button
                 key={card.strategy}
                 type="button"
+                aria-pressed={isSelected}
                 onClick={() => setSelected(card.strategy)}
                 className={cn(
                   'glass-card hover-glow cursor-pointer p-4 rounded-none border-2 text-left transition-all duration-200',

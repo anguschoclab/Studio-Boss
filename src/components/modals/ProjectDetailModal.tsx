@@ -475,6 +475,7 @@ export const ProjectDetailModal = () => {
                      ].map(tier => (
                        <button
                          key={tier.id}
+                         aria-pressed={project.marketingLevel === tier.id || selectedTier === tier.id}
                          disabled={!!project.marketingLevel || (gameState ? gameState.finance.cash < tier.cost : false)}
                          onClick={() => setSelectedTier(tier.id as 'none' | 'basic' | 'blockbuster')}
                          className={cn(
