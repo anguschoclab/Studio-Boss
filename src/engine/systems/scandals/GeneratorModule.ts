@@ -14,15 +14,19 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
     uiNotifications: []
   };
   
-  const contractsList = Object.values(state.entities.contracts || {});
+  // ⚡ Bolt Optimization: Replaced Object.values() with a direct for...in loop to avoid large array allocations
+  const contractsDict = state.entities.contracts || {};
   const talentToProjectMap = new Map<string, string>();
-  for (const c of contractsList) {
-    talentToProjectMap.set(c.talentId, c.projectId);
+  let numContracts = 0;
+  for (const id in contractsDict) {
+    if (Object.prototype.hasOwnProperty.call(contractsDict, id)) {
+      const c = contractsDict[id];
+      talentToProjectMap.set(c.talentId, c.projectId);
+      numContracts++;
+    }
   }
   
   const studioProjects = state.entities.projects || {};
-
-  const numContracts = contractsList.length;
   const studioProjectsCount = Object.keys(studioProjects).length;
   const sizeModifier = 1.0 + (numContracts * 0.50) + (studioProjectsCount * 0.75);
 

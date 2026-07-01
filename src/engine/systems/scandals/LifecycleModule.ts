@@ -16,11 +16,15 @@ export function advanceScandals(state: GameState): StateImpact[] {
     }
   }
   
-  const contractsList = Object.values(state.entities.contracts || {});
+  // ⚡ Bolt Optimization: Replaced Object.values() with a direct for...in loop to avoid large array allocations
+  const contractsDict = state.entities.contracts || {};
   const penalizedProjectIds = new Set<string>();
-  for (const c of contractsList) {
-    if (activeScandalTalent.has(c.talentId)) {
-      penalizedProjectIds.add(c.projectId);
+  for (const id in contractsDict) {
+    if (Object.prototype.hasOwnProperty.call(contractsDict, id)) {
+      const c = contractsDict[id];
+      if (activeScandalTalent.has(c.talentId)) {
+        penalizedProjectIds.add(c.projectId);
+      }
     }
   }
   
