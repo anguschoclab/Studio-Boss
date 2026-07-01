@@ -95,3 +95,6 @@ I eliminated the duplicate iterations and the `Map` construction entirely. The e
 ## 2026-06-15 - Replace Object.values arrays with for...in loops in getLiveCounterBid
 **Learning:** `getLiveCounterBid` iterates over opportunity bids by creating arrays with `Object.values(opportunity.bids || {}).map(...)` and `Math.max(...)`. When called frequently inside the auction tick loops, this creates compounding garbage collection spikes.
 **Action:** Replace `Object.values().map()` chains with direct `for...in` loops to iterate over opportunity bids efficiently without creating intermediate arrays.
+## 2024-07-01 - Avoid Object.values() for Entity Dictionaries in Hot Loops
+**Learning:** In the game state architecture, retrieving all entities (like contracts) via `Object.values(state.entities.X)` inside high-frequency game ticks (e.g. `advanceScandals`, `generateScandals`) allocates huge intermediate arrays causing severe Garbage Collection pressure and O(N) penalties.
+**Action:** Iterate directly using `for...in` loops and explicitly access properties (e.g., `const id in dict; const item = dict[id];`) to drastically reduce overhead.
