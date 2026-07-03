@@ -418,7 +418,7 @@ export const ProjectDetailModal = () => {
                                   
                                   {(project.state === 'development' || project.state === 'needs_greenlight') && (
                                     <Select onValueChange={(val) => val && gameState && gameState.finance.cash >= (talentMap.get(val)?.fee || 0) && signContract(val, project.id)}>
-                                      <SelectTrigger className="w-[180px] bg-black/60 border-slate-700 h-10 text-xs font-bold uppercase tracking-widest"><SelectValue placeholder="Cast Role..." /></SelectTrigger>
+                                      <SelectTrigger aria-label="Cast Role" className="w-[180px] bg-black/60 border-slate-700 h-10 text-xs font-bold uppercase tracking-widest"><SelectValue placeholder="Cast Role..." /></SelectTrigger>
                                       <SelectContent className="bg-black border-white/5 text-slate-200">
                                         {group.available.map(t => (
                                           <SelectItem 
@@ -556,7 +556,7 @@ export const ProjectDetailModal = () => {
                       
                       <div className="space-y-4">
                         <Select onValueChange={(v) => { submitToFestival(project.id, v as AwardBody); selectProject(null); }}>
-                          <SelectTrigger className="h-12 bg-black border-white/5 text-xs font-black uppercase tracking-widest"><SelectValue placeholder="Festival Submission..." /></SelectTrigger>
+                          <SelectTrigger aria-label="Festival Submission" className="h-12 bg-black border-white/5 text-xs font-black uppercase tracking-widest"><SelectValue placeholder="Festival Submission..." /></SelectTrigger>
                           <SelectContent className="bg-black border-white/5 text-slate-200">
                              {FESTIVALS.map(f => <SelectItem key={f.body} value={f.body} className="font-bold flex items-center">
                                {f.name} <span className="ml-2 text-emerald-400">({formatMoney(f.cost)})</span>

@@ -127,7 +127,7 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
                 </label>
               </TooltipWrapper>
               <Select value={angle} onValueChange={(v) => setAngle(v as MarketingAngle)}>
-                <SelectTrigger className="w-full bg-white/5 border-white/10">
+                <SelectTrigger aria-label="Select Angle" className="w-full bg-white/5 border-white/10">
                   <SelectValue placeholder="Select Angle" />
                 </SelectTrigger>
                 <SelectContent>
