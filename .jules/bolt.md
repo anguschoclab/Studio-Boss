@@ -95,3 +95,7 @@ I eliminated the duplicate iterations and the `Map` construction entirely. The e
 ## 2026-06-15 - Replace Object.values arrays with for...in loops in getLiveCounterBid
 **Learning:** `getLiveCounterBid` iterates over opportunity bids by creating arrays with `Object.values(opportunity.bids || {}).map(...)` and `Math.max(...)`. When called frequently inside the auction tick loops, this creates compounding garbage collection spikes.
 **Action:** Replace `Object.values().map()` chains with direct `for...in` loops to iterate over opportunity bids efficiently without creating intermediate arrays.
+
+## 2026-06-25 - Replace Object.values arrays with for...in loops in WorldSimulator
+**Learning:** High-frequency event generation loops like `tickWorldEvents` cause significant garbage collection pressure when calling `Object.values()` coupled with array methods (`forEach`) to iterate over GameState entities, creating intermediate O(N) array allocation overhead per tick.
+**Action:** Replace `Object.values` chained functions with direct `for...in` loops to iterate over state entities (`projects`) efficiently without creating intermediate arrays, reducing time complexity and eliminating GC pressure.

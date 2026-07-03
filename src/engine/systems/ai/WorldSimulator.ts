@@ -7,22 +7,26 @@ import { RandomGenerator } from '../../utils/rng';
  */
 export function tickWorldEvents(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const projects = Object.values(state.entities.projects || {});
+  const projectsDict = state.entities.projects || {};
 
   // 1. Poison the Well: Genre Saturation
-  projects.forEach(project => {
-    if (project.state === 'released' && project.weeksInPhase === 1) {
-      if (rng.next() < 0.25) {
-        impacts.push({
-          type: 'NEWS_ADDED',
-          payload: {
-            headline: `MARKET SATURATION: The success of ${project.title} has flooded the ${project.genre} market.`,
-            description: `Analysts are warning of potential genre fatigue in the ${project.genre} space following the blockbuster debut of "${project.title}".`,
-          }
-        });
+  // ⚡ Bolt Optimization: Replaced Object.values().forEach() with direct for...in loop
+  for (const id in projectsDict) {
+    if (Object.prototype.hasOwnProperty.call(projectsDict, id)) {
+      const project = projectsDict[id];
+      if (project.state === 'released' && project.weeksInPhase === 1) {
+        if (rng.next() < 0.25) {
+          impacts.push({
+            type: 'NEWS_ADDED',
+            payload: {
+              headline: `MARKET SATURATION: The success of ${project.title} has flooded the ${project.genre} market.`,
+              description: `Analysts are warning of potential genre fatigue in the ${project.genre} space following the blockbuster debut of "${project.title}".`,
+            }
+          });
+        }
       }
     }
-  });
+  }
 
   // 2. Star Meter & Talent Momentum
   const talentsMap = state.entities.talents || {};
