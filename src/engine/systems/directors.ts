@@ -16,10 +16,19 @@ export interface DirectorDispute {
  * Checks if the director for a given project has final cut / creative control.
  */
 export function hasCreativeControl(projectId: string, state: GameState): boolean {
-  const directorContract = Object.values(state.entities?.contracts || {}).find(
-    (c) =>
-      c.projectId === projectId && state.entities?.talents?.[c.talentId]?.roles.includes("director")
-  );
+  // ⚡ Bolt Optimization: Replaced Object.values().find() with a direct for...in loop
+  // to eliminate O(N) array allocation overhead on every function call.
+  const contracts = state.entities?.contracts || {};
+  let directorContract = null;
+  for (const key in contracts) {
+    if (Object.prototype.hasOwnProperty.call(contracts, key)) {
+      const c = contracts[key];
+      if (c.projectId === projectId && state.entities?.talents?.[c.talentId]?.roles.includes("director")) {
+        directorContract = c;
+        break;
+      }
+    }
+  }
 
   if (!directorContract) return false;
   return !!directorContract.creativeControl;
