@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand';
 import { GameStore } from '../gameStore';
-import { Opportunity, CharacterArchetype, StateImpact } from '@/engine/types';
+import { Opportunity, CharacterArchetype, StateImpact, RivalStudio } from '@/engine/types';
 import { type ProjectId, type OpportunityId, type StudioId, type TalentId, type ContractId } from '@/engine/types/shared.types';
 import { buildProjectAndContracts, CreateProjectParams, applyStateImpact } from '../storeUtils';
 import { calculateLiveCounterBid } from '@/engine/systems/ai/biddingEngine';
@@ -121,7 +121,13 @@ export const createTalentMarketplaceSlice: StateCreator<GameStore, [], [], Talen
       };
 
       const rng = new RandomGenerator(state.rngState);
-      const aggressiveRivals = Object.values(state.entities.rivals).filter(r => r.cash > amount * 1.5 && r.prestige > 40);
+      const aggressiveRivals: RivalStudio[] = [];
+      for (const rId in state.entities.rivals) {
+        const r = state.entities.rivals[rId];
+        if (r.cash > amount * 1.5 && r.prestige > 40) {
+          aggressiveRivals.push(r);
+        }
+      }
       
       if (aggressiveRivals.length > 0) {
         const rivalIdx = Math.floor(rng.next() * aggressiveRivals.length);

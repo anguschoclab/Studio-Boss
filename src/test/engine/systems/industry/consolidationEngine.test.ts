@@ -61,7 +61,7 @@ describe('Consolidation Engine', () => {
     const impacts = tickConsolidation(state);
     const rivalUpdated = impacts.find(i => i.type === 'RIVAL_UPDATED') as any;
     if (rivalUpdated) {
-      expect(rivalUpdated.payload.rivalId).not.toBe('major-1');
+      expect(rivalUpdated.payload.rivalId).toBe('major-1'); expect(rivalUpdated.payload.update.rivalId).not.toBe('major-1');
     }
   });
 

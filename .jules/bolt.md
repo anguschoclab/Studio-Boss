@@ -95,3 +95,23 @@ I eliminated the duplicate iterations and the `Map` construction entirely. The e
 ## 2026-06-15 - Replace Object.values arrays with for...in loops in getLiveCounterBid
 **Learning:** `getLiveCounterBid` iterates over opportunity bids by creating arrays with `Object.values(opportunity.bids || {}).map(...)` and `Math.max(...)`. When called frequently inside the auction tick loops, this creates compounding garbage collection spikes.
 **Action:** Replace `Object.values().map()` chains with direct `for...in` loops to iterate over opportunity bids efficiently without creating intermediate arrays.
+
+## 2026-06-21 - Replace Object.values with for...in loops in TalentDiscoverySystem
+**Learning:** `tickTalentDiscoverySystem` was generating arrays on every game tick by calling `Object.values()` coupled with array methods (`filter`, `map`) on state records (like `projects`, `contracts`, `talents`, and `guestStarBookings`). Iterating and filtering the `contracts` array for every project inside an outer loop caused an O(N*M) nested bottleneck that generated severe garbage collection spikes.
+**Action:** Replaced `Object.values().filter()` chains with direct `for...in` loops. Additionally, pre-grouped `contracts` by `projectId` before entering the projects loop to convert O(N) internal array filters into O(1) dictionary lookups.
+
+## 2026-06-25 - Replace Object.values arrays with for...in loops in WorldSimulator
+**Learning:** High-frequency event generation loops like `tickWorldEvents` cause significant garbage collection pressure when calling `Object.values()` coupled with array methods (`forEach`) to iterate over GameState entities, creating intermediate O(N) array allocation overhead per tick.
+**Action:** Replace `Object.values` chained functions with direct `for...in` loops to iterate over state entities (`projects`) efficiently without creating intermediate arrays, reducing time complexity and eliminating GC pressure.
+
+## 2026-06-25 - Prevent nested array allocations during distress cascades
+**Learning:** `DistressCascade` heavily filters entities to find buyers for assets during bankruptcy events (e.g. `stage1IPFireSale`, `stage2Liquidation`). Calling `Object.values(state.entities.rivals).filter()` sequentially creates multiple intermediate array garbage overheads. During game simulation loops, these allocations cause performance spikes.
+**Action:** Replace `Object.values().filter()` chains with direct `for...in` loops to gather eligible entities (like buyers) into a single targeted array. Always wrap the logic inside an `Object.prototype.hasOwnProperty.call()` check to avoid prototype pollution and comply with static analysis.
+
+## 2026-06-26 - Eliminate Object.values chained allocations in Zustand slices
+**Learning:** Checking aggregate conditions in Zustand store slices (like finding genre saturation, aggressive rivals, or project contracts) by using `Object.values(state).filter()` creates unnecessary O(N) array allocation.
+**Action:** Replace `Object.values().filter()` chained methods with in-place `for...in` loops to evaluate state without creating intermediate arrays, reducing garbage collection spikes.
+
+## 2024-07-01 - Avoid Object.values() for Entity Dictionaries in Hot Loops
+**Learning:** In the game state architecture, retrieving all entities (like contracts) via `Object.values(state.entities.X)` inside high-frequency game ticks (e.g. `advanceScandals`, `generateScandals`) allocates huge intermediate arrays causing severe Garbage Collection pressure and O(N) penalties.
+**Action:** Iterate directly using `for...in` loops and explicitly access properties (e.g., `const id in dict; const item = dict[id];`) to drastically reduce overhead.

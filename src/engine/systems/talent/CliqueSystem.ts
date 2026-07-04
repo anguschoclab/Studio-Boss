@@ -136,11 +136,15 @@ function findPotentialCliques(state: GameState, rng: RandomGenerator): string[][
 
       // Check if this exact clique already exists
       const cliquesRecord = (state.relationships as unknown as { cliques?: { cliques?: Record<string, Clique> } })?.cliques?.cliques || {};
-      const existingCliques = Object.values(cliquesRecord);
-      const alreadyExists = existingCliques.some(c =>
-        c.members.length === sortedIds.length &&
-        c.members.every(id => sortedIds.includes(id))
-      );
+      let alreadyExists = false;
+      for (const cliqueId in cliquesRecord) {
+        if (!Object.prototype.hasOwnProperty.call(cliquesRecord, cliqueId)) continue;
+        const c = cliquesRecord[cliqueId];
+        if (c.members.length === sortedIds.length && c.members.every(id => sortedIds.includes(id))) {
+          alreadyExists = true;
+          break;
+        }
+      }
 
       if (!alreadyExists) {
         potentialCliques.push(sortedIds);
@@ -377,9 +381,11 @@ export function tickCliqueSystem(state: GameState, rng: RandomGenerator): StateI
   }
 
   // 2. Evolve existing cliques
-  const existingCliques = Object.values((state.relationships as unknown as { cliques?: { cliques?: Record<string, Clique> } })?.cliques?.cliques || {}) as Clique[];
+  const cliquesRecord = (state.relationships as unknown as { cliques?: { cliques?: Record<string, Clique> } })?.cliques?.cliques || {};
 
-  for (const clique of existingCliques) {
+  for (const cliqueId in cliquesRecord) {
+    if (!Object.prototype.hasOwnProperty.call(cliquesRecord, cliqueId)) continue;
+    const clique = cliquesRecord[cliqueId];
     if (rng.next() < 0.3) { // 30% chance to evolve each clique per week
       const { updated, impacts: evolutionImpacts } = evolveClique(clique, state, rng);
 
@@ -404,16 +410,20 @@ export function tickCliqueSystem(state: GameState, rng: RandomGenerator): StateI
  * Get fame bonus for a talent based on clique membership
  */
 export function getCliqueFameBonus(talentId: string, state: GameState): number {
-  const cliques = Object.values((state.relationships as unknown as { cliques?: { cliques?: Record<string, Clique> } })?.cliques?.cliques || {}) as Clique[];
+  const cliquesRecord = (state.relationships as unknown as { cliques?: { cliques?: Record<string, Clique> } })?.cliques?.cliques || {};
 
-  const memberCliques = cliques.filter(c =>
-    c.status === 'active' && c.members.includes(talentId)
-  );
+  let maxBonus = 0;
+  for (const cliqueId in cliquesRecord) {
+    if (!Object.prototype.hasOwnProperty.call(cliquesRecord, cliqueId)) continue;
+    const c = cliquesRecord[cliqueId];
+    if (c.status === 'active' && c.members.includes(talentId)) {
+      if (c.fameBonus > maxBonus) {
+        maxBonus = c.fameBonus;
+      }
+    }
+  }
 
-  if (memberCliques.length === 0) return 0;
-
-  // Return the highest fame bonus from any clique
-  return Math.max(...memberCliques.map(c => c.fameBonus));
+  return maxBonus;
 }
 
 /**

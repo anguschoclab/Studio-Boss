@@ -3,9 +3,7 @@ import { RandomGenerator } from '../../utils/rng';
 import {
   BreakoutStar,
   BreakoutTrigger,
-  GuestStarBooking,
   HiddenTalent,
-  DiscoveryEvent,
 } from '../../types/discovery.types';
 import { checkForBreakout } from './discovery/BreakoutStarEngine';
 import { generateGuestStarBooking } from './discovery/GuestStarEngine';
@@ -32,21 +30,29 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
   const impacts: StateImpact[] = [];
 
   // 1. Check for breakout stars from recent releases
-  const recentProjects = Object.values(state.entities.projects || {})
-    .filter(p => {
-      const releaseWeek = p.releaseWeek;
-      return releaseWeek && state.week - releaseWeek >= 0 && state.week - releaseWeek <= 4;
-    });
+  const contractsByProject: Record<string, string[]> = {};
+  const contractsDict = state.entities.contracts || {};
+  for (const cId in contractsDict) {
+    const c = contractsDict[cId];
+    if (!contractsByProject[c.projectId]) {
+      contractsByProject[c.projectId] = [];
+    }
+    contractsByProject[c.projectId].push(c.talentId);
+  }
 
-  for (const project of recentProjects) {
-    // Get cast
-    const projectContracts = Object.values(state.entities.contracts || {})
-      .filter(c => c.projectId === project.id);
-    const talents = projectContracts
-      .map(c => state.entities.talents?.[c.talentId])
-      .filter((t): t is Talent => !!t);
+  const projectsDict = state.entities.projects || {};
+  for (const pId in projectsDict) {
+    const project = projectsDict[pId];
+    const releaseWeek = project.releaseWeek;
+    if (!(releaseWeek && state.week - releaseWeek >= 0 && state.week - releaseWeek <= 4)) {
+      continue;
+    }
 
-    for (const talent of talents) {
+    const talentIds = contractsByProject[project.id] || [];
+
+    for (const tId of talentIds) {
+      const talent = state.entities.talents?.[tId];
+      if (!talent) continue;
       const breakout = checkForBreakout(talent, project, state, rng);
 
       if (breakout) {
@@ -109,22 +115,40 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
   }
 
   // 2. Check for guest star opportunities on TV series
-  const activeSeries = Object.values(state.entities.projects || {})
-    .filter(p => p.type === 'SERIES' && p.state === 'released');
+  const activeSeries: Project[] = [];
+  for (const pId in projectsDict) {
+    const p = projectsDict[pId];
+    if (p.type === 'SERIES' && p.state === 'released') {
+      activeSeries.push(p);
+    }
+  }
 
   // Get guest star candidates (famous but not lead cast)
-  const guestCandidates = Object.values(state.entities.talents || {})
-    .filter(t => (t.starMeter || 50) >= MIN_STARMETER_FOR_GUEST && t.tier <= 2);
+  const guestCandidates: Talent[] = [];
+  const talentsDict = state.entities.talents || {};
+  for (const tId in talentsDict) {
+    const t = talentsDict[tId];
+    if ((t.starMeter || 50) >= MIN_STARMETER_FOR_GUEST && t.tier <= 2) {
+      guestCandidates.push(t);
+    }
+  }
 
   for (const series of activeSeries) {
     if (rng.next() < GUEST_STAR_CHANCE && guestCandidates.length > 0) {
       const guest = rng.pick(guestCandidates);
 
       // Check if already booked
-      const existingBookings = Object.values(state.relationships.discovery?.guestStarBookings || {})
-        .filter((b) => b.talentId === guest.id && b.seriesId === series.id);
+      let alreadyBooked = false;
+      const bookingsDict = state.relationships.discovery?.guestStarBookings || {};
+      for (const bId in bookingsDict) {
+        const b = bookingsDict[bId];
+        if (b && b.talentId === guest.id && b.seriesId === series.id) {
+          alreadyBooked = true;
+          break;
+        }
+      }
 
-      if (existingBookings.length === 0) {
+      if (!alreadyBooked) {
         const booking = generateGuestStarBooking(series, guest, state, rng);
 
         if (booking) {
@@ -134,7 +158,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
               booking,
               notification: `${guest.name} available for guest appearance on "${series.title}"`,
             },
-          } as any);
+          } as unknown as StateImpact);
 
           // News about exciting casting
           impacts.push({
@@ -179,12 +203,16 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
   // 4. Hidden talent discovery
   // Studios can discover hidden talent
   if (rng.next() < DISCOVERY_CHANCE) {
-    const undiscovered = Object.values(hiddenPool)
-      .filter(h => !h.discoveredBy);
+    const undiscovered: HiddenTalent[] = [];
+    for (const hId in hiddenPool) {
+      if (!hiddenPool[hId].discoveredBy) {
+        undiscovered.push(hiddenPool[hId]);
+      }
+    }
 
     if (undiscovered.length > 0) {
       const toDiscover = rng.pick(undiscovered);
-      const { talent, event } = discoverHiddenTalent(
+      const { talent } = discoverHiddenTalent(
         { ...toDiscover, discoveredBy: 'player', discoveryWeek: state.week },
         'player',
         state.week,
@@ -235,8 +263,9 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
   }
 
   // 5. Update existing breakout stars
-  const existingBreakouts = Object.values(discoveryState.breakoutStars || {}) as BreakoutStar[];
-  for (const breakout of existingBreakouts) {
+  const breakoutsDict = discoveryState.breakoutStars || {};
+  for (const bId in breakoutsDict) {
+    const breakout = breakoutsDict[bId] as BreakoutStar;
     if (breakout.hypeWeeksRemaining > 0) {
       const updatedBreakout: BreakoutStar = {
         ...breakout,

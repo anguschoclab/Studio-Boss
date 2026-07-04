@@ -204,14 +204,35 @@ export function stage1IPFireSale(
 
   // Need either a named franchise or vault asset to sell. Otherwise skip Stage 1 —
   // distressed rivals with no concrete IP fall through to Stage 2 liquidation.
-  const ownedFranchises = Object.values(state.ip?.franchises || {}).filter(
-    (f: any) => f.ownerId === seller.id
-  );
-  const ownedAssets = (state.ip?.vault || []).filter(a => a.ownerStudioId === (seller.id as any));
+  const ownedFranchises: any[] = [];
+  const franchisesDict = state.ip?.franchises || {};
+  for (const id in franchisesDict) {
+    if (Object.prototype.hasOwnProperty.call(franchisesDict, id)) {
+      if ((franchisesDict[id] as any).ownerId === seller.id) {
+        ownedFranchises.push(franchisesDict[id]);
+      }
+    }
+  }
+
+  const ownedAssets: any[] = [];
+  const vaultArr = state.ip?.vault || [];
+  for (let i = 0; i < vaultArr.length; i++) {
+    if (vaultArr[i].ownerStudioId === (seller.id as any)) {
+      ownedAssets.push(vaultArr[i]);
+    }
+  }
   if (ownedFranchises.length === 0 && ownedAssets.length === 0) return impacts;
 
-  const rivals = Object.values(state.entities.rivals || {});
-  const buyers = rivals.filter(r => r.id !== seller.id && (r.cash || 0) > 500_000_000);
+  const buyers: any[] = [];
+  const rivalsDict = state.entities.rivals || {};
+  for (const id in rivalsDict) {
+    if (Object.prototype.hasOwnProperty.call(rivalsDict, id)) {
+      const r = rivalsDict[id];
+      if (r.id !== seller.id && (r.cash || 0) > 500_000_000) {
+        buyers.push(r);
+      }
+    }
+  }
   if (buyers.length === 0) return impacts;
 
   const buyer = pick(buyers);
@@ -435,10 +456,22 @@ function stage2AssetLiquidation(state: GameState, seller: RivalStudio): StateImp
   if (roll < 0.78) {
     // Library / back-catalog sale — flip future streaming & ancillary revenue on released titles
     // to a rival or financial buyer for a lump sum. Those IP assets transfer ownership.
-    const ownedAssets = (state.ip?.vault || []).filter(a => a.ownerStudioId === (seller.id as any));
+    const vaultArr = state.ip?.vault || [];
+    const ownedAssets: any[] = [];
+    for (let i = 0; i < vaultArr.length; i++) {
+      if (vaultArr[i].ownerStudioId === (seller.id as any)) {
+        ownedAssets.push(vaultArr[i]);
+      }
+    }
     if (ownedAssets.length >= 2) {
-      const rivals = Object.values(state.entities.rivals || {});
-      const buyers = rivals.filter(r => r.id !== seller.id && (r.cash || 0) > 300_000_000);
+      const buyers: any[] = [];
+      const rivalsDict = state.entities.rivals || {};
+      for (const id in rivalsDict) {
+        if (Object.prototype.hasOwnProperty.call(rivalsDict, id)) {
+          const r = rivalsDict[id];
+          if (r.id !== seller.id && (r.cash || 0) > 300_000_000) buyers.push(r);
+        }
+      }
       const buyer = buyers.length > 0 ? pick(buyers) : undefined;
       const bundleSize = Math.min(ownedAssets.length, 3 + Math.floor(secureRandom() * 4));
       const bundle = ownedAssets.slice(0, bundleSize);
@@ -446,9 +479,16 @@ function stage2AssetLiquidation(state: GameState, seller: RivalStudio): StateImp
       const prestigeMult = 0.8 + (seller.prestige || 30) / 100;
       const proceeds = Math.max(100_000_000, Math.min(500_000_000, Math.round(rawValue * 0.45 * prestigeMult)));
       const buyerIdForVault = (buyer?.id as any);
-      const newVault = (state.ip.vault || []).map(a =>
-        bundle.find(b => b.id === a.id) ? { ...a, ownerStudioId: buyerIdForVault } : a
-      );
+      const bundleIds = new Set(bundle.map((b: any) => b.id));
+      const newVault: any[] = [];
+      for (let i = 0; i < vaultArr.length; i++) {
+        const a = vaultArr[i];
+        if (bundleIds.has(a.id)) {
+          newVault.push({ ...a, ownerStudioId: buyerIdForVault });
+        } else {
+          newVault.push(a);
+        }
+      }
       impacts.push({ type: 'INDUSTRY_UPDATE', payload: { update: { 'ip.vault': newVault } } as any });
       impacts.push({
         type: 'RIVAL_UPDATED',
