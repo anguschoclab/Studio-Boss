@@ -109,7 +109,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
                 toggleBookmark(project.id, 'project');
               }}
               className={cn(
-                "h-8 w-8 flex items-center justify-center border transition-all duration-700 rounded-none",
+                "h-8 w-8 flex items-center justify-center border transition-all duration-700 rounded-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black",
                 isBookmarked(project.id, 'project')
                   ? "bg-primary/10 border-primary/40 text-primary shadow-[0_0_15px_rgba(var(--primary),0.2)]"
                   : "bg-white/5 border-white/10 text-muted-foreground/40 hover:text-primary hover:border-primary/40"
