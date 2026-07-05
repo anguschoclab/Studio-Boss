@@ -12,3 +12,7 @@
 **Vulnerability:** Weak CSP lacking defense-in-depth directives for object, base-uri, and form-action.
 **Learning:** Even static/frontend-only React apps need strict CSP directives to prevent class of attacks like Base Tag Hijacking and Object Injection, regardless of framework escaping.
 **Prevention:** Always include `object-src 'none'; base-uri 'self'; form-action 'self';` in baseline CSPs for web applications.
+## 2025-05-01 - Add Secure flag to sidebar cookie
+**Vulnerability:** Client-side cookie set without the Secure attribute
+**Learning:** Client-side cookies without the Secure attribute can be transmitted over unencrypted connections, risking interception.
+**Prevention:** Always append the `; Secure` attribute when setting `document.cookie` manually.
