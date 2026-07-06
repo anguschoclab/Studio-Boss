@@ -65,13 +65,13 @@ export const PipelineBoard = () => {
             aria-label="Show bookmarks only"
             onClick={() => setShowBookmarksOnly((v) => !v)}
             className={cn(
-              "h-12 w-12 flex items-center justify-center border transition-all duration-700 rounded-none",
+              "h-12 w-12 flex items-center justify-center border transition-all duration-700 rounded-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black",
               showBookmarksOnly
                 ? "bg-primary/10 border-primary/40 text-primary shadow-[0_0_15px_rgba(var(--primary),0.2)]"
                 : "bg-white/5 border-white/5 text-muted-foreground/40 hover:text-primary hover:border-primary/40"
             )}
           >
-            <Bookmark className="h-5 w-5" strokeWidth={2} />
+            <Bookmark className="h-5 w-5" strokeWidth={2} aria-hidden="true" />
           </button>
           <Button 
             onClick={openCreateProject} 
