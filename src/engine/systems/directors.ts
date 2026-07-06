@@ -19,7 +19,7 @@ export function hasCreativeControl(projectId: string, state: GameState): boolean
   // ⚡ Bolt Optimization: Replaced Object.values().find() with a direct for...in loop
   // to eliminate O(N) array allocation overhead on every function call.
   const contracts = state.entities?.contracts || {};
-  let directorContract = null;
+  let directorContract: Contract | undefined = undefined;
   for (const key in contracts) {
     if (Object.prototype.hasOwnProperty.call(contracts, key)) {
       const c = contracts[key];
