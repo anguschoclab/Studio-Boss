@@ -1,20 +1,12 @@
 import { GameState, StateImpact, Talent, CareerTrajectory, TalentPersonality } from '../../types';
 import { RandomGenerator } from '../../utils/rng';
-import { TalentRelationship } from '../../types/relationship.types';
-import { BreakoutStar } from '../../types/discovery.types';
 import { Clique } from '../../types/clique.types';
-import { TVShowRecommendation } from '../../types/tv-recommendations.types';
 
 /**
  * Biography Generator System
  * Auto-generates and updates talent biographies based on life events,
  * relationships, cliques, breakouts, and career trajectory.
  */
-
-interface BioSection {
-  header: string;
-  content: string;
-}
 
 /**
  * Generate TV recommendations section
@@ -318,67 +310,85 @@ function generatePersonalitySection(talent: Talent): string {
 
 /**
  * Main biography tick - updates bios weekly
+ *
+ * ⚡ Bolt Optimization: Eliminated O(N*M) array allocations by pre-computing a Set
+ * of talents needing updates in a single O(M) pass across relationship/clique/scandal state,
+ * avoiding repeated expensive Object.values().filter() calls for every talent during the weekly tick.
  */
 export function tickBiographyGenerator(
   state: GameState,
   rng: RandomGenerator
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const talents = Object.values(state.entities.talents || {});
+  const talentsDict = state.entities.talents || {};
 
-  for (const talent of talents) {
-    // Only update bio if significant events occurred or bio is empty/default
-    const currentBio = talent.bio || '';
-    const isDefaultBio = currentBio.includes('Tier') && currentBio.includes('is a');
+  // Pre-calculate sets of IDs that need updates to avoid O(N*M) checks in the talent loop
+  const needsUpdateIds = new Set<string>();
 
-    // Check for triggers that warrant bio update
-    const shouldUpdate = isDefaultBio || shouldUpdateBio(talent, state);
+  // 1. Relationships formed recently
+  const relationshipsDict = state.relationships?.relationships || {};
+  for (const id in relationshipsDict) {
+    if (Object.prototype.hasOwnProperty.call(relationshipsDict, id)) {
+      const r = relationshipsDict[id];
+      if (r && r.formedWeek > state.week - 4) {
+        if (r.talentAId) needsUpdateIds.add(r.talentAId);
+        if (r.talentBId) needsUpdateIds.add(r.talentBId);
+      }
+    }
+  }
 
-    if (shouldUpdate) {
-      const newBio = generateBiography(talent, state, rng);
+  // 2. Clique memberships changed recently
+  const cliquesDict = state.relationships?.cliques?.cliques || {};
+  for (const id in cliquesDict) {
+    if (Object.prototype.hasOwnProperty.call(cliquesDict, id)) {
+      const c = cliquesDict[id];
+      if (c && c.formedWeek > state.week - 4 && c.memberIds) {
+        c.memberIds.forEach((mId: string) => needsUpdateIds.add(mId));
+      }
+    }
+  }
 
-      if (newBio !== currentBio) {
-        impacts.push({
-          type: 'TALENT_UPDATED',
-          payload: {
-            talentId: talent.id,
-            update: {
-              bio: newBio,
+  // 3. Active scandals
+  const scandalsDict = state.industry?.scandals || {};
+  for (const id in scandalsDict) {
+    if (Object.prototype.hasOwnProperty.call(scandalsDict, id)) {
+      const s = scandalsDict[id];
+      if (s && s.weeksRemaining > 0 && s.talentId) {
+        needsUpdateIds.add(s.talentId);
+      }
+    }
+  }
+
+  for (const talentId in talentsDict) {
+    if (Object.prototype.hasOwnProperty.call(talentsDict, talentId)) {
+      const talent = talentsDict[talentId];
+
+      // Only update bio if significant events occurred or bio is empty/default
+      const currentBio = talent.bio || '';
+      const isDefaultBio = currentBio.includes('Tier') && currentBio.includes('is a');
+
+      // Check for triggers that warrant bio update
+      const shouldUpdate = isDefaultBio || talent.isBreakout || needsUpdateIds.has(talent.id);
+
+      if (shouldUpdate) {
+        const newBio = generateBiography(talent, state, rng);
+
+        if (newBio !== currentBio) {
+          impacts.push({
+            type: 'TALENT_UPDATED',
+            payload: {
+              talentId: talent.id,
+              update: {
+                bio: newBio,
+              },
             },
-          },
-        });
+          });
+        }
       }
     }
   }
 
   return impacts;
-}
-
-/**
- * Determine if bio should be updated based on recent events
- */
-function shouldUpdateBio(talent: Talent, state: GameState): boolean {
-  // Update if breakout just happened
-  if (talent.isBreakout) return true;
-
-  // Update if relationship status changed recently
-  const relationships = Object.values(state.relationships?.relationships || {})
-    .filter((r) => (r.talentAId === talent.id || r.talentBId === talent.id) && r.formedWeek > state.week - 4);
-
-  if (relationships.length > 0) return true;
-
-  // Update if clique membership changed
-  const recentCliqueActivity = Object.values(state.relationships?.cliques?.cliques || {})
-    .some((c) => c.memberIds?.includes(talent.id) && c.formedWeek > state.week - 4);
-  if (recentCliqueActivity) return true;
-
-  // Update if major award won recently
-  // Update if scandal active
-  const activeScandal = Object.values(state.industry?.scandals || {})
-    .some((s) => s.talentId === talent.id && s.weeksRemaining > 0);
-  if (activeScandal) return true;
-
-  return false;
 }
 
 /**
@@ -388,6 +398,7 @@ export function generateEventBioUpdate(
   talent: Talent,
   eventType: 'breakout' | 'relationship' | 'clique' | 'award' | 'scandal',
   eventData: { type?: string; status?: string; partnerName?: string; cliqueName?: string },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   state: GameState
 ): string {
   const currentBio = talent.bio || '';
