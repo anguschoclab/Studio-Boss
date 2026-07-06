@@ -23,7 +23,7 @@ export function hasCreativeControl(projectId: string, state: GameState): boolean
   for (const key in contracts) {
     if (Object.prototype.hasOwnProperty.call(contracts, key)) {
       const c = contracts[key];
-      if (c.projectId === projectId && state.entities?.talents?.[c.talentId]?.roles.includes("director")) {
+      if (c.projectId === projectId && state.entities?.talents?.[c.talentId]?.roles?.includes("director")) {
         directorContract = c;
         break;
       }
