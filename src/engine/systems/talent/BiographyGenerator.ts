@@ -1,8 +1,11 @@
 import { GameState, StateImpact, Talent, CareerTrajectory, TalentPersonality } from '../../types';
 import { RandomGenerator } from '../../utils/rng';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { TalentRelationship } from '../../types/relationship.types';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { BreakoutStar } from '../../types/discovery.types';
 import { Clique } from '../../types/clique.types';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { TVShowRecommendation } from '../../types/tv-recommendations.types';
 
 /**
@@ -11,6 +14,7 @@ import { TVShowRecommendation } from '../../types/tv-recommendations.types';
  * relationships, cliques, breakouts, and career trajectory.
  */
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface BioSection {
   header: string;
   content: string;
@@ -326,13 +330,54 @@ export function tickBiographyGenerator(
   const impacts: StateImpact[] = [];
   const talents = Object.values(state.entities.talents || {});
 
+  // ⚡ Bolt Optimization: Pre-group dictionary lookups into single-pass Sets to prevent O(N*M) GC thrashing
+  const recentRelationships = new Set<string>();
+  const relDict = state.relationships?.relationships || {};
+  for (const key in relDict) {
+    if (Object.prototype.hasOwnProperty.call(relDict, key)) {
+      const r = relDict[key];
+      if (r.formedWeek > state.week - 4) {
+        recentRelationships.add(r.talentAId);
+        recentRelationships.add(r.talentBId);
+      }
+    }
+  }
+
+  const recentCliqueMembers = new Set<string>();
+  const cliquesDict = state.relationships?.cliques?.cliques || {};
+  for (const key in cliquesDict) {
+    if (Object.prototype.hasOwnProperty.call(cliquesDict, key)) {
+      const c = cliquesDict[key];
+      if (c.formedWeek > state.week - 4 && c.memberIds) {
+        for (const id of c.memberIds) {
+          recentCliqueMembers.add(id);
+        }
+      }
+    }
+  }
+
+  const activeScandals = new Set<string>();
+  const scandalsDict = state.industry?.scandals || {};
+  for (const key in scandalsDict) {
+    if (Object.prototype.hasOwnProperty.call(scandalsDict, key)) {
+      const s = scandalsDict[key];
+      if (s.weeksRemaining > 0) {
+        activeScandals.add(s.talentId);
+      }
+    }
+  }
+
   for (const talent of talents) {
     // Only update bio if significant events occurred or bio is empty/default
     const currentBio = talent.bio || '';
     const isDefaultBio = currentBio.includes('Tier') && currentBio.includes('is a');
 
     // Check for triggers that warrant bio update
-    const shouldUpdate = isDefaultBio || shouldUpdateBio(talent, state);
+    const shouldUpdate = isDefaultBio ||
+      talent.isBreakout ||
+      recentRelationships.has(talent.id) ||
+      recentCliqueMembers.has(talent.id) ||
+      activeScandals.has(talent.id);
 
     if (shouldUpdate) {
       const newBio = generateBiography(talent, state, rng);
@@ -355,39 +400,13 @@ export function tickBiographyGenerator(
 }
 
 /**
- * Determine if bio should be updated based on recent events
- */
-function shouldUpdateBio(talent: Talent, state: GameState): boolean {
-  // Update if breakout just happened
-  if (talent.isBreakout) return true;
-
-  // Update if relationship status changed recently
-  const relationships = Object.values(state.relationships?.relationships || {})
-    .filter((r) => (r.talentAId === talent.id || r.talentBId === talent.id) && r.formedWeek > state.week - 4);
-
-  if (relationships.length > 0) return true;
-
-  // Update if clique membership changed
-  const recentCliqueActivity = Object.values(state.relationships?.cliques?.cliques || {})
-    .some((c) => c.memberIds?.includes(talent.id) && c.formedWeek > state.week - 4);
-  if (recentCliqueActivity) return true;
-
-  // Update if major award won recently
-  // Update if scandal active
-  const activeScandal = Object.values(state.industry?.scandals || {})
-    .some((s) => s.talentId === talent.id && s.weeksRemaining > 0);
-  if (activeScandal) return true;
-
-  return false;
-}
-
-/**
  * Generate a brief bio update for a specific event
  */
 export function generateEventBioUpdate(
   talent: Talent,
   eventType: 'breakout' | 'relationship' | 'clique' | 'award' | 'scandal',
   eventData: { type?: string; status?: string; partnerName?: string; cliqueName?: string },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   state: GameState
 ): string {
   const currentBio = talent.bio || '';

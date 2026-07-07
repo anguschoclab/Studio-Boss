@@ -115,3 +115,6 @@ I eliminated the duplicate iterations and the `Map` construction entirely. The e
 ## 2024-07-01 - Avoid Object.values() for Entity Dictionaries in Hot Loops
 **Learning:** In the game state architecture, retrieving all entities (like contracts) via `Object.values(state.entities.X)` inside high-frequency game ticks (e.g. `advanceScandals`, `generateScandals`) allocates huge intermediate arrays causing severe Garbage Collection pressure and O(N) penalties.
 **Action:** Iterate directly using `for...in` loops and explicitly access properties (e.g., `const id in dict; const item = dict[id];`) to drastically reduce overhead.
+## 2026-07-07 - Pre-grouping dictionaries to fix O(N*M) GC thrashing in loops
+**Learning:** Checking for state updates inside high-frequency entity loops (like BiographyGenerator) using Object.values(state).filter() creates massive GC thrashing and O(N*M) complexity.
+**Action:** Always pre-group dictionary lookups into single-pass Sets (e.g. Set of talent IDs with recent relationship changes) OUTSIDE the loop, then use fast Set.has() checks inside.
