@@ -80,6 +80,8 @@ export interface MarketingCampaign {
   efficiencyMultiplier?: number; // Calculated at release (e.g., 0.5 = bomb, 1.5 = viral hit)
   weeksInMarketing?: number; // For decay calculation
   feedbackText?: string;
+  awareness?: number; // 0-100: accrued market awareness from weekly spend (set by tickMarketing)
+  shareOfVoice?: number; // 0-1: this campaign's share of total industry marketing spend this week
 }
 
 export interface BoxOfficeResult {

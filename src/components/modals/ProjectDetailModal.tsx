@@ -129,7 +129,15 @@ export const ProjectDetailModal = () => {
       if (t) acc.push(t);
       return acc;
     }, [] as Talent[]);
-    return evaluateGreenlight(project, gameState.finance.cash, attachedTalent);
+    return evaluateGreenlight(
+      project,
+      gameState.finance.cash,
+      attachedTalent,
+      gameState.week,
+      gameState.entities ? Object.values(gameState.entities.projects) : [],
+      contracts,
+      talentMap
+    );
   }, [project, gameState, contracts, talentMap]);
 
   const projectionData = useMemo(() => {

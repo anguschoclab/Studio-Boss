@@ -5,6 +5,7 @@ import { initializeGame } from '@/engine/core/gameInit';
 import { advanceWeek } from '@/engine/core/weekAdvance';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
 import { useUIStore, ModalType } from './uiStore';
+import { useSettingsStore } from './settingsStore';
 
 const EMPTY_FINANCE = { cash: 0, ledger: [] };
 const EMPTY_NEWS = { headlines: [] };
@@ -99,8 +100,11 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
       if (state.gameState === result.newState) return state; 
 
       // The Tech Supervisor: Queue the save in the decoupled while-loop worker
-      saveQueue.push(result.newState);
-      processSaveQueue();
+      // (unless autosave is disabled via settings — Plan 4).
+      if (useSettingsStore.getState().autosaveFrequency !== 'off') {
+        saveQueue.push(result.newState);
+        processSaveQueue();
+      }
       
       // The Tech Supervisor: Maintain strict object references for unchanged slices
       const newStateObj: Partial<GameStore> = { gameState: result.newState };

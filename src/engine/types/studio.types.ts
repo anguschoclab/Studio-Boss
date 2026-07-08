@@ -45,6 +45,9 @@ export interface RivalStudio {
   acquisitionTarget?: string;
   isAcquirable?: boolean;
   archetypeId?: string;
+  // Recent weekly revenue snapshots (box office + streaming + merch), used by
+  // the UI to show a rival's release track record.
+  revenueHistory?: { week: number; revenue: number; boxOffice: number }[];
 }
 
 export interface StudioCulture {
@@ -102,6 +105,7 @@ export interface GameState {
     trends?: GenreTrend[];
     activeMarketEvents?: MarketEvent[];
     buyers: Buyer[];
+    marketingIntensity?: number; // Total industry marketing spend this week (player + rivals); drives share-of-voice
   };
   industry: {
     families: Family[];

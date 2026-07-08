@@ -36,6 +36,7 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
   const [domesticBudget, setDomesticBudget] = useState(project?.marketingCampaign?.domesticBudget || 0);
   const [foreignBudget, setForeignBudget] = useState(project?.marketingCampaign?.foreignBudget || 0);
   const [angle, setAngle] = useState<MarketingAngle>(project?.marketingCampaign?.primaryAngle || 'SELL THE STORY');
+  const [secondaryAngle, setSecondaryAngle] = useState<MarketingAngle | undefined>(project?.marketingCampaign?.secondaryAngle);
 
   const totalMarketingBudget = domesticBudget + foreignBudget;
   const isOverBudget = totalMarketingBudget > studioCash;
@@ -61,6 +62,7 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
         domesticBudget,
         foreignBudget,
         primaryAngle: angle,
+        secondaryAngle,
         weeksInMarketing: project.marketingCampaign?.weeksInMarketing || 1
       }
     });
@@ -139,6 +141,30 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
                 </SelectContent>
               </Select>
             </div>
+
+            <div className="space-y-4">
+              <TooltipWrapper tooltip="A secondary creative message layered under the primary angle. Adds up to +30% of its fit bonus to campaign effectiveness (see marketing_mechanics.md §36.39.2)." side="right">
+                <label className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 cursor-help">
+                  <Target className="w-4 h-4" /> Secondary Angle (optional)
+                </label>
+              </TooltipWrapper>
+              <Select
+                value={secondaryAngle ?? '__none__'}
+                onValueChange={(v) => setSecondaryAngle(v === '__none__' ? undefined : (v as MarketingAngle))}
+              >
+                <SelectTrigger aria-label="Select Secondary Angle" className="w-full bg-white/5 border-white/10">
+                  <SelectValue placeholder="None" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__">None</SelectItem>
+                  <SelectItem value="SELL THE SPECTACLE">Sell the Spectacle</SelectItem>
+                  <SelectItem value="SELL THE STORY">Sell the Story</SelectItem>
+                  <SelectItem value="SELL THE STARS">Sell the Stars</SelectItem>
+                  <SelectItem value="FAMILY ADVENTURE">Family Adventure</SelectItem>
+                  <SelectItem value="AWARDS PUSH">Awards Push</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* Projections & Feedback */}
@@ -155,6 +181,28 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
                 </span>
               </div>
               <Progress value={efficiencyPreview.multiplier * 50} className="h-2" />
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <TooltipWrapper tooltip="Projected market awareness after one more week of this campaign, before competitive share-of-voice. Drives opening-week gross at release." side="top">
+                  <h4 className="text-sm font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2 cursor-help">
+                    <Zap className="w-4 h-4" /> Projected Awareness
+                  </h4>
+                </TooltipWrapper>
+                <span className="text-xl font-black text-sky-400">
+                  {Math.round(
+                    Math.min(
+                      100,
+                      (project.awareness ?? 0) +
+                        ((totalMarketingBudget / Math.max(1, project.marketingCampaign?.weeksInMarketing || 1)) / 1_000_000) *
+                          1.2 *
+                          efficiencyPreview.multiplier
+                    )
+                  )}%
+                </span>
+              </div>
+              <Progress value={Math.min(100, (project.awareness ?? 0) + ((totalMarketingBudget / Math.max(1, project.marketingCampaign?.weeksInMarketing || 1)) / 1_000_000) * 1.2 * efficiencyPreview.multiplier)} className="h-2" />
             </div>
 
             <div className="p-4 rounded bg-black/40 border border-white/5">

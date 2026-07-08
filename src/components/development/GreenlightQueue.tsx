@@ -8,6 +8,7 @@ import { tokens } from '@/lib/tokens';
 import type { Project } from '@/engine/types';
 import type { Contract } from '@/engine/types/talent.types';
 import type { Talent } from '@/engine/types/talent.types';
+import { roleCompletenessScore, scheduleCertainty } from '@/engine/systems/greenlight';
 
 interface GreenlightQueueProps {
   projects: Project[];
@@ -20,50 +21,12 @@ interface GreenlightQueueProps {
   talents?: Record<string, Talent>;
 }
 
-// ── Role Completeness helpers ──────────────────────────────────────────────
-
-/**
- * Calculates how many of the 3 required creative roles (director, lead actor,
- * writer) are filled for a project. Matches are resolved via the talent's
- * primary `role` field, cross-referenced through the contracts dict.
- *
- * Returns a value 0–100.
- */
-function roleCompletenessScore(
-  projectId: string,
-  contracts: Record<string, Contract>,
-  talents: Record<string, Talent>
-): number {
-  const projectContracts = Object.values(contracts).filter(c => c.projectId === projectId);
-  const attachedRoles = new Set(
-    projectContracts
-      .map(c => talents[c.talentId]?.role?.toLowerCase() ?? '')
-      .filter(Boolean)
-  );
-
-  let filled = 0;
-  if (attachedRoles.has('director'))                filled += 1;
-  if (attachedRoles.has('actor'))                   filled += 1; // lead_actor → actor role
-  if (attachedRoles.has('writer'))                  filled += 1;
-
-  return Math.round((filled / 3) * 100);
-}
+// ── Label helpers (UI-only; scoring lives in the engine) ───────────────────
 
 function roleCompletenessLabel(score: number): { label: string; color: string } {
   if (score >= 100) return { label: 'Fully Cast',    color: 'text-success' };
   if (score >= 67)  return { label: 'Missing Role',  color: 'text-warning' };
   return               { label: 'Incomplete',        color: 'text-destructive' };
-}
-
-// ── Schedule Certainty helpers ─────────────────────────────────────────────
-
-/**
- * Derives a 0–100 certainty score from budget vs production weeks.
- * Low budget + high week count = high risk = low certainty.
- */
-function scheduleCertainty(project: Project): number {
-  const weeks = project.productionWeeks || 1;
-  return Math.min(100, (project.budget / (weeks * 1_000_000)) * 50);
 }
 
 function scheduleCertaintyLabel(score: number): { label: string; color: string } {

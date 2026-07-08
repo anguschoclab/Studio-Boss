@@ -1,4 +1,4 @@
-import { Project, Talent } from '@/engine/types';
+import { Project, Talent, Contract } from '@/engine/types';
 
 export type GreenlightRecommendation =
   | 'Easy Greenlight'
@@ -12,6 +12,44 @@ export interface GreenlightReport {
   recommendation: GreenlightRecommendation;
   positives: string[];
   negatives: string[];
+  roleCompleteness: number; // 0-100: director + lead actor + writer filled
+  scheduleCertainty: number; // 0-100: budget vs production weeks risk
+}
+
+/**
+ * Role Completeness Score (Design Bible §35.13).
+ * Evaluates whether the three mandatory creative leadership slots — director,
+ * lead actor, writer — are filled. Returns 0–100.
+ */
+export function roleCompletenessScore(
+  projectId: string,
+  contracts: Record<string, Contract> | Contract[],
+  talents: Record<string, Talent>,
+): number {
+  const list = Array.isArray(contracts) ? contracts : Object.values(contracts);
+  const projectContracts = list.filter((c) => c.projectId === projectId);
+  const attachedRoles = new Set(
+    projectContracts
+      .map((c) => (talents[c.talentId]?.role ?? (talents[c.talentId] as any)?.roles?.[0] ?? '').toLowerCase())
+      .filter(Boolean),
+  );
+
+  let filled = 0;
+  if (attachedRoles.has('director')) filled += 1;
+  if (attachedRoles.has('actor') || attachedRoles.has('lead_actor')) filled += 1;
+  if (attachedRoles.has('writer')) filled += 1;
+
+  return Math.round((filled / 3) * 100);
+}
+
+/**
+ * Schedule Certainty (Design Bible §35.13).
+ * Low budget relative to production weeks = high risk = low certainty.
+ * Returns 0–100.
+ */
+export function scheduleCertainty(project: Project): number {
+  const weeks = project.productionWeeks || 1;
+  return Math.min(100, (project.budget / (weeks * 1_000_000)) * 50);
 }
 
 export function evaluateGreenlight(
@@ -19,7 +57,9 @@ export function evaluateGreenlight(
   cash: number,
   attachedTalent: Talent[],
   currentWeek: number = 0,
-  allProjects: Project[] = []
+  allProjects: Project[] = [],
+  contracts: Record<string, Contract> | Contract[] = [],
+  talents: Record<string, Talent> = {}
 ): GreenlightReport {
   let score = 50;
   const positives: string[] = [];
@@ -117,6 +157,30 @@ export function evaluateGreenlight(
     negatives.push('Very low market awareness/buzz.');
   }
 
+  // 4. Role Completeness (Design Bible §35.13)
+  const roleCompleteness = roleCompletenessScore(project.id, contracts, talents);
+  if (roleCompleteness < 100) {
+    const penalty = (100 - roleCompleteness) * 0.15;
+    score -= penalty;
+    if (roleCompleteness === 0) {
+      negatives.push('No creative leadership attached (director / lead / writer).');
+    } else {
+      negatives.push(`Incomplete creative package: ${roleCompleteness}% of key roles filled.`);
+    }
+  } else {
+    positives.push('Fully staffed creative package (director, lead, writer).');
+  }
+
+  // 5. Schedule Certainty (Design Bible §35.13)
+  const scheduleCertaintyScore = scheduleCertainty(project);
+  if (scheduleCertaintyScore > 70) {
+    score += 5;
+    positives.push('Schedule on solid footing — low production-risk profile.');
+  } else if (scheduleCertaintyScore < 40) {
+    score -= 10;
+    negatives.push('High schedule risk: thin budget relative to production weeks.');
+  }
+
   // Bound score
   score = Math.max(0, Math.min(100, score));
 
@@ -145,6 +209,8 @@ export function evaluateGreenlight(
     score,
     recommendation,
     positives,
-    negatives
+    negatives,
+    roleCompleteness,
+    scheduleCertainty: scheduleCertaintyScore
   };
 }

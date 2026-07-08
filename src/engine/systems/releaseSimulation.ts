@@ -114,6 +114,12 @@ export function calculateOpeningWeekend(
   const { multiplier, feedbackText } = evaluateMarketingEfficiency(project, campaign);
   effectiveGross *= multiplier;
 
+  // 2.1 Apply accrued awareness from the weekly marketing loop (MarketingSystem).
+  // Awareness 0 → 0.5x floor; awareness 100 → 1.0x. This closes the loop the
+  // old release-only multiplier left open: sustained campaigns now pay off.
+  const awareness = campaign?.awareness ?? project.awareness ?? 0;
+  effectiveGross *= 0.5 + (awareness / 200);
+
   // 2.5. Apply Genre-Specific Multiplier based on real-life profitability data
   // Research shows Adventure ($66.5B) and Action ($59.8B) are most profitable
   // Drama and Comedy are solid performers ($37.4B each)

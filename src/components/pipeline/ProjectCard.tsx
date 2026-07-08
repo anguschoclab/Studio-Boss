@@ -157,6 +157,34 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
             </TooltipWrapper>
           )}
 
+          {/* Awareness Indicator (marketing phase only) */}
+          {project.state === "marketing" && (
+            <TooltipWrapper tooltip="ACCUMULATED MARKET AWARENESS — built weekly from campaign spend (share-of-voice adjusted)" side="top">
+              <div className="space-y-3">
+                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 group-hover:text-muted-foreground/60 transition-all duration-700 italic">
+                  <span className="flex items-center gap-2">
+                    <Zap
+                      className="h-3 w-3 group-hover:text-sky-400 transition-colors"
+                      strokeWidth={3}
+                    />{" "}
+                    AWARENESS
+                  </span>
+                  <span className="text-sky-400 font-display font-black italic tracking-tighter text-sm drop-shadow-[0_0_10px_rgba(56,189,248,0.3)]">
+                    {Math.round(project.awareness ?? 0)}%
+                  </span>
+                </div>
+                <div className="h-2 bg-black/60 rounded-none overflow-hidden border border-white/5 p-[1px]">
+                  <div
+                    className="h-full bg-sky-400 transition-all duration-1000 relative"
+                    style={{ width: `${project.awareness ?? 0}%` }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/20 animate-pulse" />
+                  </div>
+                </div>
+              </div>
+            </TooltipWrapper>
+          )}
+
           {/* Phase Progress */}
           {(project.state === "development" || project.state === "production") && (
             <TooltipWrapper tooltip={`CURRENT PHASE: ${project.state.toUpperCase()}`} side="top">

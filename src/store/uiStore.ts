@@ -16,7 +16,9 @@ export type ModalType =
   | 'BIDDING_WAR'
   | 'BREAKOUT_BIDDING_WAR'
   | 'REBOOT_OPPORTUNITY'
-  | 'DISTRESSED_ASSET_OFFER';
+  | 'DISTRESSED_ASSET_OFFER'
+  | 'GREENLIGHT_DECISION'
+  | 'STRATEGY_CHOICE';
 
 let modalIdCounter = 0;
 
@@ -39,6 +41,10 @@ interface UIStore {
   activeModal: QueuedModal | null;
   enqueueModal: (type: ModalType, payload: any) => void;
   resolveCurrentModal: () => void;
+
+  // Settings modal (Plan 4)
+  showSettings: boolean;
+  setShowSettings: (v: boolean) => void;
 
   // Legacy (Will be refactored to use queue)
   showCrisisModal: boolean;
@@ -69,6 +75,8 @@ export const useUIStore = create<UIStore>((set) => ({
   
   modalQueue: [],
   activeModal: null,
+  showSettings: false,
+  setShowSettings: (v) => set({ showSettings: v }),
 
   enqueueModal: (type, payload) => {
     const newModal = { id: `modal-${modalIdCounter++}`, type, payload };

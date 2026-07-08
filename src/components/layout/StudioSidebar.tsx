@@ -83,7 +83,7 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 export const StudioSidebar = () => {
-  const { activeTab, setActiveTab } = useUIStore();
+  const { activeTab, setActiveTab, setShowSettings } = useUIStore();
   const gameState = useGameStore((s) => s.gameState);
   const clearGame = useGameStore((s) => s.clearGame);
   const [isCollapsed, setIsCollapsed] = React.useState(false);
@@ -250,7 +250,7 @@ export const StudioSidebar = () => {
               type="button"
               aria-label="Configuration"
               className="w-full flex items-center gap-4 h-12 px-6 text-muted-foreground/30 hover:bg-white/5 hover:text-foreground transition-all duration-500 group overflow-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none"
-              onClick={() => {}}
+              onClick={() => setShowSettings(true)}
             >
               <Settings aria-hidden="true" className="h-5 w-5 shrink-0 group-hover:rotate-90 transition-transform duration-700" />
               {!isCollapsed && (

@@ -123,6 +123,20 @@ export const RivalCard: React.FC<RivalCardProps> = ({
               <span className="text-right">VALUATION: {formatMoney(rival.cash * 2)}</span>
             )}
         </div>
+
+        {rival.revenueHistory && rival.revenueHistory.length > 0 && (
+          <div className="space-y-2 pt-4 border-t border-white/5 relative z-10">
+            <span className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground/40">RECENT BOX OFFICE</span>
+            <div className="space-y-1">
+              {rival.revenueHistory.slice(-4).reverse().map((h) => (
+                <div key={h.week} className="flex justify-between items-center text-[10px] font-medium">
+                  <span className="text-muted-foreground/50 uppercase tracking-widest">WK {h.week}</span>
+                  <span className="font-display font-black italic tracking-tighter text-foreground/80">{formatMoney(h.boxOffice)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

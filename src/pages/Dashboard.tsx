@@ -22,8 +22,11 @@ import { ProjectDetailModal } from '@/components/modals/ProjectDetailModal';
 import { PitchProjectModal } from '@/components/modals/PitchProjectModal';
 import { CrisisModal } from '@/components/modals/CrisisModal';
 import { AwardsCeremonyModal } from '@/components/modals/AwardsCeremonyModal';
+import { GreenlightDecisionModal } from '@/components/modals/GreenlightDecisionModal';
+import { SettingsModal } from '@/components/modals/SettingsModal';
 
 import { TabId } from '@/store/uiStore';
+import { useSettingsStore } from '@/store/settingsStore';
 
 const TAB_CONTENT: Record<TabId, React.ReactNode> = {
   command: <CommandCenter key="command" />,
@@ -39,7 +42,8 @@ const TAB_CONTENT: Record<TabId, React.ReactNode> = {
 
 const Dashboard: React.FC = () => {
   const gameState = useGameStore(s => s.gameState);
-  const { activeTab } = useUIStore();
+  const { activeTab, showSettings, setShowSettings } = useUIStore();
+  const reduceMotion = useSettingsStore(s => s.reduceMotion);
   const devAutoInit = useGameStore(s => s.devAutoInit);
   const searchParams = new URLSearchParams(window.location.search);
   const isAutoStarting = searchParams.get('autoStart') === 'true';
@@ -64,13 +68,13 @@ const Dashboard: React.FC = () => {
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-none blur-[150px] -z-10 pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-secondary/5 rounded-none blur-[120px] -z-10 pointer-events-none" />
           <div className="container mx-auto max-w-[1600px] h-full flex flex-col">
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={activeTab}
-                initial={{ opacity: 0, x: 20 }}
+                initial={reduceMotion ? false : { opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.25, ease: "easeInOut" }}
+                exit={reduceMotion ? undefined : { opacity: 0, x: -20 }}
+                transition={{ duration: reduceMotion ? 0 : 0.25, ease: "easeInOut" }}
                 className="h-full flex flex-col"
               >
                 {renderContent()}
@@ -86,6 +90,8 @@ const Dashboard: React.FC = () => {
       <PitchProjectModal />
       <CrisisModal />
       <AwardsCeremonyModal />
+      <GreenlightDecisionModal />
+      <SettingsModal open={showSettings} onClose={() => setShowSettings(false)} />
     </div>
   );
 };

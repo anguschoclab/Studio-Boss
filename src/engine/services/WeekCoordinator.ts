@@ -47,12 +47,14 @@ import { tickOrganicEvents } from '../systems/talent/OrganicEventEnhancer';
 import { tickMarketingPromotionSystem } from '../systems/talent/MarketingPromotionSystem';
 import { tickBiographyGenerator } from '../systems/talent/BiographyGenerator';
 import { tickProductionEnhancementSystem } from '../systems/talent/ProductionEnhancementSystem';
+import { tickMarketing } from '../systems/marketing/MarketingSystem';
 import { tickTVRecommendationSystem } from '../systems/talent/TVRecommendationSystem';
 
 // Production Support Systems
 import { checkAndTriggerCrisis } from '../systems/crises';
 import { advanceDeals } from '../systems/deals';
 import { advanceRivals } from '../systems/rivals';
+import { tickRivalProduction } from '../systems/rivals/rivalProduction';
 import { runAwardsCeremony } from '../systems/awards/CeremonyRunner';
 import { processRazzies } from '../systems/awards/RazzieProcessor';
 import { tickPilots } from '../systems/television/pilotEvaluator';
@@ -146,6 +148,19 @@ export class WeekCoordinator {
       nextState = updateFranchiseHubs(nextState, newlyReleasedProjects);
     }
 
+    // 2.7 Player-agency hook (Plan 2): prompt a greenlight decision for any
+    // project that has reached the greenlight-ready state. The store routes
+    // MODAL_TRIGGERED → GREENLIGHT_DECISION into the UI modal queue.
+    for (const id in nextState.entities.projects) {
+      const p = nextState.entities.projects[id];
+      if (p.state === 'needs_greenlight') {
+        context.impacts.push({
+          type: 'MODAL_TRIGGERED',
+          payload: { modalType: 'GREENLIGHT_DECISION', projectId: p.id }
+        } as unknown as import('../types/state.types').StateImpact);
+      }
+    }
+
     const finalizedState: GameState = {
       ...nextState,
       week: context.week,
@@ -187,6 +202,16 @@ export class WeekCoordinator {
   }
 
   private static runProductionFilter(state: GameState, context: TickContext) {
+    // 0. Rival production — spawn/advance rival-owned projects so they feed
+    // revenue, market share, and (below) marketing intensity.
+    context.impacts.push(...tickRivalProduction(state, context.rng));
+
+    // 0.5 Marketing awareness accrual — runs before core production so released
+    // projects carry up-to-date awareness into release simulation. Rival spend
+    // contributes to industry marketing intensity (share-of-voice pressure).
+    const rivalSpend = this.estimateRivalMarketingSpend(state);
+    context.impacts.push(...tickMarketing(state, context.rng, rivalSpend));
+
     // 0. Production Enhancement (on-set chemistry bonuses) — runs before core production
     context.impacts.push(...tickProductionEnhancementSystem(state, context.rng));
 
@@ -326,17 +351,36 @@ export class WeekCoordinator {
       const overhead = 80_000 * archetypeMult * inflation;
       const net = revenue.total - overhead;
       if (net !== 0) {
+        const history = rival.revenueHistory ? [...rival.revenueHistory] : [];
+        history.push({ week: context.week, revenue: revenue.total, boxOffice: revenue.boxOffice });
+        if (history.length > 52) history = history.slice(-52);
         context.impacts.push({
           type: 'RIVAL_UPDATED',
           payload: {
             rivalId: rival.id,
             update: {
               cash: (rival.cash || 0) + net,
+              revenueHistory: history,
             }
           }
         });
       }
     }
+  }
+
+  /**
+   * Rough estimate of total rival marketing spend this week, used to feed
+   * industry marketing intensity (share-of-voice pressure) into tickMarketing.
+   */
+  private static estimateRivalMarketingSpend(state: GameState): number {
+    const rivalsMap = state.entities?.rivals || {};
+    let total = 0;
+    for (const id in rivalsMap) {
+      const rival = rivalsMap[id];
+      const archetypeMult = rival.archetype === 'major' ? 2.2 : rival.archetype === 'mid-tier' ? 1.0 : 0.4;
+      total += 5_000_000 * archetypeMult;
+    }
+    return total;
   }
 
   private static buildSummary(before: GameState, after: GameState, context: TickContext): WeekSummary {

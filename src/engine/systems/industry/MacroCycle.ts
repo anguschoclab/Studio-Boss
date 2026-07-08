@@ -17,6 +17,8 @@
 
 const WEEKS_PER_YEAR = 52;
 
+import { getDifficultyParams } from '@/store/settingsStore';
+
 interface Shock {
   startWeek: number;
   endWeek: number;
@@ -44,7 +46,7 @@ const SHOCKS: Shock[] = [
 ];
 
 /** Primary market heat index. Range ~[0.6, 1.4]. */
-export function getMarketHeat(week: number): number {
+export function getMarketHeat(week: number, difficulty: 'relaxed' | 'standard' | 'cutthroat' = 'standard'): number {
   const primary = Math.sin((week / (WEEKS_PER_YEAR * 8.5)) * Math.PI * 2) * 0.28;
   const secondary = Math.sin((week / (WEEKS_PER_YEAR * 3.7)) * Math.PI * 2) * 0.10;
   let heat = 1.0 + primary + secondary;
@@ -54,6 +56,13 @@ export function getMarketHeat(week: number): number {
       heat *= s.magnitude;
     }
   }
+
+  // Difficulty scales the boom/bust amplitude (Design Bible §33.3).
+  const { heatMultiplier } = getDifficultyParams(difficulty);
+  // Pull heat toward 1.0 by the inverse of the multiplier so relaxed flattens,
+  // cutthroat amplifies the deviation from the mean.
+  heat = 1.0 + (heat - 1.0) * heatMultiplier;
+
   // Clamp: hard floor/ceiling so a stacked trough doesn't zero revenue.
   return Math.max(0.45, Math.min(1.55, heat));
 }
