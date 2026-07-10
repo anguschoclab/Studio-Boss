@@ -1,19 +1,9 @@
-import { Talent, Agent, Agency, TalentPersonality } from '../../types/talent.types';
+import { Talent, Agent, Agency, TalentPersonality, AgentPersonality } from '../../types/talent.types';
 import { AGENCY_ARCHETYPES } from '../../data/archetypes';
 import { PERSONALITY_TRAITS } from '../../data/talentArchetypes';
 import { RandomGenerator } from '../../utils/rng';
 
-/**
- * Agent personality types
- * These define the agent's approach to talent management and negotiation
- */
-export type AgentPersonality = 
-  | 'shark'        // Aggressive, profit-focused
-  | 'diplomat'     // Relationship-focused, collaborative
-  | 'prestige'     // Awards-focused, reputation-driven
-  | 'volume'       // High-volume, deal-focused
-  | 'protector'    // Talent welfare-focused
-  | 'visionary';   // Long-term career planning
+export type { AgentPersonality } from '../../types/talent.types';
 
 /**
  * Agent personality configuration
@@ -381,7 +371,7 @@ export const TalentAgentInteractionEngine = {
           }
         }
 
-        const compatibility = this.calculateCompatibility(talent.personality, agentPersonality);
+        const compatibility = this.calculateCompatibility(talent.personality as TalentPersonality, agentPersonality);
         matrix.set(`${talentId}-${agentId}`, compatibility);
       }
     }

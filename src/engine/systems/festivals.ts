@@ -2,19 +2,32 @@ import { GameState, FestivalSubmission, AwardBody } from '@/engine/types';
 import { randRange, generateId } from '../utils';
 import { StateImpact } from '../types/state.types';
 
-export const FESTIVALS: { body: AwardBody, name: string, weeks: number[], cost: number, prestigeNeeded: number, buzzReward: number }[] = [
+export interface Festival {
+  body: AwardBody;
+  name: string;
+  weeks: number[];
+  cost: number;
+  prestigeNeeded: number;
+  buzzReward: number;
+}
+
+export const FESTIVALS: Festival[] = [
   { body: 'Sundance Film Festival', name: 'Sundance', weeks: [3, 4], cost: 25000, prestigeNeeded: 40, buzzReward: 30 },
   { body: 'Cannes Film Festival', name: 'Cannes', weeks: [20, 21], cost: 50000, prestigeNeeded: 60, buzzReward: 50 },
   { body: 'Venice Film Festival', name: 'Venice', weeks: [35, 36], cost: 50000, prestigeNeeded: 70, buzzReward: 40 },
   { body: 'Berlin International Film Festival', name: 'Berlinale', weeks: [8, 9], cost: 35000, prestigeNeeded: 50, buzzReward: 35 }
 ];
 
+export const FESTIVAL_BY_BODY = new Map<AwardBody, Festival>(
+  FESTIVALS.map(f => [f.body, f])
+);
+
 export function submitToFestival(
   state: GameState,
   projectId: string,
   festivalBody: AwardBody
 ): StateImpact | null {
-  const fest = FESTIVALS.find(f => f.body === festivalBody);
+  const fest = FESTIVAL_BY_BODY.get(festivalBody);
   const project = state.entities.projects[projectId];
   
   if (!fest || !project || state.finance.cash < fest.cost) return null;
@@ -62,7 +75,7 @@ export function resolveFestivals(state: GameState): StateImpact {
         continue;
     }
     
-    const fest = FESTIVALS.find(f => f.body === sub.festivalBody);
+    const fest = FESTIVAL_BY_BODY.get(sub.festivalBody);
     if (!fest) {
         updatedSubmissions.push(sub);
         continue;

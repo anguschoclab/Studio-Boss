@@ -1,4 +1,4 @@
-import { ActorArchetype, WriterArchetype, ProducerArchetype, PersonalityArchetype, TalentPersonality, TalentTier } from '../types/talent.types';
+import { ActorArchetype, WriterArchetype, ProducerArchetype, PersonalityArchetype, TalentPersonality, TalentTier, CareerTrajectory } from '../types/talent.types';
 
 /**
  * Archetype configuration interface
@@ -29,11 +29,6 @@ export interface ArchetypeConfig {
   crisisSusceptibility: number; // 0-100
   careerTrajectory: CareerTrajectory;
 }
-
-/**
- * Career trajectory type
- */
-export type CareerTrajectory = 'rising' | 'peak' | 'declining' | 'resurgent';
 
 /**
  * Actor Archetypes

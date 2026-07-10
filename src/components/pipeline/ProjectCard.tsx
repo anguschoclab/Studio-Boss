@@ -171,13 +171,13 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
                     AWARENESS
                   </span>
                   <span className="text-sky-400 font-display font-black italic tracking-tighter text-sm drop-shadow-[0_0_10px_rgba(56,189,248,0.3)]">
-                    {Math.round(project.awareness ?? 0)}%
+                    {Math.round(project.marketingCampaign?.awareness ?? 0)}%
                   </span>
                 </div>
                 <div className="h-2 bg-black/60 rounded-none overflow-hidden border border-white/5 p-[1px]">
                   <div
                     className="h-full bg-sky-400 transition-all duration-1000 relative"
-                    style={{ width: `${project.awareness ?? 0}%` }}
+                    style={{ width: `${project.marketingCampaign?.awareness ?? 0}%` }}
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/20 animate-pulse" />
                   </div>

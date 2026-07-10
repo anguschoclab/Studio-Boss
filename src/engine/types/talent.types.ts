@@ -25,6 +25,28 @@ export interface Scandal {
 }
 
 export type AgencyArchetype = 'powerhouse' | 'boutique' | 'shark' | 'comedy_specialist' | 'lit_agency' | 'mega_corp' | 'streaming_titan' | 'indie_darling' | 'nepotism_mill' | 'international_broker';
+
+export type AgentPersonality =
+  | 'shark'
+  | 'diplomat'
+  | 'prestige'
+  | 'volume'
+  | 'protector'
+  | 'visionary';
+
+export type TalentPersonality =
+  | 'perfectionist'
+  | 'collaborative'
+  | 'difficult'
+  | 'charismatic'
+  | 'method'
+  | 'pragmatic'
+  | 'artistic'
+  | 'commercial'
+  | 'loyal'
+  | 'ambitious';
+
+export type CareerTrajectory = 'rising' | 'peak' | 'declining' | 'resurgent';
 export type AccessLevel = 'outsider' | 'soft-access' | 'legacy' | 'dynasty' | 'comeback';
 export type ProjectRole = 'actor' | 'director' | 'writer' | 'producer' | 'showrunner';
 export type TalentRole = 'actor' | 'director' | 'writer' | 'producer';
@@ -55,6 +77,8 @@ export interface Agent {
   skill?: number;
   aggression?: number;
   motivationProfile?: MotivationProfile;
+  personality?: AgentPersonality;
+  negotiationTactic?: string;
 }
 
 export interface Family {

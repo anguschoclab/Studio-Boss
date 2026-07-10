@@ -1,4 +1,4 @@
-import { Talent, Agent } from '../../types/talent.types';
+import { Talent, Agent, Agency } from '../../types/talent.types';
 import { GameState } from '../../types/studio.types';
 import { TalentAgentRelationship } from './talentAgentInteractions';
 import { RandomGenerator } from '../../utils/rng';
@@ -14,12 +14,10 @@ import { RandomGenerator } from '../../utils/rng';
  * Determine if a talent should hire a new agent
  */
 export function shouldTalentHireAgent(
-  talent: Talent,
-  state: GameState,
-  rng: RandomGenerator
+  talent: Talent
 ): { shouldHire: boolean; preferredAgentId?: string } {
-  // Tier 1-2 talents without agents are likely to hire
-  if (!talent.agentId && (talent.tier === 1 || talent.tier === 2)) {
+  // A_LIST and B_LIST talents without agents are likely to hire
+  if (!talent.agentId && (talent.tier === 'A_LIST' || talent.tier === 'B_LIST')) {
     return { shouldHire: true };
   }
 
@@ -40,14 +38,14 @@ export function shouldTalentHireAgent(
  */
 export function shouldTalentFireAgent(
   talent: Talent,
-  relationship: TalentAgentRelationship,
-  state: GameState
+  relationship: TalentAgentRelationship
 ): boolean {
   if (!talent.agentId) return false;
 
   // No bookings for over a year
-  const weeksSinceLastBooking = talent.commitments?.length === 0 ? 52 : 0;
-  if (weeksSinceLastBooking > 52) return true;
+  const commitments = (talent as any).commitments;
+  const weeksSinceLastBooking = commitments?.length === 0 ? 53 : 0;
+  if (weeksSinceLastBooking >= 52) return true;
 
   // Poor relationship
   if (relationship.relationshipScore < 20) return true;
@@ -74,15 +72,14 @@ export function selectAgentForTalent(
   state: GameState,
   rng: RandomGenerator
 ): Agent | undefined {
+  const agencyMap = new Map<string, Agency>(state.industry.agencies.map(a => [a.id, a]));
   const availableAgents = state.industry.agents.filter(agent => {
     // Filter out agents already with the talent (if any)
     if (talent.agentId && agent.id === talent.agentId) return false;
     
-    // Prefer agents from agencies with appropriate tier
-    // Tier 1 talents should prefer powerhouse agents
-    // Tier 2 talents should prefer major/mid-tier agents
-    if (talent.tier === 1) {
-      const agency = state.industry.agencies.find(a => a.id === agent.agencyId);
+    // A_LIST talents should only get agents from powerhouse or major agencies
+    if (talent.tier === 'A_LIST') {
+      const agency = agent.agencyId ? agencyMap.get(agent.agencyId) : undefined;
       return agency?.tier === 'powerhouse' || agency?.tier === 'major';
     }
     
@@ -129,7 +126,6 @@ export function createAgentFiringEvent(
   agentId: string,
   week: number
 ): { id: string; text: string; week: number; category: string } {
-  const agent = agentId; // Will be resolved by the caller
   return {
     id: `fire-${talent.id}-${agentId}-${week}`,
     text: `${talent.name} has parted ways with their agent.`,

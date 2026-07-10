@@ -1,4 +1,5 @@
 import { GameState } from '../../types';
+import { Agency } from '../../types/talent.types';
 import { TickContext, WeekFilter } from './types';
 
 // System Imports
@@ -56,8 +57,9 @@ export const TalentFilter: WeekFilter = {
     }
 
     // Phase 3: Talent-Agent Hiring/Firing Events
+    const agencyMap = new Map<string, Agency>(state.industry.agencies.map(a => [a.id, a]));
     for (const [talentId, talent] of Object.entries(talentDict)) {
-      const hiringCheck = shouldTalentHireAgent(talent, state, context.rng);
+      const hiringCheck = shouldTalentHireAgent(talent);
       if (hiringCheck.shouldHire) {
         const newAgent = selectAgentForTalent(talent, state, context.rng);
         if (newAgent) {
@@ -78,11 +80,11 @@ export const TalentFilter: WeekFilter = {
 
           // Create new relationship
           const agentPersonality = newAgent.personality || derivePersonalityFromAgent(newAgent);
-          const agency = state.industry.agencies.find(a => a.id === newAgent.agencyId);
+          const agency = newAgent.agencyId ? agencyMap.get(newAgent.agencyId) : undefined;
           TalentAgentInteractionEngine.createRelationship(
             talentId,
             newAgent.id,
-            talent.personality || 'pragmatic',
+            (talent.personality as import('../../types/talent.types').TalentPersonality) || 'pragmatic',
             agentPersonality,
             agency?.tier
           );
@@ -104,7 +106,7 @@ export const TalentFilter: WeekFilter = {
 
       if (talent.agentId) {
         const relationship = state.talentAgentRelationships[`${talentId}-${talent.agentId}`];
-        if (relationship && shouldTalentFireAgent(talent, relationship, state)) {
+        if (relationship && shouldTalentFireAgent(talent, relationship)) {
           context.impacts.push({
             type: 'NEWS_ADDED',
             payload: createAgentFiringEvent(talent, talent.agentId, context.week)
@@ -143,14 +145,24 @@ export const TalentFilter: WeekFilter = {
       }
     }
 
-    function derivePersonalityFromAgent(agent: { negotiationTactic: string }): import('../../systems/talent/talentAgentInteractions').AgentPersonality {
-      const tacticMap: Record<string, import('../../systems/talent/talentAgentInteractions').AgentPersonality> = {
-        'SHARK': 'shark',
-        'DIPLOMAT': 'diplomat',
-        'VOLUME': 'volume',
-        'PRESTIGE': 'prestige'
-      };
-      return tacticMap[agent.negotiationTactic] || 'diplomat';
+    function derivePersonalityFromAgent(agent: { negotiationTactic?: string; agencyId?: string }): import('../../systems/talent/talentAgentInteractions').AgentPersonality {
+      if (agent.negotiationTactic) {
+        const tacticMap: Record<string, import('../../systems/talent/talentAgentInteractions').AgentPersonality> = {
+          'SHARK': 'shark',
+          'DIPLOMAT': 'diplomat',
+          'VOLUME': 'volume',
+          'PRESTIGE': 'prestige'
+        };
+        return tacticMap[agent.negotiationTactic] || 'diplomat';
+      }
+      // Fall back to agency archetype mapping
+      if (agent.agencyId) {
+        const agency = agencyMap.get(agent.agencyId);
+        if (agency) {
+          return TalentAgentInteractionEngine.mapArchetypeToPersonality(agency.archetype);
+        }
+      }
+      return 'diplomat';
     }
   }
 }

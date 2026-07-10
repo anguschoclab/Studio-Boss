@@ -287,8 +287,9 @@ export function checkAchievements(state: GameState): StateImpact[] {
 
   // Big Agency Deal — First Look deal with a powerhouse agency
   const firstLookDeals = state.studio.internal.firstLookDeals ?? [];
+  const agencyMap = new Map(state.industry.agencies.map(a => [a.id, a]));
   const hasPowerhouseDeal = firstLookDeals.some((deal) => {
-    const agency = state.industry.agencies.find((a) => a.id === state.entities.talents[deal.talentId]?.agencyId);
+    const agency = agencyMap.get(state.entities.talents[deal.talentId]?.agencyId ?? '');
     return agency?.tier === 'powerhouse';
   });
   check('big_agency_deal', hasPowerhouseDeal);

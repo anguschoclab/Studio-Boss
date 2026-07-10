@@ -1,4 +1,4 @@
-import { GameState, StateImpact, Talent, Project, Contract } from "../../types";
+import { GameState, StateImpact, Talent, Project } from "../../types";
 import { RandomGenerator } from "../../utils/rng";
 import {
   ScreenplayNote,
@@ -8,7 +8,6 @@ import {
   CreditScene,
   CreditSceneType,
 } from "../../types/production.types";
-import { getTalentRelationships, areFriends } from "./RelationshipSystem";
 
 /**
  * Production Enhancement System
@@ -59,21 +58,10 @@ const ADDITION_BONUSES: Record<
  */
 function generateScreenplayNotes(
   project: Project,
-  state: GameState,
+  talents: Talent[],
   rng: RandomGenerator
 ): ScreenplayNote[] {
   const notes: ScreenplayNote[] = [];
-
-  // Get talent attached to project
-  const talents: Talent[] = [];
-  // ⚡ The Framerate Fanatic: Replaced Object.values().filter().map() with a direct for...in loop
-  for (const cId in state.entities.contracts || {}) {
-    const c = state.entities.contracts[cId];
-    if (c.projectId === project.id) {
-      const t = state.entities.talents?.[c.talentId];
-      if (t) talents.push(t);
-    }
-  }
 
   // Each talent has a chance to provide notes
   for (const talent of talents) {
@@ -392,22 +380,36 @@ export function tickProductionEnhancementSystem(
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
 
-  // Get active projects in production or pre-production
-  const activeProjects: any[] = [];
-  // ⚡ The Framerate Fanatic: Replaced Object.values().filter() with a direct for...in loop
+  // Pre-compute talents by project ID — single O(C) pass instead of O(P×C)
+  const talentsByProject = new Map<string, Talent[]>();
+  const contractsRecord = state.entities.contracts || {};
+  const talentsRecord = state.entities.talents || {};
+  for (const cId in contractsRecord) {
+    const c = contractsRecord[cId];
+    const t = talentsRecord[c.talentId];
+    if (t) {
+      const list = talentsByProject.get(c.projectId);
+      if (list) {
+        list.push(t);
+      } else {
+        talentsByProject.set(c.projectId, [t]);
+      }
+    }
+  }
+
+  // Get active projects in development or production
+  const activeProjects: Project[] = [];
   for (const pId in state.entities.projects || {}) {
-    const p = state.entities.projects[pId] as any;
-    if (p.status === "PRE_PRODUCTION" || p.status === "IN_PRODUCTION") {
+    const p = state.entities.projects[pId];
+    if (p.state === 'development' || p.state === 'production') {
       activeProjects.push(p);
     }
   }
 
   for (const project of activeProjects) {
-    const projectStatus = (project as any).status;
-
-    // Generate screenplay notes during pre-production
-    if (projectStatus === "PRE_PRODUCTION") {
-      const notes = generateScreenplayNotes(project, state, rng);
+    // Generate screenplay notes during development
+    if (project.state === 'development') {
+      const notes = generateScreenplayNotes(project, talentsByProject.get(project.id) ?? [], rng);
       for (const note of notes) {
         impacts.push({
           type: "SCREENPLAY_NOTE_CREATED",
@@ -421,7 +423,7 @@ export function tickProductionEnhancementSystem(
     }
 
     // Generate production additions during production
-    if (projectStatus === "IN_PRODUCTION") {
+    if (project.state === 'production') {
       const additions = generateProductionAdditions(project, state, rng);
       for (const addition of additions) {
         impacts.push({
@@ -448,7 +450,7 @@ export function tickProductionEnhancementSystem(
     }
 
     // Generate credit scenes during production
-    if (projectStatus === "IN_PRODUCTION" && project.type === "FILM") {
+    if (project.state === 'production' && project.type === "FILM") {
       const scenes = generateCreditScenes(project, state, rng);
       for (const scene of scenes) {
         impacts.push({
