@@ -150,6 +150,7 @@ export const CreateProjectModal = () => {
                 id="project-title"
                 aria-label="Project Title"
                 required
+                maxLength={100}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Untitled Project"
@@ -442,6 +443,7 @@ export const CreateProjectModal = () => {
             <Input
               id="project-flavor"
               aria-label="Project Positioning"
+              maxLength={200}
               value={flavor}
               onChange={(e) => setFlavor(e.target.value)}
               placeholder="A bold reimagining of..."
