@@ -2,13 +2,10 @@ import { GameState, StateImpact, Talent } from '../../types';
 import { RandomGenerator } from '../../utils/rng';
 import {
   Clique,
-  CliqueStatus,
   CliqueReputation,
-  CliqueFormation,
   CLIQUE_NAME_PATTERNS,
 } from '../../types/clique.types';
 import {
-  getTalentRelationships,
   areFriends,
 } from './RelationshipSystem';
 
@@ -95,19 +92,35 @@ function calculateExclusivity(members: Talent[]): number {
 /**
  * Find potential cliques (groups of mutually friendly talents)
  */
-function findPotentialCliques(state: GameState, rng: RandomGenerator): string[][] {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function findPotentialCliques(state: GameState, _rng: RandomGenerator): string[][] {
   const potentialCliques: string[][] = [];
   const talentsObj = state.entities.talents || {};
 
+  // Note: the original code uses state.relationships?.relationships in getTalentRelationships
+  const relationships = state.relationships?.relationships || {};
+
+  // ⚡ Bolt Optimization: Pre-group friendships to avoid O(N*M) lookups inside the loop
+  const friendsMap = new Map<string, string[]>();
+
+  // Single pass over relationships
+  for (const key in relationships) {
+    if (!Object.prototype.hasOwnProperty.call(relationships, key)) continue;
+    const rel = relationships[key];
+    if (rel.type === 'friend' && rel.strength >= CLIQUE_FRIENDSHIP_THRESHOLD) {
+      if (!friendsMap.has(rel.talentAId)) friendsMap.set(rel.talentAId, []);
+      if (!friendsMap.has(rel.talentBId)) friendsMap.set(rel.talentBId, []);
+      friendsMap.get(rel.talentAId)!.push(rel.talentBId);
+      friendsMap.get(rel.talentBId)!.push(rel.talentAId);
+    }
+  }
+
   // Check each talent as a potential clique center
   for (const tId in talentsObj) {
+    if (!Object.prototype.hasOwnProperty.call(talentsObj, tId)) continue;
     const center = talentsObj[tId];
-    // Get all friends of this talent
-    const centerRelationships = getTalentRelationships(center.id, state);
-    const friendIds = centerRelationships
-      .filter(r => r.type === 'friend' && r.strength >= CLIQUE_FRIENDSHIP_THRESHOLD)
-      .map(r => r.talentAId === center.id ? r.talentBId : r.talentAId);
 
+    const friendIds = friendsMap.get(center.id) || [];
     if (friendIds.length < MIN_CLIQUE_SIZE - 1) continue; // Need at least 2 other friends
 
     // Check which friends are also friends with each other
@@ -118,6 +131,7 @@ function findPotentialCliques(state: GameState, rng: RandomGenerator): string[][
 
       for (const otherFriendId of friendIds) {
         if (friendId === otherFriendId) continue;
+        // Delegate to existing logic (respects encapsulation)
         if (areFriends(friendId, otherFriendId, state)) {
           mutualFriendCount++;
         }
