@@ -115,3 +115,11 @@ I eliminated the duplicate iterations and the `Map` construction entirely. The e
 ## 2024-07-01 - Avoid Object.values() for Entity Dictionaries in Hot Loops
 **Learning:** In the game state architecture, retrieving all entities (like contracts) via `Object.values(state.entities.X)` inside high-frequency game ticks (e.g. `advanceScandals`, `generateScandals`) allocates huge intermediate arrays causing severe Garbage Collection pressure and O(N) penalties.
 **Action:** Iterate directly using `for...in` loops and explicitly access properties (e.g., `const id in dict; const item = dict[id];`) to drastically reduce overhead.
+
+## 2026-06-28 - Optimize BiographyGenerator with pre-computed Sets and for...in loops
+**Learning:** `tickBiographyGenerator` was calling `Object.values()` on talents, relationships, cliques, and scandals every tick, then using `.filter()` and `.some()` inside the talent loop — creating O(N*M) complexity and multiple intermediate array allocations per tick.
+**Action:** Replaced `Object.values()` with `for...in` loops and pre-grouped recent relationship talent IDs, clique member IDs, and active scandal talent IDs into `Set<string>` for O(1) lookup per talent. Also removed unused imports (`TalentRelationship`, `BreakoutStar`, `TVShowRecommendation`), removed unused `BioSection` interface, and inlined `shouldUpdateBio` logic to eliminate the function call overhead.
+
+## 2026-06-28 - Replace Object.values().find() with for...in in hasCreativeControl
+**Learning:** `hasCreativeControl` in `directors.ts` used `Object.values(state.entities.contracts).find()` which allocates an intermediate array and performs a linear scan on every call. Since this function is called during production checks, this creates unnecessary GC pressure.
+**Action:** Replaced with a `for...in` loop that iterates contracts directly and returns early on match. Added optional chaining on `roles?.includes("director")` for defensive null-safety.

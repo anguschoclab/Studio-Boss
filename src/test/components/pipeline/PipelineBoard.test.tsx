@@ -3,11 +3,9 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { PipelineBoard } from '@/components/pipeline/PipelineBoard';
-import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { Project } from '@/engine/types';
-import { TooltipProvider } from '@/components/ui/tooltip';
 
 vi.mock('@/store/gameStore');
 vi.mock('@/store/uiStore');
@@ -88,5 +86,31 @@ describe('PipelineBoard', () => {
     // 3 columns should be empty
     const noProjectsMessages = screen.queryAllByText(/LANE EMPTY/i);
     expect(noProjectsMessages.length).toBe(3);
+  });
+
+  it('bookmark toggle button has focus-visible classes', () => {
+    vi.mocked(useGameStore).mockReturnValue([] as any);
+    render(<TooltipProvider><PipelineBoard /></TooltipProvider>);
+
+    const bookmarkBtn = screen.getByRole('button', { name: /Show bookmarks only/i });
+    expect(bookmarkBtn.className).toContain('focus-visible:ring-2');
+    expect(bookmarkBtn.className).toContain('focus-visible:ring-offset-2');
+  });
+
+  it('bookmark toggle button has aria-pressed attribute', () => {
+    vi.mocked(useGameStore).mockReturnValue([] as any);
+    render(<TooltipProvider><PipelineBoard /></TooltipProvider>);
+
+    const bookmarkBtn = screen.getByRole('button', { name: /Show bookmarks only/i });
+    expect(bookmarkBtn).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('bookmark icon has aria-hidden', () => {
+    vi.mocked(useGameStore).mockReturnValue([] as any);
+    render(<TooltipProvider><PipelineBoard /></TooltipProvider>);
+
+    const bookmarkBtn = screen.getByRole('button', { name: /Show bookmarks only/i });
+    const svg = bookmarkBtn.querySelector('svg');
+    expect(svg).toHaveAttribute('aria-hidden', 'true');
   });
 });

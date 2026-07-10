@@ -84,4 +84,77 @@ describe("hasCreativeControl", () => {
     const state = createMockState({ "t-1": talent }, [contract]);
     expect(hasCreativeControl("proj-1", state)).toBe(true);
   });
+
+  it("should return false if creativeControl is false", () => {
+    const talent: Talent = { id: "t-1", roles: ["director"] } as Talent;
+    const contract: Contract = {
+      id: "c-1",
+      talentId: "t-1",
+      projectId: "proj-1",
+      creativeControl: false,
+      fee: 100_000,
+      backendPercent: 0,
+    };
+    const state = createMockState({ "t-1": talent }, [contract]);
+    expect(hasCreativeControl("proj-1", state)).toBe(false);
+  });
+
+  it("should return false if creativeControl is undefined", () => {
+    const talent: Talent = { id: "t-1", roles: ["director"] } as Talent;
+    const contract: Contract = {
+      id: "c-1",
+      talentId: "t-1",
+      projectId: "proj-1",
+      fee: 100_000,
+      backendPercent: 0,
+    } as Contract;
+    const state = createMockState({ "t-1": talent }, [contract]);
+    expect(hasCreativeControl("proj-1", state)).toBe(false);
+  });
+
+  it("should find the correct contract among multiple contracts", () => {
+    const talent: Talent = { id: "t-1", roles: ["director"] } as Talent;
+    const contract1: Contract = {
+      id: "c-1",
+      talentId: "t-1",
+      projectId: "proj-other",
+      creativeControl: true,
+      fee: 100_000,
+      backendPercent: 0,
+    };
+    const contract2: Contract = {
+      id: "c-2",
+      talentId: "t-1",
+      projectId: "proj-1",
+      creativeControl: true,
+      fee: 100_000,
+      backendPercent: 0,
+    };
+    const state = createMockState({ "t-1": talent }, [contract1, contract2]);
+    expect(hasCreativeControl("proj-1", state)).toBe(true);
+  });
+
+  it("should handle empty contracts object", () => {
+    const state = createMockState({}, []);
+    expect(hasCreativeControl("proj-1", state)).toBe(false);
+  });
+
+  it("should handle missing entities", () => {
+    const state = { week: 1 } as unknown as GameState;
+    expect(hasCreativeControl("proj-1", state)).toBe(false);
+  });
+
+  it("should handle talent with undefined roles", () => {
+    const talent: Talent = { id: "t-1" } as Talent;
+    const contract: Contract = {
+      id: "c-1",
+      talentId: "t-1",
+      projectId: "proj-1",
+      creativeControl: true,
+      fee: 100_000,
+      backendPercent: 0,
+    };
+    const state = createMockState({ "t-1": talent }, [contract]);
+    expect(hasCreativeControl("proj-1", state)).toBe(false);
+  });
 });

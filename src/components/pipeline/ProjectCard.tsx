@@ -110,15 +110,16 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
               }}
               className={cn(
                 "h-8 w-8 flex items-center justify-center border transition-all duration-700 rounded-none",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black",
                 isBookmarked(project.id, 'project')
                   ? "bg-primary/10 border-primary/40 text-primary shadow-[0_0_15px_rgba(var(--primary),0.2)]"
                   : "bg-white/5 border-white/10 text-muted-foreground/40 hover:text-primary hover:border-primary/40"
               )}
             >
               {isBookmarked(project.id, 'project') ? (
-                <BookmarkCheck className="h-4 w-4" strokeWidth={3} />
+                <BookmarkCheck className="h-4 w-4" strokeWidth={3} aria-hidden="true" />
               ) : (
-                <Bookmark className="h-4 w-4" strokeWidth={2} />
+                <Bookmark className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
               )}
             </button>
             <div className="px-3 py-1 bg-white/5 border border-white/10 text-[9px] uppercase tracking-[0.3em] font-black h-fit rounded-none text-muted-foreground/60 group-hover:border-white/30 group-hover:text-foreground transition-all duration-700 italic">

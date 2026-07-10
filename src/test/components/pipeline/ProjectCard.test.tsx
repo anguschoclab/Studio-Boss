@@ -152,4 +152,20 @@ describe('ProjectCard', () => {
 
     expect(screen.getByText('S2')).toBeInTheDocument();
   });
+
+  it('bookmark button has focus-visible classes', () => {
+    render(<ProjectCard project={baseProject} />);
+
+    const bookmarkBtn = screen.getByRole('button', { name: /Add bookmark/i });
+    expect(bookmarkBtn.className).toContain('focus-visible:ring-2');
+    expect(bookmarkBtn.className).toContain('focus-visible:ring-offset-2');
+  });
+
+  it('bookmark icons have aria-hidden', () => {
+    render(<ProjectCard project={baseProject} />);
+
+    const bookmarkBtn = screen.getByRole('button', { name: /Add bookmark/i });
+    const svg = bookmarkBtn.querySelector('svg');
+    expect(svg).toHaveAttribute('aria-hidden', 'true');
+  });
 });

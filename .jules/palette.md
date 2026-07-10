@@ -9,3 +9,7 @@
 ## 2024-07-03 - Added ARIA labels to Select components
 **Learning:** Found an accessibility issue pattern where `SelectTrigger` components often lack `aria-label` attributes if there isn't a corresponding explicit text label.
 **Action:** Always ensure `SelectTrigger` elements include an `aria-label` or are correctly linked to a `label` with `id`/`htmlFor` for screen readers.
+
+## 2026-06-28 - Add focus-visible styles and aria-hidden to pipeline bookmark buttons
+**Learning:** Bookmark toggle buttons in `PipelineBoard.tsx` and `ProjectCard.tsx` lacked `focus-visible` ring styles, making them invisible to keyboard users when focused. Additionally, the `Bookmark` and `BookmarkCheck` icons lacked `aria-hidden="true"`, causing screen readers to announce them unnecessarily.
+**Action:** Added `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black` classes to bookmark buttons and `aria-hidden="true"` to all bookmark icons in both components.
