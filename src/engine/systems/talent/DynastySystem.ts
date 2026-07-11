@@ -47,9 +47,12 @@ export function checkPregnancies(state: GameState, rng: RandomGenerator): StateI
 
   // Get all public romantic pairs (would come from RelationshipSystem in full implementation)
   // For now, check married/coupled talent with spouseId
-  const talents = Object.values(state.entities.talents || {});
+  const talentsDict = state.entities.talents || {};
 
-  for (const talent of talents) {
+  // ⚡ Bolt: Replaced Object.values() with for...in loop
+  for (const id in talentsDict) {
+    if (!Object.prototype.hasOwnProperty.call(talentsDict, id)) continue;
+    const talent = talentsDict[id];
     if (!talent.spouseId) continue; // Not in a relationship
 
     const spouse = state.entities.talents?.[talent.spouseId];
@@ -134,12 +137,13 @@ export function processComingOfAge(state: GameState, rng: RandomGenerator): Stat
   // 2. The talent is older (40+)
   // 3. Random chance
 
-  const talents = Object.values(state.entities.talents || {});
-  const existingNepoIds = new Set(
-    talents.filter(t => t.isNepoBaby).map(t => t.parentIds || []).flat()
-  );
+  const talentsDict = state.entities.talents || {};
+  // ⚡ Bolt: Removed unused expensive existingNepoIds Set + filter/map/flat allocation
 
-  for (const parent of talents) {
+  // ⚡ Bolt: Replaced Object.values() with for...in loop
+  for (const id in talentsDict) {
+    if (!Object.prototype.hasOwnProperty.call(talentsDict, id)) continue;
+    const parent = talentsDict[id];
     if (parent.demographics.age < 40) continue;
     if (parent.tier > 2) continue; // Only A-listers and B-listers have nepo babies
 
@@ -269,13 +273,29 @@ function generateNepoBaby(parent: Talent, state: GameState, rng: RandomGenerator
  * Calculate dynasty reputation based on family members
  */
 export function calculateDynastyReputation(familyId: string, state: GameState): number {
-  const familyMembers = Object.values(state.entities.talents || {})
-    .filter(t => t.familyId === familyId);
+  const familyMembers: Talent[] = [];
+  const talentsDict = state.entities.talents || {};
+
+  // ⚡ Bolt: Replaced Object.values().filter() with for...in loop
+  for (const id in talentsDict) {
+    if (!Object.prototype.hasOwnProperty.call(talentsDict, id)) continue;
+    const t = talentsDict[id];
+    if (t.familyId === familyId) {
+      familyMembers.push(t);
+    }
+  }
 
   if (familyMembers.length === 0) return 50;
 
-  const avgPrestige = familyMembers.reduce((sum, t) => sum + (t.prestige || 50), 0) / familyMembers.length;
-  const tier1Count = familyMembers.filter(t => t.tier === 1).length;
+  let sumPrestige = 0;
+  let tier1Count = 0;
+  for (let i = 0; i < familyMembers.length; i++) {
+    const t = familyMembers[i];
+    sumPrestige += (t.prestige || 50);
+    if (t.tier === 1) tier1Count++;
+  }
+
+  const avgPrestige = sumPrestige / familyMembers.length;
   const tierBonus = tier1Count * 10;
 
   return Math.min(100, avgPrestige + tierBonus);

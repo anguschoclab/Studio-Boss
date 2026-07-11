@@ -123,3 +123,7 @@ I eliminated the duplicate iterations and the `Map` construction entirely. The e
 ## 2026-06-28 - Replace Object.values().find() with for...in in hasCreativeControl
 **Learning:** `hasCreativeControl` in `directors.ts` used `Object.values(state.entities.contracts).find()` which allocates an intermediate array and performs a linear scan on every call. Since this function is called during production checks, this creates unnecessary GC pressure.
 **Action:** Replaced with a `for...in` loop that iterates contracts directly and returns early on match. Added optional chaining on `roles?.includes("director")` for defensive null-safety.
+
+## 2024-07-11 - Unused expensive array chaining in high-frequency loops
+**Learning:** Found unused chained array operations (`.filter().map().flat()`) over the entire talent pool (thousands of entities) inside a frequent loop (`processComingOfAge`) coupled with `Object.values()`, causing massive unnecessary GC overhead without contributing to game state.
+**Action:** When inspecting `Object.values()` allocations, also check for unused variables resulting from expensive map/filter operations that can be entirely deleted.
