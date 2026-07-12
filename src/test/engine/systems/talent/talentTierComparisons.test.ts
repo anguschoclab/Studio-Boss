@@ -225,9 +225,9 @@ describe('TalentTier string comparisons (cross-system)', () => {
         prestige: 70,
         demographics: { age: 40, gender: 'MALE', ethnicity: 'Unknown', country: 'USA' },
       } as any);
-      (talent as any).lastReleaseWeek = 1;
+      (talent as any).lastReleaseWeek = 51;
       const state = createMockGameState({
-        week: 52, // year end
+        week: 104, // year end (104%52=0), weeksSinceLastRelease = 104-51 = 53 > 52
         entities: {
           ...baseEntities,
           talents: { 'TAL-LC-1': talent },

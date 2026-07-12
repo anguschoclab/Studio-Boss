@@ -102,9 +102,11 @@ function findPotentialCliques(state: GameState, _rng: RandomGenerator): string[]
     if (!Object.prototype.hasOwnProperty.call(talentsObj, tId)) continue;
     const talent = talentsObj[tId];
     if (!talent) continue;
-    const relationships = (state.relationships as unknown as { relationships?: Array<{ talentAId: string; talentBId: string; type: string; strength: number }> })?.relationships || [];
+    const relationshipsObj = (state.relationships as unknown as { relationships?: Record<string, { talentAId: string; talentBId: string; type: string; strength: number }> })?.relationships || {};
     const friends = new Set<string>();
-    for (const r of relationships) {
+    for (const rId in relationshipsObj) {
+      if (!Object.prototype.hasOwnProperty.call(relationshipsObj, rId)) continue;
+      const r = relationshipsObj[rId];
       if (r.type !== 'friend' || r.strength < CLIQUE_FRIENDSHIP_THRESHOLD) continue;
       if (r.talentAId === tId) friends.add(r.talentBId);
       else if (r.talentBId === tId) friends.add(r.talentAId);
