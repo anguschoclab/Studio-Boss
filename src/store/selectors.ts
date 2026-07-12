@@ -306,10 +306,10 @@ export const selectTalentTierDistribution = createSelector(
   (talents) => {
     const list = Object.values(talents);
     const distribution = [
-      { tier: 'A-list', count: list.filter(t => t.tier === 1 || t.tier === 'A_LIST').length },
-      { tier: 'B-list', count: list.filter(t => t.tier === 2 || t.tier === 'B_LIST').length },
-      { tier: 'C-list', count: list.filter(t => t.tier === 3 || t.tier === 'C_LIST').length },
-      { tier: 'D-list', count: list.filter(t => t.tier === 4 || t.tier === 'D_LIST').length },
+      { tier: 'A-list', count: list.filter(t => t.tier === 'A_LIST').length },
+      { tier: 'B-list', count: list.filter(t => t.tier === 'B_LIST').length },
+      { tier: 'C-list', count: list.filter(t => t.tier === 'C_LIST').length },
+      { tier: 'D-list', count: list.filter(t => t.tier === 'NEWCOMER').length },
     ];
     return { data: distribution, totalTalent: list.length };
   }

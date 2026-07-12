@@ -1,6 +1,7 @@
-import { GameState, StateImpact, Talent, TalentTier, Family, DeathEvent } from '../../types';
+import { GameState, StateImpact, Talent, TalentTier, Family } from '../../types';
 import { RandomGenerator } from '../../utils/rng';
 import { generateTalent } from '../../generators/talent/index';
+import type { DeathEvent } from './DeathSystem';
 
 /**
  * Dynasty System
@@ -47,9 +48,12 @@ export function checkPregnancies(state: GameState, rng: RandomGenerator): StateI
 
   // Get all public romantic pairs (would come from RelationshipSystem in full implementation)
   // For now, check married/coupled talent with spouseId
-  const talents = Object.values(state.entities.talents || {});
+  const talentsObj = state.entities.talents || {};
 
-  for (const talent of talents) {
+  for (const tId in talentsObj) {
+    if (!Object.prototype.hasOwnProperty.call(talentsObj, tId)) continue;
+    const talent = talentsObj[tId];
+    if (!talent) continue;
     if (!talent.spouseId) continue; // Not in a relationship
 
     const spouse = state.entities.talents?.[talent.spouseId];
@@ -134,14 +138,14 @@ export function processComingOfAge(state: GameState, rng: RandomGenerator): Stat
   // 2. The talent is older (40+)
   // 3. Random chance
 
-  const talents = Object.values(state.entities.talents || {});
-  const existingNepoIds = new Set(
-    talents.filter(t => t.isNepoBaby).map(t => t.parentIds || []).flat()
-  );
+  const talentsObj = state.entities.talents || {};
 
-  for (const parent of talents) {
+  for (const tId in talentsObj) {
+    if (!Object.prototype.hasOwnProperty.call(talentsObj, tId)) continue;
+    const parent = talentsObj[tId];
+    if (!parent) continue;
     if (parent.demographics.age < 40) continue;
-    if (parent.tier > 2) continue; // Only A-listers and B-listers have nepo babies
+    if (parent.tier !== 'A_LIST' && parent.tier !== 'B_LIST') continue; // Only A-listers and B-listers have nepo babies
 
     // Skip if already has children in pool
     if (parent.childIds && parent.childIds.length > 0) continue;
@@ -200,9 +204,9 @@ function generateNepoBaby(parent: Talent, state: GameState, rng: RandomGenerator
   }
 
   // Generate base talent
-  const childTalent = generateTalent(rng, {
+  const childTalent = generateTalent({
     role: childRole,
-    tier: 4, // Start as new talent
+    tier: 'NEWCOMER', // Start as new talent
   });
 
   // Override with nepo baby characteristics
@@ -235,11 +239,11 @@ function generateNepoBaby(parent: Talent, state: GameState, rng: RandomGenerator
 
   // Nepo baby bonuses
   const parentPrestige = parent.prestige || 50;
-  const nepoBonus = parent.tier === 1 ? 25 : parent.tier === 2 ? 15 : 10;
+  const nepoBonus = parent.tier === 'A_LIST' ? 25 : parent.tier === 'B_LIST' ? 15 : 10;
 
   childTalent.prestige = Math.min(100, childTalent.prestige + nepoBonus);
   childTalent.draw = Math.min(100, childTalent.draw + nepoBonus);
-  childTalent.fee = childTalent.fee + (parent.tier === 1 ? 1_000_000 : 500_000);
+  childTalent.fee = childTalent.fee + (parent.tier === 'A_LIST' ? 1_000_000 : 500_000);
 
   // Archetype inheritance tendency
   if (parent.actorArchetype && childRole === 'actor') {
@@ -269,13 +273,23 @@ function generateNepoBaby(parent: Talent, state: GameState, rng: RandomGenerator
  * Calculate dynasty reputation based on family members
  */
 export function calculateDynastyReputation(familyId: string, state: GameState): number {
-  const familyMembers = Object.values(state.entities.talents || {})
-    .filter(t => t.familyId === familyId);
+  const talentsObj = state.entities.talents || {};
+  let familyCount = 0;
+  let totalPrestige = 0;
+  let tier1Count = 0;
 
-  if (familyMembers.length === 0) return 50;
+  for (const tId in talentsObj) {
+    if (!Object.prototype.hasOwnProperty.call(talentsObj, tId)) continue;
+    const t = talentsObj[tId];
+    if (!t || t.familyId !== familyId) continue;
+    familyCount++;
+    totalPrestige += (t.prestige || 50);
+    if (t.tier === 'A_LIST') tier1Count++;
+  }
 
-  const avgPrestige = familyMembers.reduce((sum, t) => sum + (t.prestige || 50), 0) / familyMembers.length;
-  const tier1Count = familyMembers.filter(t => t.tier === 1).length;
+  if (familyCount === 0) return 50;
+
+  const avgPrestige = totalPrestige / familyCount;
   const tierBonus = tier1Count * 10;
 
   return Math.min(100, avgPrestige + tierBonus);
@@ -304,7 +318,7 @@ export function processDeathInFamily(
       if (!child) continue;
 
       // Child gains some prestige from parent's legacy
-      const legacyBoost = deceased.tier === 1 ? 5 : deceased.tier === 2 ? 3 : 1;
+      const legacyBoost = deceased.tier === 'A_LIST' ? 5 : deceased.tier === 'B_LIST' ? 3 : 1;
 
       impacts.push({
         type: 'TALENT_UPDATED',

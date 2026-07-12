@@ -30,9 +30,9 @@ export function generateGuestStarBooking(
   const impact = Math.max(1, Math.min(20, baseImpact + chemistryBonus));
 
   // Cost based on talent tier and role
-  const baseCost = guestTalent.tier === 1 ? 500000 :
-                   guestTalent.tier === 2 ? 200000 :
-                   guestTalent.tier === 3 ? 100000 : 50000;
+  const baseCost = guestTalent.tier === 'A_LIST' ? 500000 :
+                   guestTalent.tier === 'B_LIST' ? 200000 :
+                   guestTalent.tier === 'C_LIST' ? 100000 : 50000;
   const cost = baseCost * (roleType === 'cameo' ? 0.3 : 1);
 
   // Fan reaction prediction

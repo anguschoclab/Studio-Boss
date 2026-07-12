@@ -1,6 +1,8 @@
 // Talent Discovery System Types
 // Breakout stars, guest stars, hidden gems
 
+import { TalentTier } from './talent.types';
+
 export type BreakoutTrigger =
   | 'indie_hit'
   | 'viral_scene'
@@ -17,10 +19,10 @@ export interface BreakoutStar {
   week: number;
   // Pre-breakout stats (for comparison)
   previousStarMeter: number;
-  previousTier: number;
+  previousTier: TalentTier;
   // Post-breakout stats
   starMeterJump: number;
-  newTier: number;
+  newTier: TalentTier;
   feeMultiplier: number; // 2x, 3x, etc.
   // Duration of breakout hype
   hypeWeeksRemaining: number;

@@ -130,7 +130,7 @@ export const TalentLifecycleSystem = {
         const weeksSinceLastRelease = state.week - (talent.lastReleaseWeek || 0);
         let decay = 0;
         if (weeksSinceLastRelease > 52) {
-          decay = talent.tier === 1 ? -1 : -0.5;
+          decay = talent.tier === 'A_LIST' ? -1 : -0.5;
         }
         const legacy = (talent as unknown as { legacyPrestige?: number }).legacyPrestige || 0;
         const raw = (talent.prestige || 50) + decay;
@@ -163,7 +163,7 @@ export const TalentLifecycleSystem = {
       
       if (rng.next() < 0.0001) retirementChance = 1.0; 
 
-      if (talent.tier === 1) {
+      if (talent.tier === 'A_LIST') {
         retirementChance *= 0.2;
       }
 
@@ -185,13 +185,13 @@ export const TalentLifecycleSystem = {
       const newTalents: Talent[] = [];
       for (let i = 0; i < needsReplacement; i++) {
         const tierRoll = rng.next();
-        let tier: TalentTier = 4;
-        if (tierRoll > 0.90) tier = 3;
+        let tier: TalentTier = 'NEWCOMER';
+        if (tierRoll > 0.90) tier = 'C_LIST';
         
         const roleRoll = rng.next();
         const role = roleRoll > 0.7 ? 'director' : (roleRoll > 0.5 ? 'writer' : (roleRoll > 0.4 ? 'producer' : 'actor'));
 
-        newTalents.push(generateTalent(rng, { role: role as 'actor' | 'director' | 'writer' | 'producer', tier }));
+        newTalents.push(generateTalent({ role: role as 'actor' | 'director' | 'writer' | 'producer', tier }));
       }
       impacts.push({
         type: 'TALENT_ADDED',

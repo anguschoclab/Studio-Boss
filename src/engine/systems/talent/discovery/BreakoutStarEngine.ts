@@ -19,7 +19,7 @@ export function checkForBreakout(
 ): BreakoutStar | null {
   // Skip if already a breakout or top tier
   if ((talent as any).isBreakout) return null;
-  if (talent.tier === 1) return null;
+  if (talent.tier === 'A_LIST') return null;
 
   const currentStarMeter = talent.starMeter || 50;
 
@@ -63,9 +63,9 @@ function createBreakoutStar(
 
   // Calculate new tier based on star meter
   let newTier = talent.tier;
-  if (newStarMeter > 80) newTier = 1;
-  else if (newStarMeter > 60) newTier = 2;
-  else if (newStarMeter > 40) newTier = 3;
+  if (newStarMeter > 80) newTier = 'A_LIST';
+  else if (newStarMeter > 60) newTier = 'B_LIST';
+  else if (newStarMeter > 40) newTier = 'C_LIST';
 
   // Fee multiplier based on jump size
   const feeMultiplier = 1 + (starMeterJump / 20);

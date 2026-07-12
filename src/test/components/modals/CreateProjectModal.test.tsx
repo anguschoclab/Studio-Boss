@@ -183,5 +183,18 @@ describe('CreateProjectModal', () => {
       attachedTalentIds: [],
     }));
   });
+
+  it('title input has maxLength={100}', () => {
+    render(<CreateProjectModal />);
+    const titleInput = screen.getByDisplayValue('Generated Test Title');
+    expect(titleInput).toHaveAttribute('maxlength', '100');
+  });
+
+  it('flavor input has maxLength={200}', () => {
+    render(<CreateProjectModal />);
+    // The flavor/positioning input has placeholder "A bold reimagining of..."
+    const flavorInput = screen.getByPlaceholderText('A bold reimagining of...');
+    expect(flavorInput).toHaveAttribute('maxlength', '200');
+  });
 });
 

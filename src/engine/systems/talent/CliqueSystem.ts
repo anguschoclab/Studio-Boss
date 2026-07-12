@@ -2,13 +2,10 @@ import { GameState, StateImpact, Talent } from '../../types';
 import { RandomGenerator } from '../../utils/rng';
 import {
   Clique,
-  CliqueStatus,
   CliqueReputation,
-  CliqueFormation,
   CLIQUE_NAME_PATTERNS,
 } from '../../types/clique.types';
 import {
-  getTalentRelationships,
   areFriends,
 } from './RelationshipSystem';
 
@@ -84,7 +81,7 @@ function calculateExclusivity(members: Talent[]): number {
   let exclusivity = 50;
 
   const dynastyMembers = members.filter(m => m.accessLevel === 'dynasty').length;
-  const tier1Count = members.filter(m => m.tier === 1).length;
+  const tier1Count = members.filter(m => m.tier === 'A_LIST').length;
 
   exclusivity += dynastyMembers * 10;
   exclusivity += tier1Count * 15;
@@ -95,30 +92,48 @@ function calculateExclusivity(members: Talent[]): number {
 /**
  * Find potential cliques (groups of mutually friendly talents)
  */
-function findPotentialCliques(state: GameState, rng: RandomGenerator): string[][] {
+function findPotentialCliques(state: GameState, _rng: RandomGenerator): string[][] {
   const potentialCliques: string[][] = [];
   const talentsObj = state.entities.talents || {};
 
+  // Pre-compute friends adjacency map: talentId → friendId[]
+  const friendsMap = new Map<string, Set<string>>();
+  for (const tId in talentsObj) {
+    if (!Object.prototype.hasOwnProperty.call(talentsObj, tId)) continue;
+    const talent = talentsObj[tId];
+    if (!talent) continue;
+    const relationships = (state.relationships as unknown as { relationships?: Array<{ talentAId: string; talentBId: string; type: string; strength: number }> })?.relationships || [];
+    const friends = new Set<string>();
+    for (const r of relationships) {
+      if (r.type !== 'friend' || r.strength < CLIQUE_FRIENDSHIP_THRESHOLD) continue;
+      if (r.talentAId === tId) friends.add(r.talentBId);
+      else if (r.talentBId === tId) friends.add(r.talentAId);
+    }
+    if (friends.size > 0) friendsMap.set(tId, friends);
+  }
+
   // Check each talent as a potential clique center
   for (const tId in talentsObj) {
+    if (!Object.prototype.hasOwnProperty.call(talentsObj, tId)) continue;
     const center = talentsObj[tId];
-    // Get all friends of this talent
-    const centerRelationships = getTalentRelationships(center.id, state);
-    const friendIds = centerRelationships
-      .filter(r => r.type === 'friend' && r.strength >= CLIQUE_FRIENDSHIP_THRESHOLD)
-      .map(r => r.talentAId === center.id ? r.talentBId : r.talentAId);
+    if (!center) continue;
 
-    if (friendIds.length < MIN_CLIQUE_SIZE - 1) continue; // Need at least 2 other friends
+    const centerFriends = friendsMap.get(tId);
+    if (!centerFriends || centerFriends.size < MIN_CLIQUE_SIZE - 1) continue;
+
+    const friendIds = Array.from(centerFriends);
 
     // Check which friends are also friends with each other
     const mutuallyFriendly: string[] = [center.id];
 
     for (const friendId of friendIds) {
       let mutualFriendCount = 0;
+      const friendFriends = friendsMap.get(friendId);
 
       for (const otherFriendId of friendIds) {
         if (friendId === otherFriendId) continue;
-        if (areFriends(friendId, otherFriendId, state)) {
+        // Check friendship via adjacency map or areFriends fallback
+        if (friendFriends?.has(otherFriendId) || areFriends(friendId, otherFriendId, state)) {
           mutualFriendCount++;
         }
       }

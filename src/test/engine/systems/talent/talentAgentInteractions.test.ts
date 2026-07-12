@@ -335,7 +335,7 @@ describe('TalentAgentInteractionEngine', () => {
           name: 'Talent 1',
           role: 'actor',
           roles: ['actor'],
-          tier: 2,
+          tier: 'B_LIST',
           demographics: { gender: 'MALE', country: 'US', ethnicity: 'white', age: 35 },
           psychology: { ego: 50, mood: 50, scandalRisk: 50, synergyAffinities: [], synergyConflicts: [] },
           skills: { acting: 70, directing: 50, writing: 50, stardom: 60 },

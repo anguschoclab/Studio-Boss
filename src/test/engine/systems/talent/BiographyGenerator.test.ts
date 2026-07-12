@@ -48,7 +48,7 @@ function createMockTalent(id: string, overrides: Partial<Talent> & Record<string
     name: `Talent ${id}`,
     role: "actor",
     roles: ["actor"],
-    tier: 3,
+    tier: 'C_LIST',
     bio: "This Tier 3 talent is a rising star.",
     starMeter: 50,
     prestige: 50,

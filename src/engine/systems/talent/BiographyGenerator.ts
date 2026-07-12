@@ -82,7 +82,7 @@ function generateOpening(talent: Talent, rng: RandomGenerator): string {
   const age = talent.demographics?.age || 30;
   const ageBracket = age < 30 ? 'rising' : age < 50 ? 'established' : 'veteran';
   const role = talent.role || 'performer';
-  const tier = talent.tier === 1 ? 'A-list' : talent.tier === 2 ? 'respected' : talent.tier === 3 ? 'working' : 'up-and-coming';
+  const tier = talent.tier === 'A_LIST' ? 'A-list' : talent.tier === 'B_LIST' ? 'respected' : talent.tier === 'C_LIST' ? 'working' : 'up-and-coming';
 
   const openers = [
     `${talent.name} is a ${ageBracket} ${tier} ${role} in Hollywood, currently ${age} years old.`,

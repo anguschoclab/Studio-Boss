@@ -123,7 +123,7 @@ function generatePhotoshoot(
   // Choose shoot type based on talent
   let preferredTypes = PHOTOSHOOT_TYPES;
 
-  if (talent.accessLevel === 'dynasty' || talent.tier === 1) {
+  if (talent.accessLevel === 'dynasty' || talent.tier === 'A_LIST') {
     preferredTypes = ['magazine_cover', 'fashion_editorial'];
   } else if (talent.psychology?.scandalRisk && talent.psychology.scandalRisk > 60) {
     preferredTypes = ['controversial', 'candid'];
@@ -332,7 +332,7 @@ export function tickMarketingPromotionSystem(
 
     // --- Photoshoot ---
     // Higher chance for top-tier talent
-    const photoshootChance = PHOTOSHOOT_CHANCE * (talent.tier === 1 ? 2 : 1);
+    const photoshootChance = PHOTOSHOOT_CHANCE * (talent.tier === 'A_LIST' ? 2 : 1);
 
     if (rng.next() < photoshootChance) {
       const photoshoot = generatePhotoshoot(talent, state, rng);

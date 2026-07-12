@@ -15,7 +15,7 @@ describe('tickTalentDiscoverySystem', () => {
   });
 
   it('detects breakout stars from recently released projects', () => {
-    const talent = createMockTalent({ id: 'TAL-1', name: 'Rising Star', tier: 3 as any, starMeter: 40 });
+    const talent = createMockTalent({ id: 'TAL-1', name: 'Rising Star', tier: 'C_LIST', starMeter: 40 });
     const project = createMockProject({
       id: 'PRJ-1',
       title: 'Indie Hit',
@@ -33,6 +33,8 @@ describe('tickTalentDiscoverySystem', () => {
         talents: { 'TAL-1': talent },
         contracts: { 'CON-1': contract },
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
     const rng = new RandomGenerator(42);
@@ -46,7 +48,7 @@ describe('tickTalentDiscoverySystem', () => {
   });
 
   it('skips projects outside the 4-week release window', () => {
-    const talent = createMockTalent({ id: 'TAL-1', tier: 3 as any, starMeter: 40 });
+    const talent = createMockTalent({ id: 'TAL-1', tier: 'C_LIST', starMeter: 40 });
     const project = createMockProject({
       id: 'PRJ-1',
       title: 'Old Movie',
@@ -64,6 +66,8 @@ describe('tickTalentDiscoverySystem', () => {
         talents: { 'TAL-1': talent },
         contracts: { 'CON-1': contract },
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
     const rng = new RandomGenerator(42);
@@ -77,7 +81,7 @@ describe('tickTalentDiscoverySystem', () => {
       id: 'TAL-GUEST',
       name: 'Famous Guest',
       starMeter: 75,
-      tier: 2 as any,
+      tier: 'B_LIST',
     });
     const series = createMockProject({
       id: 'PRJ-SERIES',
@@ -95,6 +99,8 @@ describe('tickTalentDiscoverySystem', () => {
         talents: { 'TAL-GUEST': star },
         contracts: { 'CON-S1': seriesContract },
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
     const rng = new RandomGenerator(42);
@@ -111,7 +117,7 @@ describe('tickTalentDiscoverySystem', () => {
       id: 'TAL-GUEST',
       name: 'Famous Guest',
       starMeter: 75,
-      tier: 2 as any,
+      tier: 'B_LIST',
     });
     const series = createMockProject({
       id: 'PRJ-SERIES',
@@ -141,6 +147,8 @@ describe('tickTalentDiscoverySystem', () => {
         talents: { 'TAL-GUEST': star },
         contracts: { 'CON-S1': seriesContract },
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
       relationships: {
         discovery: {
@@ -169,9 +177,9 @@ describe('tickTalentDiscoverySystem', () => {
       projectId: 'PRJ-1',
       week: 5,
       previousStarMeter: 40,
-      previousTier: 3,
+      previousTier: 'C_LIST',
       starMeterJump: 30,
-      newTier: 2,
+      newTier: 'B_LIST',
       feeMultiplier: 2,
       hypeWeeksRemaining: 10,
       biddingWarActive: true,

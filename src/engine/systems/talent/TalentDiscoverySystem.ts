@@ -119,7 +119,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
   const talentsDict = state.entities.talents || {};
   for (const tId in talentsDict) {
     const t = talentsDict[tId];
-    if ((t.starMeter || 50) >= MIN_STARMETER_FOR_GUEST && t.tier <= 2) {
+    if ((t.starMeter || 50) >= MIN_STARMETER_FOR_GUEST && (t.tier === 'A_LIST' || t.tier === 'B_LIST')) {
       guestCandidates.push(t);
     }
   }

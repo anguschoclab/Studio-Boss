@@ -282,10 +282,10 @@ export const TalentDriftEngine = {
     }
 
     // Tier affects trajectory
-    if (talent.tier === 1) {
-      factor *= 0.9; // Tier 1 talents are more stable
-    } else if (talent.tier === 4) {
-      factor *= 1.1; // Tier 4 talents are more volatile
+    if (talent.tier === 'A_LIST') {
+      factor *= 0.9; // A_LIST talents are more stable
+    } else if (talent.tier === 'NEWCOMER') {
+      factor *= 1.1; // NEWCOMER talents are more volatile
     }
 
     // Prestige affects trajectory

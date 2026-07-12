@@ -39,7 +39,7 @@ export const ACTOR_ARCHETYPES: Record<ActorArchetype, ArchetypeConfig> = {
     key: 'movie_star',
     name: 'Movie Star',
     description: 'Big-screen actors who prefer films over TV, command high fees, and have strong brand recognition.',
-    tierBias: [1, 2],
+    tierBias: ['A_LIST', 'B_LIST'],
     projectPreferences: {
       formats: ['film'],
       budgetTiers: ['high', 'blockbuster'],
@@ -65,7 +65,7 @@ export const ACTOR_ARCHETYPES: Record<ActorArchetype, ArchetypeConfig> = {
     key: 'tv_star',
     name: 'TV Star',
     description: 'Television actors who prefer series work, may transition to films for prestige.',
-    tierBias: [2, 3],
+    tierBias: ['B_LIST', 'C_LIST'],
     projectPreferences: {
       formats: ['tv', 'streaming'],
       budgetTiers: ['mid', 'high'],
@@ -91,7 +91,7 @@ export const ACTOR_ARCHETYPES: Record<ActorArchetype, ArchetypeConfig> = {
     key: 'character_actor',
     name: 'Character Actor',
     description: 'Versatile actors known for playing diverse roles, often in supporting but memorable parts.',
-    tierBias: [2, 3, 4],
+    tierBias: ['B_LIST', 'C_LIST', 'NEWCOMER'],
     projectPreferences: {
       formats: ['film', 'tv'],
       budgetTiers: ['indie', 'low', 'mid'],
@@ -117,7 +117,7 @@ export const ACTOR_ARCHETYPES: Record<ActorArchetype, ArchetypeConfig> = {
     key: 'action_hero',
     name: 'Action Hero',
     description: 'Physical performers specializing in action films, often in franchise roles.',
-    tierBias: [1, 2],
+    tierBias: ['A_LIST', 'B_LIST'],
     projectPreferences: {
       formats: ['film'],
       budgetTiers: ['high', 'blockbuster'],
@@ -143,7 +143,7 @@ export const ACTOR_ARCHETYPES: Record<ActorArchetype, ArchetypeConfig> = {
     key: 'comedy_star',
     name: 'Comedy Star',
     description: 'Comedic actors who excel in comedies and romantic comedies.',
-    tierBias: [2, 3],
+    tierBias: ['B_LIST', 'C_LIST'],
     projectPreferences: {
       formats: ['film', 'tv'],
       budgetTiers: ['low', 'mid', 'high'],
@@ -169,7 +169,7 @@ export const ACTOR_ARCHETYPES: Record<ActorArchetype, ArchetypeConfig> = {
     key: 'prestige_actor',
     name: 'Prestige Actor',
     description: 'Critically acclaimed actors who prioritize artistic projects over commercial success.',
-    tierBias: [1, 2],
+    tierBias: ['A_LIST', 'B_LIST'],
     projectPreferences: {
       formats: ['film'],
       budgetTiers: ['indie', 'mid', 'high'],
@@ -195,7 +195,7 @@ export const ACTOR_ARCHETYPES: Record<ActorArchetype, ArchetypeConfig> = {
     key: 'indie_darling',
     name: 'Indie Darling',
     description: 'Actors who made their name in independent films, often seeking artistic fulfillment.',
-    tierBias: [2, 3, 4],
+    tierBias: ['B_LIST', 'C_LIST', 'NEWCOMER'],
     projectPreferences: {
       formats: ['film'],
       budgetTiers: ['indie', 'low'],
@@ -221,7 +221,7 @@ export const ACTOR_ARCHETYPES: Record<ActorArchetype, ArchetypeConfig> = {
     key: 'viral_sensation',
     name: 'Viral Sensation',
     description: 'Actors who gained fame through social media or viral content, often with limited traditional training.',
-    tierBias: [3, 4],
+    tierBias: ['C_LIST', 'NEWCOMER'],
     projectPreferences: {
       formats: ['tv', 'streaming', 'unscripted'],
       budgetTiers: ['low', 'mid'],
@@ -247,7 +247,7 @@ export const ACTOR_ARCHETYPES: Record<ActorArchetype, ArchetypeConfig> = {
     key: 'kid_actor',
     name: 'Kid Actor',
     description: 'Child actors who typically start in family-friendly content and must navigate career transitions as they age.',
-    tierBias: [3, 4],
+    tierBias: ['C_LIST', 'NEWCOMER'],
     projectPreferences: {
       formats: ['tv', 'film'],
       budgetTiers: ['low', 'mid', 'high'],
@@ -273,7 +273,7 @@ export const ACTOR_ARCHETYPES: Record<ActorArchetype, ArchetypeConfig> = {
     key: 'young_adult',
     name: 'Young Adult',
     description: 'Actors in their late teens to early twenties transitioning from child roles to adult content.',
-    tierBias: [2, 3],
+    tierBias: ['B_LIST', 'C_LIST'],
     projectPreferences: {
       formats: ['tv', 'film', 'streaming'],
       budgetTiers: ['mid', 'high'],
@@ -299,7 +299,7 @@ export const ACTOR_ARCHETYPES: Record<ActorArchetype, ArchetypeConfig> = {
     key: 'veteran',
     name: 'Veteran',
     description: 'Established actors with decades of experience, often taking mentorship roles or character parts.',
-    tierBias: [1, 2],
+    tierBias: ['A_LIST', 'B_LIST'],
     projectPreferences: {
       formats: ['film', 'tv', 'streaming'],
       budgetTiers: ['indie', 'mid', 'high', 'blockbuster'],
@@ -332,7 +332,7 @@ export const WRITER_ARCHETYPES: Record<WriterArchetype, ArchetypeConfig> = {
     key: 'showrunner',
     name: 'Showrunner',
     description: 'Writer-creators who run TV series, with creative control over the show.',
-    tierBias: [1, 2],
+    tierBias: ['A_LIST', 'B_LIST'],
     projectPreferences: {
       formats: ['tv', 'streaming'],
       budgetTiers: ['mid', 'high', 'blockbuster'],
@@ -358,7 +358,7 @@ export const WRITER_ARCHETYPES: Record<WriterArchetype, ArchetypeConfig> = {
     key: 'screenwriter',
     name: 'Screenwriter',
     description: 'Traditional screenwriters who work on film scripts.',
-    tierBias: [2, 3, 4],
+    tierBias: ['B_LIST', 'C_LIST', 'NEWCOMER'],
     projectPreferences: {
       formats: ['film'],
       budgetTiers: ['low', 'mid', 'high'],
@@ -384,7 +384,7 @@ export const WRITER_ARCHETYPES: Record<WriterArchetype, ArchetypeConfig> = {
     key: 'script_doctor',
     name: 'Script Doctor',
     description: 'Writers hired to fix or improve existing scripts.',
-    tierBias: [2, 3, 4],
+    tierBias: ['B_LIST', 'C_LIST', 'NEWCOMER'],
     projectPreferences: {
       formats: ['film', 'tv'],
       budgetTiers: ['mid', 'high'],
@@ -410,7 +410,7 @@ export const WRITER_ARCHETYPES: Record<WriterArchetype, ArchetypeConfig> = {
     key: 'novelist',
     name: 'Novelist',
     description: 'Authors adapting their own work to screen, often with strong artistic vision.',
-    tierBias: [1, 2],
+    tierBias: ['A_LIST', 'B_LIST'],
     projectPreferences: {
       formats: ['film', 'tv'],
       budgetTiers: ['mid', 'high', 'blockbuster'],
@@ -436,7 +436,7 @@ export const WRITER_ARCHETYPES: Record<WriterArchetype, ArchetypeConfig> = {
     key: 'comedy_writer',
     name: 'Comedy Writer',
     description: 'Writers specializing in comedy content for film and TV.',
-    tierBias: [2, 3, 4],
+    tierBias: ['B_LIST', 'C_LIST', 'NEWCOMER'],
     projectPreferences: {
       formats: ['film', 'tv', 'streaming'],
       budgetTiers: ['low', 'mid', 'high'],
@@ -462,7 +462,7 @@ export const WRITER_ARCHETYPES: Record<WriterArchetype, ArchetypeConfig> = {
     key: 'genre_specialist',
     name: 'Genre Specialist',
     description: 'Writers who excel in specific genres like horror, sci-fi, or romance.',
-    tierBias: [2, 3],
+    tierBias: ['B_LIST', 'C_LIST'],
     projectPreferences: {
       formats: ['film', 'tv', 'streaming'],
       budgetTiers: ['low', 'mid', 'high'],
@@ -488,7 +488,7 @@ export const WRITER_ARCHETYPES: Record<WriterArchetype, ArchetypeConfig> = {
     key: 'prestige_writer',
     name: 'Prestige Writer',
     description: 'Critically acclaimed writers who prioritize artistic projects.',
-    tierBias: [1, 2],
+    tierBias: ['A_LIST', 'B_LIST'],
     projectPreferences: {
       formats: ['film', 'tv'],
       budgetTiers: ['indie', 'mid', 'high'],
@@ -520,7 +520,7 @@ export const PRODUCER_ARCHETYPES: Record<ProducerArchetype, ArchetypeConfig> = {
     key: 'blockbuster_producer',
     name: 'Blockbuster Producer',
     description: 'Producers who specialize in big-budget franchise films.',
-    tierBias: [1, 2],
+    tierBias: ['A_LIST', 'B_LIST'],
     projectPreferences: {
       formats: ['film'],
       budgetTiers: ['high', 'blockbuster'],
@@ -546,7 +546,7 @@ export const PRODUCER_ARCHETYPES: Record<ProducerArchetype, ArchetypeConfig> = {
     key: 'indie_producer',
     name: 'Indie Producer',
     description: 'Producers who work on independent films with artistic focus.',
-    tierBias: [2, 3, 4],
+    tierBias: ['B_LIST', 'C_LIST', 'NEWCOMER'],
     projectPreferences: {
       formats: ['film'],
       budgetTiers: ['indie', 'low'],
@@ -572,7 +572,7 @@ export const PRODUCER_ARCHETYPES: Record<ProducerArchetype, ArchetypeConfig> = {
     key: 'studio_exec',
     name: 'Studio Executive',
     description: 'Producers with studio backgrounds who prioritize commercial success.',
-    tierBias: [1, 2],
+    tierBias: ['A_LIST', 'B_LIST'],
     projectPreferences: {
       formats: ['film', 'tv'],
       budgetTiers: ['mid', 'high', 'blockbuster'],
@@ -598,7 +598,7 @@ export const PRODUCER_ARCHETYPES: Record<ProducerArchetype, ArchetypeConfig> = {
     key: 'packager',
     name: 'Packager',
     description: 'Producers who package multiple projects together for sale.',
-    tierBias: [2, 3],
+    tierBias: ['B_LIST', 'C_LIST'],
     projectPreferences: {
       formats: ['tv', 'streaming'],
       budgetTiers: ['mid', 'high'],
@@ -624,7 +624,7 @@ export const PRODUCER_ARCHETYPES: Record<ProducerArchetype, ArchetypeConfig> = {
     key: 'line_producer',
     name: 'Line Producer',
     description: 'Producers focused on budget management and production logistics.',
-    tierBias: [2, 3, 4],
+    tierBias: ['B_LIST', 'C_LIST', 'NEWCOMER'],
     projectPreferences: {
       formats: ['film', 'tv'],
       budgetTiers: ['low', 'mid', 'high'],
@@ -650,7 +650,7 @@ export const PRODUCER_ARCHETYPES: Record<ProducerArchetype, ArchetypeConfig> = {
     key: 'creative_producer',
     name: 'Creative Producer',
     description: 'Producers with strong creative input and artistic vision.',
-    tierBias: [1, 2],
+    tierBias: ['A_LIST', 'B_LIST'],
     projectPreferences: {
       formats: ['film', 'tv'],
       budgetTiers: ['mid', 'high'],
@@ -682,7 +682,7 @@ export const PERSONALITY_ARCHETYPES: Record<PersonalityArchetype, ArchetypeConfi
     key: 'influencer',
     name: 'Influencer',
     description: 'Social media personalities with large followings.',
-    tierBias: [3, 4],
+    tierBias: ['C_LIST', 'NEWCOMER'],
     projectPreferences: {
       formats: ['streaming', 'unscripted', 'tv'],
       budgetTiers: ['low', 'mid'],
@@ -708,7 +708,7 @@ export const PERSONALITY_ARCHETYPES: Record<PersonalityArchetype, ArchetypeConfi
     key: 'reality_star',
     name: 'Reality Star',
     description: 'Personalities from reality television seeking mainstream opportunities.',
-    tierBias: [3, 4],
+    tierBias: ['C_LIST', 'NEWCOMER'],
     projectPreferences: {
       formats: ['unscripted', 'tv', 'streaming'],
       budgetTiers: ['low', 'mid'],
@@ -734,7 +734,7 @@ export const PERSONALITY_ARCHETYPES: Record<PersonalityArchetype, ArchetypeConfi
     key: 'talk_show_host',
     name: 'Talk Show Host',
     description: 'Television hosts with strong communication skills and personality.',
-    tierBias: [2, 3],
+    tierBias: ['B_LIST', 'C_LIST'],
     projectPreferences: {
       formats: ['tv', 'streaming'],
       budgetTiers: ['mid', 'high'],
@@ -760,7 +760,7 @@ export const PERSONALITY_ARCHETYPES: Record<PersonalityArchetype, ArchetypeConfi
     key: 'news_anchor',
     name: 'News Anchor',
     description: 'Journalists and news presenters.',
-    tierBias: [2, 3, 4],
+    tierBias: ['B_LIST', 'C_LIST', 'NEWCOMER'],
     projectPreferences: {
       formats: ['tv', 'streaming'],
       budgetTiers: ['mid', 'high'],
@@ -786,7 +786,7 @@ export const PERSONALITY_ARCHETYPES: Record<PersonalityArchetype, ArchetypeConfi
     key: 'viral_creator',
     name: 'Viral Creator',
     description: 'Digital content creators who gained fame through online platforms.',
-    tierBias: [3, 4],
+    tierBias: ['C_LIST', 'NEWCOMER'],
     projectPreferences: {
       formats: ['streaming', 'unscripted', 'tv'],
       budgetTiers: ['low', 'mid'],
@@ -812,7 +812,7 @@ export const PERSONALITY_ARCHETYPES: Record<PersonalityArchetype, ArchetypeConfi
     key: 'legacy_personality',
     name: 'Legacy Personality',
     description: 'Established personalities with long careers and name recognition.',
-    tierBias: [1, 2],
+    tierBias: ['A_LIST', 'B_LIST'],
     projectPreferences: {
       formats: ['tv', 'film'],
       budgetTiers: ['mid', 'high'],
@@ -1007,26 +1007,26 @@ export function generatePersonalityTrait(rng: { next: () => number }): TalentPer
 /**
  * Generate career trajectory based on tier
  */
-const TIER_TRAJECTORY_CHANCES: Record<number, (roll: number) => CareerTrajectory> = {
-  1: (roll) => (roll > 0.3 ? 'peak' : 'declining'),
-  2: (roll) => {
+const TIER_TRAJECTORY_CHANCES: Partial<Record<TalentTier, (roll: number) => CareerTrajectory>> = {
+  'A_LIST': (roll) => (roll > 0.3 ? 'peak' : 'declining'),
+  'B_LIST': (roll) => {
     if (roll < 0.3) return 'rising';
     if (roll < 0.6) return 'peak';
     return 'declining';
   },
-  3: (roll) => {
+  'C_LIST': (roll) => {
     if (roll < 0.5) return 'rising';
     if (roll < 0.8) return 'peak';
     return 'declining';
   },
-  4: () => 'rising',
+  'NEWCOMER': () => 'rising',
 };
 
 /**
  * Generate career trajectory based on tier
  */
 export function generateCareerTrajectory(tier: TalentTier, rng: { next(): number }): CareerTrajectory {
-  const handler = TIER_TRAJECTORY_CHANCES[tier] || TIER_TRAJECTORY_CHANCES[4];
+  const handler = TIER_TRAJECTORY_CHANCES[tier] || TIER_TRAJECTORY_CHANCES['NEWCOMER']!;
   return handler(rng.next());
 }
 

@@ -182,7 +182,7 @@ function calculateGriefImpact(deadTalent: Talent, state: GameState): { coStarIds
 
   // Calculate grief level based on relationship and talent tier
   // Higher tier talent = more grief industry-wide
-  const tierGrief = deadTalent.tier === 1 ? 80 : deadTalent.tier === 2 ? 60 : 40;
+  const tierGrief = deadTalent.tier === 'A_LIST' ? 80 : deadTalent.tier === 'B_LIST' ? 60 : 40;
 
   return { coStarIds, griefLevel: tierGrief };
 }
@@ -402,7 +402,7 @@ export function tickDeathSystem(state: GameState, rng: RandomGenerator): StateIm
           payload: {
             id: rng.uuid('NWS'),
             headline,
-            description: `${talent.name}, ${age}, ${deathEvent.cause} ${deathEvent.location}. The industry mourns the loss of this ${talent.tier === 1 ? 'legendary' : talent.tier === 2 ? 'acclaimed' : 'beloved'} ${talent.role}.`,
+            description: `${talent.name}, ${age}, ${deathEvent.cause} ${deathEvent.location}. The industry mourns the loss of this ${talent.tier === 'A_LIST' ? 'legendary' : talent.tier === 'B_LIST' ? 'acclaimed' : 'beloved'} ${talent.role}.`,
             category: 'talent',
             publication: deathEvent.isPublic ? 'Variety' : 'Industry Insider',
           },

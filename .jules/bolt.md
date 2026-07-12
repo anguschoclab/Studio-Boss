@@ -123,3 +123,13 @@ I eliminated the duplicate iterations and the `Map` construction entirely. The e
 ## 2026-06-28 - Replace Object.values().find() with for...in in hasCreativeControl
 **Learning:** `hasCreativeControl` in `directors.ts` used `Object.values(state.entities.contracts).find()` which allocates an intermediate array and performs a linear scan on every call. Since this function is called during production checks, this creates unnecessary GC pressure.
 **Action:** Replaced with a `for...in` loop that iterates contracts directly and returns early on match. Added optional chaining on `roles?.includes("director")` for defensive null-safety.
+
+## 2026-06-28 - Replace getTalentRelationships() calls with pre-computed friendsMap in CliqueSystem
+**Learning:** `findPotentialCliques` in `CliqueSystem.ts` called `getTalentRelationships()` for every talent in the pool inside a nested loop, creating O(N*M) complexity where N is talent count and M is relationships per talent. Each call also allocated intermediate arrays for filtering and mapping.
+**Action:** Pre-computed a `friendsMap` adjacency map (Map<string, Set<string>>) before the main loop, iterating the relationships array once. Replaced `getTalentRelationships()` calls with direct Map lookups. Used get-or-create pattern for Map entries. Added defensive `if (!center) continue;` check. Removed unused imports (`CliqueStatus`, `CliqueFormation`, `getTalentRelationships`). Also fixed pre-existing `TalentTier` bug: `m.tier === 1` → `m.tier === 'A_LIST'` in `calculateExclusivity`.
+
+## 2026-06-28 - Replace Object.values() with for...in loops in DynastySystem
+**Learning:** `checkPregnancies`, `processComingOfAge`, and `calculateDynastyReputation` all used `Object.values()` on the talents dict, creating expensive intermediate arrays. `processComingOfAge` also allocated an `existingNepoIds` Set via `.filter().map().flat()` that was never read.
+**Action:** Replaced all `Object.values()` with `for...in` loops with `hasOwnProperty` guards. Removed dead `existingNepoIds` allocation. Replaced `.reduce()` and `.filter()` in `calculateDynastyReputation` with manual accumulators. Fixed `DeathEvent` import (was importing from `../../types` but is exported from `./DeathSystem`). Fixed all `TalentTier` numeric comparisons: `parent.tier > 2` → `parent.tier !== 'A_LIST' && parent.tier !== 'B_LIST'`, `parent.tier === 1` → `parent.tier === 'A_LIST'`, etc. Fixed `generateTalent` call signature: removed spurious `rng` first argument, changed `tier: 4` → `tier: 'NEWCOMER'`.
+
+
