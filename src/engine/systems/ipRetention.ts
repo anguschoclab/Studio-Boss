@@ -1,22 +1,26 @@
-import { Project } from '@/engine/types';
-import { StateImpact } from '../types/state.types';
+import { Project } from "@/engine/types";
+import { StateImpact } from "../types/state.types";
 
 export function calculateIPValue(project: Project): number {
-  if (project.state === 'development' || project.state === 'pitching' || project.state === 'needs_greenlight') {
+  if (
+    project.state === "development" ||
+    project.state === "pitching" ||
+    project.state === "needs_greenlight"
+  ) {
     return project.budget * 0.1; // Base speculative value
   }
-  
+
   // Real value comes from box office and buzz
   let value = project.revenue * 0.4; // 40% of theatrical as baseline catalog value
-  
+
   if (project.awardsProfile && project.awardsProfile.prestigeScore > 80) {
     value *= 1.5; // Prestige titles hold more long-term value
   }
-  
-  if (project.genre === 'Sci-Fi' || project.genre === 'Horror' || project.genre === 'Animation') {
+
+  if (project.genre === "Sci-Fi" || project.genre === "Horror" || project.genre === "Animation") {
     value *= 1.25; // Franchise friendly genres hold more value
   }
-  
+
   return value;
 }
 
@@ -34,42 +38,42 @@ export function checkRightsExpiry(project: Project, currentWeek: number): string
 }
 
 export function advanceIPRights(projects: Project[], currentWeek: number): StateImpact {
-   const impact: StateImpact = {
-       projectUpdates: [],
-       uiNotifications: []
-   };
-   
-   for (const p of projects) {
-     if (p.ipRights && p.ipRights.reversionWeek !== undefined) {
-        if (currentWeek >= p.ipRights.reversionWeek) {
-          impact.uiNotifications!.push(`You lost the exclusive IP rights to ${p.title}.`);
-          impact.projectUpdates!.push({
-            projectId: p.id,
-            update: {
-                ipRights: {
-                    ...p.ipRights,
-                    rightsOwner: 'external' as const
-                }
-            }
-          });
-          continue;
-        }
-     }
-     
-     if (p.ipRights && p.ipRights.rightsOwner === 'studio') {
+  const impact: StateImpact = {
+    projectUpdates: [],
+    uiNotifications: [],
+  };
+
+  for (const p of projects) {
+    if (p.ipRights && p.ipRights.reversionWeek !== undefined) {
+      if (currentWeek >= p.ipRights.reversionWeek) {
+        impact.uiNotifications!.push(`You lost the exclusive IP rights to ${p.title}.`);
         impact.projectUpdates!.push({
-            projectId: p.id,
-            update: {
-                ipRights: {
-                    ...p.ipRights,
-                    catalogValue: calculateIPValue(p)
-                }
-            }
+          projectId: p.id,
+          update: {
+            ipRights: {
+              ...p.ipRights,
+              rightsOwner: "external" as const,
+            },
+          },
         });
-     }
-   }
-   
-   return impact;
+        continue;
+      }
+    }
+
+    if (p.ipRights && p.ipRights.rightsOwner === "studio") {
+      impact.projectUpdates!.push({
+        projectId: p.id,
+        update: {
+          ipRights: {
+            ...p.ipRights,
+            catalogValue: calculateIPValue(p),
+          },
+        },
+      });
+    }
+  }
+
+  return impact;
 }
 
 export function catalogValue(projects: Project[]): number {
@@ -77,10 +81,10 @@ export function catalogValue(projects: Project[]): number {
   for (let i = 0; i < projects.length; i++) {
     const p = projects[i];
     if (p.ipRights) {
-      if (p.ipRights.rightsOwner === 'studio') {
-        total += (p.ipRights.catalogValue || calculateIPValue(p));
-      } else if (p.ipRights.rightsOwner === 'shared') {
-        total += ((p.ipRights.catalogValue || calculateIPValue(p)) * 0.5);
+      if (p.ipRights.rightsOwner === "studio") {
+        total += p.ipRights.catalogValue || calculateIPValue(p);
+      } else if (p.ipRights.rightsOwner === "shared") {
+        total += (p.ipRights.catalogValue || calculateIPValue(p)) * 0.5;
       }
     }
   }

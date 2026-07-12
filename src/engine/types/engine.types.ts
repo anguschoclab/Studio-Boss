@@ -1,8 +1,8 @@
 // Types related to the Simulation Engine, News, and Events
 
-export type HeadlineCategory = 'rival' | 'market' | 'talent' | 'awards' | 'general' | 'rumor';
+export type HeadlineCategory = "rival" | "market" | "talent" | "awards" | "general" | "rumor";
 
-export type NewsEventType = 'CRISIS' | 'AWARD' | 'RELEASE' | 'STUDIO_EVENT' | 'RIVAL';
+export type NewsEventType = "CRISIS" | "AWARD" | "RELEASE" | "STUDIO_EVENT" | "RIVAL";
 
 export interface NewsEvent {
   id: string;
@@ -30,7 +30,7 @@ export interface ActiveCrisis {
   description: string;
   options: CrisisOption[];
   resolved: boolean;
-  severity: 'low' | 'medium' | 'high';
+  severity: "low" | "medium" | "high";
 }
 
 export interface Headline {
@@ -41,11 +41,11 @@ export interface Headline {
 }
 
 export interface NarrativeEvent {
-  type: 'crisis' | 'project_update' | 'rival_action' | 'market_event' | 'general';
+  type: "crisis" | "project_update" | "rival_action" | "market_event" | "general";
   projectId?: string;
   title: string;
   description: string;
-  severity?: 'low' | 'medium' | 'high';
+  severity?: "low" | "medium" | "high";
   isPositive?: boolean;
 }
 
@@ -71,7 +71,14 @@ export interface FinanceRecord {
   costs: number;
 }
 
-export type MarketEventType = 'streaming_boom' | 'theatrical_revival' | 'writers_strike' | 'actors_strike' | 'platform_war' | 'market_crash' | 'awards_season_frenzy';
+export type MarketEventType =
+  | "streaming_boom"
+  | "theatrical_revival"
+  | "writers_strike"
+  | "actors_strike"
+  | "platform_war"
+  | "market_crash"
+  | "awards_season_frenzy";
 
 export interface MarketEvent {
   id: string;
@@ -89,7 +96,7 @@ export interface Rumor {
   text: string;
   week: number;
   truthful: boolean;
-  category: 'talent' | 'rival' | 'market' | 'project';
+  category: "talent" | "rival" | "market" | "project";
   resolved: boolean;
   resolutionWeek?: number;
 }

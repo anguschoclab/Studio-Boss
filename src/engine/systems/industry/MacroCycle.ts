@@ -17,7 +17,7 @@
 
 const WEEKS_PER_YEAR = 52;
 
-import { getDifficultyParams } from '@/store/settingsStore';
+import { getDifficultyParams } from "@/store/settingsStore";
 
 interface Shock {
   startWeek: number;
@@ -25,7 +25,7 @@ interface Shock {
   magnitude: number; // multiplicative (e.g. 0.55 = -45%)
   label: string;
   // Which segments it affects — 'all' or tier/flag
-  scope?: 'all' | 'theatrical' | 'ancillary';
+  scope?: "all" | "theatrical" | "ancillary";
 }
 
 // Sim-year to week helper: year 1 = week 0, year Y = (Y-1)*52
@@ -34,21 +34,48 @@ const y = (year: number) => Math.floor((year - 1) * WEEKS_PER_YEAR);
 // Historical + projected shocks (sim year 1 ≈ 1975)
 const SHOCKS: Shock[] = [
   // 2008 financial crisis → sim year 34
-  { startWeek: y(34), endWeek: y(36), magnitude: 0.72, label: 'Global financial crisis', scope: 'all' },
+  {
+    startWeek: y(34),
+    endWeek: y(36),
+    magnitude: 0.72,
+    label: "Global financial crisis",
+    scope: "all",
+  },
   // 2019-20 COVID theatrical collapse → sim year 45-46
-  { startWeek: y(45), endWeek: y(47), magnitude: 0.35, label: 'Pandemic theatrical shutdown', scope: 'theatrical' },
+  {
+    startWeek: y(45),
+    endWeek: y(47),
+    magnitude: 0.35,
+    label: "Pandemic theatrical shutdown",
+    scope: "theatrical",
+  },
   // 2023 strike + streaming correction → sim year 49
-  { startWeek: y(49), endWeek: y(50), magnitude: 0.70, label: 'Writers/actors strike + streaming correction', scope: 'all' },
+  {
+    startWeek: y(49),
+    endWeek: y(50),
+    magnitude: 0.7,
+    label: "Writers/actors strike + streaming correction",
+    scope: "all",
+  },
   // Projected AI cost collapse + volume boom → sim year 58-60
-  { startWeek: y(58), endWeek: y(60), magnitude: 1.25, label: 'AI production boom', scope: 'all' },
+  { startWeek: y(58), endWeek: y(60), magnitude: 1.25, label: "AI production boom", scope: "all" },
   // Projected platform consolidation wave → sim year 66
-  { startWeek: y(66), endWeek: y(68), magnitude: 0.78, label: 'Platform consolidation shakeout', scope: 'all' },
+  {
+    startWeek: y(66),
+    endWeek: y(68),
+    magnitude: 0.78,
+    label: "Platform consolidation shakeout",
+    scope: "all",
+  },
 ];
 
 /** Primary market heat index. Range ~[0.6, 1.4]. */
-export function getMarketHeat(week: number, difficulty: 'relaxed' | 'standard' | 'cutthroat' = 'standard'): number {
+export function getMarketHeat(
+  week: number,
+  difficulty: "relaxed" | "standard" | "cutthroat" = "standard"
+): number {
   const primary = Math.sin((week / (WEEKS_PER_YEAR * 8.5)) * Math.PI * 2) * 0.28;
-  const secondary = Math.sin((week / (WEEKS_PER_YEAR * 3.7)) * Math.PI * 2) * 0.10;
+  const secondary = Math.sin((week / (WEEKS_PER_YEAR * 3.7)) * Math.PI * 2) * 0.1;
   let heat = 1.0 + primary + secondary;
 
   for (const s of SHOCKS) {
@@ -68,19 +95,19 @@ export function getMarketHeat(week: number, difficulty: 'relaxed' | 'standard' |
 }
 
 /** Classify current regime so other systems can branch on it. */
-export type MarketRegime = 'boom' | 'normal' | 'bust' | 'shock';
+export type MarketRegime = "boom" | "normal" | "bust" | "shock";
 export function getMarketRegime(week: number): MarketRegime {
-  const activeShock = SHOCKS.find(s => week >= s.startWeek && week <= s.endWeek);
-  if (activeShock) return 'shock';
+  const activeShock = SHOCKS.find((s) => week >= s.startWeek && week <= s.endWeek);
+  if (activeShock) return "shock";
   const heat = getMarketHeat(week);
-  if (heat > 1.15) return 'boom';
-  if (heat < 0.85) return 'bust';
-  return 'normal';
+  if (heat > 1.15) return "boom";
+  if (heat < 0.85) return "bust";
+  return "normal";
 }
 
 /** Active shock label, or null. */
 export function getActiveShock(week: number): string | null {
-  const s = SHOCKS.find(sh => week >= sh.startWeek && week <= sh.endWeek);
+  const s = SHOCKS.find((sh) => week >= sh.startWeek && week <= sh.endWeek);
   return s ? s.label : null;
 }
 

@@ -1,7 +1,7 @@
-import { GameState, StateImpact, Talent, CareerTrajectory, TalentPersonality } from '../../types';
-import { RandomGenerator } from '../../utils/rng';
-import { Clique } from '../../types/clique.types';
-import { TalentRelationship } from '../../types/relationship.types';
+import { GameState, StateImpact, Talent, CareerTrajectory, TalentPersonality } from "../../types";
+import { RandomGenerator } from "../../utils/rng";
+import { Clique } from "../../types/clique.types";
+import { TalentRelationship } from "../../types/relationship.types";
 
 /**
  * Biography Generator System
@@ -14,8 +14,9 @@ import { TalentRelationship } from '../../types/relationship.types';
  */
 function generateTVRecommendationsSection(talent: Talent, state: GameState): string | null {
   const tvRecommendations = state.tvRecommendations?.recommendations || {};
-  const talentRecommendations = Object.values(tvRecommendations)
-    .filter((r) => r.talentId === talent.id && r.expiresWeek > state.week && !r.accepted);
+  const talentRecommendations = Object.values(tvRecommendations).filter(
+    (r) => r.talentId === talent.id && r.expiresWeek > state.week && !r.accepted
+  );
 
   if (talentRecommendations.length === 0) return null;
 
@@ -24,27 +25,27 @@ function generateTVRecommendationsSection(talent: Talent, state: GameState): str
 
   const parts: string[] = [];
 
-  parts.push(`Considered a strong fit for ${topRecommendation.roleType.replace('_', ' ')} roles in ${topRecommendation.genre} series.`);
+  parts.push(
+    `Considered a strong fit for ${topRecommendation.roleType.replace("_", " ")} roles in ${topRecommendation.genre} series.`
+  );
 
   if (topRecommendation.matchScore > 75) {
-    parts.push(`Excellent match with ${topRecommendation.platform.replace('_', '-')} platforms.`);
+    parts.push(`Excellent match with ${topRecommendation.platform.replace("_", "-")} platforms.`);
   }
 
   if (topRecommendation.suggestedShowTitles.length > 0) {
-    parts.push(`Potential projects include ${topRecommendation.suggestedShowTitles.slice(0, 2).join(' and ')}.`);
+    parts.push(
+      `Potential projects include ${topRecommendation.suggestedShowTitles.slice(0, 2).join(" and ")}.`
+    );
   }
 
-  return parts.join(' ');
+  return parts.join(" ");
 }
 
 /**
  * Generate a comprehensive biography for a talent
  */
-export function generateBiography(
-  talent: Talent,
-  state: GameState,
-  rng: RandomGenerator
-): string {
+export function generateBiography(talent: Talent, state: GameState, rng: RandomGenerator): string {
   const sections: string[] = [];
 
   // Opening: Basic info
@@ -72,7 +73,7 @@ export function generateBiography(
   // Personality/Work Style
   sections.push(generatePersonalitySection(talent));
 
-  return sections.join(' ');
+  return sections.join(" ");
 }
 
 /**
@@ -80,9 +81,16 @@ export function generateBiography(
  */
 function generateOpening(talent: Talent, rng: RandomGenerator): string {
   const age = talent.demographics?.age || 30;
-  const ageBracket = age < 30 ? 'rising' : age < 50 ? 'established' : 'veteran';
-  const role = talent.role || 'performer';
-  const tier = talent.tier === 'A_LIST' ? 'A-list' : talent.tier === 'B_LIST' ? 'respected' : talent.tier === 'C_LIST' ? 'working' : 'up-and-coming';
+  const ageBracket = age < 30 ? "rising" : age < 50 ? "established" : "veteran";
+  const role = talent.role || "performer";
+  const tier =
+    talent.tier === "A_LIST"
+      ? "A-list"
+      : talent.tier === "B_LIST"
+        ? "respected"
+        : talent.tier === "C_LIST"
+          ? "working"
+          : "up-and-coming";
 
   const openers = [
     `${talent.name} is a ${ageBracket} ${tier} ${role} in Hollywood, currently ${age} years old.`,
@@ -105,7 +113,9 @@ function generateCareerSummary(talent: Talent, state: GameState): string {
   void prestige;
 
   if (starMeter > 80) {
-    parts.push(`Currently at the peak of their fame with a Star Meter of ${starMeter}, they are one of the most sought-after talents in the industry.`);
+    parts.push(
+      `Currently at the peak of their fame with a Star Meter of ${starMeter}, they are one of the most sought-after talents in the industry.`
+    );
   } else if (starMeter > 60) {
     parts.push(`With a solid Star Meter of ${starMeter}, they maintain steady industry relevance.`);
   } else if (starMeter < 30) {
@@ -115,57 +125,66 @@ function generateCareerSummary(talent: Talent, state: GameState): string {
   // Breakout status
   const isBreakout = talent.isBreakout;
   if (isBreakout) {
-    const breakouts = Object.values(state.relationships?.discovery?.breakoutStars || {})
-      .filter((b) => b.talentId === talent.id);
+    const breakouts = Object.values(state.relationships?.discovery?.breakoutStars || {}).filter(
+      (b) => b.talentId === talent.id
+    );
 
     if (breakouts.length > 0) {
       const breakout = breakouts[0];
-      parts.push(`Recently broke out as a major star, jumping ${breakout.starMeterJump} points in Star Meter following their breakout performance.`);
+      parts.push(
+        `Recently broke out as a major star, jumping ${breakout.starMeterJump} points in Star Meter following their breakout performance.`
+      );
     }
   }
 
   // Awards
   const awards = talent.awards || [];
   if (awards.length > 0) {
-    const majorWins = awards.filter((a) => a.status === 'won').length;
+    const majorWins = awards.filter((a) => a.status === "won").length;
     if (majorWins > 0) {
-      parts.push(`An acclaimed talent with ${majorWins} major award${majorWins > 1 ? 's' : ''} to their name.`);
+      parts.push(
+        `An acclaimed talent with ${majorWins} major award${majorWins > 1 ? "s" : ""} to their name.`
+      );
     }
   }
 
   // Career trajectory
   if (talent.careerTrajectory) {
     const trajectoryDescriptions: Record<CareerTrajectory, string> = {
-      'rising': 'Their career is on a clear upward trajectory.',
-      'peak': 'Currently at the absolute height of their power and influence.',
-      'plateau': 'They have maintained consistent success over the years.',
-      'declining': 'Recently facing career challenges but with potential for a comeback.',
-      'resurgent': 'Experiencing a significant return to form after a quiet period.',
-      'comeback': 'In the midst of an impressive career resurgence.',
+      rising: "Their career is on a clear upward trajectory.",
+      peak: "Currently at the absolute height of their power and influence.",
+      plateau: "They have maintained consistent success over the years.",
+      declining: "Recently facing career challenges but with potential for a comeback.",
+      resurgent: "Experiencing a significant return to form after a quiet period.",
+      comeback: "In the midst of an impressive career resurgence.",
     };
     parts.push(trajectoryDescriptions[talent.careerTrajectory]);
   }
 
-  return parts.filter(p => p).join(' ');
+  return parts.filter((p) => p).join(" ");
 }
 
 /**
  * Generate relationships section
  */
 function generateRelationshipsSection(talent: Talent, state: GameState): string | null {
-  const relationships = Object.values(state.relationships?.relationships || {})
-    .filter((r) => r.talentAId === talent.id || r.talentBId === talent.id);
+  const relationships = Object.values(state.relationships?.relationships || {}).filter(
+    (r) => r.talentAId === talent.id || r.talentBId === talent.id
+  );
 
   if (relationships.length === 0) return null;
 
   const parts: string[] = [];
 
   // Romantic relationships
-  const romances = relationships.filter(r => r.type === 'romantic');
+  const romances = relationships.filter((r) => r.type === "romantic");
   if (romances.length > 0) {
-    const currentRomance = romances.find(r => r.strength > 50); // Strong relationship
+    const currentRomance = romances.find((r) => r.strength > 50); // Strong relationship
     if (currentRomance) {
-      const partnerId = currentRomance.talentAId === talent.id ? currentRomance.talentBId : currentRomance.talentAId;
+      const partnerId =
+        currentRomance.talentAId === talent.id
+          ? currentRomance.talentBId
+          : currentRomance.talentAId;
       const partner = state.entities.talents?.[partnerId];
       if (partner) {
         parts.push(`Currently in a high-profile relationship with ${partner.name}.`);
@@ -174,34 +193,34 @@ function generateRelationshipsSection(talent: Talent, state: GameState): string 
   }
 
   // Famous friends
-  const friends = relationships.filter(r => r.type === 'friend' && r.strength > 30);
+  const friends = relationships.filter((r) => r.type === "friend" && r.strength > 30);
   if (friends.length > 0) {
     const friendNames = friends
       .slice(0, 2)
-      .map(r => {
+      .map((r) => {
         const friendId = r.talentAId === talent.id ? r.talentBId : r.talentAId;
         return state.entities.talents?.[friendId]?.name;
       })
       .filter(Boolean);
 
     if (friendNames.length > 0) {
-      parts.push(`Known to be close friends with ${friendNames.join(' and ')}.`);
+      parts.push(`Known to be close friends with ${friendNames.join(" and ")}.`);
     }
   }
 
   // Rivals
-  const rivals = relationships.filter(r => r.type === 'rival');
+  const rivals = relationships.filter((r) => r.type === "rival");
   if (rivals.length > 0) {
     const rivalNames = rivals
       .slice(0, 2)
-      .map(r => {
+      .map((r) => {
         const rivalId = r.talentAId === talent.id ? r.talentBId : r.talentAId;
         return state.entities.talents?.[rivalId]?.name;
       })
       .filter(Boolean);
 
     if (rivalNames.length > 0) {
-      parts.push(`Has a well-documented rivalry with ${rivalNames.join(' and ')}.`);
+      parts.push(`Has a well-documented rivalry with ${rivalNames.join(" and ")}.`);
     }
   }
 
@@ -219,7 +238,7 @@ function generateRelationshipsSection(talent: Talent, state: GameState): string 
     }
   }
 
-  return parts.length > 0 ? parts.join(' ') : null;
+  return parts.length > 0 ? parts.join(" ") : null;
 }
 
 /**
@@ -232,7 +251,9 @@ function generatePersonalSection(talent: Talent, state: GameState): string | nul
   if (talent.isNepoBaby && talent.parentIds && talent.parentIds.length > 0) {
     const parent = state.entities.talents?.[talent.parentIds[0]];
     if (parent) {
-      parts.push(`The ${talent.demographics?.gender === 'FEMALE' ? 'daughter' : 'son'} of acclaimed ${parent.role} ${parent.name}, they entered the industry with significant family connections.`);
+      parts.push(
+        `The ${talent.demographics?.gender === "FEMALE" ? "daughter" : "son"} of acclaimed ${parent.role} ${parent.name}, they entered the industry with significant family connections.`
+      );
     }
   }
 
@@ -247,10 +268,12 @@ function generatePersonalSection(talent: Talent, state: GameState): string | nul
   // Children
   if (talent.childIds && talent.childIds.length > 0) {
     const childCount = talent.childIds.length;
-    parts.push(`Parent to ${childCount} ${childCount === 1 ? 'child' : 'children'} in the industry.`);
+    parts.push(
+      `Parent to ${childCount} ${childCount === 1 ? "child" : "children"} in the industry.`
+    );
   }
 
-  return parts.length > 0 ? parts.join(' ') : null;
+  return parts.length > 0 ? parts.join(" ") : null;
 }
 
 /**
@@ -262,8 +285,9 @@ function generateRecentEventsSection(talent: Talent, state: GameState): string |
   // Breakout star status
   const isBreakout = talent.isBreakout;
   if (isBreakout) {
-    const breakouts = Object.values(state.relationships?.discovery?.breakoutStars || {})
-      .filter((b) => b.talentId === talent.id && b.hypeWeeksRemaining > 0);
+    const breakouts = Object.values(state.relationships?.discovery?.breakoutStars || {}).filter(
+      (b) => b.talentId === talent.id && b.hypeWeeksRemaining > 0
+    );
 
     if (breakouts.length > 0) {
       parts.push(`Currently experiencing breakout star status with intense media attention.`);
@@ -271,7 +295,9 @@ function generateRecentEventsSection(talent: Talent, state: GameState): string |
   }
 
   // Recent scandal
-  const scandals = (state.industry?.scandals || []).filter((s) => s.talentId === talent.id && s.weeksRemaining > 0);
+  const scandals = (state.industry?.scandals || []).filter(
+    (s) => s.talentId === talent.id && s.weeksRemaining > 0
+  );
 
   if (scandals.length > 0) {
     parts.push(`Recently navigated through personal challenges that captured public attention.`);
@@ -282,7 +308,7 @@ function generateRecentEventsSection(talent: Talent, state: GameState): string |
     parts.push(`Currently taking time away from the spotlight for personal health.`);
   }
 
-  return parts.length > 0 ? parts.join(' ') : null;
+  return parts.length > 0 ? parts.join(" ") : null;
 }
 
 /**
@@ -290,22 +316,26 @@ function generateRecentEventsSection(talent: Talent, state: GameState): string |
  */
 function generatePersonalitySection(talent: Talent): string {
   const personality = talent.personality;
-  if (!personality) return '';
+  if (!personality) return "";
 
   const descriptions: Partial<Record<TalentPersonality, string>> = {
-    'charismatic': 'Known for their magnetic screen presence and ability to light up any set.',
-    'difficult': 'Their intense dedication to craft sometimes creates on-set tension, but yields powerful results.',
-    'perfectionist': 'A meticulous artist who demands excellence from themselves and their collaborators.',
-    'collaborative': 'Prized for their team-first attitude and ability to elevate everyone around them.',
-    'method': 'A dedicated practitioner of method acting, staying in character throughout production.',
-    'pragmatic': 'Known for a professional, no-nonsense approach to the business of acting.',
-    'artistic': 'Driven by creative vision and artistic integrity over commercial concerns.',
-    'commercial': 'A reliable box-office draw with a keen sense for market appeal.',
-    'loyal': 'Valued for their long-standing industry relationships and loyalty to collaborators.',
-    'ambitious': 'Consistently pushing for bigger roles and greater industry influence.',
+    charismatic: "Known for their magnetic screen presence and ability to light up any set.",
+    difficult:
+      "Their intense dedication to craft sometimes creates on-set tension, but yields powerful results.",
+    perfectionist:
+      "A meticulous artist who demands excellence from themselves and their collaborators.",
+    collaborative:
+      "Prized for their team-first attitude and ability to elevate everyone around them.",
+    method:
+      "A dedicated practitioner of method acting, staying in character throughout production.",
+    pragmatic: "Known for a professional, no-nonsense approach to the business of acting.",
+    artistic: "Driven by creative vision and artistic integrity over commercial concerns.",
+    commercial: "A reliable box-office draw with a keen sense for market appeal.",
+    loyal: "Valued for their long-standing industry relationships and loyalty to collaborators.",
+    ambitious: "Consistently pushing for bigger roles and greater industry influence.",
   };
 
-  return descriptions[personality] || '';
+  return descriptions[personality] || "";
 }
 
 /**
@@ -315,10 +345,7 @@ function generatePersonalitySection(talent: Talent): string {
  * for O(1) lookup per talent, and uses for...in to avoid intermediate array allocations
  * from Object.values().
  */
-export function tickBiographyGenerator(
-  state: GameState,
-  rng: RandomGenerator
-): StateImpact[] {
+export function tickBiographyGenerator(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
   const talents = state.entities.talents || {};
 
@@ -363,8 +390,8 @@ export function tickBiographyGenerator(
     const talent = talents[key];
 
     // Only update bio if significant events occurred or bio is empty/default
-    const currentBio = talent.bio || '';
-    const isDefaultBio = currentBio.includes('Tier') && currentBio.includes('is a');
+    const currentBio = talent.bio || "";
+    const isDefaultBio = currentBio.includes("Tier") && currentBio.includes("is a");
 
     // Check for triggers that warrant bio update
     const shouldUpdate =
@@ -379,7 +406,7 @@ export function tickBiographyGenerator(
 
       if (newBio !== currentBio) {
         impacts.push({
-          type: 'TALENT_UPDATED',
+          type: "TALENT_UPDATED",
           payload: {
             talentId: talent.id,
             update: {
@@ -399,30 +426,30 @@ export function tickBiographyGenerator(
  */
 export function generateEventBioUpdate(
   talent: Talent,
-  eventType: 'breakout' | 'relationship' | 'clique' | 'award' | 'scandal',
+  eventType: "breakout" | "relationship" | "clique" | "award" | "scandal",
   eventData: { type?: string; status?: string; partnerName?: string; cliqueName?: string },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   state: GameState
 ): string {
-  const currentBio = talent.bio || '';
+  const currentBio = talent.bio || "";
 
   switch (eventType) {
-    case 'breakout':
+    case "breakout":
       return `${currentBio} Recently skyrocketed to fame as Hollywood's newest breakout sensation.`;
 
-    case 'relationship':
-      if (eventData.type === 'romantic' && eventData.status === 'active') {
+    case "relationship":
+      if (eventData.type === "romantic" && eventData.status === "active") {
         return `${currentBio} Currently in a high-profile relationship with ${eventData.partnerName}.`;
       }
       return currentBio;
 
-    case 'clique':
+    case "clique":
       return `${currentBio} Member of the exclusive Hollywood group "${eventData.cliqueName}".`;
 
-    case 'award':
+    case "award":
       return `${currentBio} Award-winning talent with recent recognition for excellence.`;
 
-    case 'scandal':
+    case "scandal":
       return `${currentBio} Recently navigated through public challenges with resilience.`;
 
     default:

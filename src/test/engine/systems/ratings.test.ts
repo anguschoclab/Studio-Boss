@@ -1,11 +1,15 @@
 import { describe, it, expect } from "vitest";
-import { evaluateRating, calculateRegionalPenalties, editForRating } from "../../../engine/systems/ratings";
+import {
+  evaluateRating,
+  calculateRegionalPenalties,
+  editForRating,
+} from "../../../engine/systems/ratings";
 import { Project, GameState, ContentFlag } from "../../../engine/types";
 
 const mockProject: Project = {
   id: "proj-1",
   title: "Test Project",
-  type: 'FILM',
+  type: "FILM",
   budgetTier: "mid",
   budget: 10_000_000,
   genre: "Drama",
@@ -25,7 +29,7 @@ const mockProject: Project = {
   momentum: 50,
   progress: 0,
   activeCrisis: null,
-  contentFlags: [] as ContentFlag[]
+  contentFlags: [] as ContentFlag[],
 } as Project;
 
 describe("ratings system", () => {
@@ -46,7 +50,10 @@ describe("ratings system", () => {
     });
 
     it("returns reduced multiplier for project with both political and gore flags", () => {
-      const project = { ...mockProject, contentFlags: ["political" as ContentFlag, "gore" as ContentFlag] };
+      const project = {
+        ...mockProject,
+        contentFlags: ["political" as ContentFlag, "gore" as ContentFlag],
+      };
       const penalty = calculateRegionalPenalties(project);
       expect(penalty).toBeGreaterThan(0.1);
       expect(penalty).toBeLessThan(1.0);
@@ -64,17 +71,17 @@ describe("ratings system", () => {
     });
 
     it("returns R for combo of three", () => {
-       expect(evaluateRating(["violence", "political", "profanity"])).toBe("R");
+      expect(evaluateRating(["violence", "political", "profanity"])).toBe("R");
     });
   });
 
   describe("editForRating", () => {
     const mockState = {
-        studio: {
-            internal: {
-                contracts: []
-            }
-        }
+      studio: {
+        internal: {
+          contracts: [],
+        },
+      },
     } as unknown as GameState;
 
     it("returns success if flag not present", () => {
@@ -85,7 +92,11 @@ describe("ratings system", () => {
     });
 
     it("succeeds and updates project if no creative control", () => {
-      const project = { ...mockProject, contentFlags: ["gore" as ContentFlag], rating: "NC-17" as const };
+      const project = {
+        ...mockProject,
+        contentFlags: ["gore" as ContentFlag],
+        rating: "NC-17" as const,
+      };
       const result = editForRating(project, mockState, "gore" as ContentFlag);
       expect(result.success).toBe(true);
       expect(result.data?.contentFlags).not.toContain("gore");

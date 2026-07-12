@@ -1,23 +1,17 @@
-import { describe, it, expect } from 'vitest';
-import { MarketState } from '../../../../engine/types/state.types';
-import { 
-  evaluatePackageOffer
-} from '../../../../engine/systems/ai/AgentBrain';
+import { describe, it, expect } from "vitest";
+import { MarketState } from "../../../../engine/types/state.types";
+import { evaluatePackageOffer } from "../../../../engine/systems/ai/AgentBrain";
+import { shouldAttemptHostileTakeover } from "../../../../engine/systems/ai/BehaviorEngine";
+import { generateFestivalBid } from "../../../../engine/systems/ai/RivalBiddingEngine";
+import { mockRandomSeed } from "../../../utils/mockRandom";
 import {
-  shouldAttemptHostileTakeover
-} from '../../../../engine/systems/ai/BehaviorEngine';
-import {
-  generateFestivalBid
-} from '../../../../engine/systems/ai/RivalBiddingEngine';
-import { mockRandomSeed } from '../../../utils/mockRandom';
-import { 
-  createMockAgency, 
-  createMockTalent, 
-  createMockProject, 
-  createMockRival, 
+  createMockAgency,
+  createMockTalent,
+  createMockProject,
+  createMockRival,
   createMockGameState,
-} from '../../../utils/mockFactories';
-import { AI_ARCHETYPES } from '../../../../engine/data/aiArchetypes';
+} from "../../../utils/mockFactories";
+import { AI_ARCHETYPES } from "../../../../engine/data/aiArchetypes";
 
 const mockMarket: MarketState = {
   baseRate: 0.045,
@@ -27,41 +21,46 @@ const mockMarket: MarketState = {
   rateHistory: [],
 };
 
-describe('AI Archetype Strategy (AgentBrain)', () => {
-  describe('evaluatePackageOffer', () => {
-    it('offeres a package deal when motivation is THE_PACKAGER', () => {
-      const rng = mockRandomSeed('seed');
-      const agency = createMockAgency({ currentMotivation: 'THE_PACKAGER' });
-      const lead = createMockTalent({ id: 'lead', prestige: 50, agencyId: agency.id });
-      const client = createMockTalent({ id: 'client', agencyId: agency.id });
-      
+describe("AI Archetype Strategy (AgentBrain)", () => {
+  describe("evaluatePackageOffer", () => {
+    it("offeres a package deal when motivation is THE_PACKAGER", () => {
+      const rng = mockRandomSeed("seed");
+      const agency = createMockAgency({ currentMotivation: "THE_PACKAGER" });
+      const lead = createMockTalent({ id: "lead", prestige: 50, agencyId: agency.id });
+      const client = createMockTalent({ id: "client", agencyId: agency.id });
+
       const result = evaluatePackageOffer(agency, lead, [lead, client], mockMarket, rng);
-      
+
       expect(result.reason).toBeDefined();
     });
 
-    it('increases package deal probability for high-prestige Auteurs', () => {
-      const rng = mockRandomSeed('1'); // first next() is low
-      const agency = createMockAgency({ currentMotivation: 'VOLUME_RETAIL' });
-      const auteur = createMockTalent({ id: 'auteur', prestige: 95, roles: ['director'], agencyId: agency.id });
-      const collaborator = createMockTalent({ id: 'collateral', agencyId: agency.id });
+    it("increases package deal probability for high-prestige Auteurs", () => {
+      const rng = mockRandomSeed("1"); // first next() is low
+      const agency = createMockAgency({ currentMotivation: "VOLUME_RETAIL" });
+      const auteur = createMockTalent({
+        id: "auteur",
+        prestige: 95,
+        roles: ["director"],
+        agencyId: agency.id,
+      });
+      const collaborator = createMockTalent({ id: "collateral", agencyId: agency.id });
 
       const result = evaluatePackageOffer(agency, auteur, [auteur, collaborator], mockMarket, rng);
       expect(result.reason).toBeDefined();
     });
   });
 
-  describe('generateFestivalBid', () => {
-    it('returns a bid for an interested rival', () => {
+  describe("generateFestivalBid", () => {
+    it("returns a bid for an interested rival", () => {
       // Seed '1' gives a very low first next() value (approx 0.1)
-      const rng = mockRandomSeed('1'); 
+      const rng = mockRandomSeed("1");
       const archetype = AI_ARCHETYPES[6]; // Streaming Titan: 92.5% bid chance
       const rival = createMockRival({ behaviorId: archetype.id, cash: 100_000_000 });
-      const project = createMockProject({ 
-        genre: 'Sci-Fi', 
-        budget: 10_000_000, 
-        reviewScore: 90, 
-        buzz: 90 
+      const project = createMockProject({
+        genre: "Sci-Fi",
+        budget: 10_000_000,
+        reviewScore: 90,
+        buzz: 90,
       });
 
       const bid = generateFestivalBid(rival, project, rng);
@@ -71,18 +70,18 @@ describe('AI Archetype Strategy (AgentBrain)', () => {
       }
     });
 
-    it('aggressively outbids for IP when motivation is FRANCHISE_BUILDING', () => {
+    it("aggressively outbids for IP when motivation is FRANCHISE_BUILDING", () => {
       // Seed '1' is stable for the first few next() calls
-      const rng = mockRandomSeed('1');
-      const rival = createMockRival({ 
-        behaviorId: 'STREAMING_TITAN', 
-        currentMotivation: 'FRANCHISE_BUILDING', 
-        cash: 1_000_000_000 
+      const rng = mockRandomSeed("1");
+      const rival = createMockRival({
+        behaviorId: "STREAMING_TITAN",
+        currentMotivation: "FRANCHISE_BUILDING",
+        cash: 1_000_000_000,
       });
-      const project = createMockProject({ 
-        genre: 'Sci-Fi', 
-        budget: 10_000_000, 
-        reviewScore: 95 
+      const project = createMockProject({
+        genre: "Sci-Fi",
+        budget: 10_000_000,
+        reviewScore: 95,
       });
 
       const bid = generateFestivalBid(rival, project, rng);
@@ -93,21 +92,21 @@ describe('AI Archetype Strategy (AgentBrain)', () => {
     });
   });
 
-  describe('shouldAttemptHostileTakeover', () => {
-    it('blocks takeover if combined market share exceeds 40% (Anti-Trust)', () => {
+  describe("shouldAttemptHostileTakeover", () => {
+    it("blocks takeover if combined market share exceeds 40% (Anti-Trust)", () => {
       const state = createMockGameState();
-      const attacker = createMockRival({ 
-        id: 'attacker', 
-        behaviorId: 'shark', 
-        marketShare: 0.25, 
+      const attacker = createMockRival({
+        id: "attacker",
+        behaviorId: "shark",
+        marketShare: 0.25,
         cash: 1_000_000_000,
-        currentMotivation: 'MARKET_DISRUPTION'
+        currentMotivation: "MARKET_DISRUPTION",
       });
-      const target = createMockRival({ 
-        id: 'target', 
-        marketShare: 0.20, 
+      const target = createMockRival({
+        id: "target",
+        marketShare: 0.2,
         cash: 10_000_000,
-        prestige: 50
+        prestige: 50,
       });
 
       // 0.25 + 0.20 = 0.45 > 0.40
@@ -115,26 +114,26 @@ describe('AI Archetype Strategy (AgentBrain)', () => {
       expect(allowed).toBe(false);
     });
 
-    it('allows takeover if under cap and motivation matches', () => {
+    it("allows takeover if under cap and motivation matches", () => {
       const state = createMockGameState();
-      const attacker = createMockRival({ 
-        id: 'attacker', 
-        behaviorId: 'predator', // assuming predator strategy is acquirer/poacher
-        marketShare: 0.10, 
+      const attacker = createMockRival({
+        id: "attacker",
+        behaviorId: "predator", // assuming predator strategy is acquirer/poacher
+        marketShare: 0.1,
         cash: 1_000_000_000,
-        currentMotivation: 'MARKET_DISRUPTION'
+        currentMotivation: "MARKET_DISRUPTION",
       });
-      const target = createMockRival({ 
-        id: 'target', 
-        marketShare: 0.10, 
+      const target = createMockRival({
+        id: "target",
+        marketShare: 0.1,
         cash: 10_000_000,
-        prestige: 10
+        prestige: 10,
       });
 
       const allowed = shouldAttemptHostileTakeover(attacker, target, state);
       // Note: This depends on the predator archetype in data.
       // If predator isn't an 'acquirer' or 'poacher', it reflects logic correctness.
-      expect(typeof allowed).toBe('boolean');
+      expect(typeof allowed).toBe("boolean");
     });
   });
 });

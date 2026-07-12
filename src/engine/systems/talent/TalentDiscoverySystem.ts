@@ -1,14 +1,10 @@
-import { GameState, StateImpact, Talent, Project } from '../../types';
-import { RandomGenerator } from '../../utils/rng';
-import { getContractsByProjectId } from '../../utils';
-import {
-  BreakoutStar,
-  BreakoutTrigger,
-  HiddenTalent,
-} from '../../types/discovery.types';
-import { checkForBreakout } from './discovery/BreakoutStarEngine';
-import { generateGuestStarBooking } from './discovery/GuestStarEngine';
-import { generateHiddenTalent, discoverHiddenTalent } from './discovery/HiddenTalentPool';
+import { GameState, StateImpact, Talent, Project } from "../../types";
+import { RandomGenerator } from "../../utils/rng";
+import { getContractsByProjectId } from "../../utils";
+import { BreakoutStar, BreakoutTrigger, HiddenTalent } from "../../types/discovery.types";
+import { checkForBreakout } from "./discovery/BreakoutStarEngine";
+import { generateGuestStarBooking } from "./discovery/GuestStarEngine";
+import { generateHiddenTalent, discoverHiddenTalent } from "./discovery/HiddenTalentPool";
 
 /**
  * Talent Discovery System
@@ -38,8 +34,12 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
       continue;
     }
 
-    const projectContracts = getContractsByProjectId(state.entities.contractsByProjectId, state.entities.contracts, project.id);
-    const talentIds = projectContracts.map(c => c.talentId);
+    const projectContracts = getContractsByProjectId(
+      state.entities.contractsByProjectId,
+      state.entities.contracts,
+      project.id
+    );
+    const talentIds = projectContracts.map((c) => c.talentId);
 
     for (const tId of talentIds) {
       const talent = state.entities.talents?.[tId];
@@ -49,7 +49,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
       if (breakout) {
         // Create breakout record
         impacts.push({
-          type: 'BREAKOUT_STAR_CREATED',
+          type: "BREAKOUT_STAR_CREATED",
           payload: {
             breakout,
             notification: `${talent.name} is breaking out from "${project.title}"!`,
@@ -58,7 +58,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
 
         // Update talent stats
         impacts.push({
-          type: 'TALENT_UPDATED',
+          type: "TALENT_UPDATED",
           payload: {
             talentId: talent.id,
             update: {
@@ -72,30 +72,30 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
 
         // News announcement
         const triggerDescriptions: Record<BreakoutTrigger, string> = {
-          'indie_hit': 'breakout performance in an indie hit',
-          'viral_scene': 'viral scene taking over social media',
-          'cameo_steal': 'scene-stealing cameo',
-          'tv_performance': 'standout TV performance',
-          'award_nomination': 'surprise award nomination',
-          'critical_praise': 'unanimous critical praise',
+          indie_hit: "breakout performance in an indie hit",
+          viral_scene: "viral scene taking over social media",
+          cameo_steal: "scene-stealing cameo",
+          tv_performance: "standout TV performance",
+          award_nomination: "surprise award nomination",
+          critical_praise: "unanimous critical praise",
         };
 
         impacts.push({
-          type: 'NEWS_ADDED',
+          type: "NEWS_ADDED",
           payload: {
-            id: rng.uuid('NWS'),
+            id: rng.uuid("NWS"),
             headline: `Breakout Star Alert: ${talent.name}`,
             description: `${talent.name} is Hollywood's newest breakout sensation thanks to their ${triggerDescriptions[breakout.trigger]}. Studios are scrambling to sign them.`,
-            category: 'talent',
-            publication: 'Variety',
+            category: "talent",
+            publication: "Variety",
           },
         });
 
         // Create bidding war notification for player
         impacts.push({
-          type: 'MODAL_TRIGGERED',
+          type: "MODAL_TRIGGERED",
           payload: {
-            modalType: 'BREAKOUT_BIDDING_WAR',
+            modalType: "BREAKOUT_BIDDING_WAR",
             talentId: talent.id,
             currentFee: Math.floor(talent.fee * breakout.feeMultiplier),
             competingStudios: Object.keys(state.entities.rivals || {}).slice(0, 3),
@@ -109,7 +109,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
   const activeSeries: Project[] = [];
   for (const pId in projectsDict) {
     const p = projectsDict[pId];
-    if (p.type === 'SERIES' && p.state === 'released') {
+    if (p.type === "SERIES" && p.state === "released") {
       activeSeries.push(p);
     }
   }
@@ -119,7 +119,10 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
   const talentsDict = state.entities.talents || {};
   for (const tId in talentsDict) {
     const t = talentsDict[tId];
-    if ((t.starMeter || 50) >= MIN_STARMETER_FOR_GUEST && (t.tier === 'A_LIST' || t.tier === 'B_LIST')) {
+    if (
+      (t.starMeter || 50) >= MIN_STARMETER_FOR_GUEST &&
+      (t.tier === "A_LIST" || t.tier === "B_LIST")
+    ) {
       guestCandidates.push(t);
     }
   }
@@ -144,7 +147,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
 
         if (booking) {
           impacts.push({
-            type: 'GUEST_STAR_OPPORTUNITY',
+            type: "GUEST_STAR_OPPORTUNITY",
             payload: {
               booking,
               notification: `${guest.name} available for guest appearance on "${series.title}"`,
@@ -153,13 +156,13 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
 
           // News about exciting casting
           impacts.push({
-            type: 'NEWS_ADDED',
+            type: "NEWS_ADDED",
             payload: {
-              id: rng.uuid('NWS'),
+              id: rng.uuid("NWS"),
               headline: `${guest.name} to Appear on "${series.title}"`,
               description: `The ${booking.roleType} appearance is expected to boost ratings significantly.`,
-              category: 'talent',
-              publication: 'The Hollywood Reporter',
+              category: "talent",
+              publication: "The Hollywood Reporter",
             },
           });
         }
@@ -181,7 +184,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
     }
 
     impacts.push({
-      type: 'DISCOVERY_STATE_UPDATED',
+      type: "DISCOVERY_STATE_UPDATED",
       payload: {
         discovery: {
           ...discoveryState,
@@ -204,8 +207,8 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
     if (undiscovered.length > 0) {
       const toDiscover = rng.pick(undiscovered);
       const { talent } = discoverHiddenTalent(
-        { ...toDiscover, discoveredBy: 'player', discoveryWeek: state.week },
-        'player',
+        { ...toDiscover, discoveredBy: "player", discoveryWeek: state.week },
+        "player",
         state.week,
         state,
         rng
@@ -213,7 +216,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
 
       // Add talent to pool
       impacts.push({
-        type: 'TALENT_ADDED',
+        type: "TALENT_ADDED",
         payload: { talent },
       });
 
@@ -222,7 +225,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
       delete updatedPool[toDiscover.id];
 
       impacts.push({
-        type: 'DISCOVERY_STATE_UPDATED',
+        type: "DISCOVERY_STATE_UPDATED",
         payload: {
           discovery: {
             ...discoveryState,
@@ -234,20 +237,20 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
 
       // Discovery news
       const methodDescriptions: Record<string, string> = {
-        'audition': 'a stunning audition tape',
-        'recommendation': 'an industry insider recommendation',
-        'scouting': 'talent scouts at a local theater',
-        'viral_discovery': 'a viral social media clip',
+        audition: "a stunning audition tape",
+        recommendation: "an industry insider recommendation",
+        scouting: "talent scouts at a local theater",
+        viral_discovery: "a viral social media clip",
       };
 
       impacts.push({
-        type: 'NEWS_ADDED',
+        type: "NEWS_ADDED",
         payload: {
-          id: rng.uuid('NWS'),
+          id: rng.uuid("NWS"),
           headline: `Hidden Gem Discovered: ${talent.name}`,
           description: `Your scouts found ${talent.name} through ${methodDescriptions[toDiscover.discoveryMethod]}. They show incredible potential.`,
-          category: 'talent',
-          publication: 'Deadline',
+          category: "talent",
+          publication: "Deadline",
         },
       });
     }
@@ -269,7 +272,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
       }
 
       impacts.push({
-        type: 'BREAKOUT_STAR_UPDATED',
+        type: "BREAKOUT_STAR_UPDATED",
         payload: {
           breakoutId: breakout.id,
           breakout: updatedBreakout,
@@ -297,7 +300,7 @@ export function acceptGuestStarBooking(
 
   // Deduct cost
   impacts.push({
-    type: 'FUNDS_DEDUCTED',
+    type: "FUNDS_DEDUCTED",
     cashChange: -booking.cost,
   });
 
@@ -305,7 +308,7 @@ export function acceptGuestStarBooking(
   const updatedBooking = { ...booking };
 
   impacts.push({
-    type: 'GUEST_STAR_BOOKED',
+    type: "GUEST_STAR_BOOKED",
     payload: {
       bookingId,
       booking: updatedBooking,
@@ -314,10 +317,10 @@ export function acceptGuestStarBooking(
 
   // Add contract for guest appearance
   impacts.push({
-    type: 'CONTRACT_ADDED',
+    type: "CONTRACT_ADDED",
     payload: {
       contract: {
-        id: rng.uuid('CNT'),
+        id: rng.uuid("CNT"),
         projectId: booking.seriesId,
         talentId: booking.talentId,
         fee: booking.cost,
@@ -332,13 +335,13 @@ export function acceptGuestStarBooking(
   const talent = state.entities.talents?.[booking.talentId];
 
   impacts.push({
-    type: 'NEWS_ADDED',
+    type: "NEWS_ADDED",
     payload: {
-      id: rng.uuid('NWS'),
+      id: rng.uuid("NWS"),
       headline: `${talent?.name} Confirmed for "${series?.title}"`,
       description: `The guest appearance has been officially confirmed. Fans are already excited.`,
-      category: 'talent',
-      publication: 'Variety',
+      category: "talent",
+      publication: "Variety",
     },
   });
 
@@ -363,7 +366,7 @@ export function signBreakoutStar(
 
   // Deduct signing fee
   impacts.push({
-    type: 'FUNDS_DEDUCTED',
+    type: "FUNDS_DEDUCTED",
     cashChange: -offerFee,
   });
 
@@ -375,7 +378,7 @@ export function signBreakoutStar(
   };
 
   impacts.push({
-    type: 'BREAKOUT_STAR_UPDATED',
+    type: "BREAKOUT_STAR_UPDATED",
     payload: {
       breakoutId,
       breakout: updatedBreakout,
@@ -386,11 +389,11 @@ export function signBreakoutStar(
   const talent = state.entities.talents?.[breakout.talentId];
   if (talent) {
     impacts.push({
-      type: 'TALENT_UPDATED',
+      type: "TALENT_UPDATED",
       payload: {
         talentId: talent.id,
         update: {
-          contractStatus: 'SIGNED',
+          contractStatus: "SIGNED",
           fee: offerFee,
         },
       },
@@ -398,13 +401,13 @@ export function signBreakoutStar(
 
     // News
     impacts.push({
-      type: 'NEWS_ADDED',
+      type: "NEWS_ADDED",
       payload: {
-        id: rng.uuid('NWS'),
+        id: rng.uuid("NWS"),
         headline: `${talent.name} Signs with Studio`,
         description: `After a fierce bidding war, the breakout star has signed a lucrative deal.`,
-        category: 'talent',
-        publication: 'The Hollywood Reporter',
+        category: "talent",
+        publication: "The Hollywood Reporter",
       },
     });
   }

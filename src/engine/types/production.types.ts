@@ -2,12 +2,12 @@
 // Screenplay modifiers, production additions, credit scenes
 
 export type ScreenplayNoteType =
-  | 'character_arc'
-  | 'plot_twist'
-  | 'dialogue_rewrite'
-  | 'pacing_fix'
-  | 'emotional_beat'
-  | 'thematic_deepening';
+  | "character_arc"
+  | "plot_twist"
+  | "dialogue_rewrite"
+  | "pacing_fix"
+  | "emotional_beat"
+  | "thematic_deepening";
 
 export interface ScreenplayNote {
   id: string;
@@ -23,13 +23,13 @@ export interface ScreenplayNote {
 }
 
 export type ProductionAdditionType =
-  | 'stunt_sequence'
-  | 'practical_effects'
-  | 'musical_number'
-  | 'location_shoot'
-  | 'period_costumes'
-  | 'cameo'
-  | 'extended_runtime';
+  | "stunt_sequence"
+  | "practical_effects"
+  | "musical_number"
+  | "location_shoot"
+  | "period_costumes"
+  | "cameo"
+  | "extended_runtime";
 
 export interface ProductionAddition {
   id: string;
@@ -43,14 +43,15 @@ export interface ProductionAddition {
   marketingValue: number; // Extra buzz
 }
 
-export type CreditSceneType = 'mid_credits' | 'post_credits' | 'teaser' | 'joke' | 'emotional_button';
+export type CreditSceneType =
+  "mid_credits" | "post_credits" | "teaser" | "joke" | "emotional_button";
 
 export interface CreditScene {
   id: string;
   projectId: string;
   type: CreditSceneType;
   description: string;
-  unlockCondition: 'franchise_member' | 'boxoffice_threshold' | 'sequels' | 'standalone';
+  unlockCondition: "franchise_member" | "boxoffice_threshold" | "sequels" | "standalone";
   cost: number;
   audienceBonus: number; // +satisfaction for stickering around
   franchiseValue: number; // Setup for sequels

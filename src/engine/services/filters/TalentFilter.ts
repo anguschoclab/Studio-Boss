@@ -1,31 +1,37 @@
-import { GameState } from '../../types';
-import { Agency } from '../../types/talent.types';
-import { TickContext, WeekFilter } from './types';
+import { GameState } from "../../types";
+import { Agency } from "../../types/talent.types";
+import { TickContext, WeekFilter } from "./types";
 
 // System Imports
-import { TalentSystem } from '../../systems/TalentSystem';
-import { TalentLifecycleSystem } from '../../systems/talent/TalentLifecycleSystem';
-import { tickDeathSystem } from '../../systems/talent/DeathSystem';
-import { tickDynastySystem } from '../../systems/talent/DynastySystem';
-import { tickRelationshipSystem } from '../../systems/talent/RelationshipSystem';
-import { tickCliqueSystem } from '../../systems/talent/CliqueSystem';
-import { tickProductionEnhancementSystem } from '../../systems/talent/ProductionEnhancementSystem';
-import { tickMarketingPromotionSystem } from '../../systems/talent/MarketingPromotionSystem';
-import { tickTalentDiscoverySystem } from '../../systems/talent/TalentDiscoverySystem';
-import { tickCastingConstraintSystem } from '../../systems/talent/CastingConstraintSystem';
-import { tickBiographyGenerator } from '../../systems/talent/BiographyGenerator';
-import { tickOrganicEvents } from '../../systems/talent/OrganicEventEnhancer';
-import { tickTVRecommendationSystem } from '../../systems/talent/TVRecommendationSystem';
-import { TalentMoraleSystem } from '../../systems/talent/TalentMoraleSystem';
-import { shouldTalentHireAgent, selectAgentForTalent, shouldTalentFireAgent, createAgentHiringEvent, createAgentFiringEvent } from '../../systems/talent/talentAgentEvents';
-import { TalentAgentInteractionEngine } from '../../systems/talent/talentAgentInteractions';
+import { TalentSystem } from "../../systems/TalentSystem";
+import { TalentLifecycleSystem } from "../../systems/talent/TalentLifecycleSystem";
+import { tickDeathSystem } from "../../systems/talent/DeathSystem";
+import { tickDynastySystem } from "../../systems/talent/DynastySystem";
+import { tickRelationshipSystem } from "../../systems/talent/RelationshipSystem";
+import { tickCliqueSystem } from "../../systems/talent/CliqueSystem";
+import { tickProductionEnhancementSystem } from "../../systems/talent/ProductionEnhancementSystem";
+import { tickMarketingPromotionSystem } from "../../systems/talent/MarketingPromotionSystem";
+import { tickTalentDiscoverySystem } from "../../systems/talent/TalentDiscoverySystem";
+import { tickCastingConstraintSystem } from "../../systems/talent/CastingConstraintSystem";
+import { tickBiographyGenerator } from "../../systems/talent/BiographyGenerator";
+import { tickOrganicEvents } from "../../systems/talent/OrganicEventEnhancer";
+import { tickTVRecommendationSystem } from "../../systems/talent/TVRecommendationSystem";
+import { TalentMoraleSystem } from "../../systems/talent/TalentMoraleSystem";
+import {
+  shouldTalentHireAgent,
+  selectAgentForTalent,
+  shouldTalentFireAgent,
+  createAgentHiringEvent,
+  createAgentFiringEvent,
+} from "../../systems/talent/talentAgentEvents";
+import { TalentAgentInteractionEngine } from "../../systems/talent/talentAgentInteractions";
 
 /**
  * Talent Filter
  * Handles talent lifecycle, morale, agent relationships, and various talent systems
  */
 export const TalentFilter: WeekFilter = {
-  name: 'TalentFilter',
+  name: "TalentFilter",
 
   execute(state: GameState, context: TickContext): void {
     // Core talent systems
@@ -47,17 +53,21 @@ export const TalentFilter: WeekFilter = {
     const talentDict = state.entities.talents;
     const projectsDict = state.entities.projects;
     const contractsDict = state.entities.contracts;
-    const moraleUpdates = TalentMoraleSystem.processWeeklyMorale(talentDict, projectsDict, contractsDict);
-    
+    const moraleUpdates = TalentMoraleSystem.processWeeklyMorale(
+      talentDict,
+      projectsDict,
+      contractsDict
+    );
+
     for (const update of moraleUpdates) {
       context.impacts.push({
-        type: 'TALENT_UPDATED',
-        payload: { talentId: update.talentId, update: update.update }
+        type: "TALENT_UPDATED",
+        payload: { talentId: update.talentId, update: update.update },
       });
     }
 
     // Phase 3: Talent-Agent Hiring/Firing Events
-    const agencyMap = new Map<string, Agency>(state.industry.agencies.map(a => [a.id, a]));
+    const agencyMap = new Map<string, Agency>(state.industry.agencies.map((a) => [a.id, a]));
     for (const [talentId, talent] of Object.entries(talentDict)) {
       const hiringCheck = shouldTalentHireAgent(talent);
       if (hiringCheck.shouldHire) {
@@ -68,13 +78,13 @@ export const TalentFilter: WeekFilter = {
             const currentRelationshipId = `${talentId}-${talent.agentId}`;
             const newRelationships = { ...state.talentAgentRelationships };
             delete newRelationships[currentRelationshipId];
-            
+
             context.impacts.push({
-              type: 'TALENT_UPDATED',
+              type: "TALENT_UPDATED",
               payload: {
                 talentId,
-                update: { agentId: undefined, agencyId: undefined }
-              }
+                update: { agentId: undefined, agencyId: undefined },
+              },
             });
           }
 
@@ -84,22 +94,23 @@ export const TalentFilter: WeekFilter = {
           TalentAgentInteractionEngine.createRelationship(
             talentId,
             newAgent.id,
-            (talent.personality as import('../../types/talent.types').TalentPersonality) || 'pragmatic',
+            (talent.personality as import("../../types/talent.types").TalentPersonality) ||
+              "pragmatic",
             agentPersonality,
             agency?.tier
           );
 
           context.impacts.push({
-            type: 'TALENT_UPDATED',
+            type: "TALENT_UPDATED",
             payload: {
               talentId,
-              update: { agentId: newAgent.id, agencyId: newAgent.agencyId }
-            }
+              update: { agentId: newAgent.id, agencyId: newAgent.agencyId },
+            },
           });
 
           context.impacts.push({
-            type: 'NEWS_ADDED',
-            payload: createAgentHiringEvent(talent, newAgent, context.week)
+            type: "NEWS_ADDED",
+            payload: createAgentHiringEvent(talent, newAgent, context.week),
           });
         }
       }
@@ -108,16 +119,16 @@ export const TalentFilter: WeekFilter = {
         const relationship = state.talentAgentRelationships[`${talentId}-${talent.agentId}`];
         if (relationship && shouldTalentFireAgent(talent, relationship)) {
           context.impacts.push({
-            type: 'NEWS_ADDED',
-            payload: createAgentFiringEvent(talent, talent.agentId, context.week)
+            type: "NEWS_ADDED",
+            payload: createAgentFiringEvent(talent, talent.agentId, context.week),
           });
 
           context.impacts.push({
-            type: 'TALENT_UPDATED',
+            type: "TALENT_UPDATED",
             payload: {
               talentId,
-              update: { agentId: undefined, agencyId: undefined }
-            }
+              update: { agentId: undefined, agencyId: undefined },
+            },
           });
 
           // Note: Relationship removal will be handled by impact reducer when talent agentId is cleared
@@ -137,23 +148,29 @@ export const TalentFilter: WeekFilter = {
           );
           if (evolved !== relationship) {
             context.impacts.push({
-              type: 'RELATIONSHIP_UPDATED',
-              payload: { relationshipId, relationship: evolved }
+              type: "RELATIONSHIP_UPDATED",
+              payload: { relationshipId, relationship: evolved },
             });
           }
         }
       }
     }
 
-    function derivePersonalityFromAgent(agent: { negotiationTactic?: string; agencyId?: string }): import('../../systems/talent/talentAgentInteractions').AgentPersonality {
+    function derivePersonalityFromAgent(agent: {
+      negotiationTactic?: string;
+      agencyId?: string;
+    }): import("../../systems/talent/talentAgentInteractions").AgentPersonality {
       if (agent.negotiationTactic) {
-        const tacticMap: Record<string, import('../../systems/talent/talentAgentInteractions').AgentPersonality> = {
-          'SHARK': 'shark',
-          'DIPLOMAT': 'diplomat',
-          'VOLUME': 'volume',
-          'PRESTIGE': 'prestige'
+        const tacticMap: Record<
+          string,
+          import("../../systems/talent/talentAgentInteractions").AgentPersonality
+        > = {
+          SHARK: "shark",
+          DIPLOMAT: "diplomat",
+          VOLUME: "volume",
+          PRESTIGE: "prestige",
         };
-        return tacticMap[agent.negotiationTactic] || 'diplomat';
+        return tacticMap[agent.negotiationTactic] || "diplomat";
       }
       // Fall back to agency archetype mapping
       if (agent.agencyId) {
@@ -162,7 +179,7 @@ export const TalentFilter: WeekFilter = {
           return TalentAgentInteractionEngine.mapArchetypeToPersonality(agency.archetype);
         }
       }
-      return 'diplomat';
+      return "diplomat";
     }
-  }
-}
+  },
+};

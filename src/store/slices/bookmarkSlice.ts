@@ -1,10 +1,10 @@
-import { StateCreator } from 'zustand';
-import { GameStore } from '../gameStore';
-import { Bookmark } from '@/engine/types';
+import { StateCreator } from "zustand";
+import { GameStore } from "../gameStore";
+import { Bookmark } from "@/engine/types";
 
 export interface BookmarkSlice {
-  toggleBookmark: (id: string, type: 'project' | 'talent') => void;
-  isBookmarked: (id: string, type: 'project' | 'talent') => boolean;
+  toggleBookmark: (id: string, type: "project" | "talent") => void;
+  isBookmarked: (id: string, type: "project" | "talent") => boolean;
   getBookmarkedProjects: () => string[];
   getBookmarkedTalent: () => string[];
 }
@@ -42,16 +42,12 @@ export const createBookmarkSlice: StateCreator<GameStore, [], [], BookmarkSlice>
   getBookmarkedProjects: () => {
     const state = get().gameState;
     if (!state) return [];
-    return (state.studio.bookmarks || [])
-      .filter((b) => b.type === 'project')
-      .map((b) => b.id);
+    return (state.studio.bookmarks || []).filter((b) => b.type === "project").map((b) => b.id);
   },
 
   getBookmarkedTalent: () => {
     const state = get().gameState;
     if (!state) return [];
-    return (state.studio.bookmarks || [])
-      .filter((b) => b.type === 'talent')
-      .map((b) => b.id);
+    return (state.studio.bookmarks || []).filter((b) => b.type === "talent").map((b) => b.id);
   },
 });

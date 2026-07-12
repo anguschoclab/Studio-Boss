@@ -1,28 +1,30 @@
-import { describe, it, expect } from 'vitest';
-import { useGameStore } from '@/store/gameStore';
+import { describe, it, expect } from "vitest";
+import { useGameStore } from "@/store/gameStore";
 
-describe('Unscripted Projects', () => {
-  it('creates an unscripted project with correct stats', async () => {
-    useGameStore.getState().devAutoInit('major');
+describe("Unscripted Projects", () => {
+  it("creates an unscripted project with correct stats", async () => {
+    useGameStore.getState().devAutoInit("major");
 
     useGameStore.getState().createProject({
-      title: 'Real World Test',
-      format: 'unscripted',
-      unscriptedFormat: 'reality_ensemble',
-      genre: 'Ensemble Reality',
-      budgetTier: 'mid',
-      targetAudience: 'Adults 25-54',
-      flavor: 'Drama in a house',
+      title: "Real World Test",
+      format: "unscripted",
+      unscriptedFormat: "reality_ensemble",
+      genre: "Ensemble Reality",
+      budgetTier: "mid",
+      targetAudience: "Adults 25-54",
+      flavor: "Drama in a house",
       episodes: 12,
-      releaseModel: 'weekly'
+      releaseModel: "weekly",
     });
 
     const state = useGameStore.getState().gameState;
-    const project = Object.values(state?.entities.projects || {}).find(p => p.title === 'Real World Test') as any;
+    const project = Object.values(state?.entities.projects || {}).find(
+      (p) => p.title === "Real World Test"
+    ) as any;
 
     expect(project).toBeDefined();
-    expect(project?.format).toBe('unscripted');
-    expect(project?.unscriptedFormat).toBe('reality_ensemble');
+    expect(project?.format).toBe("unscripted");
+    expect(project?.unscriptedFormat).toBe("reality_ensemble");
     expect(project?.tvDetails?.episodesOrdered).toBe(12);
     expect(project?.tvDetails?.currentSeason).toBe(1);
     expect(project?.renewable).toBe(true);

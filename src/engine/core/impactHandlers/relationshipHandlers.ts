@@ -1,4 +1,4 @@
-import { GameState, StateImpact } from '@/engine/types';
+import { GameState, StateImpact } from "@/engine/types";
 
 /**
  * Relationship-related impact handlers
@@ -173,7 +173,10 @@ export function handleProductionAdditionCreated(state: GameState, impact: StateI
   };
 }
 
-export function handleCreditSceneCreatedOrUpdated(state: GameState, impact: StateImpact): GameState {
+export function handleCreditSceneCreatedOrUpdated(
+  state: GameState,
+  impact: StateImpact
+): GameState {
   if (!impact.payload) return state;
   const { scene } = impact.payload;
   if (!scene) return state;
@@ -269,7 +272,10 @@ export function handlePressTourCreated(state: GameState, impact: StateImpact): G
   };
 }
 
-export function handleBreakoutStarCreatedOrUpdated(state: GameState, impact: StateImpact): GameState {
+export function handleBreakoutStarCreatedOrUpdated(
+  state: GameState,
+  impact: StateImpact
+): GameState {
   if (!impact.payload) return state;
   const { breakoutId, breakout } = impact.payload;
   if (!breakout) return state;
@@ -295,7 +301,10 @@ export function handleBreakoutStarCreatedOrUpdated(state: GameState, impact: Sta
   };
 }
 
-export function handleGuestStarOpportunityOrBooked(state: GameState, impact: StateImpact): GameState {
+export function handleGuestStarOpportunityOrBooked(
+  state: GameState,
+  impact: StateImpact
+): GameState {
   if (!impact.payload) return state;
   const { bookingId, booking } = impact.payload;
   if (!booking) return state;

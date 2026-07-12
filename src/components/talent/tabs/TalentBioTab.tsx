@@ -1,8 +1,8 @@
-import { TabsContent } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Briefcase, Heart, Info, Users, Zap } from 'lucide-react';
-import { Talent, Agency, Agent, Family } from '@/engine/types';
-import { TalentAvatar } from '../TalentAvatar';
+import { TabsContent } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Briefcase, Heart, Info, Users, Zap } from "lucide-react";
+import { Talent, Agency, Agent, Family } from "@/engine/types";
+import { TalentAvatar } from "../TalentAvatar";
 
 const Quote = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -20,9 +20,17 @@ interface TalentBioTabProps {
 }
 
 export const TalentBioTab: React.FC<TalentBioTabProps> = ({
-  talent, agency, agent, family, familyMembers, onSelectTalent
+  talent,
+  agency,
+  agent,
+  family,
+  familyMembers,
+  onSelectTalent,
 }) => (
-  <TabsContent value="bio" className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300 focus-visible:outline-none">
+  <TabsContent
+    value="bio"
+    className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300 focus-visible:outline-none"
+  >
     <div className="grid grid-cols-5 gap-8">
       <div className="col-span-3 space-y-8">
         <div className="glass-panel p-8 rounded-none relative group overflow-hidden">
@@ -43,7 +51,10 @@ export const TalentBioTab: React.FC<TalentBioTabProps> = ({
           </h4>
           <div className="grid grid-cols-1 gap-3">
             {talent.trivia?.map((t, i) => (
-              <div key={i} className="bg-black/40 p-5 rounded-none border border-white/5 hover:border-primary/20 transition-all duration-300 flex gap-4">
+              <div
+                key={i}
+                className="bg-black/40 p-5 rounded-none border border-white/5 hover:border-primary/20 transition-all duration-300 flex gap-4"
+              >
                 <div className="w-6 h-6 rounded-none bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
                   <span className="text-[10px] font-black text-primary">{i + 1}</span>
                 </div>
@@ -62,31 +73,57 @@ export const TalentBioTab: React.FC<TalentBioTabProps> = ({
           {agency ? (
             <div className="space-y-4">
               <div className="p-4 rounded-none bg-white/5 border border-white/5">
-                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Current Agency</p>
-                <p className="font-black text-white text-lg tracking-tight uppercase italic">{agency.name}</p>
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">
+                  Current Agency
+                </p>
+                <p className="font-black text-white text-lg tracking-tight uppercase italic">
+                  {agency.name}
+                </p>
                 <div className="flex gap-2 mt-2">
-                  <Badge variant="secondary" className="text-[9px] h-5 bg-primary/20 text-primary border-primary/20 uppercase font-black">{agency.tier}</Badge>
-                  <Badge variant="secondary" className="text-[9px] h-5 bg-slate-800 text-slate-400 uppercase font-black">{agency.culture}</Badge>
+                  <Badge
+                    variant="secondary"
+                    className="text-[9px] h-5 bg-primary/20 text-primary border-primary/20 uppercase font-black"
+                  >
+                    {agency.tier}
+                  </Badge>
+                  <Badge
+                    variant="secondary"
+                    className="text-[9px] h-5 bg-slate-800 text-slate-400 uppercase font-black"
+                  >
+                    {agency.culture}
+                  </Badge>
                 </div>
               </div>
               {talent.contractId && (
                 <div className="p-4 rounded-none bg-rose-500/5 border border-rose-500/10">
-                  <p className="text-[10px] font-bold text-rose-500/60 uppercase tracking-widest mb-1">Exclusive Pact</p>
-                  <p className="text-xs font-black text-rose-400 uppercase italic">Active Industry Tie-up</p>
-                  <p className="text-[9px] text-rose-400/60 font-bold mt-1 uppercase">Limited availability for outside projects</p>
+                  <p className="text-[10px] font-bold text-rose-500/60 uppercase tracking-widest mb-1">
+                    Exclusive Pact
+                  </p>
+                  <p className="text-xs font-black text-rose-400 uppercase italic">
+                    Active Industry Tie-up
+                  </p>
+                  <p className="text-[9px] text-rose-400/60 font-bold mt-1 uppercase">
+                    Limited availability for outside projects
+                  </p>
                 </div>
               )}
               {agent && (
                 <div className="pl-2">
-                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-0.5">Primary Agent</p>
+                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-0.5">
+                    Primary Agent
+                  </p>
                   <p className="font-bold text-slate-200">{agent.name}</p>
-                  <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mt-1">Specialty: {agent.specialty.replace('_', ' ')}</p>
+                  <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mt-1">
+                    Specialty: {agent.specialty.replace("_", " ")}
+                  </p>
                 </div>
               )}
             </div>
           ) : (
             <div className="p-10 text-center border-2 border-dashed border-white/5 rounded-none">
-              <p className="text-xs italic text-slate-500 font-bold uppercase tracking-widest opacity-40">Unrepresented</p>
+              <p className="text-xs italic text-slate-500 font-bold uppercase tracking-widest opacity-40">
+                Unrepresented
+              </p>
             </div>
           )}
         </div>
@@ -101,8 +138,15 @@ export const TalentBioTab: React.FC<TalentBioTabProps> = ({
                 {family.name[0]}
               </div>
               <div>
-                <p className="text-xs font-black text-amber-500 uppercase tracking-widest">The {family.name} Family</p>
-                <Badge variant="outline" className="text-[9px] border-amber-500/30 text-amber-400/80 uppercase px-2 py-0 h-4 mt-1">{family.status}</Badge>
+                <p className="text-xs font-black text-amber-500 uppercase tracking-widest">
+                  The {family.name} Family
+                </p>
+                <Badge
+                  variant="outline"
+                  className="text-[9px] border-amber-500/30 text-amber-400/80 uppercase px-2 py-0 h-4 mt-1"
+                >
+                  {family.status}
+                </Badge>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3 mb-4">
@@ -121,7 +165,7 @@ export const TalentBioTab: React.FC<TalentBioTabProps> = ({
                   <Users className="w-3 h-3" /> Family Members
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {familyMembers.slice(0, 4).map(member => (
+                  {familyMembers.slice(0, 4).map((member) => (
                     <button
                       type="button"
                       key={member.id}
@@ -130,8 +174,12 @@ export const TalentBioTab: React.FC<TalentBioTabProps> = ({
                     >
                       <TalentAvatar talent={member} size="xs" className="border-amber-500/20" />
                       <div>
-                        <p className="text-[10px] font-bold text-amber-200 leading-tight">{member.name}</p>
-                        <p className="text-[8px] font-bold text-amber-500/50 uppercase">{member.roles[0]}</p>
+                        <p className="text-[10px] font-bold text-amber-200 leading-tight">
+                          {member.name}
+                        </p>
+                        <p className="text-[8px] font-bold text-amber-500/50 uppercase">
+                          {member.roles[0]}
+                        </p>
                       </div>
                     </button>
                   ))}
@@ -139,7 +187,8 @@ export const TalentBioTab: React.FC<TalentBioTabProps> = ({
               </div>
             )}
             <p className="text-[10px] text-amber-200/40 leading-relaxed font-bold uppercase tracking-tight mt-3">
-              A recognized lineage in the Hollywood hierarchy. Transitioning from {family.status} status.
+              A recognized lineage in the Hollywood hierarchy. Transitioning from {family.status}{" "}
+              status.
             </p>
           </div>
         )}

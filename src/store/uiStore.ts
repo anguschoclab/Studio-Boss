@@ -1,24 +1,24 @@
-import { create } from 'zustand';
-import { WeekSummary } from '@/engine/types';
+import { create } from "zustand";
+import { WeekSummary } from "@/engine/types";
 
 export type ModalType =
-  | 'CRISIS'
-  | 'AWARDS'
-  | 'SUMMARY'
-  | 'GAME_OVER'
-  | 'RELEASE_STRATEGY'
-  | 'POST_PRODUCTION'
-  | 'ACHIEVEMENT_UNLOCKED'
-  | 'FESTIVAL_MARKET'
-  | 'PACKAGE_DEAL_OFFERED'
-  | 'DIRECTORS_CUT_AVAILABLE'
-  | 'UPFRONTS'
-  | 'BIDDING_WAR'
-  | 'BREAKOUT_BIDDING_WAR'
-  | 'REBOOT_OPPORTUNITY'
-  | 'DISTRESSED_ASSET_OFFER'
-  | 'GREENLIGHT_DECISION'
-  | 'STRATEGY_CHOICE';
+  | "CRISIS"
+  | "AWARDS"
+  | "SUMMARY"
+  | "GAME_OVER"
+  | "RELEASE_STRATEGY"
+  | "POST_PRODUCTION"
+  | "ACHIEVEMENT_UNLOCKED"
+  | "FESTIVAL_MARKET"
+  | "PACKAGE_DEAL_OFFERED"
+  | "DIRECTORS_CUT_AVAILABLE"
+  | "UPFRONTS"
+  | "BIDDING_WAR"
+  | "BREAKOUT_BIDDING_WAR"
+  | "REBOOT_OPPORTUNITY"
+  | "DISTRESSED_ASSET_OFFER"
+  | "GREENLIGHT_DECISION"
+  | "STRATEGY_CHOICE";
 
 let modalIdCounter = 0;
 
@@ -28,14 +28,23 @@ export interface QueuedModal {
   payload: any;
 }
 
-export type TabId = 'command' | 'pipeline' | 'ip' | 'distribution' | 'talent' | 'finance' | 'trades' | 'industry' | 'bookmarks';
+export type TabId =
+  | "command"
+  | "pipeline"
+  | "ip"
+  | "distribution"
+  | "talent"
+  | "finance"
+  | "trades"
+  | "industry"
+  | "bookmarks";
 
 interface UIStore {
   activeTab: TabId;
   showCreateProject: boolean;
   showPitchProject: boolean;
   pitchingProjectId: string | null;
-  
+
   // Modal Queue System
   modalQueue: QueuedModal[];
   activeModal: QueuedModal | null;
@@ -51,7 +60,7 @@ interface UIStore {
   crisisProjectId: string | null;
   showWeekSummary: boolean;
   weekSummary: WeekSummary | null;
-  
+
   selectedProjectId: string | null;
   selectedTalentId: string | null;
   setActiveTab: (tab: TabId) => void;
@@ -68,11 +77,11 @@ interface UIStore {
 }
 
 export const useUIStore = create<UIStore>((set) => ({
-  activeTab: 'command',
+  activeTab: "command",
   showCreateProject: false,
   showPitchProject: false,
   pitchingProjectId: null,
-  
+
   modalQueue: [],
   activeModal: null,
   showSettings: false,
@@ -123,4 +132,3 @@ export const useUIStore = create<UIStore>((set) => ({
   selectProject: (id) => set({ selectedProjectId: id }),
   selectTalent: (id) => set({ selectedTalentId: id }),
 }));
-

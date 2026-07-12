@@ -1,15 +1,15 @@
-import React from 'react';
-import { useGameStore } from '@/store/gameStore';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Network, Zap, AlertTriangle, TrendingUp, Layers, Film, Tv, Play } from 'lucide-react';
-import { formatMoney } from '@/engine/utils';
-import { Franchise, IPAsset } from '@/engine/types';
-import { useShallow } from 'zustand/react/shallow';
+import React from "react";
+import { useGameStore } from "@/store/gameStore";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Network, Zap, AlertTriangle, TrendingUp, Layers, Film, Tv, Play } from "lucide-react";
+import { formatMoney } from "@/engine/utils";
+import { Franchise, IPAsset } from "@/engine/types";
+import { useShallow } from "zustand/react/shallow";
 
 export const FranchiseHub = () => {
-  const ipState = useGameStore(useShallow(s => s.gameState?.ip)) || { franchises: {}, vault: [] };
+  const ipState = useGameStore(useShallow((s) => s.gameState?.ip)) || { franchises: {}, vault: [] };
   const franchises = Object.values(ipState.franchises);
 
   if (franchises.length === 0) {
@@ -17,7 +17,8 @@ export const FranchiseHub = () => {
       <div className="py-24 text-center glass-card border-none">
         <Network className="w-12 h-12 text-muted-foreground/10 mx-auto mb-4" />
         <p className="text-sm font-bold text-muted-foreground/30 uppercase tracking-widest max-w-[280px] mx-auto leading-relaxed">
-          No Shared Universes established. Franchises are born when you sequelise or spinoff a successful IP.
+          No Shared Universes established. Franchises are born when you sequelise or spinoff a
+          successful IP.
         </p>
       </div>
     );
@@ -25,18 +26,18 @@ export const FranchiseHub = () => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-12">
-      {franchises.map(franchise => (
-        <FranchiseCard 
-          key={franchise.id} 
-          franchise={franchise} 
-          assets={ipState.vault.filter(a => a.franchiseId === franchise.id)} 
+      {franchises.map((franchise) => (
+        <FranchiseCard
+          key={franchise.id}
+          franchise={franchise}
+          assets={ipState.vault.filter((a) => a.franchiseId === franchise.id)}
         />
       ))}
     </div>
   );
 };
 
-const FranchiseCard = ({ franchise, assets }: { franchise: Franchise, assets: IPAsset[] }) => {
+const FranchiseCard = ({ franchise, assets }: { franchise: Franchise; assets: IPAsset[] }) => {
   const fatiguePercent = (franchise.fatigueLevel || 0) * 100;
   const isFatigued = fatiguePercent > 40;
   const isDanger = fatiguePercent > 70;
@@ -95,40 +96,52 @@ const FranchiseCard = ({ franchise, assets }: { franchise: Franchise, assets: IP
         <div className="p-6 border-b border-white/5 space-y-3">
           <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
             <div className="flex items-center gap-2">
-              <AlertTriangle className={`h-3 w-3 ${isFatigued ? 'text-amber-500' : 'text-muted-foreground/40'}`} />
+              <AlertTriangle
+                className={`h-3 w-3 ${isFatigued ? "text-amber-500" : "text-muted-foreground/40"}`}
+              />
               <span>Audience Fatigue</span>
             </div>
-            <span className={isDanger ? 'text-red-500' : (isFatigued ? 'text-amber-500' : 'text-primary')}>
+            <span
+              className={isDanger ? "text-red-500" : isFatigued ? "text-amber-500" : "text-primary"}
+            >
               {fatiguePercent.toFixed(0)}%
             </span>
           </div>
-          <Progress 
-            value={fatiguePercent} 
-            className={`h-2 border border-white/5 ${isDanger ? 'bg-red-500' : (isFatigued ? 'bg-amber-500' : 'bg-primary')}`} 
+          <Progress
+            value={fatiguePercent}
+            className={`h-2 border border-white/5 ${isDanger ? "bg-red-500" : isFatigued ? "bg-amber-500" : "bg-primary"}`}
           />
           <p className="text-[9px] font-medium text-muted-foreground/60 leading-relaxed italic">
-            {isDanger 
+            {isDanger
               ? "CRITICAL: The audience is rejecting this brand. Market saturation is absolute. Reboot recommended."
-              : isFatigued 
-                ? "WARNING: Audience interest is waning. Consider diverse formats (TV/Animation) to pivot." 
-                : "HEALTHY: The brand is thriving. Synergy from cross-format releases is high."
-            }
+              : isFatigued
+                ? "WARNING: Audience interest is waning. Consider diverse formats (TV/Animation) to pivot."
+                : "HEALTHY: The brand is thriving. Synergy from cross-format releases is high."}
           </p>
         </div>
 
         {/* Universe Assets Preview */}
         <div className="p-6 space-y-4">
-          <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">Component Properties</h4>
+          <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
+            Component Properties
+          </h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {assets.slice(0, 4).map(asset => (
-              <div key={asset.id} className="flex items-center gap-3 p-2 rounded bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
+            {assets.slice(0, 4).map((asset) => (
+              <div
+                key={asset.id}
+                className="flex items-center gap-3 p-2 rounded bg-white/5 border border-white/5 hover:bg-white/10 transition-colors"
+              >
                 <div className="w-8 h-8 rounded bg-black/40 flex items-center justify-center shrink-0">
-                  {asset.totalEpisodes > 0 ? <Tv className="h-4 w-4 text-purple-400" /> : <Film className="h-4 w-4 text-blue-400" />}
+                  {asset.totalEpisodes > 0 ? (
+                    <Tv className="h-4 w-4 text-purple-400" />
+                  ) : (
+                    <Film className="h-4 w-4 text-blue-400" />
+                  )}
                 </div>
                 <div className="min-w-0">
                   <div className="text-[10px] font-bold text-white truncate">{asset.title}</div>
                   <div className="text-[8px] font-black uppercase text-muted-foreground/60 tracking-widest">
-                    {asset.syndicationTier !== 'NONE' ? asset.syndicationTier : 'Standard Catalog'}
+                    {asset.syndicationTier !== "NONE" ? asset.syndicationTier : "Standard Catalog"}
                   </div>
                 </div>
               </div>
@@ -143,18 +156,18 @@ const FranchiseCard = ({ franchise, assets }: { franchise: Franchise, assets: IP
 
         {/* Footer Actions */}
         <div className="px-6 py-4 bg-white/5 flex gap-3">
-           <button
-             type="button"
-             className="flex-1 text-[10px] font-black bg-primary/20 hover:bg-primary text-primary hover:text-black border border-primary/20 p-2 rounded transition-all uppercase tracking-widest flex items-center justify-center gap-2 group focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-           >
-             <Play aria-hidden="true" className="h-3 w-3 fill-current" /> Exploit IP
-           </button>
-           <button
-             type="button"
-             className="flex-1 text-[10px] font-black bg-white/5 hover:bg-white/20 text-white border border-white/10 p-2 rounded transition-all uppercase tracking-widest focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-           >
-             Deep Analytics
-           </button>
+          <button
+            type="button"
+            className="flex-1 text-[10px] font-black bg-primary/20 hover:bg-primary text-primary hover:text-black border border-primary/20 p-2 rounded transition-all uppercase tracking-widest flex items-center justify-center gap-2 group focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+          >
+            <Play aria-hidden="true" className="h-3 w-3 fill-current" /> Exploit IP
+          </button>
+          <button
+            type="button"
+            className="flex-1 text-[10px] font-black bg-white/5 hover:bg-white/20 text-white border border-white/10 p-2 rounded transition-all uppercase tracking-widest focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+          >
+            Deep Analytics
+          </button>
         </div>
       </CardContent>
     </Card>

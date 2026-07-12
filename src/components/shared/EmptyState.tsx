@@ -1,13 +1,13 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { LucideIcon } from 'lucide-react';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { LucideIcon } from "lucide-react";
 
 interface EmptyStateProps {
   icon: LucideIcon;
   title: string;
   message: string;
   className?: string;
-  variant?: 'default' | 'card';
+  variant?: "default" | "card";
   action?: {
     label: string;
     onClick: () => void;
@@ -19,15 +19,17 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   title,
   message,
   className,
-  variant = 'default',
-  action
+  variant = "default",
+  action,
 }) => {
   return (
-    <div className={cn(
-      "col-span-full py-32 text-center glass-card border-white/5 flex flex-col items-center justify-center space-y-12 animate-in fade-in duration-1000 rounded-none",
-      variant === 'card' && "bg-white/[0.01]",
-      className
-    )}>
+    <div
+      className={cn(
+        "col-span-full py-32 text-center glass-card border-white/5 flex flex-col items-center justify-center space-y-12 animate-in fade-in duration-1000 rounded-none",
+        variant === "card" && "bg-white/[0.01]",
+        className
+      )}
+    >
       <div className="w-24 h-24 rounded-none bg-white/[0.02] border border-white/5 flex items-center justify-center text-muted-foreground/10 transition-all duration-1000 group-hover:scale-110 group-hover:bg-white/5">
         <Icon className="h-10 w-10" strokeWidth={1} />
       </div>
@@ -39,7 +41,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           {message.toUpperCase()}
         </p>
       </div>
-      
+
       {action && (
         <button
           onClick={action.onClick}

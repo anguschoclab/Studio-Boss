@@ -2,6 +2,6 @@ export function useRegisterSW() {
   return {
     needRefresh: [false, () => {}],
     offlineReady: [false, () => {}],
-    updateServiceWorker: () => Promise.resolve()
-  }
+    updateServiceWorker: () => Promise.resolve(),
+  };
 }

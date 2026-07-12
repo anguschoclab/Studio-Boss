@@ -29,7 +29,7 @@ const mockProject: Project = {
   contentFlags: [],
   scriptHeat: 50,
   activeRoles: [],
-  scriptEvents: []
+  scriptEvents: [],
 } as Project;
 
 const mockBuyer: StreamerPlatform = {
@@ -44,7 +44,7 @@ const mockBuyer: StreamerPlatform = {
   foundedWeek: 0,
   marketShare: 0.1,
   reach: 80,
-  subscriberHistory: []
+  subscriberHistory: [],
 };
 
 describe("buyers system", () => {
@@ -54,17 +54,17 @@ describe("buyers system", () => {
 
   describe("calculateFitScore", () => {
     it("calculates base fit score correctly", () => {
-      vi.spyOn(utils, 'randRange').mockReturnValue(0);
+      vi.spyOn(utils, "randRange").mockReturnValue(0);
       const score = calculateFitScore(mockProject, mockBuyer, 10, []);
       // Base (50) + Gap (15) + Buzz (10) = 75
       expect(score).toBe(75);
     });
 
     it("adds bonus for mandate match", () => {
-      vi.spyOn(utils, 'randRange').mockReturnValue(0);
+      vi.spyOn(utils, "randRange").mockReturnValue(0);
       const buyerWithMandate = {
         ...mockBuyer,
-        currentMandate: { type: "sci-fi" as const, activeUntilWeek: 50 }
+        currentMandate: { type: "sci-fi" as const, activeUntilWeek: 50 },
       };
       const score = calculateFitScore(mockProject, buyerWithMandate, 10, []);
       // Base (50) + Gap (15) + Buzz (10) + Mandate (30) = 105 (capped at 100)
@@ -74,16 +74,16 @@ describe("buyers system", () => {
 
   describe("negotiateContract", () => {
     it("accepts a high fit score", () => {
-      vi.spyOn(utils, 'randRange').mockReturnValue(0);
+      vi.spyOn(utils, "randRange").mockReturnValue(0);
       // Score for this is 75 (Base 50 + Gap 15 + Buzz 10)
-      expect(negotiateContract(mockProject, mockBuyer, 'standard')).toBe(true);
+      expect(negotiateContract(mockProject, mockBuyer, "standard")).toBe(true);
     });
 
     it("requires a higher score (65) for upfront contracts", () => {
-      vi.spyOn(utils, 'randRange').mockReturnValue(0);
-      const buyer = { ...mockBuyer, archetype: 'network' as const, reach: 75 } as Buyer;
+      vi.spyOn(utils, "randRange").mockReturnValue(0);
+      const buyer = { ...mockBuyer, archetype: "network" as const, reach: 75 } as Buyer;
       // Score: Base 50 + Gap 15 + Buzz 10 - Network Blockbuster Penalty 20 = 55
-      expect(negotiateContract(mockProject, buyer, 'upfront')).toBe(false);
+      expect(negotiateContract(mockProject, buyer, "upfront")).toBe(false);
     });
   });
 });

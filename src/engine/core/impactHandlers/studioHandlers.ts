@@ -1,4 +1,4 @@
-import { GameState, StateImpact, NewsEvent } from '@/engine/types';
+import { GameState, StateImpact, NewsEvent } from "@/engine/types";
 
 /**
  * Studio-related impact handlers
@@ -11,8 +11,8 @@ export function handlePrestigeChanged(state: GameState, impact: StateImpact): Ga
     ...state,
     studio: {
       ...state.studio,
-      prestige: Math.max(0, state.studio.prestige + amount)
-    }
+      prestige: Math.max(0, state.studio.prestige + amount),
+    },
   };
 }
 
@@ -21,17 +21,17 @@ export function handleNewsAdded(state: GameState, impact: StateImpact): GameStat
   const newsEvent: NewsEvent = {
     id: id,
     week: state.week,
-    type: 'STUDIO_EVENT',
+    type: "STUDIO_EVENT",
     headline: headline,
     description: description,
-    publication: publication
+    publication: publication,
   };
   return {
     ...state,
     industry: {
       ...state.industry,
-      newsHistory: [newsEvent, ...state.industry.newsHistory].slice(0, 100)
-    }
+      newsHistory: [newsEvent, ...state.industry.newsHistory].slice(0, 100),
+    },
   };
 }
 
@@ -43,14 +43,14 @@ export function handleSystemTick(state: GameState, impact: StateImpact): GameSta
   let updated: GameState = {
     ...state,
     week: (week as number) ?? state.week,
-    tickCount: (tickCount as number) ?? state.tickCount
+    tickCount: (tickCount as number) ?? state.tickCount,
   };
 
   // Generic studio property patch (used by loan tick, identity tick, etc.)
   if (__studioUpdate) {
     updated = {
       ...updated,
-      studio: { ...updated.studio, ...(__studioUpdate as Record<string, unknown>) }
+      studio: { ...updated.studio, ...(__studioUpdate as Record<string, unknown>) },
     };
   }
 
@@ -60,21 +60,28 @@ export function handleSystemTick(state: GameState, impact: StateImpact): GameSta
       ...updated,
       studio: {
         ...updated.studio,
-        identity: { ...((updated.studio as unknown as Record<string, unknown>).identity as Record<string, unknown>), ...(studioIdentity as Record<string, unknown>) }
-      }
+        identity: {
+          ...((updated.studio as unknown as Record<string, unknown>).identity as Record<
+            string,
+            unknown
+          >),
+          ...(studioIdentity as Record<string, unknown>),
+        },
+      },
     };
   }
 
   // New achievement ID unlock
   if (newAchievementId) {
-    const existing: string[] = ((updated.studio as unknown as Record<string, unknown>).achievements as string[]) ?? [];
+    const existing: string[] =
+      ((updated.studio as unknown as Record<string, unknown>).achievements as string[]) ?? [];
     if (!existing.includes(newAchievementId as string)) {
       updated = {
         ...updated,
         studio: {
           ...updated.studio,
-          achievements: [...existing, newAchievementId as string]
-        } as unknown as typeof updated.studio
+          achievements: [...existing, newAchievementId as string],
+        } as unknown as typeof updated.studio,
       };
     }
   }

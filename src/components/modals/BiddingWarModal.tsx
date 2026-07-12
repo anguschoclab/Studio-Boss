@@ -1,24 +1,24 @@
-import React from 'react';
-import { useUIStore } from '@/store/uiStore';
-import { useGameStore } from '@/store/gameStore';
-import { formatMoney } from '@/engine/utils';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Swords, Building2, DollarSign, AlertTriangle, Shield } from 'lucide-react';
+import React from "react";
+import { useUIStore } from "@/store/uiStore";
+import { useGameStore } from "@/store/gameStore";
+import { formatMoney } from "@/engine/utils";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Swords, Building2, DollarSign, AlertTriangle, Shield } from "lucide-react";
 
 export const BiddingWarModal: React.FC = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
-  const resolveMerger = useGameStore(s => s.resolveMerger);
+  const resolveMerger = useGameStore((s) => s.resolveMerger);
 
-  if (!activeModal || activeModal.type !== 'BIDDING_WAR') return null;
+  if (!activeModal || activeModal.type !== "BIDDING_WAR") return null;
 
   const {
-    attackerId = '',
-    attackerName = 'Unknown Rival',
-    targetId = '',
-    targetName = 'Unknown Studio',
+    attackerId = "",
+    attackerName = "Unknown Rival",
+    targetId = "",
+    targetName = "Unknown Studio",
     offerAmount = 0,
-    week = 0
+    week = 0,
   } = (activeModal.payload || {}) as {
     attackerId: string;
     attackerName: string;
@@ -62,8 +62,9 @@ export const BiddingWarModal: React.FC = () => {
               <p className="text-sm font-bold text-destructive">Hostile Takeover in Progress</p>
             </div>
             <p className="text-sm text-muted-foreground">
-              <span className="font-bold text-foreground">{attackerName}</span> is attempting a hostile
-              acquisition of <span className="font-bold text-foreground">{targetName}</span>.
+              <span className="font-bold text-foreground">{attackerName}</span> is attempting a
+              hostile acquisition of <span className="font-bold text-foreground">{targetName}</span>
+              .
             </p>
           </div>
 
@@ -82,8 +83,8 @@ export const BiddingWarModal: React.FC = () => {
 
           <div className="p-3 rounded-none bg-amber-500/10 border border-amber-500/20">
             <p className="text-xs text-amber-400 font-bold">
-              Accept: You receive {formatMoney(offerAmount)} and the rival absorbs {targetName}'s assets.
-              Fight: The merger proceeds without your involvement — rivals grow stronger.
+              Accept: You receive {formatMoney(offerAmount)} and the rival absorbs {targetName}'s
+              assets. Fight: The merger proceeds without your involvement — rivals grow stronger.
             </p>
           </div>
 

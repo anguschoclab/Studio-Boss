@@ -1,52 +1,56 @@
 import { describe, it, expect } from "vitest";
-import { generateAwardsProfile, runAwardsCeremony, processRazzies } from "../../../engine/systems/awards/index";
+import {
+  generateAwardsProfile,
+  runAwardsCeremony,
+  processRazzies,
+} from "../../../engine/systems/awards/index";
 import { Project, GameState } from "../../../engine/types";
 import { RandomGenerator } from "../../../engine/utils/rng";
 
 describe("awards system", () => {
-
-  const getInitialState = (): GameState => ({
-    week: 1,
-    gameSeed: 1,
-    tickCount: 0,
-    game: { currentWeek: 1 },
-    finance: { cash: 1_000_000, ledger: [] },
-    news: { headlines: [] },
-    ip: { vault: [], franchises: {} },
-    entities: {
-      projects: {},
-      releasedProjectIds: [],
-      talents: {},
-      contracts: {},
-      rivals: {},
-      contractsByProjectId: {}
-    },
-    studio: {
-      id: 'player-studio',
-      name: 'Test Studio',
-      archetype: 'major',
-      prestige: 50,
-      internal: {
-        projectHistory: [],
-      }
-    },
-    market: { opportunities: [], buyers: [] },
-    industry: {
-      families: [],
-      agencies: [],
-      agents: [],
-      newsHistory: [],
-      rumors: []
-    },
-    culture: { genrePopularity: {} },
-    history: [],
-    eventHistory: []
-  } as unknown as GameState);
+  const getInitialState = (): GameState =>
+    ({
+      week: 1,
+      gameSeed: 1,
+      tickCount: 0,
+      game: { currentWeek: 1 },
+      finance: { cash: 1_000_000, ledger: [] },
+      news: { headlines: [] },
+      ip: { vault: [], franchises: {} },
+      entities: {
+        projects: {},
+        releasedProjectIds: [],
+        talents: {},
+        contracts: {},
+        rivals: {},
+        contractsByProjectId: {},
+      },
+      studio: {
+        id: "player-studio",
+        name: "Test Studio",
+        archetype: "major",
+        prestige: 50,
+        internal: {
+          projectHistory: [],
+        },
+      },
+      market: { opportunities: [], buyers: [] },
+      industry: {
+        families: [],
+        agencies: [],
+        agents: [],
+        newsHistory: [],
+        rumors: [],
+      },
+      culture: { genrePopularity: {} },
+      history: [],
+      eventHistory: [],
+    }) as unknown as GameState;
 
   const eligibleProject: Project = {
     id: "proj-1",
     title: "Award Winner",
-    type: 'FILM',
+    type: "FILM",
     format: "film",
     genre: "Drama",
     budgetTier: "mid",
@@ -80,8 +84,8 @@ describe("awards system", () => {
       guildAppeal: 90,
       populistAppeal: 60,
       indieCredibility: 40,
-      industryNarrativeScore: 80
-    }
+      industryNarrativeScore: 80,
+    },
   } as Project;
 
   describe("generateAwardsProfile", () => {
@@ -105,7 +109,7 @@ describe("awards system", () => {
       const impacts = runAwardsCeremony(state, 4, 2024, rng);
 
       // New CeremonyRunner emits INDUSTRY_UPDATE impacts with awards
-      const awardImpacts = impacts.filter(i => i.type === 'INDUSTRY_UPDATE');
+      const awardImpacts = impacts.filter((i) => i.type === "INDUSTRY_UPDATE");
       expect(impacts.length).toBeGreaterThan(0);
     });
 
@@ -118,39 +122,39 @@ describe("awards system", () => {
 
       const rng = new RandomGenerator(12345);
       const impacts = runAwardsCeremony(state, 4, 2024, rng);
-      const prestigeImpact = impacts.find(i => i.type === 'PRESTIGE_CHANGED');
+      const prestigeImpact = impacts.find((i) => i.type === "PRESTIGE_CHANGED");
       expect((prestigeImpact?.payload as any)?.amount ?? 0).toBeGreaterThanOrEqual(0);
     });
   });
 
   describe("processRazzies", () => {
-      it("triggers Razzie penalty for high-budget, low-score films", () => {
-          const badFilm = {
-              ...eligibleProject,
-              id: "bad-1",
-              title: "Disaster Piece",
-              budget: 100_000_000,
-              budgetTier: "high",
-              reviewScore: 10,
-              buzz: 10,
-              releaseWeek: 5,
-              ownerId: 'player-studio'
-          } as Project;
-          const state = getInitialState();
-          state.entities.projects = { [badFilm.id]: badFilm };
-          state.entities.releasedProjectIds = [badFilm.id];
-          state.week = 4;
-          state.week = 4;
+    it("triggers Razzie penalty for high-budget, low-score films", () => {
+      const badFilm = {
+        ...eligibleProject,
+        id: "bad-1",
+        title: "Disaster Piece",
+        budget: 100_000_000,
+        budgetTier: "high",
+        reviewScore: 10,
+        buzz: 10,
+        releaseWeek: 5,
+        ownerId: "player-studio",
+      } as Project;
+      const state = getInitialState();
+      state.entities.projects = { [badFilm.id]: badFilm };
+      state.entities.releasedProjectIds = [badFilm.id];
+      state.week = 4;
+      state.week = 4;
 
-          const rng = new RandomGenerator(12345);
-          const impacts = processRazzies(state, 4, rng);
+      const rng = new RandomGenerator(12345);
+      const impacts = processRazzies(state, 4, rng);
 
-          const prestigeImpact = impacts.find(i => i.type === 'PRESTIGE_CHANGED');
-          expect(prestigeImpact).toBeDefined();
-          expect((prestigeImpact!.payload as any).amount).toBeLessThan(0);
-          expect(impacts.length).toBeGreaterThan(0);
-          const newsImpact = impacts.find(i => i.type === 'NEWS_ADDED');
-          expect(newsImpact).toBeDefined();
-      });
+      const prestigeImpact = impacts.find((i) => i.type === "PRESTIGE_CHANGED");
+      expect(prestigeImpact).toBeDefined();
+      expect((prestigeImpact!.payload as any).amount).toBeLessThan(0);
+      expect(impacts.length).toBeGreaterThan(0);
+      const newsImpact = impacts.find((i) => i.type === "NEWS_ADDED");
+      expect(newsImpact).toBeDefined();
+    });
   });
 });

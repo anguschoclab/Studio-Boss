@@ -1,6 +1,6 @@
-import { GameState, StateImpact, Project } from '@/engine/types';
-import { RandomGenerator } from '../../utils/rng';
-import { FestivalSubmission } from '@/engine/types/project.types';
+import { GameState, StateImpact, Project } from "@/engine/types";
+import { RandomGenerator } from "../../utils/rng";
+import { FestivalSubmission } from "@/engine/types/project.types";
 
 // Festival market weeks: Sundance (4), Cannes (20), TIFF (36)
 export const FESTIVAL_MARKET_WEEKS = [4, 20, 36] as const;
@@ -23,9 +23,9 @@ export interface FestivalAuctionResult {
 }
 
 function getActiveFestivalBody(week: number): string | null {
-  if (week === 4) return 'Sundance Film Festival';
-  if (week === 20) return 'Cannes Film Festival';
-  if (week === 36) return 'Toronto International Film Festival';
+  if (week === 4) return "Sundance Film Festival";
+  if (week === 20) return "Cannes Film Festival";
+  if (week === 36) return "Toronto International Film Festival";
   return null;
 }
 
@@ -53,10 +53,10 @@ export function generateNPCBid(
   if (cappedBid < 100_000) return null;
 
   return {
-    bidderId: rng.uuid('SUB'),
-    bidderName: 'NPC Buyer',
+    bidderId: rng.uuid("SUB"),
+    bidderName: "NPC Buyer",
     amount: cappedBid,
-    terms: reviewScore > 75 ? 'theatrical + streaming rights' : 'streaming rights only',
+    terms: reviewScore > 75 ? "theatrical + streaming rights" : "streaming rights only",
   };
 }
 
@@ -72,7 +72,7 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
 
   const submissions: FestivalSubmission[] = state.industry.festivalSubmissions ?? [];
   const activeSubmissions = submissions.filter(
-    s => s.festivalBody === festivalBody && (s.status === 'submitted' || s.status === 'selected')
+    (s) => s.festivalBody === festivalBody && (s.status === "submitted" || s.status === "selected")
   );
 
   if (activeSubmissions.length === 0) return impacts;
@@ -81,14 +81,14 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
   const auctionResults: FestivalAuctionResult[] = [];
   const rivalsList = Object.values(state.entities.rivals || {});
 
-  activeSubmissions.forEach(sub => {
+  activeSubmissions.forEach((sub) => {
     const project = state.entities.projects[sub.projectId];
     if (!project) return;
 
     const bids: FestivalBid[] = [];
 
     // Generate NPC bids from all buyers
-    buyers.forEach(buyer => {
+    buyers.forEach((buyer) => {
       const buyerCash = (buyer as unknown as { cash?: number }).cash ?? 50_000_000;
       const bid = generateNPCBid(project, buyerCash, rng);
       if (bid) {
@@ -97,7 +97,7 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
     });
 
     // Add NPC rival bids
-    rivalsList.slice(0, 3).forEach(rival => {
+    rivalsList.slice(0, 3).forEach((rival) => {
       const bid = generateNPCBid(project, rival.cash, rng);
       if (bid) {
         bids.push({ ...bid, bidderId: rival.id, bidderName: rival.name });
@@ -107,7 +107,7 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
     bids.sort((a, b) => b.amount - a.amount);
     const winner = bids[0] ?? null;
 
-    const isPlayerProject = project.ownerId === 'PLAYER' || !project.ownerId;
+    const isPlayerProject = project.ownerId === "PLAYER" || !project.ownerId;
 
     auctionResults.push({
       projectId: project.id,
@@ -121,40 +121,40 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
 
     if (!isPlayerProject && winner) {
       // NPC project sold — update submission status
-      const updatedSubs = submissions.map(s =>
-        s.projectId === sub.projectId ? { ...s, status: 'selected' as const } : s
+      const updatedSubs = submissions.map((s) =>
+        s.projectId === sub.projectId ? { ...s, status: "selected" as const } : s
       );
       impacts.push({
-        type: 'INDUSTRY_UPDATE',
-        payload: { update: { 'industry.festivalSubmissions': updatedSubs } }
+        type: "INDUSTRY_UPDATE",
+        payload: { update: { "industry.festivalSubmissions": updatedSubs } },
       });
     }
   });
 
-  const playerResults = auctionResults.filter(r => r.isPlayerProject);
+  const playerResults = auctionResults.filter((r) => r.isPlayerProject);
 
   if (playerResults.length > 0) {
     // Trigger FESTIVAL_MARKET modal so player can review bids and accept/decline
     impacts.push({
-      type: 'MODAL_TRIGGERED',
+      type: "MODAL_TRIGGERED",
       payload: {
-        modalType: 'FESTIVAL_MARKET',
+        modalType: "FESTIVAL_MARKET",
         priority: 40,
-        payload: { results: playerResults, festivalBody, week: state.week }
-      }
+        payload: { results: playerResults, festivalBody, week: state.week },
+      },
     });
   }
 
   // Headline for the festival market opening
   impacts.push({
-    type: 'NEWS_ADDED',
+    type: "NEWS_ADDED",
     payload: {
-      id: rng.uuid('NWS'),
+      id: rng.uuid("NWS"),
       headline: `${festivalBody} market opens — acquisition frenzy underway`,
       description: `Buyers and sellers converge as distribution rights go up for grabs.`,
-      category: 'festival',
-      publication: 'Variety'
-    }
+      category: "festival",
+      publication: "Variety",
+    },
   });
 
   return impacts;

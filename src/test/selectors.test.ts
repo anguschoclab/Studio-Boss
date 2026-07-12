@@ -3,7 +3,7 @@
  * Tests data aggregation and computation logic for visualization components
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from "vitest";
 import {
   selectCashFlowTrends,
   selectRevenueBreakdown,
@@ -20,23 +20,23 @@ import {
   selectStudioHealthMetrics,
   selectCrisisRiskLevel,
   selectAwardsProbability,
-} from '@/store/selectors';
-import type { Project, Talent } from '@/engine/types';
+} from "@/store/selectors";
+import type { Project, Talent } from "@/engine/types";
 
-import { createMockGameState } from './mockFactory';
+import { createMockGameState } from "./mockFactory";
 
-describe('Phase 1: Financial Selectors', () => {
-  describe('selectCashFlowTrends', () => {
-    it('returns empty array for null state', () => {
+describe("Phase 1: Financial Selectors", () => {
+  describe("selectCashFlowTrends", () => {
+    it("returns empty array for null state", () => {
       expect(selectCashFlowTrends(null)).toEqual([]);
     });
 
-    it('returns empty array for state with no weekly history', () => {
+    it("returns empty array for state with no weekly history", () => {
       const state = createMockGameState();
       expect(selectCashFlowTrends(state)).toEqual([]);
     });
 
-    it('correctly aggregates revenue and expenses from snapshots', () => {
+    it("correctly aggregates revenue and expenses from snapshots", () => {
       const state = createMockGameState({
         finance: {
           cash: 5000000,
@@ -45,20 +45,34 @@ describe('Phase 1: Financial Selectors', () => {
             {
               week: 1,
               revenue: { theatrical: 1000000, streaming: 500000, merch: 100000, passive: 50000 },
-              expenses: { production: 800000, burn: 200000, marketing: 300000, pacts: 50000, royalties: 20000, interest: 10000 },
+              expenses: {
+                production: 800000,
+                burn: 200000,
+                marketing: 300000,
+                pacts: 50000,
+                royalties: 20000,
+                interest: 10000,
+              },
               net: 275000,
               cash: 5000000,
             },
             {
               week: 2,
               revenue: { theatrical: 1200000, streaming: 600000, merch: 120000, passive: 60000 },
-              expenses: { production: 900000, burn: 250000, marketing: 350000, pacts: 60000, royalties: 25000, interest: 12000 },
+              expenses: {
+                production: 900000,
+                burn: 250000,
+                marketing: 350000,
+                pacts: 60000,
+                royalties: 25000,
+                interest: 12000,
+              },
               net: 283000,
               cash: 5275000,
             },
           ],
           marketState: {
-            cycle: 'STABLE',
+            cycle: "STABLE",
             sentiment: 50,
             baseRate: 0.05,
             debtRate: 0.08,
@@ -77,7 +91,7 @@ describe('Phase 1: Financial Selectors', () => {
       expect(result[0].net).toBe(275000);
     });
 
-    it('limits results to specified weeks', () => {
+    it("limits results to specified weeks", () => {
       const state = createMockGameState({
         finance: {
           cash: 5000000,
@@ -85,12 +99,19 @@ describe('Phase 1: Financial Selectors', () => {
           weeklyHistory: Array.from({ length: 20 }, (_, i) => ({
             week: i + 1,
             revenue: { theatrical: 1000000, streaming: 500000, merch: 100000, passive: 50000 },
-            expenses: { production: 800000, burn: 200000, marketing: 300000, pacts: 50000, royalties: 20000, interest: 10000 },
+            expenses: {
+              production: 800000,
+              burn: 200000,
+              marketing: 300000,
+              pacts: 50000,
+              royalties: 20000,
+              interest: 10000,
+            },
             net: 275000,
             cash: 5000000,
           })),
           marketState: {
-            cycle: 'STABLE',
+            cycle: "STABLE",
             sentiment: 50,
             baseRate: 0.05,
             debtRate: 0.08,
@@ -107,17 +128,17 @@ describe('Phase 1: Financial Selectors', () => {
     });
   });
 
-  describe('selectRevenueBreakdown', () => {
-    it('returns empty array for null state', () => {
+  describe("selectRevenueBreakdown", () => {
+    it("returns empty array for null state", () => {
       expect(selectRevenueBreakdown(null)).toEqual([]);
     });
 
-    it('returns empty array for state with no snapshot', () => {
+    it("returns empty array for state with no snapshot", () => {
       const state = createMockGameState();
       expect(selectRevenueBreakdown(state)).toEqual([]);
     });
 
-    it('correctly breaks down revenue by source', () => {
+    it("correctly breaks down revenue by source", () => {
       const state = createMockGameState({
         finance: {
           cash: 5000000,
@@ -126,13 +147,20 @@ describe('Phase 1: Financial Selectors', () => {
             {
               week: 1,
               revenue: { theatrical: 2000000, streaming: 1500000, merch: 500000, passive: 300000 },
-              expenses: { production: 800000, burn: 200000, marketing: 300000, pacts: 50000, royalties: 20000, interest: 10000 },
+              expenses: {
+                production: 800000,
+                burn: 200000,
+                marketing: 300000,
+                pacts: 50000,
+                royalties: 20000,
+                interest: 10000,
+              },
               net: 3220000,
               cash: 5000000,
             },
           ],
           marketState: {
-            cycle: 'STABLE',
+            cycle: "STABLE",
             sentiment: 50,
             baseRate: 0.05,
             debtRate: 0.08,
@@ -145,13 +173,13 @@ describe('Phase 1: Financial Selectors', () => {
 
       const result = selectRevenueBreakdown(state);
       expect(result).toHaveLength(4);
-      expect(result[0].source).toBe('Theatrical');
+      expect(result[0].source).toBe("Theatrical");
       expect(result[0].value).toBe(2000000);
-      expect(result[1].source).toBe('Streaming');
+      expect(result[1].source).toBe("Streaming");
       expect(result[1].value).toBe(1500000);
     });
 
-    it('filters out zero-value sources', () => {
+    it("filters out zero-value sources", () => {
       const state = createMockGameState({
         finance: {
           cash: 5000000,
@@ -160,13 +188,20 @@ describe('Phase 1: Financial Selectors', () => {
             {
               week: 1,
               revenue: { theatrical: 2000000, streaming: 0, merch: 0, passive: 0 },
-              expenses: { production: 800000, burn: 200000, marketing: 300000, pacts: 50000, royalties: 20000, interest: 10000 },
+              expenses: {
+                production: 800000,
+                burn: 200000,
+                marketing: 300000,
+                pacts: 50000,
+                royalties: 20000,
+                interest: 10000,
+              },
               net: 930000,
               cash: 5000000,
             },
           ],
           marketState: {
-            cycle: 'STABLE',
+            cycle: "STABLE",
             sentiment: 50,
             baseRate: 0.05,
             debtRate: 0.08,
@@ -179,26 +214,52 @@ describe('Phase 1: Financial Selectors', () => {
 
       const result = selectRevenueBreakdown(state);
       expect(result).toHaveLength(1);
-      expect(result[0].source).toBe('Theatrical');
+      expect(result[0].source).toBe("Theatrical");
     });
   });
 
-  describe('selectWeeklyRevenueHistory', () => {
-    it('returns empty array for null state', () => {
+  describe("selectWeeklyRevenueHistory", () => {
+    it("returns empty array for null state", () => {
       expect(selectWeeklyRevenueHistory(null)).toEqual([]);
     });
 
-    it('returns net values from weekly history', () => {
+    it("returns net values from weekly history", () => {
       const state = createMockGameState({
         finance: {
           cash: 5000000,
           ledger: [],
           weeklyHistory: [
-            { week: 1, revenue: { theatrical: 1000000, streaming: 500000, merch: 100000, passive: 50000 }, expenses: { production: 800000, burn: 200000, marketing: 300000, pacts: 50000, royalties: 20000, interest: 10000 }, net: 275000, cash: 5000000 },
-            { week: 2, revenue: { theatrical: 1200000, streaming: 600000, merch: 120000, passive: 60000 }, expenses: { production: 900000, burn: 250000, marketing: 350000, pacts: 60000, royalties: 25000, interest: 12000 }, net: 283000, cash: 5275000 },
+            {
+              week: 1,
+              revenue: { theatrical: 1000000, streaming: 500000, merch: 100000, passive: 50000 },
+              expenses: {
+                production: 800000,
+                burn: 200000,
+                marketing: 300000,
+                pacts: 50000,
+                royalties: 20000,
+                interest: 10000,
+              },
+              net: 275000,
+              cash: 5000000,
+            },
+            {
+              week: 2,
+              revenue: { theatrical: 1200000, streaming: 600000, merch: 120000, passive: 60000 },
+              expenses: {
+                production: 900000,
+                burn: 250000,
+                marketing: 350000,
+                pacts: 60000,
+                royalties: 25000,
+                interest: 12000,
+              },
+              net: 283000,
+              cash: 5275000,
+            },
           ],
           marketState: {
-            cycle: 'STABLE',
+            cycle: "STABLE",
             sentiment: 50,
             baseRate: 0.05,
             debtRate: 0.08,
@@ -214,27 +275,27 @@ describe('Phase 1: Financial Selectors', () => {
     });
   });
 
-  describe('selectRecoupmentStatus', () => {
-    it('returns empty array for null state', () => {
+  describe("selectRecoupmentStatus", () => {
+    it("returns empty array for null state", () => {
       expect(selectRecoupmentStatus(null)).toEqual([]);
     });
 
-    it('calculates recoupment percentage correctly', () => {
+    it("calculates recoupment percentage correctly", () => {
       const state = createMockGameState({
         entities: {
           projects: {
-            'proj-1': {
-              id: 'proj-1',
-              title: 'Test Project',
-              type: 'FILM',
-              format: 'film',
-              genre: 'Action',
-              budgetTier: 'mid',
+            "proj-1": {
+              id: "proj-1",
+              title: "Test Project",
+              type: "FILM",
+              format: "film",
+              genre: "Action",
+              budgetTier: "mid",
               budget: 10000000,
               weeklyCost: 100000,
-              targetAudience: 'General',
-              flavor: 'Action',
-              state: 'released',
+              targetAudience: "General",
+              flavor: "Action",
+              state: "released",
               buzz: 70,
               weeksInPhase: 10,
               developmentWeeks: 5,
@@ -256,27 +317,27 @@ describe('Phase 1: Financial Selectors', () => {
 
       const result = selectRecoupmentStatus(state);
       expect(result).toHaveLength(1);
-      expect(result[0].title).toBe('Test Project');
+      expect(result[0].title).toBe("Test Project");
       expect(result[0].recoupPercent).toBe(80);
       expect(result[0].isRecouped).toBe(false);
     });
 
-    it('marks project as profitable when >120% recouped', () => {
+    it("marks project as profitable when >120% recouped", () => {
       const state = createMockGameState({
         entities: {
           projects: {
-            'proj-1': {
-              id: 'proj-1',
-              title: 'Test Project',
-              type: 'FILM',
-              format: 'film',
-              genre: 'Action',
-              budgetTier: 'mid',
+            "proj-1": {
+              id: "proj-1",
+              title: "Test Project",
+              type: "FILM",
+              format: "film",
+              genre: "Action",
+              budgetTier: "mid",
               budget: 10000000,
               weeklyCost: 100000,
-              targetAudience: 'General',
-              flavor: 'Action',
-              state: 'released',
+              targetAudience: "General",
+              flavor: "Action",
+              state: "released",
               buzz: 70,
               weeksInPhase: 10,
               developmentWeeks: 5,
@@ -301,28 +362,28 @@ describe('Phase 1: Financial Selectors', () => {
     });
   });
 
-  describe('selectBudgetBurnData', () => {
-    it('returns null for non-existent project', () => {
+  describe("selectBudgetBurnData", () => {
+    it("returns null for non-existent project", () => {
       const state = createMockGameState();
-      expect(selectBudgetBurnData(state, 'nonexistent')).toBeNull();
+      expect(selectBudgetBurnData(state, "nonexistent")).toBeNull();
     });
 
-    it('calculates budget burn from financial snapshots', () => {
+    it("calculates budget burn from financial snapshots", () => {
       const state = createMockGameState({
         entities: {
           projects: {
-            'proj-1': {
-              id: 'proj-1',
-              title: 'Test Project',
-              type: 'FILM',
-              format: 'film',
-              genre: 'Action',
-              budgetTier: 'mid',
+            "proj-1": {
+              id: "proj-1",
+              title: "Test Project",
+              type: "FILM",
+              format: "film",
+              genre: "Action",
+              budgetTier: "mid",
               budget: 10000000,
               weeklyCost: 100000,
-              targetAudience: 'General',
-              flavor: 'Action',
-              state: 'production',
+              targetAudience: "General",
+              flavor: "Action",
+              state: "production",
               buzz: 70,
               weeksInPhase: 5,
               developmentWeeks: 5,
@@ -347,22 +408,36 @@ describe('Phase 1: Financial Selectors', () => {
             {
               week: 1,
               revenue: { theatrical: 0, streaming: 0, merch: 0, passive: 0 },
-              expenses: { production: 1000000, burn: 100000, marketing: 0, pacts: 0, royalties: 0, interest: 0 },
+              expenses: {
+                production: 1000000,
+                burn: 100000,
+                marketing: 0,
+                pacts: 0,
+                royalties: 0,
+                interest: 0,
+              },
               net: -1100000,
               cash: 5000000,
-              projectRecoupment: { 'proj-1': 0 },
+              projectRecoupment: { "proj-1": 0 },
             },
             {
               week: 2,
               revenue: { theatrical: 0, streaming: 0, merch: 0, passive: 0 },
-              expenses: { production: 1000000, burn: 100000, marketing: 0, pacts: 0, royalties: 0, interest: 0 },
+              expenses: {
+                production: 1000000,
+                burn: 100000,
+                marketing: 0,
+                pacts: 0,
+                royalties: 0,
+                interest: 0,
+              },
               net: -1100000,
               cash: 3900000,
-              projectRecoupment: { 'proj-1': 0 },
+              projectRecoupment: { "proj-1": 0 },
             },
           ],
           marketState: {
-            cycle: 'STABLE',
+            cycle: "STABLE",
             sentiment: 50,
             baseRate: 0.05,
             debtRate: 0.08,
@@ -373,10 +448,10 @@ describe('Phase 1: Financial Selectors', () => {
         },
       });
 
-      const result = selectBudgetBurnData(state, 'proj-1');
+      const result = selectBudgetBurnData(state, "proj-1");
       expect(result).not.toBeNull();
       if (result) {
-        expect(result.projectTitle).toBe('Test Project');
+        expect(result.projectTitle).toBe("Test Project");
         expect(result.budget).toBe(10000000);
         expect(result.accumulated).toBe(5000000);
         expect(result.burnRate).toBe(50);
@@ -385,15 +460,84 @@ describe('Phase 1: Financial Selectors', () => {
   });
 });
 
-describe('Phase 2: Project Status Selectors', () => {
-  describe('selectProjectTimelineData', () => {
-    it('returns timeline data with correct state counts', () => {
+describe("Phase 2: Project Status Selectors", () => {
+  describe("selectProjectTimelineData", () => {
+    it("returns timeline data with correct state counts", () => {
       const state = createMockGameState({
         entities: {
           projects: {
-            'proj-1': { id: 'proj-1', title: 'Project 1', type: 'FILM', format: 'film', genre: 'Action', budgetTier: 'mid', budget: 10000000, weeklyCost: 100000, targetAudience: 'General', flavor: 'Action', state: 'development', buzz: 70, weeksInPhase: 5, developmentWeeks: 5, productionWeeks: 10, revenue: 0, weeklyRevenue: 0, releaseWeek: null, activeCrisis: null, momentum: 70, progress: 50, accumulatedCost: 5000000 } as Project,
-            'proj-2': { id: 'proj-2', title: 'Project 2', type: 'FILM', format: 'film', genre: 'Drama', budgetTier: 'low', budget: 5000000, weeklyCost: 50000, targetAudience: 'General', flavor: 'Drama', state: 'production', buzz: 60, weeksInPhase: 3, developmentWeeks: 5, productionWeeks: 10, revenue: 0, weeklyRevenue: 0, releaseWeek: null, activeCrisis: null, momentum: 60, progress: 30, accumulatedCost: 1500000 } as Project,
-            'proj-3': { id: 'proj-3', title: 'Project 3', type: 'FILM', format: 'film', genre: 'Comedy', budgetTier: 'high', budget: 20000000, weeklyCost: 200000, targetAudience: 'General', flavor: 'Comedy', state: 'released', buzz: 80, weeksInPhase: 10, developmentWeeks: 5, productionWeeks: 10, revenue: 25000000, weeklyRevenue: 0, releaseWeek: 8, activeCrisis: null, momentum: 80, progress: 100, accumulatedCost: 20000000 } as Project,
+            "proj-1": {
+              id: "proj-1",
+              title: "Project 1",
+              type: "FILM",
+              format: "film",
+              genre: "Action",
+              budgetTier: "mid",
+              budget: 10000000,
+              weeklyCost: 100000,
+              targetAudience: "General",
+              flavor: "Action",
+              state: "development",
+              buzz: 70,
+              weeksInPhase: 5,
+              developmentWeeks: 5,
+              productionWeeks: 10,
+              revenue: 0,
+              weeklyRevenue: 0,
+              releaseWeek: null,
+              activeCrisis: null,
+              momentum: 70,
+              progress: 50,
+              accumulatedCost: 5000000,
+            } as Project,
+            "proj-2": {
+              id: "proj-2",
+              title: "Project 2",
+              type: "FILM",
+              format: "film",
+              genre: "Drama",
+              budgetTier: "low",
+              budget: 5000000,
+              weeklyCost: 50000,
+              targetAudience: "General",
+              flavor: "Drama",
+              state: "production",
+              buzz: 60,
+              weeksInPhase: 3,
+              developmentWeeks: 5,
+              productionWeeks: 10,
+              revenue: 0,
+              weeklyRevenue: 0,
+              releaseWeek: null,
+              activeCrisis: null,
+              momentum: 60,
+              progress: 30,
+              accumulatedCost: 1500000,
+            } as Project,
+            "proj-3": {
+              id: "proj-3",
+              title: "Project 3",
+              type: "FILM",
+              format: "film",
+              genre: "Comedy",
+              budgetTier: "high",
+              budget: 20000000,
+              weeklyCost: 200000,
+              targetAudience: "General",
+              flavor: "Comedy",
+              state: "released",
+              buzz: 80,
+              weeksInPhase: 10,
+              developmentWeeks: 5,
+              productionWeeks: 10,
+              revenue: 25000000,
+              weeklyRevenue: 0,
+              releaseWeek: 8,
+              activeCrisis: null,
+              momentum: 80,
+              progress: 100,
+              accumulatedCost: 20000000,
+            } as Project,
           },
           contracts: {},
           talents: {},
@@ -408,28 +552,28 @@ describe('Phase 2: Project Status Selectors', () => {
     });
   });
 
-  describe('selectBoxOfficeData', () => {
-    it('returns empty array for no released projects with box office data', () => {
+  describe("selectBoxOfficeData", () => {
+    it("returns empty array for no released projects with box office data", () => {
       const state = createMockGameState();
       expect(selectBoxOfficeData(state)).toEqual([]);
     });
 
-    it('calculates trend correctly based on opening weekend', () => {
+    it("calculates trend correctly based on opening weekend", () => {
       const state = createMockGameState({
         entities: {
           projects: {
-            'proj-1': {
-              id: 'proj-1',
-              title: 'Blockbuster',
-              type: 'FILM',
-              format: 'film',
-              genre: 'Action',
-              budgetTier: 'blockbuster',
+            "proj-1": {
+              id: "proj-1",
+              title: "Blockbuster",
+              type: "FILM",
+              format: "film",
+              genre: "Action",
+              budgetTier: "blockbuster",
               budget: 100000000,
               weeklyCost: 1000000,
-              targetAudience: 'General',
-              flavor: 'Action',
-              state: 'released',
+              targetAudience: "General",
+              flavor: "Action",
+              state: "released",
               buzz: 90,
               weeksInPhase: 20,
               developmentWeeks: 10,
@@ -441,7 +585,13 @@ describe('Phase 2: Project Status Selectors', () => {
               momentum: 90,
               progress: 100,
               accumulatedCost: 100000000,
-              boxOffice: { openingWeekendDomestic: 60000000, openingWeekendForeign: 40000000, totalDomestic: 150000000, totalForeign: 100000000, multiplier: 2.5 },
+              boxOffice: {
+                openingWeekendDomestic: 60000000,
+                openingWeekendForeign: 40000000,
+                totalDomestic: 150000000,
+                totalForeign: 100000000,
+                multiplier: 2.5,
+              },
             } as Project,
           },
           contracts: {},
@@ -457,28 +607,28 @@ describe('Phase 2: Project Status Selectors', () => {
     });
   });
 
-  describe('selectProductionSlippage', () => {
-    it('returns empty array for no slipped projects', () => {
+  describe("selectProductionSlippage", () => {
+    it("returns empty array for no slipped projects", () => {
       const state = createMockGameState();
       expect(selectProductionSlippage(state)).toEqual([]);
     });
 
-    it('identifies projects with schedule delays', () => {
+    it("identifies projects with schedule delays", () => {
       const state = createMockGameState({
         entities: {
           projects: {
-            'proj-1': {
-              id: 'proj-1',
-              title: 'Delayed Project',
-              type: 'FILM',
-              format: 'film',
-              genre: 'Drama',
-              budgetTier: 'mid',
+            "proj-1": {
+              id: "proj-1",
+              title: "Delayed Project",
+              type: "FILM",
+              format: "film",
+              genre: "Drama",
+              budgetTier: "mid",
               budget: 10000000,
               weeklyCost: 100000,
-              targetAudience: 'General',
-              flavor: 'Drama',
-              state: 'production',
+              targetAudience: "General",
+              flavor: "Drama",
+              state: "production",
               buzz: 70,
               weeksInPhase: 12,
               developmentWeeks: 5,
@@ -501,44 +651,44 @@ describe('Phase 2: Project Status Selectors', () => {
 
       const result = selectProductionSlippage(state);
       expect(result).toHaveLength(1);
-      expect(result[0].title).toBe('Delayed Project');
+      expect(result[0].title).toBe("Delayed Project");
       expect(result[0].slippage).toBeGreaterThanOrEqual(0);
     });
   });
 });
 
-describe('Phase 3: Market Intelligence Selectors', () => {
-  describe('selectGenrePerformanceMatrix', () => {
-    it('returns empty array for no market trends', () => {
+describe("Phase 3: Market Intelligence Selectors", () => {
+  describe("selectGenrePerformanceMatrix", () => {
+    it("returns empty array for no market trends", () => {
       const state = createMockGameState();
       expect(selectGenrePerformanceMatrix(state)).toEqual([]);
     });
 
-    it('calculates ROI by genre and metric from market trends', () => {
+    it("calculates ROI by genre and metric from market trends", () => {
       const state = createMockGameState({
         market: {
           opportunities: [],
           trends: [
-            { genre: 'Action', heat: 80, direction: 'hot' as const, weeksRemaining: 10 },
-            { genre: 'Drama', heat: 60, direction: 'stable' as const, weeksRemaining: 8 },
+            { genre: "Action", heat: 80, direction: "hot" as const, weeksRemaining: 10 },
+            { genre: "Drama", heat: 60, direction: "stable" as const, weeksRemaining: 8 },
           ],
           activeMarketEvents: [],
           buyers: [],
         },
         entities: {
           projects: {
-            'proj-1': {
-              id: 'proj-1',
-              title: 'Action Hit',
-              type: 'FILM',
-              format: 'film',
-              genre: 'Action',
-              budgetTier: 'mid',
+            "proj-1": {
+              id: "proj-1",
+              title: "Action Hit",
+              type: "FILM",
+              format: "film",
+              genre: "Action",
+              budgetTier: "mid",
               budget: 10000000,
               weeklyCost: 100000,
-              targetAudience: 'General',
-              flavor: 'Action',
-              state: 'released',
+              targetAudience: "General",
+              flavor: "Action",
+              state: "released",
               buzz: 80,
               weeksInPhase: 10,
               developmentWeeks: 5,
@@ -566,9 +716,9 @@ describe('Phase 3: Market Intelligence Selectors', () => {
   });
 });
 
-describe('Phase 4: Talent Selectors', () => {
-  describe('selectTalentSatisfaction', () => {
-    it('returns zero scores for empty talent pool', () => {
+describe("Phase 4: Talent Selectors", () => {
+  describe("selectTalentSatisfaction", () => {
+    it("returns zero scores for empty talent pool", () => {
       const state = createMockGameState({
         entities: {
           projects: {},
@@ -583,47 +733,59 @@ describe('Phase 4: Talent Selectors', () => {
       expect(result.byCategory).toEqual([]);
     });
 
-    it('calculates average mood from talent pool', () => {
+    it("calculates average mood from talent pool", () => {
       const state = createMockGameState({
         entities: {
           projects: {},
           contracts: {},
           talents: {
-            'talent-1': {
-              id: 'talent-1',
-              name: 'Actor 1',
-              role: 'actor',
-              roles: ['actor'],
-              tier: 'A_LIST',
+            "talent-1": {
+              id: "talent-1",
+              name: "Actor 1",
+              role: "actor",
+              roles: ["actor"],
+              tier: "A_LIST",
               prestige: 80,
               fee: 5000000,
               draw: 3,
-              accessLevel: 'legacy',
+              accessLevel: "legacy",
               momentum: 70,
               skills: { acting: 85, directing: 50, writing: 40, stardom: 80 },
-              demographics: { age: 35, gender: 'MALE', ethnicity: 'Caucasian', country: 'USA' },
-              psychology: { mood: 80, ego: 60, scandalRisk: 20, synergyAffinities: [], synergyConflicts: [] },
+              demographics: { age: 35, gender: "MALE", ethnicity: "Caucasian", country: "USA" },
+              psychology: {
+                mood: 80,
+                ego: 60,
+                scandalRisk: 20,
+                synergyAffinities: [],
+                synergyConflicts: [],
+              },
               commitments: [],
               fatigue: 20,
-              preferredGenres: ['Action', 'Drama'],
+              preferredGenres: ["Action", "Drama"],
             } as Talent,
-            'talent-2': {
-              id: 'talent-2',
-              name: 'Actor 2',
-              role: 'actor',
-              roles: ['actor'],
-              tier: 'B_LIST',
+            "talent-2": {
+              id: "talent-2",
+              name: "Actor 2",
+              role: "actor",
+              roles: ["actor"],
+              tier: "B_LIST",
               prestige: 60,
               fee: 2000000,
               draw: 2,
-              accessLevel: 'soft-access',
+              accessLevel: "soft-access",
               momentum: 50,
               skills: { acting: 70, directing: 40, writing: 30, stardom: 60 },
-              demographics: { age: 28, gender: 'FEMALE', ethnicity: 'Asian', country: 'USA' },
-              psychology: { mood: 60, ego: 50, scandalRisk: 15, synergyAffinities: [], synergyConflicts: [] },
+              demographics: { age: 28, gender: "FEMALE", ethnicity: "Asian", country: "USA" },
+              psychology: {
+                mood: 60,
+                ego: 50,
+                scandalRisk: 15,
+                synergyAffinities: [],
+                synergyConflicts: [],
+              },
               commitments: [],
               fatigue: 30,
-              preferredGenres: ['Drama', 'Romance'],
+              preferredGenres: ["Drama", "Romance"],
             } as Talent,
           },
           rivals: {},
@@ -636,48 +798,60 @@ describe('Phase 4: Talent Selectors', () => {
     });
   });
 
-  describe('selectTalentTierDistribution', () => {
-    it('calculates distribution by tier', () => {
+  describe("selectTalentTierDistribution", () => {
+    it("calculates distribution by tier", () => {
       const state = createMockGameState({
         entities: {
           projects: {},
           contracts: {},
           talents: {
-            'talent-1': {
-              id: 'talent-1',
-              name: 'A-List Star',
-              role: 'actor',
-              roles: ['actor'],
-              tier: 'A_LIST',
+            "talent-1": {
+              id: "talent-1",
+              name: "A-List Star",
+              role: "actor",
+              roles: ["actor"],
+              tier: "A_LIST",
               prestige: 90,
               fee: 10000000,
               draw: 5,
-              accessLevel: 'dynasty',
+              accessLevel: "dynasty",
               momentum: 85,
               skills: { acting: 90, directing: 60, writing: 50, stardom: 90 },
-              demographics: { age: 40, gender: 'MALE', ethnicity: 'Caucasian', country: 'USA' },
-              psychology: { mood: 75, ego: 70, scandalRisk: 25, synergyAffinities: [], synergyConflicts: [] },
+              demographics: { age: 40, gender: "MALE", ethnicity: "Caucasian", country: "USA" },
+              psychology: {
+                mood: 75,
+                ego: 70,
+                scandalRisk: 25,
+                synergyAffinities: [],
+                synergyConflicts: [],
+              },
               commitments: [],
               fatigue: 15,
-              preferredGenres: ['Action', 'Drama'],
+              preferredGenres: ["Action", "Drama"],
             } as Talent,
-            'talent-2': {
-              id: 'talent-2',
-              name: 'B-List Actor',
-              role: 'actor',
-              roles: ['actor'],
-              tier: 'B_LIST',
+            "talent-2": {
+              id: "talent-2",
+              name: "B-List Actor",
+              role: "actor",
+              roles: ["actor"],
+              tier: "B_LIST",
               prestige: 60,
               fee: 2000000,
               draw: 2,
-              accessLevel: 'soft-access',
+              accessLevel: "soft-access",
               momentum: 50,
               skills: { acting: 65, directing: 40, writing: 30, stardom: 55 },
-              demographics: { age: 30, gender: 'FEMALE', ethnicity: 'Asian', country: 'USA' },
-              psychology: { mood: 65, ego: 45, scandalRisk: 20, synergyAffinities: [], synergyConflicts: [] },
+              demographics: { age: 30, gender: "FEMALE", ethnicity: "Asian", country: "USA" },
+              psychology: {
+                mood: 65,
+                ego: 45,
+                scandalRisk: 20,
+                synergyAffinities: [],
+                synergyConflicts: [],
+              },
               commitments: [],
               fatigue: 25,
-              preferredGenres: ['Drama', 'Romance'],
+              preferredGenres: ["Drama", "Romance"],
             } as Talent,
           },
           rivals: {},
@@ -686,16 +860,16 @@ describe('Phase 4: Talent Selectors', () => {
 
       const result = selectTalentTierDistribution(state);
       expect(result.data).toHaveLength(4);
-      expect(result.data[0].tier).toBe('A-list');
+      expect(result.data[0].tier).toBe("A-list");
       expect(result.data[0].count).toBe(1);
-      expect(result.data[1].tier).toBe('B-list');
+      expect(result.data[1].tier).toBe("B-list");
       expect(result.data[1].count).toBe(1);
       expect(result.totalTalent).toBe(2);
     });
   });
 
-  describe('selectDealStats', () => {
-    it('returns zero stats for no deals', () => {
+  describe("selectDealStats", () => {
+    it("returns zero stats for no deals", () => {
       const state = createMockGameState();
       const result = selectDealStats(state);
       expect(result.total).toBe(0);
@@ -704,36 +878,32 @@ describe('Phase 4: Talent Selectors', () => {
       expect(result.pending).toBe(0);
     });
 
-    it('calculates deal statistics from opportunities with bid history', () => {
+    it("calculates deal statistics from opportunities with bid history", () => {
       const state = createMockGameState({
         market: {
           opportunities: [
             {
-              id: 'opp-1',
-              talentId: 'talent-1',
-              projectId: 'proj-1',
+              id: "opp-1",
+              talentId: "talent-1",
+              projectId: "proj-1",
               bidHistory: [
-                { rivalId: 'PLAYER', amount: 5000000, week: 1 },
-                { rivalId: 'RIVAL-1', amount: 4500000, week: 1 },
+                { rivalId: "PLAYER", amount: 5000000, week: 1 },
+                { rivalId: "RIVAL-1", amount: 4500000, week: 1 },
               ],
               bids: {},
             } as any,
             {
-              id: 'opp-2',
-              talentId: 'talent-2',
-              projectId: 'proj-2',
-              bidHistory: [
-                { rivalId: 'PLAYER', amount: 3000000, week: 2 },
-              ],
+              id: "opp-2",
+              talentId: "talent-2",
+              projectId: "proj-2",
+              bidHistory: [{ rivalId: "PLAYER", amount: 3000000, week: 2 }],
               bids: {},
             } as any,
             {
-              id: 'opp-3',
-              talentId: 'talent-3',
-              projectId: 'proj-3',
-              bidHistory: [
-                { rivalId: 'RIVAL-1', amount: 4000000, week: 3 },
-              ],
+              id: "opp-3",
+              talentId: "talent-3",
+              projectId: "proj-3",
+              bidHistory: [{ rivalId: "RIVAL-1", amount: 4000000, week: 3 }],
               bids: {},
             } as any,
           ],
@@ -752,30 +922,82 @@ describe('Phase 4: Talent Selectors', () => {
   });
 });
 
-describe('Phase 5: Studio Health & Crisis Selectors', () => {
-  describe('selectStudioHealthMetrics', () => {
-    it('returns default scores for empty state', () => {
+describe("Phase 5: Studio Health & Crisis Selectors", () => {
+  describe("selectStudioHealthMetrics", () => {
+    it("returns default scores for empty state", () => {
       const state = createMockGameState();
       const result = selectStudioHealthMetrics(state);
-      
+
       expect(result).toHaveLength(6);
-      expect(result[0].metric).toBe('Finances');
+      expect(result[0].metric).toBe("Finances");
       expect(result[0].score).toBe(100); // Returns 100 as default when no burn data
     });
 
-    it('calculates finance score based on cash vs burn', () => {
+    it("calculates finance score based on cash vs burn", () => {
       const state = createMockGameState({
         finance: {
           cash: 10000000,
           ledger: [],
           weeklyHistory: [
-            { week: 1, revenue: { theatrical: 0, streaming: 0, merch: 0, passive: 0 }, expenses: { production: 0, burn: 500000, marketing: 0, pacts: 0, royalties: 0, interest: 0 }, net: -500000, cash: 10000000 },
-            { week: 2, revenue: { theatrical: 0, streaming: 0, merch: 0, passive: 0 }, expenses: { production: 0, burn: 500000, marketing: 0, pacts: 0, royalties: 0, interest: 0 }, net: -500000, cash: 9500000 },
-            { week: 3, revenue: { theatrical: 0, streaming: 0, merch: 0, passive: 0 }, expenses: { production: 0, burn: 500000, marketing: 0, pacts: 0, royalties: 0, interest: 0 }, net: -500000, cash: 9000000 },
-            { week: 4, revenue: { theatrical: 0, streaming: 0, merch: 0, passive: 0 }, expenses: { production: 0, burn: 500000, marketing: 0, pacts: 0, royalties: 0, interest: 0 }, net: -500000, cash: 8500000 },
+            {
+              week: 1,
+              revenue: { theatrical: 0, streaming: 0, merch: 0, passive: 0 },
+              expenses: {
+                production: 0,
+                burn: 500000,
+                marketing: 0,
+                pacts: 0,
+                royalties: 0,
+                interest: 0,
+              },
+              net: -500000,
+              cash: 10000000,
+            },
+            {
+              week: 2,
+              revenue: { theatrical: 0, streaming: 0, merch: 0, passive: 0 },
+              expenses: {
+                production: 0,
+                burn: 500000,
+                marketing: 0,
+                pacts: 0,
+                royalties: 0,
+                interest: 0,
+              },
+              net: -500000,
+              cash: 9500000,
+            },
+            {
+              week: 3,
+              revenue: { theatrical: 0, streaming: 0, merch: 0, passive: 0 },
+              expenses: {
+                production: 0,
+                burn: 500000,
+                marketing: 0,
+                pacts: 0,
+                royalties: 0,
+                interest: 0,
+              },
+              net: -500000,
+              cash: 9000000,
+            },
+            {
+              week: 4,
+              revenue: { theatrical: 0, streaming: 0, merch: 0, passive: 0 },
+              expenses: {
+                production: 0,
+                burn: 500000,
+                marketing: 0,
+                pacts: 0,
+                royalties: 0,
+                interest: 0,
+              },
+              net: -500000,
+              cash: 8500000,
+            },
           ],
           marketState: {
-            cycle: 'STABLE',
+            cycle: "STABLE",
             sentiment: 50,
             baseRate: 0.05,
             debtRate: 0.08,
@@ -787,36 +1009,36 @@ describe('Phase 5: Studio Health & Crisis Selectors', () => {
       });
 
       const result = selectStudioHealthMetrics(state);
-      expect(result[0].metric).toBe('Finances');
+      expect(result[0].metric).toBe("Finances");
       expect(result[0].score).toBeGreaterThan(0);
     });
   });
 
-  describe('selectCrisisRiskLevel', () => {
-    it('returns zero risk for no crises', () => {
+  describe("selectCrisisRiskLevel", () => {
+    it("returns zero risk for no crises", () => {
       const state = createMockGameState();
       const result = selectCrisisRiskLevel(state);
-      
+
       expect(result.riskLevel).toBe(0);
       expect(result.activeThreats).toHaveLength(0);
     });
 
-    it('calculates risk based on crises and budget overruns', () => {
+    it("calculates risk based on crises and budget overruns", () => {
       const state = createMockGameState({
         entities: {
           projects: {
-            'proj-1': {
-              id: 'proj-1',
-              title: 'Crisis Project',
-              type: 'FILM',
-              format: 'film',
-              genre: 'Action',
-              budgetTier: 'mid',
+            "proj-1": {
+              id: "proj-1",
+              title: "Crisis Project",
+              type: "FILM",
+              format: "film",
+              genre: "Action",
+              budgetTier: "mid",
               budget: 10000000,
               weeklyCost: 100000,
-              targetAudience: 'General',
-              flavor: 'Action',
-              state: 'production',
+              targetAudience: "General",
+              flavor: "Action",
+              state: "production",
               buzz: 70,
               weeksInPhase: 5,
               developmentWeeks: 5,
@@ -824,12 +1046,20 @@ describe('Phase 5: Studio Health & Crisis Selectors', () => {
               revenue: 0,
               weeklyRevenue: 0,
               releaseWeek: null,
-              activeCrisis: { crisisId: 'crisis-1', triggeredWeek: 5, haltedProduction: true, description: 'Director quit', options: [], resolved: false, severity: 'high' },
+              activeCrisis: {
+                crisisId: "crisis-1",
+                triggeredWeek: 5,
+                haltedProduction: true,
+                description: "Director quit",
+                options: [],
+                resolved: false,
+                severity: "high",
+              },
               momentum: 70,
               progress: 50,
               accumulatedCost: 12000000, // Over budget
               scriptHeat: 50,
-              activeRoles: ['protagonist'],
+              activeRoles: ["protagonist"],
               scriptEvents: [],
             } as any, // Type assertion for test mock
           },
@@ -846,29 +1076,29 @@ describe('Phase 5: Studio Health & Crisis Selectors', () => {
   });
 });
 
-describe('Phase 6: Awards Selector', () => {
-  describe('selectAwardsProbability', () => {
-    it('returns empty array for no projects with awards profile', () => {
+describe("Phase 6: Awards Selector", () => {
+  describe("selectAwardsProbability", () => {
+    it("returns empty array for no projects with awards profile", () => {
       const state = createMockGameState();
       expect(selectAwardsProbability(state)).toEqual([]);
     });
 
-    it('calculates probability from awards profile', () => {
+    it("calculates probability from awards profile", () => {
       const state = createMockGameState({
         entities: {
           projects: {
-            'proj-1': {
-              id: 'proj-1',
-              title: 'Awards Contender',
-              type: 'FILM',
-              format: 'film',
-              genre: 'Drama',
-              budgetTier: 'high',
+            "proj-1": {
+              id: "proj-1",
+              title: "Awards Contender",
+              type: "FILM",
+              format: "film",
+              genre: "Drama",
+              budgetTier: "high",
               budget: 50000000,
               weeklyCost: 500000,
-              targetAudience: 'General',
-              flavor: 'Drama',
-              state: 'released',
+              targetAudience: "General",
+              flavor: "Drama",
+              state: "released",
               buzz: 85,
               weeksInPhase: 15,
               developmentWeeks: 10,
@@ -905,7 +1135,7 @@ describe('Phase 6: Awards Selector', () => {
 
       const result = selectAwardsProbability(state);
       expect(result).toHaveLength(1);
-      expect(result[0].projectTitle).toBe('Awards Contender');
+      expect(result[0].projectTitle).toBe("Awards Contender");
       expect(result[0].probability).toBe(90);
     });
   });

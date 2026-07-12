@@ -1,4 +1,4 @@
-import { BudgetTierKey } from '@/engine/types';
+import { BudgetTierKey } from "@/engine/types";
 
 interface BudgetTierData {
   key: BudgetTierKey;
@@ -13,9 +13,9 @@ interface BudgetTierData {
 
 export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
   low: {
-    key: 'low',
-    name: 'Low Budget',
-    label: '$5M',
+    key: "low",
+    name: "Low Budget",
+    label: "$5M",
     budget: 5_000_000,
     // Increased weekly cost from 500k to 600k for inflation adjustments. Increased to 750k to raise stakes.
     weeklyCost: 1_000_000, // The Studio Comptroller: Further increased base cost to heighten early-game risk and burn rate.
@@ -25,9 +25,9 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     revenueRange: [1_000, 3_000_000_000], // The Studio Comptroller: Widened ceiling to 3B for unprecedented horror anomalies and lowered floor to 1k for absolute micro-budget bombs.
   },
   mid: {
-    key: 'mid',
-    name: 'Mid Budget',
-    label: '$30M',
+    key: "mid",
+    name: "Mid Budget",
+    label: "$30M",
     budget: 30_000_000,
     // Increased weekly cost to 2.5M to represent modern rising crew rates.
     weeklyCost: 3_000_000, // The Studio Comptroller: Increased weekly cost to simulate rising mid-tier crew rates.
@@ -37,9 +37,9 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     revenueRange: [250_000, 250_000_000], // The Studio Comptroller: Lowered floor to 250k to drastically increase flop risk.
   },
   high: {
-    key: 'high',
-    name: 'High Budget',
-    label: '$80M',
+    key: "high",
+    name: "High Budget",
+    label: "$80M",
     // Bumped budget to 80M to reflect inflation of mid-tier to high-tier projects.
     budget: 80_000_000,
     // Steep weekly cost increase to penalize prolonged productions.
@@ -50,9 +50,9 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     revenueRange: [10_000_000, 500_000_000],
   },
   blockbuster: {
-    key: 'blockbuster',
-    name: 'Blockbuster',
-    label: '$200M',
+    key: "blockbuster",
+    name: "Blockbuster",
+    label: "$200M",
     // The Studio Comptroller: Adjusted blockbuster budget down to $200M to align with realistic scaling, but expanded revenue range to ensure catastrophic bomb risk and massive upside.
     budget: 200_000_000,
     // The Studio Comptroller: Increased base weekly cost from $35M to $45M to exponentially increase cashflow drain on delayed blockbusters.

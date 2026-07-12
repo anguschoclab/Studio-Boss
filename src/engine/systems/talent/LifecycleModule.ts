@@ -1,12 +1,12 @@
-import { GameState, Talent } from '@/engine/types';
-import { TalentUpdate } from '../../types/state.types';
-import { SchedulingEngine } from '../schedulingEngine';
-import { BardResolver } from '../bardResolver';
-import { RandomGenerator } from '../../utils/rng';
+import { GameState, Talent } from "@/engine/types";
+import { TalentUpdate } from "../../types/state.types";
+import { SchedulingEngine } from "../schedulingEngine";
+import { BardResolver } from "../bardResolver";
+import { RandomGenerator } from "../../utils/rng";
 
 export function advanceTalentLifecycle(state: GameState, rng: RandomGenerator): TalentUpdate[] {
   const talentUpdates: TalentUpdate[] = [];
-  
+
   for (const id in state.entities.talents) {
     const talent = state.entities.talents[id];
     const update: Partial<Talent> = {};
@@ -31,7 +31,7 @@ export function advanceTalentLifecycle(state: GameState, rng: RandomGenerator): 
         changed = true;
       }
     }
-    
+
     let nextCommitments = talent.commitments;
     if (talent.commitments && talent.commitments.length > 0) {
       let hasExpired = false;
@@ -43,16 +43,16 @@ export function advanceTalentLifecycle(state: GameState, rng: RandomGenerator): 
       }
 
       if (hasExpired) {
-        nextCommitments = talent.commitments.filter(c => c.endWeek >= state.week);
+        nextCommitments = talent.commitments.filter((c) => c.endWeek >= state.week);
         update.commitments = nextCommitments;
         changed = true;
       }
     }
-    
+
     if (changed) {
       talentUpdates.push({
         talentId: id,
-        update
+        update,
       });
     }
   }

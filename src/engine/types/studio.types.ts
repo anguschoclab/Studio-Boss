@@ -1,30 +1,55 @@
 // Types related to Studios, Rivals, and Game State
 
-import { Project, Opportunity, GenreTrend, FestivalSubmission, Award, ReleaseStrategy } from './project.types';
-import { Contract, FirstLookDeal, Family, Agency, Agent, Talent, Scandal, MotivationProfile, RivalStrategy } from './talent.types';
-import { NewsEvent, Rumor, MarketEvent } from './engine.types';
-import { FinanceState, NewsState, IPState } from './state.types';
+import {
+  Project,
+  Opportunity,
+  GenreTrend,
+  FestivalSubmission,
+  Award,
+  ReleaseStrategy,
+} from "./project.types";
+import {
+  Contract,
+  FirstLookDeal,
+  Family,
+  Agency,
+  Agent,
+  Talent,
+  Scandal,
+  MotivationProfile,
+  RivalStrategy,
+} from "./talent.types";
+import { NewsEvent, Rumor, MarketEvent } from "./engine.types";
+import { FinanceState, NewsState, IPState } from "./state.types";
 
 export interface MergerOffer {
   id: string;
   acquirerId: string;
   targetId: string;
-  status: 'pending' | 'accepted' | 'rejected';
+  status: "pending" | "accepted" | "rejected";
   terms?: unknown;
 }
 
 export interface GameEvent {
   id: string;
   week: number;
-  type: 'PROJECT_FINISHED' | 'STUDIO_MERGED' | 'AWARD_WON' | 'BANKRUPTCY_WARNING' | 'MARKET_CRASH' | 'TALENT_SCANDAL' | 'GENERAL';
+  type:
+    | "PROJECT_FINISHED"
+    | "STUDIO_MERGED"
+    | "AWARD_WON"
+    | "BANKRUPTCY_WARNING"
+    | "MARKET_CRASH"
+    | "TALENT_SCANDAL"
+    | "GENERAL";
   title: string;
   description: string;
   data?: unknown;
 }
 
-export type ArchetypeKey = 'major' | 'mid-tier' | 'indie';
+export type ArchetypeKey = "major" | "mid-tier" | "indie";
 
-export type StudioMotivation = 'CASH_CRUNCH' | 'AWARD_CHASE' | 'FRANCHISE_BUILDING' | 'MARKET_DISRUPTION' | 'STABILITY';
+export type StudioMotivation =
+  "CASH_CRUNCH" | "AWARD_CHASE" | "FRANCHISE_BUILDING" | "MARKET_DISRUPTION" | "STABILITY";
 
 export interface RivalStudio {
   id: string;
@@ -83,7 +108,7 @@ export interface GameState {
     talents: Record<string, Talent>;
     contracts: Record<string, Contract>;
     rivals: Record<string, RivalStudio>;
-    shingles?: Record<string, import('./talent.types').ProducerShingle>;
+    shingles?: Record<string, import("./talent.types").ProducerShingle>;
     contractsByProjectId: Record<string, string[]>;
     contractsByTalentId: Record<string, string[]>;
   };
@@ -101,7 +126,7 @@ export interface GameState {
     };
     ownedPlatforms?: string[];
     // Loan system
-    loans?: import('./state.types').LoanRecord[];
+    loans?: import("./state.types").LoanRecord[];
     isBankrupt?: boolean;
     // Achievement tracking (array of unlocked achievement IDs)
     achievements?: string[];
@@ -126,7 +151,7 @@ export interface GameState {
     rumors?: Rumor[];
     scandals?: Scandal[];
     newsHistory: NewsEvent[];
-    distressedOffers?: import('./distress.types').DistressedAssetOffer[];
+    distressedOffers?: import("./distress.types").DistressedAssetOffer[];
     activeMergers?: MergerOffer[];
   };
   // UI Data Vis Extensions (Epic 4)
@@ -139,7 +164,7 @@ export interface GameState {
   talentAgentRelationships?: Record<string, unknown>;
   relationships?: { relationships: Record<string, unknown> };
   tvRecommendations?: {
-    recommendations: Record<string, import('./tv-recommendations.types').TVShowRecommendation>;
+    recommendations: Record<string, import("./tv-recommendations.types").TVShowRecommendation>;
   };
 }
 
@@ -152,10 +177,10 @@ export interface SaveSlotMeta {
   timestamp: number;
 }
 
-export type BuyerArchetype = 'network' | 'premium' | 'streamer';
+export type BuyerArchetype = "network" | "premium" | "streamer";
 
 export interface BuyerMandate {
-  type: import('./project.types').MandateType;
+  type: import("./project.types").MandateType;
   activeUntilWeek: number;
 }
 
@@ -180,17 +205,17 @@ export interface BuyerBase {
 }
 
 export interface NetworkPlatform extends BuyerBase {
-  archetype: 'network';
+  archetype: "network";
   reach: number; // 0-100: Influences initial rating
 }
 
 export interface PremiumPlatform extends BuyerBase {
-  archetype: 'premium';
+  archetype: "premium";
   prestigeBonus: number; // 0-50: Influences review scores
 }
 
 export interface StreamerPlatform extends BuyerBase {
-  archetype: 'streamer';
+  archetype: "streamer";
   subscribers: number;
   churnRate: number; // 0.01 to 0.10
   contentLibraryQuality: number; // 0-100: Influences growth
@@ -202,7 +227,7 @@ export type Buyer = NetworkPlatform | PremiumPlatform | StreamerPlatform;
 
 export interface Bookmark {
   id: string;
-  type: 'project' | 'talent';
+  type: "project" | "talent";
   createdAtWeek: number;
 }
 
@@ -210,8 +235,8 @@ export interface StudioSnapshot {
   year: number;
   week: number;
   funds: number;
-  activeProjects: number;     // Count of projects not in 'Released' state
-  completedProjects: number;  // Count of projects in 'Released' state
-  totalPrestige: number;      // Derived from studio prestige/awards
-  timestamp: string;          // ISO string of when snapshot was taken
+  activeProjects: number; // Count of projects not in 'Released' state
+  completedProjects: number; // Count of projects in 'Released' state
+  totalPrestige: number; // Derived from studio prestige/awards
+  timestamp: string; // ISO string of when snapshot was taken
 }

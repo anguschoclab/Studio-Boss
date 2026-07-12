@@ -1,4 +1,4 @@
-import { Talent } from '../../types';
+import { Talent } from "../../types";
 
 /**
  * Relationship compatibility scoring
@@ -11,14 +11,14 @@ export const ROMANCE_THRESHOLD = 70;
 export const MENTORSHIP_THRESHOLD = 50;
 
 export const PERSONALITY_COMPATIBILITY: Record<string, Record<string, number>> = {
-  'perfectionist': { 'collaborative': -10, 'difficult': -20, 'charismatic': 5, 'pragmatic': 10 },
-  'collaborative': { 'difficult': -30, 'charismatic': 15, 'pragmatic': 10, 'artistic': 10 },
-  'difficult': { 'charismatic': -15, 'pragmatic': -10, 'artistic': -5 },
-  'charismatic': { 'pragmatic': 5, 'artistic': 10, 'commercial': 10 },
-  'pragmatic': { 'artistic': -5, 'commercial': 15 },
-  'artistic': { 'commercial': -10 },
-  'loyal': { 'loyal': 20, 'ambitious': -10 },
-  'ambitious': { 'ambitious': -5 },
+  perfectionist: { collaborative: -10, difficult: -20, charismatic: 5, pragmatic: 10 },
+  collaborative: { difficult: -30, charismatic: 15, pragmatic: 10, artistic: 10 },
+  difficult: { charismatic: -15, pragmatic: -10, artistic: -5 },
+  charismatic: { pragmatic: 5, artistic: 10, commercial: 10 },
+  pragmatic: { artistic: -5, commercial: 15 },
+  artistic: { commercial: -10 },
+  loyal: { loyal: 20, ambitious: -10 },
+  ambitious: { ambitious: -5 },
 };
 
 export function getRelationshipKey(talentAId: string, talentBId: string): string {
@@ -52,8 +52,8 @@ export function calculateCompatibility(talentA: Talent, talentB: Talent): number
     if (talentA.actorArchetype === talentB.actorArchetype) {
       compatibility += 5;
     } else if (
-      (talentA.actorArchetype === 'movie_star' && talentB.actorArchetype === 'prestige_actor') ||
-      (talentA.actorArchetype === 'prestige_actor' && talentB.actorArchetype === 'movie_star')
+      (talentA.actorArchetype === "movie_star" && talentB.actorArchetype === "prestige_actor") ||
+      (talentA.actorArchetype === "prestige_actor" && talentB.actorArchetype === "movie_star")
     ) {
       compatibility -= 10;
     }

@@ -1,5 +1,5 @@
-import { GameState, StateImpact, GameEvent } from '../../types';
-import { RandomGenerator } from '../../utils/rng';
+import { GameState, StateImpact, GameEvent } from "../../types";
+import { RandomGenerator } from "../../utils/rng";
 
 /**
  * Simulation Tick Context

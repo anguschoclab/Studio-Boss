@@ -1,5 +1,11 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { RouterProvider, createRouter, createRoute, createRootRoute, Outlet } from "@tanstack/react-router";
+import {
+  RouterProvider,
+  createRouter,
+  createRoute,
+  createRootRoute,
+  Outlet,
+} from "@tanstack/react-router";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -22,24 +28,24 @@ const rootRoute = createRootRoute({
       <Sonner />
     </GlobalThemeProvider>
   ),
-  notFoundComponent: () => <NotFound />
+  notFoundComponent: () => <NotFound />,
 });
 
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/',
+  path: "/",
   component: TitleScreen,
 });
 
 const newGameRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/new-game',
+  path: "/new-game",
   component: NewGame,
 });
 
 const dashboardRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/dashboard',
+  path: "/dashboard",
   component: Dashboard,
 });
 
@@ -47,9 +53,9 @@ const routeTree = rootRoute.addChildren([indexRoute, newGameRoute, dashboardRout
 
 const router = createRouter({ routeTree });
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface Register {
-    router: typeof router
+    router: typeof router;
   }
 }
 

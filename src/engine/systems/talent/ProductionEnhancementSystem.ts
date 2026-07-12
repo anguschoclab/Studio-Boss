@@ -385,7 +385,11 @@ export function tickProductionEnhancementSystem(
   const talentsByProject = new Map<string, Talent[]>();
   const talentsRecord = state.entities.talents || {};
   for (const pId in state.entities.projects || {}) {
-    const projectContracts = getContractsByProjectId(state.entities.contractsByProjectId, state.entities.contracts, pId);
+    const projectContracts = getContractsByProjectId(
+      state.entities.contractsByProjectId,
+      state.entities.contracts,
+      pId
+    );
     const talentList: Talent[] = [];
     for (let i = 0; i < projectContracts.length; i++) {
       const t = talentsRecord[projectContracts[i].talentId];
@@ -400,14 +404,14 @@ export function tickProductionEnhancementSystem(
   const activeProjects: Project[] = [];
   for (const pId in state.entities.projects || {}) {
     const p = state.entities.projects[pId];
-    if (p.state === 'development' || p.state === 'production') {
+    if (p.state === "development" || p.state === "production") {
       activeProjects.push(p);
     }
   }
 
   for (const project of activeProjects) {
     // Generate screenplay notes during development
-    if (project.state === 'development') {
+    if (project.state === "development") {
       const notes = generateScreenplayNotes(project, talentsByProject.get(project.id) ?? [], rng);
       for (const note of notes) {
         impacts.push({
@@ -422,7 +426,7 @@ export function tickProductionEnhancementSystem(
     }
 
     // Generate production additions during production
-    if (project.state === 'production') {
+    if (project.state === "production") {
       const additions = generateProductionAdditions(project, state, rng);
       for (const addition of additions) {
         impacts.push({
@@ -449,7 +453,7 @@ export function tickProductionEnhancementSystem(
     }
 
     // Generate credit scenes during production
-    if (project.state === 'production' && project.type === "FILM") {
+    if (project.state === "production" && project.type === "FILM") {
       const scenes = generateCreditScenes(project, state, rng);
       for (const scene of scenes) {
         impacts.push({

@@ -1,29 +1,29 @@
 // ⚠️ DEAD CODE: This file is not imported by any active module. The active production tick lives in
 // src/engine/systems/productionEngine.ts and src/engine/services/filters/ProductionFilter.ts.
-import { GameState, Project, StateImpact, Contract, Talent } from '../../types';
-import { RandomGenerator } from '../../utils/rng';
-import { getContractsByProjectId } from '../../utils';
-import { TalentMoraleSystem } from '../talent/TalentMoraleSystem';
-import { processDirectorDisputes } from '../directors';
-import { SchedulingEngine } from '../schedulingEngine';
-import { advanceProject } from '../projects';
-import { tickScriptDevelopment } from './ScriptDraftingSystem';
-import { getAttachedTalent } from '../../utils/talentHelpers';
+import { GameState, Project, StateImpact, Contract, Talent } from "../../types";
+import { RandomGenerator } from "../../utils/rng";
+import { getContractsByProjectId } from "../../utils";
+import { TalentMoraleSystem } from "../talent/TalentMoraleSystem";
+import { processDirectorDisputes } from "../directors";
+import { SchedulingEngine } from "../schedulingEngine";
+import { advanceProject } from "../projects";
+import { tickScriptDevelopment } from "./ScriptDraftingSystem";
+import { getAttachedTalent } from "../../utils/talentHelpers";
 
 function tickProject(
-  project: Project, 
+  project: Project,
   projectContracts: Contract[],
   talentPoolMap: Map<string, Talent>,
   rng: RandomGenerator,
   studioPrestige: number,
   currentWeek: number
 ): StateImpact[] {
-  if (project.state === 'archived') {
+  if (project.state === "archived") {
     return [];
   }
 
   const impacts: StateImpact[] = [];
-  
+
   const advancementResult = advanceProject(
     project,
     currentWeek,
@@ -37,48 +37,48 @@ function tickProject(
     0, // fatigue
     rng
   );
-  
+
   // Add project update impact
   impacts.push({
-    type: 'PROJECT_UPDATED',
+    type: "PROJECT_UPDATED",
     payload: {
       projectId: project.id,
-      update: advancementResult.project
-    }
+      update: advancementResult.project,
+    },
   });
 
   // Add talent updates if any
-  advancementResult.talentUpdates.forEach(t => {
+  advancementResult.talentUpdates.forEach((t) => {
     impacts.push({
-      type: 'TALENT_UPDATED',
-      payload: { talentId: t.id, update: t }
+      type: "TALENT_UPDATED",
+      payload: { talentId: t.id, update: t },
     });
   });
 
   // 1.5 Script Development Evolution
-  if (project.state === 'development') {
+  if (project.state === "development") {
     const draftingImpacts = tickScriptDevelopment(project, rng);
     impacts.push(...draftingImpacts);
   }
 
-  if (project.state === 'production') {
+  if (project.state === "production") {
     const targetWeeks = Math.max(4, Math.min(30, project.productionWeeks || 20));
     const attachedTalent = getAttachedTalent(projectContracts, Object.fromEntries(talentPoolMap));
     const moraleMult = TalentMoraleSystem.getProductionSpeedMultiplier(attachedTalent);
-    
-    attachedTalent.forEach(t => {
+
+    attachedTalent.forEach((t) => {
       const newFatigue = SchedulingEngine.updateTalentFatigue(t, true);
       if (newFatigue !== t.fatigue) {
         impacts.push({
-          type: 'TALENT_UPDATED',
-          payload: { talentId: t.id, update: { fatigue: newFatigue } }
+          type: "TALENT_UPDATED",
+          payload: { talentId: t.id, update: { fatigue: newFatigue } },
         });
       }
     });
 
     const baseProgress = (1 / targetWeeks) * 100;
     const variance = rng.range(0.8, 1.2);
-    const actualProgressIncrement = baseProgress * variance * moraleMult; 
+    const actualProgressIncrement = baseProgress * variance * moraleMult;
     const newProgress = Math.min(100, (project.progress || 0) + actualProgressIncrement);
 
     let qualityShift = 0;
@@ -87,16 +87,16 @@ function tickProject(
     }
 
     // Only push progress update if not transitioning to post_production this week
-    if ((project.weeksInPhase + 1) < targetWeeks) {
+    if (project.weeksInPhase + 1 < targetWeeks) {
       const progressUpdateImpact = {
-        type: 'PROJECT_UPDATED' as const,
+        type: "PROJECT_UPDATED" as const,
         payload: {
           projectId: project.id,
           update: {
             progress: newProgress,
-            reviewScore: Math.min(100, Math.max(0, (project.reviewScore || 50) + qualityShift))
-          }
-        }
+            reviewScore: Math.min(100, Math.max(0, (project.reviewScore || 50) + qualityShift)),
+          },
+        },
       };
       impacts.push(progressUpdateImpact);
     }
@@ -171,38 +171,45 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
 
     const projectContracts = contractMap.get(project.id) || [];
     const talentPoolMap = new Map(Object.entries(state.entities.talents));
- 
-    const projectImpacts = tickProject(project, projectContracts, talentPoolMap, rng, studioPrestige, state.week);
- 
-    projectImpacts.forEach(imp => {
-        if (imp.type === 'PROJECT_UPDATED') {
-            allProjects[imp.payload.projectId] = {
-                ...allProjects[imp.payload.projectId],
-                ...imp.payload.update
-            };
-            projectsChanged = true;
-        } else {
-            allImpacts.push(imp);
-        }
+
+    const projectImpacts = tickProject(
+      project,
+      projectContracts,
+      talentPoolMap,
+      rng,
+      studioPrestige,
+      state.week
+    );
+
+    projectImpacts.forEach((imp) => {
+      if (imp.type === "PROJECT_UPDATED") {
+        allProjects[imp.payload.projectId] = {
+          ...allProjects[imp.payload.projectId],
+          ...imp.payload.update,
+        };
+        projectsChanged = true;
+      } else {
+        allImpacts.push(imp);
+      }
     });
 
     const disputeResult = processDirectorDisputes(project, projectContracts, talentPoolMap, rng);
     if (disputeResult.updates.length > 0 || disputeResult.newCrises.length > 0) {
-        allImpacts.push({
-            uiNotifications: disputeResult.updates,
-            projectUpdates: disputeResult.newCrises.map(c => ({
-                projectId: c.projectId,
-                update: { activeCrisis: c.crisis }
-            }))
-        });
+      allImpacts.push({
+        uiNotifications: disputeResult.updates,
+        projectUpdates: disputeResult.newCrises.map((c) => ({
+          projectId: c.projectId,
+          update: { activeCrisis: c.crisis },
+        })),
+      });
     }
   }
 
   if (projectsChanged) {
-      allImpacts.push({
-          type: 'INDUSTRY_UPDATE',
-          payload: { update: { 'entities.projects': allProjects } }
-      });
+    allImpacts.push({
+      type: "INDUSTRY_UPDATE",
+      payload: { update: { "entities.projects": allProjects } },
+    });
   }
 
   for (const talentId in state.entities.talents) {
@@ -212,8 +219,8 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
       const newFatigue = SchedulingEngine.updateTalentFatigue(talent, false);
       if (newFatigue !== talent.fatigue) {
         allImpacts.push({
-          type: 'TALENT_UPDATED',
-          payload: { talentId: talent.id, update: { fatigue: newFatigue } }
+          type: "TALENT_UPDATED",
+          payload: { talentId: talent.id, update: { fatigue: newFatigue } },
         });
       }
     }

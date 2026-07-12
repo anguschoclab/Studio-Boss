@@ -1,5 +1,5 @@
-import { GameState, StateImpact } from '@/engine/types';
-import { getContractsByTalentId } from '../../utils';
+import { GameState, StateImpact } from "@/engine/types";
+import { getContractsByTalentId } from "../../utils";
 
 export function advanceScandals(state: GameState): StateImpact[] {
   const impacts: StateImpact[] = [];
@@ -11,12 +11,12 @@ export function advanceScandals(state: GameState): StateImpact[] {
       activeScandalTalent.add(s.talentId);
     } else {
       impacts.push({
-        type: 'SCANDAL_REMOVED',
-        payload: { scandalId: s.id }
+        type: "SCANDAL_REMOVED",
+        payload: { scandalId: s.id },
       });
     }
   }
-  
+
   const contractsDict = state.entities.contracts || {};
   const talentIdx = state.entities.contractsByTalentId || {};
   const penalizedProjectIds = new Set<string>();
@@ -26,19 +26,19 @@ export function advanceScandals(state: GameState): StateImpact[] {
       penalizedProjectIds.add(c.projectId);
     }
   }
-  
+
   for (const projectId of penalizedProjectIds) {
-      const p = state.entities.projects[projectId];
-      if (p) {
-          impacts.push({
-              type: 'PROJECT_UPDATED',
-              payload: {
-                  projectId,
-                  update: { buzz: Math.max(0, p.buzz - 2) }
-              }
-          });
-      }
+    const p = state.entities.projects[projectId];
+    if (p) {
+      impacts.push({
+        type: "PROJECT_UPDATED",
+        payload: {
+          projectId,
+          update: { buzz: Math.max(0, p.buzz - 2) },
+        },
+      });
+    }
   }
-  
+
   return impacts;
 }

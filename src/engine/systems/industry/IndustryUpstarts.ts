@@ -1,8 +1,8 @@
-import { GameState, RivalStudio, StateImpact, Buyer, StreamerPlatform } from '@/engine/types';
-import { BrandSystem } from '../../generators/BrandSystem';
-import { pick, secureRandom, randRange } from '../../utils';
-import { ARCHETYPES } from '../../data/archetypes';
-import { generateMotto } from '../../generators/names';
+import { GameState, RivalStudio, StateImpact, Buyer, StreamerPlatform } from "@/engine/types";
+import { BrandSystem } from "../../generators/BrandSystem";
+import { pick, secureRandom, randRange } from "../../utils";
+import { ARCHETYPES } from "../../data/archetypes";
+import { generateMotto } from "../../generators/names";
 
 /**
  * Studio Boss - Industry Upstarts
@@ -22,7 +22,7 @@ export function tickIndustryUpstarts(state: GameState): StateImpact[] {
 
   let currentStreamers = 0;
   for (const buyer of state.market.buyers) {
-    if (buyer.archetype === 'streamer') {
+    if (buyer.archetype === "streamer") {
       currentStreamers++;
     }
     usedNames.add(buyer.name);
@@ -36,7 +36,7 @@ export function tickIndustryUpstarts(state: GameState): StateImpact[] {
   if (currentRivals < MIN_RIVALS && secureRandom() < 0.1) {
     const ident = BrandSystem.generateIdentity(usedNames);
     const name = BrandSystem.getStudioName(ident);
-    const archetype = 'indie'; // Upstarts usually start small
+    const archetype = "indie"; // Upstarts usually start small
     const archData = ARCHETYPES[archetype];
 
     const newStudio: RivalStudio = {
@@ -49,69 +49,69 @@ export function tickIndustryUpstarts(state: GameState): StateImpact[] {
       strength: 30 + Math.floor(secureRandom() * 20),
       cash: archData.startingCash * 0.8,
       prestige: 50 + Math.floor(randRange(0, 20)),
-      recentActivity: 'A new boutique studio enters the fray with big ambitions.',
+      recentActivity: "A new boutique studio enters the fray with big ambitions.",
       projects: {},
       contracts: [],
       projectCount: 0,
       motivationProfile: { financial: 50, prestige: 80, legacy: 40, aggression: 70 },
-      currentMotivation: 'MARKET_DISRUPTION',
-      ownedPlatforms: []
+      currentMotivation: "MARKET_DISRUPTION",
+      ownedPlatforms: [],
     };
 
     impacts.push({
-      type: 'INDUSTRY_UPDATE',
-      payload: { 
+      type: "INDUSTRY_UPDATE",
+      payload: {
         update: {},
-        rival: { rivalId: newStudio.id, update: newStudio }
-      }
+        rival: { rivalId: newStudio.id, update: newStudio },
+      },
     });
 
     impacts.push({
-      type: 'NEWS_ADDED',
+      type: "NEWS_ADDED",
       payload: {
         headline: `NEW PLAYER: ${name} launches as artisanal studio`,
         description: `With a focus on quality over volume, ${name} has officially entered the market as a boutique ${archetype} studio.`,
-        category: 'general'
-      }
+        category: "general",
+      },
     });
   }
 
   // Spawn Streamer Upstart
   if (currentStreamers < MIN_STREAMERS && secureRandom() < 0.1) {
-     const ident = BrandSystem.generateIdentity(usedNames);
-     const name = BrandSystem.getStreamingName(ident);
-     
-     const newStreamer: StreamerPlatform = {
-        id: `upstart-streamer-${Math.floor(secureRandom() * 1_000_000_000)}`,
-        name,
-        archetype: 'streamer',
-        foundedWeek: state.week,
-        parentBrand: ident.core,
-        subscribers: 2_000_000,
-        churnRate: 0.08,
-        contentLibraryQuality: 30,
-        marketingSpend: 1_000_000,
-        subscriberHistory: [{ week: state.week, count: 2_000_000 }],
-        marketShare: 0.02,
-        reach: 40
-     };
+    const ident = BrandSystem.generateIdentity(usedNames);
+    const name = BrandSystem.getStreamingName(ident);
 
-     impacts.push({
-        type: 'BUYER_UPDATED',
-        payload: {
-           buyerId: newStreamer.id,
-           update: newStreamer
-        }
-     });
+    const newStreamer: StreamerPlatform = {
+      id: `upstart-streamer-${Math.floor(secureRandom() * 1_000_000_000)}`,
+      name,
+      archetype: "streamer",
+      foundedWeek: state.week,
+      parentBrand: ident.core,
+      subscribers: 2_000_000,
+      churnRate: 0.08,
+      contentLibraryQuality: 30,
+      marketingSpend: 1_000_000,
+      subscriberHistory: [{ week: state.week, count: 2_000_000 }],
+      marketShare: 0.02,
+      reach: 40,
+    };
 
-     impacts.push({
-        type: 'NEWS_ADDED',
-        payload: {
-           headline: `DISRUPTOR: ${name} enters the streaming wars`,
-           description: `A new streaming platform, ${name}, has launched today with an aggressive subscriber acquisition strategy.`,
-           category: 'market'
-        }
-     });
+    impacts.push({
+      type: "BUYER_UPDATED",
+      payload: {
+        buyerId: newStreamer.id,
+        update: newStreamer,
+      },
+    });
+
+    impacts.push({
+      type: "NEWS_ADDED",
+      payload: {
+        headline: `DISRUPTOR: ${name} enters the streaming wars`,
+        description: `A new streaming platform, ${name}, has launched today with an aggressive subscriber acquisition strategy.`,
+        category: "market",
+      },
+    });
   }
 
   return impacts;

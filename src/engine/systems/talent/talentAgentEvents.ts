@@ -1,7 +1,7 @@
-import { Talent, Agent, Agency } from '../../types/talent.types';
-import { GameState } from '../../types/studio.types';
-import { TalentAgentRelationship } from './talentAgentInteractions';
-import { RandomGenerator } from '../../utils/rng';
+import { Talent, Agent, Agency } from "../../types/talent.types";
+import { GameState } from "../../types/studio.types";
+import { TalentAgentRelationship } from "./talentAgentInteractions";
+import { RandomGenerator } from "../../utils/rng";
 
 /**
  * Talent-Agent Event System
@@ -13,16 +13,17 @@ import { RandomGenerator } from '../../utils/rng';
 /**
  * Determine if a talent should hire a new agent
  */
-export function shouldTalentHireAgent(
-  talent: Talent
-): { shouldHire: boolean; preferredAgentId?: string } {
+export function shouldTalentHireAgent(talent: Talent): {
+  shouldHire: boolean;
+  preferredAgentId?: string;
+} {
   // A_LIST and B_LIST talents without agents are likely to hire
-  if (!talent.agentId && (talent.tier === 'A_LIST' || talent.tier === 'B_LIST')) {
+  if (!talent.agentId && (talent.tier === "A_LIST" || talent.tier === "B_LIST")) {
     return { shouldHire: true };
   }
 
   // Rising stars may upgrade agents
-  if (talent.careerTrajectory === 'rising' && talent.prestige > 70) {
+  if (talent.careerTrajectory === "rising" && talent.prestige > 70) {
     return { shouldHire: true };
   }
 
@@ -51,13 +52,15 @@ export function shouldTalentFireAgent(
   if (relationship.relationshipScore < 20) return true;
 
   // Career decline with poor relationship
-  if (talent.careerTrajectory === 'declining' && relationship.relationshipScore < 40) {
+  if (talent.careerTrajectory === "declining" && relationship.relationshipScore < 40) {
     return true;
   }
 
   // Multiple failed negotiations
-  if (relationship.history.failedDeals >= 3 && 
-      relationship.history.failedDeals > relationship.history.successfulDeals) {
+  if (
+    relationship.history.failedDeals >= 3 &&
+    relationship.history.failedDeals > relationship.history.successfulDeals
+  ) {
     return true;
   }
 
@@ -72,17 +75,17 @@ export function selectAgentForTalent(
   state: GameState,
   rng: RandomGenerator
 ): Agent | undefined {
-  const agencyMap = new Map<string, Agency>(state.industry.agencies.map(a => [a.id, a]));
-  const availableAgents = state.industry.agents.filter(agent => {
+  const agencyMap = new Map<string, Agency>(state.industry.agencies.map((a) => [a.id, a]));
+  const availableAgents = state.industry.agents.filter((agent) => {
     // Filter out agents already with the talent (if any)
     if (talent.agentId && agent.id === talent.agentId) return false;
-    
+
     // A_LIST talents should only get agents from powerhouse or major agencies
-    if (talent.tier === 'A_LIST') {
+    if (talent.tier === "A_LIST") {
       const agency = agent.agencyId ? agencyMap.get(agent.agencyId) : undefined;
-      return agency?.tier === 'powerhouse' || agency?.tier === 'major';
+      return agency?.tier === "powerhouse" || agency?.tier === "major";
     }
-    
+
     return true;
   });
 
@@ -91,7 +94,7 @@ export function selectAgentForTalent(
   // Random selection weighted by agent prestige
   const totalPrestige = availableAgents.reduce((sum, agent) => sum + agent.prestige, 0);
   let randomValue = rng.next() * totalPrestige;
-  
+
   for (const agent of availableAgents) {
     randomValue -= agent.prestige;
     if (randomValue <= 0) {
@@ -114,7 +117,7 @@ export function createAgentHiringEvent(
     id: `hire-${talent.id}-${agent.id}-${week}`,
     text: `${talent.name} has hired ${agent.name} as their new agent.`,
     week,
-    category: 'talent'
+    category: "talent",
   };
 }
 
@@ -130,6 +133,6 @@ export function createAgentFiringEvent(
     id: `fire-${talent.id}-${agentId}-${week}`,
     text: `${talent.name} has parted ways with their agent.`,
     week,
-    category: 'talent'
+    category: "talent",
   };
 }

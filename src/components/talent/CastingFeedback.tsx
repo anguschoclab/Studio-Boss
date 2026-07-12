@@ -2,14 +2,8 @@ import React from "react";
 import { Talent, Project } from "@/engine/types";
 import { calculateWillingness } from "@/engine/systems/talent/willingnessEngine";
 import { useGameStore } from "@/store/gameStore";
-import {
-  AlertCircle,
-  Brain,
-  Zap,
-  ChevronRight,
-} from "lucide-react";
+import { AlertCircle, Brain, Zap, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-
 
 interface CastingFeedbackProps {
   talent: Talent;

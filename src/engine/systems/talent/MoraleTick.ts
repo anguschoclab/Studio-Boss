@@ -1,5 +1,5 @@
-import { GameState, StateImpact } from '@/engine/types';
-import { RandomGenerator } from '@/engine/utils/rng';
+import { GameState, StateImpact } from "@/engine/types";
+import { RandomGenerator } from "@/engine/utils/rng";
 
 /**
  * MoraleTick — Weekly morale adjustment for contracted talent.
@@ -53,7 +53,7 @@ export function tickMorale(state: GameState, rng: RandomGenerator): StateImpact[
 
     // --- Rule 5: No active crisis AND project in 'production' — +1 baseline positive
     const hasActiveCrisis = project.activeCrisis && !project.activeCrisis.resolved;
-    if (!hasActiveCrisis && project.state === 'production') {
+    if (!hasActiveCrisis && project.state === "production") {
       delta += 1;
     }
 
@@ -63,7 +63,7 @@ export function tickMorale(state: GameState, rng: RandomGenerator): StateImpact[
     const newMorale = Math.max(0, Math.min(100, currentMorale + delta));
 
     impacts.push({
-      type: 'TALENT_UPDATED',
+      type: "TALENT_UPDATED",
       payload: {
         talentId: talent.id,
         update: { morale: newMorale } as any,
@@ -73,11 +73,11 @@ export function tickMorale(state: GameState, rng: RandomGenerator): StateImpact[
     // --- Low morale news event: 1-in-3 chance when morale drops below 20
     if (newMorale < 20 && rng.next() < 1 / 3) {
       impacts.push({
-        type: 'NEWS_ADDED',
+        type: "NEWS_ADDED",
         payload: {
           headline: `${talent.name} shows signs of unhappiness on set`,
           description: `Sources close to the production of "${project.title}" report that ${talent.name} has been visibly unhappy on set. Continued unrest could affect production quality and team morale.`,
-          category: 'talent',
+          category: "talent",
         },
       } as StateImpact);
     }

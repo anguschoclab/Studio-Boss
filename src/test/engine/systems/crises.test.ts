@@ -28,37 +28,37 @@ describe("crises system", () => {
         {
           text: "Pay up",
           effectDescription: "Lose money",
-          cashPenalty: 1000000
+          cashPenalty: 1000000,
         },
         {
           text: "Delay",
           effectDescription: "Delay production",
-          weeksDelay: 2
+          weeksDelay: 2,
         },
         {
           text: "Scandal",
           effectDescription: "Lose buzz",
           buzzPenalty: 20,
-          reputationPenalty: 5
-        }
+          reputationPenalty: 5,
+        },
       ],
       resolved: false,
-      severity: "medium"
-    }
+      severity: "medium",
+    },
   } as unknown as Project;
 
   const mockGameState: GameState = {
-      entities: {
-          projects: { [mockProject.id]: mockProject },
-          contracts: {},
-          talents: {},
-          rivals: {}
+    entities: {
+      projects: { [mockProject.id]: mockProject },
+      contracts: {},
+      talents: {},
+      rivals: {},
+    },
+    studio: {
+      internal: {
+        projects: { [mockProject.id]: mockProject },
       },
-      studio: {
-          internal: {
-              projects: { [mockProject.id]: mockProject }
-          }
-      }
+    },
   } as any;
 
   describe("checkAndTriggerCrisis", () => {
@@ -71,7 +71,7 @@ describe("crises system", () => {
     });
 
     it("should trigger a crisis in production with rand probability", () => {
-      vi.spyOn(utils, 'rand').mockReturnValue(0.01);
+      vi.spyOn(utils, "rand").mockReturnValue(0.01);
       const impact = checkAndTriggerCrisis(mockProject);
       expect(impact!.projectUpdates).toHaveLength(1);
       expect(impact!.projectUpdates![0].update.activeCrisis?.resolved).toBe(false);
@@ -88,7 +88,9 @@ describe("crises system", () => {
 
     it("should return correct impact for delay option", () => {
       const impact = resolveCrisis(mockGameState, mockProject.id, 1);
-      expect(impact.projectUpdates![0].update.productionWeeks).toBe(mockProject.productionWeeks + 2);
+      expect(impact.projectUpdates![0].update.productionWeeks).toBe(
+        mockProject.productionWeeks + 2
+      );
     });
 
     it("should return correct impact for buzz/prestige penalty option", () => {
@@ -100,18 +102,17 @@ describe("crises system", () => {
     it("should return empty impact if crisis already resolved", () => {
       const resolvedProject = {
         ...mockProject,
-        activeCrisis: { ...mockProject.activeCrisis!, resolved: true }
+        activeCrisis: { ...mockProject.activeCrisis!, resolved: true },
       };
       const stateWithResolved = {
-          ...mockGameState,
-          entities: {
-              ...mockGameState.entities,
-              projects: { [resolvedProject.id]: resolvedProject }
-          },
-          studio: { internal: { projects: { [resolvedProject.id]: resolvedProject } } }
+        ...mockGameState,
+        entities: {
+          ...mockGameState.entities,
+          projects: { [resolvedProject.id]: resolvedProject },
+        },
+        studio: { internal: { projects: { [resolvedProject.id]: resolvedProject } } },
       } as any;
       resolveCrisis(stateWithResolved, resolvedProject.id, 0);
-
     });
   });
 });

@@ -1,58 +1,65 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { useGameStore } from '@/store/gameStore';
-import { calculateFranchiseFatigue } from '@/engine/systems/ip/fatigueEngine';
-import { generateSpinoffProposal } from '@/engine/systems/ip/spinoffFactory';
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { useGameStore } from "@/store/gameStore";
+import { calculateFranchiseFatigue } from "@/engine/systems/ip/fatigueEngine";
+import { generateSpinoffProposal } from "@/engine/systems/ip/spinoffFactory";
 
-vi.mock('@/engine/utils/rng', () => ({
+vi.mock("@/engine/utils/rng", () => ({
   RandomGenerator: vi.fn().mockImplementation(() => ({
     next: vi.fn(() => 0.5),
-    uuid: vi.fn(() => 'mock-uuid'),
+    uuid: vi.fn(() => "mock-uuid"),
     getState: vi.fn(() => ({ seed: 12345 })),
   })),
 }));
 
-vi.mock('@/engine/systems/ip/spinoffFactory', () => ({
+vi.mock("@/engine/systems/ip/spinoffFactory", () => ({
   generateSpinoffProposal: vi.fn(() => ({
-    title: 'Spinoff Movie',
-    genre: 'Action',
-    format: 'film',
-    budgetTier: 'mid',
-    targetAudience: 'General',
-    flavor: 'Boom',
+    title: "Spinoff Movie",
+    genre: "Action",
+    format: "film",
+    budgetTier: "mid",
+    targetAudience: "General",
+    flavor: "Boom",
   })),
 }));
 
-vi.mock('@/engine/systems/ip/fatigueEngine', () => ({
+vi.mock("@/engine/systems/ip/fatigueEngine", () => ({
   calculateFranchiseFatigue: vi.fn(() => 0.5),
 }));
 
-vi.mock('@/engine/systems/culture', () => ({
+vi.mock("@/engine/systems/culture", () => ({
   updateCultureFromProject: vi.fn(),
 }));
 
-vi.mock('@/engine/systems/projects', () => ({
+vi.mock("@/engine/systems/projects", () => ({
   releaseProject: vi.fn(),
 }));
 
-vi.mock('@/engine/systems/buyers', () => ({
+vi.mock("@/engine/systems/buyers", () => ({
   negotiateContract: vi.fn(),
 }));
 
-vi.mock('@/engine/systems/crises', () => ({
+vi.mock("@/engine/systems/crises", () => ({
   resolveCrisis: vi.fn(),
 }));
 
-vi.mock('@/engine/systems/festivals', () => ({
+vi.mock("@/engine/systems/festivals", () => ({
   submitToFestival: vi.fn(),
 }));
 
-vi.mock('@/engine/systems/awards', () => ({
+vi.mock("@/engine/systems/awards", () => ({
   submitForAward: vi.fn(),
 }));
 
-vi.mock('@/store/storeUtils', () => ({
+vi.mock("@/store/storeUtils", () => ({
   buildProjectAndContracts: vi.fn(() => ({
-    project: { id: 'new-proj-1', title: 'Spinoff Movie', genre: 'Action', state: 'development', budget: 50_000_000, type: 'FILM' },
+    project: {
+      id: "new-proj-1",
+      title: "Spinoff Movie",
+      genre: "Action",
+      state: "development",
+      budget: 50_000_000,
+      type: "FILM",
+    },
     newContracts: [],
     talentFees: 0,
   })),
@@ -60,7 +67,9 @@ vi.mock('@/store/storeUtils', () => ({
   CreateProjectParams: {} as any,
 }));
 
-function makeFranchiseState(genreProjects: Array<{ id: string; genre: string; franchiseId?: string }>) {
+function makeFranchiseState(
+  genreProjects: Array<{ id: string; genre: string; franchiseId?: string }>
+) {
   const projects: Record<string, any> = {};
   for (const p of genreProjects) {
     projects[p.id] = p;
@@ -69,24 +78,39 @@ function makeFranchiseState(genreProjects: Array<{ id: string; genre: string; fr
     week: 100,
     finance: { cash: 100_000_000, ledger: [], weeklyHistory: [] },
     studio: {
-      id: 'PLR-1',
-      name: 'Player Studio',
-      archetype: 'major',
+      id: "PLR-1",
+      name: "Player Studio",
+      archetype: "major",
       prestige: 50,
       internal: { projectHistory: [], firstLookDeals: [], projects: {}, contracts: [] },
     },
-    entities: { projects, releasedProjectIds: [], talents: {}, contracts: {}, rivals: {}, contractsByProjectId: {} },
+    entities: {
+      projects,
+      releasedProjectIds: [],
+      talents: {},
+      contracts: {},
+      rivals: {},
+      contractsByProjectId: {},
+    },
     market: { opportunities: [], trends: [], activeMarketEvents: [], buyers: [] },
-    industry: { families: [], agencies: [], agents: [], awards: [], newsHistory: [], rumors: [], scandals: [] },
+    industry: {
+      families: [],
+      agencies: [],
+      agents: [],
+      awards: [],
+      newsHistory: [],
+      rumors: [],
+      scandals: [],
+    },
     culture: { genrePopularity: {} },
     news: { headlines: [] },
     ip: {
       vault: [],
       franchises: {
-        'FR-1': {
-          id: 'FR-1',
-          name: 'Action Universe',
-          assetIds: ['PRJ-1', 'PRJ-2'],
+        "FR-1": {
+          id: "FR-1",
+          name: "Action Universe",
+          assetIds: ["PRJ-1", "PRJ-2"],
           lastReleaseWeeks: [10],
         },
       },
@@ -100,20 +124,18 @@ function makeFranchiseState(genreProjects: Array<{ id: string; genre: string; fr
   } as any;
 }
 
-describe('projectSlice — exploitFranchise genreSaturation count', () => {
+describe("projectSlice — exploitFranchise genreSaturation count", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('counts 0 same-genre projects correctly', () => {
+  it("counts 0 same-genre projects correctly", () => {
     useGameStore.setState({
-      gameState: makeFranchiseState([
-        { id: 'PRJ-1', genre: 'Action', franchiseId: 'FR-1' },
-      ]),
+      gameState: makeFranchiseState([{ id: "PRJ-1", genre: "Action", franchiseId: "FR-1" }]),
     } as any);
 
     const store = useGameStore.getState() as any;
-    store.exploitFranchise('PRJ-1');
+    store.exploitFranchise("PRJ-1");
 
     expect(calculateFranchiseFatigue).toHaveBeenCalled();
     const callArgs = (calculateFranchiseFatigue as any).mock.calls[0];
@@ -121,18 +143,18 @@ describe('projectSlice — exploitFranchise genreSaturation count', () => {
     expect(callArgs[1]).toBe(1);
   });
 
-  it('counts multiple same-genre projects correctly', () => {
+  it("counts multiple same-genre projects correctly", () => {
     useGameStore.setState({
       gameState: makeFranchiseState([
-        { id: 'PRJ-1', genre: 'Action', franchiseId: 'FR-1' },
-        { id: 'PRJ-2', genre: 'Action' },
-        { id: 'PRJ-3', genre: 'Action' },
-        { id: 'PRJ-4', genre: 'Drama' },
+        { id: "PRJ-1", genre: "Action", franchiseId: "FR-1" },
+        { id: "PRJ-2", genre: "Action" },
+        { id: "PRJ-3", genre: "Action" },
+        { id: "PRJ-4", genre: "Drama" },
       ]),
     } as any);
 
     const store = useGameStore.getState() as any;
-    store.exploitFranchise('PRJ-1');
+    store.exploitFranchise("PRJ-1");
 
     expect(calculateFranchiseFatigue).toHaveBeenCalled();
     const callArgs = (calculateFranchiseFatigue as any).mock.calls[0];
@@ -140,19 +162,17 @@ describe('projectSlice — exploitFranchise genreSaturation count', () => {
     expect(callArgs[1]).toBe(3);
   });
 
-  it('calls generateSpinoffProposal with HEALTHY status and 0 relatedCount when project has no franchiseId', () => {
+  it("calls generateSpinoffProposal with HEALTHY status and 0 relatedCount when project has no franchiseId", () => {
     useGameStore.setState({
-      gameState: makeFranchiseState([
-        { id: 'PRJ-1', genre: 'Action' },
-      ]),
+      gameState: makeFranchiseState([{ id: "PRJ-1", genre: "Action" }]),
     } as any);
 
     const store = useGameStore.getState() as any;
-    store.exploitFranchise('PRJ-1');
+    store.exploitFranchise("PRJ-1");
 
     expect(generateSpinoffProposal).toHaveBeenCalled();
     const callArgs = (generateSpinoffProposal as any).mock.calls[0];
-    expect(callArgs[1]).toBe('HEALTHY');
+    expect(callArgs[1]).toBe("HEALTHY");
     expect(callArgs[2]).toBe(0);
   });
 });

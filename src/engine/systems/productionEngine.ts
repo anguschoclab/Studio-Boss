@@ -1,14 +1,18 @@
-import { GameState, Project, StateImpact } from '@/engine/types';
-import { RandomGenerator } from '../utils/rng';
-import { processDirectorDisputes } from './directors';
-import { getContractsByProjectId } from '@/engine/utils';
+import { GameState, Project, StateImpact } from "@/engine/types";
+import { RandomGenerator } from "../utils/rng";
+import { processDirectorDisputes } from "./directors";
+import { getContractsByProjectId } from "@/engine/utils";
 
 /**
  * Pure function to advance a single project's weekly production logic.
  * Handlers are kept under 50 lines per mandate.
  */
 function tickProject(project: Project, rng: RandomGenerator): StateImpact[] {
-  if (project.state === 'archived' || project.state === 'released' || project.state === 'post_release') {
+  if (
+    project.state === "archived" ||
+    project.state === "released" ||
+    project.state === "post_release"
+  ) {
     return [];
   }
 
@@ -17,19 +21,19 @@ function tickProject(project: Project, rng: RandomGenerator): StateImpact[] {
   const targetWeeks = project.productionWeeks || 20;
 
   // Crisis halt: production is frozen but costs continue accumulating
-  if (project.state === 'production' && project.activeCrisis?.haltedProduction) {
-    const momentumFactor = 0.5 + ((project.momentum || 50) / 200);
+  if (project.state === "production" && project.activeCrisis?.haltedProduction) {
+    const momentumFactor = 0.5 + (project.momentum || 50) / 200;
     const haltCostStep = (project.budget * 0.05) / momentumFactor;
     impacts.push({
-      type: 'PROJECT_UPDATED',
+      type: "PROJECT_UPDATED",
       payload: {
         projectId: project.id,
         update: {
           weeksInPhase: nextWeeksInPhase,
           momentum: Math.max(0, (project.momentum || 50) - 5),
-          accumulatedCost: (project.accumulatedCost || 0) + haltCostStep
-        }
-      }
+          accumulatedCost: (project.accumulatedCost || 0) + haltCostStep,
+        },
+      },
     });
     return impacts;
   }
@@ -48,15 +52,15 @@ function tickProject(project: Project, rng: RandomGenerator): StateImpact[] {
   }
 
   impacts.push({
-    type: 'PROJECT_UPDATED',
+    type: "PROJECT_UPDATED",
     payload: {
       projectId: project.id,
       update: {
         weeksInPhase: nextWeeksInPhase,
         progress: newProgress,
-        reviewScore: Math.min(100, Math.max(0, (project.reviewScore || 50) + qualityShift))
-      }
-    }
+        reviewScore: Math.min(100, Math.max(0, (project.reviewScore || 50) + qualityShift)),
+      },
+    },
   });
 
   return impacts;
@@ -76,19 +80,23 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
     const project = state.entities.projects[key];
     allImpacts.push(...tickProject(project, rng));
 
-    if (project.state === 'production' && !project.activeCrisis) {
-      const projectContracts = getContractsByProjectId(state.entities.contractsByProjectId, state.entities.contracts, project.id);
+    if (project.state === "production" && !project.activeCrisis) {
+      const projectContracts = getContractsByProjectId(
+        state.entities.contractsByProjectId,
+        state.entities.contracts,
+        project.id
+      );
       const disputeResult = processDirectorDisputes(project, projectContracts, talentMap, rng);
       disputeResult.newCrises.forEach(({ projectId, crisis }) => {
         allImpacts.push({
-          type: 'PROJECT_UPDATED',
-          payload: { projectId, update: { activeCrisis: crisis } }
+          type: "PROJECT_UPDATED",
+          payload: { projectId, update: { activeCrisis: crisis } },
         });
       });
       if (disputeResult.updates.length > 0) {
         allImpacts.push({
-          type: 'NEWS_ADDED',
-          payload: { headline: 'ON-SET CRISIS', description: disputeResult.updates[0] }
+          type: "NEWS_ADDED",
+          payload: { headline: "ON-SET CRISIS", description: disputeResult.updates[0] },
         });
       }
     }

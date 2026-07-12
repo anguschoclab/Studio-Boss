@@ -2,17 +2,20 @@
 // Defines talent-talent relationships: friendships, rivalries, romance, mentorship
 
 export type RelationshipType =
-  | 'friend'
-  | 'rival'
-  | 'romantic'
-  | 'ex'
-  | 'mentor'
-  | 'enemy'
-  | 'frenemy';
+  "friend" | "rival" | "romantic" | "ex" | "mentor" | "enemy" | "frenemy";
 
 export interface RelationshipEvent {
   week: number;
-  type: 'project_together' | 'scandal_shared' | 'award_competition' | 'breakup' | 'reconciliation' | 'betrayal' | 'formed' | 'strengthened' | 'weakened';
+  type:
+    | "project_together"
+    | "scandal_shared"
+    | "award_competition"
+    | "breakup"
+    | "reconciliation"
+    | "betrayal"
+    | "formed"
+    | "strengthened"
+    | "weakened";
   impact: number; // How much this changed the relationship (-20 to +20)
   description: string;
 }
@@ -33,23 +36,23 @@ export interface TalentRelationship {
 export interface RelationshipsState {
   relationships: Record<string, TalentRelationship>; // key: "talentA-talentB" (sorted alphabetically)
   cliques?: {
-    cliques: Record<string, import('./clique.types').Clique>;
+    cliques: Record<string, import("./clique.types").Clique>;
     memberCliqueMap: Record<string, string[]>; // talentId -> cliqueIds
   };
   productionEnhancements?: {
-    screenplayNotes: Record<string, import('./production.types').ScreenplayNote>;
-    productionAdditions: Record<string, import('./production.types').ProductionAddition>;
-    creditScenes: Record<string, import('./production.types').CreditScene>;
+    screenplayNotes: Record<string, import("./production.types").ScreenplayNote>;
+    productionAdditions: Record<string, import("./production.types").ProductionAddition>;
+    creditScenes: Record<string, import("./production.types").CreditScene>;
   };
   marketingPromotions?: {
-    talkShowAppearances: Record<string, import('./marketing.types').TalkShowAppearance>;
-    photoshoots: Record<string, import('./marketing.types').MagazinePhotoshoot>;
-    activePressTours: Record<string, import('./marketing.types').PressTour>;
+    talkShowAppearances: Record<string, import("./marketing.types").TalkShowAppearance>;
+    photoshoots: Record<string, import("./marketing.types").MagazinePhotoshoot>;
+    activePressTours: Record<string, import("./marketing.types").PressTour>;
   };
   discovery?: {
-    breakoutStars: Record<string, import('./discovery.types').BreakoutStar>;
-    guestStarBookings: Record<string, import('./discovery.types').GuestStarBooking>;
-    hiddenTalentPool: Record<string, import('./discovery.types').HiddenTalent>;
+    breakoutStars: Record<string, import("./discovery.types").BreakoutStar>;
+    guestStarBookings: Record<string, import("./discovery.types").GuestStarBooking>;
+    hiddenTalentPool: Record<string, import("./discovery.types").HiddenTalent>;
     discoveryLog: string[];
   };
 }

@@ -5,6 +5,7 @@ Thank you for your interest in contributing to Studio Boss!
 ## Development Setup
 
 ### Prerequisites
+
 - Bun (v1.1 or higher)
 
 ### Installation
@@ -30,6 +31,7 @@ cp .env.example .env
 ```
 
 Required environment variables:
+
 - `GEMINI_API_KEY`: Google Generative AI API key for narrative generation
 
 ## Development Scripts

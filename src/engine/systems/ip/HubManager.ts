@@ -1,22 +1,26 @@
-import { GameState, Project, Franchise, StateImpact } from '../../types';
-import { RandomGenerator } from '../../utils/rng';
-import { calculateFranchiseEquity } from './EquityCalculator';
-import { clamp } from '../../utils';
+import { GameState, Project, Franchise, StateImpact } from "../../types";
+import { RandomGenerator } from "../../utils/rng";
+import { calculateFranchiseEquity } from "./EquityCalculator";
+import { clamp } from "../../utils";
 
 /**
  * Evaluates a finished project and updates or creates its Franchise Hub.
  * This is the entry point for turning successful originals into persistent franchises.
  */
-export function updateFranchiseHub(state: GameState, project: Project, rng: RandomGenerator): StateImpact[] {
+export function updateFranchiseHub(
+  state: GameState,
+  project: Project,
+  rng: RandomGenerator
+): StateImpact[] {
   const impacts: StateImpact[] = [];
   let franchiseId = project.franchiseId;
 
   // 1. Breakout Success Detection
-  const isBreakout = project.revenue > (project.budget * 2.5);
+  const isBreakout = project.revenue > project.budget * 2.5;
   const isPrestigeHit = (project.awardsProfile?.prestigeScore || 0) > 85;
 
   if (!franchiseId && (isBreakout || isPrestigeHit)) {
-    franchiseId = rng.uuid('IPH');
+    franchiseId = rng.uuid("IPH");
     const newFranchise: Franchise = {
       id: franchiseId,
       name: project.title,
@@ -29,28 +33,28 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
       assetIds: [`ip-${project.id}`],
       activeProjectIds: [],
       lastReleaseWeeks: [project.releaseWeek || state.week],
-      creationWeek: state.week
+      creationWeek: state.week,
     };
-    
+
     impacts.push({
-      type: 'FRANCHISE_UPDATED',
-      payload: { franchiseId, update: newFranchise }
+      type: "FRANCHISE_UPDATED",
+      payload: { franchiseId, update: newFranchise },
     });
-    
+
     impacts.push({
-      type: 'PROJECT_UPDATED',
-      payload: { projectId: project.id, update: { franchiseId } }
+      type: "PROJECT_UPDATED",
+      payload: { projectId: project.id, update: { franchiseId } },
     });
-  } 
-  
+  }
+
   // 2. Existing Franchise Maintenance
   else if (franchiseId && state.ip.franchises[franchiseId]) {
     const hub = state.ip.franchises[franchiseId];
     const newAssetId = `ip-${project.id}`;
-    
+
     if (!hub.assetIds.includes(newAssetId)) {
       const nextAssetIds = [...hub.assetIds, newAssetId];
-      const relevantAssets = state.ip.vault.filter(a => a.id && nextAssetIds.includes(a.id));
+      const relevantAssets = state.ip.vault.filter((a) => a.id && nextAssetIds.includes(a.id));
 
       let updatedLoyalty = hub.audienceLoyalty;
       let updatedSynergy = clamp(hub.synergyMultiplier + 0.15, 1.0, 3.0);
@@ -58,7 +62,8 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
         updatedLoyalty = clamp(updatedLoyalty - 5, 0, 100);
       }
 
-      const lastRelease = hub.lastReleaseWeeks.length > 0 ? Math.max(...hub.lastReleaseWeeks) : state.week;
+      const lastRelease =
+        hub.lastReleaseWeeks.length > 0 ? Math.max(...hub.lastReleaseWeeks) : state.week;
       const yearsSince = (state.week - lastRelease) / 52;
 
       if (yearsSince >= 12 && (isBreakout || isPrestigeHit)) {
@@ -99,7 +104,7 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
       );
 
       impacts.push({
-        type: 'FRANCHISE_UPDATED',
+        type: "FRANCHISE_UPDATED",
         payload: {
           franchiseId,
           update: {
@@ -108,9 +113,9 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
             audienceLoyalty: updatedLoyalty,
             synergyMultiplier: updatedSynergy,
             relevanceScore: updatedRelevance,
-            totalEquity: updatedTotalEquity
-          }
-        }
+            totalEquity: updatedTotalEquity,
+          },
+        },
       });
     }
   }

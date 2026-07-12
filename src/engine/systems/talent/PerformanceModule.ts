@@ -1,6 +1,6 @@
-import { Talent, Project, Contract, Award } from '@/engine/types';
-import { clamp } from '../../utils';
-import { applyAwardBoostsToTalent } from '../talentStats';
+import { Talent, Project, Contract, Award } from "@/engine/types";
+import { clamp } from "../../utils";
+import { applyAwardBoostsToTalent } from "../talentStats";
 
 export function applyProjectResults(
   project: Project,
@@ -13,7 +13,7 @@ export function applyProjectResults(
   const isArray = Array.isArray(talentPool);
   const talentPoolMap = isArray ? new Map<string, Talent>() : null;
   if (isArray) {
-    for (const t of (talentPool as Talent[])) {
+    for (const t of talentPool as Talent[]) {
       talentPoolMap!.set(t.id, t);
     }
   }
@@ -30,18 +30,39 @@ export function applyProjectResults(
   // (Spielberg, Scorsese, Sheridan) routinely hit 90+. Higher budgets mean each hit carries
   // more cultural weight — scale prestige bumps by log of project budget.
   const budgetFactor = Math.log10(Math.max(10_000_000, project.budget)) / 7.2; // ~1.0 at $60M, ~1.15 at $150M
-  if (ROI > 6.0) { drawChange = 14; prestigeChange = 10; feeMultiplier = 1.8; }
-  else if (ROI > 4.0) { drawChange = 12; prestigeChange = 7; feeMultiplier = 1.6; }
-  else if (ROI > 2.0) { drawChange = 6; prestigeChange = 4; feeMultiplier = 1.3; }
-  else if (ROI > 1.0) { drawChange = 2; prestigeChange = 2; feeMultiplier = 1.1; }
-  else if (ROI < 0.4) { drawChange = -10; prestigeChange = -4; feeMultiplier = 0.75; }
-  else if (ROI < 0.8) { drawChange = -4; prestigeChange = -2; feeMultiplier = 0.85; }
+  if (ROI > 6.0) {
+    drawChange = 14;
+    prestigeChange = 10;
+    feeMultiplier = 1.8;
+  } else if (ROI > 4.0) {
+    drawChange = 12;
+    prestigeChange = 7;
+    feeMultiplier = 1.6;
+  } else if (ROI > 2.0) {
+    drawChange = 6;
+    prestigeChange = 4;
+    feeMultiplier = 1.3;
+  } else if (ROI > 1.0) {
+    drawChange = 2;
+    prestigeChange = 2;
+    feeMultiplier = 1.1;
+  } else if (ROI < 0.4) {
+    drawChange = -10;
+    prestigeChange = -4;
+    feeMultiplier = 0.75;
+  } else if (ROI < 0.8) {
+    drawChange = -4;
+    prestigeChange = -2;
+    feeMultiplier = 0.85;
+  }
   prestigeChange = Math.round(prestigeChange * budgetFactor * 10) / 10;
 
   const updatedTalent: Talent[] = [];
 
   for (const contract of contracts) {
-    const talent = talentPoolMap ? talentPoolMap.get(contract.talentId) : (talentPool as Record<string, Talent>)[contract.talentId];
+    const talent = talentPoolMap
+      ? talentPoolMap.get(contract.talentId)
+      : (talentPool as Record<string, Talent>)[contract.talentId];
     if (!talent) continue;
 
     let talentAwardsDrawBonus = 0;
@@ -50,32 +71,52 @@ export function applyProjectResults(
     let talentAwardsEgoBoost = 0;
 
     for (const award of projectAwards) {
-      const isDirector = talent.roles.includes('director');
-      const isActor = talent.roles.includes('actor');
-      const isWriter = talent.roles.includes('writer');
+      const isDirector = talent.roles.includes("director");
+      const isActor = talent.roles.includes("actor");
+      const isWriter = talent.roles.includes("writer");
 
       let qualifiesForBonus;
-      if (award.category.includes('Director')) { qualifiesForBonus = isDirector; }
-      else if (award.category.includes('Actor') || award.category.includes('Actress') || award.category.includes('Ensemble')) { qualifiesForBonus = isActor; }
-      else if (award.category.includes('Screenplay')) { qualifiesForBonus = isWriter; }
-      else { qualifiesForBonus = true; }
+      if (award.category.includes("Director")) {
+        qualifiesForBonus = isDirector;
+      } else if (
+        award.category.includes("Actor") ||
+        award.category.includes("Actress") ||
+        award.category.includes("Ensemble")
+      ) {
+        qualifiesForBonus = isActor;
+      } else if (award.category.includes("Screenplay")) {
+        qualifiesForBonus = isWriter;
+      } else {
+        qualifiesForBonus = true;
+      }
 
       if (qualifiesForBonus) {
-        const multiplier = (award.category.includes('Director') || award.category.includes('Actor') || award.category.includes('Actress') || award.category.includes('Screenplay')) ? 1.0 : 0.5;
-        const isPrestige = ['Academy Awards', 'Primetime Emmys', 'Cannes Film Festival', 'Venice Film Festival'].includes(award.body);
-        
+        const multiplier =
+          award.category.includes("Director") ||
+          award.category.includes("Actor") ||
+          award.category.includes("Actress") ||
+          award.category.includes("Screenplay")
+            ? 1.0
+            : 0.5;
+        const isPrestige = [
+          "Academy Awards",
+          "Primetime Emmys",
+          "Cannes Film Festival",
+          "Venice Film Festival",
+        ].includes(award.body);
+
         const boosts = applyAwardBoostsToTalent(talent, award, multiplier, isPrestige);
 
         talentAwardsPrestigeBonus += boosts.prestigeBoost;
         talentAwardsDrawBonus += boosts.drawBoost;
 
-        talentAwardsFeeMultiplier += (boosts.feeMultiplier - 1.0);
+        talentAwardsFeeMultiplier += boosts.feeMultiplier - 1.0;
         talentAwardsEgoBoost += boosts.egoBoost;
       }
     }
 
     const finalFeeMultiplier = feeMultiplier * talentAwardsFeeMultiplier;
-    
+
     const newTalent = {
       ...talent,
       draw: clamp(talent.draw + drawChange + talentAwardsDrawBonus, 0, 100),
@@ -83,8 +124,8 @@ export function applyProjectResults(
       fee: Math.round(clamp(talent.fee * finalFeeMultiplier, 10000, 75000000)),
       psychology: {
         ...talent.psychology,
-        ego: clamp((talent.psychology?.ego || 50) + talentAwardsEgoBoost, 0, 100)
-      }
+        ego: clamp((talent.psychology?.ego || 50) + talentAwardsEgoBoost, 0, 100),
+      },
     };
 
     updatedTalent.push(newTalent);

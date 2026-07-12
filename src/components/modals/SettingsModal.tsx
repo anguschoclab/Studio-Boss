@@ -1,8 +1,14 @@
-import { useSettingsStore, Difficulty, AutosaveFrequency, PolicyKey } from '@/store/settingsStore';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { Settings as SettingsIcon } from 'lucide-react';
+import { useSettingsStore, Difficulty, AutosaveFrequency, PolicyKey } from "@/store/settingsStore";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { Settings as SettingsIcon } from "lucide-react";
 
 interface SettingsModalProps {
   open: boolean;
@@ -10,13 +16,41 @@ interface SettingsModalProps {
 }
 
 const POLICY_LABELS: { key: PolicyKey; label: string; hint: string }[] = [
-  { key: 'allowVanityAttachments', label: 'Allow Vanity Attachments', hint: 'Permit actor-producer vanity packages by default' },
-  { key: 'capOverheadDeals', label: 'Cap Overhead Deals', hint: 'Limit simultaneous overhead deals' },
-  { key: 'preferExternalWriters', label: 'Prefer External Writers', hint: 'Favor external writers over internal pods' },
-  { key: 'requireVeteranShowrunner', label: 'Require Veteran Showrunner', hint: 'Mandate veteran showrunner on high-budget TV' },
-  { key: 'autoFlagNepotism', label: 'Auto-Flag Nepotism', hint: 'Flag nepotism optics risks automatically' },
-  { key: 'allowAuteurPackages', label: 'Allow Auteur Packages', hint: 'Permit multi-role auteur packages above budget threshold' },
-  { key: 'prioritizeOrbitStaffing', label: 'Prioritize Orbit Staffing', hint: 'Prefer company-orbit talent when auto-filling' },
+  {
+    key: "allowVanityAttachments",
+    label: "Allow Vanity Attachments",
+    hint: "Permit actor-producer vanity packages by default",
+  },
+  {
+    key: "capOverheadDeals",
+    label: "Cap Overhead Deals",
+    hint: "Limit simultaneous overhead deals",
+  },
+  {
+    key: "preferExternalWriters",
+    label: "Prefer External Writers",
+    hint: "Favor external writers over internal pods",
+  },
+  {
+    key: "requireVeteranShowrunner",
+    label: "Require Veteran Showrunner",
+    hint: "Mandate veteran showrunner on high-budget TV",
+  },
+  {
+    key: "autoFlagNepotism",
+    label: "Auto-Flag Nepotism",
+    hint: "Flag nepotism optics risks automatically",
+  },
+  {
+    key: "allowAuteurPackages",
+    label: "Allow Auteur Packages",
+    hint: "Permit multi-role auteur packages above budget threshold",
+  },
+  {
+    key: "prioritizeOrbitStaffing",
+    label: "Prioritize Orbit Staffing",
+    hint: "Prefer company-orbit talent when auto-filling",
+  },
 ];
 
 export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
@@ -37,10 +71,18 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     setPolicy,
   } = useSettingsStore();
 
-  const difficulties: Difficulty[] = ['relaxed', 'standard', 'cutthroat'];
-  const autosaveOptions: AutosaveFrequency[] = ['weekly', 'off'];
+  const difficulties: Difficulty[] = ["relaxed", "standard", "cutthroat"];
+  const autosaveOptions: AutosaveFrequency[] = ["weekly", "off"];
 
-  const Toggle = ({ checked, onChange, label }: { checked: boolean; onChange: (v: boolean) => void; label: string }) => (
+  const Toggle = ({
+    checked,
+    onChange,
+    label,
+  }: {
+    checked: boolean;
+    onChange: (v: boolean) => void;
+    label: string;
+  }) => (
     <button
       type="button"
       role="switch"
@@ -48,11 +90,16 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
       aria-label={label}
       onClick={() => onChange(!checked)}
       className={cn(
-        'relative h-6 w-11 rounded-none border transition-all duration-300',
-        checked ? 'bg-primary/20 border-primary/50' : 'bg-white/5 border-white/10'
+        "relative h-6 w-11 rounded-none border transition-all duration-300",
+        checked ? "bg-primary/20 border-primary/50" : "bg-white/5 border-white/10"
       )}
     >
-      <span className={cn('absolute top-0.5 h-4 w-4 transition-all duration-300', checked ? 'left-6 bg-primary' : 'left-0.5 bg-muted-foreground/40')} />
+      <span
+        className={cn(
+          "absolute top-0.5 h-4 w-4 transition-all duration-300",
+          checked ? "left-6 bg-primary" : "left-0.5 bg-muted-foreground/40"
+        )}
+      />
     </button>
   );
 
@@ -65,16 +112,22 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
             <DialogTitle className="font-display text-3xl font-black tracking-tighter uppercase italic text-foreground flex items-center gap-3">
               <SettingsIcon className="h-6 w-6 text-primary" /> Studio Configuration
             </DialogTitle>
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">Preferences & Policy</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">
+              Preferences & Policy
+            </p>
           </DialogHeader>
 
           {/* UX preferences */}
           <section className="space-y-4">
-            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50">Experience</h4>
+            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50">
+              Experience
+            </h4>
             <div className="flex items-center justify-between border border-white/10 p-4">
               <div>
                 <p className="text-sm font-bold text-foreground">Reduce Motion</p>
-                <p className="text-[10px] text-muted-foreground/50">Disable tab transitions & animations</p>
+                <p className="text-[10px] text-muted-foreground/50">
+                  Disable tab transitions & animations
+                </p>
               </div>
               <Toggle checked={reduceMotion} onChange={setReduceMotion} label="Reduce motion" />
             </div>
@@ -88,7 +141,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
                   <Button
                     key={opt}
                     size="sm"
-                    variant={autosaveFrequency === opt ? 'default' : 'outline'}
+                    variant={autosaveFrequency === opt ? "default" : "outline"}
                     onClick={() => setAutosaveFrequency(opt)}
                     className="text-[10px] uppercase tracking-widest"
                   >
@@ -101,12 +154,14 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
 
           {/* Difficulty */}
           <section className="space-y-4">
-            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50">Difficulty</h4>
+            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50">
+              Difficulty
+            </h4>
             <div className="flex gap-2">
               {difficulties.map((d) => (
                 <Button
                   key={d}
-                  variant={difficulty === d ? 'default' : 'outline'}
+                  variant={difficulty === d ? "default" : "outline"}
                   onClick={() => setDifficulty(d)}
                   className="flex-1 text-[10px] uppercase tracking-widest"
                 >
@@ -118,23 +173,30 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
 
           {/* Policy toggles (Design Bible §30.29) */}
           <section className="space-y-3">
-            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50">Studio Policy</h4>
+            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50">
+              Studio Policy
+            </h4>
             {POLICY_LABELS.map(({ key, label, hint }) => (
-              <div key={key} className="flex items-center justify-between border border-white/10 p-3">
+              <div
+                key={key}
+                className="flex items-center justify-between border border-white/10 p-3"
+              >
                 <div className="pr-4">
                   <p className="text-xs font-bold text-foreground">{label}</p>
                   <p className="text-[9px] text-muted-foreground/40">{hint}</p>
                 </div>
                 <Toggle
-                  checked={{
-                    allowVanityAttachments,
-                    capOverheadDeals,
-                    preferExternalWriters,
-                    requireVeteranShowrunner,
-                    autoFlagNepotism,
-                    allowAuteurPackages,
-                    prioritizeOrbitStaffing,
-                  }[key]}
+                  checked={
+                    {
+                      allowVanityAttachments,
+                      capOverheadDeals,
+                      preferExternalWriters,
+                      requireVeteranShowrunner,
+                      autoFlagNepotism,
+                      allowAuteurPackages,
+                      prioritizeOrbitStaffing,
+                    }[key]
+                  }
                   onChange={(v) => setPolicy(key, v)}
                   label={label}
                 />
@@ -144,7 +206,10 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
         </div>
 
         <DialogFooter className="p-6 border-t border-white/10 bg-white/[0.02]">
-          <Button onClick={onClose} className="bg-primary text-primary-foreground font-black uppercase w-full">
+          <Button
+            onClick={onClose}
+            className="bg-primary text-primary-foreground font-black uppercase w-full"
+          >
             Done
           </Button>
         </DialogFooter>

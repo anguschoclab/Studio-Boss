@@ -8,17 +8,17 @@
 
 **Tech Stack:** TypeScript, React, Vite, Vitest, Playwright, git.
 
-> **Dependency:** Run the *Runtime Crash Sweep* plan first — its Task 5 E2E smoke test (`e2e/all_tabs_render.spec.ts`) and `typecheck` script are the verification harness this plan relies on. If that plan hasn't run, create the `typecheck` script (Crash-Sweep Task 1) before starting.
+> **Dependency:** Run the _Runtime Crash Sweep_ plan first — its Task 5 E2E smoke test (`e2e/all_tabs_render.spec.ts`) and `typecheck` script are the verification harness this plan relies on. If that plan hasn't run, create the `typecheck` script (Crash-Sweep Task 1) before starting.
 
 ---
 
 ## File Structure
 
-| Target | Responsibility | Change |
-|--------|---------------|--------|
-| `src/components/hubs/**` | Parallel/dead dashboard + visualization screens | **Delete entire directory** |
-| Repo-root cruft (`simulation-results-v*.txt`, `fix_*.cjs`, `fix_*.ts`, `benchmark*.ts`, `lint_*.txt`, `lint_*.json`, `*_test_results.txt`, `failures.log`, `all_files.txt`, etc.) | Throwaway logs/scripts from prior AI iteration | **Delete** |
-| `.gitignore` | Ignore rules | Add patterns so logs/dumps can't be re-committed |
+| Target                                                                                                                                                                            | Responsibility                                  | Change                                           |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------ |
+| `src/components/hubs/**`                                                                                                                                                          | Parallel/dead dashboard + visualization screens | **Delete entire directory**                      |
+| Repo-root cruft (`simulation-results-v*.txt`, `fix_*.cjs`, `fix_*.ts`, `benchmark*.ts`, `lint_*.txt`, `lint_*.json`, `*_test_results.txt`, `failures.log`, `all_files.txt`, etc.) | Throwaway logs/scripts from prior AI iteration  | **Delete**                                       |
+| `.gitignore`                                                                                                                                                                      | Ignore rules                                    | Add patterns so logs/dumps can't be re-committed |
 
 ---
 
@@ -27,6 +27,7 @@
 `src/components/hubs/` contains 7 top-level screens (`StudioHQ`, `ExecutiveDashboard`, `IntelligenceHub`, `ProductionHub`, `StrategyPanel`, `CrisisTriageDashboard`, `TalentHub`) plus `hq/`, `intelligence/`, `production/`, `talent/`, and `visualizations/` subfolders. `StudioHQ` is imported by nothing; the others are imported only by `StudioHQ` or by nothing; and `visualizations/*` are imported only from within `hubs/`.
 
 **Files:**
+
 - Delete: `src/components/hubs/` (entire directory)
 
 - [ ] **Step 1: Prove no file outside `hubs/` imports anything from `hubs/`**
@@ -52,7 +53,7 @@ Expected: **no output**. If a route references a hub, STOP and reassess.
 - [ ] **Step 3: Capture the pre-deletion typecheck error count (baseline)**
 
 Run: `npm run typecheck 2>&1 | grep -c "error TS"`
-Record the number (call it `BEFORE`). Deleting dead code must not *increase* it.
+Record the number (call it `BEFORE`). Deleting dead code must not _increase_ it.
 
 - [ ] **Step 4: Delete the directory**
 
@@ -63,7 +64,7 @@ git rm -r "src/components/hubs"
 - [ ] **Step 5: Verify typecheck error count did not increase**
 
 Run: `npm run typecheck 2>&1 | grep -c "error TS"`
-Expected: a number ≤ `BEFORE` (it should *drop*, since the deleted files had their own errors). If it increased, a kept file referenced a deleted one — investigate the new errors and restore only the specific referenced file.
+Expected: a number ≤ `BEFORE` (it should _drop_, since the deleted files had their own errors). If it increased, a kept file referenced a deleted one — investigate the new errors and restore only the specific referenced file.
 
 - [ ] **Step 6: Verify the app still renders every tab**
 
@@ -83,6 +84,7 @@ git commit -m "chore: delete unreachable src/components/hubs tree (zombie dashbo
 Some `ModalType` values in `uiStore.ts` are only enqueued from now-deleted hub code. Removing them is optional cleanup, but leaving them is harmless. Only remove a modal type if BOTH its `enqueueModal('TYPE'` call sites AND its `ModalManager` case are gone.
 
 **Files:**
+
 - Modify: `src/store/uiStore.ts` (only if orphans confirmed)
 - Modify: `src/components/modals/ModalManager.tsx` (only if orphans confirmed)
 
@@ -101,6 +103,7 @@ Expected: a count per modal type. **Any type showing `0` is an orphan candidate.
 - [ ] **Step 2: For each orphan (count 0), remove its `ModalManager` case and lazy import, its `ModalType` union member, and its modal component file**
 
 For an orphan named `ORPHAN_TYPE` whose component is `src/components/modals/OrphanModal.tsx`:
+
 - In `src/components/modals/ModalManager.tsx`: delete the `const OrphanModal = React.lazy(...)` line and the `case 'ORPHAN_TYPE': return <OrphanModal .../>;` line.
 - In `src/store/uiStore.ts`: delete the `| 'ORPHAN_TYPE'` union member.
 - `git rm` the now-unreferenced component file (confirm with `grep -rn OrphanModal src` first — must be empty after the above edits).
@@ -124,6 +127,7 @@ git commit -m "chore: remove modal types orphaned by hubs deletion"
 The repo root holds ~40 throwaway files from prior AI iterations: per-version simulation dumps, one-off `fix_*` scripts, benchmark scratch files, and committed lint/test output.
 
 **Files:**
+
 - Delete (tracked and/or untracked) files matching the patterns below.
 
 - [ ] **Step 1: Preview exactly what will be removed**
@@ -163,6 +167,7 @@ git commit -m "chore: remove repo-root cruft (sim dumps, fix scripts, lint/test 
 ### Task 4: Add `.gitignore` rules so cruft can't return
 
 **Files:**
+
 - Modify: `.gitignore`
 
 - [ ] **Step 1: Append ignore patterns**
@@ -212,4 +217,4 @@ git commit -m "chore: gitignore throwaway sim/lint/test output"
 - **Spec coverage:** zombie `hubs/` deletion (Task 1), orphaned modal cleanup (Task 2, conditional), root cruft removal (Task 3), regression prevention via `.gitignore` (Task 4).
 - **Safety:** every deletion is preceded by a grep proving non-reference and followed by typecheck-count + E2E-render verification. The plan explicitly STOPs if a reference is found.
 - **Known interaction:** Task 1 deletes `hubs/hq/MarketingWarRoom.tsx` and `hubs/visualizations/*`, which the Runtime Crash Sweep plan also touched. That's fine — deleting them removes the need for those fixes; the restored selectors (Crash Sweep Task 4) remain valid for any non-hub consumer and for re-introduction later.
-- **Not deleted:** `src/components/talent/TalentHub.tsx` (the *live* Talent tab) is a different file from `src/components/hubs/TalentHub.tsx` (zombie). Only the latter is removed by the `hubs/` delete.
+- **Not deleted:** `src/components/talent/TalentHub.tsx` (the _live_ Talent tab) is a different file from `src/components/hubs/TalentHub.tsx` (zombie). Only the latter is removed by the `hubs/` delete.

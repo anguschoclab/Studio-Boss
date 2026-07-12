@@ -1,9 +1,9 @@
-import { StateCreator } from 'zustand';
-import { GameStore } from '../gameStore';
-import { completeFireSale } from '@/engine/systems/industry/DistressCascade';
-import { getPlayerId } from '@/engine/utils/ownership';
-import { applyImpacts } from '@/engine/core/impactReducer';
-import { useUIStore } from '@/store/uiStore';
+import { StateCreator } from "zustand";
+import { GameStore } from "../gameStore";
+import { completeFireSale } from "@/engine/systems/industry/DistressCascade";
+import { getPlayerId } from "@/engine/utils/ownership";
+import { applyImpacts } from "@/engine/core/impactReducer";
+import { useUIStore } from "@/store/uiStore";
 
 export interface DistressSlice {
   acquireDistressedAsset: (offerId: string) => void;
@@ -29,9 +29,9 @@ export const createDistressSlice: StateCreator<GameStore, [], [], DistressSlice>
     const withRemoval = applyImpacts(state, [
       ...impacts,
       {
-        type: 'INDUSTRY_UPDATE',
-        payload: { update: { 'industry.distressedOffers': remaining } },
-      } as unknown as import('@/engine/types').StateImpact,
+        type: "INDUSTRY_UPDATE",
+        payload: { update: { "industry.distressedOffers": remaining } },
+      } as unknown as import("@/engine/types").StateImpact,
     ]);
     set({ gameState: withRemoval });
     useUIStore.getState().resolveCurrentModal();
@@ -51,9 +51,9 @@ export const createDistressSlice: StateCreator<GameStore, [], [], DistressSlice>
     const withRemoval = applyImpacts(state, [
       ...impacts,
       {
-        type: 'INDUSTRY_UPDATE',
-        payload: { update: { 'industry.distressedOffers': remaining } },
-      } as unknown as import('@/engine/types').StateImpact,
+        type: "INDUSTRY_UPDATE",
+        payload: { update: { "industry.distressedOffers": remaining } },
+      } as unknown as import("@/engine/types").StateImpact,
     ]);
     set({ gameState: withRemoval });
     useUIStore.getState().resolveCurrentModal();

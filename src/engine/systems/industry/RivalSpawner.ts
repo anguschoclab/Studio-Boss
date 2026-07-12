@@ -1,6 +1,6 @@
-import { GameState, RivalStudio, StateImpact } from '@/engine/types';
-import { secureRandom, randRange, pick } from '../../utils';
-import { getMarketHeat, getMarketRegime, getBudgetInflation } from './MacroCycle';
+import { GameState, RivalStudio, StateImpact } from "@/engine/types";
+import { secureRandom, randRange, pick } from "../../utils";
+import { getMarketHeat, getMarketRegime, getBudgetInflation } from "./MacroCycle";
 
 /**
  * RivalSpawner — keeps the competitive field populated.
@@ -13,11 +13,42 @@ import { getMarketHeat, getMarketRegime, getBudgetInflation } from './MacroCycle
 
 const TARGET_ACTIVE = 10;
 const MIN_FLOOR = 7;
-const INDIE_NAMES = ['Lantern', 'Meridian', 'Foxglove', 'Northstar', 'Kettle', 'Driftwood', 'Solstice', 'Cobalt', 'Paper Crane', 'Ember', 'Tideline', 'Spindle', 'Quarry', 'Halcyon', 'Wildflower'];
-const DISRUPTOR_NAMES = ['Helix', 'Synapse', 'Orbital', 'Vector', 'Quanta', 'Nexus', 'Vanta', 'Prism', 'Chromium', 'Zenith', 'Halo', 'Pulse', 'Lumen', 'Ansible'];
-const INDIE_SUFFIX = ['Pictures', 'Films', 'Studios', 'Productions', 'Picture Co.'];
-const DISRUPTOR_SUFFIX_EARLY = ['Digital', 'Media', 'Entertainment', 'Networks'];
-const DISRUPTOR_SUFFIX_AI = ['AI Studios', 'Neural', 'Synth Media', 'AI Films'];
+const INDIE_NAMES = [
+  "Lantern",
+  "Meridian",
+  "Foxglove",
+  "Northstar",
+  "Kettle",
+  "Driftwood",
+  "Solstice",
+  "Cobalt",
+  "Paper Crane",
+  "Ember",
+  "Tideline",
+  "Spindle",
+  "Quarry",
+  "Halcyon",
+  "Wildflower",
+];
+const DISRUPTOR_NAMES = [
+  "Helix",
+  "Synapse",
+  "Orbital",
+  "Vector",
+  "Quanta",
+  "Nexus",
+  "Vanta",
+  "Prism",
+  "Chromium",
+  "Zenith",
+  "Halo",
+  "Pulse",
+  "Lumen",
+  "Ansible",
+];
+const INDIE_SUFFIX = ["Pictures", "Films", "Studios", "Productions", "Picture Co."];
+const DISRUPTOR_SUFFIX_EARLY = ["Digital", "Media", "Entertainment", "Networks"];
+const DISRUPTOR_SUFFIX_AI = ["AI Studios", "Neural", "Synth Media", "AI Films"];
 
 function activeRivalCount(state: GameState): number {
   // Replace Object.values().length with direct count to avoid array allocation
@@ -41,20 +72,20 @@ function makeIndie(state: GameState, usedNames: Set<string>): RivalStudio {
   return {
     id: `indie-${state.week}-${Math.floor(secureRandom() * 1e6)}`,
     name,
-    motto: 'Art over algorithms.',
-    archetype: 'indie' as any,
+    motto: "Art over algorithms.",
+    archetype: "indie" as any,
     foundedWeek: state.week,
-    parentBrand: name.split(' ')[0],
+    parentBrand: name.split(" ")[0],
     strength: 25 + Math.floor(secureRandom() * 20),
     cash,
     prestige: 55 + Math.floor(secureRandom() * 25),
-    recentActivity: 'A prestige-focused boutique launches amid industry downturn.',
+    recentActivity: "A prestige-focused boutique launches amid industry downturn.",
     projects: {},
     contracts: [],
     projectCount: 0,
     motivationProfile: { financial: 30, prestige: 90, legacy: 60, aggression: 40 },
-    currentMotivation: 'PRESTIGE_BUILDING' as any,
-    ownedPlatforms: []
+    currentMotivation: "PRESTIGE_BUILDING" as any,
+    ownedPlatforms: [],
   };
 }
 
@@ -67,20 +98,20 @@ function makeDisruptor(state: GameState, usedNames: Set<string>): RivalStudio {
   return {
     id: `disruptor-${state.week}-${Math.floor(secureRandom() * 1e6)}`,
     name,
-    motto: 'Scale changes everything.',
-    archetype: 'mid-tier' as any,
+    motto: "Scale changes everything.",
+    archetype: "mid-tier" as any,
     foundedWeek: state.week,
-    parentBrand: name.split(' ')[0],
+    parentBrand: name.split(" ")[0],
     strength: 55 + Math.floor(secureRandom() * 25),
     cash,
     prestige: 30 + Math.floor(secureRandom() * 20),
-    recentActivity: 'A tech-adjacent entrant launches with platform ambitions.',
+    recentActivity: "A tech-adjacent entrant launches with platform ambitions.",
     projects: {},
     contracts: [],
     projectCount: 0,
     motivationProfile: { financial: 80, prestige: 40, legacy: 30, aggression: 85 },
-    currentMotivation: 'MARKET_DISRUPTION' as any,
-    ownedPlatforms: []
+    currentMotivation: "MARKET_DISRUPTION" as any,
+    ownedPlatforms: [],
   };
 }
 
@@ -101,8 +132,8 @@ export function tickRivalSpawner(state: GameState): StateImpact[] {
 
   // Archetype selection: booms/AI era favor disruptors; busts favor indies.
   let indieWeight = 0.5;
-  if (regime === 'bust' || heat < 0.9) indieWeight = 0.8;
-  if (regime === 'boom' || heat > 1.1) indieWeight = 0.2;
+  if (regime === "bust" || heat < 0.9) indieWeight = 0.8;
+  if (regime === "boom" || heat > 1.1) indieWeight = 0.2;
   if (year >= 2033 && year <= 2050) indieWeight -= 0.2;
   indieWeight = Math.max(0.1, Math.min(0.9, indieWeight));
 
@@ -112,28 +143,28 @@ export function tickRivalSpawner(state: GameState): StateImpact[] {
   for (const id in rivalsDict) {
     usedNames.add(rivalsDict[id].name);
   }
-  state.market.buyers.forEach(b => usedNames.add(b.name));
+  state.market.buyers.forEach((b) => usedNames.add(b.name));
 
   const isIndie = secureRandom() < indieWeight;
   const newRival = isIndie ? makeIndie(state, usedNames) : makeDisruptor(state, usedNames);
 
   impacts.push({
-    type: 'INDUSTRY_UPDATE',
+    type: "INDUSTRY_UPDATE",
     payload: {
       update: {},
-      rival: { rivalId: newRival.id, update: newRival as any }
-    } as any
+      rival: { rivalId: newRival.id, update: newRival as any },
+    } as any,
   });
 
   impacts.push({
-    type: 'NEWS_ADDED',
+    type: "NEWS_ADDED",
     payload: {
       headline: isIndie
         ? `NEW ENTRANT: ${newRival.name} launches as prestige indie`
         : `DISRUPTOR: ${newRival.name} enters industry with $${(newRival.cash / 1e6).toFixed(0)}M war chest`,
       description: newRival.recentActivity,
-      category: 'market'
-    }
+      category: "market",
+    },
   });
 
   return impacts;
@@ -157,16 +188,16 @@ export function tickHardBankruptcy(state: GameState): StateImpact[] {
     // 8% weekly conversion from flagged to hard-bankrupt once truly in distress.
     if (secureRandom() > 0.08) continue;
     impacts.push({
-      type: 'INDUSTRY_UPDATE',
-      payload: { update: {}, bankruptRivalId: r.id } as any
+      type: "INDUSTRY_UPDATE",
+      payload: { update: {}, bankruptRivalId: r.id } as any,
     });
     impacts.push({
-      type: 'NEWS_ADDED',
+      type: "NEWS_ADDED",
       payload: {
         headline: `INSOLVENCY: ${r.name} liquidates, assets to be auctioned`,
         description: `After prolonged cash depletion, ${r.name} has entered Chapter 7 and will cease operations.`,
-        category: 'market'
-      }
+        category: "market",
+      },
     });
     // One bankruptcy per tick keeps churn realistic.
     break;

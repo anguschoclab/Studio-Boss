@@ -1,28 +1,30 @@
-import { Project, ActiveCrisis, GameState } from '@/engine/types';
-import { pick, rand, generateId } from '../utils';
-import { StateImpact } from '../types/state.types';
-import { CRISIS_POOLS } from '../data/crises.data';
+import { Project, ActiveCrisis, GameState } from "@/engine/types";
+import { pick, rand, generateId } from "../utils";
+import { StateImpact } from "../types/state.types";
+import { CRISIS_POOLS } from "../data/crises.data";
 
 export function generateCrisis(project: Project): StateImpact | null {
   const template = pick(CRISIS_POOLS);
   if (!template) return null;
 
   const crisis: ActiveCrisis = {
-    crisisId: generateId('CRI'),
+    crisisId: generateId("CRI"),
     triggeredWeek: 0,
     haltedProduction: false,
     description: template.description,
     options: template.options,
     resolved: false,
-    severity: 'medium'
+    severity: "medium",
   };
 
   return {
-    projectUpdates: [{
-      projectId: project.id,
-      update: { activeCrisis: crisis }
-    }],
-    uiNotifications: [`CRISIS: "${project.title}" - ${crisis.description}`]
+    projectUpdates: [
+      {
+        projectId: project.id,
+        update: { activeCrisis: crisis },
+      },
+    ],
+    uiNotifications: [`CRISIS: "${project.title}" - ${crisis.description}`],
   };
 }
 
@@ -34,7 +36,11 @@ export function checkAndTriggerCrisis(project: Project): StateImpact | null {
   return null;
 }
 
-export function resolveCrisis(state: GameState, projectId: string, optionIndex: number): StateImpact {
+export function resolveCrisis(
+  state: GameState,
+  projectId: string,
+  optionIndex: number
+): StateImpact {
   const project = state.entities.projects[projectId];
   if (!project || !project.activeCrisis || project.activeCrisis.resolved) {
     return {};
@@ -49,14 +55,14 @@ export function resolveCrisis(state: GameState, projectId: string, optionIndex: 
     projectUpdates: [],
     removeContracts: [],
     newHeadlines: [],
-    newsEvents: []
+    newsEvents: [],
   };
 
   const projectUpdate: Partial<Project> = {
     activeCrisis: {
       ...project.activeCrisis,
-      resolved: true
-    }
+      resolved: true,
+    },
   };
 
   if (option.weeksDelay) {
@@ -69,7 +75,7 @@ export function resolveCrisis(state: GameState, projectId: string, optionIndex: 
 
   impact.projectUpdates!.push({
     projectId,
-    update: projectUpdate
+    update: projectUpdate,
   });
 
   if (option.removeTalentId) {
@@ -77,16 +83,16 @@ export function resolveCrisis(state: GameState, projectId: string, optionIndex: 
   }
 
   impact.newHeadlines!.push({
-    id: generateId('HL'),
+    id: generateId("HL"),
     week: state.week,
-    category: 'general',
-    text: `Crisis resolved for "${project.title}": ${option.text}`
+    category: "general",
+    text: `Crisis resolved for "${project.title}": ${option.text}`,
   });
 
   impact.newsEvents!.push({
-    id: generateId('NEWS'),
+    id: generateId("NEWS"),
     week: state.week,
-    type: 'CRISIS',
+    type: "CRISIS",
     headline: `Crisis at ${project.title}`,
     description: `The production faced a major setback: ${project.activeCrisis.description.slice(0, 100)}... Studio resolved it by: ${option.text}`,
   });

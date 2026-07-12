@@ -1,28 +1,34 @@
-import { GameState, Project, Franchise, StateImpact } from '../../types';
-import { RandomGenerator } from '../../utils/rng';
-import { clamp } from '../../utils';
+import { GameState, Project, Franchise, StateImpact } from "../../types";
+import { RandomGenerator } from "../../utils/rng";
+import { clamp } from "../../utils";
 
 /**
  * Identifies projects released in the current simulation week and triggers franchise evolution.
  */
-export function calculateFranchiseEvolutionImpacts(state: GameState, rng: RandomGenerator): StateImpact[] {
+export function calculateFranchiseEvolutionImpacts(
+  state: GameState,
+  rng: RandomGenerator
+): StateImpact[] {
   const impacts: StateImpact[] = [];
   const projects = Object.values(state.entities.projects);
-  
-  projects.forEach(project => {
-    if (project.state === 'released' && !project.franchiseId) {
+
+  projects.forEach((project) => {
+    if (project.state === "released" && !project.franchiseId) {
       let franchiseId = project.franchiseId;
-      const isBreakout = project.revenue > (project.budget * 1.0);
+      const isBreakout = project.revenue > project.budget * 1.0;
       const isPrestigeHit = (project.awardsProfile?.prestigeScore || 0) > 50;
       const isQualityHit = ((project as any).quality || 50) > 70;
-      const isGenreBonus = ['SCI-FI', 'FANTASY', 'SUPERHERO'].includes((project.genre || '').toUpperCase());
+      const isGenreBonus = ["SCI-FI", "FANTASY", "SUPERHERO"].includes(
+        (project.genre || "").toUpperCase()
+      );
       const isHighQuality = (project.quality || 0) > 70;
-      const genreUpper = (project.genre || '').toUpperCase();
-      const isFranchiseGenre = genreUpper === 'SCI-FI' || genreUpper === 'FANTASY' || genreUpper === 'SUPERHERO';
+      const genreUpper = (project.genre || "").toUpperCase();
+      const isFranchiseGenre =
+        genreUpper === "SCI-FI" || genreUpper === "FANTASY" || genreUpper === "SUPERHERO";
 
       // 1. Breakout Hub Creation
       if (!franchiseId && (isBreakout || isPrestigeHit || isHighQuality || isFranchiseGenre)) {
-        franchiseId = rng.uuid('IPH');
+        franchiseId = rng.uuid("IPH");
         const newFranchise: Franchise = {
           id: franchiseId,
           name: project.title,
@@ -35,31 +41,31 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
           assetIds: [`ip-${project.id}`],
           activeProjectIds: [],
           lastReleaseWeeks: [state.week],
-          creationWeek: state.week
+          creationWeek: state.week,
         };
-        
+
         impacts.push({
-          type: 'FRANCHISE_UPDATED',
-          payload: { franchiseId, update: newFranchise }
+          type: "FRANCHISE_UPDATED",
+          payload: { franchiseId, update: newFranchise },
         });
 
         impacts.push({
-          type: 'PROJECT_UPDATED',
-          payload: { projectId: project.id, update: { franchiseId } }
+          type: "PROJECT_UPDATED",
+          payload: { projectId: project.id, update: { franchiseId } },
         });
 
         // Vault update handled separately via IPVaultManager
       }
-      
+
       // 2. Mainstream Hub Maintenance
       else if (franchiseId && state.ip.franchises[franchiseId]) {
         const hub = state.ip.franchises[franchiseId];
         const newAssetId = `ip-${project.id}`;
-        
+
         if (!hub.assetIds.includes(newAssetId)) {
           const nextAssetIds = [...hub.assetIds, newAssetId];
           const nextReleaseWeeks = [...hub.lastReleaseWeeks, state.week];
-          
+
           let updatedLoyalty = hub.audienceLoyalty;
           if (hub.activeProjectIds.length >= 3) {
             updatedLoyalty = clamp(updatedLoyalty - 5, 0, 100);
@@ -67,11 +73,11 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
 
           let newSynergy = hub.synergyMultiplier + 0.15;
           if (!isBreakout && !isPrestigeHit && project.revenue < project.budget) {
-            newSynergy = hub.synergyMultiplier - 0.10;
+            newSynergy = hub.synergyMultiplier - 0.1;
           }
 
           impacts.push({
-            type: 'FRANCHISE_UPDATED',
+            type: "FRANCHISE_UPDATED",
             payload: {
               franchiseId,
               update: {
@@ -83,9 +89,9 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
                   hub.relevanceScore - (hub.activeProjectIds.length >= 5 ? 15 : 0),
                   0,
                   100
-                )
-              }
-            }
+                ),
+              },
+            },
           });
 
           // Vault update handled separately via IPVaultManager

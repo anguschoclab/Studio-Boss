@@ -8,7 +8,10 @@
 
 class PersistenceService {
   private worker: Worker | null = null;
-  private pendingPromises: Map<number, { resolve: (data: any) => void; reject: (err: Error) => void }> = new Map();
+  private pendingPromises: Map<
+    number,
+    { resolve: (data: any) => void; reject: (err: Error) => void }
+  > = new Map();
   private requestCounter = 0;
 
   constructor() {
@@ -16,10 +19,10 @@ class PersistenceService {
   }
 
   private initWorker() {
-    if (typeof window !== 'undefined' && 'Worker' in window) {
+    if (typeof window !== "undefined" && "Worker" in window) {
       // Vite handles ?worker imports
-      this.worker = new Worker(new URL('./saveWorker.ts', import.meta.url), {
-        type: 'module',
+      this.worker = new Worker(new URL("./saveWorker.ts", import.meta.url), {
+        type: "module",
       });
 
       this.worker.onmessage = (e: MessageEvent) => {
@@ -29,11 +32,11 @@ class PersistenceService {
         if (!pending) return;
         this.pendingPromises.delete(requestId);
 
-        if (type === 'SAVE_SUCCESS') {
+        if (type === "SAVE_SUCCESS") {
           pending.resolve(true);
-        } else if (type === 'LOAD_SUCCESS') {
+        } else if (type === "LOAD_SUCCESS") {
           pending.resolve(state);
-        } else if (type === 'ERROR') {
+        } else if (type === "ERROR") {
           console.error(`[PersistenceService] Worker error (requestId: ${requestId}): ${message}`);
           pending.reject(new Error(message));
         }
@@ -51,7 +54,7 @@ class PersistenceService {
     return new Promise((resolve, reject) => {
       this.pendingPromises.set(requestId, { resolve, reject });
       this.worker?.postMessage({
-        type: 'SAVE_GAME',
+        type: "SAVE_GAME",
         slotId,
         state,
         requestId,
@@ -69,7 +72,7 @@ class PersistenceService {
     return new Promise((resolve, reject) => {
       this.pendingPromises.set(requestId, { resolve, reject });
       this.worker?.postMessage({
-        type: 'LOAD_GAME',
+        type: "LOAD_GAME",
         slotId,
         requestId,
       });

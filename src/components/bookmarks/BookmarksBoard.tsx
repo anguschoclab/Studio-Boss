@@ -1,9 +1,9 @@
-import { useMemo } from 'react';
-import { useGameStore } from '@/store/gameStore';
-import { ProjectCard } from '@/components/pipeline/ProjectCard';
-import { TalentCard } from '@/components/talent/TalentCard';
-import { EmptyState } from '@/components/shared/EmptyState';
-import { Bookmark, Layers, Users } from 'lucide-react';
+import { useMemo } from "react";
+import { useGameStore } from "@/store/gameStore";
+import { ProjectCard } from "@/components/pipeline/ProjectCard";
+import { TalentCard } from "@/components/talent/TalentCard";
+import { EmptyState } from "@/components/shared/EmptyState";
+import { Bookmark, Layers, Users } from "lucide-react";
 
 export const BookmarksBoard = () => {
   const gameState = useGameStore((s) => s.gameState);
@@ -13,18 +13,14 @@ export const BookmarksBoard = () => {
   );
 
   const bookmarkedProjects = useMemo(() => {
-    const projectIds = bookmarkIds
-      .filter((b) => b.type === 'project')
-      .map((b) => b.id);
+    const projectIds = bookmarkIds.filter((b) => b.type === "project").map((b) => b.id);
     return projectIds
       .map((id) => gameState?.entities.projects[id])
       .filter((p): p is NonNullable<typeof p> => !!p);
   }, [bookmarkIds, gameState?.entities.projects]);
 
   const bookmarkedTalent = useMemo(() => {
-    const talentIds = bookmarkIds
-      .filter((b) => b.type === 'talent')
-      .map((b) => b.id);
+    const talentIds = bookmarkIds.filter((b) => b.type === "talent").map((b) => b.id);
     return talentIds
       .map((id) => gameState?.entities.talents[id])
       .filter((t): t is NonNullable<typeof t> => !!t);

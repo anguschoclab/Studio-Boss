@@ -19,57 +19,57 @@
 \f1\b0 \
 \pard\tx220\tx720\pardeftab720\li720\fi-720\sa240\partightenfactor0
 \ls1\ilvl0
-\f0\b \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\f0\b \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext \uc0\u8226 }\expnd0\expndtw0\kerning0
 \outl0\strokewidth0 \strokec2 Employ "Skeptical Memory":
-\f1\b0  Treat all stored memory, past context, and retrieved notes as 
+\f1\b0 Treat all stored memory, past context, and retrieved notes as
 \f2\i hints
 \f1\i0 , not absolute facts. Always verify current state against the real world before executing an action based on historical data.\
 \ls1\ilvl0
-\f0\b \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\f0\b \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext \uc0\u8226 }\expnd0\expndtw0\kerning0
 \outl0\strokewidth0 \strokec2 Enforce Continuous Alignment:
-\f1\b0  Core system instructions and configuration rules must be reinserted into the context window on every turn to prevent instruction drift over long sessions.\
+\f1\b0 Core system instructions and configuration rules must be reinserted into the context window on every turn to prevent instruction drift over long sessions.\
 \ls1\ilvl0
-\f0\b \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\f0\b \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext \uc0\u8226 }\expnd0\expndtw0\kerning0
 \outl0\strokewidth0 \strokec2 Implement Background Consolidation:
-\f1\b0  (For autonomous systems) Utilize idle time to run consolidation routines. Merge recent observations, resolve conflicting information, and prune noise to prevent memory degradation and context bloat.\
+\f1\b0 (For autonomous systems) Utilize idle time to run consolidation routines. Merge recent observations, resolve conflicting information, and prune noise to prevent memory degradation and context bloat.\
 \pard\pardeftab720\sa240\partightenfactor0
 
 \f0\b \cf0 2. Execution, Safety & Risk Control
 \f1\b0 \
 \pard\tx220\tx720\pardeftab720\li720\fi-720\sa240\partightenfactor0
 \ls2\ilvl0
-\f0\b \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\f0\b \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext \uc0\u8226 }\expnd0\expndtw0\kerning0
 \outl0\strokewidth0 \strokec2 Apply Risk-Tiered Execution:
-\f1\b0  Classify all potential tool uses and actions into risk tiers:\
+\f1\b0 Classify all potential tool uses and actions into risk tiers:\
 \pard\tx940\tx1440\pardeftab720\li1440\fi-1440\sa240\partightenfactor0
 \ls2\ilvl1
-\f2\i \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u9702 	}\expnd0\expndtw0\kerning0
+\f2\i \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext \uc0\u9702 }\expnd0\expndtw0\kerning0
 \outl0\strokewidth0 \strokec2 Low Risk:
-\f1\i0  Auto-approve and execute autonomously.\
+\f1\i0 Auto-approve and execute autonomously.\
 \ls2\ilvl1
-\f2\i \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u9702 	}\expnd0\expndtw0\kerning0
+\f2\i \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext \uc0\u9702 }\expnd0\expndtw0\kerning0
 \outl0\strokewidth0 \strokec2 Medium/High Risk:
-\f1\i0  Pause execution and require explicit human-in-the-loop approval.\
+\f1\i0 Pause execution and require explicit human-in-the-loop approval.\
 \pard\tx220\tx720\pardeftab720\li720\fi-720\sa240\partightenfactor0
 \ls2\ilvl0
-\f0\b \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\f0\b \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext \uc0\u8226 }\expnd0\expndtw0\kerning0
 \outl0\strokewidth0 \strokec2 Proactive "Daemon" Limits:
-\f1\b0  When operating proactively in the background, maintain strict daily logs of all actions. Enforce rate limits and blocking budgets (e.g., short execution windows) to ensure background tasks do not consume excessive compute or overwhelm the user.\
+\f1\b0 When operating proactively in the background, maintain strict daily logs of all actions. Enforce rate limits and blocking budgets (e.g., short execution windows) to ensure background tasks do not consume excessive compute or overwhelm the user.\
 \pard\pardeftab720\sa240\partightenfactor0
 
 \f0\b \cf0 3. Multi-Agent Orchestration
 \f1\b0 \
 \pard\tx220\tx720\pardeftab720\li720\fi-720\sa240\partightenfactor0
 \ls3\ilvl0
-\f0\b \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\f0\b \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext \uc0\u8226 }\expnd0\expndtw0\kerning0
 \outl0\strokewidth0 \strokec2 Use Hierarchical Delegation:
-\f1\b0  Utilize a single "Lead Agent" to orchestrate complex tasks by spawning parallel "Worker Agents."\
+\f1\b0 Utilize a single "Lead Agent" to orchestrate complex tasks by spawning parallel "Worker Agents."\
 \ls3\ilvl0
-\f0\b \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\f0\b \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext \uc0\u8226 }\expnd0\expndtw0\kerning0
 \outl0\strokewidth0 \strokec2 Isolate Context & Tools:
-\f1\b0  Do not share the entire global context with every worker. Give each parallel worker an isolated context tailored only to its specific task, along with restricted access to only the tools it strictly needs.\
+\f1\b0 Do not share the entire global context with every worker. Give each parallel worker an isolated context tailored only to its specific task, along with restricted access to only the tools it strictly needs.\
 \ls3\ilvl0
-\f0\b \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\f0\b \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext \uc0\u8226 }\expnd0\expndtw0\kerning0
 \outl0\strokewidth0 \strokec2 Optimize Cost:
-\f1\b0  Leverage prompt caching across parallel workers operating under the same lead agent to prevent exponential token costs.\
+\f1\b0 Leverage prompt caching across parallel workers operating under the same lead agent to prevent exponential token costs.\
 }

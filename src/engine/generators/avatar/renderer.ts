@@ -1,12 +1,12 @@
-import { AvatarFeatures } from './types';
-import { getFaceShapePath, renderEars } from './geometry/faceShapes';
-import { renderHairBack, renderHairFront } from './features/hairStyles';
-import { renderEyes, EYE_ANIMATION_CSS } from './features/eyes';
-import { renderMouth } from './features/mouth';
-import { renderNose } from './features/nose';
-import { renderClothing, CLOTHING_ANIMATION_CSS } from './features/clothing';
-import { renderFacialHair, renderAccessories } from './features/accessories';
-import { darkenColor } from './utils';
+import { AvatarFeatures } from "./types";
+import { getFaceShapePath, renderEars } from "./geometry/faceShapes";
+import { renderHairBack, renderHairFront } from "./features/hairStyles";
+import { renderEyes, EYE_ANIMATION_CSS } from "./features/eyes";
+import { renderMouth } from "./features/mouth";
+import { renderNose } from "./features/nose";
+import { renderClothing, CLOTHING_ANIMATION_CSS } from "./features/clothing";
+import { renderFacialHair, renderAccessories } from "./features/accessories";
+import { darkenColor } from "./utils";
 
 /**
  * Assembles the full SVG for the procedural avatar.
@@ -17,11 +17,19 @@ export function renderAvatarSVG(f: AvatarFeatures): string {
   const faceW = (68 + (f.faceWidth - 1) * 40) * f.faceWidth;
   const faceH = (78 + (f.faceHeight - 1) * 36) * f.faceHeight;
   const uid = `av-${f.seed.toString(36)}`;
-  
-  const facePath = getFaceShapePath(f.faceShape, cx, cy, faceW, faceH, f.jawWidth, f.chinPointiness);
-  
+
+  const facePath = getFaceShapePath(
+    f.faceShape,
+    cx,
+    cy,
+    faceW,
+    faceH,
+    f.jawWidth,
+    f.chinPointiness
+  );
+
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">`;
-  
+
   // ── CSS Animations ──
   svg += `<style>
     ${EYE_ANIMATION_CSS}
@@ -38,7 +46,7 @@ export function renderAvatarSVG(f: AvatarFeatures): string {
     <stop offset="60%" stop-color="${f.skin.base}"/>
     <stop offset="100%" stop-color="${f.skin.shadow}"/>
   </radialGradient>`;
-  
+
   // Lighting Filter (Soft volume)
   svg += `<filter id="${uid}-glow" x="-20%" y="-20%" width="140%" height="140%">
     <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
@@ -50,7 +58,7 @@ export function renderAvatarSVG(f: AvatarFeatures): string {
   svg += `<filter id="${uid}-shadow">
     <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.3"/>
   </filter>`;
-  
+
   svg += `</defs>`;
 
   // ── Background & Canvas ──
@@ -66,16 +74,16 @@ export function renderAvatarSVG(f: AvatarFeatures): string {
   svg += `<g transform="translate(0, -10) scale(0.88) translate(13.6, 13.6)">`;
 
   // ── Layered Rendering ──
-  
+
   // 1. Clothing (Shoulders/Neck) - includes breathing animation
   svg += renderClothing(f, cx, cy, faceW, faceH, f.skin);
-  
+
   // 2. Ears
   svg += renderEars(cx, cy, faceW, faceH, f.skin);
-  
+
   // 3. Hair Back
   svg += renderHairBack(f, cx, cy, faceW, faceH);
-  
+
   // 4. Face Base
   // Subtle outer skin halo so pale-skinned talent with white/grey/blond hair
   // don't blend into the background. Rendered just behind the face so it
@@ -87,16 +95,16 @@ export function renderAvatarSVG(f: AvatarFeatures): string {
   if (f.age >= 45) {
     svg += renderJowls(f, cx, cy, faceW, faceH);
   }
-  
+
   // 5. Features
   svg += renderNose(f, cx, cy, faceW, faceH, f.skin);
   svg += renderMouth(f, cx, cy, faceW, faceH, f.skin);
   svg += renderEyes(f, cx, cy, faceW, faceH, f.skin);
   svg += renderFacialHair(f, cx, cy, faceW, faceH);
-  
+
   // 6. Accessories
   svg += renderAccessories(f, cx, cy, faceW, faceH);
-  
+
   // 7. Hair Front
   svg += renderHairFront(f, cx, cy, faceW, faceH);
 
@@ -113,22 +121,28 @@ export function renderAvatarSVG(f: AvatarFeatures): string {
   return svg;
 }
 
-function renderWrinkleLines(f: AvatarFeatures, cx: number, cy: number, faceW: number, faceH: number): string {
+function renderWrinkleLines(
+  f: AvatarFeatures,
+  cx: number,
+  cy: number,
+  faceW: number,
+  faceH: number
+): string {
   // Gradual ramp 45 → 70 (then plateaus). Matches the greying curve cadence.
   const t = Math.max(0, Math.min(1, (f.age - 45) / 25));
-  if (t <= 0) return '';
+  if (t <= 0) return "";
   const shadow = f.skin.shadow;
   const browY = cy - faceH * 0.18;
   const eyeY = cy - faceH * 0.08;
   const mouthY = cy + faceH * 0.28;
 
-  let lines = '';
+  let lines = "";
 
   // Forehead lines — fade in from 45, deepen through 70
-  const foreheadOp = 0.10 + t * 0.20;
-  lines += `<path d="M ${cx - faceW/4} ${browY - 8} Q ${cx} ${browY - 10} ${cx + faceW/4} ${browY - 8}" stroke="${shadow}" stroke-width="0.5" fill="none" opacity="${foreheadOp.toFixed(2)}"/>`;
+  const foreheadOp = 0.1 + t * 0.2;
+  lines += `<path d="M ${cx - faceW / 4} ${browY - 8} Q ${cx} ${browY - 10} ${cx + faceW / 4} ${browY - 8}" stroke="${shadow}" stroke-width="0.5" fill="none" opacity="${foreheadOp.toFixed(2)}"/>`;
   if (t > 0.4) {
-    lines += `<path d="M ${cx - faceW/5} ${browY - 14} Q ${cx} ${browY - 16} ${cx + faceW/5} ${browY - 14}" stroke="${shadow}" stroke-width="0.5" fill="none" opacity="${(foreheadOp * 0.7).toFixed(2)}"/>`;
+    lines += `<path d="M ${cx - faceW / 5} ${browY - 14} Q ${cx} ${browY - 16} ${cx + faceW / 5} ${browY - 14}" stroke="${shadow}" stroke-width="0.5" fill="none" opacity="${(foreheadOp * 0.7).toFixed(2)}"/>`;
   }
 
   // Crow's feet — appear early (~47), fan out from outer eye corners
@@ -149,7 +163,7 @@ function renderWrinkleLines(f: AvatarFeatures, cx: number, cy: number, faceW: nu
 
   // Nasolabial / laugh lines — show from ~50
   if (t > 0.2) {
-    const laughOp = (0.20 + t * 0.30).toFixed(2);
+    const laughOp = (0.2 + t * 0.3).toFixed(2);
     lines += `<path d="M ${cx - 15} ${eyeY + 15} Q ${cx - 18} ${mouthY} ${cx - 12} ${mouthY + 5}" stroke="${shadow}" stroke-width="0.8" fill="none" opacity="${laughOp}" stroke-linecap="round"/>`;
     lines += `<path d="M ${cx + 15} ${eyeY + 15} Q ${cx + 18} ${mouthY} ${cx + 12} ${mouthY + 5}" stroke="${shadow}" stroke-width="0.8" fill="none" opacity="${laughOp}" stroke-linecap="round"/>`;
   }
@@ -161,15 +175,21 @@ function renderWrinkleLines(f: AvatarFeatures, cx: number, cy: number, faceW: nu
  * Mild jowls — soft sagging shadow at the jawline. Ramps in between
  * ages 45-70 and plateaus, mirroring the greying curve cadence.
  */
-function renderJowls(f: AvatarFeatures, cx: number, cy: number, faceW: number, faceH: number): string {
+function renderJowls(
+  f: AvatarFeatures,
+  cx: number,
+  cy: number,
+  faceW: number,
+  faceH: number
+): string {
   const t = Math.max(0, Math.min(1, (f.age - 45) / 25));
-  if (t <= 0) return '';
+  if (t <= 0) return "";
   const op = (0.12 + t * 0.18).toFixed(2);
   const shadow = f.skin.shadow;
-  const jawY = cy + faceH * 0.30;
+  const jawY = cy + faceH * 0.3;
   const jawX = faceW * 0.42;
   // Subtle filled crescents along the lower jaw
-  let s = '';
+  let s = "";
   s += `<path d="M ${cx - jawX} ${jawY} Q ${cx - jawX * 0.6} ${jawY + 8 + t * 4} ${cx - jawX * 0.2} ${jawY + 4}" stroke="${shadow}" stroke-width="1" fill="none" opacity="${op}" stroke-linecap="round"/>`;
   s += `<path d="M ${cx + jawX} ${jawY} Q ${cx + jawX * 0.6} ${jawY + 8 + t * 4} ${cx + jawX * 0.2} ${jawY + 4}" stroke="${shadow}" stroke-width="1" fill="none" opacity="${op}" stroke-linecap="round"/>`;
   return s;

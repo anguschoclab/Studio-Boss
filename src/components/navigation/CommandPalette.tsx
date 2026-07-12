@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
   Film,
@@ -17,11 +17,11 @@ import {
   Activity,
   Zap,
   Flame,
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { transitions } from '@/lib/animations';
-import { useUIStore } from '@/store/uiStore';
-import { useGameStore } from '@/store/gameStore';
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { transitions } from "@/lib/animations";
+import { useUIStore } from "@/store/uiStore";
+import { useGameStore } from "@/store/gameStore";
 
 interface CommandItem {
   id: string;
@@ -43,7 +43,7 @@ interface CommandPaletteProps {
 
 /**
  * CommandPalette - Quick navigation and action center
- * 
+ *
  * Provides keyboard-driven access to:
  * - Hub navigation (Cmd+1, Cmd+2, etc.)
  * - Recent actions
@@ -51,11 +51,8 @@ interface CommandPaletteProps {
  * - Common actions (new project, etc.)
  * - Full Design Bible v1.0 Compliance
  */
-const CommandPalette: React.FC<CommandPaletteProps> = ({
-  isOpen,
-  onClose,
-}) => {
-  const [query, setQuery] = useState('');
+const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
+  const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const { openCreateProject, setActiveHub, setActiveSubTab } = useUIStore();
   const doAdvanceWeek = useGameStore((s) => s.doAdvanceWeek);
@@ -65,159 +62,161 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
     const list: CommandItem[] = [
       // Navigation
       {
-        id: 'nav-hq',
-        title: 'STUDIO HQ',
-        subtitle: 'OVERVIEW OPERATIONS STRATEGY',
+        id: "nav-hq",
+        title: "STUDIO HQ",
+        subtitle: "OVERVIEW OPERATIONS STRATEGY",
         icon: LayoutDashboard,
-        shortcut: '⌘1',
-        action: () => setActiveHub('hq'),
-        section: 'NAVIGATION HUB',
+        shortcut: "⌘1",
+        action: () => setActiveHub("hq"),
+        section: "NAVIGATION HUB",
       },
       {
-        id: 'nav-production',
-        title: 'PRODUCTION CONTROL',
-        subtitle: 'SLATE DEVELOPMENT DISTRIBUTION',
+        id: "nav-production",
+        title: "PRODUCTION CONTROL",
+        subtitle: "SLATE DEVELOPMENT DISTRIBUTION",
         icon: Film,
-        shortcut: '⌘2',
-        action: () => setActiveHub('production'),
-        section: 'NAVIGATION HUB',
+        shortcut: "⌘2",
+        action: () => setActiveHub("production"),
+        section: "NAVIGATION HUB",
       },
       {
-        id: 'nav-talent',
-        title: 'TALENT & DEALS',
-        subtitle: 'ROSTER MARKETPLACE AGENCIES',
+        id: "nav-talent",
+        title: "TALENT & DEALS",
+        subtitle: "ROSTER MARKETPLACE AGENCIES",
         icon: Users,
-        shortcut: '⌘3',
-        action: () => setActiveHub('talent'),
-        section: 'NAVIGATION HUB',
+        shortcut: "⌘3",
+        action: () => setActiveHub("talent"),
+        section: "NAVIGATION HUB",
       },
       {
-        id: 'nav-intelligence',
-        title: 'STRATEGIC INTELLIGENCE',
-        subtitle: 'RIVALS AWARDS MARKET FINANCIALS',
+        id: "nav-intelligence",
+        title: "STRATEGIC INTELLIGENCE",
+        subtitle: "RIVALS AWARDS MARKET FINANCIALS",
         icon: Globe,
-        shortcut: '⌘4',
-        action: () => setActiveHub('intelligence'),
-        section: 'NAVIGATION HUB',
+        shortcut: "⌘4",
+        action: () => setActiveHub("intelligence"),
+        section: "NAVIGATION HUB",
       },
       // Actions
       {
-        id: 'action-new-project',
-        title: 'INITIALIZE NEW PROJECT',
-        subtitle: 'CREATE A NEW FILM OR TV PROJECT',
+        id: "action-new-project",
+        title: "INITIALIZE NEW PROJECT",
+        subtitle: "CREATE A NEW FILM OR TV PROJECT",
         icon: Sparkles,
-        shortcut: '⌘N',
+        shortcut: "⌘N",
         action: () => openCreateProject(),
-        section: 'TACTICAL ACTIONS',
+        section: "TACTICAL ACTIONS",
       },
       {
-        id: 'action-week',
-        title: 'ADVANCE WEEKLY CYCLE',
-        subtitle: 'PROGRESS TO NEXT PRODUCTION WEEK',
+        id: "action-week",
+        title: "ADVANCE WEEKLY CYCLE",
+        subtitle: "PROGRESS TO NEXT PRODUCTION WEEK",
         icon: Clock,
-        action: () => { doAdvanceWeek(); },
-        section: 'TACTICAL ACTIONS',
+        action: () => {
+          doAdvanceWeek();
+        },
+        section: "TACTICAL ACTIONS",
       },
       // Crisis Management
       {
-        id: 'crisis-dashboard',
-        title: 'CRISIS COMMAND DASHBOARD',
-        subtitle: 'VIEW ALL ACTIVE CRISES AND ISSUES',
+        id: "crisis-dashboard",
+        title: "CRISIS COMMAND DASHBOARD",
+        subtitle: "VIEW ALL ACTIVE CRISES AND ISSUES",
         icon: AlertTriangle,
-        shortcut: '⌘⇧C',
+        shortcut: "⌘⇧C",
         action: () => {
-          setActiveHub('hq');
-          setActiveSubTab('operations');
+          setActiveHub("hq");
+          setActiveSubTab("operations");
         },
-        section: 'CRISIS MANAGEMENT',
-        keywords: ['emergency', 'problems', 'issues', 'alerts'],
+        section: "CRISIS MANAGEMENT",
+        keywords: ["emergency", "problems", "issues", "alerts"],
       },
       {
-        id: 'greenlight-queue',
-        title: 'GREENLIGHT QUEUE AUDIT',
-        subtitle: 'REVIEW PROJECTS AWAITING APPROVAL',
+        id: "greenlight-queue",
+        title: "GREENLIGHT QUEUE AUDIT",
+        subtitle: "REVIEW PROJECTS AWAITING APPROVAL",
         icon: Zap,
         action: () => {
-          setActiveHub('production');
-          setActiveSubTab('slate');
+          setActiveHub("production");
+          setActiveSubTab("slate");
         },
-        section: 'CRISIS MANAGEMENT',
-        keywords: ['approve', 'projects', 'slate'],
+        section: "CRISIS MANAGEMENT",
+        keywords: ["approve", "projects", "slate"],
       },
       // Intelligence Views
       {
-        id: 'market-trends',
-        title: 'MARKET TREND ANALYSIS',
-        subtitle: 'VIEW GENRE TRENDS AND MARKET SENTIMENT',
+        id: "market-trends",
+        title: "MARKET TREND ANALYSIS",
+        subtitle: "VIEW GENRE TRENDS AND MARKET SENTIMENT",
         icon: TrendingUp,
         action: () => {
-          setActiveHub('intelligence');
-          setActiveSubTab('market');
+          setActiveHub("intelligence");
+          setActiveSubTab("market");
         },
-        section: 'INTELLIGENCE REPORTS',
-        keywords: ['genres', 'trends', 'market', 'analysis'],
+        section: "INTELLIGENCE REPORTS",
+        keywords: ["genres", "trends", "market", "analysis"],
       },
       {
-        id: 'studio-health',
-        title: 'STUDIO HEALTH AUDIT',
-        subtitle: 'CHECK OVERALL STUDIO PERFORMANCE METRICS',
+        id: "studio-health",
+        title: "STUDIO HEALTH AUDIT",
+        subtitle: "CHECK OVERALL STUDIO PERFORMANCE METRICS",
         icon: Activity,
         action: () => {
-          setActiveHub('hq');
-          setActiveSubTab('overview');
+          setActiveHub("hq");
+          setActiveSubTab("overview");
         },
-        section: 'INTELLIGENCE REPORTS',
-        keywords: ['health', 'metrics', 'performance', 'dashboard'],
+        section: "INTELLIGENCE REPORTS",
+        keywords: ["health", "metrics", "performance", "dashboard"],
       },
-      // Talent Views  
+      // Talent Views
       {
-        id: 'talent-morale',
-        title: 'TALENT MORALE MONITOR',
-        subtitle: 'CHECK ROSTER SATISFACTION LEVELS',
+        id: "talent-morale",
+        title: "TALENT MORALE MONITOR",
+        subtitle: "CHECK ROSTER SATISFACTION LEVELS",
         icon: Users,
         action: () => {
-          setActiveHub('talent');
-          setActiveSubTab('roster');
+          setActiveHub("talent");
+          setActiveSubTab("roster");
         },
-        section: 'TALENT MANAGEMENT',
-        keywords: ['morale', 'happiness', 'satisfaction', 'roster'],
+        section: "TALENT MANAGEMENT",
+        keywords: ["morale", "happiness", "satisfaction", "roster"],
       },
       {
-        id: 'deal-history',
-        title: 'DEAL HISTORY LOG',
-        subtitle: 'VIEW NEGOTIATION HISTORY AND OFFERS',
+        id: "deal-history",
+        title: "DEAL HISTORY LOG",
+        subtitle: "VIEW NEGOTIATION HISTORY AND OFFERS",
         icon: Briefcase,
         action: () => {
-          setActiveHub('talent');
-          setActiveSubTab('negotiations');
+          setActiveHub("talent");
+          setActiveSubTab("negotiations");
         },
-        section: 'TALENT MANAGEMENT',
-        keywords: ['offers', 'negotiations', 'deals', 'history'],
+        section: "TALENT MANAGEMENT",
+        keywords: ["offers", "negotiations", "deals", "history"],
       },
       // Financial Views
       {
-        id: 'budget-burn',
-        title: 'BUDGET BURN RATE AUDIT',
-        subtitle: 'MONITOR PRODUCTION SPENDING VS PLANNED',
+        id: "budget-burn",
+        title: "BUDGET BURN RATE AUDIT",
+        subtitle: "MONITOR PRODUCTION SPENDING VS PLANNED",
         icon: Flame,
         action: () => {
-          setActiveHub('production');
-          setActiveSubTab('development');
+          setActiveHub("production");
+          setActiveSubTab("development");
         },
-        section: 'FINANCIAL INTELLIGENCE',
-        keywords: ['budget', 'spending', 'overrun', 'costs'],
+        section: "FINANCIAL INTELLIGENCE",
+        keywords: ["budget", "spending", "overrun", "costs"],
       },
       {
-        id: 'cash-flow',
-        title: 'CASH FLOW ANALYSIS',
-        subtitle: 'VIEW REVENUE AND EXPENSE TRENDS',
+        id: "cash-flow",
+        title: "CASH FLOW ANALYSIS",
+        subtitle: "VIEW REVENUE AND EXPENSE TRENDS",
         icon: DollarSign,
         action: () => {
-          setActiveHub('intelligence');
-          setActiveSubTab('financials');
+          setActiveHub("intelligence");
+          setActiveSubTab("financials");
         },
-        section: 'FINANCIAL INTELLIGENCE',
-        keywords: ['cash', 'revenue', 'expenses', 'financials'],
+        section: "FINANCIAL INTELLIGENCE",
+        keywords: ["cash", "revenue", "expenses", "financials"],
       },
     ];
 
@@ -257,20 +256,18 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
     if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         onClose();
         return;
       }
 
-      if (e.key === 'ArrowDown') {
+      if (e.key === "ArrowDown") {
         e.preventDefault();
-        setSelectedIndex((prev) =>
-          Math.min(prev + 1, filteredCommands.length - 1)
-        );
-      } else if (e.key === 'ArrowUp') {
+        setSelectedIndex((prev) => Math.min(prev + 1, filteredCommands.length - 1));
+      } else if (e.key === "ArrowUp") {
         e.preventDefault();
         setSelectedIndex((prev) => Math.max(prev - 1, 0));
-      } else if (e.key === 'Enter') {
+      } else if (e.key === "Enter") {
         e.preventDefault();
         const selected = filteredCommands[selectedIndex];
         if (selected) {
@@ -280,14 +277,14 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose, filteredCommands, selectedIndex]);
 
   // Focus input on open
   useEffect(() => {
     if (isOpen) {
-      setQuery('');
+      setQuery("");
       setSelectedIndex(0);
     }
   }, [isOpen]);
@@ -340,7 +337,9 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
               <div className="max-h-[500px] overflow-y-auto py-4 custom-scrollbar">
                 {flatCommands.length === 0 ? (
                   <div className="px-8 py-16 text-center">
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic">NULL RESULT DETECTED</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic">
+                      NULL RESULT DETECTED
+                    </p>
                     <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/20 mt-2 italic">
                       SYSTEM SCAN FAILED: TRY ALTERNATIVE QUERY
                     </p>
@@ -365,23 +364,29 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
                             }}
                             onMouseEnter={() => setSelectedIndex(flatIdx)}
                             className={cn(
-                              'w-full flex items-center gap-6 px-8 py-4 text-left border-l-2 transition-all duration-700',
-                              isSelected 
-                                ? 'bg-primary/5 border-primary text-primary translate-x-1 shadow-2xl' 
-                                : 'bg-transparent border-transparent text-muted-foreground/40 hover:bg-white/[0.02] hover:text-foreground hover:translate-x-1',
+                              "w-full flex items-center gap-6 px-8 py-4 text-left border-l-2 transition-all duration-700",
+                              isSelected
+                                ? "bg-primary/5 border-primary text-primary translate-x-1 shadow-2xl"
+                                : "bg-transparent border-transparent text-muted-foreground/40 hover:bg-white/[0.02] hover:text-foreground hover:translate-x-1"
                             )}
                           >
-                            <div className={cn(
-                              "w-10 h-10 rounded-none flex items-center justify-center shrink-0 transition-all duration-700",
-                              isSelected ? "bg-primary text-black" : "bg-white/5 text-muted-foreground/40"
-                            )}>
+                            <div
+                              className={cn(
+                                "w-10 h-10 rounded-none flex items-center justify-center shrink-0 transition-all duration-700",
+                                isSelected
+                                  ? "bg-primary text-black"
+                                  : "bg-white/5 text-muted-foreground/40"
+                              )}
+                            >
                               <Icon className="w-5 h-5" strokeWidth={isSelected ? 3 : 2} />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className={cn(
-                                "text-sm font-black uppercase italic tracking-tight leading-none mb-1",
-                                isSelected ? "text-foreground" : "text-foreground/60"
-                              )}>
+                              <p
+                                className={cn(
+                                  "text-sm font-black uppercase italic tracking-tight leading-none mb-1",
+                                  isSelected ? "text-foreground" : "text-foreground/60"
+                                )}
+                              >
                                 {item.title}
                               </p>
                               {item.subtitle && (
@@ -391,10 +396,14 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
                               )}
                             </div>
                             {item.shortcut && (
-                              <kbd className={cn(
-                                "px-3 py-1 rounded-none text-[10px] font-black shrink-0 italic border transition-all duration-700",
-                                isSelected ? "bg-primary/20 text-primary border-primary/20" : "bg-white/5 text-muted-foreground/30 border-white/5"
-                              )}>
+                              <kbd
+                                className={cn(
+                                  "px-3 py-1 rounded-none text-[10px] font-black shrink-0 italic border transition-all duration-700",
+                                  isSelected
+                                    ? "bg-primary/20 text-primary border-primary/20"
+                                    : "bg-white/5 text-muted-foreground/30 border-white/5"
+                                )}
+                              >
                                 {item.shortcut}
                               </kbd>
                             )}
@@ -438,14 +447,14 @@ const useCommandPalette = () => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Cmd+K or Ctrl+K
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         setIsOpen((prev) => !prev);
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   return {

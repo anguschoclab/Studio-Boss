@@ -1,16 +1,16 @@
-import React from 'react';
-import { FinancialOverviewWidget } from './FinancialOverviewWidget';
-import { DemographicsWidget } from './DemographicsWidget';
-import { useGameStore } from '@/store/gameStore';
-import { Clapperboard, Users, PieChart, TrendingUp } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { KPIStatCard } from '@/components/shared/KPIStatCard';
-import { StudioIdentityPanel } from '@/components/studio/StudioIdentityPanel';
-import { AchievementsPanel } from '@/components/achievements/AchievementsPanel';
+import React from "react";
+import { FinancialOverviewWidget } from "./FinancialOverviewWidget";
+import { DemographicsWidget } from "./DemographicsWidget";
+import { useGameStore } from "@/store/gameStore";
+import { Clapperboard, Users, PieChart, TrendingUp } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { KPIStatCard } from "@/components/shared/KPIStatCard";
+import { StudioIdentityPanel } from "@/components/studio/StudioIdentityPanel";
+import { AchievementsPanel } from "@/components/achievements/AchievementsPanel";
 
 /** Compact currency that handles billions and negatives (cash can go red on loans). */
 function formatCash(value: number): string {
-  const sign = value < 0 ? '-' : '';
+  const sign = value < 0 ? "-" : "";
   const abs = Math.abs(value);
   if (abs >= 1_000_000_000) return `${sign}$${(abs / 1_000_000_000).toFixed(2)}B`;
   if (abs >= 1_000_000) return `${sign}$${(abs / 1_000_000).toFixed(0)}M`;
@@ -20,11 +20,11 @@ function formatCash(value: number): string {
 
 /** Honest descriptor derived from real rank + share — no hardcoded label. */
 function marketPositionLabel(rank: number, total: number, share: number): string {
-  if (total <= 1) return 'Sole Studio';
-  if (rank === 1) return 'Market Leader';
-  if (rank <= 3 || share >= 15) return 'Major Player';
-  if (share >= 5) return 'Established Studio';
-  return 'Challenger';
+  if (total <= 1) return "Sole Studio";
+  if (rank === 1) return "Market Leader";
+  if (rank <= 3 || share >= 15) return "Major Player";
+  if (share >= 5) return "Established Studio";
+  return "Challenger";
 }
 
 export const CommandCenter: React.FC = () => {
@@ -37,7 +37,7 @@ export const CommandCenter: React.FC = () => {
   const rivals = Object.values(entities?.rivals || {});
 
   const activeProjectsCount = projects.filter(
-    (p) => p.state !== 'released' && p.state !== 'post_release' && p.state !== 'archived'
+    (p) => p.state !== "released" && p.state !== "post_release" && p.state !== "archived"
   ).length;
 
   const cash = finance?.cash ?? 0;
@@ -62,7 +62,7 @@ export const CommandCenter: React.FC = () => {
               {studio.name}
             </h1>
             <span className="inline-flex h-6 items-center bg-primary px-3 text-[11px] font-bold uppercase tracking-[0.1em] text-primary-foreground">
-              {studio.archetype.replace('-', ' ')}
+              {studio.archetype.replace("-", " ")}
             </span>
           </div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/60 not-italic">
@@ -91,7 +91,7 @@ export const CommandCenter: React.FC = () => {
           value={formatCash(cash)}
           subLabel="Operating Balance"
           icon={<TrendingUp className="h-5 w-5" strokeWidth={1.75} />}
-          variant={cash < 0 ? 'destructive' : 'primary'}
+          variant={cash < 0 ? "destructive" : "primary"}
           tooltip="Current liquid funds available to the studio."
         />
         <KPIStatCard
@@ -157,8 +157,8 @@ export const CommandCenter: React.FC = () => {
               <article
                 key={news.id}
                 className={cn(
-                  'flex items-start gap-4 bg-background p-5 transition-colors duration-200 hover:bg-white/[0.03]',
-                  i === 0 && 'md:col-span-2'
+                  "flex items-start gap-4 bg-background p-5 transition-colors duration-200 hover:bg-white/[0.03]",
+                  i === 0 && "md:col-span-2"
                 )}
               >
                 <div className="flex shrink-0 flex-col items-center justify-center border border-white/10 px-3 py-2 text-center">

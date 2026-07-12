@@ -23,33 +23,35 @@ export default tseslint.config(
       "@typescript-eslint/no-unused-vars": "error",
     },
   },
-    {
-        /* ARCHITECTURAL BOUNDARY: UI/PAGES */
-        files: ["src/components/**/*.{ts,tsx}", "src/pages/**/*.{ts,tsx}"],
-        rules: {
-            "no-restricted-imports": [
-                "error",
-                {
-                    "patterns": [
-                        {
-                            "group": ["**/engine/types/world", "**/engine/tick/*", "**/engine/storage/*"],
-                            "message": "UI components should only consume processed UIDigest. Direct access to raw engine state or systems is forbidden."
-                        },
-                        {
-                            "group": ["**/engine/!(types/common|worker/*)"],
-                            "message": "Importing logic from src/engine/ is forbidden. Use src/presenters/ or src/engine/types/common."
-                        }
-                    ]
-                }
-            ]
-        }
+  {
+    /* ARCHITECTURAL BOUNDARY: UI/PAGES */
+    files: ["src/components/**/*.{ts,tsx}", "src/pages/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["**/engine/types/world", "**/engine/tick/*", "**/engine/storage/*"],
+              message:
+                "UI components should only consume processed UIDigest. Direct access to raw engine state or systems is forbidden.",
+            },
+            {
+              group: ["**/engine/!(types/common|worker/*)"],
+              message:
+                "Importing logic from src/engine/ is forbidden. Use src/presenters/ or src/engine/types/common.",
+            },
+          ],
+        },
+      ],
     },
-    {
-        /* RELAXED STANDARDS FOR TESTS */
-        files: ["src/test/**/*.{ts,tsx}"],
-        rules: {
-            "@typescript-eslint/no-explicit-any": "off",
-            "@typescript-eslint/no-unused-vars": "warn"
-        }
-    }
+  },
+  {
+    /* RELAXED STANDARDS FOR TESTS */
+    files: ["src/test/**/*.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": "warn",
+    },
+  }
 );

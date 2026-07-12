@@ -1,16 +1,16 @@
-import { describe, it, expect } from 'vitest';
-import { ScriptMetricsCalculator } from '@/engine/systems/production/ScriptMetricsCalculator';
-import { createMockProject } from '@/test/utils/mockFactories';
-import { ScriptedProject, ScriptEvent, ScriptMetrics } from '@/engine/types';
+import { describe, it, expect } from "vitest";
+import { ScriptMetricsCalculator } from "@/engine/systems/production/ScriptMetricsCalculator";
+import { createMockProject } from "@/test/utils/mockFactories";
+import { ScriptedProject, ScriptEvent, ScriptMetrics } from "@/engine/types";
 
-describe('ScriptMetricsCalculator', () => {
-  describe('calculateMetrics', () => {
-    it('calculates metrics correctly for a basic project', () => {
+describe("ScriptMetricsCalculator", () => {
+  describe("calculateMetrics", () => {
+    it("calculates metrics correctly for a basic project", () => {
       const project = createMockProject({
         scriptHeat: 50,
-        genre: 'Drama',
-        activeRoles: ['protagonist', 'antagonist', 'mentor', 'love_interest', 'sidekick'], // 5 roles
-        scriptEvents: []
+        genre: "Drama",
+        activeRoles: ["protagonist", "antagonist", "mentor", "love_interest", "sidekick"], // 5 roles
+        scriptEvents: [],
       }) as ScriptedProject;
 
       const metrics = ScriptMetricsCalculator.calculateMetrics(project, 10);
@@ -20,43 +20,50 @@ describe('ScriptMetricsCalculator', () => {
       expect(metrics.originality).toBe(40); // base 40 + 0 bonus
       expect(metrics.emotionalImpact).toBe(50); // heat 50
       expect(metrics.commercialViability).toBe(50); // base 50 - 10 prestige + 10 good structure
-      expect(metrics.trend).toBe('stable');
+      expect(metrics.trend).toBe("stable");
       expect(metrics.lastCalculatedWeek).toBe(10);
     });
 
-    it('calculates trend correctly', () => {
+    it("calculates trend correctly", () => {
       const project = createMockProject({
         scriptHeat: 50,
-        genre: 'Comedy',
-        activeRoles: ['protagonist', 'antagonist', 'mentor', 'love_interest', 'sidekick'],
+        genre: "Comedy",
+        activeRoles: ["protagonist", "antagonist", "mentor", "love_interest", "sidekick"],
       }) as ScriptedProject;
 
       const prevMetrics: ScriptMetrics = {
-        structure: 50, dialogue: 50, originality: 50, pacing: 50, emotionalImpact: 50, commercialViability: 50,
-        score: 20, trend: 'stable', lastCalculatedWeek: 5
+        structure: 50,
+        dialogue: 50,
+        originality: 50,
+        pacing: 50,
+        emotionalImpact: 50,
+        commercialViability: 50,
+        score: 20,
+        trend: "stable",
+        lastCalculatedWeek: 5,
       };
 
       const metrics = ScriptMetricsCalculator.calculateMetrics(project, 10, prevMetrics);
-      expect(metrics.trend).toBe('improving');
+      expect(metrics.trend).toBe("improving");
 
       prevMetrics.score = 100;
       const metricsDeclining = ScriptMetricsCalculator.calculateMetrics(project, 10, prevMetrics);
-      expect(metricsDeclining.trend).toBe('declining');
+      expect(metricsDeclining.trend).toBe("declining");
 
       prevMetrics.score = metrics.score; // approx equal
       const metricsStable = ScriptMetricsCalculator.calculateMetrics(project, 10, prevMetrics);
-      expect(metricsStable.trend).toBe('stable');
+      expect(metricsStable.trend).toBe("stable");
     });
 
-    it('handles negative events and 0 roles properly (edge case)', () => {
+    it("handles negative events and 0 roles properly (edge case)", () => {
       const project = createMockProject({
         scriptHeat: -10, // extreme
-        genre: 'Action',
+        genre: "Action",
         activeRoles: [], // 0 roles
         scriptEvents: [
-          { type: 'ROLE_MERGE', qualityImpact: -10, heatGain: -5 } as ScriptEvent,
-          { type: 'ROLE_MERGE', qualityImpact: -10, heatGain: -5 } as ScriptEvent,
-        ]
+          { type: "ROLE_MERGE", qualityImpact: -10, heatGain: -5 } as ScriptEvent,
+          { type: "ROLE_MERGE", qualityImpact: -10, heatGain: -5 } as ScriptEvent,
+        ],
       }) as ScriptedProject;
 
       const metrics = ScriptMetricsCalculator.calculateMetrics(project, 10);
@@ -66,23 +73,43 @@ describe('ScriptMetricsCalculator', () => {
       expect(metrics.emotionalImpact).toBe(-10); // Directly tied to heat
     });
 
-    it('handles many roles and complex script events properly (edge case)', () => {
+    it("handles many roles and complex script events properly (edge case)", () => {
       const project = createMockProject({
         scriptHeat: 150,
-        genre: 'Sci-Fi',
+        genre: "Sci-Fi",
         weeksInPhase: 2,
-        activeRoles: Array.from({ length: 15 }, (_, i) => (['protagonist', 'antagonist', 'mentor', 'love_interest', 'sidekick', 'comic_relief', 'anti_hero', 'femme_fatale', 'loose_cannon', 'everyman', 'chosen_one', 'wise_fool', 'protagonist', 'antagonist', 'mentor'][i] as import('@/engine/types').CharacterArchetype)), // 15 roles
+        activeRoles: Array.from(
+          { length: 15 },
+          (_, i) =>
+            [
+              "protagonist",
+              "antagonist",
+              "mentor",
+              "love_interest",
+              "sidekick",
+              "comic_relief",
+              "anti_hero",
+              "femme_fatale",
+              "loose_cannon",
+              "everyman",
+              "chosen_one",
+              "wise_fool",
+              "protagonist",
+              "antagonist",
+              "mentor",
+            ][i] as import("@/engine/types").CharacterArchetype
+        ), // 15 roles
         scriptEvents: [
-          { type: 'ROLE_SPLIT', qualityImpact: 5, heatGain: 2 } as ScriptEvent,
-          { type: 'ROLE_SPLIT', qualityImpact: 5, heatGain: 2 } as ScriptEvent,
-          { type: 'DIALOGUE_POLISH', qualityImpact: 60, heatGain: 10 } as ScriptEvent,
-          { type: 'DIALOGUE_POLISH', qualityImpact: 40, heatGain: 10 } as ScriptEvent,
-          { type: 'PLOT_TWIST_ADDED', qualityImpact: 20, heatGain: 20 } as ScriptEvent,
-          { type: 'PLOT_TWIST_ADDED', qualityImpact: 20, heatGain: 20 } as ScriptEvent,
-          { type: 'PLOT_TWIST_ADDED', qualityImpact: 20, heatGain: 20 } as ScriptEvent,
-          { type: 'PLOT_TWIST_ADDED', qualityImpact: 20, heatGain: 20 } as ScriptEvent,
-          { type: 'PLOT_TWIST_ADDED', qualityImpact: 20, heatGain: 20 } as ScriptEvent,
-        ]
+          { type: "ROLE_SPLIT", qualityImpact: 5, heatGain: 2 } as ScriptEvent,
+          { type: "ROLE_SPLIT", qualityImpact: 5, heatGain: 2 } as ScriptEvent,
+          { type: "DIALOGUE_POLISH", qualityImpact: 60, heatGain: 10 } as ScriptEvent,
+          { type: "DIALOGUE_POLISH", qualityImpact: 40, heatGain: 10 } as ScriptEvent,
+          { type: "PLOT_TWIST_ADDED", qualityImpact: 20, heatGain: 20 } as ScriptEvent,
+          { type: "PLOT_TWIST_ADDED", qualityImpact: 20, heatGain: 20 } as ScriptEvent,
+          { type: "PLOT_TWIST_ADDED", qualityImpact: 20, heatGain: 20 } as ScriptEvent,
+          { type: "PLOT_TWIST_ADDED", qualityImpact: 20, heatGain: 20 } as ScriptEvent,
+          { type: "PLOT_TWIST_ADDED", qualityImpact: 20, heatGain: 20 } as ScriptEvent,
+        ],
       }) as ScriptedProject;
 
       const metrics = ScriptMetricsCalculator.calculateMetrics(project, 10);
@@ -100,15 +127,24 @@ describe('ScriptMetricsCalculator', () => {
       expect(metrics.commercialViability).toBeGreaterThanOrEqual(0);
     });
 
-    it('calculates commercial viability correctly for various genres', () => {
-      const genres = ['Family', 'Animation', 'Action', 'Comedy', 'Drama', 'Thriller', 'Crime', 'Unknown'];
+    it("calculates commercial viability correctly for various genres", () => {
+      const genres = [
+        "Family",
+        "Animation",
+        "Action",
+        "Comedy",
+        "Drama",
+        "Thriller",
+        "Crime",
+        "Unknown",
+      ];
       const baseExpectedViabilities = [];
 
       for (const genre of genres) {
         const project = createMockProject({
           scriptHeat: 50,
           genre,
-          activeRoles: ['protagonist', 'antagonist', 'mentor', 'love_interest', 'sidekick'],
+          activeRoles: ["protagonist", "antagonist", "mentor", "love_interest", "sidekick"],
         }) as ScriptedProject;
 
         const metrics = ScriptMetricsCalculator.calculateMetrics(project, 10);

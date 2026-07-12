@@ -1,6 +1,19 @@
-import { Talent, ActorArchetype, WriterArchetype, ProducerArchetype, PersonalityArchetype, DirectorArchetype, TalentPersonality, CareerTrajectory } from '../../types/talent.types';
-import { ARCHETYPE_TRANSITIONS, PERSONALITY_TRANSITIONS, CAREER_TRAJECTORY_TRANSITIONS } from '../../data/talentArchetypes';
-import { RandomGenerator } from '../../utils/rng';
+import {
+  Talent,
+  ActorArchetype,
+  WriterArchetype,
+  ProducerArchetype,
+  PersonalityArchetype,
+  DirectorArchetype,
+  TalentPersonality,
+  CareerTrajectory,
+} from "../../types/talent.types";
+import {
+  ARCHETYPE_TRANSITIONS,
+  PERSONALITY_TRANSITIONS,
+  CAREER_TRAJECTORY_TRANSITIONS,
+} from "../../data/talentArchetypes";
+import { RandomGenerator } from "../../utils/rng";
 
 /**
  * Drift configuration for how archetypes and personalities can change over time
@@ -21,7 +34,7 @@ export const DEFAULT_DRIFT_CONFIG: DriftConfig = {
   personalityDriftProbability: 0.05, // 5% chance per week
   careerTrajectoryDriftProbability: 0.03, // 3% chance per week
   driftIntensity: 0.3, // Moderate drift intensity
-  enableAgeBasedTransitions: true // Enable age-based archetype transitions
+  enableAgeBasedTransitions: true, // Enable age-based archetype transitions
 };
 
 /**
@@ -58,11 +71,11 @@ export const TalentDriftEngine = {
       archetypeChanged: false,
       personalityChanged: false,
       careerTrajectoryChanged: false,
-      changes: {}
+      changes: {},
     };
 
     // 0. Age-based archetype transitions (if enabled)
-    if (config.enableAgeBasedTransitions && talent.role === 'actor') {
+    if (config.enableAgeBasedTransitions && talent.role === "actor") {
       const ageBasedChange = this.processAgeBasedArchetypeTransition(talent, rng);
       if (ageBasedChange) {
         result.archetypeChanged = true;
@@ -85,7 +98,11 @@ export const TalentDriftEngine = {
 
     // 2. Personality Trait Drift
     if (rng.next() < config.personalityDriftProbability && talent.personality) {
-      const personalityChange = this.driftPersonality(talent.personality, config.driftIntensity, rng);
+      const personalityChange = this.driftPersonality(
+        talent.personality,
+        config.driftIntensity,
+        rng
+      );
       if (personalityChange) {
         result.personalityChanged = true;
         result.changes.oldPersonality = personalityChange.old;
@@ -122,27 +139,31 @@ export const TalentDriftEngine = {
     const currentArchetype = talent.actorArchetype;
 
     // Age-based transition rules
-    const ageTransitions: Record<string, { minAge: number; maxAge: number; newArchetypes: ActorArchetype[] }> = {
+    const ageTransitions: Record<
+      string,
+      { minAge: number; maxAge: number; newArchetypes: ActorArchetype[] }
+    > = {
       kid_actor: {
         minAge: 16,
         maxAge: 22,
-        newArchetypes: ['young_adult', 'tv_star', 'character_actor']
+        newArchetypes: ["young_adult", "tv_star", "character_actor"],
       },
       young_adult: {
         minAge: 23,
         maxAge: 30,
-        newArchetypes: ['movie_star', 'tv_star', 'character_actor', 'action_hero', 'comedy_star']
-      }
+        newArchetypes: ["movie_star", "tv_star", "character_actor", "action_hero", "comedy_star"],
+      },
     };
 
     // Check if current archetype has age-based transitions
     const transitionRule = ageTransitions[currentArchetype];
     if (!transitionRule) {
       // Check if talent is old enough to become a veteran
-      if (age >= 50 && currentArchetype !== 'veteran') {
-        const currentTransitions: string[] = ARCHETYPE_TRANSITIONS.actor[currentArchetype as ActorArchetype] || [];
-        if (currentTransitions.includes('veteran')) {
-          return { old: currentArchetype, new: 'veteran' };
+      if (age >= 50 && currentArchetype !== "veteran") {
+        const currentTransitions: string[] =
+          ARCHETYPE_TRANSITIONS.actor[currentArchetype as ActorArchetype] || [];
+        if (currentTransitions.includes("veteran")) {
+          return { old: currentArchetype, new: "veteran" };
         }
       }
       return null;
@@ -161,8 +182,9 @@ export const TalentDriftEngine = {
 
     // In transition window - probabilistic transition
     // Higher probability as age increases within the window
-    const ageProgress = (age - transitionRule.minAge) / (transitionRule.maxAge - transitionRule.minAge);
-    const transitionProbability = 0.3 + (ageProgress * 0.4); // 30% to 70% based on age progress
+    const ageProgress =
+      (age - transitionRule.minAge) / (transitionRule.maxAge - transitionRule.minAge);
+    const transitionProbability = 0.3 + ageProgress * 0.4; // 30% to 70% based on age progress
 
     if (rng.next() < transitionProbability) {
       const newArchetype = rng.pick(transitionRule.newArchetypes);
@@ -194,7 +216,8 @@ export const TalentDriftEngine = {
       transitions = ARCHETYPE_TRANSITIONS.producer[talent.producerArchetype as ProducerArchetype];
     } else if (talent.personalityArchetype) {
       currentArchetype = talent.personalityArchetype;
-      transitions = ARCHETYPE_TRANSITIONS.personality[talent.personalityArchetype as PersonalityArchetype];
+      transitions =
+        ARCHETYPE_TRANSITIONS.personality[talent.personalityArchetype as PersonalityArchetype];
     } else if (talent.directorArchetype) {
       currentArchetype = talent.directorArchetype;
       transitions = ARCHETYPE_TRANSITIONS.director[talent.directorArchetype];
@@ -248,7 +271,7 @@ export const TalentDriftEngine = {
     intensity: number,
     rng: RandomGenerator
   ): { old: string; new: string } | null {
-    const currentTrajectory = talent.careerTrajectory || 'rising';
+    const currentTrajectory = talent.careerTrajectory || "rising";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const transitions = (CAREER_TRAJECTORY_TRANSITIONS as any)[currentTrajectory];
     if (!transitions || transitions.length === 0) {
@@ -282,9 +305,9 @@ export const TalentDriftEngine = {
     }
 
     // Tier affects trajectory
-    if (talent.tier === 'A_LIST') {
+    if (talent.tier === "A_LIST") {
       factor *= 0.9; // A_LIST talents are more stable
-    } else if (talent.tier === 'NEWCOMER') {
+    } else if (talent.tier === "NEWCOMER") {
       factor *= 1.1; // NEWCOMER talents are more volatile
     }
 
@@ -306,15 +329,15 @@ export const TalentDriftEngine = {
 
     if (driftResult.changes.newArchetype) {
       const newVal = driftResult.changes.newArchetype;
-      if (talent.role === 'actor') {
+      if (talent.role === "actor") {
         updated.actorArchetype = newVal as ActorArchetype;
-      } else if (talent.role === 'writer' || talent.role === 'showrunner') {
+      } else if (talent.role === "writer" || talent.role === "showrunner") {
         updated.writerArchetype = newVal as WriterArchetype;
-      } else if (talent.role === 'producer') {
+      } else if (talent.role === "producer") {
         updated.producerArchetype = newVal as ProducerArchetype;
-      } else if (talent.role === 'personality') {
+      } else if (talent.role === "personality") {
         updated.personalityArchetype = newVal as PersonalityArchetype;
-      } else if (talent.role === 'director') {
+      } else if (talent.role === "director") {
         updated.directorArchetype = newVal as DirectorArchetype;
       }
     }
@@ -343,12 +366,16 @@ export const TalentDriftEngine = {
 
     for (const [id, talent] of Object.entries(talents)) {
       const driftResult = this.processDrift(talent, config, rng);
-      if (driftResult.archetypeChanged || driftResult.personalityChanged || driftResult.careerTrajectoryChanged) {
+      if (
+        driftResult.archetypeChanged ||
+        driftResult.personalityChanged ||
+        driftResult.careerTrajectoryChanged
+      ) {
         updatedTalents[id] = this.applyDriftChanges(talent, driftResult);
         driftResults[id] = driftResult;
       }
     }
 
     return { updatedTalents, driftResults };
-  }
+  },
 };

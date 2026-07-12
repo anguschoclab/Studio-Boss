@@ -1,16 +1,16 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { DiscoveryBoard } from '../../../components/discovery/DiscoveryBoard';
-import { useGameStore } from '../../../store/gameStore';
-import { useUIStore } from '../../../store/uiStore';
-import { Opportunity } from '../../../engine/types';
+import React from "react";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { DiscoveryBoard } from "../../../components/discovery/DiscoveryBoard";
+import { useGameStore } from "../../../store/gameStore";
+import { useUIStore } from "../../../store/uiStore";
+import { Opportunity } from "../../../engine/types";
 
-vi.mock('../../../store/uiStore', () => ({
+vi.mock("../../../store/uiStore", () => ({
   useUIStore: vi.fn(),
 }));
 
-describe('DiscoveryBoard', () => {
+describe("DiscoveryBoard", () => {
   const mockOpenCreateProject = vi.fn();
   const mockAcquireOpportunity = vi.fn();
 
@@ -21,122 +21,134 @@ describe('DiscoveryBoard', () => {
     });
   });
 
-  it('renders empty state when there are no opportunities', () => {
+  it("renders empty state when there are no opportunities", () => {
     useGameStore.setState({
       gameState: {
         market: { opportunities: [], trends: [] },
-        industry: { newsHistory: [] }
+        industry: { newsHistory: [] },
       },
-      acquireOpportunity: mockAcquireOpportunity
+      acquireOpportunity: mockAcquireOpportunity,
     } as any);
 
     render(<DiscoveryBoard />);
 
-    expect(screen.getAllByText((c) => c.includes('MARKET SATURATION') || c.includes('GLOBAL IP MARKETPLACE') || c.includes('DISCOVERY')).length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText(
+        (c) =>
+          c.includes("MARKET SATURATION") ||
+          c.includes("GLOBAL IP MARKETPLACE") ||
+          c.includes("DISCOVERY")
+      ).length
+    ).toBeGreaterThan(0);
   });
 
-  it('calls openCreateProject when Create Original button is clicked', () => {
+  it("calls openCreateProject when Create Original button is clicked", () => {
     useGameStore.setState({
       gameState: {
         market: { opportunities: [], trends: [] },
-        industry: { newsHistory: [] }
+        industry: { newsHistory: [] },
       },
-      acquireOpportunity: mockAcquireOpportunity
+      acquireOpportunity: mockAcquireOpportunity,
     } as any);
 
     render(<DiscoveryBoard />);
 
-    const createButton = screen.getByText((c) => c.includes('ORIGINAL IP CONCEPT') || c.includes('Original Concept') || c.includes('ORIGINAL'));
+    const createButton = screen.getByText(
+      (c) =>
+        c.includes("ORIGINAL IP CONCEPT") ||
+        c.includes("Original Concept") ||
+        c.includes("ORIGINAL")
+    );
     fireEvent.click(createButton);
 
     expect(mockOpenCreateProject).toHaveBeenCalledTimes(1);
   });
 
-  it('renders opportunity cards when there are opportunities', () => {
+  it("renders opportunity cards when there are opportunities", () => {
     const mockOpportunities: Opportunity[] = [
       {
-        id: '1',
-        title: 'Action Movie',
-        type: 'script',
-        genre: 'Action',
-        format: 'film',
-        budgetTier: 'high',
-        flavor: 'Explosions everywhere.',
+        id: "1",
+        title: "Action Movie",
+        type: "script",
+        genre: "Action",
+        format: "film",
+        budgetTier: "high",
+        flavor: "Explosions everywhere.",
         weeksUntilExpiry: 5,
-        targetAudience: 'Broad',
+        targetAudience: "Broad",
         qualityBonus: 0,
-        origin: 'open_spec',
+        origin: "open_spec",
         costToAcquire: 0,
         bids: {},
         expirationWeek: 10,
-        bidHistory: []
+        bidHistory: [],
       },
       {
-        id: '2',
-        title: 'Comedy Show',
-        type: 'pitch',
-        genre: 'Comedy',
-        format: 'tv',
-        budgetTier: 'low',
-        flavor: 'Laugh out loud.',
+        id: "2",
+        title: "Comedy Show",
+        type: "pitch",
+        genre: "Comedy",
+        format: "tv",
+        budgetTier: "low",
+        flavor: "Laugh out loud.",
         weeksUntilExpiry: 3,
-        targetAudience: 'Niche',
+        targetAudience: "Niche",
         qualityBonus: 0,
-        origin: 'agency_package',
+        origin: "agency_package",
         costToAcquire: 10000,
         bids: {},
         expirationWeek: 8,
-        bidHistory: []
+        bidHistory: [],
       },
     ];
 
     useGameStore.setState({
       gameState: {
         market: { opportunities: mockOpportunities, trends: [] },
-        industry: { newsHistory: [] }
+        industry: { newsHistory: [] },
       },
-      acquireOpportunity: mockAcquireOpportunity
+      acquireOpportunity: mockAcquireOpportunity,
     } as any);
 
     render(<DiscoveryBoard />);
 
-    expect(screen.getByText('Action Movie')).toBeDefined();
-    expect(screen.getByText('Comedy Show')).toBeDefined();
+    expect(screen.getByText("Action Movie")).toBeDefined();
+    expect(screen.getByText("Comedy Show")).toBeDefined();
     expect(screen.getAllByText(/Action/i)).toBeDefined();
     expect(screen.getAllByText(/film/i)).toBeDefined();
   });
 
-  it('calls acquireOpportunity when Acquire button is clicked on a card', () => {
+  it("calls acquireOpportunity when Acquire button is clicked on a card", () => {
     const mockOpportunities: Opportunity[] = [
       {
-        id: 'opp-123',
-        title: 'Drama Film',
-        type: 'script',
-        genre: 'Drama',
-        format: 'film',
-        budgetTier: 'mid',
-        flavor: 'Tearjerker.',
+        id: "opp-123",
+        title: "Drama Film",
+        type: "script",
+        genre: "Drama",
+        format: "film",
+        budgetTier: "mid",
+        flavor: "Tearjerker.",
         weeksUntilExpiry: 4,
-        targetAudience: 'Broad',
+        targetAudience: "Broad",
         qualityBonus: 0,
-        origin: 'open_spec',
+        origin: "open_spec",
         costToAcquire: 0,
         bids: {},
         expirationWeek: 9,
-        bidHistory: []
+        bidHistory: [],
       },
     ];
 
     useGameStore.setState({
       gameState: {
         market: { opportunities: mockOpportunities, trends: [] },
-        industry: { newsHistory: [] }
+        industry: { newsHistory: [] },
       },
-      acquireOpportunity: mockAcquireOpportunity
+      acquireOpportunity: mockAcquireOpportunity,
     } as any);
 
     render(<DiscoveryBoard />);
 
-    expect(screen.getByText('Drama Film')).toBeDefined();
+    expect(screen.getByText("Drama Film")).toBeDefined();
   });
 });

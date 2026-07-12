@@ -1,7 +1,7 @@
-import { GameState, StateImpact } from '@/engine/types';
-import { getContractsByTalentId } from '../../utils';
+import { GameState, StateImpact } from "@/engine/types";
+import { getContractsByTalentId } from "../../utils";
 
-const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+const FORBIDDEN_KEYS = new Set(["__proto__", "constructor", "prototype"]);
 
 /**
  * Industry-related impact handlers
@@ -10,17 +10,14 @@ const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
 
 export function handleIndustryUpdate(state: GameState, impact: StateImpact): GameState {
   const payload = impact.payload as Record<string, unknown>;
-  if (!payload || typeof payload !== 'object') return state;
+  if (!payload || typeof payload !== "object") return state;
   let nextState = { ...state };
 
   // 1. Batch Project Updates
   if (Array.isArray(payload.projects)) {
     const nextProjects = { ...nextState.entities.projects };
     payload.projects.forEach(
-      (u: {
-        projectId: string;
-        update: Partial<import("@/engine/types").Project>;
-      }) => {
+      (u: { projectId: string; update: Partial<import("@/engine/types").Project> }) => {
         if (nextProjects[u.projectId]) {
           nextProjects[u.projectId] = {
             ...nextProjects[u.projectId],
@@ -36,10 +33,7 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
   if (Array.isArray(payload.rivals)) {
     const nextRivals = { ...nextState.entities.rivals };
     payload.rivals.forEach(
-      (u: {
-        rivalId: string;
-        update: Partial<import("@/engine/types").RivalStudio>;
-      }) => {
+      (u: { rivalId: string; update: Partial<import("@/engine/types").RivalStudio> }) => {
         if (nextRivals[u.rivalId]) {
           nextRivals[u.rivalId] = { ...nextRivals[u.rivalId], ...u.update };
         }
@@ -52,10 +46,7 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
   if (Array.isArray(payload.talents)) {
     const nextTalents = { ...nextState.entities.talents };
     payload.talents.forEach(
-      (u: {
-        talentId: string;
-        update: Partial<import("@/engine/types").Talent>;
-      }) => {
+      (u: { talentId: string; update: Partial<import("@/engine/types").Talent> }) => {
         if (nextTalents[u.talentId]) {
           nextTalents[u.talentId] = { ...nextTalents[u.talentId], ...u.update };
         }
@@ -69,7 +60,7 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
   if (update && typeof update === "object" && !Array.isArray(update)) {
     const clonedRefs = new Set<unknown>([nextState]);
     for (const [path, value] of Object.entries(update)) {
-      const parts = path.split('.');
+      const parts = path.split(".");
       let current: Record<string, unknown> = nextState as unknown as Record<string, unknown>;
 
       for (let i = 0; i < parts.length - 1; i++) {
@@ -105,7 +96,11 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
       if (acquirerId === "player") {
         const mergedVault = nextState.ip.vault.map((asset) => {
           if (asset.ownerStudioId === mergedRivalId) {
-            return { ...asset, rightsOwner: "STUDIO" as const, ownerStudioId: undefined } as import("@/engine/types").IPAsset;
+            return {
+              ...asset,
+              rightsOwner: "STUDIO" as const,
+              ownerStudioId: undefined,
+            } as import("@/engine/types").IPAsset;
           }
           return asset;
         });
@@ -155,7 +150,10 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
   if (payload["market.opportunities"]) {
     nextState = {
       ...nextState,
-      market: { ...nextState.market, opportunities: payload["market.opportunities"] as import("@/engine/types").Opportunity[] },
+      market: {
+        ...nextState.market,
+        opportunities: payload["market.opportunities"] as import("@/engine/types").Opportunity[],
+      },
     };
   }
 
@@ -254,9 +252,8 @@ export function handleRivalUpdated(state: GameState, impact: StateImpact): GameS
 }
 
 export function handleMergerOffered(state: GameState, impact: StateImpact): GameState {
-  const merger = (
-    impact.payload as { merger?: import("@/engine/types/studio.types").MergerOffer }
-  ).merger;
+  const merger = (impact.payload as { merger?: import("@/engine/types/studio.types").MergerOffer })
+    .merger;
   if (!merger) return state;
   return {
     ...state,

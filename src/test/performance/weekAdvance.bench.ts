@@ -1,6 +1,6 @@
-import { describe, bench } from 'vitest';
-import { advanceWeek } from '@/engine/core/weekAdvance';
-import { GameState, Project, Contract } from '@/engine/types';
+import { describe, bench } from "vitest";
+import { advanceWeek } from "@/engine/core/weekAdvance";
+import { GameState, Project, Contract } from "@/engine/types";
 
 function createMockState(projectCount: number, contractsPerProject: number): GameState {
   const projects: Record<string, Project> = {};
@@ -11,7 +11,7 @@ function createMockState(projectCount: number, contractsPerProject: number): Gam
     projects[projectId] = {
       id: projectId,
       title: `Project ${i}`,
-      state: 'production',
+      state: "production",
       weeklyCost: 100,
       budget: 1000,
       weeksInPhase: 0,
@@ -21,11 +21,11 @@ function createMockState(projectCount: number, contractsPerProject: number): Gam
       weeklyRevenue: 0,
       releaseWeek: null,
       buzz: 0,
-      format: 'film',
-      genre: 'Drama',
-      budgetTier: 'mid',
-      targetAudience: 'General',
-      flavor: '',
+      format: "film",
+      genre: "Drama",
+      budgetTier: "mid",
+      targetAudience: "General",
+      flavor: "",
     } as unknown as Project;
 
     for (let j = 0; j < contractsPerProject; j++) {
@@ -42,30 +42,30 @@ function createMockState(projectCount: number, contractsPerProject: number): Gam
   return {
     week: 1,
     studio: {
-        name: 'Test Studio',
-        archetype: 'indie',
-        prestige: 50,
-        internal: {
-            projects,
-            contracts,
-        }
+      name: "Test Studio",
+      archetype: "indie",
+      prestige: 50,
+      internal: {
+        projects,
+        contracts,
+      },
     },
     market: {
-        opportunities: [],
-        buyers: [],
+      opportunities: [],
+      buyers: [],
     },
     industry: {
-        rivals: [],
-        newsHistory: [],
-        families: [],
-        agencies: [],
-        agents: [],
-        talentPool: {},
-        awards: [],
+      rivals: [],
+      newsHistory: [],
+      families: [],
+      agencies: [],
+      agents: [],
+      talentPool: {},
+      awards: [],
     },
     culture: { genrePopularity: {} },
     finance: { cash: 1000000, ledger: [] },
-    history: []
+    history: [],
   } as unknown as GameState;
 }
 
@@ -73,8 +73,11 @@ const PROJECT_COUNT = 100;
 const CONTRACTS_PER_PROJECT = 50;
 const state = createMockState(PROJECT_COUNT, CONTRACTS_PER_PROJECT);
 
-describe('advanceWeek Performance', () => {
-  bench(`advanceWeek with ${PROJECT_COUNT} projects and ${PROJECT_COUNT * CONTRACTS_PER_PROJECT} total contracts`, () => {
-    advanceWeek(state, rng);
-  });
+describe("advanceWeek Performance", () => {
+  bench(
+    `advanceWeek with ${PROJECT_COUNT} projects and ${PROJECT_COUNT * CONTRACTS_PER_PROJECT} total contracts`,
+    () => {
+      advanceWeek(state, rng);
+    }
+  );
 });

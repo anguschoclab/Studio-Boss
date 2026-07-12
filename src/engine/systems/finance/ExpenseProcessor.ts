@@ -1,4 +1,4 @@
-import { Project } from '../../types';
+import { Project } from "../../types";
 
 /**
  * ExpenseProcessor handles all loss-related calculations for the studio.
@@ -10,12 +10,12 @@ export class ExpenseProcessor {
    */
   static calculateStudioBurn(level: number, activeProjectsCount: number): number {
     const baseRent = 500000; // $500k base weekly overhead
-    
+
     // Non-linear scaling: Base * (1.25 ^ (Level-1))
     const levelScale = Math.pow(1.25, Math.max(0, level - 1));
     const projectPenalty = 75000; // $75k penalty per active project
-    
-    const burn = (baseRent * levelScale) + (activeProjectsCount * projectPenalty);
+
+    const burn = baseRent * levelScale + activeProjectsCount * projectPenalty;
     return Math.round(burn);
   }
 
@@ -24,7 +24,7 @@ export class ExpenseProcessor {
    */
   static calculateDebtInterest(cash: number, debtRate: number): number {
     if (cash >= 0) return 0;
-    
+
     // Weekly interest = (Balance * AnnualRate) / 52
     const weeklyRate = debtRate / 52;
     return Math.abs(Math.round(cash * weeklyRate));
@@ -35,7 +35,7 @@ export class ExpenseProcessor {
    */
   static calculateSavingsYield(cash: number, savingsYield: number): number {
     if (cash <= 0) return 0;
-    
+
     // Weekly yield = (Balance * AnnualRate) / 52
     const weeklyRate = savingsYield / 52;
     return Math.round(cash * weeklyRate);
@@ -46,12 +46,12 @@ export class ExpenseProcessor {
    */
   static calculateMarketingBurn(projects: Project[]): number {
     let totalBurn = 0;
-    
+
     projects.forEach((p) => {
-      if (p.state === 'marketing' && p.marketingBudget) {
+      if (p.state === "marketing" && p.marketingBudget) {
         // Marketing budget is usually spent over 4-8 weeks
         // Weekly burn is a fraction of the total budget
-        const weeklyMarketingBurn = p.marketingBudget / 6; 
+        const weeklyMarketingBurn = p.marketingBudget / 6;
         totalBurn += weeklyMarketingBurn;
       }
     });
@@ -64,9 +64,9 @@ export class ExpenseProcessor {
    */
   static calculateProductionBurn(projects: Project[]): number {
     let totalBurn = 0;
-    
+
     projects.forEach((p) => {
-      if (p.state === 'production') {
+      if (p.state === "production") {
         totalBurn += p.weeklyCost;
       }
     });
@@ -79,22 +79,20 @@ export class ExpenseProcessor {
    */
   static calculateConsolidatedExpenses(
     projects: Project[],
-    state: import('../../types').GameState,
-    market: import('../../types/state.types').FinancialMarketState,
+    state: import("../../types").GameState,
+    market: import("../../types/state.types").FinancialMarketState,
     archetype: string,
     cash: number,
     prestige: number,
-    pacts: import('../../types').TalentPact[]
+    pacts: import("../../types").TalentPact[]
   ) {
     // Determine active projects for overhead (exclude released/archived/completed)
-    const activeProjects = projects.filter(p => 
-        p.state !== 'released' && 
-        p.state !== 'archived' && 
-        p.state !== 'completed'
+    const activeProjects = projects.filter(
+      (p) => p.state !== "released" && p.state !== "archived" && p.state !== "completed"
     );
 
     // Get studio level from archetype
-    const studioLevel = archetype === 'major' ? 3 : archetype === 'mid-tier' ? 2 : 1;
+    const studioLevel = archetype === "major" ? 3 : archetype === "mid-tier" ? 2 : 1;
 
     const overhead = this.calculateStudioBurn(studioLevel, activeProjects.length);
     const production = this.calculateProductionBurn(projects);
@@ -103,11 +101,11 @@ export class ExpenseProcessor {
     const pactsCost = pacts.reduce((acc, p) => acc + (p.weeklyFee || 0), 0);
 
     return {
-        overhead,
-        production,
-        marketing,
-        interest,
-        pacts: pactsCost
+      overhead,
+      production,
+      marketing,
+      interest,
+      pacts: pactsCost,
     };
   }
 }

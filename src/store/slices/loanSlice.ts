@@ -1,6 +1,6 @@
-import { StateCreator } from 'zustand';
-import { GameStore } from '../gameStore';
-import { createLoan, Loan } from '@/engine/systems/finance/LoanSystem';
+import { StateCreator } from "zustand";
+import { GameStore } from "../gameStore";
+import { createLoan, Loan } from "@/engine/systems/finance/LoanSystem";
 
 // ---------------------------------------------------------------------------
 // Slice interface
@@ -16,7 +16,6 @@ export interface LoanSlice {
 // ---------------------------------------------------------------------------
 
 export const createLoanSlice: StateCreator<GameStore, [], [], LoanSlice> = (set, get) => ({
-
   // -------------------------------------------------------------------------
   // addLoan: generate a Loan, add it to studio.loans, credit cash
   // -------------------------------------------------------------------------

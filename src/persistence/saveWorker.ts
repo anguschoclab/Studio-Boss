@@ -5,20 +5,22 @@
  * disk I/O using Origin Private File System (OPFS).
  */
 
+import { parseAndValidate } from './saveSchema';
+
 self.onmessage = async (e: MessageEvent) => {
   const { type, slotId, state, requestId } = e.data;
 
   try {
-    if (type === 'SAVE_GAME') {
+    if (type === "SAVE_GAME") {
       await handleSave(slotId, state);
-      self.postMessage({ type: 'SAVE_SUCCESS', slotId, requestId });
-    } else if (type === 'LOAD_GAME') {
+      self.postMessage({ type: "SAVE_SUCCESS", slotId, requestId });
+    } else if (type === "LOAD_GAME") {
       const loadedState = await handleLoad(slotId);
-      self.postMessage({ type: 'LOAD_SUCCESS', slotId, state: loadedState, requestId });
+      self.postMessage({ type: "LOAD_SUCCESS", slotId, state: loadedState, requestId });
     }
   } catch (error) {
     console.error(`SaveWorker Error [${type}]:`, error);
-    self.postMessage({ type: 'ERROR', message: (error as Error).message, requestId });
+    self.postMessage({ type: "ERROR", message: (error as Error).message, requestId });
   }
 };
 
@@ -43,7 +45,7 @@ async function handleSave(slotId: string | number, state: any) {
   }
 }
 
-async function handleLoad(slotId: string | number) {
+export async function handleLoad(slotId: string | number) {
   const root = await navigator.storage.getDirectory();
   const fileHandle = await root.getFileHandle(`slot_${slotId}.sb`);
 
@@ -56,7 +58,11 @@ async function handleLoad(slotId: string | number) {
     accessHandle.read(buffer, { at: 0 });
 
     const decoder = new TextDecoder();
-    return JSON.parse(decoder.decode(buffer));
+    const result = parseAndValidate(decoder.decode(buffer));
+    if (!result.success) {
+      throw new Error(`Save validation failed: ${result.error}`);
+    }
+    return result.data;
   } finally {
     accessHandle.close();
   }

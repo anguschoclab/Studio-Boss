@@ -1,81 +1,81 @@
-import { GameState, StateImpact, WeekSummary, GameEvent } from '../types';
-import { RandomGenerator } from '../utils/rng';
-import { applyImpacts } from '../core/impactReducer';
-import { setDeterministicSeed } from '../utils';
+import { GameState, StateImpact, WeekSummary, GameEvent } from "../types";
+import { RandomGenerator } from "../utils/rng";
+import { applyImpacts } from "../core/impactReducer";
+import { setDeterministicSeed } from "../utils";
 
 // System Imports
-import { tickProduction } from '../systems/productionEngine';
-import { tickScriptDevelopment } from '../systems/production/ScriptDraftingSystem';
-import { tickPlatforms } from '../systems/television/platformEngine';
-import { tickAIMinds } from '../systems/ai/motivationEngine';
-import { tickAgencies } from '../systems/ai/AgentBrain';
-import { tickAuctions } from '../systems/ai/biddingEngine';
-import { tickWorldEvents } from '../systems/ai/WorldSimulator';
-import { tickTelevision } from '../systems/television/televisionTick';
-import { tickFinance } from '../systems/finance/financeTick';
-import { advanceTrends } from '../systems/trends';
-import { advanceMarketEvents } from '../systems/marketEvents';
-import { advanceScandals, generateScandals } from '../systems/scandals';
-import { advanceBuyers } from '../systems/buyerMergers';
+import { tickProduction } from "../systems/productionEngine";
+import { tickScriptDevelopment } from "../systems/production/ScriptDraftingSystem";
+import { tickPlatforms } from "../systems/television/platformEngine";
+import { tickAIMinds } from "../systems/ai/motivationEngine";
+import { tickAgencies } from "../systems/ai/AgentBrain";
+import { tickAuctions } from "../systems/ai/biddingEngine";
+import { tickWorldEvents } from "../systems/ai/WorldSimulator";
+import { tickTelevision } from "../systems/television/televisionTick";
+import { tickFinance } from "../systems/finance/financeTick";
+import { advanceTrends } from "../systems/trends";
+import { advanceMarketEvents } from "../systems/marketEvents";
+import { advanceScandals, generateScandals } from "../systems/scandals";
+import { advanceBuyers } from "../systems/buyerMergers";
 
 // New Industry Systems
-import { tickVerticalIntegration } from '../systems/industry/VerticalIntegrationProcessor';
-import { tickIndustryUpstarts } from '../systems/industry/IndustryUpstarts';
-import { tickConsolidation } from '../systems/industry/ConsolidationEngine';
-import { tickRivalSpawner, tickHardBankruptcy } from '../systems/industry/RivalSpawner';
-import { tickAntitrust } from '../systems/industry/Antitrust';
-import { tickDistressCascade, tickDistressedOffers } from '../systems/industry/DistressCascade';
-import { tickShingleSystem } from '../systems/deals/ShingleSystem';
-import { tickShinglePitchRouter } from '../systems/deals/ShinglePitchRouter';
-import { InterestRateSimulator } from '../systems/market/InterestRateSimulator';
-import { tickLoans } from '../systems/finance/LoanSystem';
-import { tickReleaseStrategy } from '../systems/ReleaseStrategySystem';
-import { tickStudioIdentity } from '../systems/StudioIdentitySystem';
-import { checkAchievements } from '../systems/AchievementsSystem';
+import { tickVerticalIntegration } from "../systems/industry/VerticalIntegrationProcessor";
+import { tickIndustryUpstarts } from "../systems/industry/IndustryUpstarts";
+import { tickConsolidation } from "../systems/industry/ConsolidationEngine";
+import { tickRivalSpawner, tickHardBankruptcy } from "../systems/industry/RivalSpawner";
+import { tickAntitrust } from "../systems/industry/Antitrust";
+import { tickDistressCascade, tickDistressedOffers } from "../systems/industry/DistressCascade";
+import { tickShingleSystem } from "../systems/deals/ShingleSystem";
+import { tickShinglePitchRouter } from "../systems/deals/ShinglePitchRouter";
+import { InterestRateSimulator } from "../systems/market/InterestRateSimulator";
+import { tickLoans } from "../systems/finance/LoanSystem";
+import { tickReleaseStrategy } from "../systems/ReleaseStrategySystem";
+import { tickStudioIdentity } from "../systems/StudioIdentitySystem";
+import { checkAchievements } from "../systems/AchievementsSystem";
 
 // New Game Systems
-import { tickPostProduction } from '../systems/PostProductionSystem';
-import { tickMorale } from '../systems/talent/MoraleTick';
+import { tickPostProduction } from "../systems/PostProductionSystem";
+import { tickMorale } from "../systems/talent/MoraleTick";
 
 // Talent Lifecycle Systems
-import { tickRelationshipSystem } from '../systems/talent/RelationshipSystem';
-import { tickCliqueSystem } from '../systems/talent/CliqueSystem';
-import { tickTalentDiscoverySystem } from '../systems/talent/TalentDiscoverySystem';
-import { tickDeathSystem } from '../systems/talent/DeathSystem';
-import { tickDynastySystem } from '../systems/talent/DynastySystem';
-import { tickOrganicEvents } from '../systems/talent/OrganicEventEnhancer';
-import { tickMarketingPromotionSystem } from '../systems/talent/MarketingPromotionSystem';
-import { tickBiographyGenerator } from '../systems/talent/BiographyGenerator';
-import { tickProductionEnhancementSystem } from '../systems/talent/ProductionEnhancementSystem';
-import { tickMarketing } from '../systems/marketing/MarketingSystem';
-import { tickTVRecommendationSystem } from '../systems/talent/TVRecommendationSystem';
+import { tickRelationshipSystem } from "../systems/talent/RelationshipSystem";
+import { tickCliqueSystem } from "../systems/talent/CliqueSystem";
+import { tickTalentDiscoverySystem } from "../systems/talent/TalentDiscoverySystem";
+import { tickDeathSystem } from "../systems/talent/DeathSystem";
+import { tickDynastySystem } from "../systems/talent/DynastySystem";
+import { tickOrganicEvents } from "../systems/talent/OrganicEventEnhancer";
+import { tickMarketingPromotionSystem } from "../systems/talent/MarketingPromotionSystem";
+import { tickBiographyGenerator } from "../systems/talent/BiographyGenerator";
+import { tickProductionEnhancementSystem } from "../systems/talent/ProductionEnhancementSystem";
+import { tickMarketing } from "../systems/marketing/MarketingSystem";
+import { tickTVRecommendationSystem } from "../systems/talent/TVRecommendationSystem";
 
 // Production Support Systems
-import { checkAndTriggerCrisis } from '../systems/crises';
-import { advanceDeals } from '../systems/deals';
-import { advanceRivals } from '../systems/rivals';
-import { tickRivalProduction } from '../systems/rivals/rivalProduction';
-import { runAwardsCeremony } from '../systems/awards/CeremonyRunner';
-import { processRazzies } from '../systems/awards/RazzieProcessor';
-import { tickPilots } from '../systems/television/pilotEvaluator';
-import { runUpfronts } from '../systems/television/upfrontsEngine';
+import { checkAndTriggerCrisis } from "../systems/crises";
+import { advanceDeals } from "../systems/deals";
+import { advanceRivals } from "../systems/rivals";
+import { tickRivalProduction } from "../systems/rivals/rivalProduction";
+import { runAwardsCeremony } from "../systems/awards/CeremonyRunner";
+import { processRazzies } from "../systems/awards/RazzieProcessor";
+import { tickPilots } from "../systems/television/pilotEvaluator";
+import { runUpfronts } from "../systems/television/upfrontsEngine";
 
 // AI Competition Systems
-import { tickTalentCompetition } from '../systems/ai/bidding/CompetitionModule';
-import { runFestivalMarket } from '../systems/festivals/festivalAuctionEngine';
+import { tickTalentCompetition } from "../systems/ai/bidding/CompetitionModule";
+import { runFestivalMarket } from "../systems/festivals/festivalAuctionEngine";
 
 // IP Systems
-import { tickIPVault } from '../systems/ip/IPVaultManager';
-import { advanceIPRights } from '../systems/ipRetention';
-import { updateFranchiseHubs } from '../systems/ip/franchiseCoordinator';
-import { AnnualScans } from './filters/AnnualScans';
+import { tickIPVault } from "../systems/ip/IPVaultManager";
+import { advanceIPRights } from "../systems/ipRetention";
+import { updateFranchiseHubs } from "../systems/ip/franchiseCoordinator";
+import { AnnualScans } from "./filters/AnnualScans";
 
 // Market Systems
-import { advanceRumors } from '../systems/rumors';
+import { advanceRumors } from "../systems/rumors";
 
 // Rival Systems
-import { RivalRevenueCalculator } from '../systems/rivals/RivalRevenueCalculator';
-import { getBudgetInflation } from '../systems/industry/MacroCycle';
+import { RivalRevenueCalculator } from "../systems/rivals/RivalRevenueCalculator";
+import { getBudgetInflation } from "../systems/industry/MacroCycle";
 
 /**
  * Studio Boss - Simulation Tick Context
@@ -98,7 +98,11 @@ export class WeekCoordinator {
   /**
    * Main entry point for the weekly simulation tick.
    */
-  static execute(state: GameState): { newState: GameState; summary: WeekSummary; impacts: StateImpact[] } {
+  static execute(state: GameState): {
+    newState: GameState;
+    summary: WeekSummary;
+    impacts: StateImpact[];
+  } {
     // 1. Preparation Phase (The Valve)
     const tickSeed = (state.gameSeed || 12345) + (state.tickCount || 0);
     setDeterministicSeed(tickSeed);
@@ -107,9 +111,9 @@ export class WeekCoordinator {
       week: state.week + 1,
       tickCount: (state.tickCount || 0) + 1,
       rng: new RandomGenerator(tickSeed),
-      timestamp: 1713552000000 + (state.week * 604800000), // Deterministic: 2024-04-20 + weeks
+      timestamp: 1713552000000 + state.week * 604800000, // Deterministic: 2024-04-20 + weeks
       impacts: [],
-      events: []
+      events: [],
     };
 
     // 2. The Filter Pipeline
@@ -123,8 +127,8 @@ export class WeekCoordinator {
 
     // 2.5 Weekly Summary Trigger
     context.impacts.push({
-      type: 'MODAL_TRIGGERED',
-      payload: { modalType: 'SUMMARY' }
+      type: "MODAL_TRIGGERED",
+      payload: { modalType: "SUMMARY" },
     });
 
     // 2.6 Achievements Check
@@ -139,7 +143,11 @@ export class WeekCoordinator {
     const newlyReleasedProjects = [];
     for (const id in nextState.entities.projects) {
       const p = nextState.entities.projects[id];
-      if (p.state === 'released' && (p.releaseWeek === context.week || p.releaseWeek === context.week - 1) && !p.franchiseId) {
+      if (
+        p.state === "released" &&
+        (p.releaseWeek === context.week || p.releaseWeek === context.week - 1) &&
+        !p.franchiseId
+      ) {
         newlyReleasedProjects.push(p);
       }
     }
@@ -153,11 +161,11 @@ export class WeekCoordinator {
     // MODAL_TRIGGERED → GREENLIGHT_DECISION into the UI modal queue.
     for (const id in nextState.entities.projects) {
       const p = nextState.entities.projects[id];
-      if (p.state === 'needs_greenlight') {
+      if (p.state === "needs_greenlight") {
         context.impacts.push({
-          type: 'MODAL_TRIGGERED',
-          payload: { modalType: 'GREENLIGHT_DECISION', projectId: p.id }
-        } as unknown as import('../types/state.types').StateImpact);
+          type: "MODAL_TRIGGERED",
+          payload: { modalType: "GREENLIGHT_DECISION", projectId: p.id },
+        } as unknown as import("../types/state.types").StateImpact);
       }
     }
 
@@ -165,13 +173,13 @@ export class WeekCoordinator {
       ...nextState,
       week: context.week,
       tickCount: context.tickCount,
-      eventHistory: [...(state.eventHistory || []), ...context.events].slice(-500)
+      eventHistory: [...(state.eventHistory || []), ...context.events].slice(-500),
     };
 
     return {
       newState: finalizedState,
       summary: this.buildSummary(state, finalizedState, context),
-      impacts: context.impacts
+      impacts: context.impacts,
     };
   }
 
@@ -182,7 +190,7 @@ export class WeekCoordinator {
     context.impacts.push(...advanceTrends(state.market.trends || []));
     context.impacts.push(...advanceMarketEvents(state));
     context.impacts.push(advanceBuyers(state));
-    
+
     // New Industry Filters
     context.impacts.push(...tickVerticalIntegration(state, context.rng));
     context.impacts.push(...tickIndustryUpstarts(state));
@@ -227,7 +235,7 @@ export class WeekCoordinator {
     // ⚡ The Framerate Fanatic: Replaced Object.values() with a direct for...in loop
     for (const id in state.entities.projects) {
       const project = state.entities.projects[id];
-      if (project.state === 'production') {
+      if (project.state === "production") {
         const crisis = checkAndTriggerCrisis(project);
         if (crisis) context.impacts.push(crisis);
       }
@@ -237,15 +245,15 @@ export class WeekCoordinator {
     // ⚡ The Framerate Fanatic: Replaced Object.values() with a direct for...in loop
     for (const id in state.entities.projects) {
       const project = state.entities.projects[id];
-      if (project.state === 'development') {
+      if (project.state === "development") {
         const result = tickScriptDevelopment(project, context.rng);
         if (result.project !== project) {
           context.impacts.push({
-            type: 'PROJECT_UPDATED',
+            type: "PROJECT_UPDATED",
             payload: {
               projectId: project.id,
-              update: result.project
-            }
+              update: result.project,
+            },
           });
           if (result.impact) context.impacts.push(result.impact);
         }
@@ -328,15 +336,15 @@ export class WeekCoordinator {
     // Loan payments + bankruptcy check
     context.impacts.push(...tickLoans(state, context.rng));
     // Decrement weeksRemaining on loans and remove paid-off ones
-    const currentLoans: import('@/engine/types').Loan[] = state.studio.loans || [];
+    const currentLoans: import("@/engine/types").Loan[] = state.studio.loans || [];
     if (currentLoans.length > 0) {
       const updatedLoans = currentLoans
         .map((l) => ({ ...l, weeksRemaining: l.weeksRemaining - 1 }))
         .filter((l) => l.weeksRemaining > 0);
       context.impacts.push({
-        type: 'SYSTEM_TICK',
-        payload: { __studioUpdate: { loans: updatedLoans } }
-      } as unknown as import('@/engine/types').StateImpact);
+        type: "SYSTEM_TICK",
+        payload: { __studioUpdate: { loans: updatedLoans } },
+      } as unknown as import("@/engine/types").StateImpact);
     }
 
     // Rival weekly revenue + overhead drain. Opening-weekend gross already bakes
@@ -346,8 +354,14 @@ export class WeekCoordinator {
     const rivalsMap = state.entities.rivals || {};
     for (const id in rivalsMap) {
       const rival = rivalsMap[id];
-      const revenue = RivalRevenueCalculator.calculateWeeklyRevenue(rival, context.week, context.rng, state);
-      const archetypeMult = rival.archetype === 'major' ? 2.2 : rival.archetype === 'mid-tier' ? 1.0 : 0.4;
+      const revenue = RivalRevenueCalculator.calculateWeeklyRevenue(
+        rival,
+        context.week,
+        context.rng,
+        state
+      );
+      const archetypeMult =
+        rival.archetype === "major" ? 2.2 : rival.archetype === "mid-tier" ? 1.0 : 0.4;
       const overhead = 80_000 * archetypeMult * inflation;
       const net = revenue.total - overhead;
       if (net !== 0) {
@@ -355,14 +369,14 @@ export class WeekCoordinator {
         history.push({ week: context.week, revenue: revenue.total, boxOffice: revenue.boxOffice });
         if (history.length > 52) history = history.slice(-52);
         context.impacts.push({
-          type: 'RIVAL_UPDATED',
+          type: "RIVAL_UPDATED",
           payload: {
             rivalId: rival.id,
             update: {
               cash: (rival.cash || 0) + net,
               revenueHistory: history,
-            }
-          }
+            },
+          },
         });
       }
     }
@@ -377,47 +391,56 @@ export class WeekCoordinator {
     let total = 0;
     for (const id in rivalsMap) {
       const rival = rivalsMap[id];
-      const archetypeMult = rival.archetype === 'major' ? 2.2 : rival.archetype === 'mid-tier' ? 1.0 : 0.4;
+      const archetypeMult =
+        rival.archetype === "major" ? 2.2 : rival.archetype === "mid-tier" ? 1.0 : 0.4;
       total += 5_000_000 * archetypeMult;
     }
     return total;
   }
 
-  private static buildSummary(before: GameState, after: GameState, context: TickContext): WeekSummary {
-    const newsImpacts = context.impacts.filter(i => i.type === 'NEWS_ADDED');
-    const ledgerImpact = context.impacts.find(i => i.type === 'LEDGER_UPDATED');
-    
+  private static buildSummary(
+    before: GameState,
+    after: GameState,
+    context: TickContext
+  ): WeekSummary {
+    const newsImpacts = context.impacts.filter((i) => i.type === "NEWS_ADDED");
+    const ledgerImpact = context.impacts.find((i) => i.type === "LEDGER_UPDATED");
+
     let totalRevenue = 0;
     let totalCosts = 0;
 
-    if (ledgerImpact && ledgerImpact.type === 'LEDGER_UPDATED') {
-       const payload = ledgerImpact.payload as import('../types/state.types').LedgerImpact['payload'];
-       const report = payload.report;
-       totalRevenue = report.revenue.boxOffice + report.revenue.distribution + report.revenue.other;
-       totalCosts = report.expenses.production + report.expenses.marketing + report.expenses.overhead;
+    if (ledgerImpact && ledgerImpact.type === "LEDGER_UPDATED") {
+      const payload =
+        ledgerImpact.payload as import("../types/state.types").LedgerImpact["payload"];
+      const report = payload.report;
+      totalRevenue = report.revenue.boxOffice + report.revenue.distribution + report.revenue.other;
+      totalCosts =
+        report.expenses.production + report.expenses.marketing + report.expenses.overhead;
     }
 
     const projectUpdates = context.impacts
-      .filter((i): i is import('../types/state.types').ProjectUpdateImpact => i.type === 'PROJECT_UPDATED')
-      .map(i => i.payload.projectId);
+      .filter(
+        (i): i is import("../types/state.types").ProjectUpdateImpact => i.type === "PROJECT_UPDATED"
+      )
+      .map((i) => i.payload.projectId);
 
     // Capture uiNotifications from impacts for narrative events
-    const narrativeEvents: import('../types/engine.types').NarrativeEvent[] = [];
-    context.impacts.forEach(impact => {
+    const narrativeEvents: import("../types/engine.types").NarrativeEvent[] = [];
+    context.impacts.forEach((impact) => {
       if (impact.uiNotifications) {
-        impact.uiNotifications.forEach(notification => {
+        impact.uiNotifications.forEach((notification) => {
           narrativeEvents.push({
-            type: notification.startsWith('CRISIS') ? 'crisis' : 'general',
+            type: notification.startsWith("CRISIS") ? "crisis" : "general",
             title: notification,
             description: notification,
-            severity: notification.startsWith('CRISIS') ? 'high' : 'low'
+            severity: notification.startsWith("CRISIS") ? "high" : "low",
           });
         });
       }
     });
 
     // Quiet week detection
-    const isQuietWeek = 
+    const isQuietWeek =
       projectUpdates.length === 0 &&
       narrativeEvents.length === 0 &&
       newsImpacts.length <= 2 &&
@@ -431,19 +454,21 @@ export class WeekCoordinator {
       totalRevenue,
       totalCosts,
       projectUpdates: Array.from(new Set(projectUpdates)),
-      newHeadlines: newsImpacts.map(i => {
-        if (i.type !== 'NEWS_ADDED') return null;
-        const payload = i.payload as import('../types/state.types').NewsImpact['payload'];
-        return {
-          id: context.rng.uuid('news'),
-          text: payload.headline || 'Unknown Event',
-          week: context.week,
-          category: 'general' as import('../types/engine.types').HeadlineCategory
-        };
-      }).filter((h): h is import('../types/engine.types').Headline => h !== null),
-      events: context.events.map(e => e.title),
+      newHeadlines: newsImpacts
+        .map((i) => {
+          if (i.type !== "NEWS_ADDED") return null;
+          const payload = i.payload as import("../types/state.types").NewsImpact["payload"];
+          return {
+            id: context.rng.uuid("news"),
+            text: payload.headline || "Unknown Event",
+            week: context.week,
+            category: "general" as import("../types/engine.types").HeadlineCategory,
+          };
+        })
+        .filter((h): h is import("../types/engine.types").Headline => h !== null),
+      events: context.events.map((e) => e.title),
       narrativeEvents,
-      isQuietWeek
+      isQuietWeek,
     };
   }
 }

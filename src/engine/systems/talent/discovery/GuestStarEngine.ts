@@ -1,7 +1,7 @@
-import { GameState, Talent, Project, Contract } from '../../../types';
-import { RandomGenerator } from '../../../utils/rng';
-import { GuestStarBooking } from '../../../types/discovery.types';
-import { getContractsByProjectId } from '../../../utils';
+import { GameState, Talent, Project, Contract } from "../../../types";
+import { RandomGenerator } from "../../../utils/rng";
+import { GuestStarBooking } from "../../../types/discovery.types";
+import { getContractsByProjectId } from "../../../utils";
 
 // Guest star thresholds
 const MIN_STARMETER_FOR_GUEST = 60; // Must be somewhat famous
@@ -14,13 +14,20 @@ export function generateGuestStarBooking(
   rng: RandomGenerator
 ): GuestStarBooking | null {
   // Check if series has regular cast
-  const seriesContracts = getContractsByProjectId(state.entities.contractsByProjectId, state.entities.contracts, series.id);
+  const seriesContracts = getContractsByProjectId(
+    state.entities.contractsByProjectId,
+    state.entities.contracts,
+    series.id
+  );
 
   if (seriesContracts.length === 0) return null;
 
   // Determine role type
-  const roleTypes: Array<'cameo' | 'recurring_guest' | 'special_guest' | 'crossover'> = [
-    'cameo', 'cameo', 'recurring_guest', 'special_guest'
+  const roleTypes: Array<"cameo" | "recurring_guest" | "special_guest" | "crossover"> = [
+    "cameo",
+    "cameo",
+    "recurring_guest",
+    "special_guest",
   ];
   const roleType = rng.pick(roleTypes);
 
@@ -30,18 +37,23 @@ export function generateGuestStarBooking(
   const impact = Math.max(1, Math.min(20, baseImpact + chemistryBonus));
 
   // Cost based on talent tier and role
-  const baseCost = guestTalent.tier === 'A_LIST' ? 500000 :
-                   guestTalent.tier === 'B_LIST' ? 200000 :
-                   guestTalent.tier === 'C_LIST' ? 100000 : 50000;
-  const cost = baseCost * (roleType === 'cameo' ? 0.3 : 1);
+  const baseCost =
+    guestTalent.tier === "A_LIST"
+      ? 500000
+      : guestTalent.tier === "B_LIST"
+        ? 200000
+        : guestTalent.tier === "C_LIST"
+          ? 100000
+          : 50000;
+  const cost = baseCost * (roleType === "cameo" ? 0.3 : 1);
 
   // Fan reaction prediction
   const fanReactionRoll = rng.next();
-  let fanReaction: GuestStarBooking['fanReaction'] = 'positive';
-  if (fanReactionRoll < 0.05) fanReaction = 'negative';
-  else if (fanReactionRoll < 0.15) fanReaction = 'mixed';
+  let fanReaction: GuestStarBooking["fanReaction"] = "positive";
+  if (fanReactionRoll < 0.05) fanReaction = "negative";
+  else if (fanReactionRoll < 0.15) fanReaction = "mixed";
   else if (fanReactionRoll > 0.85 && guestTalent.starMeter && guestTalent.starMeter > 80) {
-    fanReaction = 'viral';
+    fanReaction = "viral";
   }
 
   // Get series details
@@ -50,7 +62,7 @@ export function generateGuestStarBooking(
   const episodeNumber = seriesDetails?.episodesOrdered || rng.rangeInt(1, 10);
 
   return {
-    id: rng.uuid('GST'),
+    id: rng.uuid("GST"),
     talentId: guestTalent.id,
     seriesId: series.id,
     episodeNumber,

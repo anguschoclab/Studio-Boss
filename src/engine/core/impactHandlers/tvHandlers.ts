@@ -1,4 +1,4 @@
-import { GameState, StateImpact } from '@/engine/types';
+import { GameState, StateImpact } from "@/engine/types";
 
 /**
  * TV-related impact handlers
@@ -49,7 +49,10 @@ export function handleTVRecommendationAccepted(state: GameState, impact: StateIm
   return state;
 }
 
-export function handleTVRecommendationStateUpdated(state: GameState, impact: StateImpact): GameState {
+export function handleTVRecommendationStateUpdated(
+  state: GameState,
+  impact: StateImpact
+): GameState {
   if (!impact.payload) return state;
   const { tvRecommendations } = impact.payload;
   if (!tvRecommendations) return state;

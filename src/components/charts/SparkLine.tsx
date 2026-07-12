@@ -1,6 +1,6 @@
-import React from 'react';
-import { LineChart, Line, ResponsiveContainer, YAxis } from 'recharts';
-import { cn } from '@/lib/utils';
+import React from "react";
+import { LineChart, Line, ResponsiveContainer, YAxis } from "recharts";
+import { cn } from "@/lib/utils";
 
 interface SparkLineProps {
   data: number[];
@@ -15,22 +15,22 @@ export const SparkLine: React.FC<SparkLineProps> = ({
   data,
   width = 120,
   height = 30,
-  color = 'hsl(var(--secondary))',
+  color = "hsl(var(--secondary))",
   showDots = false,
   className,
 }) => {
   if (!data || data.length === 0) return null;
 
   const chartData = data.map((value, index) => ({ index, value }));
-  const trend = data[data.length - 1] > data[0] ? 'up' : 'down';
-  const trendColor = trend === 'up' ? 'hsl(var(--success))' : 'hsl(var(--destructive))';
-  const finalColor = color === 'trend' ? trendColor : color;
+  const trend = data[data.length - 1] > data[0] ? "up" : "down";
+  const trendColor = trend === "up" ? "hsl(var(--success))" : "hsl(var(--destructive))";
+  const finalColor = color === "trend" ? trendColor : color;
 
   return (
-    <div className={cn('inline-block', className)} style={{ width, height }}>
+    <div className={cn("inline-block", className)} style={{ width, height }}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={chartData}>
-          <YAxis domain={['dataMin', 'dataMax']} hide />
+          <YAxis domain={["dataMin", "dataMax"]} hide />
           <Line
             type="monotone"
             dataKey="value"

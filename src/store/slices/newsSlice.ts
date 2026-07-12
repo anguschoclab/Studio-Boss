@@ -1,10 +1,10 @@
-import { StateCreator } from 'zustand';
-import { NewsEvent, Headline, NewsState } from '@/engine/types';
-import { GameStore } from '../gameStore';
+import { StateCreator } from "zustand";
+import { NewsEvent, Headline, NewsState } from "@/engine/types";
+import { GameStore } from "../gameStore";
 
 export interface NewsSlice {
   news: NewsState;
-  logNewsEvent: (event: Omit<NewsEvent, 'id' | 'week'>) => void;
+  logNewsEvent: (event: Omit<NewsEvent, "id" | "week">) => void;
   addHeadline: (headline: Partial<Headline>) => void;
 }
 
@@ -16,15 +16,15 @@ export const createNewsSlice: StateCreator<GameStore, [], [], NewsSlice> = (set,
   logNewsEvent: (event) => {
     set((s) => {
       if (!s.gameState) return s;
-      
+
       const history = s.gameState.industry.newsHistory || [];
       const newEvent = {
         ...event,
         id: `ne-${s.gameState.week}-${history.length}`,
         week: s.gameState.week,
-        type: event.type || 'STUDIO_EVENT',
-        headline: event.headline || '',
-        description: event.description || ''
+        type: event.type || "STUDIO_EVENT",
+        headline: event.headline || "",
+        description: event.description || "",
       } as NewsEvent;
 
       return {
@@ -32,9 +32,9 @@ export const createNewsSlice: StateCreator<GameStore, [], [], NewsSlice> = (set,
           ...s.gameState,
           industry: {
             ...s.gameState.industry,
-            newsHistory: [newEvent, ...history].slice(0, 100)
-          }
-        }
+            newsHistory: [newEvent, ...history].slice(0, 100),
+          },
+        },
       };
     });
   },
@@ -46,8 +46,8 @@ export const createNewsSlice: StateCreator<GameStore, [], [], NewsSlice> = (set,
       const newHeadline: Headline = {
         id: h.id || `hl-${s.gameState.week}-${s.news.headlines.length}`,
         week: h.week || s.gameState.week,
-        category: h.category || 'general',
-        text: h.text || '',
+        category: h.category || "general",
+        text: h.text || "",
       };
 
       const headlines = [newHeadline, ...s.news.headlines].slice(0, 50);
@@ -62,9 +62,9 @@ export const createNewsSlice: StateCreator<GameStore, [], [], NewsSlice> = (set,
           news: {
             ...s.gameState.news,
             headlines,
-          }
-        }
+          },
+        },
       };
     });
-  }
+  },
 });

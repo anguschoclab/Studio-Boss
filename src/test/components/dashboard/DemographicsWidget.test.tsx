@@ -1,17 +1,22 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { DemographicsWidget } from '@/components/dashboard/DemographicsWidget';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { DemographicsWidget } from "@/components/dashboard/DemographicsWidget";
 
 // In vitest we have to import vi from vitest, and then call vi.mock
 
-vi.mock('recharts', () => {
+vi.mock("recharts", () => {
   return {
     ResponsiveContainer: ({ children }: any) => <div>{children}</div>,
     BarChart: ({ data, children }: any) => (
       <div data-testid="mock-barchart">
         {data?.map((d: any, i: number) => (
-          <div key={i} data-testid={`mock-bar-${i}`} data-genre={d.genre} data-popularity={d.popularity}>
+          <div
+            key={i}
+            data-testid={`mock-bar-${i}`}
+            data-genre={d.genre}
+            data-popularity={d.popularity}
+          >
             {d.genre}: {d.popularity}
           </div>
         ))}
@@ -26,33 +31,33 @@ vi.mock('recharts', () => {
   };
 });
 
-vi.mock('@/components/ui/chart', () => ({
+vi.mock("@/components/ui/chart", () => ({
   ChartContainer: ({ children }: any) => <div data-testid="chart-container">{children}</div>,
   ChartTooltip: () => null,
   ChartTooltipContent: () => null,
 }));
 
 const mockUseGameStore = vi.fn();
-vi.mock('@/store/gameStore', () => ({
+vi.mock("@/store/gameStore", () => ({
   useGameStore: (selector: any) => mockUseGameStore(selector),
 }));
 
-vi.mock('zustand/react/shallow', () => ({
+vi.mock("zustand/react/shallow", () => ({
   useShallow: (fn: any) => fn,
 }));
 
-describe('DemographicsWidget', () => {
+describe("DemographicsWidget", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('renders null when culture state is missing', () => {
+  it("renders null when culture state is missing", () => {
     mockUseGameStore.mockReturnValue(undefined);
     const { container } = render(<DemographicsWidget />);
     expect(container.firstChild).toBeNull();
   });
 
-  it('renders component correctly and transforms data when culture state exists', () => {
+  it("renders component correctly and transforms data when culture state exists", () => {
     const mockCulture = {
       genrePopularity: {
         action: 0.85,
@@ -70,20 +75,22 @@ describe('DemographicsWidget', () => {
 
     render(<DemographicsWidget />);
 
-    expect(screen.getByText((c) => c.includes('Audience Vector') || c.includes('AUDIENCE'))).toBeInTheDocument();
+    expect(
+      screen.getByText((c) => c.includes("Audience Vector") || c.includes("AUDIENCE"))
+    ).toBeInTheDocument();
 
-    const chart = screen.getByTestId('mock-barchart');
+    const chart = screen.getByTestId("mock-barchart");
     expect(chart).toBeInTheDocument();
 
-    expect(screen.getByTestId('mock-bar-0')).toHaveAttribute('data-genre', 'HORROR');
-    expect(screen.getByTestId('mock-bar-0')).toHaveAttribute('data-popularity', '95');
+    expect(screen.getByTestId("mock-bar-0")).toHaveAttribute("data-genre", "HORROR");
+    expect(screen.getByTestId("mock-bar-0")).toHaveAttribute("data-popularity", "95");
 
-    expect(screen.getByTestId('mock-bar-1')).toHaveAttribute('data-genre', 'ACTION');
-    expect(screen.getByTestId('mock-bar-1')).toHaveAttribute('data-popularity', '85');
+    expect(screen.getByTestId("mock-bar-1")).toHaveAttribute("data-genre", "ACTION");
+    expect(screen.getByTestId("mock-bar-1")).toHaveAttribute("data-popularity", "85");
 
-    expect(screen.getByTestId('mock-bar-4')).toHaveAttribute('data-genre', 'SCIFI');
-    expect(screen.getByTestId('mock-bar-4')).toHaveAttribute('data-popularity', '35');
+    expect(screen.getByTestId("mock-bar-4")).toHaveAttribute("data-genre", "SCIFI");
+    expect(screen.getByTestId("mock-bar-4")).toHaveAttribute("data-popularity", "35");
 
-    expect(screen.queryByTestId('mock-bar-5')).toBeNull();
+    expect(screen.queryByTestId("mock-bar-5")).toBeNull();
   });
 });

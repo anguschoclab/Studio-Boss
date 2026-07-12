@@ -29,7 +29,7 @@ describe("calculateIPValue", () => {
     contentFlags: [],
     scriptHeat: 50,
     activeRoles: [],
-    scriptEvents: []
+    scriptEvents: [],
   } as Project;
 
   it("returns 10% of budget for early stages", () => {
@@ -51,20 +51,20 @@ describe("calculateIPValue", () => {
     const prestigeProject = {
       ...baseProject,
       state: "released" as const,
-      awardsProfile: { 
-          criticScore: 90,
-          audienceScore: 80,
-          prestigeScore: 85,
-          craftScore: 80,
-          culturalHeat: 40,
-          campaignStrength: 20,
-          controversyRisk: 5,
-          festivalBuzz: 0,
-          academyAppeal: 80,
-          guildAppeal: 75,
-          populistAppeal: 30,
-          indieCredibility: 95,
-          industryNarrativeScore: 60
+      awardsProfile: {
+        criticScore: 90,
+        audienceScore: 80,
+        prestigeScore: 85,
+        craftScore: 80,
+        culturalHeat: 40,
+        campaignStrength: 20,
+        controversyRisk: 5,
+        festivalBuzz: 0,
+        academyAppeal: 80,
+        guildAppeal: 75,
+        populistAppeal: 30,
+        indieCredibility: 95,
+        industryNarrativeScore: 60,
       } as AwardsProfile,
     } as Project;
     // 5000000 * 0.4 * 1.5 = 3000000

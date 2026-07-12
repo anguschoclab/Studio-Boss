@@ -1,10 +1,10 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { AIFilter } from '@/engine/services/filters/AIFilter';
-import { GameState } from '@/engine/types';
-import { RandomGenerator } from '@/engine/utils/rng';
-import { TickContext, WeekFilter } from '@/engine/services/filters/types';
+import { describe, it, expect, beforeEach } from "vitest";
+import { AIFilter } from "@/engine/services/filters/AIFilter";
+import { GameState } from "@/engine/types";
+import { RandomGenerator } from "@/engine/utils/rng";
+import { TickContext, WeekFilter } from "@/engine/services/filters/types";
 
-describe('AIFilter', () => {
+describe("AIFilter", () => {
   let filter: WeekFilter;
   let mockState: GameState;
   let mockContext: TickContext;
@@ -13,29 +13,29 @@ describe('AIFilter', () => {
   beforeEach(() => {
     filter = AIFilter;
     mockRng = new RandomGenerator(42);
-    
+
     mockState = {
       week: 1,
       tickCount: 1,
       gameSeed: 12345,
       studio: {
-        id: 'studio-1',
-        name: 'Test Studio',
-        archetype: 'major',
+        id: "studio-1",
+        name: "Test Studio",
+        archetype: "major",
         prestige: 50,
         internal: { projectHistory: [] },
       } as any,
       entities: {
         projects: {},
         rivals: {
-          'rival-1': {
-            id: 'rival-1',
-            name: 'Test Rival',
-            archetype: 'major',
+          "rival-1": {
+            id: "rival-1",
+            name: "Test Rival",
+            archetype: "major",
             cash: 50000000,
             prestige: 60,
             strength: 70,
-            currentMotivation: 'STABILITY',
+            currentMotivation: "STABILITY",
             motivationProfile: {
               financial: 50,
               prestige: 50,
@@ -93,22 +93,22 @@ describe('AIFilter', () => {
     };
   });
 
-  it('should have correct name', () => {
-    expect(filter.name).toBe('AIFilter');
+  it("should have correct name", () => {
+    expect(filter.name).toBe("AIFilter");
   });
 
-  it('should execute without errors', () => {
+  it("should execute without errors", () => {
     expect(() => filter.execute(mockState, mockContext)).not.toThrow();
   });
 
-  it('should generate impacts', () => {
+  it("should generate impacts", () => {
     filter.execute(mockState, mockContext);
     expect(mockContext.impacts.length).toBeGreaterThan(0);
   });
 
-  it('should update rival motivations', () => {
+  it("should update rival motivations", () => {
     filter.execute(mockState, mockContext);
-    const rivalUpdates = mockContext.impacts.filter(i => i.type === 'RIVAL_UPDATED');
+    const rivalUpdates = mockContext.impacts.filter((i) => i.type === "RIVAL_UPDATED");
     expect(rivalUpdates.length).toBeGreaterThan(0);
   });
 });

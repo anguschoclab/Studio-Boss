@@ -1,9 +1,9 @@
-import { useMemo } from 'react';
-import { useGameStore } from '@/store/gameStore';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Newspaper, Trophy, TrendingUp, MonitorPlay, Activity } from 'lucide-react';
-import { NewsEvent } from '@/engine/types';
+import { useMemo } from "react";
+import { useGameStore } from "@/store/gameStore";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Newspaper, Trophy, TrendingUp, MonitorPlay, Activity } from "lucide-react";
+import { NewsEvent } from "@/engine/types";
 
 interface MappedHeadline {
   id: string;
@@ -24,11 +24,15 @@ const OutletWidget = ({ title, description, icon, headlines, colorClass }: Outle
   <Card className="h-full flex flex-col border-border/40 bg-card/30 backdrop-blur-md shadow-lg transition-all duration-300 hover:shadow-xl hover:bg-card/40 hover:border-border/60">
     <CardHeader className="pb-3 border-b border-border/50">
       <div className="flex items-center gap-2">
-        <div className={`p-2 rounded-none ${colorClass} bg-opacity-20 flex items-center justify-center`}>
+        <div
+          className={`p-2 rounded-none ${colorClass} bg-opacity-20 flex items-center justify-center`}
+        >
           {icon}
         </div>
         <div>
-          <CardTitle className={`font-display tracking-tight text-lg ${colorClass}`}>{title}</CardTitle>
+          <CardTitle className={`font-display tracking-tight text-lg ${colorClass}`}>
+            {title}
+          </CardTitle>
           <CardDescription className="text-xs">{description}</CardDescription>
         </div>
       </div>
@@ -37,7 +41,10 @@ const OutletWidget = ({ title, description, icon, headlines, colorClass }: Outle
       {headlines.length > 0 ? (
         <div className="space-y-4">
           {headlines.map((h, i) => (
-            <div key={h.id || i} className="space-y-2 pb-3.5 border-b border-border/30 last:border-0 last:pb-0 hover:bg-muted/10 p-2 -mx-2 rounded-none transition-colors">
+            <div
+              key={h.id || i}
+              className="space-y-2 pb-3.5 border-b border-border/30 last:border-0 last:pb-0 hover:bg-muted/10 p-2 -mx-2 rounded-none transition-colors"
+            >
               <div className="flex justify-between items-start gap-2">
                 <span className="text-[10px] font-mono text-muted-foreground bg-muted px-1.5 py-0.5 rounded uppercase tracking-wider">
                   Wk {h.week}
@@ -62,16 +69,16 @@ const OutletWidget = ({ title, description, icon, headlines, colorClass }: Outle
 function mapNewsEvent(ev: NewsEvent): MappedHeadline {
   // Derive a category from the NewsEvent type
   const categoryMap: Record<string, string> = {
-    'CRISIS': 'general',
-    'AWARD': 'awards',
-    'RELEASE': 'market',
-    'STUDIO_EVENT': 'talent',
-    'RIVAL': 'rival',
+    CRISIS: "general",
+    AWARD: "awards",
+    RELEASE: "market",
+    STUDIO_EVENT: "talent",
+    RIVAL: "rival",
   };
   return {
     id: ev.id,
     week: ev.week,
-    category: categoryMap[ev.type] || 'general',
+    category: categoryMap[ev.type] || "general",
     text: ev.headline,
   };
 }
@@ -83,7 +90,7 @@ export const MediaPage = () => {
   // Combine both sources into a unified headline format
   const allHeadlines = useMemo(() => {
     const mapped: MappedHeadline[] = [
-      ...newsHeadlines.map(h => ({ id: h.id, week: h.week, category: h.category, text: h.text })),
+      ...newsHeadlines.map((h) => ({ id: h.id, week: h.week, category: h.category, text: h.text })),
       ...newsHistory.map(mapNewsEvent),
     ];
     // Sort by week descending
@@ -91,51 +98,87 @@ export const MediaPage = () => {
     return mapped;
   }, [newsHistory, newsHeadlines]);
 
-  const groupedHeadlines = useMemo(() => allHeadlines.reduce(
-    (acc, h) => {
-      const c = h.category;
-      if (c === 'talent') {
-        acc.deadline.push(h);
-        acc.insider.push(h);
-      } else if (c === 'rival') {
-        acc.deadline.push(h);
-        acc.market.push(h);
-      } else if (c === 'awards') {
-        acc.variety.push(h);
-      } else if (c === 'market') {
-        acc.variety.push(h);
-        acc.boxOffice.push(h);
-        acc.market.push(h);
-      } else if (c === 'general') {
-        acc.boxOffice.push(h);
-        acc.insider.push(h);
-      }
-      return acc;
-    },
-    {
-      deadline: [] as MappedHeadline[],
-      variety: [] as MappedHeadline[],
-      boxOffice: [] as MappedHeadline[],
-      market: [] as MappedHeadline[],
-      insider: [] as MappedHeadline[],
-    }
-  ), [allHeadlines]);
+  const groupedHeadlines = useMemo(
+    () =>
+      allHeadlines.reduce(
+        (acc, h) => {
+          const c = h.category;
+          if (c === "talent") {
+            acc.deadline.push(h);
+            acc.insider.push(h);
+          } else if (c === "rival") {
+            acc.deadline.push(h);
+            acc.market.push(h);
+          } else if (c === "awards") {
+            acc.variety.push(h);
+          } else if (c === "market") {
+            acc.variety.push(h);
+            acc.boxOffice.push(h);
+            acc.market.push(h);
+          } else if (c === "general") {
+            acc.boxOffice.push(h);
+            acc.insider.push(h);
+          }
+          return acc;
+        },
+        {
+          deadline: [] as MappedHeadline[],
+          variety: [] as MappedHeadline[],
+          boxOffice: [] as MappedHeadline[],
+          market: [] as MappedHeadline[],
+          insider: [] as MappedHeadline[],
+        }
+      ),
+    [allHeadlines]
+  );
 
   return (
     <div className="h-full flex flex-col space-y-6">
       <div>
-        <h2 className="text-3xl font-display font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-foreground to-foreground/70">The Trades</h2>
+        <h2 className="text-3xl font-display font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-foreground to-foreground/70">
+          The Trades
+        </h2>
         <p className="text-muted-foreground mt-2 text-sm max-w-2xl">
           Industry rumors, box office scoreboards, and awards buzz.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 auto-rows-fr pb-6">
-        <OutletWidget title="The Daily Lead" description="Fast, deal-driven, rumor-forward casting and rival scoops." icon={<Activity className="w-5 h-5 text-destructive" />} headlines={groupedHeadlines.deadline} colorClass="text-destructive" />
-        <OutletWidget title="Showbiz Weekly" description="Institutional awards-literate coverage and prestige framing." icon={<Trophy className="w-5 h-5 text-primary" />} headlines={groupedHeadlines.variety} colorClass="text-primary" />
-        <OutletWidget title="Box Office Bulletin" description="Specialized reporting for weekend box office and TV ratings." icon={<TrendingUp className="w-5 h-5 text-green-500" />} headlines={groupedHeadlines.boxOffice} colorClass="text-green-500" />
-        <OutletWidget title="Global Screen Report" description="Sales, festivals, and worldwide commercial temperature." icon={<MonitorPlay className="w-5 h-5 text-blue-400" />} headlines={groupedHeadlines.market} colorClass="text-blue-400" />
-        <OutletWidget title="Hollywood Insider" description="Talent profiles, behind-the-scenes friction, and ecosystem power lists." icon={<Newspaper className="w-5 h-5 text-orange-400" />} headlines={groupedHeadlines.insider} colorClass="text-orange-400" />
+        <OutletWidget
+          title="The Daily Lead"
+          description="Fast, deal-driven, rumor-forward casting and rival scoops."
+          icon={<Activity className="w-5 h-5 text-destructive" />}
+          headlines={groupedHeadlines.deadline}
+          colorClass="text-destructive"
+        />
+        <OutletWidget
+          title="Showbiz Weekly"
+          description="Institutional awards-literate coverage and prestige framing."
+          icon={<Trophy className="w-5 h-5 text-primary" />}
+          headlines={groupedHeadlines.variety}
+          colorClass="text-primary"
+        />
+        <OutletWidget
+          title="Box Office Bulletin"
+          description="Specialized reporting for weekend box office and TV ratings."
+          icon={<TrendingUp className="w-5 h-5 text-green-500" />}
+          headlines={groupedHeadlines.boxOffice}
+          colorClass="text-green-500"
+        />
+        <OutletWidget
+          title="Global Screen Report"
+          description="Sales, festivals, and worldwide commercial temperature."
+          icon={<MonitorPlay className="w-5 h-5 text-blue-400" />}
+          headlines={groupedHeadlines.market}
+          colorClass="text-blue-400"
+        />
+        <OutletWidget
+          title="Hollywood Insider"
+          description="Talent profiles, behind-the-scenes friction, and ecosystem power lists."
+          icon={<Newspaper className="w-5 h-5 text-orange-400" />}
+          headlines={groupedHeadlines.insider}
+          colorClass="text-orange-400"
+        />
       </div>
     </div>
   );

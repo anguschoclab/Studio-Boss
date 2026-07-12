@@ -1,13 +1,24 @@
-import React from 'react';
-import { useGameStore } from '@/store/gameStore';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tv, Activity, Star, AlertCircle, PlayCircle, Zap, BarChart3, TrendingUp, TrendingDown, Minus } from 'lucide-react';
-import { Project, SeriesProject } from '@/engine/types';
-import { useShallow } from 'zustand/react/shallow';
-import { cn } from '@/lib/utils';
-import { NielsenProfile } from '@/engine/systems/television/nielsenSystem';
+import React from "react";
+import { useGameStore } from "@/store/gameStore";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Tv,
+  Activity,
+  Star,
+  AlertCircle,
+  PlayCircle,
+  Zap,
+  BarChart3,
+  TrendingUp,
+  TrendingDown,
+  Minus,
+} from "lucide-react";
+import { Project, SeriesProject } from "@/engine/types";
+import { useShallow } from "zustand/react/shallow";
+import { cn } from "@/lib/utils";
+import { NielsenProfile } from "@/engine/systems/television/nielsenSystem";
 
 export const TelevisionDashboard = () => {
   const activeProjects = useGameStore(

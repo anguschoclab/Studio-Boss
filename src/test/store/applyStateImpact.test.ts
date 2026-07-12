@@ -3,75 +3,76 @@ import { applyStateImpact } from "../../store/storeUtils";
 import { GameState, Project, StateImpact } from "../../engine/types";
 
 describe("applyStateImpact utility", () => {
-  const getInitialMockState = (): GameState => ({
-    week: 1,
-    entities: {
-      releasedProjectIds: [],
-      projects: { 
-        "proj-1": {
-          id: "proj-1",
-          title: "Test Project",
-          state: "development",
-          buzz: 50,
-          weeksInPhase: 0,
-          developmentWeeks: 10,
-          productionWeeks: 10,
-          budget: 5000000,
-          budgetTier: 'mid',
-          format: 'film',
-          genre: 'Action',
-          targetAudience: 'General',
-          flavor: 'Test',
-          weeklyCost: 100000,
-          revenue: 0,
-          weeklyRevenue: 0,
-          releaseWeek: null
-        } as Project 
+  const getInitialMockState = (): GameState =>
+    ({
+      week: 1,
+      entities: {
+        releasedProjectIds: [],
+        projects: {
+          "proj-1": {
+            id: "proj-1",
+            title: "Test Project",
+            state: "development",
+            buzz: 50,
+            weeksInPhase: 0,
+            developmentWeeks: 10,
+            productionWeeks: 10,
+            budget: 5000000,
+            budgetTier: "mid",
+            format: "film",
+            genre: "Action",
+            targetAudience: "General",
+            flavor: "Test",
+            weeklyCost: 100000,
+            revenue: 0,
+            weeklyRevenue: 0,
+            releaseWeek: null,
+          } as Project,
+        },
+        talents: {},
+        contracts: {},
+        rivals: {},
       },
-      talents: {},
-      contracts: {},
-      rivals: {}
-    },
-    studio: {
-      name: "Test Studio",
-      archetype: "major",
-      prestige: 50,
-      internal: {
-        projectHistory: [],
-      }
-    },
-    industry: {
-      families: [],
-      agencies: [],
-      agents: [],
-      newsHistory: [],
-    },
-    market: {
+      studio: {
+        name: "Test Studio",
+        archetype: "major",
+        prestige: 50,
+        internal: {
+          projectHistory: [],
+        },
+      },
+      industry: {
+        families: [],
+        agencies: [],
+        agents: [],
+        newsHistory: [],
+      },
+      market: {
         opportunities: [],
-        buyers: []
-    },
-    finance: {
+        buyers: [],
+      },
+      finance: {
         cash: 1000000,
-        ledger: []
-    },
-    news: {
-        headlines: []
-    }
-  } as unknown as GameState);
+        ledger: [],
+      },
+      news: {
+        headlines: [],
+      },
+    }) as unknown as GameState;
 
   it("should update cash correctly", () => {
-    const impact: StateImpact = { type: 'FUNDS_CHANGED', payload: { amount: -500000 } };
+    const impact: StateImpact = { type: "FUNDS_CHANGED", payload: { amount: -500000 } };
     const newState = applyStateImpact(getInitialMockState(), impact);
     expect(newState.finance.cash).toBe(500000);
   });
 
   it("should update project fields correctly", () => {
     const impact: StateImpact = {
-      type: 'PROJECT_UPDATED',
+      type: "PROJECT_UPDATED",
       payload: {
         projectId: "proj-1",
-        update: { state: "production", buzz: 70 }
-      }
+        update: { state: "production", buzz: 70 },
+      },
     };
     const newState = applyStateImpact(getInitialMockState(), impact);
     const updatedProject = newState.entities.projects["proj-1"];
@@ -80,15 +81,15 @@ describe("applyStateImpact utility", () => {
   });
 
   it("should update prestige correctly", () => {
-    const impact: StateImpact = { type: 'PRESTIGE_CHANGED', payload: { amount: 10 } };
+    const impact: StateImpact = { type: "PRESTIGE_CHANGED", payload: { amount: 10 } };
     const newState = applyStateImpact(getInitialMockState(), impact);
     expect(newState.studio.prestige).toBe(60);
   });
 
   it("should add news events", () => {
     const impact: StateImpact = {
-      type: 'NEWS_ADDED',
-      payload: { headline: "Award Won!", description: "Win" }
+      type: "NEWS_ADDED",
+      payload: { headline: "Award Won!", description: "Win" },
     };
     const newState = applyStateImpact(getInitialMockState(), impact);
     expect(newState.industry.newsHistory).toHaveLength(1);

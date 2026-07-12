@@ -1,10 +1,10 @@
-import React, { useMemo } from 'react';
-import { useGameStore } from '@/store/gameStore';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatMoney } from '@/engine/utils';
-import { cn } from '@/lib/utils';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Wallet, AlertTriangle } from 'lucide-react';
+import React, { useMemo } from "react";
+import { useGameStore } from "@/store/gameStore";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatMoney } from "@/engine/utils";
+import { cn } from "@/lib/utils";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import { Wallet, AlertTriangle } from "lucide-react";
 
 interface ResourceAllocationProps {
   className?: string;
@@ -21,7 +21,7 @@ interface AllocationEntry {
 }
 
 export const ResourceAllocation: React.FC<ResourceAllocationProps> = ({ className }) => {
-  const gameState = useGameStore(s => s.gameState);
+  const gameState = useGameStore((s) => s.gameState);
 
   const { projects, finance } = useMemo(() => {
     if (!gameState) {
@@ -32,12 +32,12 @@ export const ResourceAllocation: React.FC<ResourceAllocationProps> = ({ classNam
   }, [gameState]);
 
   const allocationData = useMemo<AllocationEntry[]>(() => {
-    const activeProjects = projects.filter(p =>
-      p.state === 'production' || p.state === 'development' || p.state === 'marketing'
+    const activeProjects = projects.filter(
+      (p) => p.state === "production" || p.state === "development" || p.state === "marketing"
     );
 
-    return activeProjects.map(p => ({
-      name: p.title.length > 15 ? p.title.slice(0, 15) + '...' : p.title,
+    return activeProjects.map((p) => ({
+      name: p.title.length > 15 ? p.title.slice(0, 15) + "..." : p.title,
       fullName: p.title,
       weeklyCost: p.weeklyCost || 0,
       state: p.state,
@@ -58,7 +58,7 @@ export const ResourceAllocation: React.FC<ResourceAllocationProps> = ({ classNam
       marketing: [],
     };
 
-    allocationData.forEach(p => {
+    allocationData.forEach((p) => {
       if (groups[p.state]) {
         groups[p.state].push(p);
       }
@@ -73,7 +73,9 @@ export const ResourceAllocation: React.FC<ResourceAllocationProps> = ({ classNam
   const isCritical = runway < 4;
 
   return (
-    <Card className={cn("rounded-none border-white/5 bg-white/[0.01] backdrop-blur-3xl", className)}>
+    <Card
+      className={cn("rounded-none border-white/5 bg-white/[0.01] backdrop-blur-3xl", className)}
+    >
       <CardHeader className="pb-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -84,12 +86,16 @@ export const ResourceAllocation: React.FC<ResourceAllocationProps> = ({ classNam
           </div>
           <div className="flex items-center gap-4">
             {isOverallocated && (
-              <div className={cn(
-                "flex items-center gap-2 px-3 py-1 rounded-none text-[9px] font-black uppercase tracking-widest",
-                isCritical ? "bg-red-500/10 text-red-400 border border-red-500/20" : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
-              )}>
+              <div
+                className={cn(
+                  "flex items-center gap-2 px-3 py-1 rounded-none text-[9px] font-black uppercase tracking-widest",
+                  isCritical
+                    ? "bg-red-500/10 text-red-400 border border-red-500/20"
+                    : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                )}
+              >
                 <AlertTriangle className="w-3 h-3" />
-                {isCritical ? 'CRITICAL BURN' : 'OVERALLOCATED'}
+                {isCritical ? "CRITICAL BURN" : "OVERALLOCATED"}
               </div>
             )}
             <span className="text-[11px] font-display font-black italic tracking-tighter text-muted-foreground/80">
@@ -98,7 +104,7 @@ export const ResourceAllocation: React.FC<ResourceAllocationProps> = ({ classNam
           </div>
         </div>
       </CardHeader>
-      
+
       <CardContent className="space-y-8">
         {/* Runway indicator */}
         <div className="flex items-center justify-between p-4 bg-black/40 border border-white/5">
@@ -106,16 +112,28 @@ export const ResourceAllocation: React.FC<ResourceAllocationProps> = ({ classNam
             LIQUIDITY RUNWAY
           </span>
           <div className="flex items-center gap-3">
-            <div className={cn(
-              "text-lg font-black font-display italic tracking-tighter",
-              isCritical ? "text-red-400" : isOverallocated ? "text-amber-400" : "text-emerald-400"
-            )}>
+            <div
+              className={cn(
+                "text-lg font-black font-display italic tracking-tighter",
+                isCritical
+                  ? "text-red-400"
+                  : isOverallocated
+                    ? "text-amber-400"
+                    : "text-emerald-400"
+              )}
+            >
               {Math.floor(runway)} WEEKS
             </div>
-            <div className={cn(
-              "w-2.5 h-2.5",
-              isCritical ? "bg-red-500 animate-pulse" : isOverallocated ? "bg-amber-500" : "bg-emerald-500 shadow-[0_0_10px_rgba(34,197,94,0.3)]"
-            )} />
+            <div
+              className={cn(
+                "w-2.5 h-2.5",
+                isCritical
+                  ? "bg-red-500 animate-pulse"
+                  : isOverallocated
+                    ? "bg-amber-500"
+                    : "bg-emerald-500 shadow-[0_0_10px_rgba(34,197,94,0.3)]"
+              )}
+            />
           </div>
         </div>
 
@@ -123,36 +141,62 @@ export const ResourceAllocation: React.FC<ResourceAllocationProps> = ({ classNam
         {allocationData.length > 0 ? (
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={allocationData} layout="vertical" margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
+              <BarChart
+                data={allocationData}
+                layout="vertical"
+                margin={{ top: 0, right: 20, left: 0, bottom: 0 }}
+              >
                 <XAxis type="number" hide />
-                <YAxis 
-                  dataKey="name" 
-                  type="category" 
+                <YAxis
+                  dataKey="name"
+                  type="category"
                   width={100}
-                  tick={{ fontSize: 9, fontWeight: 900, fill: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.1em' }}
+                  tick={{
+                    fontSize: 9,
+                    fontWeight: 900,
+                    fill: "rgba(255,255,255,0.4)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.1em",
+                  }}
                   axisLine={false}
                   tickLine={false}
                 />
                 <Tooltip
-                  cursor={{ fill: 'rgba(255,255,255,0.03)' }}
+                  cursor={{ fill: "rgba(255,255,255,0.03)" }}
                   content={({ active, payload }) => {
                     if (active && payload && payload.length) {
                       const data = payload[0].payload as AllocationEntry;
                       return (
                         <div className="bg-black/90 border border-white/10 p-4 backdrop-blur-3xl">
-                          <p className="text-[10px] font-display font-black uppercase italic mb-1 text-primary">{data.fullName}</p>
-                          <p className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest mb-3">{data.state}</p>
+                          <p className="text-[10px] font-display font-black uppercase italic mb-1 text-primary">
+                            {data.fullName}
+                          </p>
+                          <p className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest mb-3">
+                            {data.state}
+                          </p>
                           <div className="space-y-2">
                             <div className="flex justify-between gap-8 text-[10px]">
-                              <span className="font-black text-muted-foreground/60">WEEKLY BURN:</span>
-                              <span className="font-display font-black italic">{formatMoney(data.weeklyCost)}</span>
+                              <span className="font-black text-muted-foreground/60">
+                                WEEKLY BURN:
+                              </span>
+                              <span className="font-display font-black italic">
+                                {formatMoney(data.weeklyCost)}
+                              </span>
                             </div>
                             <div className="flex justify-between gap-8 text-[10px]">
-                              <span className="font-black text-muted-foreground/60">BUZZ UTILIZATION:</span>
-                              <span className={cn(
-                                "font-display font-black italic",
-                                data.percentUsed > 90 ? "text-red-400" : data.percentUsed > 70 ? "text-amber-400" : "text-emerald-400"
-                              )}>
+                              <span className="font-black text-muted-foreground/60">
+                                BUZZ UTILIZATION:
+                              </span>
+                              <span
+                                className={cn(
+                                  "font-display font-black italic",
+                                  data.percentUsed > 90
+                                    ? "text-red-400"
+                                    : data.percentUsed > 70
+                                      ? "text-amber-400"
+                                      : "text-emerald-400"
+                                )}
+                              >
                                 {Math.round(data.percentUsed)}%
                               </span>
                             </div>
@@ -165,9 +209,15 @@ export const ResourceAllocation: React.FC<ResourceAllocationProps> = ({ classNam
                 />
                 <Bar dataKey="weeklyCost" radius={[0, 0, 0, 0]} maxBarSize={16}>
                   {allocationData.map((entry, index) => (
-                    <Cell 
-                      key={`cell-${index}`} 
-                      fill={entry.percentUsed > 90 ? '#ef4444' : entry.percentUsed > 70 ? '#f59e0b' : 'rgba(var(--primary), 0.6)'}
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={
+                        entry.percentUsed > 90
+                          ? "#ef4444"
+                          : entry.percentUsed > 70
+                            ? "#f59e0b"
+                            : "rgba(var(--primary), 0.6)"
+                      }
                     />
                   ))}
                 </Bar>
@@ -176,7 +226,9 @@ export const ResourceAllocation: React.FC<ResourceAllocationProps> = ({ classNam
           </div>
         ) : (
           <div className="h-48 flex items-center justify-center border border-dashed border-white/5">
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/20 italic">ZERO ACTIVE PRODUCTION COSTS</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/20 italic">
+              ZERO ACTIVE PRODUCTION COSTS
+            </p>
           </div>
         )}
 
@@ -185,12 +237,21 @@ export const ResourceAllocation: React.FC<ResourceAllocationProps> = ({ classNam
           {Object.entries(stateGroups).map(([state, projects]) => {
             const total = projects.reduce((sum, p) => sum + p.weeklyCost, 0);
             if (total === 0) return null;
-            
+
             return (
-              <div key={state} className="p-4 bg-white/[0.02] border border-white/5 text-left group hover:bg-white/[0.04] transition-colors">
-                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-2 group-hover:text-primary transition-colors">{state}</p>
-                <p className="text-sm font-display font-black italic tracking-tighter mb-1">{formatMoney(total)}</p>
-                <p className="text-[9px] font-black text-muted-foreground/20 uppercase tracking-widest">{projects.length} PROJECTS</p>
+              <div
+                key={state}
+                className="p-4 bg-white/[0.02] border border-white/5 text-left group hover:bg-white/[0.04] transition-colors"
+              >
+                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-2 group-hover:text-primary transition-colors">
+                  {state}
+                </p>
+                <p className="text-sm font-display font-black italic tracking-tighter mb-1">
+                  {formatMoney(total)}
+                </p>
+                <p className="text-[9px] font-black text-muted-foreground/20 uppercase tracking-widest">
+                  {projects.length} PROJECTS
+                </p>
               </div>
             );
           })}

@@ -1,11 +1,11 @@
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { StudioSidebar } from '@/components/layout/StudioSidebar';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { useGameStore } from '@/store/gameStore';
-import { useUIStore } from '@/store/uiStore';
-import { createRootRoute, createRouter, RouterProvider } from '@tanstack/react-router';
-import React from 'react';
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { StudioSidebar } from "@/components/layout/StudioSidebar";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
+import { createRootRoute, createRouter, RouterProvider } from "@tanstack/react-router";
+import React from "react";
 
 // Mock ResizeObserver
 global.ResizeObserver = vi.fn().mockImplementation(() => ({
@@ -15,25 +15,27 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
 }));
 
 // Mock recharts
-vi.mock('recharts', () => {
+vi.mock("recharts", () => {
   return {
-    ResponsiveContainer: ({ children }: any) => <div data-testid="mock-responsive-container">{children}</div>,
+    ResponsiveContainer: ({ children }: any) => (
+      <div data-testid="mock-responsive-container">{children}</div>
+    ),
     LineChart: ({ children }: any) => <div data-testid="mock-line-chart">{children}</div>,
-    Line: () => <div data-testid="mock-line" />
+    Line: () => <div data-testid="mock-line" />,
   };
 });
 
 // Mock Zustand stores
-vi.mock('@/store/gameStore', () => ({
-  useGameStore: vi.fn()
+vi.mock("@/store/gameStore", () => ({
+  useGameStore: vi.fn(),
 }));
 
-vi.mock('@/store/uiStore', () => ({
-  useUIStore: vi.fn()
+vi.mock("@/store/uiStore", () => ({
+  useUIStore: vi.fn(),
 }));
 
 // Mock icons
-vi.mock('lucide-react', () => {
+vi.mock("lucide-react", () => {
   return {
     LayoutDashboard: () => <div data-testid="icon" />,
     Film: () => <div data-testid="icon" />,
@@ -56,36 +58,40 @@ vi.mock('lucide-react', () => {
     Award: () => <div data-testid="icon" />,
     Zap: () => <div data-testid="icon" />,
     Archive: () => <div data-testid="icon" />,
-    Bookmark: () => <div data-testid="icon" />
+    Bookmark: () => <div data-testid="icon" />,
   };
 });
 
 // Setup router for the component
 const rootRoute = createRootRoute({
-  component: () => <StudioSidebar />
+  component: () => <StudioSidebar />,
 });
 const router = createRouter({ routeTree: rootRoute });
 
 const renderSidebar = () => {
-  return render(<TooltipProvider><RouterProvider router={router} /></TooltipProvider>);
+  return render(
+    <TooltipProvider>
+      <RouterProvider router={router} />
+    </TooltipProvider>
+  );
 };
 
-describe('StudioSidebar', () => {
+describe("StudioSidebar", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
     // Default mocks
     (useUIStore as any).mockImplementation((selector: any) => {
-      if (typeof selector === 'function') {
-        return selector({ activeTab: 'command', setActiveTab: vi.fn() });
+      if (typeof selector === "function") {
+        return selector({ activeTab: "command", setActiveTab: vi.fn() });
       }
-      return { activeTab: 'command', setActiveTab: vi.fn() };
+      return { activeTab: "command", setActiveTab: vi.fn() };
     });
   });
 
-  it('renders without crashing when no game state', () => {
+  it("renders without crashing when no game state", () => {
     (useGameStore as any).mockImplementation((selector: any) => {
-      if (typeof selector === 'function') {
+      if (typeof selector === "function") {
         return selector({ gameState: null, clearGame: vi.fn() });
       }
       return { gameState: null, clearGame: vi.fn() };
@@ -95,24 +101,26 @@ describe('StudioSidebar', () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it('renders correctly with basic game state', () => {
+  it("renders correctly with basic game state", () => {
     (useGameStore as any).mockImplementation((selector: any) => {
       const mockState = {
         gameState: {
           entities: { projects: {}, talents: {}, contracts: {}, rivals: {} },
           finance: { cash: 1000000, weeklyHistory: [] },
-          studio: { prestige: 10, internal: { projects: {}, projectHistory: [] } }
+          studio: { prestige: 10, internal: { projects: {}, projectHistory: [] } },
         },
-        clearGame: vi.fn()
+        clearGame: vi.fn(),
       };
-      if (typeof selector === 'function') {
+      if (typeof selector === "function") {
         return selector(mockState);
       }
       return mockState;
     });
 
     renderSidebar();
-    expect(screen.getByText('BOSS')).toBeDefined();
-    expect(screen.getByText((c) => c.includes('CASH RESERVES') || c.includes('CASH'))).toBeDefined();
+    expect(screen.getByText("BOSS")).toBeDefined();
+    expect(
+      screen.getByText((c) => c.includes("CASH RESERVES") || c.includes("CASH"))
+    ).toBeDefined();
   });
 });

@@ -1,20 +1,16 @@
-import { GameState, StateImpact, Talent } from '../../types';
-import { RandomGenerator } from '../../utils/rng';
-import {
-  TalentRelationship,
-  RelationshipEvent,
-  RomanceData
-} from '../../types/relationship.types';
-import { getRelationshipKey } from './relationshipCompatibility';
+import { GameState, StateImpact, Talent } from "../../types";
+import { RandomGenerator } from "../../utils/rng";
+import { TalentRelationship, RelationshipEvent, RomanceData } from "../../types/relationship.types";
+import { getRelationshipKey } from "./relationshipCompatibility";
 import {
   getRelationship,
   haveWorkedTogether,
   haveCompeted,
   checkNaturalFormation,
   formRelationship,
-} from './relationshipFormation';
+} from "./relationshipFormation";
 
-export { haveCompeted } from './relationshipFormation';
+export { haveCompeted } from "./relationshipFormation";
 
 function evolveRelationship(
   relationship: TalentRelationship,
@@ -30,66 +26,74 @@ function evolveRelationship(
   }
 
   let strengthChange = 0;
-  let eventType: RelationshipEvent['type'] | null = null;
-  let description = '';
+  let eventType: RelationshipEvent["type"] | null = null;
+  let description = "";
 
   strengthChange += rng.rangeInt(-5, 5);
 
   if (haveWorkedTogether(talentA.id, talentB.id, state)) {
-    if (relationship.type === 'friend') {
+    if (relationship.type === "friend") {
       strengthChange += 5;
-      eventType = 'strengthened';
-      description = 'Reunited on set and their friendship deepened';
-    } else if (relationship.type === 'rival') {
+      eventType = "strengthened";
+      description = "Reunited on set and their friendship deepened";
+    } else if (relationship.type === "rival") {
       strengthChange -= 5;
-      eventType = 'weakened';
-      description = 'Being forced to work together intensified their feud';
+      eventType = "weakened";
+      description = "Being forced to work together intensified their feud";
     }
   }
 
-  if (relationship.type === 'rival' && haveCompeted(talentA.id, talentB.id, state)) {
+  if (relationship.type === "rival" && haveCompeted(talentA.id, talentB.id, state)) {
     strengthChange -= 10;
-    eventType = 'weakened';
+    eventType = "weakened";
     description = `Competing for the same award reignited their rivalry`;
   }
 
-  if (relationship.type === 'romantic') {
-    const romanceData = (relationship as import('../../types/relationship.types').RomanticRelationship).romanceData;
+  if (relationship.type === "romantic") {
+    const romanceData = (
+      relationship as import("../../types/relationship.types").RomanticRelationship
+    ).romanceData;
 
     if (romanceData?.isSecret && rng.next() < 0.1) {
       strengthChange -= 3;
-      description = 'The pressure of keeping their relationship secret is taking a toll';
+      description = "The pressure of keeping their relationship secret is taking a toll";
     }
 
     const weeksTogether = state.week - relationship.formedWeek;
     if (weeksTogether > 52 && rng.next() < 0.3) {
       strengthChange += 10;
-      eventType = 'strengthened';
+      eventType = "strengthened";
       description = `Celebrated ${Math.floor(weeksTogether / 52)} year anniversary`;
     }
 
     if (relationship.strength < 30 && rng.next() < 0.2) {
-      relationship.type = 'ex';
+      relationship.type = "ex";
       relationship.strength = -20;
-      eventType = 'breakup';
+      eventType = "breakup";
       description = `${talentA.name} and ${talentB.name} have called it quits`;
 
       impacts.push({
-        type: 'NEWS_ADDED',
+        type: "NEWS_ADDED",
         payload: {
-          id: rng.uuid('NWS'),
+          id: rng.uuid("NWS"),
           headline: `It's Over: ${talentA.name} and ${talentB.name} Split`,
           description: `After weeks of speculation, sources confirm the couple has gone their separate ways.`,
-          category: 'talent',
-          publication: 'People Magazine',
+          category: "talent",
+          publication: "People Magazine",
         },
       });
 
       if (talentA.spouseId === talentB.id) {
-        impacts.push({ type: 'TALENT_UPDATED', payload: { talentId: talentA.id, update: { spouseId: undefined } } });
+        impacts.push({
+          type: "TALENT_UPDATED",
+          payload: { talentId: talentA.id, update: { spouseId: undefined } },
+        });
       }
       if (talentB.spouseId === talentA.id) {
-        impacts.push({ type: 'TALENT_UPDATED', payload: { talentId: talentB.id, update: { spouseId: undefined } } });
+        impacts.push({
+          type: "TALENT_UPDATED",
+          payload: { talentId: talentB.id, update: { spouseId: undefined } },
+        });
       }
     }
   }
@@ -99,7 +103,12 @@ function evolveRelationship(
   if (newStrength !== relationship.strength && eventType) {
     relationship.strength = newStrength;
     relationship.lastUpdatedWeek = state.week;
-    relationship.history.push({ week: state.week, type: eventType, impact: strengthChange, description });
+    relationship.history.push({
+      week: state.week,
+      type: eventType,
+      impact: strengthChange,
+      description,
+    });
   }
 
   return { updated: relationship, impacts };
@@ -110,13 +119,13 @@ export function tickRelationshipSystem(state: GameState, rng: RandomGenerator): 
   const talents = Object.values(state.entities.talents || {});
   // ⚡ Bolt: Use Object.keys iteration to prevent massive intermediate array allocation
   const projectsDict = state.entities.projects || {};
-  const projects = Object.keys(projectsDict).map(pid => projectsDict[pid]);
+  const projects = Object.keys(projectsDict).map((pid) => projectsDict[pid]);
   const awards = state.industry?.awards || [];
-  const awardedProjectIds = new Set(awards.map(a => a.projectId));
+  const awardedProjectIds = new Set(awards.map((a) => a.projectId));
 
   // ⚡ The Framerate Fanatic: Massive O(N²) optimization.
   // Instead of checking all pairs, we check project interactions and a random sample of the rest.
-  
+
   // 1. Pre-index talent clusters by project
   const projectTalentMap = new Map<string, Set<string>>();
   const awardedProjectsTalentSets: Set<string>[] = [];
@@ -124,7 +133,7 @@ export function tickRelationshipSystem(state: GameState, rng: RandomGenerator): 
   for (const project of projects) {
     const attachedIds = project.attachedTalentIds || [];
     if (attachedIds.length < 2) continue;
-    
+
     const set = new Set<string>(attachedIds);
     projectTalentMap.set(project.id, set);
     if (awardedProjectIds.has(project.id)) {
@@ -158,7 +167,14 @@ export function tickRelationshipSystem(state: GameState, rng: RandomGenerator): 
 
   // 2. Process Candidates
   for (const [talentA, talentB] of formationCandidates) {
-    const formation = checkNaturalFormation(talentA, talentB, state, rng, projectTalentMap, awardedProjectsTalentSets);
+    const formation = checkNaturalFormation(
+      talentA,
+      talentB,
+      state,
+      rng,
+      projectTalentMap,
+      awardedProjectsTalentSets
+    );
 
     if (formation) {
       const { relationship, impacts: formationImpacts } = formRelationship(
@@ -173,7 +189,7 @@ export function tickRelationshipSystem(state: GameState, rng: RandomGenerator): 
       // Add to state
       const key = getRelationshipKey(formation.talentAId, formation.talentBId);
       impacts.push({
-        type: 'RELATIONSHIP_FORMED',
+        type: "RELATIONSHIP_FORMED",
         payload: {
           key,
           relationship,
@@ -181,16 +197,16 @@ export function tickRelationshipSystem(state: GameState, rng: RandomGenerator): 
       } as any);
 
       // Update spouseId for public romantic relationships
-      if (relationship.type === 'romantic' && relationship.isPublic) {
+      if (relationship.type === "romantic" && relationship.isPublic) {
         impacts.push({
-          type: 'TALENT_UPDATED',
+          type: "TALENT_UPDATED",
           payload: {
             talentId: relationship.talentAId,
             update: { spouseId: relationship.talentBId },
           },
         });
         impacts.push({
-          type: 'TALENT_UPDATED',
+          type: "TALENT_UPDATED",
           payload: {
             talentId: relationship.talentBId,
             update: { spouseId: relationship.talentAId },
@@ -210,7 +226,7 @@ export function tickRelationshipSystem(state: GameState, rng: RandomGenerator): 
       if (updated !== relationship) {
         const key = getRelationshipKey(relationship.talentAId, relationship.talentBId);
         impacts.push({
-          type: 'RELATIONSHIP_UPDATED',
+          type: "RELATIONSHIP_UPDATED",
           payload: {
             key,
             relationship: updated,
@@ -230,7 +246,7 @@ export function tickRelationshipSystem(state: GameState, rng: RandomGenerator): 
  */
 export function areFriends(talentAId: string, talentBId: string, state: GameState): boolean {
   const rel = getRelationship(talentAId, talentBId, state);
-  return rel?.type === 'friend' && rel.strength > 40;
+  return rel?.type === "friend" && rel.strength > 40;
 }
 
 /**
@@ -238,7 +254,7 @@ export function areFriends(talentAId: string, talentBId: string, state: GameStat
  */
 export function areRivals(talentAId: string, talentBId: string, state: GameState): boolean {
   const rel = getRelationship(talentAId, talentBId, state);
-  return (rel?.type === 'rival' || rel?.type === 'enemy') && rel.strength < -40;
+  return (rel?.type === "rival" || rel?.type === "enemy") && rel.strength < -40;
 }
 
 /**
@@ -246,15 +262,16 @@ export function areRivals(talentAId: string, talentBId: string, state: GameState
  */
 export function areRomantic(talentAId: string, talentBId: string, state: GameState): boolean {
   const rel = getRelationship(talentAId, talentBId, state);
-  return rel?.type === 'romantic' && rel.strength > 50;
+  return rel?.type === "romantic" && rel.strength > 50;
 }
 
 /**
  * Get all relationships for a talent
  */
 export function getTalentRelationships(talentId: string, state: GameState): TalentRelationship[] {
-  return Object.values(state.relationships?.relationships || {})
-    .filter((r) => r.talentAId === talentId || r.talentBId === talentId);
+  return Object.values(state.relationships?.relationships || {}).filter(
+    (r) => r.talentAId === talentId || r.talentBId === talentId
+  );
 }
 
 /**
@@ -272,17 +289,17 @@ export function getCastingChemistry(
   if (!rel) return 0; // Neutral
 
   switch (rel.type) {
-    case 'friend':
-    case 'mentor':
+    case "friend":
+    case "mentor":
       return Math.floor(rel.strength / 10); // Up to +10 for best friends
-    case 'romantic':
+    case "romantic":
       return Math.floor(rel.strength / 8) + 5; // Bonus for real couples +5
-    case 'rival':
-    case 'enemy':
+    case "rival":
+    case "enemy":
       return Math.floor(rel.strength / 10); // Negative, up to -10
-    case 'ex':
+    case "ex":
       return -15; // Awkward!
-    case 'frenemy':
+    case "frenemy":
       return rng && rng.next() < 0.5 ? 5 : -5; // Unpredictable
     default:
       return 0;

@@ -1,9 +1,15 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { tickAntitrust, isAcquirerBlockedByAntitrust, resetAntitrustState, antitrustEventLog, antitrustBlockList } from '@/engine/systems/industry/Antitrust';
-import { GameState } from '@/engine/types';
-import { createMockGameState, createMockRival } from '../../generators/mockFactory';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import {
+  tickAntitrust,
+  isAcquirerBlockedByAntitrust,
+  resetAntitrustState,
+  antitrustEventLog,
+  antitrustBlockList,
+} from "@/engine/systems/industry/Antitrust";
+import { GameState } from "@/engine/types";
+import { createMockGameState, createMockRival } from "../../generators/mockFactory";
 
-import * as utils from '@/engine/utils';
+import * as utils from "@/engine/utils";
 
 function makeRivalDict(count: number, cash: number): Record<string, any> {
   const dict: Record<string, any> = {};
@@ -18,25 +24,30 @@ function makeRivalDict(count: number, cash: number): Record<string, any> {
   return dict;
 }
 
-describe('Antitrust System', () => {
+describe("Antitrust System", () => {
   beforeEach(() => {
     resetAntitrustState();
-    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.001);
+    vi.spyOn(utils, "secureRandom").mockReturnValue(0.001);
   });
 
-  describe('computeConcentration (via tickAntitrust)', () => {
-    it('returns empty impacts when not dominant', () => {
+  describe("computeConcentration (via tickAntitrust)", () => {
+    it("returns empty impacts when not dominant", () => {
       const state = createMockGameState({
         week: 300,
         finance: { cash: 50_000_000, ledger: [], weeklyHistory: [] } as any,
-        entities: { projects: {}, talents: {}, contracts: {}, rivals: makeRivalDict(6, 50_000_000) } as any,
+        entities: {
+          projects: {},
+          talents: {},
+          contracts: {},
+          rivals: makeRivalDict(6, 50_000_000),
+        } as any,
       });
 
       const impacts = tickAntitrust(state);
       expect(impacts).toHaveLength(0);
     });
 
-    it('returns empty impacts when positiveCount < MIN_POSITIVE_COUNT (5)', () => {
+    it("returns empty impacts when positiveCount < MIN_POSITIVE_COUNT (5)", () => {
       const rivals = makeRivalDict(3, 50_000_000);
       const state = createMockGameState({
         week: 300,
@@ -48,7 +59,7 @@ describe('Antitrust System', () => {
       expect(impacts).toHaveLength(0);
     });
 
-    it('returns empty impacts during cooldown period', () => {
+    it("returns empty impacts during cooldown period", () => {
       const rivals = makeRivalDict(6, 10_000_000);
       const state = createMockGameState({
         week: 300,
@@ -63,15 +74,15 @@ describe('Antitrust System', () => {
       expect(impacts2).toHaveLength(0);
     });
 
-    it('produces divestiture impacts when single entity is dominant', () => {
+    it("produces divestiture impacts when single entity is dominant", () => {
       const rivals = makeRivalDict(6, 10_000_000);
       const dominantRival = createMockRival({
-        id: 'dominant-1',
-        name: 'Mega Corp',
+        id: "dominant-1",
+        name: "Mega Corp",
         cash: 2_000_000_000,
         strength: 90,
       });
-      rivals['dominant-1'] = dominantRival;
+      rivals["dominant-1"] = dominantRival;
 
       const state = createMockGameState({
         week: 300,
@@ -80,31 +91,37 @@ describe('Antitrust System', () => {
       });
 
       const impacts = tickAntitrust(state);
-      const hasIndustryUpdate = impacts.some(i => i.type === 'INDUSTRY_UPDATE');
-      const hasRivalUpdated = impacts.some(i => i.type === 'RIVAL_UPDATED');
-      const hasNews = impacts.some(i => i.type === 'NEWS_ADDED');
+      const hasIndustryUpdate = impacts.some((i) => i.type === "INDUSTRY_UPDATE");
+      const hasRivalUpdated = impacts.some((i) => i.type === "RIVAL_UPDATED");
+      const hasNews = impacts.some((i) => i.type === "NEWS_ADDED");
       expect(hasIndustryUpdate).toBe(true);
       expect(hasRivalUpdated).toBe(true);
       expect(hasNews).toBe(true);
     });
 
-    it('produces fine impacts (FUNDS_CHANGED) when player is the dominant entity', () => {
+    it("produces fine impacts (FUNDS_CHANGED) when player is the dominant entity", () => {
       const rivals = makeRivalDict(6, 10_000_000);
       const state = createMockGameState({
         week: 300,
         finance: { cash: 2_000_000_000, ledger: [], weeklyHistory: [] } as any,
-        studio: { id: 'PLAYER', name: 'Player', archetype: 'major', prestige: 50, internal: { projectHistory: [], firstLookDeals: [] } } as any,
+        studio: {
+          id: "PLAYER",
+          name: "Player",
+          archetype: "major",
+          prestige: 50,
+          internal: { projectHistory: [], firstLookDeals: [] },
+        } as any,
         entities: { projects: {}, talents: {}, contracts: {}, rivals } as any,
       });
 
       const impacts = tickAntitrust(state);
-      const hasFundsChanged = impacts.some(i => i.type === 'FUNDS_CHANGED');
-      const hasNews = impacts.some(i => i.type === 'NEWS_ADDED');
+      const hasFundsChanged = impacts.some((i) => i.type === "FUNDS_CHANGED");
+      const hasNews = impacts.some((i) => i.type === "NEWS_ADDED");
       expect(hasFundsChanged).toBe(true);
       expect(hasNews).toBe(true);
     });
 
-    it('handles empty rivals dict gracefully', () => {
+    it("handles empty rivals dict gracefully", () => {
       const state = createMockGameState({
         week: 300,
         finance: { cash: 50_000_000, ledger: [], weeklyHistory: [] } as any,
@@ -115,7 +132,7 @@ describe('Antitrust System', () => {
       expect(impacts).toHaveLength(0);
     });
 
-    it('handles null/undefined rivals gracefully', () => {
+    it("handles null/undefined rivals gracefully", () => {
       const state = createMockGameState({
         week: 300,
         finance: { cash: 50_000_000, ledger: [], weeklyHistory: [] } as any,
@@ -126,23 +143,23 @@ describe('Antitrust System', () => {
     });
   });
 
-  describe('isAcquirerBlockedByAntitrust', () => {
-    it('returns true when acquirer is on block list and week < untilWeek', () => {
+  describe("isAcquirerBlockedByAntitrust", () => {
+    it("returns true when acquirer is on block list and week < untilWeek", () => {
       resetAntitrustState();
-      antitrustBlockList.push({ acquirerId: 'rival-1', untilWeek: 200 });
-      expect(isAcquirerBlockedByAntitrust('rival-1', 100)).toBe(true);
+      antitrustBlockList.push({ acquirerId: "rival-1", untilWeek: 200 });
+      expect(isAcquirerBlockedByAntitrust("rival-1", 100)).toBe(true);
     });
 
-    it('returns false when block has expired', () => {
+    it("returns false when block has expired", () => {
       resetAntitrustState();
-      antitrustBlockList.push({ acquirerId: 'rival-1', untilWeek: 200 });
-      expect(isAcquirerBlockedByAntitrust('rival-1', 250)).toBe(false);
+      antitrustBlockList.push({ acquirerId: "rival-1", untilWeek: 200 });
+      expect(isAcquirerBlockedByAntitrust("rival-1", 250)).toBe(false);
     });
 
-    it('returns false when acquirer not on list', () => {
+    it("returns false when acquirer not on list", () => {
       resetAntitrustState();
-      antitrustBlockList.push({ acquirerId: 'rival-1', untilWeek: 200 });
-      expect(isAcquirerBlockedByAntitrust('rival-2', 100)).toBe(false);
+      antitrustBlockList.push({ acquirerId: "rival-1", untilWeek: 200 });
+      expect(isAcquirerBlockedByAntitrust("rival-2", 100)).toBe(false);
     });
   });
 });

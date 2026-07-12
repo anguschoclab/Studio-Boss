@@ -1,5 +1,5 @@
-import { GameState, StateImpact } from '@/engine/types';
-import { RandomGenerator } from '@/engine/utils/rng';
+import { GameState, StateImpact } from "@/engine/types";
+import { RandomGenerator } from "@/engine/utils/rng";
 
 // ---------------------------------------------------------------------------
 // Loan record – stored in state.studio.loans[]
@@ -8,8 +8,8 @@ import { RandomGenerator } from '@/engine/utils/rng';
 export interface Loan {
   id: string;
   principal: number;
-  interestRate: number;   // annual rate, e.g. 0.08 for 8%
-  weeklyPayment: number;  // fixed payment each week
+  interestRate: number; // annual rate, e.g. 0.08 for 8%
+  weeklyPayment: number; // fixed payment each week
   weeksRemaining: number;
   startWeek: number;
   lenderName: string;
@@ -20,14 +20,14 @@ export interface Loan {
 // ---------------------------------------------------------------------------
 
 const LENDER_NAMES = [
-  'First National Bank',
-  'Studio Hedge Fund',
-  'Sunset Capital Partners',
-  'Pacific Venture Lending',
-  'Meridian Film Finance',
-  'Goldcrest Credit Corp',
-  'Paramount Lending Group',
-  'Apex Studio Finance',
+  "First National Bank",
+  "Studio Hedge Fund",
+  "Sunset Capital Partners",
+  "Pacific Venture Lending",
+  "Meridian Film Finance",
+  "Goldcrest Credit Corp",
+  "Paramount Lending Group",
+  "Apex Studio Finance",
 ];
 
 // ---------------------------------------------------------------------------
@@ -38,7 +38,7 @@ export function createLoan(
   amount: number,
   termWeeks: number,
   loanRate: number,
-  startWeek: number,
+  startWeek: number
 ): Loan {
   // Weekly interest = annual rate / 52
   const weeklyInterestRate = loanRate / 52;
@@ -48,8 +48,7 @@ export function createLoan(
     weeklyPayment = amount / termWeeks;
   } else {
     weeklyPayment =
-      (amount * weeklyInterestRate) /
-      (1 - Math.pow(1 + weeklyInterestRate, -termWeeks));
+      (amount * weeklyInterestRate) / (1 - Math.pow(1 + weeklyInterestRate, -termWeeks));
   }
 
   // Deterministic ID from start week + amount (no rand() to keep engine pure)
@@ -88,13 +87,13 @@ export function tickLoans(state: GameState, _rng: RandomGenerator): StateImpact[
 
     // Deduct payment from cash
     impacts.push({
-      type: 'FUNDS_DEDUCTED',
+      type: "FUNDS_DEDUCTED",
       payload: { amount: payment },
     });
 
     // Record in ledger as a finance transaction
     impacts.push({
-      type: 'FINANCE_TRANSACTION',
+      type: "FINANCE_TRANSACTION",
       payload: {
         amount: -payment,
         description: `Loan payment to ${loan.lenderName}`,
@@ -103,11 +102,11 @@ export function tickLoans(state: GameState, _rng: RandomGenerator): StateImpact[
 
     if (isFinalPayment) {
       impacts.push({
-        type: 'NEWS_ADDED',
+        type: "NEWS_ADDED",
         payload: {
           headline: `Loan to ${loan.lenderName} fully repaid`,
           description: `Your studio has completed all payments on the $${(loan.principal / 1_000_000).toFixed(0)}M loan from ${loan.lenderName}. The debt has been cleared.`,
-          category: 'general',
+          category: "general",
         },
       });
     }
@@ -118,7 +117,7 @@ export function tickLoans(state: GameState, _rng: RandomGenerator): StateImpact[
     // callers can tick the array themselves.  We piggyback on a typed approach
     // using a SYSTEM_TICK-adjacent payload that callers recognise:
     impacts.push({
-      type: 'SYSTEM_TICK' as any,
+      type: "SYSTEM_TICK" as any,
       payload: {
         __loanTick: true,
         loanId: loan.id,
@@ -146,12 +145,12 @@ export function checkBankruptcy(state: GameState): StateImpact | null {
   if (cash >= -500_000) return null;
 
   return {
-    type: 'MODAL_TRIGGERED',
+    type: "MODAL_TRIGGERED",
     payload: {
-      modalType: 'GAME_OVER',
+      modalType: "GAME_OVER",
       priority: 999,
       payload: {
-        reason: 'bankruptcy',
+        reason: "bankruptcy",
         cashDeficit: Math.abs(cash),
       },
     },

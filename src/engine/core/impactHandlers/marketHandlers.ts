@@ -1,4 +1,4 @@
-import { GameState, StateImpact, Buyer } from '@/engine/types';
+import { GameState, StateImpact, Buyer } from "@/engine/types";
 
 /**
  * Market-related impact handlers
@@ -7,28 +7,28 @@ import { GameState, StateImpact, Buyer } from '@/engine/types';
 
 export function handleBuyerUpdated(state: GameState, impact: StateImpact): GameState {
   const { buyerId, update } = impact.payload;
-  const buyers = state.market.buyers.map(b => 
-    b.id === buyerId ? { ...b, ...update } as Buyer : b
+  const buyers = state.market.buyers.map((b) =>
+    b.id === buyerId ? ({ ...b, ...update } as Buyer) : b
   );
   return {
     ...state,
     market: {
       ...state.market,
-      buyers
-    }
+      buyers,
+    },
   };
 }
 
 export function handleOpportunityUpdated(state: GameState, impact: StateImpact): GameState {
   const { opportunityId, rivalId, bid } = impact.payload;
-  const opportunities = state.market.opportunities.map(o => {
+  const opportunities = state.market.opportunities.map((o) => {
     if (o.id === opportunityId) {
       return {
         ...o,
         bids: {
           ...(o.bids || {}),
-          [rivalId]: bid
-        }
+          [rivalId]: bid,
+        },
       };
     }
     return o;
@@ -37,8 +37,8 @@ export function handleOpportunityUpdated(state: GameState, impact: StateImpact):
     ...state,
     market: {
       ...state.market,
-      opportunities
-    }
+      opportunities,
+    },
   };
 }
 
@@ -48,7 +48,7 @@ export function handleTrendsUpdated(state: GameState, impact: StateImpact): Game
     ...state,
     market: {
       ...state.market,
-      trends: trends
-    }
+      trends: trends,
+    },
   };
 }

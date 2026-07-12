@@ -1,5 +1,5 @@
-import { GameState, StateImpact, RivalStudio } from '@/engine/types';
-import { secureRandom, pick } from '../../utils';
+import { GameState, StateImpact, RivalStudio } from "@/engine/types";
+import { secureRandom, pick } from "../../utils";
 
 /**
  * Antitrust — concentration monitor + occasional interventions.
@@ -9,16 +9,22 @@ import { secureRandom, pick } from '../../utils';
  * Two knobs trigger action: top-3 cash share > 65%, or top-1 > 35%.
  */
 
-const TOP3_THRESHOLD = 0.70;
-const TOP1_THRESHOLD = 0.40;
+const TOP3_THRESHOLD = 0.7;
+const TOP1_THRESHOLD = 0.4;
 const ACTION_COOLDOWN_WEEKS = 260; // ~5 years between interventions so 50-year run yields ~2-3
 const MIN_POSITIVE_COUNT = 5; // need enough solvent players for a share metric to be meaningful
-const DIVEST_NAMES = ['Beacon Pictures', 'Resolute Films', 'Openfield Studios', 'Commons Media', 'Public Square Pictures'];
+const DIVEST_NAMES = [
+  "Beacon Pictures",
+  "Resolute Films",
+  "Openfield Studios",
+  "Commons Media",
+  "Public Square Pictures",
+];
 
 export interface AntitrustEvent {
   week: number;
   year: number;
-  kind: 'block-warning' | 'divestiture' | 'fine';
+  kind: "block-warning" | "divestiture" | "fine";
   dominantId: string;
   dominantName: string;
   topShare: number;
@@ -42,7 +48,12 @@ function computeConcentration(state: GameState) {
   const FLOOR = 10_000_000;
   const playerCash = Math.max(FLOOR, state.finance?.cash || 0);
   const entries: { id: string; name: string; cash: number; positive: boolean }[] = [
-    { id: 'PLAYER', name: state.studio?.name || 'Player', cash: playerCash, positive: (state.finance?.cash || 0) > 0 }
+    {
+      id: "PLAYER",
+      name: state.studio?.name || "Player",
+      cash: playerCash,
+      positive: (state.finance?.cash || 0) > 0,
+    },
   ];
 
   let positiveCount = entries[0].positive ? 1 : 0;
@@ -71,7 +82,7 @@ function computeConcentration(state: GameState) {
 }
 
 export function isAcquirerBlockedByAntitrust(acquirerId: string, week: number): boolean {
-  return antitrustBlockList.some(b => b.acquirerId === acquirerId && b.untilWeek > week);
+  return antitrustBlockList.some((b) => b.acquirerId === acquirerId && b.untilWeek > week);
 }
 
 export function tickAntitrust(state: GameState): StateImpact[] {
@@ -98,19 +109,20 @@ export function tickAntitrust(state: GameState): StateImpact[] {
   antitrustBlockList.push({ acquirerId: leader.id, untilWeek: week + 104 });
 
   // Pick intervention: divestiture if top1 > 35%, else block-warning + fine.
-  const kind: AntitrustEvent['kind'] = top1 > TOP1_THRESHOLD ? 'divestiture' : 'block-warning';
+  const kind: AntitrustEvent["kind"] = top1 > TOP1_THRESHOLD ? "divestiture" : "block-warning";
 
-  if (kind === 'divestiture' && leader.id !== 'PLAYER') {
+  if (kind === "divestiture" && leader.id !== "PLAYER") {
     // Spin off divested unit into a new indie — elegant refill mechanism.
-    const spinoffName = pick(DISRUPTOR_SAFE(leader.name)) + ' ' + pick(['Pictures', 'Films', 'Studios']);
+    const spinoffName =
+      pick(DISRUPTOR_SAFE(leader.name)) + " " + pick(["Pictures", "Films", "Studios"]);
     const spinoffCash = leader.cash * 0.08;
     const spinoff: RivalStudio = {
       id: `divest-${week}-${Math.floor(secureRandom() * 1e6)}`,
       name: spinoffName,
-      motto: 'Independence restored.',
-      archetype: 'indie' as any,
+      motto: "Independence restored.",
+      archetype: "indie" as any,
       foundedWeek: week,
-      parentBrand: spinoffName.split(' ')[0],
+      parentBrand: spinoffName.split(" ")[0],
       strength: 40,
       cash: spinoffCash,
       prestige: 60,
@@ -119,57 +131,59 @@ export function tickAntitrust(state: GameState): StateImpact[] {
       contracts: [],
       projectCount: 0,
       motivationProfile: { financial: 50, prestige: 70, legacy: 50, aggression: 50 },
-      currentMotivation: 'PRESTIGE_BUILDING' as any,
-      ownedPlatforms: []
+      currentMotivation: "PRESTIGE_BUILDING" as any,
+      ownedPlatforms: [],
     };
     impacts.push({
-      type: 'INDUSTRY_UPDATE',
+      type: "INDUSTRY_UPDATE",
       payload: {
         update: {},
-        rival: { rivalId: spinoff.id, update: spinoff as unknown as Partial<RivalStudio> }
-      }
+        rival: { rivalId: spinoff.id, update: spinoff as unknown as Partial<RivalStudio> },
+      },
     });
     // Penalize dominant: lose divested cash.
     impacts.push({
-      type: 'RIVAL_UPDATED',
-      payload: { rivalId: leader.id, update: { cash: leader.cash - spinoffCash } }
+      type: "RIVAL_UPDATED",
+      payload: { rivalId: leader.id, update: { cash: leader.cash - spinoffCash } },
     });
     impacts.push({
-      type: 'NEWS_ADDED',
+      type: "NEWS_ADDED",
       payload: {
         headline: `ANTITRUST: Court orders ${leader.name} to divest; ${spinoffName} spun off`,
         description: `Regulators have ordered ${leader.name} to divest operations after its market share exceeded ${(top1 * 100).toFixed(1)}%. The divested unit relaunches as ${spinoffName}.`,
-        category: 'market'
-      }
+        category: "market",
+      },
     });
   } else {
     // Fine (cash penalty)
     const fine = Math.min(500_000_000, leader.cash * 0.03);
-    if (leader.id !== 'PLAYER') {
+    if (leader.id !== "PLAYER") {
       impacts.push({
-        type: 'RIVAL_UPDATED',
-        payload: { rivalId: leader.id, update: { cash: leader.cash - fine } }
+        type: "RIVAL_UPDATED",
+        payload: { rivalId: leader.id, update: { cash: leader.cash - fine } },
       });
     } else {
-      impacts.push({ type: 'FUNDS_CHANGED', payload: { amount: -fine } });
+      impacts.push({ type: "FUNDS_CHANGED", payload: { amount: -fine } });
     }
     impacts.push({
-      type: 'NEWS_ADDED',
+      type: "NEWS_ADDED",
       payload: {
         headline: `ANTITRUST: ${leader.name} fined $${(fine / 1e6).toFixed(0)}M; pending M&A blocked`,
         description: `Regulators cite top-3 industry concentration at ${(top3 * 100).toFixed(1)}%. ${leader.name} is barred from further acquisitions for two years.`,
-        category: 'market'
-      }
+        category: "market",
+      },
     });
   }
 
   antitrustEventLog.push({
-    week, year, kind,
+    week,
+    year,
+    kind,
     dominantId: leader.id,
     dominantName: leader.name,
     topShare: top1,
     top3Share: top3,
-    note: kind === 'divestiture' ? 'Forced spinoff' : 'M&A freeze + fine'
+    note: kind === "divestiture" ? "Forced spinoff" : "M&A freeze + fine",
   });
 
   return impacts;
@@ -177,6 +191,6 @@ export function tickAntitrust(state: GameState): StateImpact[] {
 
 function DISRUPTOR_SAFE(leaderName: string): string[] {
   // Shuffle a tiny name pool so the spinoff feels distinct from the parent.
-  const base = DIVEST_NAMES.map(n => n.split(' ')[0]);
-  return base.filter(b => !leaderName.toLowerCase().includes(b.toLowerCase()));
+  const base = DIVEST_NAMES.map((n) => n.split(" ")[0]);
+  return base.filter((b) => !leaderName.toLowerCase().includes(b.toLowerCase()));
 }

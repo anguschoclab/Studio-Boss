@@ -1,8 +1,8 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { RevenueStreamChart } from './RevenueStreamChart';
-import { ProfitWaterfallChart } from './ProfitWaterfallChart';
-import { CashEfficiencyGauge } from './CashEfficiencyGauge';
-import { FinancialSnapshot } from '@/engine/types/state.types';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { RevenueStreamChart } from "./RevenueStreamChart";
+import { ProfitWaterfallChart } from "./ProfitWaterfallChart";
+import { CashEfficiencyGauge } from "./CashEfficiencyGauge";
+import { FinancialSnapshot } from "@/engine/types/state.types";
 
 interface EconomicAnalyticsProps {
   financeHistory: FinancialSnapshot[];
@@ -10,7 +10,11 @@ interface EconomicAnalyticsProps {
   prestige: number;
 }
 
-export const EconomicAnalytics = ({ financeHistory, latestFinanceSnapshot, prestige }: EconomicAnalyticsProps) => {
+export const EconomicAnalytics = ({
+  financeHistory,
+  latestFinanceSnapshot,
+  prestige,
+}: EconomicAnalyticsProps) => {
   return (
     <div className="grid grid-cols-3 gap-6 h-[250px]">
       <Card className="col-span-1 glass-card">

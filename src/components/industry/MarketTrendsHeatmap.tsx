@@ -1,19 +1,19 @@
-import React, { useMemo } from 'react';
-import { useGameStore } from '@/store/gameStore';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Heatmap } from '@/components/shared/Heatmap';
-import { cn } from '@/lib/utils';
-import { TrendingUp, TrendingDown, Activity } from 'lucide-react';
+import React, { useMemo } from "react";
+import { useGameStore } from "@/store/gameStore";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Heatmap } from "@/components/shared/Heatmap";
+import { cn } from "@/lib/utils";
+import { TrendingUp, TrendingDown, Activity } from "lucide-react";
 
 interface MarketTrendsHeatmapProps {
   className?: string;
 }
 
-const GENRES = ['Action', 'Comedy', 'Drama', 'Horror', 'Romance', 'Sci-Fi', 'Thriller'];
-const QUARTERS = ['Q1', 'Q2', 'Q3', 'Q4'];
+const GENRES = ["Action", "Comedy", "Drama", "Horror", "Romance", "Sci-Fi", "Thriller"];
+const QUARTERS = ["Q1", "Q2", "Q3", "Q4"];
 
 export const MarketTrendsHeatmap: React.FC<MarketTrendsHeatmapProps> = ({ className }) => {
-  const gameState = useGameStore(s => s.gameState);
+  const gameState = useGameStore((s) => s.gameState);
 
   // Generate heatmap data based on genre trends and market saturation
   const heatmapData = useMemo(() => {
@@ -32,7 +32,7 @@ export const MarketTrendsHeatmap: React.FC<MarketTrendsHeatmapProps> = ({ classN
 
     for (const projectId in gameState.entities.projects) {
       const p = gameState.entities.projects[projectId];
-      if (p.state !== 'archived' && p.state !== 'post_release' && p.genre) {
+      if (p.state !== "archived" && p.state !== "post_release" && p.genre) {
         const g = p.genre.toLowerCase();
         playerProjectCounts[g] = (playerProjectCounts[g] || 0) + 1;
       }
@@ -51,10 +51,10 @@ export const MarketTrendsHeatmap: React.FC<MarketTrendsHeatmapProps> = ({ classN
       }
     }
 
-    GENRES.forEach(genre => {
+    GENRES.forEach((genre) => {
       const genreLower = genre.toLowerCase();
       // Move static genre calculations outside the quarter loop
-      const trendData = trends.find(t => t.genre.toLowerCase() === genreLower);
+      const trendData = trends.find((t) => t.genre.toLowerCase() === genreLower);
       const popularity = genrePopularity[genre as keyof typeof genrePopularity] || 50;
       const heat = trendData?.heat || 50;
 
@@ -62,17 +62,18 @@ export const MarketTrendsHeatmap: React.FC<MarketTrendsHeatmapProps> = ({ classN
       const rivalProjects = rivalProjectCounts[genreLower] || 0;
       const saturation = Math.min(100, (genreProjects + rivalProjects) * 10);
 
-      const opportunity = Math.max(0, Math.min(100,
-        (popularity * 0.3) + (heat * 0.4) - (saturation * 0.3) + (marketSentiment * 0.1)
-      ));
+      const opportunity = Math.max(
+        0,
+        Math.min(100, popularity * 0.3 + heat * 0.4 - saturation * 0.3 + marketSentiment * 0.1)
+      );
 
-      let status = 'Stable';
-      if (opportunity > 70) status = 'Hot';
-      else if (opportunity > 50) status = 'Growing';
-      else if (opportunity < 30) status = 'Cooling';
-      else if (saturation > 70) status = 'Oversaturated';
+      let status = "Stable";
+      if (opportunity > 70) status = "Hot";
+      else if (opportunity > 50) status = "Growing";
+      else if (opportunity < 30) status = "Cooling";
+      else if (saturation > 70) status = "Oversaturated";
 
-      QUARTERS.forEach(quarter => {
+      QUARTERS.forEach((quarter) => {
         data.push({
           id: `${genre}-${quarter}`,
           row: genre,
@@ -89,8 +90,8 @@ export const MarketTrendsHeatmap: React.FC<MarketTrendsHeatmapProps> = ({ classN
   // Find hot genres
   const hotGenres = useMemo(() => {
     const avgByGenre: Record<string, number> = {};
-    GENRES.forEach(genre => {
-      const genreData = heatmapData.filter(d => d.row === genre);
+    GENRES.forEach((genre) => {
+      const genreData = heatmapData.filter((d) => d.row === genre);
       avgByGenre[genre] = genreData.reduce((sum, d) => sum + d.value, 0) / (genreData.length || 1);
     });
 
@@ -102,8 +103,8 @@ export const MarketTrendsHeatmap: React.FC<MarketTrendsHeatmapProps> = ({ classN
   // Find cooling genres
   const coolingGenres = useMemo(() => {
     const avgByGenre: Record<string, number> = {};
-    GENRES.forEach(genre => {
-      const genreData = heatmapData.filter(d => d.row === genre);
+    GENRES.forEach((genre) => {
+      const genreData = heatmapData.filter((d) => d.row === genre);
       avgByGenre[genre] = genreData.reduce((sum, d) => sum + d.value, 0) / (genreData.length || 1);
     });
 
@@ -124,12 +125,13 @@ export const MarketTrendsHeatmap: React.FC<MarketTrendsHeatmapProps> = ({ classN
           </CardTitle>
         </div>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         <p className="text-[10px] text-muted-foreground">
-          Heatmap shows genre opportunity scores by quarter. Darker colors indicate better opportunities.
+          Heatmap shows genre opportunity scores by quarter. Darker colors indicate better
+          opportunities.
         </p>
-        
+
         <Heatmap
           data={heatmapData}
           rows={GENRES}
@@ -138,7 +140,7 @@ export const MarketTrendsHeatmap: React.FC<MarketTrendsHeatmapProps> = ({ classN
           cellSize="md"
           className="w-full"
         />
-        
+
         {/* Trending Summary */}
         <div className="grid grid-cols-2 gap-3 pt-3 border-t border-border/30">
           <div>
@@ -155,7 +157,7 @@ export const MarketTrendsHeatmap: React.FC<MarketTrendsHeatmapProps> = ({ classN
               ))}
             </div>
           </div>
-          
+
           <div>
             <div className="flex items-center gap-1.5 mb-2">
               <TrendingDown className="w-3.5 h-3.5 text-red-400" />

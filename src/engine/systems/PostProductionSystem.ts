@@ -1,5 +1,5 @@
-import { GameState, StateImpact } from '@/engine/types';
-import { RandomGenerator } from '@/engine/utils/rng';
+import { GameState, StateImpact } from "@/engine/types";
+import { RandomGenerator } from "@/engine/utils/rng";
 
 // Default number of weeks a project spends in post-production
 const DEFAULT_POST_PRODUCTION_WEEKS = 3;
@@ -20,10 +20,7 @@ const RATINGS_BOARD_DELAY_CHANCE = 0.1;
  *  - 10% chance: ratings-board delays add 1 extra week
  *  - At 0 weeks remaining: transitions project to 'marketing' and emits a news headline
  */
-export function tickPostProduction(
-  state: GameState,
-  rng: RandomGenerator
-): StateImpact[] {
+export function tickPostProduction(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
 
   // ⚡ The Framerate Fanatic: Replaced Object.values() with a direct for...in loop
@@ -31,11 +28,10 @@ export function tickPostProduction(
   for (const projectId in state.entities.projects) {
     if (!Object.prototype.hasOwnProperty.call(state.entities.projects, projectId)) continue;
     const project = state.entities.projects[projectId];
-    if (project.state !== 'post_production') continue;
+    if (project.state !== "post_production") continue;
 
     const currentWeeksRemaining: number =
-      project.postProductionWeeksRemaining ??
-      DEFAULT_POST_PRODUCTION_WEEKS;
+      project.postProductionWeeksRemaining ?? DEFAULT_POST_PRODUCTION_WEEKS;
 
     let weeksRemaining = currentWeeksRemaining;
 
@@ -44,22 +40,19 @@ export function tickPostProduction(
       weeksRemaining += 1;
 
       impacts.push({
-        type: 'NEWS_ADDED',
+        type: "NEWS_ADDED",
         payload: {
           headline: `"${project.title}" faces ratings board delay`,
           description: `The ratings board has requested additional review time for "${project.title}", adding one week to post-production.`,
-          category: 'general',
+          category: "general",
         },
       });
     }
 
     // ── Director's cut request (20%) ─────────────────────────────────────────
-    if (
-      rng.next() < DIRECTORS_CUT_REQUEST_CHANCE &&
-      !project.directorsCutNotified
-    ) {
+    if (rng.next() < DIRECTORS_CUT_REQUEST_CHANCE && !project.directorsCutNotified) {
       impacts.push({
-        type: 'PROJECT_UPDATED',
+        type: "PROJECT_UPDATED",
         payload: {
           projectId: project.id,
           update: { directorsCutNotified: true },
@@ -67,9 +60,9 @@ export function tickPostProduction(
       });
 
       impacts.push({
-        type: 'MODAL_TRIGGERED',
+        type: "MODAL_TRIGGERED",
         payload: {
-          modalType: 'DIRECTORS_CUT_AVAILABLE',
+          modalType: "DIRECTORS_CUT_AVAILABLE",
           priority: 40,
           payload: { projectId: project.id, projectTitle: project.title },
         },
@@ -82,29 +75,29 @@ export function tickPostProduction(
     // ── Completion: transition to marketing ──────────────────────────────────
     if (weeksRemaining === 0) {
       impacts.push({
-        type: 'PROJECT_UPDATED',
+        type: "PROJECT_UPDATED",
         payload: {
           projectId: project.id,
           update: {
-            state: 'marketing',
+            state: "marketing",
             postProductionWeeksRemaining: 0,
             weeksInPhase: 0,
-          } as unknown as Partial<import('@/engine/types').Project>,
+          } as unknown as Partial<import("@/engine/types").Project>,
         },
       });
 
       impacts.push({
-        type: 'NEWS_ADDED',
+        type: "NEWS_ADDED",
         payload: {
           headline: `"${project.title}" wraps post-production`,
           description: `"${project.title}" has completed post-production and is now entering the marketing phase.`,
-          category: 'general',
+          category: "general",
         },
       });
     } else {
       // Still in post-production — persist updated counter
       impacts.push({
-        type: 'PROJECT_UPDATED',
+        type: "PROJECT_UPDATED",
         payload: {
           projectId: project.id,
           update: {

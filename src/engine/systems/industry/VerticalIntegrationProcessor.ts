@@ -1,6 +1,6 @@
-import { GameState, StateImpact, StreamerPlatform, RivalStudio } from '@/engine/types';
-import { RandomGenerator } from '../../utils/rng';
-import { isPlayerOwner } from '../../utils/ownership';
+import { GameState, StateImpact, StreamerPlatform, RivalStudio } from "@/engine/types";
+import { RandomGenerator } from "../../utils/rng";
+import { isPlayerOwner } from "../../utils/ownership";
 
 /**
  * Studio Boss - Vertical Integration Processor
@@ -8,39 +8,40 @@ import { isPlayerOwner } from '../../utils/ownership';
  */
 export function tickVerticalIntegration(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
-  
+
   // Find all platforms with an ownerId
   const ownedPlatforms = state.market.buyers.filter(
-    b => b.archetype === 'streamer' && b.ownerId
+    (b) => b.archetype === "streamer" && b.ownerId
   ) as StreamerPlatform[];
 
-  ownedPlatforms.forEach(platform => {
+  ownedPlatforms.forEach((platform) => {
     // Calculate weekly P&L for the platform
     // Simplified: Revenue = subscribers * $0.20 (average weekly ARPU)
     // Costs = marketingSpend + contentLibraryQuality * $50k
-    const weeklyRevenue = platform.subscribers * 0.20;
-    const weeklyCosts = (platform.marketingSpend || 1_000_000) / 4 + (platform.contentLibraryQuality * 20_000);
+    const weeklyRevenue = platform.subscribers * 0.2;
+    const weeklyCosts =
+      (platform.marketingSpend || 1_000_000) / 4 + platform.contentLibraryQuality * 20_000;
     const netProfit = weeklyRevenue - weeklyCosts;
 
     // Apply netProfit to the owner's cash
     if (isPlayerOwner(state, platform.ownerId)) {
       impacts.push({
-        type: 'FINANCE_TRANSACTION',
+        type: "FINANCE_TRANSACTION",
         payload: {
           amount: netProfit,
           description: `Platform P&L: ${platform.name}`,
-        }
+        },
       });
     } else if (platform.ownerId) {
       // Rival owner
       const rival = state.entities.rivals[platform.ownerId];
       if (rival) {
         impacts.push({
-          type: 'RIVAL_UPDATED',
+          type: "RIVAL_UPDATED",
           payload: {
             rivalId: rival.id,
-            update: { cash: rival.cash + netProfit }
-          }
+            update: { cash: rival.cash + netProfit },
+          },
         });
       }
     }
@@ -48,14 +49,15 @@ export function tickVerticalIntegration(state: GameState, rng: RandomGenerator):
     // Add news if profit/loss is massive
     if (Math.abs(netProfit) > 5_000_000 && rng.next() < 0.1) {
       impacts.push({
-        type: 'NEWS_ADDED',
+        type: "NEWS_ADDED",
         payload: {
-          headline: netProfit > 0 
-            ? `${platform.name} reports record weekly profits` 
-            : `${isPlayerOwner(state, platform.ownerId) ? state.studio.name : platform.name} shares tumble on streaming losses`,
+          headline:
+            netProfit > 0
+              ? `${platform.name} reports record weekly profits`
+              : `${isPlayerOwner(state, platform.ownerId) ? state.studio.name : platform.name} shares tumble on streaming losses`,
           description: `Weekly platform earnings signal a major shift in distribution economics for ${platform.name}.`,
-          category: 'market',
-        }
+          category: "market",
+        },
       });
     }
   });

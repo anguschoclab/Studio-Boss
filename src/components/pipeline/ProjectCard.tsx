@@ -1,14 +1,22 @@
-import { Project } from '@/engine/types';
-import { useUIStore } from '@/store/uiStore';
-import { useGameStore } from '@/store/gameStore';
-import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
-import { Button } from '@/components/ui/button';
-import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
-import { AlertTriangle, Activity, Zap, DollarSign, Target, Bookmark, BookmarkCheck } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { formatMoney } from '@/engine/utils';
-import { DistributionBadge } from '../shared/DistributionBadge';
-import { RecoupmentStatus } from '../shared/RecoupmentStatus';
+import { Project } from "@/engine/types";
+import { useUIStore } from "@/store/uiStore";
+import { useGameStore } from "@/store/gameStore";
+import { BUDGET_TIERS } from "@/engine/data/budgetTiers";
+import { Button } from "@/components/ui/button";
+import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
+import {
+  AlertTriangle,
+  Activity,
+  Zap,
+  DollarSign,
+  Target,
+  Bookmark,
+  BookmarkCheck,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { formatMoney } from "@/engine/utils";
+import { DistributionBadge } from "../shared/DistributionBadge";
+import { RecoupmentStatus } from "../shared/RecoupmentStatus";
 
 /**
  * Props for the ProjectCard component.
@@ -22,7 +30,7 @@ interface ProjectCardProps {
  * A highly stylized card component for the studio production pipeline.
  * Displays project title, genre, budget tier, market buzz, and current production phase progress.
  * Includes executive action buttons for greenlighting projects, pitching, or resolving crises.
- * 
+ *
  * @param props - Component properties
  */
 export const ProjectCard = ({ project }: ProjectCardProps) => {
@@ -46,7 +54,8 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
         ? Math.floor(project.budget * 0.03)
         : 0;
 
-  const displayFormat = project.type === 'SERIES' && 'tvDetails' in project
+  const displayFormat =
+    project.type === "SERIES" && "tvDetails" in project
       ? `S${project.tvDetails?.currentSeason || 1}`
       : project.format.toUpperCase();
 
@@ -103,20 +112,20 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
           <div className="flex items-center gap-3">
             <button
               type="button"
-              aria-label={isBookmarked(project.id, 'project') ? 'Remove bookmark' : 'Add bookmark'}
+              aria-label={isBookmarked(project.id, "project") ? "Remove bookmark" : "Add bookmark"}
               onClick={(e) => {
                 e.stopPropagation();
-                toggleBookmark(project.id, 'project');
+                toggleBookmark(project.id, "project");
               }}
               className={cn(
                 "h-8 w-8 flex items-center justify-center border transition-all duration-700 rounded-none",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black",
-                isBookmarked(project.id, 'project')
+                isBookmarked(project.id, "project")
                   ? "bg-primary/10 border-primary/40 text-primary shadow-[0_0_15px_rgba(var(--primary),0.2)]"
                   : "bg-white/5 border-white/10 text-muted-foreground/40 hover:text-primary hover:border-primary/40"
               )}
             >
-              {isBookmarked(project.id, 'project') ? (
+              {isBookmarked(project.id, "project") ? (
                 <BookmarkCheck className="h-4 w-4" strokeWidth={3} aria-hidden="true" />
               ) : (
                 <Bookmark className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
@@ -160,7 +169,10 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
 
           {/* Awareness Indicator (marketing phase only) */}
           {project.state === "marketing" && (
-            <TooltipWrapper tooltip="ACCUMULATED MARKET AWARENESS — built weekly from campaign spend (share-of-voice adjusted)" side="top">
+            <TooltipWrapper
+              tooltip="ACCUMULATED MARKET AWARENESS — built weekly from campaign spend (share-of-voice adjusted)"
+              side="top"
+            >
               <div className="space-y-3">
                 <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 group-hover:text-muted-foreground/60 transition-all duration-700 italic">
                   <span className="flex items-center gap-2">

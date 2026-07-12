@@ -1,9 +1,6 @@
-import { GameState, Talent } from '../../../types';
-import { RandomGenerator } from '../../../utils/rng';
-import {
-  HiddenTalent,
-  DiscoveryEvent,
-} from '../../../types/discovery.types';
+import { GameState, Talent } from "../../../types";
+import { RandomGenerator } from "../../../utils/rng";
+import { HiddenTalent, DiscoveryEvent } from "../../../types/discovery.types";
 
 // Hidden talent generation
 const HIDDEN_TALENT_POOL_SIZE = 20;
@@ -15,12 +12,12 @@ export function generateHiddenTalent(rng: RandomGenerator): HiddenTalent {
   const age = rng.rangeInt(18, 35);
 
   return {
-    id: rng.uuid('HTL'),
+    id: rng.uuid("HTL"),
     name: generateHiddenTalentName(rng),
     age,
     potential,
     currentSkill,
-    discoveryMethod: rng.pick(['audition', 'recommendation', 'scouting', 'viral_discovery']),
+    discoveryMethod: rng.pick(["audition", "recommendation", "scouting", "viral_discovery"]),
     askingPrice: rng.rangeInt(50000, 200000),
     charisma: rng.rangeInt(40, 95),
     prestige: rng.rangeInt(20, 60),
@@ -30,10 +27,40 @@ export function generateHiddenTalent(rng: RandomGenerator): HiddenTalent {
 }
 
 function generateHiddenTalentName(rng: RandomGenerator): string {
-  const firstNames = ['Maya', 'River', 'Zion', 'Sage', 'Phoenix', 'Indigo', 'Orion', 'Nova',
-                      'Luna', 'Stella', 'Axel', 'Jett', 'Cruz', 'Knox', 'Blake', 'Quinn'];
-  const lastNames = ['Chen', 'Patel', 'Kim', 'Sato', 'Okafor', 'Baptiste', 'Andersson',
-                     'Leroy', 'Rossi', 'Kowalski', 'Yilmaz', 'Santos', 'Reyes', 'Khan'];
+  const firstNames = [
+    "Maya",
+    "River",
+    "Zion",
+    "Sage",
+    "Phoenix",
+    "Indigo",
+    "Orion",
+    "Nova",
+    "Luna",
+    "Stella",
+    "Axel",
+    "Jett",
+    "Cruz",
+    "Knox",
+    "Blake",
+    "Quinn",
+  ];
+  const lastNames = [
+    "Chen",
+    "Patel",
+    "Kim",
+    "Sato",
+    "Okafor",
+    "Baptiste",
+    "Andersson",
+    "Leroy",
+    "Rossi",
+    "Kowalski",
+    "Yilmaz",
+    "Santos",
+    "Reyes",
+    "Khan",
+  ];
 
   return `${rng.pick(firstNames)} ${rng.pick(lastNames)}`;
 }
@@ -49,16 +76,16 @@ export function discoverHiddenTalent(
   const newTalent: Talent = {
     id: hiddenTalent.id,
     name: hiddenTalent.name,
-    role: 'actor',
-    roles: ['actor'],
+    role: "actor",
+    roles: ["actor"],
     tier: 4, // Start as unknown
     demographics: {
       age: hiddenTalent.age,
-      gender: rng.next() < 0.5 ? 'MALE' : 'FEMALE',
-      country: rng.pick(['USA', 'UK', 'Canada', 'Australia', 'Other']),
-      ethnicity: 'varied',
+      gender: rng.next() < 0.5 ? "MALE" : "FEMALE",
+      country: rng.pick(["USA", "UK", "Canada", "Australia", "Other"]),
+      ethnicity: "varied",
     },
-    accessLevel: 'outsider',
+    accessLevel: "outsider",
     momentum: 50,
     skills: {
       acting: hiddenTalent.currentSkill,
@@ -80,8 +107,8 @@ export function discoverHiddenTalent(
       synergyAffinities: [],
       synergyConflicts: [],
     },
-    personality: rng.pick(['charismatic', 'collaborative', 'difficult', 'perfectionist']),
-    actorArchetype: rng.pick(['movie_star', 'prestige_actor', 'tv_star', 'character_actor']),
+    personality: rng.pick(["charismatic", "collaborative", "difficult", "perfectionist"]),
+    actorArchetype: rng.pick(["movie_star", "prestige_actor", "tv_star", "character_actor"]),
   };
 
   const event: DiscoveryEvent = {

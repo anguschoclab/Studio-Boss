@@ -1,14 +1,14 @@
-import React from 'react';
-import { render, screen, cleanup } from '@testing-library/react';
-import { describe, it, expect, afterEach } from 'vitest';
-import { MoraleDashboard } from '@/components/talent/MoraleDashboard';
+import React from "react";
+import { render, screen, cleanup } from "@testing-library/react";
+import { describe, it, expect, afterEach } from "vitest";
+import { MoraleDashboard } from "@/components/talent/MoraleDashboard";
 
-describe('MoraleDashboard', () => {
+describe("MoraleDashboard", () => {
   afterEach(() => {
     cleanup();
   });
 
-  it('renders summary cards', () => {
+  it("renders summary cards", () => {
     const moraleData = {
       byTalent: [],
       averageMorale: 75,
@@ -17,21 +17,21 @@ describe('MoraleDashboard', () => {
 
     render(<MoraleDashboard moraleData={moraleData} />);
 
-    expect(screen.getByText('Average Morale')).toBeInTheDocument();
-    expect(screen.getAllByText('75%').length).toBeGreaterThan(0);
-    expect(screen.getByText('At Risk')).toBeInTheDocument();
-    expect(screen.getByText('Tracked Talent')).toBeInTheDocument();
+    expect(screen.getByText("Average Morale")).toBeInTheDocument();
+    expect(screen.getAllByText("75%").length).toBeGreaterThan(0);
+    expect(screen.getByText("At Risk")).toBeInTheDocument();
+    expect(screen.getByText("Tracked Talent")).toBeInTheDocument();
   });
 
-  it('displays at-risk talent section when there are at-risk members', () => {
+  it("displays at-risk talent section when there are at-risk members", () => {
     const moraleData = {
       byTalent: [
         {
-          talentId: '1',
-          talentName: 'John Actor',
+          talentId: "1",
+          talentName: "John Actor",
           morale: 25,
-          trend: 'down' as const,
-          factors: ['Contract dispute', 'Overworked'],
+          trend: "down" as const,
+          factors: ["Contract dispute", "Overworked"],
           atRisk: true,
         },
       ],
@@ -41,20 +41,20 @@ describe('MoraleDashboard', () => {
 
     render(<MoraleDashboard moraleData={moraleData} />);
 
-    expect(screen.getByText('AT-RISK TALENT')).toBeInTheDocument();
-    expect(screen.getByText('JOHN ACTOR')).toBeInTheDocument();
-    expect(screen.getAllByText('25%').length).toBeGreaterThan(0);
-    expect(screen.getByText('Contract dispute')).toBeInTheDocument();
+    expect(screen.getByText("AT-RISK TALENT")).toBeInTheDocument();
+    expect(screen.getByText("JOHN ACTOR")).toBeInTheDocument();
+    expect(screen.getAllByText("25%").length).toBeGreaterThan(0);
+    expect(screen.getByText("Contract dispute")).toBeInTheDocument();
   });
 
-  it('renders talent morale overview section', () => {
+  it("renders talent morale overview section", () => {
     const moraleData = {
       byTalent: [
         {
-          talentId: '1',
-          talentName: 'Happy Actor',
+          talentId: "1",
+          talentName: "Happy Actor",
           morale: 85,
-          trend: 'stable' as const,
+          trend: "stable" as const,
           factors: [],
           atRisk: false,
         },
@@ -65,19 +65,19 @@ describe('MoraleDashboard', () => {
 
     render(<MoraleDashboard moraleData={moraleData} />);
 
-    expect(screen.getByText('TALENT MORALE OVERVIEW')).toBeInTheDocument();
-    expect(screen.getByText('HAPPY ACTOR')).toBeInTheDocument();
-    expect(screen.getAllByText('85%').length).toBeGreaterThan(0);
+    expect(screen.getByText("TALENT MORALE OVERVIEW")).toBeInTheDocument();
+    expect(screen.getByText("HAPPY ACTOR")).toBeInTheDocument();
+    expect(screen.getAllByText("85%").length).toBeGreaterThan(0);
   });
 
-  it('shows correct trend indicators', () => {
+  it("shows correct trend indicators", () => {
     const moraleData = {
       byTalent: [
         {
-          talentId: '1',
-          talentName: 'Test Actor',
+          talentId: "1",
+          talentName: "Test Actor",
           morale: 50,
-          trend: 'up' as const,
+          trend: "up" as const,
           factors: [],
           atRisk: true,
         },
@@ -88,6 +88,6 @@ describe('MoraleDashboard', () => {
 
     render(<MoraleDashboard moraleData={moraleData} />);
 
-    expect(screen.getByText('↗ Improving')).toBeInTheDocument();
+    expect(screen.getByText("↗ Improving")).toBeInTheDocument();
   });
 });

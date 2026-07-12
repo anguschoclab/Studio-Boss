@@ -1,26 +1,26 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { AnnualScans } from '@/engine/services/filters/AnnualScans';
-import { GameState } from '@/engine/types';
-import { RandomGenerator } from '@/engine/utils/rng';
-import { TickContext } from '@/engine/services/filters/types';
+import { describe, it, expect, beforeEach } from "vitest";
+import { AnnualScans } from "@/engine/services/filters/AnnualScans";
+import { GameState } from "@/engine/types";
+import { RandomGenerator } from "@/engine/utils/rng";
+import { TickContext } from "@/engine/services/filters/types";
 
-describe('AnnualScans', () => {
+describe("AnnualScans", () => {
   let mockState: GameState;
   let mockContext: TickContext;
   let mockRng: RandomGenerator;
 
   beforeEach(() => {
     mockRng = new RandomGenerator(42);
-    
+
     mockState = {
       week: 1,
       tickCount: 1,
       gameSeed: 12345,
       rngState: 12345,
       studio: {
-        id: 'studio-1',
-        name: 'Test Studio',
-        archetype: 'major',
+        id: "studio-1",
+        name: "Test Studio",
+        archetype: "major",
         prestige: 50,
         internal: {
           projectHistory: [],
@@ -29,14 +29,14 @@ describe('AnnualScans', () => {
       entities: {
         projects: {},
         rivals: {
-          'rival-1': {
-            id: 'rival-1',
-            name: 'Test Rival',
-            archetype: 'major',
+          "rival-1": {
+            id: "rival-1",
+            name: "Test Rival",
+            archetype: "major",
             cash: 50000000,
             prestige: 60,
             strength: 70,
-            currentMotivation: 'STABILITY',
+            currentMotivation: "STABILITY",
             motivationProfile: {
               financial: 50,
               prestige: 50,
@@ -68,7 +68,7 @@ describe('AnnualScans', () => {
           loanRate: 0.08,
           rateHistory: [],
           sentiment: 50,
-          cycle: 'STABLE',
+          cycle: "STABLE",
         },
       },
       ip: {
@@ -94,37 +94,37 @@ describe('AnnualScans', () => {
     };
   });
 
-  it('should execute without errors', () => {
+  it("should execute without errors", () => {
     expect(() => AnnualScans.execute(mockState, mockContext)).not.toThrow();
   });
 
-  it('should preserve RNG state', () => {
+  it("should preserve RNG state", () => {
     const stateBefore = mockRng.getState();
     AnnualScans.execute(mockState, mockContext);
     const stateAfter = mockRng.getState();
     expect(stateAfter).toEqual(stateBefore);
   });
 
-  it('should handle week 1 for annual IP scan', () => {
+  it("should handle week 1 for annual IP scan", () => {
     mockContext.week = 1;
     mockState.week = 1;
     expect(() => AnnualScans.execute(mockState, mockContext)).not.toThrow();
   });
 
-  it('should handle week 52 for annual M&A scan', () => {
+  it("should handle week 52 for annual M&A scan", () => {
     mockContext.week = 52;
     mockState.week = 52;
     expect(() => AnnualScans.execute(mockState, mockContext)).not.toThrow();
   });
 
-  it('should handle empty vault', () => {
+  it("should handle empty vault", () => {
     mockState.ip.vault = [];
     mockContext.week = 1;
     mockState.week = 1;
     expect(() => AnnualScans.execute(mockState, mockContext)).not.toThrow();
   });
 
-  it('should handle empty rivals', () => {
+  it("should handle empty rivals", () => {
     mockState.entities.rivals = {};
     mockContext.week = 52;
     mockState.week = 52;

@@ -1,6 +1,6 @@
-import { GameState, StateImpact, Talent, Project, Contract } from '../../types';
-import { RandomGenerator } from '../../utils/rng';
-import { getContractsByProjectId } from '../../utils';
+import { GameState, StateImpact, Talent, Project, Contract } from "../../types";
+import { RandomGenerator } from "../../utils/rng";
+import { getContractsByProjectId } from "../../utils";
 import {
   TalkShowAppearance,
   TalkShowType,
@@ -9,8 +9,8 @@ import {
   PressTour,
   FAMOUS_TALK_SHOWS,
   PRESTIGIOUS_MAGAZINES,
-} from '../../types/marketing.types';
-import { areRomantic } from './RelationshipSystem';
+} from "../../types/marketing.types";
+import { areRomantic } from "./RelationshipSystem";
 
 /**
  * Marketing & Promotion System
@@ -24,13 +24,22 @@ const PHOTOSHOOT_CHANCE = 0.05; // 5% per week per talent
 const PRESS_TOUR_CHANCE = 0.15; // 15% chance when releasing major film
 
 const TALK_SHOW_TYPES: TalkShowType[] = [
-  'late_night', 'morning_show', 'podcast', 'variety', 'comedy_central', 'serious_interview'
+  "late_night",
+  "morning_show",
+  "podcast",
+  "variety",
+  "comedy_central",
+  "serious_interview",
 ];
 
 const PHOTOSHOOT_TYPES: PhotoshootType[] = [
-  'magazine_cover', 'fashion_editorial', 'promotional', 'candid', 'red_carpet', 'controversial'
+  "magazine_cover",
+  "fashion_editorial",
+  "promotional",
+  "candid",
+  "red_carpet",
+  "controversial",
 ];
-
 
 // Performance factors
 const BASE_PERFORMANCE = 50;
@@ -52,10 +61,10 @@ function generateTalkShowAppearance(
   // Match show type to talent personality
   let preferredTypes = TALK_SHOW_TYPES;
 
-  if (talent.personality === 'charismatic') {
-    preferredTypes = ['late_night', 'variety', 'comedy_central'];
+  if (talent.personality === "charismatic") {
+    preferredTypes = ["late_night", "variety", "comedy_central"];
   } else if (talent.prestige > 80) {
-    preferredTypes = ['serious_interview', 'morning_show'];
+    preferredTypes = ["serious_interview", "morning_show"];
   }
 
   const showType = rng.pick(preferredTypes);
@@ -63,8 +72,8 @@ function generateTalkShowAppearance(
 
   // Calculate performance
   let performance = BASE_PERFORMANCE;
-  if (talent.personality === 'charismatic') performance += CHARISMA_BONUS;
-  if (talent.personality === 'difficult') performance -= 10;
+  if (talent.personality === "charismatic") performance += CHARISMA_BONUS;
+  if (talent.personality === "difficult") performance -= 10;
   performance += rng.rangeInt(-15, 25);
   performance = Math.max(0, Math.min(100, performance));
 
@@ -74,28 +83,28 @@ function generateTalkShowAppearance(
 
   // Scandal risk (difficult personalities + live TV = risk)
   let scandalChance = SCANDAL_RISK_BASE;
-  if (talent.personality === 'difficult') scandalChance += 20;
-  if (showType === 'comedy_central') scandalChance += 10;
-  if (showType === 'variety') scandalChance += 5;
-  const scandalGenerated = rng.next() < (scandalChance / 100);
+  if (talent.personality === "difficult") scandalChance += 20;
+  if (showType === "comedy_central") scandalChance += 10;
+  if (showType === "variety") scandalChance += 5;
+  const scandalGenerated = rng.next() < scandalChance / 100;
 
   // Calculate reach based on show type and talent fame
   const baseReach: Record<TalkShowType, number> = {
-    'late_night': 2000000,
-    'morning_show': 3500000,
-    'podcast': 500000,
-    'variety': 1500000,
-    'comedy_central': 800000,
-    'serious_interview': 1200000,
+    late_night: 2000000,
+    morning_show: 3500000,
+    podcast: 500000,
+    variety: 1500000,
+    comedy_central: 800000,
+    serious_interview: 1200000,
   };
-  const reach = Math.floor(baseReach[showType] * (talent.starMeter || 50) / 50);
+  const reach = Math.floor((baseReach[showType] * (talent.starMeter || 50)) / 50);
 
   // Calculate boosts
-  const prestigeChange = performance > 70 ? 1 : (performance < 40 ? -1 : 0);
+  const prestigeChange = performance > 70 ? 1 : performance < 40 ? -1 : 0;
   const starMeterBoost = Math.floor((performance - 50) / 10) + (viralMoment ? 10 : 0);
 
   return {
-    id: rng.uuid('TSH'),
+    id: rng.uuid("TSH"),
     talentId: talent.id,
     projectId: project?.id,
     showName,
@@ -123,10 +132,10 @@ function generatePhotoshoot(
   // Choose shoot type based on talent
   let preferredTypes = PHOTOSHOOT_TYPES;
 
-  if (talent.accessLevel === 'dynasty' || talent.tier === 'A_LIST') {
-    preferredTypes = ['magazine_cover', 'fashion_editorial'];
+  if (talent.accessLevel === "dynasty" || talent.tier === "A_LIST") {
+    preferredTypes = ["magazine_cover", "fashion_editorial"];
   } else if (talent.psychology?.scandalRisk && talent.psychology.scandalRisk > 60) {
-    preferredTypes = ['controversial', 'candid'];
+    preferredTypes = ["controversial", "candid"];
   }
 
   const shootType = rng.pick(preferredTypes);
@@ -134,13 +143,13 @@ function generatePhotoshoot(
 
   // Quality based on talent prestige + photographer skill (random)
   let quality = (talent.prestige || 50) * 0.5 + rng.rangeInt(20, 50);
-  if (shootType === 'controversial') quality += 10; // Edgy shoots get attention
+  if (shootType === "controversial") quality += 10; // Edgy shoots get attention
   quality = Math.min(100, quality);
 
   // Controversy level
   let controversy = 0;
-  if (shootType === 'controversial') controversy = rng.rangeInt(40, 80);
-  else if (shootType === 'candid') controversy = rng.rangeInt(10, 30);
+  if (shootType === "controversial") controversy = rng.rangeInt(40, 80);
+  else if (shootType === "candid") controversy = rng.rangeInt(10, 30);
   else if (talent.psychology?.scandalRisk && talent.psychology.scandalRisk > 60) {
     controversy = rng.rangeInt(20, 50);
   }
@@ -150,14 +159,14 @@ function generatePhotoshoot(
 
   // Calculate boosts
   const starMeterBoost = Math.floor(quality / 10) + (controversy > 50 ? 5 : 0);
-  const prestigeChange = shootType === 'magazine_cover' && quality > 80 ? 2 :
-                         shootType === 'controversial' ? -1 : 0;
+  const prestigeChange =
+    shootType === "magazine_cover" && quality > 80 ? 2 : shootType === "controversial" ? -1 : 0;
 
   const coTalentIds = coTalent ? [coTalent.id] : [];
   const isCoupleShoot = coTalent ? areRomantic(talent.id, coTalent.id, state) : false;
 
   return {
-    id: rng.uuid('PHS'),
+    id: rng.uuid("PHS"),
     talentId: talent.id,
     magazineName,
     shootType,
@@ -191,7 +200,7 @@ function generatePressTour(
   }
 
   const tour: PressTour = {
-    id: rng.uuid('PRT'),
+    id: rng.uuid("PRT"),
     projectId: project.id,
     talentIds,
     startWeek: state.week,
@@ -201,7 +210,6 @@ function generatePressTour(
     totalCost: talents.length * duration * 50000, // $50k per talent per week
     effectiveness: 0, // Calculated after generation
   };
-
 
   // Generate appearances for each week
   for (let week = 0; week < duration; week++) {
@@ -251,7 +259,6 @@ function generatePressTour(
     tour.effectiveness = 50;
   }
 
-
   return tour;
 }
 
@@ -270,12 +277,12 @@ export function tickMarketingPromotionSystem(
     const talent = talentsRecord[talentId];
 
     // --- Talk Show Appearance ---
-    if (rng.next() < TALK_SHOW_CHANCE * (talent.starMeter || 50) / 50) {
+    if (rng.next() < (TALK_SHOW_CHANCE * (talent.starMeter || 50)) / 50) {
       const appearance = generateTalkShowAppearance(talent, state, rng);
 
       if (appearance) {
         impacts.push({
-          type: 'TALK_SHOW_APPEARANCE_CREATED',
+          type: "TALK_SHOW_APPEARANCE_CREATED",
           payload: {
             talentId: talent.id,
             appearance,
@@ -285,11 +292,14 @@ export function tickMarketingPromotionSystem(
         // Apply star meter boost
         if (appearance.starMeterBoost !== 0) {
           impacts.push({
-            type: 'TALENT_UPDATED',
+            type: "TALENT_UPDATED",
             payload: {
               talentId: talent.id,
               update: {
-                starMeter: Math.max(0, Math.min(100, (talent.starMeter || 50) + appearance.starMeterBoost)),
+                starMeter: Math.max(
+                  0,
+                  Math.min(100, (talent.starMeter || 50) + appearance.starMeterBoost)
+                ),
               },
             },
           });
@@ -298,13 +308,13 @@ export function tickMarketingPromotionSystem(
         // Viral moment news
         if (appearance.viralMoment) {
           impacts.push({
-            type: 'NEWS_ADDED',
+            type: "NEWS_ADDED",
             payload: {
-              id: rng.uuid('NWS'),
+              id: rng.uuid("NWS"),
               headline: `${talent.name} Goes Viral on ${appearance.showName}`,
               description: `A clip from the appearance has taken over social media, boosting their profile significantly.`,
-              category: 'talent',
-              publication: 'Entertainment Weekly',
+              category: "talent",
+              publication: "Entertainment Weekly",
             },
           });
         }
@@ -312,15 +322,15 @@ export function tickMarketingPromotionSystem(
         // Scandal from appearance
         if (appearance.scandalGenerated) {
           impacts.push({
-            type: 'SCANDAL_ADDED',
+            type: "SCANDAL_ADDED",
             payload: {
               scandal: {
-                id: rng.uuid('SCD'),
+                id: rng.uuid("SCD"),
                 talentId: talent.id,
                 week: state.week,
-                type: 'CONTROVERSY',
+                type: "CONTROVERSY",
                 description: `${talent.name} made controversial remarks during their ${appearance.showName} appearance`,
-                severity: 'medium',
+                severity: "medium",
                 publicAwareness: 60,
                 careerImpact: -5,
               },
@@ -332,14 +342,14 @@ export function tickMarketingPromotionSystem(
 
     // --- Photoshoot ---
     // Higher chance for top-tier talent
-    const photoshootChance = PHOTOSHOOT_CHANCE * (talent.tier === 'A_LIST' ? 2 : 1);
+    const photoshootChance = PHOTOSHOOT_CHANCE * (talent.tier === "A_LIST" ? 2 : 1);
 
     if (rng.next() < photoshootChance) {
       const photoshoot = generatePhotoshoot(talent, state, rng);
 
       if (photoshoot) {
         impacts.push({
-          type: 'PHOTOSHOOT_CREATED',
+          type: "PHOTOSHOOT_CREATED",
           payload: {
             talentId: talent.id,
             photoshoot,
@@ -349,25 +359,28 @@ export function tickMarketingPromotionSystem(
         // Apply boosts when published
         if (photoshoot.publicationWeek === state.week) {
           impacts.push({
-            type: 'TALENT_UPDATED',
+            type: "TALENT_UPDATED",
             payload: {
               talentId: talent.id,
               update: {
-                starMeter: Math.max(0, Math.min(100, (talent.starMeter || 50) + photoshoot.starMeterBoost)),
+                starMeter: Math.max(
+                  0,
+                  Math.min(100, (talent.starMeter || 50) + photoshoot.starMeterBoost)
+                ),
                 prestige: (talent.prestige || 50) + photoshoot.prestigeChange,
               },
             },
           });
 
           // News about cover
-          if (photoshoot.shootType === 'magazine_cover') {
+          if (photoshoot.shootType === "magazine_cover") {
             impacts.push({
-              type: 'NEWS_ADDED',
+              type: "NEWS_ADDED",
               payload: {
-                id: rng.uuid('NWS'),
+                id: rng.uuid("NWS"),
                 headline: `${talent.name} Graces Cover of ${photoshoot.magazineName}`,
                 description: `The stunning cover shoot is generating major buzz in the industry.`,
-                category: 'talent',
+                category: "talent",
                 publication: photoshoot.magazineName,
               },
             });
@@ -376,13 +389,13 @@ export function tickMarketingPromotionSystem(
           // News about controversy
           if (photoshoot.controversy > 60) {
             impacts.push({
-              type: 'NEWS_ADDED',
+              type: "NEWS_ADDED",
               payload: {
-                id: rng.uuid('NWS'),
+                id: rng.uuid("NWS"),
                 headline: `${photoshoot.magazineName} Shoot Sparks Controversy`,
                 description: `${talent.name}'s edgy photoshoot is dividing fans and critics alike.`,
-                category: 'talent',
-                publication: 'Page Six',
+                category: "talent",
+                publication: "Page Six",
               },
             });
           }
@@ -391,12 +404,12 @@ export function tickMarketingPromotionSystem(
           if (photoshoot.isCoupleShoot && photoshoot.coTalentIds.length > 0) {
             const coTalent = state.entities.talents?.[photoshoot.coTalentIds[0]];
             impacts.push({
-              type: 'NEWS_ADDED',
+              type: "NEWS_ADDED",
               payload: {
-                id: rng.uuid('NWS'),
+                id: rng.uuid("NWS"),
                 headline: `Power Couple: ${talent.name} and ${coTalent?.name} on ${photoshoot.magazineName}`,
                 description: `Hollywood's hottest couple poses together in an exclusive shoot.`,
-                category: 'talent',
+                category: "talent",
                 publication: photoshoot.magazineName,
               },
             });
@@ -413,10 +426,18 @@ export function tickMarketingPromotionSystem(
     const project = projectsRecord[id];
 
     // Release window check (2-6 weeks out)
-    if (project.releaseWeek && project.releaseWeek - state.week >= 2 && project.releaseWeek - state.week <= 6) {
+    if (
+      project.releaseWeek &&
+      project.releaseWeek - state.week >= 2 &&
+      project.releaseWeek - state.week <= 6
+    ) {
       if (rng.next() < PRESS_TOUR_CHANCE) {
         // Gather attached talent via index
-        const projectContracts = getContractsByProjectId(state.entities.contractsByProjectId, state.entities.contracts, project.id);
+        const projectContracts = getContractsByProjectId(
+          state.entities.contractsByProjectId,
+          state.entities.contracts,
+          project.id
+        );
         const projectTalents: Talent[] = [];
         for (let i = 0; i < projectContracts.length; i++) {
           const t = state.entities.talents?.[projectContracts[i].talentId];
@@ -428,7 +449,7 @@ export function tickMarketingPromotionSystem(
 
           if (tour) {
             impacts.push({
-              type: 'PRESS_TOUR_CREATED',
+              type: "PRESS_TOUR_CREATED",
               payload: {
                 projectId: project.id,
                 tour,
@@ -438,19 +459,19 @@ export function tickMarketingPromotionSystem(
 
             // Deduct cost
             impacts.push({
-              type: 'FUNDS_DEDUCTED',
+              type: "FUNDS_DEDUCTED",
               cashChange: -tour.totalCost,
             });
 
             // News about tour
             impacts.push({
-              type: 'NEWS_ADDED',
+              type: "NEWS_ADDED",
               payload: {
-                id: rng.uuid('NWS'),
+                id: rng.uuid("NWS"),
                 headline: `"${project.title}" Press Tour Kicks Off`,
                 description: `The cast is hitting all the major talk shows and magazines to promote the upcoming release.`,
-                category: 'industry',
-                publication: 'Variety',
+                category: "industry",
+                publication: "Variety",
               },
             });
           }
@@ -459,7 +480,6 @@ export function tickMarketingPromotionSystem(
     }
   }
 
-
   return impacts;
 }
 
@@ -467,21 +487,19 @@ export function tickMarketingPromotionSystem(
  * Get active press tours for a project
  */
 export function getActivePressTours(projectId: string, state: GameState): PressTour[] {
-
   const marketing = state.relationships?.marketingPromotions || {};
   const activeTours = marketing.activePressTours || {};
   const result: PressTour[] = [];
-  
+
   for (const id in activeTours) {
     const tour = activeTours[id];
     if (tour.projectId === projectId) {
       result.push(tour);
     }
   }
-  
+
   return result;
 }
-
 
 /**
  * Calculate buzz bonus from marketing activities
@@ -502,10 +520,9 @@ export function calculateMarketingBuzz(
       if (a.viralMoment) {
         viralMoments++;
       }
-      buzzScore += (a.performance / 10);
+      buzzScore += a.performance / 10;
     }
   }
 
   return { buzzScore, viralMoments };
 }
-

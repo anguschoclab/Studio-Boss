@@ -1,33 +1,33 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { getIdentityLabel } from '@/engine/systems/StudioIdentitySystem';
-import { StudioCulture } from '@/engine/types';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { getIdentityLabel } from "@/engine/systems/StudioIdentitySystem";
+import { StudioCulture } from "@/engine/types";
 
 // ---------------------------------------------------------------------------
 // Identity label tooltip copy
 // ---------------------------------------------------------------------------
 const LABEL_DESCRIPTIONS: Record<string, string> = {
-  'Auteur Studio':
-    'Your studio is synonymous with artistic vision. Top-tier auteur filmmakers actively seek you out, and critics respect your output. Commercial blockbusters are rare on your slate.',
-  'Prestige Franchise Factory':
-    'You have carved out an enviable niche: high-quality franchise storytelling. Audiences trust your brand for both spectacle and substance.',
-  'Blockbuster Machine':
-    'You are a box-office powerhouse built on proven IP. Expect strong opening weekends, global partnerships, and talent drawn by big budgets — not prestige.',
-  'Genre Indie':
-    'Your original, genre-forward work punches above its weight. Emerging talent gravitates toward you for creative freedom on a lean budget.',
-  'Balanced Studio':
-    'A diverse slate with no single defining identity — flexibility is your strength, but it can dilute your brand in competitive award seasons.',
+  "Auteur Studio":
+    "Your studio is synonymous with artistic vision. Top-tier auteur filmmakers actively seek you out, and critics respect your output. Commercial blockbusters are rare on your slate.",
+  "Prestige Franchise Factory":
+    "You have carved out an enviable niche: high-quality franchise storytelling. Audiences trust your brand for both spectacle and substance.",
+  "Blockbuster Machine":
+    "You are a box-office powerhouse built on proven IP. Expect strong opening weekends, global partnerships, and talent drawn by big budgets — not prestige.",
+  "Genre Indie":
+    "Your original, genre-forward work punches above its weight. Emerging talent gravitates toward you for creative freedom on a lean budget.",
+  "Balanced Studio":
+    "A diverse slate with no single defining identity — flexibility is your strength, but it can dilute your brand in competitive award seasons.",
 };
 
 // ---------------------------------------------------------------------------
 // Talent attraction hints per identity
 // ---------------------------------------------------------------------------
 const TALENT_HINTS: Record<string, string> = {
-  'Auteur Studio': 'Auteur filmmakers & prestige-hunters prefer your studio.',
-  'Prestige Franchise Factory': 'Award-conscious franchise stars are drawn to your slate.',
-  'Blockbuster Machine': 'Commercial A-listers & action stars target your projects.',
-  'Genre Indie': 'Rising stars & genre specialists seek creative opportunities here.',
-  'Balanced Studio': 'A broad range of talent considers your studio a safe choice.',
+  "Auteur Studio": "Auteur filmmakers & prestige-hunters prefer your studio.",
+  "Prestige Franchise Factory": "Award-conscious franchise stars are drawn to your slate.",
+  "Blockbuster Machine": "Commercial A-listers & action stars target your projects.",
+  "Genre Indie": "Rising stars & genre specialists seek creative opportunities here.",
+  "Balanced Studio": "A broad range of talent considers your studio a safe choice.",
 };
 
 // ---------------------------------------------------------------------------
@@ -37,11 +37,17 @@ interface AxisBarProps {
   leftLabel: string;
   rightLabel: string;
   value: number; // 0-100 (100 = right)
-  leftColor: string;  // Tailwind gradient start class
+  leftColor: string; // Tailwind gradient start class
   rightColor: string; // Tailwind gradient end class
 }
 
-const AxisBar: React.FC<AxisBarProps> = ({ leftLabel, rightLabel, value, leftColor, rightColor }) => {
+const AxisBar: React.FC<AxisBarProps> = ({
+  leftLabel,
+  rightLabel,
+  value,
+  leftColor,
+  rightColor,
+}) => {
   const pct = Math.max(0, Math.min(100, value));
 
   return (
@@ -54,7 +60,7 @@ const AxisBar: React.FC<AxisBarProps> = ({ leftLabel, rightLabel, value, leftCol
       <div className="relative h-3 rounded-none bg-white/5 overflow-visible">
         {/* Fill */}
         <div
-          className={cn('absolute inset-y-0 left-0 rounded-none', leftColor, rightColor)}
+          className={cn("absolute inset-y-0 left-0 rounded-none", leftColor, rightColor)}
           style={{
             width: `${pct}%`,
             background: `linear-gradient(to right, var(--tw-gradient-stops))`,
@@ -68,7 +74,9 @@ const AxisBar: React.FC<AxisBarProps> = ({ leftLabel, rightLabel, value, leftCol
       </div>
       {/* Value callout */}
       <div className="flex justify-end">
-        <span className="text-[10px] font-tabular-nums text-muted-foreground">{pct.toFixed(0)}</span>
+        <span className="text-[10px] font-tabular-nums text-muted-foreground">
+          {pct.toFixed(0)}
+        </span>
       </div>
     </div>
   );
@@ -83,10 +91,7 @@ interface StudioIdentityPanelProps {
   className?: string;
 }
 
-export const StudioIdentityPanel: React.FC<StudioIdentityPanelProps> = ({
-  culture,
-  className,
-}) => {
+export const StudioIdentityPanel: React.FC<StudioIdentityPanelProps> = ({ culture, className }) => {
   const axes: StudioCulture = {
     prestigeVsCommercial: culture?.prestigeVsCommercial ?? 50,
     franchiseOriginal: culture?.franchiseOriginal ?? 50,
@@ -96,19 +101,17 @@ export const StudioIdentityPanel: React.FC<StudioIdentityPanelProps> = ({
   };
 
   const label = getIdentityLabel(axes);
-  const description = LABEL_DESCRIPTIONS[label] ?? '';
-  const hint = TALENT_HINTS[label] ?? '';
+  const description = LABEL_DESCRIPTIONS[label] ?? "";
+  const hint = TALENT_HINTS[label] ?? "";
 
   return (
-    <div className={cn('glass-card p-5 space-y-5', className)}>
+    <div className={cn("glass-card p-5 space-y-5", className)}>
       {/* Header */}
       <div>
         <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-body mb-1">
           Studio Identity
         </p>
-        <h2 className="font-display font-black text-2xl text-primary leading-tight">
-          {label}
-        </h2>
+        <h2 className="font-display font-black text-2xl text-primary leading-tight">{label}</h2>
         {description && (
           <p className="mt-1 text-xs font-body text-muted-foreground leading-relaxed">
             {description}

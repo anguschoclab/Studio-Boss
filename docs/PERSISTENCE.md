@@ -26,6 +26,7 @@ UI/Store → saveLoad.ts → [Electron IPC or PersistenceService] → Storage
 ### Saving Game State
 
 **Electron Path:**
+
 1. `saveGame(slot, state)` called from store
 2. Detects Electron environment via `window.electronAPI`
 3. Calls `window.electronAPI.saveGame(slot, state)` via IPC
@@ -33,6 +34,7 @@ UI/Store → saveLoad.ts → [Electron IPC or PersistenceService] → Storage
 5. Returns success/failure boolean
 
 **Web Path:**
+
 1. `saveGame(slot, state)` called from store
 2. Detects web environment (no electronAPI)
 3. Dynamically imports `PersistenceService`
@@ -44,12 +46,14 @@ UI/Store → saveLoad.ts → [Electron IPC or PersistenceService] → Storage
 ### Loading Game State
 
 **Electron Path:**
+
 1. `loadGame(slot)` called from store
 2. Calls `window.electronAPI.loadGame(slot)` via IPC
 3. Electron main process reads from file system
 4. Returns `GameState` object or `null`
 
 **Web Path:**
+
 1. `loadGame(slot)` called from store
 2. Dynamically imports `PersistenceService`
 3. Creates Web Worker message with `LOAD_GAME` type
@@ -93,6 +97,7 @@ Manages Web Worker lifecycle and message passing:
 ### Message Protocol
 
 **Save Request:**
+
 ```typescript
 {
   type: 'SAVE_GAME',
@@ -103,6 +108,7 @@ Manages Web Worker lifecycle and message passing:
 ```
 
 **Load Request:**
+
 ```typescript
 {
   type: 'LOAD_GAME',
@@ -112,6 +118,7 @@ Manages Web Worker lifecycle and message passing:
 ```
 
 **Worker Response:**
+
 ```typescript
 {
   type: 'SAVE_SUCCESS' | 'LOAD_SUCCESS' | 'ERROR',

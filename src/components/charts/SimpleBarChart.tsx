@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   BarChart,
   Bar,
@@ -8,8 +8,8 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
-} from 'recharts';
-import { cn } from '@/lib/utils';
+} from "recharts";
+import { cn } from "@/lib/utils";
 
 interface DataPoint {
   label: string;
@@ -37,33 +37,35 @@ export const SimpleBarChart: React.FC<SimpleBarChartProps> = ({
 }) => {
   if (!data || data.length === 0) {
     return (
-      <div className={cn('flex items-center justify-center h-[200px] text-muted-foreground', className)}>
+      <div
+        className={cn(
+          "flex items-center justify-center h-[200px] text-muted-foreground",
+          className
+        )}
+      >
         No data available
       </div>
     );
   }
 
   const defaultColors = [
-    'hsl(var(--secondary))',
-    'hsl(var(--success))',
-    'hsl(var(--primary))',
-    'hsl(var(--destructive))',
-    '#8b5cf6',
-    '#ec4899',
+    "hsl(var(--secondary))",
+    "hsl(var(--success))",
+    "hsl(var(--primary))",
+    "hsl(var(--destructive))",
+    "#8b5cf6",
+    "#ec4899",
   ];
 
   return (
-    <div className={cn('w-full', className)} style={{ height }}>
+    <div className={cn("w-full", className)} style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-          {showGrid && <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.3} />}
-          <XAxis 
-            dataKey="label" 
-            tick={{ fontSize: 10 }}
-            axisLine={false}
-            tickLine={false}
-          />
-          <YAxis 
+          {showGrid && (
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.3} />
+          )}
+          <XAxis dataKey="label" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} />
+          <YAxis
             tick={{ fontSize: 10 }}
             axisLine={false}
             tickLine={false}
@@ -71,21 +73,21 @@ export const SimpleBarChart: React.FC<SimpleBarChartProps> = ({
           />
           {showTooltip && (
             <Tooltip
-              formatter={(value: number) => [valueFormatter(value), 'Value']}
+              formatter={(value: number) => [valueFormatter(value), "Value"]}
               contentStyle={{
-                backgroundColor: 'hsl(var(--card))',
-                border: '1px solid hsl(var(--border))',
-                borderRadius: '6px',
-                fontSize: '12px',
-                color: 'inherit',
+                backgroundColor: "hsl(var(--card))",
+                border: "1px solid hsl(var(--border))",
+                borderRadius: "6px",
+                fontSize: "12px",
+                color: "inherit",
               }}
             />
           )}
           <Bar dataKey="value" radius={[4, 4, 0, 0]}>
             {data.map((entry, index) => (
-              <Cell 
-                key={`cell-${index}`} 
-                fill={entry.color || defaultColors[index % defaultColors.length]} 
+              <Cell
+                key={`cell-${index}`}
+                fill={entry.color || defaultColors[index % defaultColors.length]}
               />
             ))}
           </Bar>

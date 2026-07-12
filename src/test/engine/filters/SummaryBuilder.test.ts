@@ -1,10 +1,10 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { SummaryBuilder } from '@/engine/services/filters/SummaryBuilder';
-import { GameState } from '@/engine/types';
-import { RandomGenerator } from '@/engine/utils/rng';
-import { TickContext } from '@/engine/services/filters/types';
+import { describe, it, expect, beforeEach } from "vitest";
+import { SummaryBuilder } from "@/engine/services/filters/SummaryBuilder";
+import { GameState } from "@/engine/types";
+import { RandomGenerator } from "@/engine/utils/rng";
+import { TickContext } from "@/engine/services/filters/types";
 
-describe('SummaryBuilder', () => {
+describe("SummaryBuilder", () => {
   let mockBeforeState: GameState;
   let mockAfterState: GameState;
   let mockContext: TickContext;
@@ -12,16 +12,16 @@ describe('SummaryBuilder', () => {
 
   beforeEach(() => {
     mockRng = new RandomGenerator(42);
-    
+
     mockBeforeState = {
       week: 1,
       tickCount: 1,
       gameSeed: 12345,
       rngState: 12345,
       studio: {
-        id: 'studio-1',
-        name: 'Test Studio',
-        archetype: 'major',
+        id: "studio-1",
+        name: "Test Studio",
+        archetype: "major",
         prestige: 50,
       } as any,
       entities: {
@@ -49,7 +49,7 @@ describe('SummaryBuilder', () => {
           loanRate: 0.08,
           rateHistory: [],
           sentiment: 50,
-          cycle: 'STABLE',
+          cycle: "STABLE",
         },
       },
       game: {} as any,
@@ -82,9 +82,9 @@ describe('SummaryBuilder', () => {
     };
   });
 
-  it('should build summary with basic state', () => {
+  it("should build summary with basic state", () => {
     const summary = SummaryBuilder.build(mockBeforeState, mockAfterState, mockContext);
-    
+
     expect(summary.id).toBeDefined();
     expect(summary.fromWeek).toBe(1);
     expect(summary.toWeek).toBe(2);
@@ -92,34 +92,34 @@ describe('SummaryBuilder', () => {
     expect(summary.cashAfter).toBe(10500000);
   });
 
-  it('should handle project updates', () => {
+  it("should handle project updates", () => {
     mockContext.impacts.push({
-      type: 'PROJECT_UPDATED',
-      payload: { projectId: 'project-1', update: { progress: 50 } },
+      type: "PROJECT_UPDATED",
+      payload: { projectId: "project-1", update: { progress: 50 } },
     });
-    
+
     const summary = SummaryBuilder.build(mockBeforeState, mockAfterState, mockContext);
-    expect(summary.projectUpdates).toContain('project-1');
+    expect(summary.projectUpdates).toContain("project-1");
   });
 
-  it('should handle news impacts', () => {
+  it("should handle news impacts", () => {
     mockContext.impacts.push({
-      type: 'NEWS_ADDED',
+      type: "NEWS_ADDED",
       payload: {
-        headline: 'Breaking News',
-        category: 'general' as any,
-        publication: 'Variety',
+        headline: "Breaking News",
+        category: "general" as any,
+        publication: "Variety",
       },
     });
-    
+
     const summary = SummaryBuilder.build(mockBeforeState, mockAfterState, mockContext);
     expect(summary.newHeadlines.length).toBeGreaterThan(0);
-    expect(summary.newHeadlines[0].text).toBe('Breaking News');
+    expect(summary.newHeadlines[0].text).toBe("Breaking News");
   });
 
-  it('should handle ledger impacts', () => {
+  it("should handle ledger impacts", () => {
     mockContext.impacts.push({
-      type: 'LEDGER_UPDATED',
+      type: "LEDGER_UPDATED",
       payload: {
         report: {
           revenue: { boxOffice: 1000000, distribution: 500000, other: 200000 },
@@ -127,22 +127,22 @@ describe('SummaryBuilder', () => {
         },
       },
     });
-    
+
     const summary = SummaryBuilder.build(mockBeforeState, mockAfterState, mockContext);
     expect(summary.totalRevenue).toBe(1700000);
     expect(summary.totalCosts).toBe(1250000);
   });
 
-  it('should handle events', () => {
-    mockContext.events.push({ title: 'Event 1' } as any);
-    mockContext.events.push({ title: 'Event 2' } as any);
-    
+  it("should handle events", () => {
+    mockContext.events.push({ title: "Event 1" } as any);
+    mockContext.events.push({ title: "Event 2" } as any);
+
     const summary = SummaryBuilder.build(mockBeforeState, mockAfterState, mockContext);
-    expect(summary.events).toContain('Event 1');
-    expect(summary.events).toContain('Event 2');
+    expect(summary.events).toContain("Event 1");
+    expect(summary.events).toContain("Event 2");
   });
 
-  it('should handle empty impacts', () => {
+  it("should handle empty impacts", () => {
     const summary = SummaryBuilder.build(mockBeforeState, mockAfterState, mockContext);
     expect(summary.projectUpdates).toEqual([]);
     expect(summary.newHeadlines).toEqual([]);

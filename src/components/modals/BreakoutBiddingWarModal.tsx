@@ -1,23 +1,23 @@
-import React from 'react';
-import { useUIStore } from '@/store/uiStore';
-import { useGameStore } from '@/store/gameStore';
-import { formatMoney } from '@/engine/utils';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Star, Zap, DollarSign, Building2, TrendingUp } from 'lucide-react';
+import React from "react";
+import { useUIStore } from "@/store/uiStore";
+import { useGameStore } from "@/store/gameStore";
+import { formatMoney } from "@/engine/utils";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Star, Zap, DollarSign, Building2, TrendingUp } from "lucide-react";
 
 export const BreakoutBiddingWarModal: React.FC = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
-  const signBreakoutTalent = useGameStore(s => s.signBreakoutTalent);
-  const gameState = useGameStore(s => s.gameState);
+  const signBreakoutTalent = useGameStore((s) => s.signBreakoutTalent);
+  const gameState = useGameStore((s) => s.gameState);
 
-  if (!activeModal || activeModal.type !== 'BREAKOUT_BIDDING_WAR') return null;
+  if (!activeModal || activeModal.type !== "BREAKOUT_BIDDING_WAR") return null;
 
   const {
-    talentId = '',
+    talentId = "",
     currentFee = 0,
-    competingStudios = [] as string[]
+    competingStudios = [] as string[],
   } = (activeModal.payload || {}) as {
     talentId: string;
     currentFee: number;
@@ -28,8 +28,8 @@ export const BreakoutBiddingWarModal: React.FC = () => {
   const premiumFee = Math.round(currentFee * 1.5);
   const canAfford = (gameState?.finance?.cash ?? 0) >= premiumFee;
 
-  const competitorNames = competingStudios.map(id =>
-    gameState?.entities?.rivals?.[id]?.name ?? id
+  const competitorNames = competingStudios.map(
+    (id) => gameState?.entities?.rivals?.[id]?.name ?? id
   );
 
   const handleSign = () => {
@@ -63,7 +63,7 @@ export const BreakoutBiddingWarModal: React.FC = () => {
               <div>
                 <p className="text-base font-black">{talent?.name ?? talentId}</p>
                 <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold">
-                  {talent?.roles?.join(', ') ?? 'Talent'} • Breakout Star
+                  {talent?.roles?.join(", ") ?? "Talent"} • Breakout Star
                 </p>
               </div>
             </div>
@@ -71,7 +71,7 @@ export const BreakoutBiddingWarModal: React.FC = () => {
 
           {competitorNames.length > 0 && (
             <div className="flex flex-wrap gap-2">
-              {competitorNames.map(name => (
+              {competitorNames.map((name) => (
                 <Badge key={name} variant="outline" className="text-[9px] gap-1">
                   <Building2 className="h-2.5 w-2.5" />
                   {name}
@@ -88,23 +88,22 @@ export const BreakoutBiddingWarModal: React.FC = () => {
             </div>
             <div className="p-3 rounded-none bg-primary/10 border border-primary/20 text-center">
               <TrendingUp className="h-4 w-4 text-primary mx-auto mb-1" />
-              <p className="text-[10px] text-muted-foreground uppercase font-bold">Sign at Premium</p>
+              <p className="text-[10px] text-muted-foreground uppercase font-bold">
+                Sign at Premium
+              </p>
               <p className="text-sm font-black text-primary">{formatMoney(premiumFee)}</p>
             </div>
           </div>
 
           {!canAfford && (
             <p className="text-xs text-destructive font-bold text-center">
-              Insufficient funds — need {formatMoney(premiumFee - (gameState?.finance?.cash ?? 0))} more
+              Insufficient funds — need {formatMoney(premiumFee - (gameState?.finance?.cash ?? 0))}{" "}
+              more
             </p>
           )}
 
           <div className="flex gap-3">
-            <Button
-              variant="outline"
-              className="flex-1"
-              onClick={() => resolveCurrentModal()}
-            >
+            <Button variant="outline" className="flex-1" onClick={() => resolveCurrentModal()}>
               Pass
             </Button>
             <Button

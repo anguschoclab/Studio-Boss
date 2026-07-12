@@ -1,18 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { 
-  calculateReviewScore, 
-  simulateWeeklyBoxOffice, 
-  calculateBoxOfficeRanks, 
+import {
+  calculateReviewScore,
+  simulateWeeklyBoxOffice,
+  calculateBoxOfficeRanks,
   BoxOfficeEntry,
-  calculateOpeningWeekend
+  calculateOpeningWeekend,
 } from "../../../engine/systems/releaseSimulation";
 import { Project, Talent, ActiveCrisis } from "../../../engine/types";
-import * as utils from '../../../engine/utils';
+import * as utils from "../../../engine/utils";
 
 const mockProject: Project = {
   id: "proj-1",
   title: "Simulated Project",
-  type: 'FILM',
+  type: "FILM",
   format: "film",
   genre: "Drama",
   budgetTier: "mid",
@@ -31,22 +31,22 @@ const mockProject: Project = {
   accumulatedCost: 0,
   momentum: 50,
   progress: 0,
-  activeCrisis: null
+  activeCrisis: null,
 } as Project;
 
 const mockTalent: Talent = {
-  id: "t1", 
-  name: "Star", 
+  id: "t1",
+  name: "Star",
   role: "actor",
-  roles: ["actor"], 
+  roles: ["actor"],
   tier: "A_LIST",
-  prestige: 50, 
-  fee: 1_000_000, 
+  prestige: 50,
+  fee: 1_000_000,
   draw: 50,
   accessLevel: "outsider",
   momentum: 50,
-  demographics: { age: 30, gender: 'MALE', ethnicity: 'White', country: 'USA' },
-  psychology: { ego: 50, mood: 100, scandalRisk: 0, synergyAffinities: [], synergyConflicts: [] }
+  demographics: { age: 30, gender: "MALE", ethnicity: "White", country: "USA" },
+  psychology: { ego: 50, mood: 100, scandalRisk: 0, synergyAffinities: [], synergyConflicts: [] },
 } as Talent;
 
 describe("releaseSimulation system", () => {
@@ -56,16 +56,24 @@ describe("releaseSimulation system", () => {
 
   describe("calculateReviewScore", () => {
     it("calculates base score clamped between 1 and 100", () => {
-      vi.spyOn(utils, 'randRange').mockReturnValue(55); 
+      vi.spyOn(utils, "randRange").mockReturnValue(55);
       const score = calculateReviewScore(mockProject, [], undefined);
       expect(score).toBeGreaterThanOrEqual(1);
       expect(score).toBeLessThanOrEqual(100);
     });
 
     it("applies penalty for active, unresolved crises", () => {
-      vi.spyOn(utils, 'randRange').mockImplementation((min, max) => (min + max) / 2);
-      const crisis: ActiveCrisis = { crisisId: 'c1', triggeredWeek: 1, description: "Bad", options: [], resolved: false, severity: 'medium', haltedProduction: false };
-      
+      vi.spyOn(utils, "randRange").mockImplementation((min, max) => (min + max) / 2);
+      const crisis: ActiveCrisis = {
+        crisisId: "c1",
+        triggeredWeek: 1,
+        description: "Bad",
+        options: [],
+        resolved: false,
+        severity: "medium",
+        haltedProduction: false,
+      };
+
       const baseScore = calculateReviewScore(mockProject, [], undefined);
       const penaltyScore = calculateReviewScore(mockProject, [], crisis);
 
@@ -73,7 +81,7 @@ describe("releaseSimulation system", () => {
     });
 
     it("ignores absent crises", () => {
-      vi.spyOn(utils, 'randRange').mockImplementation((min, max) => (min + max) / 2);
+      vi.spyOn(utils, "randRange").mockImplementation((min, max) => (min + max) / 2);
       const scoreNoCrisis = calculateReviewScore(mockProject, [], undefined);
       const scoreNullCrisis = calculateReviewScore(mockProject, [], null);
 
@@ -83,9 +91,9 @@ describe("releaseSimulation system", () => {
 
   describe("calculateOpeningWeekend", () => {
     it("returns updated project and feedback", () => {
-       const { project, feedback } = calculateOpeningWeekend(mockProject, [mockTalent], 50);
-       expect(project.revenue).toBeGreaterThan(0);
-       expect(feedback).toBeDefined();
+      const { project, feedback } = calculateOpeningWeekend(mockProject, [mockTalent], 50);
+      expect(project.revenue).toBeGreaterThan(0);
+      expect(feedback).toBeDefined();
     });
   });
 

@@ -1,6 +1,6 @@
-import { Project, Contract, Talent, TalentPact, GameState, StateImpact } from '@/engine/types';
-import { RandomGenerator } from '../utils/rng';
-import { getContractsByProjectId } from '@/engine/utils';
+import { Project, Contract, Talent, TalentPact, GameState, StateImpact } from "@/engine/types";
+import { RandomGenerator } from "../utils/rng";
+import { getContractsByProjectId } from "@/engine/utils";
 
 export const SchedulingEngine = {
   tick(state: GameState, rng: RandomGenerator): StateImpact[] {
@@ -9,30 +9,39 @@ export const SchedulingEngine = {
     // ⚡ Bolt: Replaced Object.values().forEach() with a direct for...in loop
     for (const projectId in state.entities.projects) {
       const project = state.entities.projects[projectId];
-      if (project.state !== 'production') continue;
+      if (project.state !== "production") continue;
 
-      const projectContracts = getContractsByProjectId(state.entities.contractsByProjectId, state.entities.contracts, project.id);
-      const { hasConflict, conflicts } = this.evaluateSchedulingConflicts(project, projectContracts, talentPool, state.week);
-      
+      const projectContracts = getContractsByProjectId(
+        state.entities.contractsByProjectId,
+        state.entities.contracts,
+        project.id
+      );
+      const { hasConflict, conflicts } = this.evaluateSchedulingConflicts(
+        project,
+        projectContracts,
+        talentPool,
+        state.week
+      );
+
       if (hasConflict) {
         impacts.push({
-          type: 'PROJECT_UPDATED',
+          type: "PROJECT_UPDATED",
           payload: {
             projectId: project.id,
-            update: { 
-              weeksInPhase: Math.max(0, project.weeksInPhase - 1) // Delay progress
-            }
-          }
+            update: {
+              weeksInPhase: Math.max(0, project.weeksInPhase - 1), // Delay progress
+            },
+          },
         });
 
         impacts.push({
-          type: 'NEWS_ADDED',
+          type: "NEWS_ADDED",
           payload: {
-            id: rng.uuid('NWS'),
+            id: rng.uuid("NWS"),
             headline: `Scheduling Conflict Halts "${project.title}"`,
-            description: conflicts.join('. '),
-            category: 'talent'
-          }
+            description: conflicts.join(". "),
+            category: "talent",
+          },
         });
       }
     }
@@ -47,7 +56,7 @@ export const SchedulingEngine = {
     currentWeek: number
   ): { hasConflict: boolean; conflicts: string[] } {
     const conflicts: string[] = [];
-    
+
     const contractsLen = projectContracts.length;
     for (let i = 0; i < contractsLen; i++) {
       const contract = projectContracts[i];
@@ -68,18 +77,22 @@ export const SchedulingEngine = {
         if (currentWeek < commitment.startWeek || currentWeek > commitment.endWeek) continue;
         if (commitment.projectId === project.id) continue;
 
-        conflicts.push(`${talent.name} is currently filming "${commitment.projectTitle}" (Week ${currentWeek} overlap)`);
+        conflicts.push(
+          `${talent.name} is currently filming "${commitment.projectTitle}" (Week ${currentWeek} overlap)`
+        );
       }
     }
     return { hasConflict: conflicts.length > 0, conflicts };
   },
 
   processPacts(pacts: TalentPact[]): TalentPact[] {
-    return (pacts || []).map(p => ({ ...p, weeksRemaining: p.weeksRemaining - 1 })).filter(p => p.weeksRemaining > 0);
+    return (pacts || [])
+      .map((p) => ({ ...p, weeksRemaining: p.weeksRemaining - 1 }))
+      .filter((p) => p.weeksRemaining > 0);
   },
 
   updateTalentFatigue(talent: Talent, isWorking: boolean): number {
     const f = talent.fatigue || 0;
     return isWorking ? Math.min(100, f + 5) : Math.max(0, f - 10);
-  }
+  },
 };

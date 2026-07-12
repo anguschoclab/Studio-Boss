@@ -8,22 +8,23 @@ describe("scandals system", () => {
   });
 
   describe("advanceScandals", () => {
-    const createMockState = (scandals: Scandal[]): GameState => ({
-      industry: { scandals },
-      entities: {
-        projects: {},
-        contracts: {},
-        talents: {},
-        rivals: {}
-      },
-      studio: {
-        internal: {
+    const createMockState = (scandals: Scandal[]): GameState =>
+      ({
+        industry: { scandals },
+        entities: {
           projects: {},
-          contracts: [],
-          talentPool: {}
-        }
-      }
-    } as unknown as GameState);
+          contracts: {},
+          talents: {},
+          rivals: {},
+        },
+        studio: {
+          internal: {
+            projects: {},
+            contracts: [],
+            talentPool: {},
+          },
+        },
+      }) as unknown as GameState;
 
     it("returns empty impact if there are no scandals", () => {
       const initialState = createMockState([]);
@@ -33,16 +34,16 @@ describe("scandals system", () => {
 
     it("updates existing scandals via SCANDAL_UPDATED", () => {
       const s1: Scandal = {
-          id: "s1",
-          talentId: "t1",
-          severity: 50,
-          type: "legal",
-          weeksRemaining: 5
+        id: "s1",
+        talentId: "t1",
+        severity: 50,
+        type: "legal",
+        weeksRemaining: 5,
       };
 
       const initialState = createMockState([s1]);
       const impacts = advanceScandals(initialState);
-      const updateImpact = impacts.find(i => i.type === 'SCANDAL_UPDATED');
+      const updateImpact = impacts.find((i) => i.type === "SCANDAL_UPDATED");
       expect(updateImpact).toBeDefined();
       expect(updateImpact?.payload.scandalUpdates).toBeDefined();
       expect(updateImpact?.payload.scandalUpdates[0].scandalId).toBe("s1");
@@ -50,17 +51,17 @@ describe("scandals system", () => {
     });
 
     it("removes expired scandals via SCANDAL_REMOVED", () => {
-      const s1: Scandal = { 
-          id: "s1", 
-          talentId: "t1", 
-          severity: 50, 
-          type: "legal", 
-          weeksRemaining: 1 
+      const s1: Scandal = {
+        id: "s1",
+        talentId: "t1",
+        severity: 50,
+        type: "legal",
+        weeksRemaining: 1,
       };
-      
+
       const initialState = createMockState([s1]);
       const impacts = advanceScandals(initialState);
-      const removeImpact = impacts.find(i => i.type === 'SCANDAL_REMOVED');
+      const removeImpact = impacts.find((i) => i.type === "SCANDAL_REMOVED");
       expect(removeImpact?.payload.scandalId).toBe("s1");
     });
   });

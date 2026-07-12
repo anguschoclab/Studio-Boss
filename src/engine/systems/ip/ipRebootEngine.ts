@@ -1,21 +1,21 @@
-import { IPAsset, Project } from '../../types';
+import { IPAsset, Project } from "../../types";
 
 /**
  * Logic for "Rebooting" historical IP.
  * A rebooted project inherits a "Nostalgia Bonus" based on the original IP's success.
  */
 export function applyRebootNostalgia(project: Project, sourceAsset: IPAsset): Project {
-  // Nostalgia Factor: If the original was a massive hit (high baseValue), 
+  // Nostalgia Factor: If the original was a massive hit (high baseValue),
   // the reboot starts with a significant Buzz floor.
   // We scale this so a huge hit provides a +30 buzz bump.
-  const nostalgiaBonus = Math.min(30, (sourceAsset.baseValue / 1000000) * 5); 
-  
+  const nostalgiaBonus = Math.min(30, (sourceAsset.baseValue / 1000000) * 5);
+
   return {
     ...project,
     buzz: Math.min(100, project.buzz + Math.floor(nostalgiaBonus)),
     isSpinoff: true,
     parentProjectId: sourceAsset.originalProjectId,
-    title: project.title || `Untitled ${sourceAsset.title} Reboot`
+    title: project.title || `Untitled ${sourceAsset.title} Reboot`,
   };
 }
 
@@ -24,17 +24,17 @@ export function applyRebootNostalgia(project: Project, sourceAsset: IPAsset): Pr
  */
 export function generateRebootProposal(vault: IPAsset[], rng: any): any {
   if (!vault || vault.length === 0) return null;
-  
-  const candidates = vault.filter(v => v.rightsOwner === 'STUDIO');
+
+  const candidates = vault.filter((v) => v.rightsOwner === "STUDIO");
   if (candidates.length === 0) return null;
 
   const asset = rng.pick(candidates);
-  
+
   return {
     ipId: asset.id,
     ipTitle: asset.title,
     suggestedBudget: Math.max(50_000_000, asset.baseValue * 0.5),
     estimatedNostalgiaBonus: 15,
-    description: `Nostalgia is at an all-time high for "${asset.title}". Execs suggest a modern reimagining for the new generation.`
+    description: `Nostalgia is at an all-time high for "${asset.title}". Execs suggest a modern reimagining for the new generation.`,
   };
 }

@@ -1,10 +1,10 @@
-import { GameState, StateImpact, RivalStudio, StreamerPlatform } from '@/engine/types';
-import { pick, secureRandom } from '../../utils';
-import { getMarketHeat } from './MacroCycle';
-import { isAcquirerBlockedByAntitrust } from './Antitrust';
-import { cancelHighestOverheadDeal } from '../deals/ShingleSystem';
-import type { DistressedAssetOffer } from '@/engine/types/distress.types';
-import { getPlayerId } from '@/engine/utils/ownership';
+import { GameState, StateImpact, RivalStudio, StreamerPlatform } from "@/engine/types";
+import { pick, secureRandom } from "../../utils";
+import { getMarketHeat } from "./MacroCycle";
+import { isAcquirerBlockedByAntitrust } from "./Antitrust";
+import { cancelHighestOverheadDeal } from "../deals/ShingleSystem";
+import type { DistressedAssetOffer } from "@/engine/types/distress.types";
+import { getPlayerId } from "@/engine/utils/ownership";
 
 /**
  * DistressCascade — stepwise collapse ladder for insolvent rivals.
@@ -20,7 +20,16 @@ export interface DistressEvent {
   week: number;
   year: number;
   stage: 1 | 2 | 3 | 4;
-  kind: 'ip-sale' | 'shelve-project' | 'library-sale' | 'backend-sale' | 'layoffs' | 'backlot-sale' | 'platform-sale' | 'distressed-ma' | 'bankruptcy';
+  kind:
+    | "ip-sale"
+    | "shelve-project"
+    | "library-sale"
+    | "backend-sale"
+    | "layoffs"
+    | "backlot-sale"
+    | "platform-sale"
+    | "distressed-ma"
+    | "bankruptcy";
   studioId: string;
   studioName: string;
   counterpartyId?: string;
@@ -42,12 +51,12 @@ const lastActionWeek: Record<string, number> = {};
 // tick escalates them instead of looping forever on backlot sales.
 const stageActionCount: Record<string, { s1: number; s2: number; s3: number }> = {};
 
-const STREAK_STAGE1 = 26;         // ~6 months negative before IP sale
-const STAGE_COOLDOWN = 26;        // ~6 months between stage actions on same rival — news-cycle pacing
-const MAX_STAGE1 = 1;             // one crown-jewel sale is the realistic ceiling before escalation
-const MAX_STAGE2 = 2;             // two asset sales max before forced M&A/bankruptcy
-const MAX_STAGE3 = 2;             // at most 2 rejected M&A attempts before bankruptcy
-const STAGE1_CASH = 0;            // cash < 0 required
+const STREAK_STAGE1 = 26; // ~6 months negative before IP sale
+const STAGE_COOLDOWN = 26; // ~6 months between stage actions on same rival — news-cycle pacing
+const MAX_STAGE1 = 1; // one crown-jewel sale is the realistic ceiling before escalation
+const MAX_STAGE2 = 2; // two asset sales max before forced M&A/bankruptcy
+const MAX_STAGE3 = 2; // at most 2 rejected M&A attempts before bankruptcy
+const STAGE1_CASH = 0; // cash < 0 required
 const STAGE2_CASH = -75_000_000;
 const STAGE3_CASH = -200_000_000;
 const STAGE4_CASH = -400_000_000;
@@ -120,9 +129,9 @@ export function completeFireSale(
   const seller = state.entities.rivals?.[offer.sellerId];
 
   // 1. Transfer ownership.
-  if (offer.assetKind === 'franchise') {
+  if (offer.assetKind === "franchise") {
     impacts.push({
-      type: 'FRANCHISE_UPDATED',
+      type: "FRANCHISE_UPDATED",
       payload: { franchiseId: offer.assetId, update: { ownerId: buyerId } },
     } as unknown as StateImpact);
   } else {
@@ -130,43 +139,51 @@ export function completeFireSale(
       a.id === offer.assetId ? { ...a, ownerStudioId: buyerId as any } : a
     );
     impacts.push({
-      type: 'INDUSTRY_UPDATE',
-      payload: { update: { 'ip.vault': newVault } },
+      type: "INDUSTRY_UPDATE",
+      payload: { update: { "ip.vault": newVault } },
     } as unknown as StateImpact);
   }
 
   // 2. Credit the seller (and the standard -5 prestige hit for a distressed sale).
   if (seller) {
     impacts.push({
-      type: 'RIVAL_UPDATED',
+      type: "RIVAL_UPDATED",
       payload: {
         rivalId: offer.sellerId,
-        update: { cash: (seller.cash || 0) + offer.price, prestige: Math.max(0, (seller.prestige || 0) - 5) },
+        update: {
+          cash: (seller.cash || 0) + offer.price,
+          prestige: Math.max(0, (seller.prestige || 0) - 5),
+        },
       },
     } as unknown as StateImpact);
   }
 
   // 3. Debit the buyer.
   if (isPlayerBuyer) {
-    impacts.push({ type: 'FUNDS_DEDUCTED', payload: { amount: offer.price } } as unknown as StateImpact);
+    impacts.push({
+      type: "FUNDS_DEDUCTED",
+      payload: { amount: offer.price },
+    } as unknown as StateImpact);
   } else {
     const buyer = state.entities.rivals?.[buyerId];
     if (buyer) {
       impacts.push({
-        type: 'RIVAL_UPDATED',
+        type: "RIVAL_UPDATED",
         payload: { rivalId: buyerId, update: { cash: (buyer.cash || 0) - offer.price } },
       } as unknown as StateImpact);
     }
   }
 
   // 4. News.
-  const buyerName = isPlayerBuyer ? state.studio.name : (state.entities.rivals?.[buyerId]?.name ?? 'a rival');
+  const buyerName = isPlayerBuyer
+    ? state.studio.name
+    : (state.entities.rivals?.[buyerId]?.name ?? "a rival");
   impacts.push({
-    type: 'NEWS_ADDED',
+    type: "NEWS_ADDED",
     payload: {
       headline: `FIRE SALE: ${offer.sellerName} sells ${offer.assetLabel} to ${buyerName} for $${(offer.price / 1e6).toFixed(0)}M`,
       description: `Facing sustained losses, ${offer.sellerName} has offloaded ${offer.assetLabel} in a distressed IP sale.`,
-      category: 'market',
+      category: "market",
     },
   } as unknown as StateImpact);
 
@@ -190,16 +207,13 @@ export function tickDistressedOffers(state: GameState): StateImpact[] {
   }
   const remaining = offers.filter((o) => state.week < o.expiresWeek);
   impacts.push({
-    type: 'INDUSTRY_UPDATE',
-    payload: { update: { 'industry.distressedOffers': remaining } },
+    type: "INDUSTRY_UPDATE",
+    payload: { update: { "industry.distressedOffers": remaining } },
   } as unknown as StateImpact);
   return impacts;
 }
 
-export function stage1IPFireSale(
-  state: GameState,
-  seller: RivalStudio
-): StateImpact[] {
+export function stage1IPFireSale(state: GameState, seller: RivalStudio): StateImpact[] {
   const impacts: StateImpact[] = [];
 
   // Need either a named franchise or vault asset to sell. Otherwise skip Stage 1 —
@@ -237,32 +251,35 @@ export function stage1IPFireSale(
 
   const buyer = pick(buyers);
   const heat = getMarketHeat(state.week);
-  const franchiseProxy = Math.max(100_000_000, (seller.prestige || 30) * 3_000_000 + (seller.strength || 30) * 2_000_000);
+  const franchiseProxy = Math.max(
+    100_000_000,
+    (seller.prestige || 30) * 3_000_000 + (seller.strength || 30) * 2_000_000
+  );
   const basePrice = Math.max(50_000_000, franchiseProxy * 0.5 * heat);
   const price = Math.round(basePrice * 0.7);
 
   // Build the offer (asset id/label + AI fallback buyer + price are already chosen above).
-  let assetKind: 'franchise' | 'vault';
+  let assetKind: "franchise" | "vault";
   let assetId: string;
   let assetLabel: string;
   if (ownedFranchises.length > 0) {
     const franchise: any = pick(ownedFranchises);
-    assetKind = 'franchise';
+    assetKind = "franchise";
     assetId = franchise.id;
     assetLabel = `franchise '${franchise.name}'`;
   } else {
     const named = ownedAssets.filter((a) => {
       const t = (a as any).title || (a as any).name;
-      return typeof t === 'string' && t.trim().length > 0;
+      return typeof t === "string" && t.trim().length > 0;
     });
     if (named.length === 0) return [];
     const asset: any = pick(named);
-    assetKind = 'vault';
+    assetKind = "vault";
     assetId = asset.id;
     assetLabel = `'${asset.title || asset.name}'`;
   }
 
-  const offer: import('@/engine/types/distress.types').DistressedAssetOffer = {
+  const offer: import("@/engine/types/distress.types").DistressedAssetOffer = {
     id: `distress-${seller.id}-${state.week}`,
     sellerId: seller.id,
     sellerName: seller.name,
@@ -283,18 +300,24 @@ export function stage1IPFireSale(
   if (playerCanAfford) {
     const existing = state.industry?.distressedOffers ?? [];
     impacts.push({
-      type: 'INDUSTRY_UPDATE',
-      payload: { update: { 'industry.distressedOffers': [...existing, offer] } },
+      type: "INDUSTRY_UPDATE",
+      payload: { update: { "industry.distressedOffers": [...existing, offer] } },
     } as unknown as StateImpact);
     impacts.push({
-      type: 'MODAL_TRIGGERED',
-      payload: { modalType: 'DISTRESSED_ASSET_OFFER', offerId: offer.id },
+      type: "MODAL_TRIGGERED",
+      payload: { modalType: "DISTRESSED_ASSET_OFFER", offerId: offer.id },
     } as unknown as StateImpact);
     logEvent({
-      week: state.week, year: Math.floor(state.week / 52) + 1975,
-      stage: 1, kind: 'ip-sale', studioId: seller.id, studioName: seller.name,
-      counterpartyId: 'player', counterpartyName: state.studio.name,
-      amount: price, note: `Offered ${assetLabel} to player`,
+      week: state.week,
+      year: Math.floor(state.week / 52) + 1975,
+      stage: 1,
+      kind: "ip-sale",
+      studioId: seller.id,
+      studioName: seller.name,
+      counterpartyId: "player",
+      counterpartyName: state.studio.name,
+      amount: price,
+      note: `Offered ${assetLabel} to player`,
     });
     return impacts;
   }
@@ -302,10 +325,16 @@ export function stage1IPFireSale(
   // Player can't afford it — AI buyer completes immediately (original behavior).
   impacts.push(...completeFireSale(state, offer, buyer.id));
   logEvent({
-    week: state.week, year: Math.floor(state.week / 52) + 1975,
-    stage: 1, kind: 'ip-sale', studioId: seller.id, studioName: seller.name,
-    counterpartyId: buyer.id, counterpartyName: buyer.name,
-    amount: price, note: `Sold ${assetLabel}`,
+    week: state.week,
+    year: Math.floor(state.week / 52) + 1975,
+    stage: 1,
+    kind: "ip-sale",
+    studioId: seller.id,
+    studioName: seller.name,
+    counterpartyId: buyer.id,
+    counterpartyName: buyer.name,
+    amount: price,
+    note: `Sold ${assetLabel}`,
   });
   return impacts;
 }
@@ -326,10 +355,13 @@ function stage2AssetLiquidation(state: GameState, seller: RivalStudio): StateImp
     if (cancelImpacts) {
       impacts.push(...cancelImpacts);
       logEvent({
-        week: state.week, year: Math.floor(state.week / 52) + 1975,
-        stage: 2, kind: 'layoffs',
-        studioId: seller.id, studioName: seller.name,
-        note: 'Shingle deal cancelled'
+        week: state.week,
+        year: Math.floor(state.week / 52) + 1975,
+        stage: 2,
+        kind: "layoffs",
+        studioId: seller.id,
+        studioName: seller.name,
+        note: "Shingle deal cancelled",
       });
       counts(seller.id).s2++;
       return impacts;
@@ -340,34 +372,45 @@ function stage2AssetLiquidation(state: GameState, seller: RivalStudio): StateImp
   if (ownsPlatform && roll < 0.18) {
     // Sell platform stake — large one-time injection, strips owned platform.
     const platformId = (seller.ownedPlatforms || [])[0];
-    const platform = state.market.buyers.find(b => b.id === platformId) as StreamerPlatform | undefined;
+    const platform = state.market.buyers.find((b) => b.id === platformId) as
+      StreamerPlatform | undefined;
     const proceeds = platform
       ? Math.max(500_000_000, Math.min(2_000_000_000, (platform.subscribers || 0) * 8))
       : 500_000_000;
-    const newOwned = (seller.ownedPlatforms || []).filter(id => id !== platformId);
+    const newOwned = (seller.ownedPlatforms || []).filter((id) => id !== platformId);
     impacts.push({
-      type: 'RIVAL_UPDATED',
-      payload: { rivalId: seller.id, update: { cash: (seller.cash || 0) + proceeds, ownedPlatforms: newOwned } } as any
+      type: "RIVAL_UPDATED",
+      payload: {
+        rivalId: seller.id,
+        update: { cash: (seller.cash || 0) + proceeds, ownedPlatforms: newOwned },
+      } as any,
     });
     if (platform) {
       impacts.push({
-        type: 'BUYER_UPDATED',
-        payload: { buyerId: platform.id, update: { ownerId: undefined, parentBrand: undefined } } as any
+        type: "BUYER_UPDATED",
+        payload: {
+          buyerId: platform.id,
+          update: { ownerId: undefined, parentBrand: undefined },
+        } as any,
       });
     }
     impacts.push({
-      type: 'NEWS_ADDED',
+      type: "NEWS_ADDED",
       payload: {
-        headline: `LIQUIDATION: ${seller.name} divests ${platform?.name || 'streaming platform'} for $${(proceeds / 1e6).toFixed(0)}M`,
+        headline: `LIQUIDATION: ${seller.name} divests ${platform?.name || "streaming platform"} for $${(proceeds / 1e6).toFixed(0)}M`,
         description: `${seller.name} has unwound its platform bet to stanch the bleeding.`,
-        category: 'market'
-      }
+        category: "market",
+      },
     });
     logEvent({
-      week: state.week, year: Math.floor(state.week / 52) + 1975,
-      stage: 2, kind: 'platform-sale',
-      studioId: seller.id, studioName: seller.name, amount: proceeds,
-      note: `Sold ${platform?.name || 'platform stake'}`
+      week: state.week,
+      year: Math.floor(state.week / 52) + 1975,
+      stage: 2,
+      kind: "platform-sale",
+      studioId: seller.id,
+      studioName: seller.name,
+      amount: proceeds,
+      note: `Sold ${platform?.name || "platform stake"}`,
     });
     counts(seller.id).s2++;
     return impacts;
@@ -377,28 +420,32 @@ function stage2AssetLiquidation(state: GameState, seller: RivalStudio): StateImp
     // Backlot / facility sale — flat one-time, prestige tax.
     const proceeds = Math.round(50_000_000 + secureRandom() * 150_000_000);
     impacts.push({
-      type: 'RIVAL_UPDATED',
+      type: "RIVAL_UPDATED",
       payload: {
         rivalId: seller.id,
         update: {
           cash: (seller.cash || 0) + proceeds,
-          prestige: Math.max(0, (seller.prestige || 0) - 10)
-        }
-      } as any
+          prestige: Math.max(0, (seller.prestige || 0) - 10),
+        },
+      } as any,
     });
     impacts.push({
-      type: 'NEWS_ADDED',
+      type: "NEWS_ADDED",
       payload: {
         headline: `BACKLOT SALE: ${seller.name} sells production facilities for $${(proceeds / 1e6).toFixed(0)}M`,
         description: `${seller.name} has sold studio real estate and equipment in a distressed asset sale.`,
-        category: 'market'
-      }
+        category: "market",
+      },
     });
     logEvent({
-      week: state.week, year: Math.floor(state.week / 52) + 1975,
-      stage: 2, kind: 'backlot-sale',
-      studioId: seller.id, studioName: seller.name, amount: proceeds,
-      note: 'Backlot liquidation'
+      week: state.week,
+      year: Math.floor(state.week / 52) + 1975,
+      stage: 2,
+      kind: "backlot-sale",
+      studioId: seller.id,
+      studioName: seller.name,
+      amount: proceeds,
+      note: "Backlot liquidation",
     });
     counts(seller.id).s2++;
     return impacts;
@@ -413,8 +460,14 @@ function stage2AssetLiquidation(state: GameState, seller: RivalStudio): StateImp
     let maxCost = -1;
     for (const id in allProjects) {
       const p: any = allProjects[id];
-      if (p.ownerId === seller.id &&
-         (p.state === 'development' || p.state === 'pitching' || p.state === 'needs_greenlight' || p.state === 'production' || p.state === 'post_production')) {
+      if (
+        p.ownerId === seller.id &&
+        (p.state === "development" ||
+          p.state === "pitching" ||
+          p.state === "needs_greenlight" ||
+          p.state === "production" ||
+          p.state === "post_production")
+      ) {
         const cost = p.accumulatedCost || p.budget || 0;
         if (cost > maxCost) {
           maxCost = cost;
@@ -426,26 +479,39 @@ function stage2AssetLiquidation(state: GameState, seller: RivalStudio): StateImp
       const sunk = Math.max(target.accumulatedCost || 0, (target.budget || 0) * 0.4);
       const proceeds = Math.max(20_000_000, Math.round(sunk * 0.4));
       impacts.push({
-        type: 'PROJECT_UPDATED',
-        payload: { projectId: target.id, update: { state: 'archived', weeklyCost: 0, weeklyRevenue: 0 } } as any
+        type: "PROJECT_UPDATED",
+        payload: {
+          projectId: target.id,
+          update: { state: "archived", weeklyCost: 0, weeklyRevenue: 0 },
+        } as any,
       });
       impacts.push({
-        type: 'RIVAL_UPDATED',
-        payload: { rivalId: seller.id, update: { cash: (seller.cash || 0) + proceeds, prestige: Math.max(0, (seller.prestige || 0) - 5) } } as any
+        type: "RIVAL_UPDATED",
+        payload: {
+          rivalId: seller.id,
+          update: {
+            cash: (seller.cash || 0) + proceeds,
+            prestige: Math.max(0, (seller.prestige || 0) - 5),
+          },
+        } as any,
       });
       impacts.push({
-        type: 'NEWS_ADDED',
+        type: "NEWS_ADDED",
         payload: {
           headline: `SHELVED: ${seller.name} scraps ${target.title} mid-production, claims $${(proceeds / 1e6).toFixed(0)}M write-off`,
           description: `${seller.name} has abandoned ${target.title} and will book the sunk cost as a tax write-down.`,
-          category: 'market'
-        }
+          category: "market",
+        },
       });
       logEvent({
-        week: state.week, year: Math.floor(state.week / 52) + 1975,
-        stage: 2, kind: 'shelve-project',
-        studioId: seller.id, studioName: seller.name, amount: proceeds,
-        note: `Shelved ${target.title}`
+        week: state.week,
+        year: Math.floor(state.week / 52) + 1975,
+        stage: 2,
+        kind: "shelve-project",
+        studioId: seller.id,
+        studioName: seller.name,
+        amount: proceeds,
+        note: `Shelved ${target.title}`,
       });
       counts(seller.id).s2++;
       return impacts;
@@ -477,8 +543,11 @@ function stage2AssetLiquidation(state: GameState, seller: RivalStudio): StateImp
       const bundle = ownedAssets.slice(0, bundleSize);
       const rawValue = bundle.reduce((s, a) => s + (a.baseValue || 50_000_000), 0);
       const prestigeMult = 0.8 + (seller.prestige || 30) / 100;
-      const proceeds = Math.max(100_000_000, Math.min(500_000_000, Math.round(rawValue * 0.45 * prestigeMult)));
-      const buyerIdForVault = (buyer?.id as any);
+      const proceeds = Math.max(
+        100_000_000,
+        Math.min(500_000_000, Math.round(rawValue * 0.45 * prestigeMult))
+      );
+      const buyerIdForVault = buyer?.id as any;
       const bundleIds = new Set(bundle.map((b: any) => b.id));
       const newVault: any[] = [];
       for (let i = 0; i < vaultArr.length; i++) {
@@ -489,31 +558,45 @@ function stage2AssetLiquidation(state: GameState, seller: RivalStudio): StateImp
           newVault.push(a);
         }
       }
-      impacts.push({ type: 'INDUSTRY_UPDATE', payload: { update: { 'ip.vault': newVault } } as any });
       impacts.push({
-        type: 'RIVAL_UPDATED',
-        payload: { rivalId: seller.id, update: { cash: (seller.cash || 0) + proceeds, prestige: Math.max(0, (seller.prestige || 0) - 3) } } as any
+        type: "INDUSTRY_UPDATE",
+        payload: { update: { "ip.vault": newVault } } as any,
+      });
+      impacts.push({
+        type: "RIVAL_UPDATED",
+        payload: {
+          rivalId: seller.id,
+          update: {
+            cash: (seller.cash || 0) + proceeds,
+            prestige: Math.max(0, (seller.prestige || 0) - 3),
+          },
+        } as any,
       });
       if (buyer) {
         impacts.push({
-          type: 'RIVAL_UPDATED',
-          payload: { rivalId: buyer.id, update: { cash: (buyer.cash || 0) - proceeds } } as any
+          type: "RIVAL_UPDATED",
+          payload: { rivalId: buyer.id, update: { cash: (buyer.cash || 0) - proceeds } } as any,
         });
       }
       impacts.push({
-        type: 'NEWS_ADDED',
+        type: "NEWS_ADDED",
         payload: {
-          headline: `LIBRARY SALE: ${seller.name} offloads ${bundleSize} back-catalog titles${buyer ? ` to ${buyer.name}` : ''} for $${(proceeds / 1e6).toFixed(0)}M`,
+          headline: `LIBRARY SALE: ${seller.name} offloads ${bundleSize} back-catalog titles${buyer ? ` to ${buyer.name}` : ""} for $${(proceeds / 1e6).toFixed(0)}M`,
           description: `${seller.name} has sold ongoing streaming and ancillary rights on ${bundleSize} released titles to raise cash.`,
-          category: 'market'
-        }
+          category: "market",
+        },
       });
       logEvent({
-        week: state.week, year: Math.floor(state.week / 52) + 1975,
-        stage: 2, kind: 'library-sale',
-        studioId: seller.id, studioName: seller.name,
-        counterpartyId: buyer?.id, counterpartyName: buyer?.name,
-        amount: proceeds, note: `${bundleSize} titles`
+        week: state.week,
+        year: Math.floor(state.week / 52) + 1975,
+        stage: 2,
+        kind: "library-sale",
+        studioId: seller.id,
+        studioName: seller.name,
+        counterpartyId: buyer?.id,
+        counterpartyName: buyer?.name,
+        amount: proceeds,
+        note: `${bundleSize} titles`,
       });
       counts(seller.id).s2++;
       return impacts;
@@ -524,25 +607,33 @@ function stage2AssetLiquidation(state: GameState, seller: RivalStudio): StateImp
   if (roll < 0.92) {
     // Backend / participation sale — sell a % of future franchise cashflow (not ownership)
     // for immediate cash. Franchise stays with studio; proceeds scale with franchise value proxy.
-    const franchiseProxy = (seller.prestige || 30) * 2_000_000 + (seller.strength || 30) * 1_500_000;
-    const proceeds = Math.max(50_000_000, Math.min(300_000_000, Math.round(franchiseProxy * (0.4 + secureRandom() * 0.4))));
+    const franchiseProxy =
+      (seller.prestige || 30) * 2_000_000 + (seller.strength || 30) * 1_500_000;
+    const proceeds = Math.max(
+      50_000_000,
+      Math.min(300_000_000, Math.round(franchiseProxy * (0.4 + secureRandom() * 0.4)))
+    );
     impacts.push({
-      type: 'RIVAL_UPDATED',
-      payload: { rivalId: seller.id, update: { cash: (seller.cash || 0) + proceeds } } as any
+      type: "RIVAL_UPDATED",
+      payload: { rivalId: seller.id, update: { cash: (seller.cash || 0) + proceeds } } as any,
     });
     impacts.push({
-      type: 'NEWS_ADDED',
+      type: "NEWS_ADDED",
       payload: {
         headline: `SLATE FINANCING: ${seller.name} sells backend stake on franchise slate for $${(proceeds / 1e6).toFixed(0)}M`,
         description: `${seller.name} has sold a share of future franchise revenue to outside financiers. The studio keeps ownership; backers collect the upside.`,
-        category: 'market'
-      }
+        category: "market",
+      },
     });
     logEvent({
-      week: state.week, year: Math.floor(state.week / 52) + 1975,
-      stage: 2, kind: 'backend-sale',
-      studioId: seller.id, studioName: seller.name, amount: proceeds,
-      note: 'Slate-backend financing'
+      week: state.week,
+      year: Math.floor(state.week / 52) + 1975,
+      stage: 2,
+      kind: "backend-sale",
+      studioId: seller.id,
+      studioName: seller.name,
+      amount: proceeds,
+      note: "Slate-backend financing",
     });
     counts(seller.id).s2++;
     return impacts;
@@ -552,28 +643,32 @@ function stage2AssetLiquidation(state: GameState, seller: RivalStudio): StateImp
   // Smaller cash recovery than asset sales, prestige and morale tax.
   const proceeds = Math.round(20_000_000 + secureRandom() * 60_000_000);
   impacts.push({
-    type: 'RIVAL_UPDATED',
+    type: "RIVAL_UPDATED",
     payload: {
       rivalId: seller.id,
       update: {
         cash: (seller.cash || 0) + proceeds,
-        prestige: Math.max(0, (seller.prestige || 0) - 5)
-      }
-    } as any
+        prestige: Math.max(0, (seller.prestige || 0) - 5),
+      },
+    } as any,
   });
   impacts.push({
-    type: 'NEWS_ADDED',
+    type: "NEWS_ADDED",
     payload: {
       headline: `LAYOFFS: ${seller.name} cuts overhead staff, saves $${(proceeds / 1e6).toFixed(0)}M annualized`,
       description: `${seller.name} has laid off executives, development, and marketing staff in a company-wide restructuring.`,
-      category: 'market'
-    }
+      category: "market",
+    },
   });
   logEvent({
-    week: state.week, year: Math.floor(state.week / 52) + 1975,
-    stage: 2, kind: 'layoffs',
-    studioId: seller.id, studioName: seller.name, amount: proceeds,
-    note: 'Overhead layoffs'
+    week: state.week,
+    year: Math.floor(state.week / 52) + 1975,
+    stage: 2,
+    kind: "layoffs",
+    studioId: seller.id,
+    studioName: seller.name,
+    amount: proceeds,
+    note: "Overhead layoffs",
   });
   counts(seller.id).s2++;
   return impacts;
@@ -603,41 +698,55 @@ function stage3DistressedMA(state: GameState, target: RivalStudio): StateImpact[
     // No buyer found — still counts as a failed stage-3 attempt so we escalate to bankruptcy.
     counts(target.id).s3++;
     impacts.push({
-      type: 'NEWS_ADDED',
+      type: "NEWS_ADDED",
       payload: {
         headline: `SHOPPED: ${target.name} fails to find buyer; bankruptcy looms`,
         description: `${target.name} sought a rescue acquisition but found no willing acquirer.`,
-        category: 'market'
-      }
+        category: "market",
+      },
     });
     return impacts;
   }
   // Fire-sale price: token amount reflecting toxic negative cash.
-  const assetValue = Math.max(50_000_000, (target.strength || 20) * 2_000_000 + (target.prestige || 30) * 500_000);
+  const assetValue = Math.max(
+    50_000_000,
+    (target.strength || 20) * 2_000_000 + (target.prestige || 30) * 500_000
+  );
   const price = Math.round(assetValue * (0.3 + secureRandom() * 0.2));
 
   impacts.push({
-    type: 'RIVAL_UPDATED',
-    payload: { rivalId: acquirer.id, update: { cash: (acquirer.cash || 0) - price, prestige: Math.min(100, (acquirer.prestige || 0) + 5) } } as any
+    type: "RIVAL_UPDATED",
+    payload: {
+      rivalId: acquirer.id,
+      update: {
+        cash: (acquirer.cash || 0) - price,
+        prestige: Math.min(100, (acquirer.prestige || 0) + 5),
+      },
+    } as any,
   });
   impacts.push({
-    type: 'INDUSTRY_UPDATE',
-    payload: { update: {}, mergedRivalId: target.id, acquirerId: acquirer.id } as any
+    type: "INDUSTRY_UPDATE",
+    payload: { update: {}, mergedRivalId: target.id, acquirerId: acquirer.id } as any,
   });
   impacts.push({
-    type: 'NEWS_ADDED',
+    type: "NEWS_ADDED",
     payload: {
       headline: `DISTRESSED M&A: ${acquirer.name} absorbs ${target.name} at fire-sale $${(price / 1e6).toFixed(0)}M`,
       description: `With ${target.name} running a cash deficit, ${acquirer.name} has struck a rescue acquisition on punitive terms.`,
-      category: 'market'
-    }
+      category: "market",
+    },
   });
   logEvent({
-    week: state.week, year: Math.floor(state.week / 52) + 1975,
-    stage: 3, kind: 'distressed-ma',
-    studioId: target.id, studioName: target.name,
-    counterpartyId: acquirer.id, counterpartyName: acquirer.name,
-    amount: price, note: 'Rescue acquisition'
+    week: state.week,
+    year: Math.floor(state.week / 52) + 1975,
+    stage: 3,
+    kind: "distressed-ma",
+    studioId: target.id,
+    studioName: target.name,
+    counterpartyId: acquirer.id,
+    counterpartyName: acquirer.name,
+    amount: price,
+    note: "Rescue acquisition",
   });
   counts(target.id).s3++;
   return impacts;
@@ -647,28 +756,31 @@ function stage4Bankruptcy(state: GameState, target: RivalStudio): StateImpact[] 
   const impacts: StateImpact[] = [];
 
   // Remaining IP reverts to open market so indies can pick it up later.
-  const orphanedVault = (state.ip.vault || []).map(a =>
+  const orphanedVault = (state.ip.vault || []).map((a) =>
     a.ownerStudioId === (target.id as any)
-      ? { ...a, ownerStudioId: undefined, rightsOwner: 'MARKET' as const }
+      ? { ...a, ownerStudioId: undefined, rightsOwner: "MARKET" as const }
       : a
   );
   impacts.push({
-    type: 'INDUSTRY_UPDATE',
-    payload: { update: { 'ip.vault': orphanedVault }, bankruptRivalId: target.id } as any
+    type: "INDUSTRY_UPDATE",
+    payload: { update: { "ip.vault": orphanedVault }, bankruptRivalId: target.id } as any,
   });
   impacts.push({
-    type: 'NEWS_ADDED',
+    type: "NEWS_ADDED",
     payload: {
       headline: `BANKRUPTCY: ${target.name} liquidates; catalog reverts to open market`,
       description: `After exhausting asset sales and finding no buyer, ${target.name} has filed Chapter 7.`,
-      category: 'market'
-    }
+      category: "market",
+    },
   });
   logEvent({
-    week: state.week, year: Math.floor(state.week / 52) + 1975,
-    stage: 4, kind: 'bankruptcy',
-    studioId: target.id, studioName: target.name,
-    note: 'Liquidated, IP to public market'
+    week: state.week,
+    year: Math.floor(state.week / 52) + 1975,
+    stage: 4,
+    kind: "bankruptcy",
+    studioId: target.id,
+    studioName: target.name,
+    note: "Liquidated, IP to public market",
   });
   return impacts;
 }
@@ -681,7 +793,7 @@ export function tickDistressCascade(state: GameState): StateImpact[] {
 
   // ⚡ Bolt: Replaced Object.values().map().filter() with a direct for...in loop
   // Pick distressed rivals, highest-stage first so the worst-off progress before the just-slipping.
-  const queue: { r: RivalStudio, stage: 0|1|2|3|4 }[] = [];
+  const queue: { r: RivalStudio; stage: 0 | 1 | 2 | 3 | 4 }[] = [];
   let rivalsCount = 0;
   for (const id in allRivals) {
     rivalsCount++;

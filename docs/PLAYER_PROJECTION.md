@@ -29,9 +29,10 @@ through M&A and hard bankruptcies:
   for 2 years; `ConsolidationEngine` refuses their bids during the window.
 
 **Player consequences:**
+
 - A player who grows past ~35% market share triggers forced divestiture — they
   lose cash AND spawn a competitor. Scaling aggression has a ceiling.
-- A mid-tier player may *benefit* when antitrust hits a dominant rival, slowing
+- A mid-tier player may _benefit_ when antitrust hits a dominant rival, slowing
   their M&A and spinning off assets the player could later target.
 - New indie/disruptor waves mean the player never reaches a "late game" where
   competition thins out — there is always a fresh entrant chasing the same deals.
@@ -50,13 +51,13 @@ through M&A and hard bankruptcies:
 
 ## Balanced persona — modal outcome
 
-| Year | Cash Position | Releases | Franchises | Notes |
-|-----:|---------------|---------:|-----------:|-------|
-| 1    | -$50M to +$100M | 0–2 | 0 | Start $500M; first pitches mostly mid/high tier, first release lands ~week 30–40. |
-| 5    | +$100M to +$400M | 8–12 | 0–1 | Break-even period. One breakout can spawn a franchise; one flop resets progress. |
-| 10   | +$300M to +$900M | 20–25 | 1–2 | Establishes tier. Macro dip (year 8–9) may compress cash. |
-| 25   | +$1B to +$2.5B | 55–70 | 3–5 | Survives the 2008-analogue dip (y18). Franchises start showing fatigue decay after entry 4–5. |
-| 50   | +$1.5B to +$4B | 100–115 | 5–8 | Survives COVID + strike shocks. By y50 at least one legacy franchise has decayed past relevance; top 2–3 rivals hold ~60% of remaining cash but the field is still ~10 rivals deep thanks to indie/disruptor spawning, and 2–4 antitrust interventions have trimmed any runaway leaders. |
+| Year | Cash Position    | Releases | Franchises | Notes                                                                                                                                                                                                                                                                                    |
+| ---: | ---------------- | -------: | ---------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|    1 | -$50M to +$100M  |      0–2 |          0 | Start $500M; first pitches mostly mid/high tier, first release lands ~week 30–40.                                                                                                                                                                                                        |
+|    5 | +$100M to +$400M |     8–12 |        0–1 | Break-even period. One breakout can spawn a franchise; one flop resets progress.                                                                                                                                                                                                         |
+|   10 | +$300M to +$900M |    20–25 |        1–2 | Establishes tier. Macro dip (year 8–9) may compress cash.                                                                                                                                                                                                                                |
+|   25 | +$1B to +$2.5B   |    55–70 |        3–5 | Survives the 2008-analogue dip (y18). Franchises start showing fatigue decay after entry 4–5.                                                                                                                                                                                            |
+|   50 | +$1.5B to +$4B   |  100–115 |        5–8 | Survives COVID + strike shocks. By y50 at least one legacy franchise has decayed past relevance; top 2–3 rivals hold ~60% of remaining cash but the field is still ~10 rivals deep thanks to indie/disruptor spawning, and 2–4 antitrust interventions have trimmed any runaway leaders. |
 
 ## Aggressive persona (predatory bidding, always pitch)
 

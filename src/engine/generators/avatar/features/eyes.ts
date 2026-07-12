@@ -1,11 +1,18 @@
-import { AvatarFeatures, ColorPalette } from '../types';
-import { darkenColor } from '../utils';
+import { AvatarFeatures, ColorPalette } from "../types";
+import { darkenColor } from "../utils";
 
 /**
  * Renders the eyes, eyebrows, and eyelashes.
  * Includes blinking animation via CSS.
  */
-export function renderEyes(f: AvatarFeatures, cx: number, cy: number, faceW: number, faceH: number, skin: ColorPalette): string {
+export function renderEyes(
+  f: AvatarFeatures,
+  cx: number,
+  cy: number,
+  faceW: number,
+  faceH: number,
+  skin: ColorPalette
+): string {
   const eyeY = cy - faceH * 0.08;
   const eyeSpacing = 12 + f.eyeSpacing * 10;
   const eyeW = 8 + f.eyeSize * 7;
@@ -13,7 +20,7 @@ export function renderEyes(f: AvatarFeatures, cx: number, cy: number, faceW: num
   const slant = f.eyeSlant * 5;
   const irisR = eyeH * 0.7;
   const pupilR = irisR * 0.45;
-  
+
   const browY = cy - faceH * 0.18;
   const browSpacing = 12 + f.eyeSpacing * 10;
   const browLen = 14 + f.browThickness * 6;
@@ -21,13 +28,13 @@ export function renderEyes(f: AvatarFeatures, cx: number, cy: number, faceW: num
   const browArch = f.browArch * 5;
   const browColor = darkenColor(f.hairColor.primary, 0.2);
 
-  let svg = '';
+  let svg = "";
 
   // ── Eyebrows ──
   // Left brow
-  svg += `<path d="M ${cx - browSpacing - browLen/2} ${browY + 1} Q ${cx - browSpacing} ${browY - browArch} ${cx - browSpacing + browLen/2} ${browY + 1}" stroke="${browColor}" stroke-width="${browThick}" stroke-linecap="round" fill="none"/>`;
+  svg += `<path d="M ${cx - browSpacing - browLen / 2} ${browY + 1} Q ${cx - browSpacing} ${browY - browArch} ${cx - browSpacing + browLen / 2} ${browY + 1}" stroke="${browColor}" stroke-width="${browThick}" stroke-linecap="round" fill="none"/>`;
   // Right brow
-  svg += `<path d="M ${cx + browSpacing - browLen/2} ${browY + 1} Q ${cx + browSpacing} ${browY - browArch} ${cx + browSpacing + browLen/2} ${browY + 1}" stroke="${browColor}" stroke-width="${browThick}" stroke-linecap="round" fill="none"/>`;
+  svg += `<path d="M ${cx + browSpacing - browLen / 2} ${browY + 1} Q ${cx + browSpacing} ${browY - browArch} ${cx + browSpacing + browLen / 2} ${browY + 1}" stroke="${browColor}" stroke-width="${browThick}" stroke-linecap="round" fill="none"/>`;
 
   // ── Eyes (Left) ──
   svg += `

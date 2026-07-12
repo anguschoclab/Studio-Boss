@@ -1,15 +1,15 @@
 // Talent Discovery System Types
 // Breakout stars, guest stars, hidden gems
 
-import { TalentTier } from './talent.types';
+import { TalentTier } from "./talent.types";
 
 export type BreakoutTrigger =
-  | 'indie_hit'
-  | 'viral_scene'
-  | 'cameo_steal'
-  | 'tv_performance'
-  | 'award_nomination'
-  | 'critical_praise';
+  | "indie_hit"
+  | "viral_scene"
+  | "cameo_steal"
+  | "tv_performance"
+  | "award_nomination"
+  | "critical_praise";
 
 export interface BreakoutStar {
   id: string;
@@ -40,11 +40,11 @@ export interface GuestStarBooking {
   seriesId: string;
   episodeNumber: number;
   seasonNumber: number;
-  roleType: 'cameo' | 'recurring_guest' | 'special_guest' | 'crossover';
+  roleType: "cameo" | "recurring_guest" | "special_guest" | "crossover";
   impact: number; // Rating boost
   cost: number;
   chemistryWithCast: number; // 0-100
-  fanReaction: 'positive' | 'mixed' | 'negative' | 'viral';
+  fanReaction: "positive" | "mixed" | "negative" | "viral";
 }
 
 // Hidden talent pool (undiscovered gems)
@@ -54,7 +54,7 @@ export interface HiddenTalent {
   age: number;
   potential: number; // 0-100, ceiling of their career
   currentSkill: number; // 0-100, actual current ability
-  discoveryMethod: 'audition' | 'recommendation' | 'scouting' | 'viral_discovery';
+  discoveryMethod: "audition" | "recommendation" | "scouting" | "viral_discovery";
   discoveredBy?: string; // Studio ID
   discoveryWeek?: number;
   askingPrice: number;

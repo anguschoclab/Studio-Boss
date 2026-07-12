@@ -90,9 +90,10 @@ export function advanceRivals(state: GameState): StateImpact {
   const rivalUpdates: RivalUpdate[] = [];
   const newsEvents: NewsEvent[] = [];
   const uiNotifications: string[] = [];
-  const ALL_RIVALS = Object.values(state.entities.rivals);
+  const rivalsObj = state.entities.rivals;
 
-  for (const rival of ALL_RIVALS) {
+  for (const id in rivalsObj) {
+    const rival = rivalsObj[id];
     const update = updateRival(rival);
 
     rivalUpdates.push({
@@ -136,7 +137,8 @@ export function advanceRivals(state: GameState): StateImpact {
   }
 
   // Talent Poaching News
-  for (const rival of ALL_RIVALS) {
+  for (const id in rivalsObj) {
+    const rival = rivalsObj[id];
     const poakMsg = rivalPoachTalent(rival, stars);
     if (poakMsg) {
       newsEvents.push({

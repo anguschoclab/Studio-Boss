@@ -1,14 +1,14 @@
-import React from 'react';
-import { 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
+import React from "react";
+import {
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
   ResponsiveContainer,
   AreaChart,
-  Area
-} from 'recharts';
-import { StreamerPlatform } from '@/engine/types';
+  Area,
+} from "recharts";
+import { StreamerPlatform } from "@/engine/types";
 
 interface SubscriberTrendChartProps {
   platform: StreamerPlatform;
@@ -31,40 +31,34 @@ export const SubscriberTrendChart: React.FC<SubscriberTrendChartProps> = ({ plat
         <AreaChart data={data}>
           <defs>
             <linearGradient id="colorSubs" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
-              <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+              <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-          <XAxis 
-            dataKey="week" 
-            hide 
-          />
-          <YAxis 
-            hide 
-            domain={['dataMin - 100000', 'dataMax + 100000']}
-          />
+          <XAxis dataKey="week" hide />
+          <YAxis hide domain={["dataMin - 100000", "dataMax + 100000"]} />
           <Tooltip
             contentStyle={{
-              backgroundColor: 'rgba(0,0,0,0.8)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: '8px',
-              fontSize: '10px',
+              backgroundColor: "rgba(0,0,0,0.8)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              borderRadius: "8px",
+              fontSize: "10px",
               fontWeight: 800,
-              textTransform: 'uppercase'
+              textTransform: "uppercase",
             }}
-            itemStyle={{ color: 'hsl(var(--primary))' }}
-            labelStyle={{ color: 'rgba(255,255,255,0.5)' }}
+            itemStyle={{ color: "hsl(var(--primary))" }}
+            labelStyle={{ color: "rgba(255,255,255,0.5)" }}
             labelFormatter={(week) => `Week ${week}`}
-            formatter={(value: number) => [value.toLocaleString(), 'Subscribers']}
+            formatter={(value: number) => [value.toLocaleString(), "Subscribers"]}
           />
-          <Area 
-            type="monotone" 
-            dataKey="count" 
-            stroke="hsl(var(--primary))" 
+          <Area
+            type="monotone"
+            dataKey="count"
+            stroke="hsl(var(--primary))"
             strokeWidth={2}
-            fillOpacity={1} 
-            fill="url(#colorSubs)" 
+            fillOpacity={1}
+            fill="url(#colorSubs)"
             animationDuration={1500}
           />
         </AreaChart>

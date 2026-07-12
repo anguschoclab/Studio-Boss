@@ -1,32 +1,32 @@
-import React from 'react';
-import { Navigate } from '@tanstack/react-router';
-import { useGameStore } from '@/store/gameStore';
-import { useUIStore } from '@/store/uiStore';
-import { TopBar } from '@/components/layout/TopBar';
-import { StudioSidebar } from '@/components/layout/StudioSidebar';
-import { CommandCenter } from '@/components/dashboard/CommandCenter';
-import { PipelineBoard } from '@/components/pipeline/PipelineBoard';
-import { TalentHub } from '@/components/talent/TalentHub';
-import { FinancePanel } from '@/components/finance/FinancePanel';
-import { DiscoveryBoard } from '@/components/discovery/DiscoveryBoard';
-import { RivalsPanel } from '@/components/rivals/RivalsPanel';
-import { IPVault } from '@/components/ip/IPVault';
-import { DistributionHub } from '@/components/distribution/DistributionHub';
-import { BookmarksBoard } from '@/components/bookmarks/BookmarksBoard';
-import { AnimatePresence, motion } from 'framer-motion';
+import React from "react";
+import { Navigate } from "@tanstack/react-router";
+import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
+import { TopBar } from "@/components/layout/TopBar";
+import { StudioSidebar } from "@/components/layout/StudioSidebar";
+import { CommandCenter } from "@/components/dashboard/CommandCenter";
+import { PipelineBoard } from "@/components/pipeline/PipelineBoard";
+import { TalentHub } from "@/components/talent/TalentHub";
+import { FinancePanel } from "@/components/finance/FinancePanel";
+import { DiscoveryBoard } from "@/components/discovery/DiscoveryBoard";
+import { RivalsPanel } from "@/components/rivals/RivalsPanel";
+import { IPVault } from "@/components/ip/IPVault";
+import { DistributionHub } from "@/components/distribution/DistributionHub";
+import { BookmarksBoard } from "@/components/bookmarks/BookmarksBoard";
+import { AnimatePresence, motion } from "framer-motion";
 
 // Modals
-import { CreateProjectModal } from '@/components/modals/CreateProjectModal';
-import { WeekSummaryModal } from '@/components/modals/WeekSummaryModal';
-import { ProjectDetailModal } from '@/components/modals/ProjectDetailModal';
-import { PitchProjectModal } from '@/components/modals/PitchProjectModal';
-import { CrisisModal } from '@/components/modals/CrisisModal';
-import { AwardsCeremonyModal } from '@/components/modals/AwardsCeremonyModal';
-import { GreenlightDecisionModal } from '@/components/modals/GreenlightDecisionModal';
-import { SettingsModal } from '@/components/modals/SettingsModal';
+import { CreateProjectModal } from "@/components/modals/CreateProjectModal";
+import { WeekSummaryModal } from "@/components/modals/WeekSummaryModal";
+import { ProjectDetailModal } from "@/components/modals/ProjectDetailModal";
+import { PitchProjectModal } from "@/components/modals/PitchProjectModal";
+import { CrisisModal } from "@/components/modals/CrisisModal";
+import { AwardsCeremonyModal } from "@/components/modals/AwardsCeremonyModal";
+import { GreenlightDecisionModal } from "@/components/modals/GreenlightDecisionModal";
+import { SettingsModal } from "@/components/modals/SettingsModal";
 
-import { TabId } from '@/store/uiStore';
-import { useSettingsStore } from '@/store/settingsStore';
+import { TabId } from "@/store/uiStore";
+import { useSettingsStore } from "@/store/settingsStore";
 
 const TAB_CONTENT: Record<TabId, React.ReactNode> = {
   command: <CommandCenter key="command" />,
@@ -41,12 +41,12 @@ const TAB_CONTENT: Record<TabId, React.ReactNode> = {
 };
 
 const Dashboard: React.FC = () => {
-  const gameState = useGameStore(s => s.gameState);
+  const gameState = useGameStore((s) => s.gameState);
   const { activeTab, showSettings, setShowSettings } = useUIStore();
-  const reduceMotion = useSettingsStore(s => s.reduceMotion);
-  const devAutoInit = useGameStore(s => s.devAutoInit);
+  const reduceMotion = useSettingsStore((s) => s.reduceMotion);
+  const devAutoInit = useGameStore((s) => s.devAutoInit);
   const searchParams = new URLSearchParams(window.location.search);
-  const isAutoStarting = searchParams.get('autoStart') === 'true';
+  const isAutoStarting = searchParams.get("autoStart") === "true";
 
   React.useEffect(() => {
     if (!gameState && isAutoStarting) {
@@ -55,7 +55,12 @@ const Dashboard: React.FC = () => {
   }, [gameState, isAutoStarting, devAutoInit]);
 
   if (!gameState && !isAutoStarting) return <Navigate to="/" />;
-  if (!gameState) return <div className="flex items-center justify-center h-screen font-sans">Initializing Studio...</div>;
+  if (!gameState)
+    return (
+      <div className="flex items-center justify-center h-screen font-sans">
+        Initializing Studio...
+      </div>
+    );
 
   const renderContent = () => TAB_CONTENT[activeTab] || <CommandCenter key="default" />;
 
@@ -83,7 +88,7 @@ const Dashboard: React.FC = () => {
           </div>
         </main>
       </div>
-      
+
       <CreateProjectModal />
       <WeekSummaryModal />
       <ProjectDetailModal />

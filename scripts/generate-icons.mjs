@@ -5,26 +5,26 @@
  * Run: node scripts/generate-icons.mjs
  */
 
-import { createCanvas } from 'canvas';
-import { writeFileSync } from 'fs';
+import { createCanvas } from "canvas";
+import { writeFileSync } from "fs";
 
 const sizes = [
-  { size: 192, name: 'pwa-192x192.png' },
-  { size: 512, name: 'pwa-512x512.png' },
-  { size: 180, name: 'apple-touch-icon.png' },
-  { size: 32,  name: 'favicon-32x32.png' },
+  { size: 192, name: "pwa-192x192.png" },
+  { size: 512, name: "pwa-512x512.png" },
+  { size: 180, name: "apple-touch-icon.png" },
+  { size: 32, name: "favicon-32x32.png" },
 ];
 
 function drawIcon(canvas) {
   const size = canvas.width;
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext("2d");
   const pad = size * 0.08;
   const r = size * 0.18;
 
   // Background gradient: deep navy → near-black
   const bg = ctx.createLinearGradient(0, 0, size, size);
-  bg.addColorStop(0, '#0a0e1a');
-  bg.addColorStop(1, '#111827');
+  bg.addColorStop(0, "#0a0e1a");
+  bg.addColorStop(1, "#111827");
   ctx.fillStyle = bg;
   ctx.beginPath();
   ctx.roundRect(0, 0, size, size, r);
@@ -37,14 +37,14 @@ function drawIcon(canvas) {
   const innerR = size * 0.12;
   const spokW = size * 0.055;
 
-  ctx.strokeStyle = '#6366f1';
+  ctx.strokeStyle = "#6366f1";
   ctx.lineWidth = size * 0.04;
   ctx.beginPath();
   ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
   ctx.stroke();
 
   // Spokes (6 spokes like a film reel)
-  ctx.strokeStyle = '#818cf8';
+  ctx.strokeStyle = "#818cf8";
   ctx.lineWidth = spokW;
   for (let i = 0; i < 6; i++) {
     const angle = (i / 6) * Math.PI * 2;
@@ -56,36 +56,36 @@ function drawIcon(canvas) {
 
   // Center hub
   const hubGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, innerR);
-  hubGrad.addColorStop(0, '#818cf8');
-  hubGrad.addColorStop(1, '#4f46e5');
+  hubGrad.addColorStop(0, "#818cf8");
+  hubGrad.addColorStop(1, "#4f46e5");
   ctx.fillStyle = hubGrad;
   ctx.beginPath();
   ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
   ctx.fill();
 
   // "SB" text in center
-  ctx.fillStyle = '#fff';
+  ctx.fillStyle = "#fff";
   ctx.font = `900 ${Math.round(innerR * 1.1)}px -apple-system, "SF Pro Display", Arial, sans-serif`;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText('SB', cx, cy + size * 0.01);
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("SB", cx, cy + size * 0.01);
 
   // Top strip: "STUDIO BOSS" text
   if (size >= 192) {
-    ctx.fillStyle = 'rgba(99,102,241,0.15)';
+    ctx.fillStyle = "rgba(99,102,241,0.15)";
     ctx.fillRect(pad, pad, size - pad * 2, size * 0.12);
 
-    ctx.fillStyle = '#a5b4fc';
+    ctx.fillStyle = "#a5b4fc";
     ctx.font = `800 ${Math.round(size * 0.065)}px -apple-system, Arial, sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('STUDIO BOSS', cx, pad + size * 0.06);
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("STUDIO BOSS", cx, pad + size * 0.06);
   }
 
   // Subtle glow ring
   const glow = ctx.createRadialGradient(cx, cy, outerR * 0.9, cx, cy, outerR * 1.3);
-  glow.addColorStop(0, 'rgba(99,102,241,0.15)');
-  glow.addColorStop(1, 'rgba(99,102,241,0)');
+  glow.addColorStop(0, "rgba(99,102,241,0.15)");
+  glow.addColorStop(1, "rgba(99,102,241,0)");
   ctx.fillStyle = glow;
   ctx.beginPath();
   ctx.arc(cx, cy, outerR * 1.3, 0, Math.PI * 2);
@@ -94,21 +94,21 @@ function drawIcon(canvas) {
 
 let hasCanvas = false;
 try {
-  const { createCanvas: cc } = await import('canvas');
+  const { createCanvas: cc } = await import("canvas");
   hasCanvas = true;
 } catch {}
 
 if (hasCanvas) {
-  const { createCanvas: cc } = await import('canvas');
+  const { createCanvas: cc } = await import("canvas");
   for (const { size, name } of sizes) {
     const canvas = cc(size, size);
     drawIcon(canvas);
-    const buf = canvas.toBuffer('image/png');
+    const buf = canvas.toBuffer("image/png");
     writeFileSync(`public/${name}`, buf);
     console.log(`✅ Generated public/${name} (${size}x${size})`);
   }
 } else {
-  console.log('canvas package not found — using SVG icon fallback');
+  console.log("canvas package not found — using SVG icon fallback");
   // Write an SVG that browsers can use as icon source
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
@@ -135,8 +135,8 @@ if (hasCanvas) {
   <text x="256" y="270" font-family="-apple-system,Arial,sans-serif" font-weight="900" font-size="58" fill="white" text-anchor="middle">SB</text>
   <text x="256" y="82" font-family="-apple-system,Arial,sans-serif" font-weight="800" font-size="34" fill="#a5b4fc" text-anchor="middle">STUDIO BOSS</text>
 </svg>`;
-  writeFileSync('public/icon.svg', svg);
-  console.log('✅ Generated public/icon.svg (SVG fallback)');
+  writeFileSync("public/icon.svg", svg);
+  console.log("✅ Generated public/icon.svg (SVG fallback)");
   // Copy SVG as all PNG names too (browsers accept SVG for many icon uses)
   for (const { name } of sizes) {
     writeFileSync(`public/${name}`, svg);

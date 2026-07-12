@@ -1,21 +1,21 @@
-import { useState, useMemo } from 'react';
-import { useGameStore } from '@/store/gameStore';
-import { Talent, TalentRole } from '@/engine/types';
-import { TalentModal } from './TalentProfileModal';
-import { TalentCard } from './TalentCard';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { useState, useMemo } from "react";
+import { useGameStore } from "@/store/gameStore";
+import { Talent, TalentRole } from "@/engine/types";
+import { TalentModal } from "./TalentProfileModal";
+import { TalentCard } from "./TalentCard";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Search, Users, Star, Database, Bookmark } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { EmptyState } from '@/components/shared/EmptyState';
+} from "@/components/ui/select";
+import { Search, Users, Star, Database, Bookmark } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { EmptyState } from "@/components/shared/EmptyState";
 
 export const TalentHub = () => {
   const state = useGameStore((s) => s.gameState);
@@ -37,13 +37,11 @@ export const TalentHub = () => {
   const isBookmarked = useGameStore((s) => s.isBookmarked);
 
   const filteredRoster = useMemo(() => {
-    return talentPool.filter(
-      (t) => {
-        const matchesRole = rosterFilter === "all" || t.roles.includes(rosterFilter as TalentRole);
-        const matchesBookmark = !showBookmarksOnly || isBookmarked(t.id, 'talent');
-        return matchesRole && matchesBookmark;
-      }
-    );
+    return talentPool.filter((t) => {
+      const matchesRole = rosterFilter === "all" || t.roles.includes(rosterFilter as TalentRole);
+      const matchesBookmark = !showBookmarksOnly || isBookmarked(t.id, "talent");
+      return matchesRole && matchesBookmark;
+    });
   }, [talentPool, rosterFilter, showBookmarksOnly, isBookmarked]);
 
   const filteredSBDB = useMemo(() => {
@@ -59,7 +57,7 @@ export const TalentHub = () => {
           else if (tierFilter === "rising") matchesTier = prestige >= 40 && prestige < 60;
           else if (tierFilter === "undiscovered") matchesTier = prestige < 40;
         }
-        const matchesBookmark = !showBookmarksOnly || isBookmarked(t.id, 'talent');
+        const matchesBookmark = !showBookmarksOnly || isBookmarked(t.id, "talent");
         return matchesSearch && matchesRole && matchesTier && matchesBookmark;
       })
       .sort((a, b) => (b.starMeter || 0) - (a.starMeter || 0));
@@ -166,7 +164,10 @@ export const TalentHub = () => {
         >
           <div className="glass-card p-10 flex flex-col md:flex-row gap-8 items-center justify-between mb-12 bg-black/40 border border-white/5 rounded-none shadow-2xl">
             <div className="relative w-full md:w-[500px] group">
-              <Search aria-hidden="true" className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/20 group-focus-within:text-primary transition-all duration-700" />
+              <Search
+                aria-hidden="true"
+                className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/20 group-focus-within:text-primary transition-all duration-700"
+              />
               <Input
                 aria-label="Search global database"
                 placeholder="SEARCH GLOBAL DATABASE..."
@@ -177,7 +178,10 @@ export const TalentHub = () => {
             </div>
             <div className="flex items-center gap-6 w-full md:w-auto">
               <Select value={roleFilter} onValueChange={setRoleFilter}>
-                <SelectTrigger aria-label="Filter by role" className="w-[200px] h-14 bg-black/60 border-white/10 text-[10px] font-black uppercase tracking-[0.3em] rounded-none italic focus:ring-0 focus:border-primary/40 transition-all duration-700">
+                <SelectTrigger
+                  aria-label="Filter by role"
+                  className="w-[200px] h-14 bg-black/60 border-white/10 text-[10px] font-black uppercase tracking-[0.3em] rounded-none italic focus:ring-0 focus:border-primary/40 transition-all duration-700"
+                >
                   <SelectValue placeholder="ALL ROLES" />
                 </SelectTrigger>
                 <SelectContent className="bg-black/95 backdrop-blur-3xl border-white/10 rounded-none">
@@ -214,7 +218,10 @@ export const TalentHub = () => {
                 </SelectContent>
               </Select>
               <Select value={tierFilter} onValueChange={setTierFilter}>
-                <SelectTrigger aria-label="Filter by tier" className="w-[200px] h-14 bg-black/60 border-white/10 text-[10px] font-black uppercase tracking-[0.3em] rounded-none italic focus:ring-0 focus:border-primary/40 transition-all duration-700">
+                <SelectTrigger
+                  aria-label="Filter by tier"
+                  className="w-[200px] h-14 bg-black/60 border-white/10 text-[10px] font-black uppercase tracking-[0.3em] rounded-none italic focus:ring-0 focus:border-primary/40 transition-all duration-700"
+                >
                   <SelectValue placeholder="ALL TIERS" />
                 </SelectTrigger>
                 <SelectContent className="bg-black/95 backdrop-blur-3xl border-white/10 rounded-none">

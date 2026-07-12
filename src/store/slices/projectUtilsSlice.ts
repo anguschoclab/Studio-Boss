@@ -1,32 +1,38 @@
-import { StateCreator } from 'zustand';
-import { GameStore } from '../gameStore';
-import { applyStateImpact } from '../storeUtils';
-import { Project, GameState } from '@/engine/types';
-import { type ProjectId } from '@/engine/types/shared.types';
+import { StateCreator } from "zustand";
+import { GameStore } from "../gameStore";
+import { applyStateImpact } from "../storeUtils";
+import { Project, GameState } from "@/engine/types";
+import { type ProjectId } from "@/engine/types/shared.types";
 
 export interface ProjectUtilsSlice {
   addProject: (project: Project) => void;
-  advanceProjectPhase: (projectId: ProjectId, newState: Project['state']) => void;
+  advanceProjectPhase: (projectId: ProjectId, newState: Project["state"]) => void;
   updateProject: (projectId: ProjectId, update: Partial<Project>) => void;
 }
 
-export const createProjectUtilsSlice: StateCreator<GameStore, [], [], ProjectUtilsSlice> = (set) => ({
+export const createProjectUtilsSlice: StateCreator<GameStore, [], [], ProjectUtilsSlice> = (
+  set
+) => ({
   addProject: (project) => {
     set((s) => {
       if (!s.gameState) return s;
-      const isReleasedTier = project.state === 'released' || project.state === 'post_release' || project.state === 'archived';
-      const releasedProjectIds = isReleasedTier && !s.gameState.entities.releasedProjectIds.includes(project.id)
-        ? [...s.gameState.entities.releasedProjectIds, project.id]
-        : s.gameState.entities.releasedProjectIds;
+      const isReleasedTier =
+        project.state === "released" ||
+        project.state === "post_release" ||
+        project.state === "archived";
+      const releasedProjectIds =
+        isReleasedTier && !s.gameState.entities.releasedProjectIds.includes(project.id)
+          ? [...s.gameState.entities.releasedProjectIds, project.id]
+          : s.gameState.entities.releasedProjectIds;
       return {
         gameState: {
           ...s.gameState,
           entities: {
             ...s.gameState.entities,
             projects: { ...s.gameState.entities.projects, [project.id as ProjectId]: project },
-            releasedProjectIds
-          }
-        }
+            releasedProjectIds,
+          },
+        },
       };
     });
   },
@@ -36,12 +42,12 @@ export const createProjectUtilsSlice: StateCreator<GameStore, [], [], ProjectUti
       if (!s.gameState) return s;
       return {
         gameState: applyStateImpact(s.gameState, {
-          type: 'PROJECT_UPDATED',
+          type: "PROJECT_UPDATED",
           payload: {
             projectId,
-            update: { state: newState as import('@/engine/types').Project['state'] }
-          }
-        })
+            update: { state: newState as import("@/engine/types").Project["state"] },
+          },
+        }),
       };
     });
   },
@@ -51,13 +57,13 @@ export const createProjectUtilsSlice: StateCreator<GameStore, [], [], ProjectUti
       if (!s.gameState) return s;
       return {
         gameState: applyStateImpact(s.gameState, {
-          type: 'PROJECT_UPDATED',
+          type: "PROJECT_UPDATED",
           payload: {
             projectId,
-            update
-          }
-        })
+            update,
+          },
+        }),
       };
     });
-  }
+  },
 });

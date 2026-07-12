@@ -1,8 +1,8 @@
-export { RumorProcessor } from './RumorProcessor';
+export { RumorProcessor } from "./RumorProcessor";
 
-import { GameState, StateImpact } from '@/engine/types';
-import { RandomGenerator } from '../../utils/rng';
-import { RumorProcessor } from './RumorProcessor';
+import { GameState, StateImpact } from "@/engine/types";
+import { RandomGenerator } from "../../utils/rng";
+import { RumorProcessor } from "./RumorProcessor";
 
 /**
  * Legacy-compatible wrapper for advanceRumors.

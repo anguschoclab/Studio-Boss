@@ -1,11 +1,17 @@
 /**
  * @vitest-environment jsdom
  */
-import { render, screen, act } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
-import { NavLink } from '../../../src/components/NavLink';
-import { createMemoryHistory, createRootRoute, createRoute, createRouter, RouterProvider } from '@tanstack/react-router';
-import React from 'react';
+import { render, screen, act } from "@testing-library/react";
+import { describe, it, expect } from "vitest";
+import { NavLink } from "../../../src/components/NavLink";
+import {
+  createMemoryHistory,
+  createRootRoute,
+  createRoute,
+  createRouter,
+  RouterProvider,
+} from "@tanstack/react-router";
+import React from "react";
 
 const renderWithRouter = async (ui: React.ReactElement) => {
   const rootRoute = createRootRoute({
@@ -14,13 +20,13 @@ const renderWithRouter = async (ui: React.ReactElement) => {
 
   const indexRoute = createRoute({
     getParentRoute: () => rootRoute,
-    path: '/',
+    path: "/",
     component: () => <div>Index</div>,
   });
 
   const testRoute = createRoute({
     getParentRoute: () => rootRoute,
-    path: '/test',
+    path: "/test",
     component: () => <div>Test</div>,
   });
 
@@ -28,7 +34,7 @@ const renderWithRouter = async (ui: React.ReactElement) => {
 
   const router = createRouter({
     routeTree,
-    history: createMemoryHistory({ initialEntries: ['/'] }),
+    history: createMemoryHistory({ initialEntries: ["/"] }),
   });
 
   let result: ReturnType<typeof render>;
@@ -39,21 +45,21 @@ const renderWithRouter = async (ui: React.ReactElement) => {
   return result;
 };
 
-describe('NavLink', () => {
-  it('renders correctly and passes activeProps', async () => {
+describe("NavLink", () => {
+  it("renders correctly and passes activeProps", async () => {
     await renderWithRouter(
       <NavLink to="/test" className="base-class" activeClassName="active-class">
         Test Link
       </NavLink>
     );
 
-    const link = screen.getByRole('link', { name: 'Test Link' });
+    const link = screen.getByRole("link", { name: "Test Link" });
     expect(link).toBeInTheDocument();
-    expect(link).toHaveAttribute('href', '/test');
-    expect(link).toHaveClass('base-class');
+    expect(link).toHaveAttribute("href", "/test");
+    expect(link).toHaveClass("base-class");
   });
 
-  it('forwards ref correctly', async () => {
+  it("forwards ref correctly", async () => {
     const ref = React.createRef<HTMLAnchorElement>();
 
     await renderWithRouter(
@@ -63,6 +69,6 @@ describe('NavLink', () => {
     );
 
     expect(ref.current).toBeInstanceOf(HTMLAnchorElement);
-    expect(ref.current?.getAttribute('href')).toBe('/test');
+    expect(ref.current?.getAttribute("href")).toBe("/test");
   });
 });

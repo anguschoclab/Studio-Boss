@@ -1,28 +1,28 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { useGameStore } from '@/store/gameStore';
-import { useUIStore } from '@/store/uiStore';
-import { Project } from '@/engine/types';
-import { Button } from '@/components/ui/button';
-import { Gavel, Users, TrendingUp, Clock } from 'lucide-react';
-import { generateFestivalBid } from '@/engine/systems/ai/AgentBrain';
-import { RandomGenerator } from '@/engine/utils/rng';
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
+import { Project } from "@/engine/types";
+import { Button } from "@/components/ui/button";
+import { Gavel, Users, TrendingUp, Clock } from "lucide-react";
+import { generateFestivalBid } from "@/engine/systems/ai/AgentBrain";
+import { RandomGenerator } from "@/engine/utils/rng";
 
 /**
  * FestivalMarketModal: The "Gavel Auction" live bidding interface.
  * Simulates real-time (simulated) bidding between the player and AI rivals.
  */
 export const FestivalMarketModal: React.FC = () => {
-  const gameState = useGameStore(s => s.gameState);
-  const studioFinance = useGameStore(s => s.finance);
-  const addProject = useGameStore(s => s.addProject);
-  const addFunds = useGameStore(s => s.addFunds);
-  
+  const gameState = useGameStore((s) => s.gameState);
+  const studioFinance = useGameStore((s) => s.finance);
+  const addProject = useGameStore((s) => s.addProject);
+  const addFunds = useGameStore((s) => s.addFunds);
+
   const { activeModal, resolveCurrentModal } = useUIStore();
-  
+
   const project = activeModal?.payload?.project as Project;
   const [currentBid, setCurrentBid] = useState(Math.round(project?.budget * 0.8 || 0));
-  const [highestBidderId, setHighestBidderId] = useState<string | 'PLAYER' | null>(null);
-  const [highestBidderName, setHighestBidderName] = useState<string>('Opening Floor');
+  const [highestBidderId, setHighestBidderId] = useState<string | "PLAYER" | null>(null);
+  const [highestBidderName, setHighestBidderName] = useState<string>("Opening Floor");
   const [timeLeft, setTimeLeft] = useState(10); // Ticks until gavel falls
   const [isResolved, setIsResolved] = useState(false);
 
@@ -32,12 +32,20 @@ export const FestivalMarketModal: React.FC = () => {
   const resolveRef = useRef(resolveCurrentModal);
   const isMounted = useRef(true);
 
-  useEffect(() => { currentBidRef.current = currentBid; }, [currentBid]);
-  useEffect(() => { highestBidderIdRef.current = highestBidderId; }, [highestBidderId]);
-  useEffect(() => { resolveRef.current = resolveCurrentModal; }, [resolveCurrentModal]);
+  useEffect(() => {
+    currentBidRef.current = currentBid;
+  }, [currentBid]);
+  useEffect(() => {
+    highestBidderIdRef.current = highestBidderId;
+  }, [highestBidderId]);
+  useEffect(() => {
+    resolveRef.current = resolveCurrentModal;
+  }, [resolveCurrentModal]);
   useEffect(() => {
     isMounted.current = true;
-    return () => { isMounted.current = false; };
+    return () => {
+      isMounted.current = false;
+    };
   }, []);
 
   // Hoisted above useEffect so the dep array is satisfied without re-creation churn
@@ -52,10 +60,10 @@ export const FestivalMarketModal: React.FC = () => {
     }
 
     // Dispatch victory impact
-    if (bidderId === 'PLAYER') {
+    if (bidderId === "PLAYER") {
       addProject({
         ...project,
-        state: 'released',
+        state: "released",
         isAcquired: true,
         acquisitionCost: bid,
       });
@@ -69,14 +77,16 @@ export const FestivalMarketModal: React.FC = () => {
   }, [project, addProject, addFunds]);
 
   const handleFinalizeRef = useRef(handleFinalize);
-  useEffect(() => { handleFinalizeRef.current = handleFinalize; }, [handleFinalize]);
+  useEffect(() => {
+    handleFinalizeRef.current = handleFinalize;
+  }, [handleFinalize]);
 
   // AI Bidding Logic (Simulated ticks)
   useEffect(() => {
     if (isResolved || !project || !gameState) return;
 
     const timer = setInterval(() => {
-      setTimeLeft(prev => {
+      setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
           handleFinalizeRef.current();
@@ -93,14 +103,18 @@ export const FestivalMarketModal: React.FC = () => {
       const latestBid = currentBidRef.current;
       const latestBidderId = highestBidderIdRef.current;
 
-      Object.values(rivals).forEach(rival => {
+      Object.values(rivals).forEach((rival) => {
         if (rival.id === latestBidderId) return;
 
         // Determine if this rival wants to bid
         const potentialBid = generateFestivalBid(rival, project, localRng);
         const nextIncrementalBid = Math.round(latestBid * 1.05);
 
-        if (potentialBid && potentialBid >= nextIncrementalBid && rival.cash >= nextIncrementalBid) {
+        if (
+          potentialBid &&
+          potentialBid >= nextIncrementalBid &&
+          rival.cash >= nextIncrementalBid
+        ) {
           // AI Bids! - Add some jitter to make it feel more human/rivalrous
           if (localRng.next() < 0.25) {
             setCurrentBid(nextIncrementalBid);
@@ -113,7 +127,16 @@ export const FestivalMarketModal: React.FC = () => {
     }, 1500);
 
     return () => clearInterval(timer);
-  }, [isResolved, project, gameState, handleFinalize, setCurrentBid, setHighestBidderId, setHighestBidderName, setTimeLeft]);
+  }, [
+    isResolved,
+    project,
+    gameState,
+    handleFinalize,
+    setCurrentBid,
+    setHighestBidderId,
+    setHighestBidderName,
+    setTimeLeft,
+  ]);
 
   const handlePlayerBid = () => {
     if (!gameState) return;
@@ -121,7 +144,7 @@ export const FestivalMarketModal: React.FC = () => {
     if (studioFinance.cash < nextBid) return;
 
     setCurrentBid(nextBid);
-    setHighestBidderId('PLAYER');
+    setHighestBidderId("PLAYER");
     setHighestBidderName(gameState.studio.name);
     setTimeLeft(5); // Reset timer
   };
@@ -135,22 +158,32 @@ export const FestivalMarketModal: React.FC = () => {
         <div className="p-6 border-b border-white/5 bg-gradient-to-r from-amber-500/10 to-transparent">
           <div className="flex items-center gap-3 mb-2">
             <Gavel className="w-5 h-5 text-amber-500" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-500">Live Festival Auction</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-500">
+              Live Festival Auction
+            </span>
           </div>
-          <h2 className="text-3xl font-display font-black tracking-tight text-white line-clamp-1">{project.title}</h2>
-          <p className="text-slate-400 text-xs mt-1 italic">{project.genre} • quality: {project.reviewScore}%</p>
+          <h2 className="text-3xl font-display font-black tracking-tight text-white line-clamp-1">
+            {project.title}
+          </h2>
+          <p className="text-slate-400 text-xs mt-1 italic">
+            {project.genre} • quality: {project.reviewScore}%
+          </p>
         </div>
 
         {/* Main Auction Block */}
         <div className="p-8 flex flex-col items-center justify-center text-center">
           <div className="mb-8">
-            <div className="text-[10px] uppercase font-black tracking-widest text-slate-500 mb-2">Current High Bid</div>
+            <div className="text-[10px] uppercase font-black tracking-widest text-slate-500 mb-2">
+              Current High Bid
+            </div>
             <div className="text-6xl font-display font-black text-white tabular-nums tracking-tighter">
               ${(currentBid / 1000000).toFixed(2)}M
             </div>
             <div className="flex items-center justify-center gap-2 mt-3 p-2 bg-black/60 rounded-none border border-white/5">
               <Users className="w-3.5 h-3.5 text-slate-400" />
-              <span className={`text-xs font-bold ${highestBidderId === 'PLAYER' ? 'text-green-400' : 'text-slate-200'}`}>
+              <span
+                className={`text-xs font-bold ${highestBidderId === "PLAYER" ? "text-green-400" : "text-slate-200"}`}
+              >
                 {highestBidderName}
               </span>
             </div>
@@ -158,10 +191,10 @@ export const FestivalMarketModal: React.FC = () => {
 
           {/* Progress Bar / Timer */}
           <div className="w-full max-w-md bg-black/60 h-1.5 rounded-none overflow-hidden mb-8 border border-white/5">
-             <div 
-               className={`h-full transition-all duration-1000 ease-linear ${timeLeft < 3 ? 'bg-red-500' : 'bg-amber-500'}`}
-               style={{ width: `${(timeLeft / 10) * 100}%` }}
-             />
+            <div
+              className={`h-full transition-all duration-1000 ease-linear ${timeLeft < 3 ? "bg-red-500" : "bg-amber-500"}`}
+              style={{ width: `${(timeLeft / 10) * 100}%` }}
+            />
           </div>
 
           {isResolved ? (
@@ -172,14 +205,14 @@ export const FestivalMarketModal: React.FC = () => {
             </div>
           ) : (
             <div className="flex flex-col gap-4 w-full max-w-sm">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 onClick={handlePlayerBid}
                 disabled={studioFinance.cash < currentBid * 1.05}
                 className="h-16 text-lg font-black uppercase tracking-wider bg-white text-black hover:bg-slate-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]"
               >
                 <TrendingUp className="w-5 h-5 mr-2" />
-                Bid ${( (currentBid * 1.05) / 1000000).toFixed(2)}M
+                Bid ${((currentBid * 1.05) / 1000000).toFixed(2)}M
               </Button>
               <div className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">
                 Your Cash: ${(studioFinance.cash / 1000000).toFixed(1)}M

@@ -1,8 +1,8 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-export type Difficulty = 'relaxed' | 'standard' | 'cutthroat';
-export type AutosaveFrequency = 'weekly' | 'off';
+export type Difficulty = "relaxed" | "standard" | "cutthroat";
+export type AutosaveFrequency = "weekly" | "off";
 
 export interface DifficultyParams {
   /** Multiplier applied to macro market heat (higher = more volatile). */
@@ -17,11 +17,11 @@ export interface DifficultyParams {
  */
 export function getDifficultyParams(difficulty: Difficulty): DifficultyParams {
   switch (difficulty) {
-    case 'relaxed':
+    case "relaxed":
       return { heatMultiplier: 0.8, inflationBias: -0.01 };
-    case 'cutthroat':
+    case "cutthroat":
       return { heatMultiplier: 1.25, inflationBias: 0.01 };
-    case 'standard':
+    case "standard":
     default:
       return { heatMultiplier: 1.0, inflationBias: 0.0 };
   }
@@ -47,20 +47,20 @@ interface SettingsState {
 }
 
 export type PolicyKey =
-  | 'allowVanityAttachments'
-  | 'capOverheadDeals'
-  | 'preferExternalWriters'
-  | 'requireVeteranShowrunner'
-  | 'autoFlagNepotism'
-  | 'allowAuteurPackages'
-  | 'prioritizeOrbitStaffing';
+  | "allowVanityAttachments"
+  | "capOverheadDeals"
+  | "preferExternalWriters"
+  | "requireVeteranShowrunner"
+  | "autoFlagNepotism"
+  | "allowAuteurPackages"
+  | "prioritizeOrbitStaffing";
 
 export const useSettingsStore = create<SettingsState>()(
   persist(
     (set) => ({
       reduceMotion: false,
-      autosaveFrequency: 'weekly',
-      difficulty: 'standard',
+      autosaveFrequency: "weekly",
+      difficulty: "standard",
       allowVanityAttachments: false,
       capOverheadDeals: false,
       preferExternalWriters: false,
@@ -75,7 +75,7 @@ export const useSettingsStore = create<SettingsState>()(
       setPolicy: (key, v) => set({ [key]: v } as Partial<SettingsState>),
     }),
     {
-      name: 'studio-boss-settings',
+      name: "studio-boss-settings",
     }
   )
 );

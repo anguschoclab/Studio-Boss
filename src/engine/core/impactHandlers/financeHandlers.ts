@@ -1,4 +1,4 @@
-import { GameState, StateImpact } from '@/engine/types';
+import { GameState, StateImpact } from "@/engine/types";
 
 /**
  * Finance-related impact handlers
@@ -11,8 +11,8 @@ export function handleFundsChanged(state: GameState, impact: StateImpact): GameS
     ...state,
     finance: {
       ...state.finance,
-      cash: state.finance.cash + amount
-    }
+      cash: state.finance.cash + amount,
+    },
   };
 }
 
@@ -22,8 +22,8 @@ export function handleLedgerUpdated(state: GameState, impact: StateImpact): Game
     ...state,
     finance: {
       ...state.finance,
-      ledger: [report, ...state.finance.ledger].slice(0, 100)
-    }
+      ledger: [report, ...state.finance.ledger].slice(0, 100),
+    },
   };
 }
 
@@ -33,8 +33,8 @@ export function handleFinanceSnapshotAdded(state: GameState, impact: StateImpact
     ...state,
     finance: {
       ...state.finance,
-      weeklyHistory: [snapshot, ...state.finance.weeklyHistory].slice(0, 52)
-    }
+      weeklyHistory: [snapshot, ...state.finance.weeklyHistory].slice(0, 52),
+    },
   };
 }
 
@@ -44,8 +44,8 @@ export function handleSyncMAFunds(state: GameState, impact: StateImpact): GameSt
     ...state,
     finance: {
       ...state.finance,
-      cash: state.finance.cash + amount
-    }
+      cash: state.finance.cash + amount,
+    },
   };
 }
 
@@ -55,14 +55,14 @@ export function handleFundsDeducted(state: GameState, impact: StateImpact): Game
     ...state,
     finance: {
       ...state.finance,
-      cash: state.finance.cash - amount
-    }
+      cash: state.finance.cash - amount,
+    },
   };
 }
 
 export function handleFinanceTransaction(state: GameState, impact: StateImpact): GameState {
   const { amount, targetId } = impact.payload;
-  if (targetId && targetId !== 'player') {
+  if (targetId && targetId !== "player") {
     const rivals = { ...state.entities.rivals };
     if (rivals[targetId]) {
       rivals[targetId] = { ...rivals[targetId], cash: rivals[targetId].cash + amount };
@@ -71,11 +71,11 @@ export function handleFinanceTransaction(state: GameState, impact: StateImpact):
       ...state,
       entities: {
         ...state.entities,
-        rivals
-      }
+        rivals,
+      },
     };
   }
-  return handleFundsChanged(state, { type: 'FUNDS_CHANGED', payload: { amount } });
+  return handleFundsChanged(state, { type: "FUNDS_CHANGED", payload: { amount } });
 }
 
 export function handleMarketEventUpdated(state: GameState, impact: StateImpact): GameState {
@@ -84,11 +84,11 @@ export function handleMarketEventUpdated(state: GameState, impact: StateImpact):
     ...state,
     market: {
       ...state.market,
-      activeMarketEvents: events || state.market.activeMarketEvents
+      activeMarketEvents: events || state.market.activeMarketEvents,
     },
     finance: {
       ...state.finance,
-      marketState: marketState || state.finance.marketState
-    }
+      marketState: marketState || state.finance.marketState,
+    },
   };
 }

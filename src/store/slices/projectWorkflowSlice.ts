@@ -1,20 +1,33 @@
-import { StateCreator } from 'zustand';
-import { GameStore } from '../gameStore';
-import { applyStateImpact } from '../storeUtils';
-import * as projectsEngine from '@/engine/systems/projects';
-import { updateCultureFromProject } from '@/engine/systems/culture';
-import { negotiateContract } from '@/engine/systems/buyers';
-import { RandomGenerator } from '@/engine/utils/rng';
-import { Project, GameState, ProjectContractType, StateImpact, NewsId } from '@/engine/types';
-import { type ProjectId, type BuyerId, type StudioId } from '@/engine/types/shared.types';
+import { StateCreator } from "zustand";
+import { GameStore } from "../gameStore";
+import { applyStateImpact } from "../storeUtils";
+import * as projectsEngine from "@/engine/systems/projects";
+import { updateCultureFromProject } from "@/engine/systems/culture";
+import { negotiateContract } from "@/engine/systems/buyers";
+import { RandomGenerator } from "@/engine/utils/rng";
+import { Project, GameState, ProjectContractType, StateImpact, NewsId } from "@/engine/types";
+import { type ProjectId, type BuyerId, type StudioId } from "@/engine/types/shared.types";
 
 export interface ProjectWorkflowSlice {
   greenlightProject: (projectId: ProjectId) => Promise<void>;
-  pitchProject: (projectId: ProjectId, buyerId: BuyerId, contractType: ProjectContractType) => Promise<boolean>;
-  _updateProjectToProduction: (state: GameState, projectId: ProjectId, project: Project, headlineText: string, extraProjectUpdates?: Partial<Project>) => void;
+  pitchProject: (
+    projectId: ProjectId,
+    buyerId: BuyerId,
+    contractType: ProjectContractType
+  ) => Promise<boolean>;
+  _updateProjectToProduction: (
+    state: GameState,
+    projectId: ProjectId,
+    project: Project,
+    headlineText: string,
+    extraProjectUpdates?: Partial<Project>
+  ) => void;
 }
 
-export const createProjectWorkflowSlice: StateCreator<GameStore, [], [], ProjectWorkflowSlice> = (set, get) => ({
+export const createProjectWorkflowSlice: StateCreator<GameStore, [], [], ProjectWorkflowSlice> = (
+  set,
+  get
+) => ({
   greenlightProject: async (projectId) => {
     const state = get().gameState;
     if (!state) return;
@@ -22,16 +35,11 @@ export const createProjectWorkflowSlice: StateCreator<GameStore, [], [], Project
     const project = state.entities.projects[projectId];
     if (!project) return;
 
-    if (project.state !== 'needs_greenlight') return;
+    if (project.state !== "needs_greenlight") return;
 
     const { project: updatedProject, update } = projectsEngine.executeGreenlight(project);
 
-    get()._updateProjectToProduction(
-      state,
-      projectId,
-      updatedProject,
-      update
-    );
+    get()._updateProjectToProduction(state, projectId, updatedProject, update);
   },
 
   pitchProject: async (projectId, buyerId, contractType) => {
@@ -39,7 +47,7 @@ export const createProjectWorkflowSlice: StateCreator<GameStore, [], [], Project
     if (!state) return false;
 
     const project = state.entities.projects[projectId];
-    const buyer = state.market.buyers.find(b => b.id === buyerId);
+    const buyer = state.market.buyers.find((b) => b.id === buyerId);
 
     if (!project || !buyer) return false;
 
@@ -48,26 +56,24 @@ export const createProjectWorkflowSlice: StateCreator<GameStore, [], [], Project
     const success = negotiateContract(project, buyer, contractType, state.week, allProjects, rng);
 
     if (success) {
-      const { project: updatedProject, update } = projectsEngine.executePitching(project, buyer.name, contractType);
+      const { project: updatedProject, update } = projectsEngine.executePitching(
+        project,
+        buyer.name,
+        contractType
+      );
 
-      const distributionStatus = buyer.archetype === 'streamer' ? 'streaming' : 'theatrical';
+      const distributionStatus = buyer.archetype === "streamer" ? "streaming" : "theatrical";
       let upfrontPayment = 0;
-      if (contractType === 'upfront') {
+      if (contractType === "upfront") {
         upfrontPayment = Math.floor(project.budget * 1.1);
       }
 
-      get()._updateProjectToProduction(
-        state,
-        projectId,
-        updatedProject,
-        update,
-        { 
-          buyerId, 
-          contractType, 
-          distributionStatus,
-          revenue: project.revenue + upfrontPayment
-        }
-      );
+      get()._updateProjectToProduction(state, projectId, updatedProject, update, {
+        buyerId,
+        contractType,
+        distributionStatus,
+        revenue: project.revenue + upfrontPayment,
+      });
 
       if (upfrontPayment > 0) {
         get().addFunds(upfrontPayment);
@@ -80,44 +86,52 @@ export const createProjectWorkflowSlice: StateCreator<GameStore, [], [], Project
     return success;
   },
 
-  _updateProjectToProduction: (state, projectId, project, headlineText, extraProjectUpdates = {}) => {
-    const newCulture = state.studio.culture ? updateCultureFromProject(state.studio.culture, project) : undefined;
+  _updateProjectToProduction: (
+    state,
+    projectId,
+    project,
+    headlineText,
+    extraProjectUpdates = {}
+  ) => {
+    const newCulture = state.studio.culture
+      ? updateCultureFromProject(state.studio.culture, project)
+      : undefined;
     const rng = new RandomGenerator(state.rngState);
-    
+
     const impacts: StateImpact[] = [
       {
-        type: 'PROJECT_UPDATED',
+        type: "PROJECT_UPDATED",
         payload: {
           projectId: project.id,
           update: {
             ...project,
-            state: 'production' as const,
+            state: "production" as const,
             weeksInPhase: 0,
-            ...extraProjectUpdates
-          }
-        }
+            ...extraProjectUpdates,
+          },
+        },
       },
       {
-        type: 'NEWS_ADDED',
+        type: "NEWS_ADDED",
         payload: {
-          id: rng.uuid('NWS') as NewsId,
+          id: rng.uuid("NWS") as NewsId,
           headline: headlineText,
-          description: `Strategic shift: ${project.title} enters production.`
-        }
-      }
+          description: `Strategic shift: ${project.title} enters production.`,
+        },
+      },
     ];
 
     const newState = applyStateImpact(state, impacts);
-    
+
     set({
       gameState: {
         ...newState,
         studio: {
           ...newState.studio,
-          culture: newCulture
+          culture: newCulture,
         },
-        rngState: rng.getState()
-      }
+        rngState: rng.getState(),
+      },
     });
-  }
+  },
 });

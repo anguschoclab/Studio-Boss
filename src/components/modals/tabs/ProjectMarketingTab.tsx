@@ -1,26 +1,32 @@
-import React, { useState } from 'react';
-import { TabsContent } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { BarChart3, CheckCircle2, Megaphone, TrendingUp, ChevronDown } from 'lucide-react';
-import { Project } from '@/engine/types';
-import { MarketingAngle } from '@/engine/types/project.types';
-import { formatMoney } from '@/engine/utils';
-import { cn } from '@/lib/utils';
+import React, { useState } from "react";
+import { TabsContent } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { BarChart3, CheckCircle2, Megaphone, TrendingUp, ChevronDown } from "lucide-react";
+import { Project } from "@/engine/types";
+import { MarketingAngle } from "@/engine/types/project.types";
+import { formatMoney } from "@/engine/utils";
+import { cn } from "@/lib/utils";
 import {
-  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
-} from 'recharts';
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 // Extended type that includes the 6 new angles planned in game design
 // (project.types.ts is not modified — these are cast as string where the base type is used)
 type ExtendedMarketingAngle =
   | MarketingAngle
-  | 'SELL THE SCARES'
-  | 'SELL THE ROMANCE'
-  | 'SELL THE WORLD MYTHOLOGY'
-  | 'SELL THE TRUE STORY HOOK'
-  | 'SELL THE MUSIC'
-  | 'BROAD FOUR QUADRANT MARKETING';
+  | "SELL THE SCARES"
+  | "SELL THE ROMANCE"
+  | "SELL THE WORLD MYTHOLOGY"
+  | "SELL THE TRUE STORY HOOK"
+  | "SELL THE MUSIC"
+  | "BROAD FOUR QUADRANT MARKETING";
 
 interface AngleOption {
   id: ExtendedMarketingAngle;
@@ -29,29 +35,80 @@ interface AngleOption {
 }
 
 const ALL_ANGLES: AngleOption[] = [
-  { id: 'SELL THE SPECTACLE',       label: 'The Spectacle',    desc: 'Big visual set-pieces and VFX drive anticipation.' },
-  { id: 'SELL THE STORY',           label: 'The Story',        desc: 'Emotionally led trailers focused on narrative.' },
-  { id: 'SELL THE STARS',           label: 'Star Power',       desc: 'Leverage A-list talent for press and promo.' },
-  { id: 'FAMILY ADVENTURE',         label: 'Family Adventure', desc: 'Broad family positioning for all-quadrant reach.' },
-  { id: 'AWARDS PUSH',              label: 'Awards Push',      desc: 'Prestige campaign targeting guilds and critics.' },
-  { id: 'GRASSROOTS',               label: 'Grassroots',       desc: 'Word-of-mouth and community fan activation.' },
-  { id: 'GLOBAL BLITZ',             label: 'Global Blitz',     desc: 'Simultaneous worldwide saturation launch.' },
-  { id: 'CONTROVERSY',              label: 'Controversy',      desc: 'Provocative marketing that drives conversation.' },
+  {
+    id: "SELL THE SPECTACLE",
+    label: "The Spectacle",
+    desc: "Big visual set-pieces and VFX drive anticipation.",
+  },
+  {
+    id: "SELL THE STORY",
+    label: "The Story",
+    desc: "Emotionally led trailers focused on narrative.",
+  },
+  {
+    id: "SELL THE STARS",
+    label: "Star Power",
+    desc: "Leverage A-list talent for press and promo.",
+  },
+  {
+    id: "FAMILY ADVENTURE",
+    label: "Family Adventure",
+    desc: "Broad family positioning for all-quadrant reach.",
+  },
+  {
+    id: "AWARDS PUSH",
+    label: "Awards Push",
+    desc: "Prestige campaign targeting guilds and critics.",
+  },
+  { id: "GRASSROOTS", label: "Grassroots", desc: "Word-of-mouth and community fan activation." },
+  { id: "GLOBAL BLITZ", label: "Global Blitz", desc: "Simultaneous worldwide saturation launch." },
+  {
+    id: "CONTROVERSY",
+    label: "Controversy",
+    desc: "Provocative marketing that drives conversation.",
+  },
   // New angles
-  { id: 'SELL THE SCARES',          label: 'Fear Factor',      desc: 'Horror-first marketing. Boosts opening weekend for horror/thriller projects.' },
-  { id: 'SELL THE ROMANCE',         label: 'Heart & Soul',     desc: 'Romance-focused push. Strengthens female demographic engagement.' },
-  { id: 'SELL THE WORLD MYTHOLOGY', label: 'World Building',   desc: 'Franchise/lore deep-dive. Boosts superfan retention for IP projects.' },
-  { id: 'SELL THE TRUE STORY HOOK', label: 'True Story',       desc: 'Based-on-true-events hook. Broadens mainstream and prestige crossover.' },
-  { id: 'SELL THE MUSIC',           label: 'Soundtrack-Led',   desc: 'Soundtrack-first marketing. Boosts streaming revenue and youth audiences.' },
-  { id: 'BROAD FOUR QUADRANT MARKETING', label: 'Four Quadrant', desc: 'Widest possible appeal. Reduces upside but guarantees a solid floor.' },
+  {
+    id: "SELL THE SCARES",
+    label: "Fear Factor",
+    desc: "Horror-first marketing. Boosts opening weekend for horror/thriller projects.",
+  },
+  {
+    id: "SELL THE ROMANCE",
+    label: "Heart & Soul",
+    desc: "Romance-focused push. Strengthens female demographic engagement.",
+  },
+  {
+    id: "SELL THE WORLD MYTHOLOGY",
+    label: "World Building",
+    desc: "Franchise/lore deep-dive. Boosts superfan retention for IP projects.",
+  },
+  {
+    id: "SELL THE TRUE STORY HOOK",
+    label: "True Story",
+    desc: "Based-on-true-events hook. Broadens mainstream and prestige crossover.",
+  },
+  {
+    id: "SELL THE MUSIC",
+    label: "Soundtrack-Led",
+    desc: "Soundtrack-first marketing. Boosts streaming revenue and youth audiences.",
+  },
+  {
+    id: "BROAD FOUR QUADRANT MARKETING",
+    label: "Four Quadrant",
+    desc: "Widest possible appeal. Reduces upside but guarantees a solid floor.",
+  },
 ];
 
-interface ProjectionPoint { week: string; revenue: number; }
+interface ProjectionPoint {
+  week: string;
+  revenue: number;
+}
 
 interface ProjectMarketingTabProps {
   project: Project;
-  selectedTier: 'none' | 'basic' | 'blockbuster';
-  onSelectTier: (tier: 'none' | 'basic' | 'blockbuster') => void;
+  selectedTier: "none" | "basic" | "blockbuster";
+  onSelectTier: (tier: "none" | "basic" | "blockbuster") => void;
   projectionData: ProjectionPoint[];
   cash: number;
   onLockCampaign: () => void;
@@ -79,8 +136,9 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
   const [showPrimaryPicker, setShowPrimaryPicker] = useState(false);
   const [showSecondaryPicker, setShowSecondaryPicker] = useState(false);
 
-  const activePrimary   = selectedPrimaryAngle   !== undefined ? selectedPrimaryAngle   : internalPrimary;
-  const activeSecondary = selectedSecondaryAngle  !== undefined ? selectedSecondaryAngle  : internalSecondary;
+  const activePrimary = selectedPrimaryAngle !== undefined ? selectedPrimaryAngle : internalPrimary;
+  const activeSecondary =
+    selectedSecondaryAngle !== undefined ? selectedSecondaryAngle : internalSecondary;
 
   const handlePickPrimary = (angle: ExtendedMarketingAngle) => {
     if (onSelectPrimaryAngle) onSelectPrimaryAngle(angle);
@@ -99,11 +157,11 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
     setShowSecondaryPicker(false);
   };
 
-  const primaryOption   = ALL_ANGLES.find(a => a.id === activePrimary);
-  const secondaryOption = ALL_ANGLES.find(a => a.id === activeSecondary);
+  const primaryOption = ALL_ANGLES.find((a) => a.id === activePrimary);
+  const secondaryOption = ALL_ANGLES.find((a) => a.id === activeSecondary);
 
   // Angles available for secondary: exclude the primary selection
-  const secondaryOptions = ALL_ANGLES.filter(a => a.id !== activePrimary);
+  const secondaryOptions = ALL_ANGLES.filter((a) => a.id !== activePrimary);
 
   const isLocked = !!project.marketingLevel;
 
@@ -112,20 +170,38 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
       {/* ── Spend tier cards ───────────────────────────────────────────── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {[
-          { id: 'none',        name: 'Word of Mouth',  cost: 0,                    buzz: 0,  desc: 'Rely on natural cultural momentum.' },
-          { id: 'basic',       name: 'Targeted Digital', cost: project.budget * 0.1, buzz: 15, desc: 'Coordinated social campaign.' },
-          { id: 'blockbuster', name: 'Global Blitz',   cost: project.budget * 0.5, buzz: 40, desc: 'Omnichannel market saturation.' }
-        ].map(tier => (
+          {
+            id: "none",
+            name: "Word of Mouth",
+            cost: 0,
+            buzz: 0,
+            desc: "Rely on natural cultural momentum.",
+          },
+          {
+            id: "basic",
+            name: "Targeted Digital",
+            cost: project.budget * 0.1,
+            buzz: 15,
+            desc: "Coordinated social campaign.",
+          },
+          {
+            id: "blockbuster",
+            name: "Global Blitz",
+            cost: project.budget * 0.5,
+            buzz: 40,
+            desc: "Omnichannel market saturation.",
+          },
+        ].map((tier) => (
           <button
             aria-pressed={project.marketingLevel === tier.id || selectedTier === tier.id}
             key={tier.id}
             disabled={isLocked || cash < tier.cost}
-            onClick={() => onSelectTier(tier.id as 'none' | 'basic' | 'blockbuster')}
+            onClick={() => onSelectTier(tier.id as "none" | "basic" | "blockbuster")}
             className={cn(
               "p-6 rounded-none border text-left transition-all relative overflow-hidden flex flex-col justify-between group h-52",
               project.marketingLevel === tier.id || selectedTier === tier.id
-                ? 'border-primary bg-primary/10 shadow-[0_0_30px_rgba(var(--primary),0.1)]'
-                : 'border-white/5 bg-black/40 hover:border-slate-700'
+                ? "border-primary bg-primary/10 shadow-[0_0_30px_rgba(var(--primary),0.1)]"
+                : "border-white/5 bg-black/40 hover:border-slate-700"
             )}
           >
             {selectedTier === tier.id && (
@@ -134,8 +210,12 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
               </div>
             )}
             <div>
-              <p className="text-[10px] font-black uppercase text-primary tracking-widest mb-1">{tier.name}</p>
-              <p className="text-2xl font-black text-white mb-2 tabular-nums">{formatMoney(tier.cost)}</p>
+              <p className="text-[10px] font-black uppercase text-primary tracking-widest mb-1">
+                {tier.name}
+              </p>
+              <p className="text-2xl font-black text-white mb-2 tabular-nums">
+                {formatMoney(tier.cost)}
+              </p>
               <p className="text-xs text-slate-400 font-medium leading-relaxed">{tier.desc}</p>
             </div>
             <div className="flex items-center gap-2 text-[10px] font-black text-emerald-400 uppercase tracking-widest">
@@ -149,11 +229,16 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
       <div className="space-y-4">
         {/* Primary angle */}
         <div>
-          <p className="text-[10px] font-black uppercase text-primary tracking-widest mb-2">Primary Marketing Angle</p>
+          <p className="text-[10px] font-black uppercase text-primary tracking-widest mb-2">
+            Primary Marketing Angle
+          </p>
           <div className="relative">
             <button
               disabled={isLocked}
-              onClick={() => { setShowPrimaryPicker(v => !v); setShowSecondaryPicker(false); }}
+              onClick={() => {
+                setShowPrimaryPicker((v) => !v);
+                setShowSecondaryPicker(false);
+              }}
               className={cn(
                 "w-full flex items-center justify-between p-4 rounded-none border text-left transition-all",
                 isLocked
@@ -171,12 +256,17 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
                   <span className="text-sm text-muted-foreground">Select a primary angle…</span>
                 )}
               </div>
-              <ChevronDown className={cn("w-4 h-4 text-muted-foreground shrink-0 transition-transform", showPrimaryPicker && "rotate-180")} />
+              <ChevronDown
+                className={cn(
+                  "w-4 h-4 text-muted-foreground shrink-0 transition-transform",
+                  showPrimaryPicker && "rotate-180"
+                )}
+              />
             </button>
 
             {showPrimaryPicker && !isLocked && (
               <div className="absolute z-20 w-full mt-1 border border-slate-700 bg-black rounded-none overflow-hidden shadow-2xl max-h-72 overflow-y-auto">
-                {ALL_ANGLES.map(angle => (
+                {ALL_ANGLES.map((angle) => (
                   <button
                     key={angle.id}
                     onClick={() => handlePickPrimary(angle.id)}
@@ -197,12 +287,18 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
         {/* Secondary angle */}
         <div>
           <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest mb-2">
-            Secondary Push <span className="normal-case font-medium">(Optional — contributes 30% of angle bonus)</span>
+            Secondary Push{" "}
+            <span className="normal-case font-medium">
+              (Optional — contributes 30% of angle bonus)
+            </span>
           </p>
           <div className="relative">
             <button
               disabled={isLocked || !activePrimary}
-              onClick={() => { setShowSecondaryPicker(v => !v); setShowPrimaryPicker(false); }}
+              onClick={() => {
+                setShowSecondaryPicker((v) => !v);
+                setShowPrimaryPicker(false);
+              }}
               className={cn(
                 "w-full flex items-center justify-between p-4 rounded-none border text-left transition-all",
                 isLocked || !activePrimary
@@ -214,7 +310,9 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
                 {secondaryOption ? (
                   <>
                     <span className="text-sm font-bold text-white/80">{secondaryOption.label}</span>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">{secondaryOption.desc}</p>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                      {secondaryOption.desc}
+                    </p>
                   </>
                 ) : (
                   <span className="text-sm text-muted-foreground">No secondary angle selected</span>
@@ -223,19 +321,27 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
               <div className="flex items-center gap-2 shrink-0">
                 {activeSecondary && !isLocked && (
                   <button
-                    onClick={(e) => { e.stopPropagation(); handlePickSecondary(null); }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePickSecondary(null);
+                    }}
                     className="text-[10px] text-muted-foreground hover:text-destructive transition-colors font-bold uppercase tracking-wider"
                   >
                     Clear
                   </button>
                 )}
-                <ChevronDown className={cn("w-4 h-4 text-muted-foreground transition-transform", showSecondaryPicker && "rotate-180")} />
+                <ChevronDown
+                  className={cn(
+                    "w-4 h-4 text-muted-foreground transition-transform",
+                    showSecondaryPicker && "rotate-180"
+                  )}
+                />
               </div>
             </button>
 
             {showSecondaryPicker && !isLocked && activePrimary && (
               <div className="absolute z-20 w-full mt-1 border border-slate-700 bg-black rounded-none overflow-hidden shadow-2xl max-h-72 overflow-y-auto">
-                {secondaryOptions.map(angle => (
+                {secondaryOptions.map((angle) => (
                   <button
                     key={angle.id}
                     onClick={() => handlePickSecondary(angle.id)}
@@ -259,9 +365,16 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
         <div className="p-5 border-b border-white/5 bg-white/3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4 text-primary" />
-            <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Yield Simulation (8-Week Lifecycle)</p>
+            <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">
+              Yield Simulation (8-Week Lifecycle)
+            </p>
           </div>
-          <Badge variant="outline" className="text-[9px] font-bold text-muted-foreground border-white/5">Algorithm V3.1</Badge>
+          <Badge
+            variant="outline"
+            className="text-[9px] font-bold text-muted-foreground border-white/5"
+          >
+            Algorithm V3.1
+          </Badge>
         </div>
         <div className="h-[240px] w-full p-4">
           <ResponsiveContainer width="100%" height="100%">
@@ -272,11 +385,31 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
                   <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="rgba(255,255,255,0.05)"
+                vertical={false}
+              />
               <XAxis dataKey="week" hide />
               <YAxis hide />
-              <Tooltip contentStyle={{ backgroundColor: '#000', border: '1px solid #333', borderRadius: '12px', fontSize: '11px', fontWeight: 'bold' }} />
-              <Area type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorRev)" strokeWidth={3} animationDuration={2000} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#000",
+                  border: "1px solid #333",
+                  borderRadius: "12px",
+                  fontSize: "11px",
+                  fontWeight: "bold",
+                }}
+              />
+              <Area
+                type="monotone"
+                dataKey="revenue"
+                stroke="hsl(var(--primary))"
+                fillOpacity={1}
+                fill="url(#colorRev)"
+                strokeWidth={3}
+                animationDuration={2000}
+              />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -286,7 +419,15 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
       {!isLocked ? (
         <Button
           className="w-full h-16 bg-primary text-black hover:bg-primary/90 font-black text-sm uppercase tracking-[0.3em] rounded-none shadow-2xl transition-all active:scale-[0.98]"
-          disabled={!selectedTier || cash < (selectedTier === 'basic' ? project.budget * 0.1 : selectedTier === 'blockbuster' ? project.budget * 0.5 : 0)}
+          disabled={
+            !selectedTier ||
+            cash <
+              (selectedTier === "basic"
+                ? project.budget * 0.1
+                : selectedTier === "blockbuster"
+                  ? project.budget * 0.5
+                  : 0)
+          }
           onClick={onLockCampaign}
         >
           Authorize Global Release & Dedicate Reserves
@@ -295,17 +436,32 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
         <div className="p-6 bg-black/40 border border-slate-700 rounded-none flex flex-col items-center justify-center gap-2">
           <div className="flex items-center gap-3">
             <Megaphone className="h-6 w-6 text-primary animate-pulse" />
-            <span className="text-base font-black uppercase text-white tracking-widest">Deployment: {project.marketingLevel} Initiative</span>
+            <span className="text-base font-black uppercase text-white tracking-widest">
+              Deployment: {project.marketingLevel} Initiative
+            </span>
           </div>
           {project.marketingCampaign && (
             <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest opacity-70">
-              Angle: {ALL_ANGLES.find(a => a.id === (project.marketingCampaign!.primaryAngle))?.label ?? project.marketingCampaign.primaryAngle}
+              Angle:{" "}
+              {ALL_ANGLES.find((a) => a.id === project.marketingCampaign!.primaryAngle)?.label ??
+                project.marketingCampaign.primaryAngle}
               {(project.marketingCampaign as { secondaryAngle?: string }).secondaryAngle && (
-                <> + {ALL_ANGLES.find(a => a.id === (project.marketingCampaign as { secondaryAngle?: string }).secondaryAngle)?.label ?? (project.marketingCampaign as { secondaryAngle?: string }).secondaryAngle}</>
+                <>
+                  {" "}
+                  +{" "}
+                  {ALL_ANGLES.find(
+                    (a) =>
+                      a.id ===
+                      (project.marketingCampaign as { secondaryAngle?: string }).secondaryAngle
+                  )?.label ??
+                    (project.marketingCampaign as { secondaryAngle?: string }).secondaryAngle}
+                </>
               )}
             </p>
           )}
-          <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest opacity-60">Box office data will populate in the week summary</p>
+          <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest opacity-60">
+            Box office data will populate in the week summary
+          </p>
         </div>
       )}
     </TabsContent>

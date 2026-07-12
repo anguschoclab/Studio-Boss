@@ -1,22 +1,22 @@
-import { ArchetypeKey, RivalStudio, GameState } from '../types/studio.types';
-import { MarketState } from '../types/state.types';
-import { ALL_GENRES, initializeTrends } from '../systems/trends';
-import { ARCHETYPES } from '../data/archetypes';
-import { BrandSystem } from '../generators/BrandSystem';
-import { IPAsset } from '../types';
-import { generateMotto } from '../generators/names';
-import { generateFamilies, generateTalentPool } from '../generators/talent';
-import { generateBuyers } from '../generators/buyers';
-import { generateAgencies, generateAgents } from '../generators/agencies';
-import { pick, randRange, setDeterministicSeed, rand, generateId } from '../utils';
-import { generateOpportunity } from '../generators/opportunities';
-import { generateProjectTitle } from '../generators/titles';
+import { ArchetypeKey, RivalStudio, GameState } from "../types/studio.types";
+import { MarketState } from "../types/state.types";
+import { ALL_GENRES, initializeTrends } from "../systems/trends";
+import { ARCHETYPES } from "../data/archetypes";
+import { BrandSystem } from "../generators/BrandSystem";
+import { IPAsset } from "../types";
+import { generateMotto } from "../generators/names";
+import { generateFamilies, generateTalentPool } from "../generators/talent";
+import { generateBuyers } from "../generators/buyers";
+import { generateAgencies, generateAgents } from "../generators/agencies";
+import { pick, randRange, setDeterministicSeed, rand, generateId } from "../utils";
+import { generateOpportunity } from "../generators/opportunities";
+import { generateProjectTitle } from "../generators/titles";
 
 /**
  * Initializes a fresh game state for a new playthrough.
  * Generates initial rivals, talent pool, agencies, buyers, and industry trends.
  * Assigns starting platforms and seeds the IP vaults for rivals.
- * 
+ *
  * @param studioName - The name of the player's studio
  * @param archetype - The studio's starting archetype (major, mid-tier, or indie)
  * @param seed - Optional seed for deterministic world generation
@@ -175,7 +175,7 @@ export function initializeGame(
         syndicationTier: "NONE",
         totalEpisodes: 0,
         rightsExpirationWeek: 99999,
-        rightsOwner: 'RIVAL',
+        rightsOwner: "RIVAL",
         ownerStudioId: rival.id,
       } as unknown as IPAsset);
     }

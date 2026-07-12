@@ -1,18 +1,18 @@
-import { GameState } from '../../types';
-import { TickContext, WeekFilter } from './types';
+import { GameState } from "../../types";
+import { TickContext, WeekFilter } from "./types";
 
 // System Imports
-import { advanceScandals, generateScandals } from '../../systems/scandals';
+import { advanceScandals, generateScandals } from "../../systems/scandals";
 
 /**
  * Scandal Filter
  * Handles scandal generation and advancement
  */
 export const ScandalFilter: WeekFilter = {
-  name: 'ScandalFilter',
+  name: "ScandalFilter",
 
   execute(state: GameState, context: TickContext): void {
     context.impacts.push(...generateScandals(state, context.rng));
     context.impacts.push(...advanceScandals(state));
-  }
-}
+  },
+};

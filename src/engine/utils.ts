@@ -1,4 +1,4 @@
-import { Contract } from '@/engine/types';
+import { Contract } from "@/engine/types";
 // Shared utilities for the engine layer — no React imports
 
 /**
@@ -11,7 +11,7 @@ export function formatMoney(amount: number): string {
   if (Number.isNaN(amount)) return "$NaN";
 
   const abs = Math.abs(amount);
-  const sign = amount < 0 || Object.is(amount, -0) ? '-' : '';
+  const sign = amount < 0 || Object.is(amount, -0) ? "-" : "";
 
   if (!Number.isFinite(amount)) return `${sign}$InfinityB`;
 
@@ -67,13 +67,13 @@ export function rand(): number {
  * Centralized, deterministic ID generation for engine entities.
  * Uses the active PRNG to ensure bit-identical results when seeded.
  */
-export function generateId(prefix: string = ''): string {
+export function generateId(prefix: string = ""): string {
   // Simple deterministic UUID-like string based on our rand() source
-  const hex = '0123456789abcdef';
-  let id = '';
+  const hex = "0123456789abcdef";
+  let id = "";
   for (let i = 0; i < 32; i++) {
     const r = Math.floor(rand() * 16);
-    if (i === 8 || i === 12 || i === 16 || i === 20) id += '-';
+    if (i === 8 || i === 12 || i === 16 || i === 20) id += "-";
     id += hex[r];
   }
   return prefix ? `${prefix}-${id}` : id;
@@ -159,7 +159,7 @@ export function addContractToIndex(
   if (existing && existing.includes(contractId)) return index;
   return {
     ...index,
-    [projectId]: existing ? [...existing, contractId] : [contractId]
+    [projectId]: existing ? [...existing, contractId] : [contractId],
   };
 }
 
@@ -188,7 +188,7 @@ export function removeContractFromIndex(
 ): Record<string, string[]> {
   const existing = index[projectId];
   if (!existing) return index;
-  const filtered = existing.filter(id => id !== contractId);
+  const filtered = existing.filter((id) => id !== contractId);
   if (filtered.length === 0) {
     const { [projectId]: _, ...rest } = index;
     return rest;
@@ -250,7 +250,7 @@ export function addContractToTalentIndex(
   if (existing && existing.includes(contractId)) return index;
   return {
     ...index,
-    [talentId]: existing ? [...existing, contractId] : [contractId]
+    [talentId]: existing ? [...existing, contractId] : [contractId],
   };
 }
 
@@ -279,7 +279,7 @@ export function removeContractFromTalentIndex(
 ): Record<string, string[]> {
   const existing = index[talentId];
   if (!existing) return index;
-  const filtered = existing.filter(id => id !== contractId);
+  const filtered = existing.filter((id) => id !== contractId);
   if (filtered.length === 0) {
     const { [talentId]: _, ...rest } = index;
     return rest;

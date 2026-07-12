@@ -1,4 +1,4 @@
-import { GameState, RivalStudio, Talent, Project, Contract, Buyer } from '../../../engine/types';
+import { GameState, RivalStudio, Talent, Project, Contract, Buyer } from "../../../engine/types";
 
 /**
  * Centralized factory for creating compliant GameState objects for testing.
@@ -19,8 +19,8 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
         savingsYield: 0.02,
         debtRate: 0.08,
         loanRate: 0.06,
-        rateHistory: []
-      }
+        rateHistory: [],
+      },
     },
     news: { headlines: [] },
     ip: { vault: [], franchises: {} },
@@ -31,25 +31,25 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
       contracts: {},
       rivals: {},
       contractsByProjectId: {},
-      contractsByTalentId: {}
+      contractsByTalentId: {},
     },
     studio: {
-      id: 'PLR-1',
-      name: 'Player Studio',
-      archetype: 'major',
+      id: "PLR-1",
+      name: "Player Studio",
+      archetype: "major",
       prestige: 50,
       internal: {
         projectHistory: [],
         firstLookDeals: [],
         projects: {},
         contracts: [],
-      }
+      },
     },
     market: {
       opportunities: [],
       trends: [],
       activeMarketEvents: [],
-      buyers: []
+      buyers: [],
     },
     industry: {
       families: [],
@@ -58,21 +58,23 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
       awards: [],
       newsHistory: [],
       rumors: [],
-      scandals: []
+      scandals: [],
     },
     culture: {
-      genrePopularity: {}
+      genrePopularity: {},
     },
     history: [],
-    eventHistory: []
+    eventHistory: [],
   };
 
   return { ...defaultState, ...overrides };
 };
 
-import { RandomGenerator } from '../../../engine/utils/rng';
+import { RandomGenerator } from "../../../engine/utils/rng";
 
-export const createMockTickContext = (overrides: Partial<import('../../../engine/services/WeekCoordinator').TickContext> = {}): import('../../../engine/services/WeekCoordinator').TickContext => {
+export const createMockTickContext = (
+  overrides: Partial<import("../../../engine/services/WeekCoordinator").TickContext> = {}
+): import("../../../engine/services/WeekCoordinator").TickContext => {
   return {
     week: 1,
     tickCount: 0,
@@ -80,57 +82,63 @@ export const createMockTickContext = (overrides: Partial<import('../../../engine
     timestamp: Date.now(),
     impacts: [],
     events: [],
-    ...overrides
+    ...overrides,
   };
 };
 
 export const createMockRival = (overrides: Partial<RivalStudio> = {}): RivalStudio => {
   return {
-    id: 'RIV-1',
-    name: 'Test Rival',
-    motto: 'Competing for tests',
-    archetype: 'mid-tier',
+    id: "RIV-1",
+    name: "Test Rival",
+    motto: "Competing for tests",
+    archetype: "mid-tier",
     strength: 50,
     cash: 50_000_000,
     prestige: 50,
     foundedWeek: 1,
-    recentActivity: 'NONE',
+    recentActivity: "NONE",
     projectCount: 0,
     motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
-    currentMotivation: 'STABILITY',
+    currentMotivation: "STABILITY",
     projects: {},
     contracts: [],
-    ...overrides
+    ...overrides,
   };
 };
 
 export const createMockTalent = (overrides: Partial<Talent> = {}): Talent => {
   return {
-    id: 'TAL-1',
-    name: 'Test Actor',
-    role: 'actor',
-    roles: ['actor'],
-    tier: 'A_LIST',
+    id: "TAL-1",
+    name: "Test Actor",
+    role: "actor",
+    roles: ["actor"],
+    tier: "A_LIST",
     prestige: 70,
     fee: 5_000_000,
     draw: 80,
-    accessLevel: 'soft-access',
+    accessLevel: "soft-access",
     momentum: 50,
-    demographics: { age: 30, gender: 'MALE', ethnicity: 'Unknown', country: 'USA' },
-    psychology: { ego: 50, mood: 100, scandalRisk: 10, synergyAffinities: [], synergyConflicts: [] },
+    demographics: { age: 30, gender: "MALE", ethnicity: "Unknown", country: "USA" },
+    psychology: {
+      ego: 50,
+      mood: 100,
+      scandalRisk: 10,
+      synergyAffinities: [],
+      synergyConflicts: [],
+    },
     motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
-    currentMotivation: 'NONE',
-    ...overrides
+    currentMotivation: "NONE",
+    ...overrides,
   };
 };
 
 export const createMockProject = (overrides: Partial<Project> = {}): Project => {
   return {
-    id: 'PRJ-1',
-    title: 'Test Project',
-    genre: 'Drama',
-    format: 'movie',
-    state: 'development',
+    id: "PRJ-1",
+    title: "Test Project",
+    genre: "Drama",
+    format: "movie",
+    state: "development",
     budget: 50_000_000,
     spent: 0,
     targetQuality: 70,
@@ -139,29 +147,29 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
     weeksInProduction: 0,
     estimatedWeeks: 10,
     talents: [],
-    ...overrides
+    ...overrides,
   } as unknown as Project;
 };
 
 export const createMockBuyer = (overrides: Partial<Buyer> = {}): Buyer => {
   return {
-    id: 'BUY-1',
-    name: 'Test Network',
-    archetype: 'network',
+    id: "BUY-1",
+    name: "Test Network",
+    archetype: "network",
     reach: 70,
     marketShare: 0.1,
     foundedWeek: 1,
-    ...overrides
+    ...overrides,
   } as Buyer;
 };
 
 export const createMockContract = (overrides: Partial<Contract> = {}): Contract => {
   return {
-    id: 'CON-1',
-    projectId: 'PRJ-1',
-    talentId: 'TAL-1',
+    id: "CON-1",
+    projectId: "PRJ-1",
+    talentId: "TAL-1",
     fee: 1_000_000,
     backendPercent: 0,
-    ...overrides
+    ...overrides,
   } as Contract;
 };

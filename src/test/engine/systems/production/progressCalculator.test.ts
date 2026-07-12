@@ -1,16 +1,16 @@
-import { advanceProjectProgress } from '@/engine/systems/production/progressCalculator';
-import { Project } from '@/engine/types';
+import { advanceProjectProgress } from "@/engine/systems/production/progressCalculator";
+import { Project } from "@/engine/types";
 
-describe('advanceProjectProgress', () => {
-  it('halts progress and burns budget if a crisis is active and halting', () => {
-    const project = { 
-        id: '1', 
-        state: 'production',
-        progress: 20, 
-        budget: 1000000, 
-        accumulatedCost: 200000,
-        activeCrisis: { crisisId: 'halt', haltedProduction: true },
-        momentum: 50
+describe("advanceProjectProgress", () => {
+  it("halts progress and burns budget if a crisis is active and halting", () => {
+    const project = {
+      id: "1",
+      state: "production",
+      progress: 20,
+      budget: 1000000,
+      accumulatedCost: 200000,
+      activeCrisis: { crisisId: "halt", haltedProduction: true },
+      momentum: 50,
     } as any as Project;
 
     const result = advanceProjectProgress(project);
@@ -18,15 +18,15 @@ describe('advanceProjectProgress', () => {
     expect(result.accumulatedCost).toBeGreaterThan(200000); // Budget burned
   });
 
-  it('advances progress normally when no crisis is active', () => {
-    const project = { 
-        id: '1', 
-        state: 'production',
-        progress: 20, 
-        budget: 1000000, 
-        accumulatedCost: 200000,
-        activeCrisis: null,
-        momentum: 50
+  it("advances progress normally when no crisis is active", () => {
+    const project = {
+      id: "1",
+      state: "production",
+      progress: 20,
+      budget: 1000000,
+      accumulatedCost: 200000,
+      activeCrisis: null,
+      momentum: 50,
     } as any as Project;
 
     const result = advanceProjectProgress(project);
@@ -34,15 +34,15 @@ describe('advanceProjectProgress', () => {
     expect(result.accumulatedCost).toBeGreaterThan(200000); // Budget burned
   });
 
-  it('handles negative budgets mathematically consistently (extreme edge case)', () => {
+  it("handles negative budgets mathematically consistently (extreme edge case)", () => {
     const project = {
-        id: '1',
-        state: 'production',
-        progress: 10,
-        budget: -500000,
-        accumulatedCost: 0,
-        activeCrisis: null,
-        momentum: 50
+      id: "1",
+      state: "production",
+      progress: 10,
+      budget: -500000,
+      accumulatedCost: 0,
+      activeCrisis: null,
+      momentum: 50,
     } as any as Project;
 
     const result = advanceProjectProgress(project);

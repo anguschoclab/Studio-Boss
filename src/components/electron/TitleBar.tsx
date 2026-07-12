@@ -1,8 +1,8 @@
-import React from 'react';
-import { Minus, Square, X } from 'lucide-react';
+import React from "react";
+import { Minus, Square, X } from "lucide-react";
 
 // Check if running in Electron environment
-const isElectron = typeof window !== 'undefined' && 'electronAPI' in window;
+const isElectron = typeof window !== "undefined" && "electronAPI" in window;
 
 export function TitleBar() {
   if (!isElectron) {

@@ -1,18 +1,21 @@
-import { GameState, StateImpact } from '../../types';
-import { evaluateVaultSynergy } from './synergyEvaluator';
-import { applyIPDecay } from './ipValuation';
-import { calculateFranchiseFatigue } from './fatigueEngine';
-import { determineSyndicationTier } from './syndicationEngine';
+import { GameState, StateImpact } from "../../types";
+import { evaluateVaultSynergy } from "./synergyEvaluator";
+import { applyIPDecay } from "./ipValuation";
+import { calculateFranchiseFatigue } from "./fatigueEngine";
+import { determineSyndicationTier } from "./syndicationEngine";
 
 /**
  * Weekly IP Vault Tick.
  * Orchestrates synergy evaluation and cultural decay for the entire studio vault.
  * Uses archetype properties to adjust IP behavior if archetype is provided.
  */
-export function tickIPVault(state: GameState, archetype?: import('../../data/aiArchetypes').StudioArchetype): StateImpact[] {
+export function tickIPVault(
+  state: GameState,
+  archetype?: import("../../data/aiArchetypes").StudioArchetype
+): StateImpact[] {
   const impacts: StateImpact[] = [];
   // ⚡ The Framerate Fanatic: Eliminate intermediate array allocation
-  const activeProjects: import('../../types').Project[] = [];
+  const activeProjects: import("../../types").Project[] = [];
   for (const id in state.entities.projects) {
     activeProjects.push(state.entities.projects[id]);
   }
@@ -22,9 +25,9 @@ export function tickIPVault(state: GameState, archetype?: import('../../data/aiA
   let festivalPrestigeBonus = 0;
 
   if (archetype) {
-    if (archetype.strategy === 'acquirer') {
+    if (archetype.strategy === "acquirer") {
       decayMultiplier = 0.8;
-    } else if (archetype.strategy === 'prestige_chaser') {
+    } else if (archetype.strategy === "prestige_chaser") {
       decayMultiplier = 1.2;
     }
 
@@ -41,7 +44,7 @@ export function tickIPVault(state: GameState, archetype?: import('../../data/aiA
 
   const hasGenreBonus = Object.keys(genreFocusBonus).length > 0;
 
-  const updatedVault = evaluateVaultSynergy(activeProjects, state.ip.vault).map(asset => {
+  const updatedVault = evaluateVaultSynergy(activeProjects, state.ip.vault).map((asset) => {
     let updatedAsset = applyIPDecay(asset);
 
     if (decayMultiplier !== 1.0) {
@@ -50,9 +53,10 @@ export function tickIPVault(state: GameState, archetype?: import('../../data/aiA
     }
 
     // ⚡ Bolt: Fetch source project once from map instead of O(N) array search inside map iteration
-    const sourceProject = (hasGenreBonus || updatedAsset.totalEpisodes > 0)
-      ? state.entities.projects[updatedAsset.originalProjectId]
-      : undefined;
+    const sourceProject =
+      hasGenreBonus || updatedAsset.totalEpisodes > 0
+        ? state.entities.projects[updatedAsset.originalProjectId]
+        : undefined;
 
     if (hasGenreBonus) {
       if (sourceProject && sourceProject.genre) {
@@ -60,7 +64,7 @@ export function tickIPVault(state: GameState, archetype?: import('../../data/aiA
         if (genreBonus > 0) {
           updatedAsset = {
             ...updatedAsset,
-            baseValue: Math.floor(updatedAsset.baseValue * (1 + genreBonus))
+            baseValue: Math.floor(updatedAsset.baseValue * (1 + genreBonus)),
           };
         }
       }
@@ -69,19 +73,19 @@ export function tickIPVault(state: GameState, archetype?: import('../../data/aiA
     if (festivalPrestigeBonus > 0) {
       updatedAsset = {
         ...updatedAsset,
-        baseValue: updatedAsset.baseValue + festivalPrestigeBonus * 1000
+        baseValue: updatedAsset.baseValue + festivalPrestigeBonus * 1000,
       };
     }
 
     if (updatedAsset.totalEpisodes > 0) {
-      const genre = sourceProject?.genre || 'DRAMA';
-      
+      const genre = sourceProject?.genre || "DRAMA";
+
       const newTier = determineSyndicationTier(updatedAsset.totalEpisodes, genre);
       if (newTier !== updatedAsset.syndicationTier) {
         updatedAsset = {
           ...updatedAsset,
           syndicationTier: newTier,
-          syndicationStatus: newTier !== 'NONE' ? 'SYNDICATED' : 'NONE'
+          syndicationStatus: newTier !== "NONE" ? "SYNDICATED" : "NONE",
         };
       }
     }
@@ -89,10 +93,10 @@ export function tickIPVault(state: GameState, archetype?: import('../../data/aiA
     return updatedAsset;
   });
 
-  updatedVault.forEach(asset => {
+  updatedVault.forEach((asset) => {
     impacts.push({
-      type: 'VAULT_ASSET_UPDATED',
-      payload: { assetId: asset.id, update: asset }
+      type: "VAULT_ASSET_UPDATED",
+      payload: { assetId: asset.id, update: asset },
     });
   });
 
@@ -110,20 +114,22 @@ export function tickIPVault(state: GameState, archetype?: import('../../data/aiA
   for (const id in state.ip.franchises) {
     const franchise = state.ip.franchises[id];
     const firstAssetId = (franchise.assetIds || [])[0];
-    const firstAsset = state.ip.vault.find(a => a.id === firstAssetId);
-    const sourceProject = firstAsset?.originalProjectId ? state.entities.projects[firstAsset.originalProjectId] : undefined;
-    
-    const genre = sourceProject?.genre || 'Action';
+    const firstAsset = state.ip.vault.find((a) => a.id === firstAssetId);
+    const sourceProject = firstAsset?.originalProjectId
+      ? state.entities.projects[firstAsset.originalProjectId]
+      : undefined;
+
+    const genre = sourceProject?.genre || "Action";
     const saturation = genreSaturation[genre.toUpperCase()] || 0;
     const newFatigue = calculateFranchiseFatigue(franchise, saturation, genre);
 
     if (newFatigue !== franchise.fatigueLevel) {
       impacts.push({
-        type: 'FRANCHISE_UPDATED',
+        type: "FRANCHISE_UPDATED",
         payload: {
           franchiseId: franchise.id,
-          update: { fatigueLevel: newFatigue }
-        }
+          update: { fatigueLevel: newFatigue },
+        },
       });
     }
   }

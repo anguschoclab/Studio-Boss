@@ -65,6 +65,7 @@ Use one primary color accent per screen section. Reserve `text-primary` (gold/ma
 ### 1.3 Reference Points
 
 The UI/UX draws inspiration from:
+
 - **Cyberpunk management UIs** — dense, atmospheric, data-rich dark interfaces
 - **Bloomberg Terminal** — relentless information density with scannable hierarchy
 - **Variety / The Hollywood Reporter** — editorial confidence and industry vocabulary
@@ -90,11 +91,11 @@ The overall mood is: **a private screening room meets a trading floor**. Dark, c
 
 The studio archetype selected at game start is not just a gameplay choice — it is a **visual identity** that permeates the entire UI through the active theme class applied to the root element.
 
-| Archetype | Primary Color | Character | Feel |
-|-----------|---------------|-----------|------|
-| **Major Studio** | Gold `hsl(45, 93%, 55%)` | Established power, weight, legacy | Regal, authoritative |
-| **Mid-Tier Studio** | Magenta `hsl(320, 100%, 65%)` | Ambitious, disruptive, creative | Bold, electric |
-| **Indie Studio** | Rust Orange `hsl(25, 85%, 60%)` | Artisanal, authentic, raw | Warm, textured, analog |
+| Archetype           | Primary Color                   | Character                         | Feel                   |
+| ------------------- | ------------------------------- | --------------------------------- | ---------------------- |
+| **Major Studio**    | Gold `hsl(45, 93%, 55%)`        | Established power, weight, legacy | Regal, authoritative   |
+| **Mid-Tier Studio** | Magenta `hsl(320, 100%, 65%)`   | Ambitious, disruptive, creative   | Bold, electric         |
+| **Indie Studio**    | Rust Orange `hsl(25, 85%, 60%)` | Artisanal, authentic, raw         | Warm, textured, analog |
 
 The Indie archetype also adds a **film grain overlay** (`opacity: 0.05`) via a CSS `::before` pseudo-element on the body — this is intentional and should be preserved on all new Indie-archetype screens.
 
@@ -112,39 +113,40 @@ All design decisions must trace back to these tokens. They are defined in `src/i
 
 ### 3.1 Token Reference
 
-| Token | CSS Variable | Tailwind Class | Usage |
-|-------|-------------|----------------|-------|
-| Background | `--background` | `bg-background` | Page/screen backgrounds |
-| Foreground | `--foreground` | `text-foreground` | Primary text |
-| Card | `--card` | `bg-card` | Card surfaces |
-| Card Foreground | `--card-foreground` | `text-card-foreground` | Text on cards |
-| Popover | `--popover` | `bg-popover` | Dropdowns, tooltips |
-| Primary | `--primary` | `bg-primary`, `text-primary` | Main accent — interactive elements, key numbers |
-| Secondary | `--secondary` | `bg-secondary`, `text-secondary` | Supporting accent — secondary data, icons |
-| Muted | `--muted` | `bg-muted` | Subdued surfaces — empty states, disabled areas |
-| Muted Foreground | `--muted-foreground` | `text-muted-foreground` | Placeholder text, labels, metadata |
-| Accent | `--accent` | `bg-accent` | Hover states, subtle highlights |
-| Destructive | `--destructive` | `bg-destructive`, `text-destructive` | Alerts, errors, dangerous actions |
-| Success | `--success` | `bg-success`, `text-success` | Positive outcomes, green metrics |
-| Border | `--border` | `border-border` | Card and panel borders |
-| Input | `--input` | `bg-input` | Form input backgrounds |
-| Ring | `--ring` | `ring-ring` | Focus rings |
-| Radius | `--radius` | (rounded-xl = 0.75rem) | Corner rounding |
+| Token            | CSS Variable         | Tailwind Class                       | Usage                                           |
+| ---------------- | -------------------- | ------------------------------------ | ----------------------------------------------- |
+| Background       | `--background`       | `bg-background`                      | Page/screen backgrounds                         |
+| Foreground       | `--foreground`       | `text-foreground`                    | Primary text                                    |
+| Card             | `--card`             | `bg-card`                            | Card surfaces                                   |
+| Card Foreground  | `--card-foreground`  | `text-card-foreground`               | Text on cards                                   |
+| Popover          | `--popover`          | `bg-popover`                         | Dropdowns, tooltips                             |
+| Primary          | `--primary`          | `bg-primary`, `text-primary`         | Main accent — interactive elements, key numbers |
+| Secondary        | `--secondary`        | `bg-secondary`, `text-secondary`     | Supporting accent — secondary data, icons       |
+| Muted            | `--muted`            | `bg-muted`                           | Subdued surfaces — empty states, disabled areas |
+| Muted Foreground | `--muted-foreground` | `text-muted-foreground`              | Placeholder text, labels, metadata              |
+| Accent           | `--accent`           | `bg-accent`                          | Hover states, subtle highlights                 |
+| Destructive      | `--destructive`      | `bg-destructive`, `text-destructive` | Alerts, errors, dangerous actions               |
+| Success          | `--success`          | `bg-success`, `text-success`         | Positive outcomes, green metrics                |
+| Border           | `--border`           | `border-border`                      | Card and panel borders                          |
+| Input            | `--input`            | `bg-input`                           | Form input backgrounds                          |
+| Ring             | `--ring`             | `ring-ring`                          | Focus rings                                     |
+| Radius           | `--radius`           | (rounded-xl = 0.75rem)               | Corner rounding                                 |
 
 ### 3.2 Sidebar-Specific Tokens
 
 The sidebar has its own token set to allow it to be slightly darker than the main background:
 
-| Token | Usage |
-|-------|-------|
+| Token                  | Usage                                              |
+| ---------------------- | -------------------------------------------------- |
 | `--sidebar-background` | Sidebar background (2% lightness, deepest surface) |
-| `--sidebar-foreground` | Nav item text at rest |
-| `--sidebar-primary` | Active nav item color = `--primary` |
-| `--sidebar-accent` | Nav item hover background |
+| `--sidebar-foreground` | Nav item text at rest                              |
+| `--sidebar-primary`    | Active nav item color = `--primary`                |
+| `--sidebar-accent`     | Nav item hover background                          |
 
 ### 3.3 Token Extension Rules
 
 When a new semantic state is needed (e.g., "warning", "info"):
+
 1. Define it in `:root` in `index.css`
 2. Add archetype overrides in `.theme-major`, `.theme-mid-tier`, `.theme-indie` if the color has archetype implications
 3. Never introduce a new one-off color in a component
@@ -155,24 +157,24 @@ When a new semantic state is needed (e.g., "warning", "info"):
 
 ### 4.1 Font Stack
 
-| Role | Family | Weights Used | Usage |
-|------|--------|-------------|-------|
-| **Display** | Montserrat | 900 (Black) | All `h1–h6`, stat values, panel titles, badge labels |
-| **Body** | Inter | 300, 400, 500, 600, 700 | Body text, descriptions, labels, form inputs |
+| Role        | Family     | Weights Used            | Usage                                                |
+| ----------- | ---------- | ----------------------- | ---------------------------------------------------- |
+| **Display** | Montserrat | 900 (Black)             | All `h1–h6`, stat values, panel titles, badge labels |
+| **Body**    | Inter      | 300, 400, 500, 600, 700 | Body text, descriptions, labels, form inputs         |
 
 Both fonts are loaded from Google Fonts in `index.css`. Use `.font-display` and `.font-body` utility classes when you need to override the default on an element.
 
 ### 4.2 Type Scale
 
-| Role | Size | Weight | Tracking | Font | Class Pattern |
-|------|------|--------|----------|------|---------------|
-| Screen Title | 36px / `text-4xl` | 900 | `-0.05em` (`tracking-tighter`) | Montserrat | `text-4xl font-black tracking-tighter uppercase` |
-| Panel Header | 18px / `text-lg` | 800 | `-0.03em` | Montserrat | `text-lg font-black tracking-tight uppercase` |
-| Section Label | 10px / `text-[10px]` | 900 | `+0.15em` (`tracking-[0.15em]`) | Montserrat | `text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground` |
-| KPI Value | 30px / `text-3xl` | 900 | `-0.03em` | Montserrat | `text-3xl font-black tracking-tighter` |
-| Body Text | 14px / `text-sm` | 400–500 | `-0.01em` | Inter | `text-sm font-medium` |
-| Caption / Meta | 11px / `text-[11px]` | 500 | 0 | Inter | `text-[11px] text-muted-foreground font-medium` |
-| Micro Label | 9px / `text-[9px]` | 900 | `+0.15em` | Montserrat | `text-[9px] font-black uppercase tracking-widest` |
+| Role           | Size                 | Weight  | Tracking                        | Font       | Class Pattern                                                              |
+| -------------- | -------------------- | ------- | ------------------------------- | ---------- | -------------------------------------------------------------------------- |
+| Screen Title   | 36px / `text-4xl`    | 900     | `-0.05em` (`tracking-tighter`)  | Montserrat | `text-4xl font-black tracking-tighter uppercase`                           |
+| Panel Header   | 18px / `text-lg`     | 800     | `-0.03em`                       | Montserrat | `text-lg font-black tracking-tight uppercase`                              |
+| Section Label  | 10px / `text-[10px]` | 900     | `+0.15em` (`tracking-[0.15em]`) | Montserrat | `text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground` |
+| KPI Value      | 30px / `text-3xl`    | 900     | `-0.03em`                       | Montserrat | `text-3xl font-black tracking-tighter`                                     |
+| Body Text      | 14px / `text-sm`     | 400–500 | `-0.01em`                       | Inter      | `text-sm font-medium`                                                      |
+| Caption / Meta | 11px / `text-[11px]` | 500     | 0                               | Inter      | `text-[11px] text-muted-foreground font-medium`                            |
+| Micro Label    | 9px / `text-[9px]`   | 900     | `+0.15em`                       | Montserrat | `text-[9px] font-black uppercase tracking-widest`                          |
 
 ### 4.3 Typography Rules
 
@@ -193,41 +195,41 @@ Both fonts are loaded from Google Fonts in `index.css`. Use `.font-display` and 
 
 Colors in Studio Boss are **semantic** — they carry specific game meaning. Using colors outside their semantic role creates confusion.
 
-| Color | Semantic Role | Examples |
-|-------|--------------|---------|
-| `text-primary` | **The accent** — single most important data point or primary action per section | KPI highlight value, active tab indicator, primary CTA button |
-| `text-secondary` | **Supporting accent** — secondary metrics, supplementary icons | Audience metrics, streaming data, info icons |
-| `text-success` | **Positive financial / prestige movement** | Revenue up, prestige gain, project greenlit |
-| `text-destructive` | **Risk, loss, crisis** | Budget overrun, scandal, negative cash flow |
-| `text-muted-foreground` | **Labels, metadata, inactive states** | Section labels, timestamps, disabled controls |
-| `text-foreground` | **Primary readable content** | Body descriptions, table values, card content |
+| Color                   | Semantic Role                                                                   | Examples                                                      |
+| ----------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| `text-primary`          | **The accent** — single most important data point or primary action per section | KPI highlight value, active tab indicator, primary CTA button |
+| `text-secondary`        | **Supporting accent** — secondary metrics, supplementary icons                  | Audience metrics, streaming data, info icons                  |
+| `text-success`          | **Positive financial / prestige movement**                                      | Revenue up, prestige gain, project greenlit                   |
+| `text-destructive`      | **Risk, loss, crisis**                                                          | Budget overrun, scandal, negative cash flow                   |
+| `text-muted-foreground` | **Labels, metadata, inactive states**                                           | Section labels, timestamps, disabled controls                 |
+| `text-foreground`       | **Primary readable content**                                                    | Body descriptions, table values, card content                 |
 
 ### 5.2 Color Encoding in Data
 
 When colors represent data categories (e.g., in charts), always use the same encoding consistently throughout the game:
 
-| Data Category | Color |
-|---------------|-------|
-| Theatrical Revenue | `hsl(var(--primary))` — archetype accent |
-| Streaming Revenue | `hsl(var(--secondary))` — cyan/blue |
-| Merchandise Revenue | `#a78bfa` — purple (consistent, not part of archetype themes) |
-| Passive / Syndication Revenue | `#34d399` — emerald |
-| Production Costs | `hsl(var(--destructive))` — red |
-| Marketing Costs | `#f97316` — orange |
-| Overhead / Burn | `#6b7280` — gray |
-| Net / Profit | `hsl(var(--success))` — green |
+| Data Category                 | Color                                                         |
+| ----------------------------- | ------------------------------------------------------------- |
+| Theatrical Revenue            | `hsl(var(--primary))` — archetype accent                      |
+| Streaming Revenue             | `hsl(var(--secondary))` — cyan/blue                           |
+| Merchandise Revenue           | `#a78bfa` — purple (consistent, not part of archetype themes) |
+| Passive / Syndication Revenue | `#34d399` — emerald                                           |
+| Production Costs              | `hsl(var(--destructive))` — red                               |
+| Marketing Costs               | `#f97316` — orange                                            |
+| Overhead / Burn               | `#6b7280` — gray                                              |
+| Net / Profit                  | `hsl(var(--success))` — green                                 |
 
 These must never change per archetype — chart data colors are fixed semantic identifiers, not decorative choices.
 
 ### 5.3 Color Opacity Conventions
 
-| Opacity | Usage |
-|---------|-------|
-| `/5` – `/10` | Atmospheric background blobs, radial glow effects |
-| `/20` – `/30` | Badge backgrounds, subtle surface tints |
-| `/40` – `/60` | Glass card backgrounds, overlays |
-| `/80` – `/90` | Nearly opaque but with glass bleed |
-| Full | Only for icons, text, and borders where full opacity is required for legibility |
+| Opacity       | Usage                                                                           |
+| ------------- | ------------------------------------------------------------------------------- |
+| `/5` – `/10`  | Atmospheric background blobs, radial glow effects                               |
+| `/20` – `/30` | Badge backgrounds, subtle surface tints                                         |
+| `/40` – `/60` | Glass card backgrounds, overlays                                                |
+| `/80` – `/90` | Nearly opaque but with glass bleed                                              |
+| Full          | Only for icons, text, and borders where full opacity is required for legibility |
 
 ---
 
@@ -237,16 +239,16 @@ These must never change per archetype — chart data colors are fixed semantic i
 
 Studio Boss uses Tailwind's 4px base unit. All spacing values must be multiples of 4px.
 
-| Token | px | Usage |
-|-------|----|-------|
-| `gap-1` / `p-1` | 4px | Icon padding, tight chip spacing |
-| `gap-2` / `p-2` | 8px | Badge padding, micro gaps |
-| `gap-3` / `p-3` | 12px | Inline spacing between related elements |
-| `gap-4` / `p-4` | 16px | Default card padding, section gaps |
-| `gap-5` / `p-5` | 20px | Card content padding (primary) |
-| `gap-6` / `p-6` | 24px | Between major sections within a panel |
-| `gap-8` / `p-8` | 32px | Between layout regions on a screen |
-| `space-y-8` | 32px | Primary vertical rhythm within a screen tab |
+| Token           | px   | Usage                                       |
+| --------------- | ---- | ------------------------------------------- |
+| `gap-1` / `p-1` | 4px  | Icon padding, tight chip spacing            |
+| `gap-2` / `p-2` | 8px  | Badge padding, micro gaps                   |
+| `gap-3` / `p-3` | 12px | Inline spacing between related elements     |
+| `gap-4` / `p-4` | 16px | Default card padding, section gaps          |
+| `gap-5` / `p-5` | 20px | Card content padding (primary)              |
+| `gap-6` / `p-6` | 24px | Between major sections within a panel       |
+| `gap-8` / `p-8` | 32px | Between layout regions on a screen          |
+| `space-y-8`     | 32px | Primary vertical rhythm within a screen tab |
 
 ### 6.2 Screen Layout
 
@@ -275,14 +277,14 @@ The main game layout is a **fixed 2-column structure**:
 
 Within the main content area, use these column patterns:
 
-| Layout | Class | When |
-|--------|-------|------|
-| Full width | `w-full` | Headers, search bars, summary banners |
-| 2-column equal | `grid grid-cols-2 gap-4` | Paired KPIs, two related charts |
-| 3-column equal | `grid grid-cols-3 gap-4` | Triple KPIs, format breakdown |
-| 4-column KPI row | `grid grid-cols-2 md:grid-cols-4 gap-4` | Command Center stat row (standard) |
-| 2/3 + 1/3 | `grid grid-cols-3 gap-6` with `col-span-2` + `col-span-1` | Primary viz + secondary widget |
-| Pipeline columns | `grid grid-cols-4 gap-4` | Kanban boards only |
+| Layout           | Class                                                     | When                                  |
+| ---------------- | --------------------------------------------------------- | ------------------------------------- |
+| Full width       | `w-full`                                                  | Headers, search bars, summary banners |
+| 2-column equal   | `grid grid-cols-2 gap-4`                                  | Paired KPIs, two related charts       |
+| 3-column equal   | `grid grid-cols-3 gap-4`                                  | Triple KPIs, format breakdown         |
+| 4-column KPI row | `grid grid-cols-2 md:grid-cols-4 gap-4`                   | Command Center stat row (standard)    |
+| 2/3 + 1/3        | `grid grid-cols-3 gap-6` with `col-span-2` + `col-span-1` | Primary viz + secondary widget        |
+| Pipeline columns | `grid grid-cols-4 gap-4`                                  | Kanban boards only                    |
 
 **Responsive rule:** All multi-column grids collapse to 1 or 2 columns on smaller windows via `md:` breakpoints. Never use `lg:` or larger as the only responsive breakpoint — assume the window may be narrower than full HD.
 
@@ -316,24 +318,26 @@ Studio Boss uses a 5-level surface hierarchy. Never skip levels — each level s
 
 ### 7.1 Surface Levels
 
-| Level | Name | Class / Style | z-index | When |
-|-------|------|---------------|---------|------|
-| 0 | **Page Background** | `bg-background` | 0 | The void — full-screen dark base |
-| 1 | **Sidebar** | `glass-panel` (`bg-background/40 backdrop-blur-2xl`) | 10 | Navigation rail |
-| 2 | **Top Bar** | `glass-header` (`bg-background/60 backdrop-blur-xl`) | 50 | Always-visible chrome |
-| 3 | **Content Cards** | `glass-card` (`bg-card/60 backdrop-blur-xl border border-white/5`) | auto | Data containers, KPI cards |
-| 4 | **Popovers / Tooltips** | `bg-popover backdrop-blur-md border border-white/10` | 100 | Hover tooltips, dropdown menus |
-| 5 | **Modals / Dialogs** | `bg-card/90 backdrop-blur-2xl border border-white/10` + backdrop overlay | 200 | Modal dialogs, sheet drawers |
+| Level | Name                    | Class / Style                                                            | z-index | When                             |
+| ----- | ----------------------- | ------------------------------------------------------------------------ | ------- | -------------------------------- |
+| 0     | **Page Background**     | `bg-background`                                                          | 0       | The void — full-screen dark base |
+| 1     | **Sidebar**             | `glass-panel` (`bg-background/40 backdrop-blur-2xl`)                     | 10      | Navigation rail                  |
+| 2     | **Top Bar**             | `glass-header` (`bg-background/60 backdrop-blur-xl`)                     | 50      | Always-visible chrome            |
+| 3     | **Content Cards**       | `glass-card` (`bg-card/60 backdrop-blur-xl border border-white/5`)       | auto    | Data containers, KPI cards       |
+| 4     | **Popovers / Tooltips** | `bg-popover backdrop-blur-md border border-white/10`                     | 100     | Hover tooltips, dropdown menus   |
+| 5     | **Modals / Dialogs**    | `bg-card/90 backdrop-blur-2xl border border-white/10` + backdrop overlay | 200     | Modal dialogs, sheet drawers     |
 
 ### 7.2 Glass Card Anatomy
 
 Every `glass-card` must have:
+
 - `bg-card/60 backdrop-blur-xl` — the frosted glass effect
 - `border border-white/5` — barely visible edge definition
 - `shadow-2xl` — depth beneath the card
 - `rounded-xl` (0.75rem radius) — consistent corner radius
 
 Optional enhancements:
+
 - `bg-gradient-to-br from-white/5 to-transparent` — inner gradient for dimensionality
 - `hover:-translate-y-1 transition-transform duration-300` — subtle lift on hover for interactive cards
 - An ambient glow blob: `<div className="absolute -top-4 -right-4 w-16 h-16 opacity-10 blur-2xl rounded-full bg-primary" />` — for cards where the KPI value is the primary accent color
@@ -355,6 +359,7 @@ Optional enhancements:
 **When to use:** Any single critical metric that needs immediate visibility.
 
 **Anatomy:**
+
 ```
 ┌─────────────────────────────┐
 ║ LABEL          [icon]       │  ← LABEL: text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground (not-italic)
@@ -365,6 +370,7 @@ Optional enhancements:
 ```
 
 **Rules:**
+
 - Identity comes from a **single 3px left accent bar** in the KPI's semantic color — not an ambient glow blob. The old `blur-[100px]` glow array is removed; it competed with the numbers for attention.
 - Icon always top-right, tinted with the KPI's semantic color at ~50% opacity (full on hover).
 - Value: always the largest element on the card. Upright, `tabular-nums`, never italic or uppercased — figures must stay column-comparable across cards.
@@ -376,30 +382,31 @@ Optional enhancements:
 
 ### 8.2 Badges & Tags
 
-| Variant | Style | When |
-|---------|-------|------|
-| **Archetype** | `bg-primary/20 text-primary border-primary/30 shadow-[0_0_10px_rgba(var(--primary),0.2)]` | Studio archetype label |
-| **Status — Active** | `bg-success/20 text-success border-success/30` | Project in production |
-| **Status — Risk** | `bg-destructive/20 text-destructive border-destructive/30` | Crisis, overrun, scandal |
-| **Status — Neutral** | `bg-muted text-muted-foreground border-border` | Development, archived |
-| **Tier — A-List** | `bg-primary/20 text-primary` | Talent tier A-List |
-| **Tier — Rising** | `bg-secondary/20 text-secondary` | Talent Rising Star |
-| **Format — Film** | `bg-white/10 text-foreground` | Content format |
-| **Format — TV** | `bg-secondary/10 text-secondary` | Content format |
+| Variant              | Style                                                                                     | When                     |
+| -------------------- | ----------------------------------------------------------------------------------------- | ------------------------ |
+| **Archetype**        | `bg-primary/20 text-primary border-primary/30 shadow-[0_0_10px_rgba(var(--primary),0.2)]` | Studio archetype label   |
+| **Status — Active**  | `bg-success/20 text-success border-success/30`                                            | Project in production    |
+| **Status — Risk**    | `bg-destructive/20 text-destructive border-destructive/30`                                | Crisis, overrun, scandal |
+| **Status — Neutral** | `bg-muted text-muted-foreground border-border`                                            | Development, archived    |
+| **Tier — A-List**    | `bg-primary/20 text-primary`                                                              | Talent tier A-List       |
+| **Tier — Rising**    | `bg-secondary/20 text-secondary`                                                          | Talent Rising Star       |
+| **Format — Film**    | `bg-white/10 text-foreground`                                                             | Content format           |
+| **Format — TV**      | `bg-secondary/10 text-secondary`                                                          | Content format           |
 
 All badges: `uppercase tracking-widest text-[10px] py-0.5 px-2 rounded-md border`
 
 ### 8.3 Buttons
 
-| Variant | Style | When |
-|---------|-------|------|
-| **Primary** | `bg-primary text-primary-foreground hover:bg-primary/90` | Single primary action per view (Greenlight, Advance Week, Save) |
-| **Secondary** | `bg-secondary/20 text-secondary border border-secondary/30 hover:bg-secondary/30` | Supporting actions |
-| **Ghost** | `hover:bg-accent hover:text-accent-foreground` | Tertiary actions, icon buttons in toolbars |
-| **Destructive** | `bg-destructive text-destructive-foreground` | Irreversible actions only (drop project, reject deal) |
-| **Outline** | `border border-white/10 bg-transparent hover:bg-white/5` | Non-critical contextual actions |
+| Variant         | Style                                                                             | When                                                            |
+| --------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| **Primary**     | `bg-primary text-primary-foreground hover:bg-primary/90`                          | Single primary action per view (Greenlight, Advance Week, Save) |
+| **Secondary**   | `bg-secondary/20 text-secondary border border-secondary/30 hover:bg-secondary/30` | Supporting actions                                              |
+| **Ghost**       | `hover:bg-accent hover:text-accent-foreground`                                    | Tertiary actions, icon buttons in toolbars                      |
+| **Destructive** | `bg-destructive text-destructive-foreground`                                      | Irreversible actions only (drop project, reject deal)           |
+| **Outline**     | `border border-white/10 bg-transparent hover:bg-white/5`                          | Non-critical contextual actions                                 |
 
 **Rules:**
+
 - One `Primary` button per content area maximum
 - Button labels: imperative verb + noun ("Greenlight Project", "Attach Talent") — never just a noun
 - Icon + text buttons: icon left of text, `gap-2`, icon `h-4 w-4`
@@ -410,11 +417,13 @@ All badges: `uppercase tracking-widest text-[10px] py-0.5 px-2 rounded-md border
 Two tab styles are used:
 
 **Panel-level tabs** (switching between major sub-views within a screen):
+
 - Full-width tab bar at the top of the panel
 - Active tab: `bg-primary/20 text-primary border-b-2 border-primary`
 - Inactive: `text-muted-foreground hover:text-foreground`
 
 **Segment tabs** (toggling between closely related data views):
+
 - Compact pill-style tab group
 - Active: `bg-primary text-primary-foreground rounded-md`
 - Inactive: `text-muted-foreground`
@@ -422,6 +431,7 @@ Two tab styles are used:
 ### 8.5 Data Tables
 
 Tables appear in the Finance Ledger and talent lists. Rules:
+
 - No `<table>` for layout — use CSS grid for aligned columns in non-tabular contexts
 - Header row: `text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground border-b border-white/5 pb-2`
 - Data row: `text-sm font-medium py-3 border-b border-white/5`
@@ -433,6 +443,7 @@ Tables appear in the Finance Ledger and talent lists. Rules:
 ### 8.6 Empty States
 
 Every list, table, kanban column, or data section that can be empty must have an empty state. Rules:
+
 - Centered in the available space
 - Icon: 48px, `text-muted-foreground/30`
 - Headline: `text-base font-black uppercase tracking-tight text-muted-foreground/50`
@@ -456,22 +467,23 @@ Never show a blank area — a blank area looks broken.
 ### 9.1 Primary Navigation — Sidebar
 
 The sidebar is the spine of the game. It must be:
+
 - Always visible (sticky, full height)
 - Never scrollable
 - Collapsible to icon-only mode (72px)
 
 **Tab order (fixed — never reorder):**
 
-| # | Tab | Icon | Description |
-|---|-----|------|-------------|
-| 1 | Command Center | Building2 / HQ | Studio executive overview |
-| 2 | Production Pipeline | Clapperboard | Kanban board of all projects |
-| 3 | The Trades | Newspaper | Discovery, IP marketplace, auctions |
-| 4 | Talent Hub | Users | Roster management + SBDB |
-| 5 | Distribution Hub | Tv2 | Deals, streaming, ratings |
-| 6 | IP Vault | Archive | Franchises, owned IP, syndication |
-| 7 | Industry Intelligence | TrendingUp | Rivals, M&A, market dynamics |
-| 8 | Finance | DollarSign | Financial reporting, forecasts, ledger |
+| #   | Tab                   | Icon           | Description                            |
+| --- | --------------------- | -------------- | -------------------------------------- |
+| 1   | Command Center        | Building2 / HQ | Studio executive overview              |
+| 2   | Production Pipeline   | Clapperboard   | Kanban board of all projects           |
+| 3   | The Trades            | Newspaper      | Discovery, IP marketplace, auctions    |
+| 4   | Talent Hub            | Users          | Roster management + SBDB               |
+| 5   | Distribution Hub      | Tv2            | Deals, streaming, ratings              |
+| 6   | IP Vault              | Archive        | Franchises, owned IP, syndication      |
+| 7   | Industry Intelligence | TrendingUp     | Rivals, M&A, market dynamics           |
+| 8   | Finance               | DollarSign     | Financial reporting, forecasts, ledger |
 
 **Active state:** The active tab has a left-border accent `border-l-2 border-primary`, the icon color shifts to `text-primary`, and the label becomes `text-foreground` (full opacity).
 
@@ -480,6 +492,7 @@ The sidebar is the spine of the game. It must be:
 ### 9.2 Secondary Navigation — In-Panel Tabs
 
 Used when a primary screen has multiple sub-views. Rules:
+
 - Maximum 5 tabs; if more are needed, introduce a second hierarchy level (not more tabs)
 - Tab labels: 1–3 words, no icons in tab labels (icons are only for the sidebar)
 - The active tab's content must be immediately visible — never require scrolling to see the default view of a tab
@@ -487,11 +500,13 @@ Used when a primary screen has multiple sub-views. Rules:
 ### 9.3 Top Bar Persistent Context
 
 The top bar always shows:
+
 - **Left:** Current week and fiscal year
 - **Center:** News ticker (scrolling industry headlines)
 - **Right:** Prestige score, cash on hand (with `+/-` weekly delta), Advance Week button, Save button
 
 **Rules for the Top Bar:**
+
 - Cash display: always formatted as `$XXXm` or `$X.XXb` — never full number strings in the top bar
 - Prestige: show as a number with a `★` prefix
 - "Advance Week" is the primary action; style as a full-color `bg-primary text-primary-foreground` button
@@ -502,6 +517,7 @@ The top bar always shows:
 Studio Boss uses a **modal-first drilldown** pattern — clicking on a card doesn't navigate to a new page, it opens a modal. There are no breadcrumbs because there is no page-level navigation beyond the sidebar tabs.
 
 **Drilldown depth rules:**
+
 - Level 1: Panel tab (sidebar navigation)
 - Level 2: Sub-tab within a panel (in-panel tab bar)
 - Level 3: Modal (card click → detail modal)
@@ -517,17 +533,17 @@ Never go deeper than Level 4. If the information doesn't fit within 4 levels, th
 
 Use the right chart for the data type. This is the canonical mapping:
 
-| Data Question | Chart Type | Component |
-|--------------|-----------|-----------|
-| "How has this changed over time?" | Line / Area | `TimeSeriesChart` |
-| "What is the proportion of parts to a whole?" | Donut / Pie | `PieChart` |
-| "How does this week compare to the last 12 weeks?" | Bar | `SimpleBarChart` |
-| "What is the net flow (costs vs. revenue)?" | Waterfall / Stacked Bar | `ProfitWaterfallChart`, `StackedBarChart` |
-| "How does a project score across multiple attributes?" | Radar | `RadarChart` |
-| "How does performance distribute across a matrix?" | Heatmap | `HeatMap` |
-| "What is the current level of a single KPI?" | Gauge (semicircle) | `GaugeChart` |
-| "What is the trend direction of a KPI?" (inline) | Sparkline | `SparkLine` |
-| "Where is projected vs. actual?" | Composed (line + bar) | `TimeSeriesChart` with forecast overlay |
+| Data Question                                          | Chart Type              | Component                                 |
+| ------------------------------------------------------ | ----------------------- | ----------------------------------------- |
+| "How has this changed over time?"                      | Line / Area             | `TimeSeriesChart`                         |
+| "What is the proportion of parts to a whole?"          | Donut / Pie             | `PieChart`                                |
+| "How does this week compare to the last 12 weeks?"     | Bar                     | `SimpleBarChart`                          |
+| "What is the net flow (costs vs. revenue)?"            | Waterfall / Stacked Bar | `ProfitWaterfallChart`, `StackedBarChart` |
+| "How does a project score across multiple attributes?" | Radar                   | `RadarChart`                              |
+| "How does performance distribute across a matrix?"     | Heatmap                 | `HeatMap`                                 |
+| "What is the current level of a single KPI?"           | Gauge (semicircle)      | `GaugeChart`                              |
+| "What is the trend direction of a KPI?" (inline)       | Sparkline               | `SparkLine`                               |
+| "Where is projected vs. actual?"                       | Composed (line + bar)   | `TimeSeriesChart` with forecast overlay   |
 
 **Never use a pie chart when there are more than 5 categories** — switch to a horizontal bar chart with a legend.
 
@@ -542,22 +558,26 @@ All charts share these visual rules:
 **Grid lines:** Use `stroke="#ffffff" strokeOpacity={0.05}` for grid lines — barely visible, just enough for reading alignment.
 
 **Axes:**
-- X-axis labels: `text-[11px] text-muted-foreground font-medium` 
+
+- X-axis labels: `text-[11px] text-muted-foreground font-medium`
 - Y-axis labels: same, aligned right
 - Never show axis ticks without labels
 - Y-axis: always include a unit in the axis label or in a chart subheader (e.g., "$M", "%", "viewers")
 
 **Tooltips:**
+
 - Background: `bg-popover/90 backdrop-blur-md border border-white/10 rounded-lg p-3`
 - Contents: label in `text-[10px] uppercase text-muted-foreground`, value in `text-sm font-black text-foreground`
 - Always show the full formatted value in the tooltip, even if the axis is abbreviated
 
 **Legend:**
+
 - Position: below the chart for small multiples, to the right for single charts with ≤5 series
 - Style: colored dot (`h-2 w-2 rounded-full inline-block`) + label `text-[11px] text-muted-foreground`
 - Never auto-generate legend colors — always use the fixed semantic color assignments from Section 5.2
 
 **Animations:**
+
 - Initial render: bars and lines animate in over 400ms
 - Data updates: animate the delta, not a full redraw
 - Use `animationDuration={400}` on Recharts components
@@ -567,6 +587,7 @@ All charts share these visual rules:
 Sparklines are used **inline within KPI cards** to show trend direction without requiring axis labels.
 
 Rules:
+
 - Height: always 30px
 - Width: 80–120px maximum
 - Color: `'trend'` mode automatically green/red based on direction, or pass the semantic color of the KPI
@@ -578,6 +599,7 @@ Rules:
 Used for single-value KPIs where the range and relative position matter more than the exact number.
 
 Rules:
+
 - Always display the numeric value below the arc
 - Always provide a `label` and optionally a `sublabel`
 - Color auto-assigns based on threshold: ≥80% = green, ≥60% = blue, ≥40% = amber, <40% = red
@@ -589,6 +611,7 @@ Rules:
 The Finance Panel has the highest data complexity in the game. These rules govern all financial visualizations:
 
 **Cash Flow Forecast Chart:**
+
 - Show 12 weeks of history as a solid area (`fill-opacity: 0.1`) with a solid line
 - Show the next 4 weeks as a projected area in dashed line + lighter fill
 - Mark the "now" point with a vertical reference line: `stroke="#ffffff" strokeOpacity={0.2} strokeDasharray="4 4"`
@@ -596,17 +619,20 @@ The Finance Panel has the highest data complexity in the game. These rules gover
 - Zero line: `stroke="#ffffff" strokeOpacity={0.15}` — slightly more visible than grid lines
 
 **Revenue Breakdown (Pie/Donut):**
+
 - Always donut, not full pie (the center hole gives room for a total value)
 - Show total value in the donut center: `text-2xl font-black`
 - Sections below 3% are merged into "Other"
 
 **Profit Waterfall:**
+
 - Starting bar: `fill="hsl(var(--primary))"` — total revenue
 - Cost bars: each cost category in its assigned color (see Section 5.2)
 - Net/Profit bar: `fill="hsl(var(--success))"` if positive, `fill="hsl(var(--destructive))"` if negative
 - Always show value labels on top of each bar
 
 **Heat Map (Demographics / Regional):**
+
 - Cell color scale: empty/low = `bg-muted/30` → full/high = `bg-primary/80`
 - Minimum 8px gap between cells
 - Row and column labels in `text-[10px] uppercase text-muted-foreground`
@@ -615,16 +641,19 @@ The Finance Panel has the highest data complexity in the game. These rules gover
 ### 10.6 Non-Chart Data Display
 
 **Financial figures in text/tables:**
+
 - Always include sign: `+$2.4m` in `text-success` or `-$1.1m` in `text-destructive`
 - Format thresholds: `<$1m` → `$XXXk`, `≥$1m` → `$X.Xm`, `≥$1b` → `$X.Xb`
 - Never display more than 3 significant digits in the UI (full precision is for exports/logs)
 
 **Percentages:**
+
 - Always include the `%` symbol
 - ROI: show with sign `+240%` / `-12%`
 - Audience ratings share: `XX.X%` (one decimal)
 
 **Talent ratings / scores:**
+
 - Prestige and Star Meter: always `0–100` scale, displayed as a whole number
 - Use a `<progress>`-style bar + numeric value side-by-side
 
@@ -638,12 +667,14 @@ The Finance Panel has the highest data complexity in the game. These rules gover
 **Aesthetic:** Full-screen atmospheric — no chrome, no sidebar, no top bar  
 **Layout:** Centered content stack, maximum width 480px  
 **Key elements:**
+
 - Studio Boss wordmark: `text-6xl font-black tracking-tighter uppercase` with `text-glow` effect
 - Tagline: `text-muted-foreground text-base font-medium italic`
 - New Game / Load Game buttons: stacked, `w-full`
 - Background: solid `bg-background` with an optional radial gradient glow at center
 
 **Save Slot Cards (Load dialog):**
+
 - 4 slots in a 2×2 grid
 - Occupied slot: show studio name (font-black), archetype badge, week/year, cash, timestamp
 - Empty slot: outlined dashed border, "Empty Slot" label, `text-muted-foreground`
@@ -655,12 +686,14 @@ The Finance Panel has the highest data complexity in the game. These rules gover
 **Layout:** Two sections: studio name input (top) + archetype cards (3-column grid)
 
 **Archetype Cards:**
+
 - Large cards, full details visible (no truncation)
 - Starting stats shown as a mini-stat grid within the card
 - Selected state: full `border-primary` border + background tint `bg-primary/5`
 - Each card's accent color shifts to match the archetype's theme color (preview the theme in the card itself)
 
 **Studio Name Input:**
+
 - Prominent, full-width input
 - Shuffle/randomize icon button `⟳` inlined on the right
 - Character limit indicator when approaching max length
@@ -670,6 +703,7 @@ The Finance Panel has the highest data complexity in the game. These rules gover
 **Purpose:** Executive overview — the game's "Monday morning briefing"  
 **First visible on tab selection:** Studio header + KPI row + Financial Overview + Demographics  
 **Information priority order:**
+
 1. Studio header with **market position** — highest; identifies who you are and where you stand
 2. KPI row (cash, pipeline, capital share, prestige) — visible without scrolling
 3. Financial Overview widget — critical at all times
@@ -677,16 +711,19 @@ The Finance Panel has the highest data complexity in the game. These rules gover
 5. Industry News — situational; can scroll to
 
 **Studio Header Rules:**
+
 - Studio name as the screen title (upright, not italic), with the archetype badge (`MAJOR` / `MID-TIER` / `INDIE`) drawn from real studio state.
 - **Market position must be derived, never hardcoded.** Show the studio's real standing: a descriptor (`Market Leader` / `Major Player` / `Established Studio` / `Challenger`) computed from rank, plus the literal `Rank #X of Y · Z% capital`. Capital share is the studio's share of total industry cash — the same metric the engine's antitrust system uses to gauge dominance. A static label like "MAJOR CHALLENGER" that ignores actual state is prohibited (see §16.5).
 
 **KPI Row Rules:**
+
 - Exactly 4 cards: **Cash on Hand**, **Active Pipeline**, **Capital Share**, **Prestige** — every value sourced from live state, formatted per §16.3.
 - Cash uses the `destructive` variant when negative (e.g. after a loan), `primary` (gold) otherwise.
 - Never add a 5th KPI to this row — create a second row below if expansion is needed.
 - Each card carries its semantic accent bar (per §8.1); no glow blobs.
 
 **Industry News (formerly "Intelligence Feed"):**
+
 - Plain, honest section label — **no surveillance/HUD theatre** ("LIVE SECURE", "GLOBAL SURVEILLANCE", "SECTOR ALPHA-1" and similar fabricated chrome are banned, §16.5).
 - Latest 5–8 news items, newest first; the lead item may span the full width.
 - Each item: week tag + headline (`font-bold`, upright) + description (`text-sm text-muted-foreground`).
@@ -699,14 +736,16 @@ The Finance Panel has the highest data complexity in the game. These rules gover
 **Layout:** 4-column Kanban board (fixed columns, horizontal scroll if needed on smaller windows)
 
 **Column Rules:**
-| Column | Status Group | Header Color |
-|--------|-------------|-------------|
-| Development | `development`, `needs_greenlight` | `text-secondary` |
-| Pitching | `pitching` | `text-primary` |
-| Active Slate | `production`, `marketing` | `text-success` |
-| Catalog | `released`, `post_release`, `archived` | `text-muted-foreground` |
+
+| Column       | Status Group                           | Header Color            |
+| ------------ | -------------------------------------- | ----------------------- |
+| Development  | `development`, `needs_greenlight`      | `text-secondary`        |
+| Pitching     | `pitching`                             | `text-primary`          |
+| Active Slate | `production`, `marketing`              | `text-success`          |
+| Catalog      | `released`, `post_release`, `archived` | `text-muted-foreground` |
 
 **Project Card Rules:**
+
 - Title: `font-black text-sm uppercase tracking-tight` (truncate at 2 lines)
 - Format badge (Film/TV) always top-right
 - Budget tier badge below format
@@ -715,6 +754,7 @@ The Finance Panel has the highest data complexity in the game. These rules gover
 - Crisis indicator: red pulsing dot `animate-pulse bg-destructive` in top-left if `activeCrisis` exists
 
 **Board Header:**
+
 - Column count badge showing number of projects in each column
 - "New IP Venture" button only appears in the Development column header
 
@@ -724,17 +764,20 @@ The Finance Panel has the highest data complexity in the game. These rules gover
 **Sub-tabs:** IP Marketplace | Auctions | Trend Board | News Feed
 
 **IP Marketplace:**
+
 - Opportunity cards in a 3-column grid
 - Each card: title, format badge, asking price, market demand indicator (sparkline or badge)
 - Acquisition CTA: `bg-primary` button
 
 **Auction Dashboard:**
+
 - Live auction timer: countdown clock in `text-destructive font-black` if under 24 hours remaining
 - Bid history as a vertical timeline, most recent at top
 - Current bid: `text-primary font-black text-2xl`
 - Your bid input: inline number field + "Bid" button
 
 **Trend Board:**
+
 - Genre trends as a horizontal bar chart (SimpleBarChart)
 - Each bar colored by momentum: rising = `text-success`, declining = `text-destructive`, stable = `text-muted-foreground`
 - Show trend direction arrow next to genre name
@@ -745,6 +788,7 @@ The Finance Panel has the highest data complexity in the game. These rules gover
 **Sub-tabs:** Your Roster | SBDB (Studio Boss Database)
 
 **Talent Cards:**
+
 - Square or tall-rectangle layout
 - Name: `font-black text-sm`
 - Tier badge top-right
@@ -754,6 +798,7 @@ The Finance Panel has the highest data complexity in the game. These rules gover
 - Hover: expand to show agency, availability status
 
 **SBDB Filter Controls:**
+
 - Search field (always visible)
 - Role filter dropdown
 - Tier filter dropdown
@@ -761,6 +806,7 @@ The Finance Panel has the highest data complexity in the game. These rules gover
 - Filter state persists within the session (don't reset on tab switch)
 
 **Talent Profile Modal:**
+
 - Two-column layout: left = identity (name, photo placeholder, bio chips), right = career stats + filmography
 - Radar chart for capability profile (acting, directing, writing, etc.)
 - Action row: "Offer Contract" (primary), "Add to Watchlist" (ghost)
@@ -771,11 +817,13 @@ The Finance Panel has the highest data complexity in the game. These rules gover
 **Sub-tabs:** Deals Desk | Streaming Platforms | Nielsen Ratings
 
 **Deals Desk:**
+
 - Active deals as a card list, each showing: buyer name, deal type badge, value, expiry date
 - Expiring deals (<4 weeks): amber warning border `border-amber-500/40`
 - Expired deals: `border-destructive/40` with a "Renegotiate" CTA
 
 **Nielsen Dashboard:**
+
 - Primary viz: line chart showing viewership over last 12 weeks per show
 - Each show gets a distinct line color (use the fixed series color palette from Section 10.2)
 - Summary table below the chart: show name, last week rating, week-over-week delta, season average
@@ -786,17 +834,20 @@ The Finance Panel has the highest data complexity in the game. These rules gover
 **Sub-tabs:** Franchise Hub | Owned Inventory | Market Rights | Syndication
 
 **IP Asset Cards:**
+
 - Base value: large number, `text-primary font-black`
 - Decay rate: small `text-destructive` percentage
 - Merchandising multiplier: `text-secondary` badge
 - Last exploit date: `text-muted-foreground text-[11px]`
 
 **Franchise Hub:**
+
 - Franchise shown as a hub-and-spoke diagram (or simplified card with connected projects as chips)
 - Total franchise value as a headline stat
 - Planned next installment with countdown
 
 **Syndication:**
+
 - Passive income per week from each syndicated title
 - Running total: prominent, `text-success font-black text-2xl`
 
@@ -806,6 +857,7 @@ The Finance Panel has the highest data complexity in the game. These rules gover
 **Sub-tabs:** Studio Intelligence | Market Dynamics
 
 **Rival Studio Cards:**
+
 - Name + motto in the card header
 - Strength rating as a gauge (GaugeChart, small size 80px)
 - Cash and prestige as stat chips
@@ -814,6 +866,7 @@ The Finance Panel has the highest data complexity in the game. These rules gover
 - Color tint: rival studios use a neutral blue-gray accent — never use the player's primary color for rivals
 
 **Market Dynamics:**
+
 - M&A activity as a timeline: vertical list, newest at top
 - Consolidation events as milestone markers on the timeline
 - Market trend indicators as horizontal arrows with labels
@@ -824,25 +877,30 @@ The Finance Panel has the highest data complexity in the game. These rules gover
 **Sub-tabs:** Cash Flow Forecast | Revenue Streams | Profit Waterfall | Market Rates | Year in Review
 
 **Cash Flow Forecast (default tab):**
+
 - Full-width `TimeSeriesChart`, 400px minimum height
 - The most important chart in the game — never shrink or truncate it
 - Reference lines for: break-even (zero line), loan thresholds, target cash floor
 
 **Revenue Streams:**
+
 - `PieChart` (donut) for current-period breakdown
 - Supporting table: each category, this-week value, month-to-date, year-to-date
 - Total row at the bottom: bold, larger font
 
 **Profit Waterfall:**
+
 - `ProfitWaterfallChart`: full-width, clearly labeled bars
 - Net result bar always last, always the widest context for the chart's color coding
 
 **Market Rates Widget:**
+
 - Current rate: `text-primary font-black text-2xl`
 - Rate history sparkline: last 12 weeks
 - Context label: "vs. 12-week avg: +0.2%"
 
 **Year in Review:**
+
 - Side-by-side comparison: this year vs. last year
 - Key metrics: total revenue, total costs, net, ROI, prestige gained, projects released
 - Positive delta: `text-success`, negative: `text-destructive`
@@ -863,12 +921,12 @@ Modals stack in this priority order (highest first):
 
 ### 12.2 Modal Sizes
 
-| Size | Max Width | When |
-|------|-----------|------|
-| **Small** | 400px | Simple confirmations, single-step actions |
-| **Medium** | 600px | Most action modals (pitch, attach talent, create package) |
-| **Large** | 800px | Project detail, talent profile, awards ceremony |
-| **Full-Screen** | 100% | Crisis modal, bidding war, festival market |
+| Size            | Max Width | When                                                      |
+| --------------- | --------- | --------------------------------------------------------- |
+| **Small**       | 400px     | Simple confirmations, single-step actions                 |
+| **Medium**      | 600px     | Most action modals (pitch, attach talent, create package) |
+| **Large**       | 800px     | Project detail, talent profile, awards ceremony           |
+| **Full-Screen** | 100%      | Crisis modal, bidding war, festival market                |
 
 ### 12.3 Modal Anatomy
 
@@ -909,6 +967,7 @@ Animation in Studio Boss serves **orientation and feedback**, not spectacle. The
 ### 13.2 Entry Animations
 
 Every panel and major content section enters with:
+
 ```
 animate-in fade-in slide-in-from-bottom-4 duration-700
 ```
@@ -916,6 +975,7 @@ animate-in fade-in slide-in-from-bottom-4 duration-700
 This is the standard entry. Do not introduce new entry animation types — consistency matters more than variety.
 
 **Staggered entry for lists:** When a list of cards loads, stagger each card's entry by 50ms:
+
 ```tsx
 style={{ animationDelay: `${index * 50}ms` }}
 ```
@@ -924,19 +984,20 @@ Use staggering only when there are 3–8 items. For longer lists, skip it (perfo
 
 ### 13.3 Interaction Animations
 
-| Interaction | Animation |
-|------------|-----------|
-| Card hover | `hover:-translate-y-1 transition-transform duration-300` |
-| Button hover | `hover:opacity-90 transition-opacity` |
-| Primary accent on hover | `hover-glow` (glow shadow + border color shift) |
-| Icon hover | `hover:scale-110 hover:drop-shadow-[0_0_8px_currentColor] transition-all duration-300` |
-| Tab switch | Framer Motion `AnimatePresence` with `opacity: 0→1, y: 8→0` over 200ms |
-| Modal open | Scale from 0.95→1.0 + fade in, 200ms |
-| Modal close | Fade out, 150ms |
+| Interaction             | Animation                                                                              |
+| ----------------------- | -------------------------------------------------------------------------------------- |
+| Card hover              | `hover:-translate-y-1 transition-transform duration-300`                               |
+| Button hover            | `hover:opacity-90 transition-opacity`                                                  |
+| Primary accent on hover | `hover-glow` (glow shadow + border color shift)                                        |
+| Icon hover              | `hover:scale-110 hover:drop-shadow-[0_0_8px_currentColor] transition-all duration-300` |
+| Tab switch              | Framer Motion `AnimatePresence` with `opacity: 0→1, y: 8→0` over 200ms                 |
+| Modal open              | Scale from 0.95→1.0 + fade in, 200ms                                                   |
+| Modal close             | Fade out, 150ms                                                                        |
 
 ### 13.4 Data Update Animations
 
 When a data value changes (e.g., after advancing a week):
+
 - Numbers count up/down to their new value over 600ms (use a number ticker where budget allows)
 - Charts animate their data update (recharts built-in animation at 400ms)
 - New items in a list slide in from the top
@@ -953,12 +1014,12 @@ When a data value changes (e.g., after advancing a week):
 
 ### 14.1 Loading States
 
-| Context | Loading Pattern |
-|---------|----------------|
-| Initial game load | Full-screen loading overlay with progress indicator |
-| Tab switch (fast) | No loading state — content renders immediately from state |
-| Action in progress (saving) | Inline spinner in the button that triggered the action |
-| Week advance | Disable "Advance Week" button, show inline spinner |
+| Context                     | Loading Pattern                                           |
+| --------------------------- | --------------------------------------------------------- |
+| Initial game load           | Full-screen loading overlay with progress indicator       |
+| Tab switch (fast)           | No loading state — content renders immediately from state |
+| Action in progress (saving) | Inline spinner in the button that triggered the action    |
+| Week advance                | Disable "Advance Week" button, show inline spinner        |
 
 Never use skeleton loading screens — the game state is always available in the Zustand store; data never loads asynchronously in a way that requires skeletons.
 
@@ -970,16 +1031,17 @@ Never use skeleton loading screens — the game state is always available in the
 
 ### 14.3 Error & Alert States
 
-| Severity | Pattern |
-|----------|---------|
-| **Crisis** (game-blocking) | CrisisModal — full modal, must resolve |
-| **Warning** (financial risk) | Alert banner at top of Finance panel with `border-destructive/50 bg-destructive/10` |
-| **Caution** (approaching threshold) | Amber badge on the affected KPI card |
-| **Info** (neutral update) | Toast notification or IntelligenceFeed item |
+| Severity                            | Pattern                                                                             |
+| ----------------------------------- | ----------------------------------------------------------------------------------- |
+| **Crisis** (game-blocking)          | CrisisModal — full modal, must resolve                                              |
+| **Warning** (financial risk)        | Alert banner at top of Finance panel with `border-destructive/50 bg-destructive/10` |
+| **Caution** (approaching threshold) | Amber badge on the affected KPI card                                                |
+| **Info** (neutral update)           | Toast notification or IntelligenceFeed item                                         |
 
 ### 14.4 Confirmation Dialogs
 
 Required for:
+
 - Dropping a project (irreversible)
 - Rejecting a crisis resolution option
 - Accepting a merger/acquisition offer
@@ -995,16 +1057,19 @@ Pattern: Small alert dialog with the consequences clearly stated, then `[Cancel]
 Studio Boss targets WCAG 2.1 Level AA compliance where technically feasible within a game context. Non-negotiables:
 
 **Color Contrast:**
+
 - `text-foreground` on `bg-card`: must maintain ≥4.5:1 contrast ratio
 - `text-primary` badges on dark backgrounds: must maintain ≥3:1 (large text rule applies to 18px+ text)
 - `text-muted-foreground` is the minimum contrast floor — never use lower-opacity text for essential content
 
 **Focus States:**
+
 - All interactive elements have a visible focus ring: `ring-2 ring-ring ring-offset-background`
 - Never remove the focus ring from keyboard-interactive elements
 - Modal focus trap: modals must trap focus within the dialog when open; Radix UI's `Dialog` handles this automatically
 
 **Keyboard Navigation:**
+
 - Sidebar: navigable via Tab + Enter
 - Modals: navigable via Tab, closeable via Escape
 - Tabs: arrow keys navigate between tab items (Radix UI `Tabs` component handles this)
@@ -1020,9 +1085,12 @@ Studio Boss targets WCAG 2.1 Level AA compliance where technically feasible with
 ### 15.3 Motion Sensitivity
 
 Wrap all Framer Motion animations in a `useReducedMotion` check:
+
 ```tsx
 const prefersReducedMotion = useReducedMotion();
-const animation = prefersReducedMotion ? {} : { initial: { opacity: 0, y: 8 }, animate: { opacity: 1, y: 0 } };
+const animation = prefersReducedMotion
+  ? {}
+  : { initial: { opacity: 0, y: 8 }, animate: { opacity: 1, y: 0 } };
 ```
 
 ---
@@ -1032,6 +1100,7 @@ const animation = prefersReducedMotion ? {} : { initial: { opacity: 0, y: 8 }, a
 ### 16.1 Voice & Tone
 
 Studio Boss speaks with the confidence and urgency of a Hollywood trades publication. The voice is:
+
 - **Authoritative** — declarative, not hedging ("Your cashflow deteriorates" not "cashflow might be low")
 - **Industry-literate** — use actual industry terminology (greenlight, above-the-line, backend, upfronts, P&A)
 - **Terse** — labels are short; descriptions are 1–2 sentences max
@@ -1039,47 +1108,47 @@ Studio Boss speaks with the confidence and urgency of a Hollywood trades publica
 
 ### 16.2 Capitalization Conventions
 
-| Element | Convention | Example |
-|---------|------------|---------|
-| Screen / tab titles | ALL CAPS | `PRODUCTION PIPELINE` |
-| Section headers | Title Case | `Cash Flow Forecast` |
-| KPI labels | ALL CAPS | `ACTIVE PIPELINE` |
-| Button labels | Title Case | `Greenlight Project` |
-| Body text | Sentence case | `This project enters post-production.` |
-| Badges and chips | ALL CAPS (≤2 words) | `A-LIST`, `MAJOR STUDIO` |
-| Placeholder text | Sentence case | `Search talent by name...` |
+| Element             | Convention          | Example                                |
+| ------------------- | ------------------- | -------------------------------------- |
+| Screen / tab titles | ALL CAPS            | `PRODUCTION PIPELINE`                  |
+| Section headers     | Title Case          | `Cash Flow Forecast`                   |
+| KPI labels          | ALL CAPS            | `ACTIVE PIPELINE`                      |
+| Button labels       | Title Case          | `Greenlight Project`                   |
+| Body text           | Sentence case       | `This project enters post-production.` |
+| Badges and chips    | ALL CAPS (≤2 words) | `A-LIST`, `MAJOR STUDIO`               |
+| Placeholder text    | Sentence case       | `Search talent by name...`             |
 
 **Words are separated by spaces, never underscores.** `SNAKE_CASE` in any visible string — title, label, tooltip, badge, button, placeholder, confirm dialog — is prohibited (it reads as code and feeds the sci-fi-HUD affect we avoid; see §4.3). Use `COMMAND CENTER`, not `COMMAND_CENTER`. Underscores are for code only.
 
 ### 16.3 Number Formatting Standards
 
-| Value | Format | Example |
-|-------|--------|---------|
-| Cash < $1M | `$XXXk` | `$450k` |
-| Cash $1M–$999M | `$X.Xm` | `$47.3m` |
-| Cash ≥ $1B | `$X.Xb` | `$2.1b` |
-| Percentage | `XX.X%` | `12.4%` |
-| Whole percentage | `XX%` | `84%` |
-| ROI | `+XX%` or `-XX%` | `+240%` |
-| Week | `Wk XX` | `Wk 14` |
-| Year | `Y X` | `Y 2` |
-| Prestige | `★ XXX` | `★ 72` |
+| Value            | Format           | Example  |
+| ---------------- | ---------------- | -------- |
+| Cash < $1M       | `$XXXk`          | `$450k`  |
+| Cash $1M–$999M   | `$X.Xm`          | `$47.3m` |
+| Cash ≥ $1B       | `$X.Xb`          | `$2.1b`  |
+| Percentage       | `XX.X%`          | `12.4%`  |
+| Whole percentage | `XX%`            | `84%`    |
+| ROI              | `+XX%` or `-XX%` | `+240%`  |
+| Week             | `Wk XX`          | `Wk 14`  |
+| Year             | `Y X`            | `Y 2`    |
+| Prestige         | `★ XXX`          | `★ 72`   |
 
 ### 16.4 Terminology Glossary
 
 Use these terms consistently throughout the UI:
 
-| Term | Meaning | Not |
-|------|---------|-----|
-| Greenlight | Approve a project for production | "Approve", "Start", "Go" |
-| Slate | The active set of projects in production | "Queue", "Lineup" |
-| Pipeline | All projects from development to catalog | "Backlog", "Projects" |
-| Above-the-Line | Creative talent costs (director, cast, writer) | "Talent costs" |
-| P&A | Print and advertising (marketing) | "Marketing" (acceptable in simplified contexts) |
-| SBDB | Studio Boss Database (talent pool) | "Talent pool" (acceptable in body copy) |
-| Fiscal Year / FY | The game's annual accounting period | "Year" alone (in financial contexts) |
-| Advance Week | Progress the simulation one week forward | "Next turn", "End week" |
-| Prestige | The studio's reputation score | "Fame", "Reputation" |
+| Term             | Meaning                                        | Not                                             |
+| ---------------- | ---------------------------------------------- | ----------------------------------------------- |
+| Greenlight       | Approve a project for production               | "Approve", "Start", "Go"                        |
+| Slate            | The active set of projects in production       | "Queue", "Lineup"                               |
+| Pipeline         | All projects from development to catalog       | "Backlog", "Projects"                           |
+| Above-the-Line   | Creative talent costs (director, cast, writer) | "Talent costs"                                  |
+| P&A              | Print and advertising (marketing)              | "Marketing" (acceptable in simplified contexts) |
+| SBDB             | Studio Boss Database (talent pool)             | "Talent pool" (acceptable in body copy)         |
+| Fiscal Year / FY | The game's annual accounting period            | "Year" alone (in financial contexts)            |
+| Advance Week     | Progress the simulation one week forward       | "Next turn", "End week"                         |
+| Prestige         | The studio's reputation score                  | "Fame", "Reputation"                            |
 
 ### 16.5 Data Integrity — No Fabricated Chrome
 
@@ -1117,7 +1186,6 @@ Every new panel tab should start from this structure:
 ```tsx
 // 1. Panel entry animation — always
 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-
   {/* 2. Panel Header */}
   <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
     <div>
@@ -1134,9 +1202,7 @@ Every new panel tab should start from this structure:
   </div>
 
   {/* 3. KPI Row — 2 to 4 stats */}
-  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-    {/* KPI cards */}
-  </div>
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">{/* KPI cards */}</div>
 
   {/* 4. Primary content area */}
   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -1145,7 +1211,6 @@ Every new panel tab should start from this structure:
   </div>
 
   {/* 5. Secondary content (lists, tables, feeds) */}
-  
 </div>
 ```
 
@@ -1193,16 +1258,19 @@ Every new component must be theme-compliant:
 ### 17.7 When to Add a New Sidebar Tab vs. Sub-Tab
 
 **Add a new sidebar tab when:**
+
 - The content represents a major operational domain (Finance, Talent, Distribution)
 - A player would "live in" this screen for extended periods
 - The domain has its own primary KPI set
 
 **Add a sub-tab within an existing panel when:**
+
 - The content is a different view of data already owned by the panel (e.g., Revenue Streams vs. Cash Flow within Finance)
 - The content is secondary to the panel's primary function
 - It doesn't require its own KPI row
 
 **Add a modal when:**
+
 - The content is a drilldown detail triggered by a user action
 - The content is transient (resolving a crisis, reviewing a deal)
 - It doesn't require persistent navigation context
@@ -1213,33 +1281,33 @@ Every new component must be theme-compliant:
 
 ### Instant Style Decisions
 
-| I need to... | Use this |
-|-------------|----------|
-| Show a single important number | `text-3xl font-black tracking-tighter text-primary` |
-| Label a section | `text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground` |
-| Create a card | `glass-card` + `p-5` |
-| Create a button | `bg-primary text-primary-foreground` (primary) |
-| Show a positive delta | `text-success` |
-| Show a negative delta | `text-destructive` |
-| Show a tag/badge | `uppercase tracking-widest text-[10px] py-0.5 px-2 rounded-md border bg-primary/20 text-primary border-primary/30` |
-| Animate in a panel | `animate-in fade-in slide-in-from-bottom-4 duration-700` |
-| Animate a card hover | `hover:-translate-y-1 transition-transform duration-300` + `hover-glow` |
-| Create a glass surface | `bg-card/60 backdrop-blur-xl border border-white/5 shadow-2xl rounded-xl` |
-| Show cash amount | `formatCash(value)` → `$Xm` / `$Xb` / `$XXXk` |
+| I need to...                   | Use this                                                                                                           |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| Show a single important number | `text-3xl font-black tracking-tighter text-primary`                                                                |
+| Label a section                | `text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground`                                         |
+| Create a card                  | `glass-card` + `p-5`                                                                                               |
+| Create a button                | `bg-primary text-primary-foreground` (primary)                                                                     |
+| Show a positive delta          | `text-success`                                                                                                     |
+| Show a negative delta          | `text-destructive`                                                                                                 |
+| Show a tag/badge               | `uppercase tracking-widest text-[10px] py-0.5 px-2 rounded-md border bg-primary/20 text-primary border-primary/30` |
+| Animate in a panel             | `animate-in fade-in slide-in-from-bottom-4 duration-700`                                                           |
+| Animate a card hover           | `hover:-translate-y-1 transition-transform duration-300` + `hover-glow`                                            |
+| Create a glass surface         | `bg-card/60 backdrop-blur-xl border border-white/5 shadow-2xl rounded-xl`                                          |
+| Show cash amount               | `formatCash(value)` → `$Xm` / `$Xb` / `$XXXk`                                                                      |
 
 ### Chart Selection Quick Reference
 
-| Data type | Chart |
-|-----------|-------|
-| Time series / trend | `TimeSeriesChart` |
-| Part of whole | `PieChart` (donut) |
-| Category comparison | `SimpleBarChart` |
-| Revenue vs. costs | `ProfitWaterfallChart` |
-| Multi-attribute profile | `RadarChart` |
-| Geographic / matrix | `HeatMap` |
-| Single KPI level | `GaugeChart` |
-| Inline trend | `SparkLine` |
+| Data type               | Chart                  |
+| ----------------------- | ---------------------- |
+| Time series / trend     | `TimeSeriesChart`      |
+| Part of whole           | `PieChart` (donut)     |
+| Category comparison     | `SimpleBarChart`       |
+| Revenue vs. costs       | `ProfitWaterfallChart` |
+| Multi-attribute profile | `RadarChart`           |
+| Geographic / matrix     | `HeatMap`              |
+| Single KPI level        | `GaugeChart`           |
+| Inline trend            | `SparkLine`            |
 
 ---
 
-*This document is a living standard. When a new pattern is established that differs from guidance here, update this bible first — then implement. The document leads the code, not the reverse.*
+_This document is a living standard. When a new pattern is established that differs from guidance here, update this bible first — then implement. The document leads the code, not the reverse._

@@ -1,7 +1,7 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { AlertCircle, LucideIcon } from 'lucide-react';
-import { tokens } from '@/lib/tokens';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { AlertCircle, LucideIcon } from "lucide-react";
+import { tokens } from "@/lib/tokens";
 
 interface FormFieldProps {
   label: string;
@@ -25,12 +25,12 @@ export const FormField: React.FC<FormFieldProps> = ({
   icon: Icon,
 }) => {
   return (
-    <div className={cn('space-y-1.5', className)}>
+    <div className={cn("space-y-1.5", className)}>
       <label
         htmlFor={htmlFor}
         className={cn(
-          'flex items-center gap-1.5 font-semibold text-sm',
-          error ? 'text-red-400' : 'text-foreground'
+          "flex items-center gap-1.5 font-semibold text-sm",
+          error ? "text-red-400" : "text-foreground"
         )}
       >
         {Icon && <Icon className="h-3.5 w-3.5 text-muted-foreground" />}
@@ -47,9 +47,7 @@ export const FormField: React.FC<FormFieldProps> = ({
         </div>
       )}
 
-      {helper && !error && (
-        <p className={cn(tokens.text.caption, 'mt-1')}>{helper}</p>
-      )}
+      {helper && !error && <p className={cn(tokens.text.caption, "mt-1")}>{helper}</p>}
     </div>
   );
 };

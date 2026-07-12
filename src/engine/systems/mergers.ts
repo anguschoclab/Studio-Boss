@@ -1,13 +1,16 @@
-import { GameState, RivalStudio } from '@/engine/types';
-import { generateId } from '../utils';
+import { GameState, RivalStudio } from "@/engine/types";
+import { generateId } from "../utils";
 
-export function evaluateAcquisitionTarget(target: RivalStudio, buyerCash: number): { viable: boolean; price: number; reason?: string } {
-  let basePrice = Math.max(10_000_000, (target.strength * 2_000_000) + target.cash);
-  if (target.archetype === 'major') basePrice *= 2.0;
-  if (target.archetype === 'indie') basePrice *= 1.2;
+export function evaluateAcquisitionTarget(
+  target: RivalStudio,
+  buyerCash: number
+): { viable: boolean; price: number; reason?: string } {
+  let basePrice = Math.max(10_000_000, target.strength * 2_000_000 + target.cash);
+  if (target.archetype === "major") basePrice *= 2.0;
+  if (target.archetype === "indie") basePrice *= 1.2;
   const finalPrice = Math.round(basePrice);
   if (buyerCash < finalPrice) {
-    return { viable: false, price: finalPrice, reason: 'Insufficient funds for acquisition.' };
+    return { viable: false, price: finalPrice, reason: "Insufficient funds for acquisition." };
   }
   return { viable: true, price: finalPrice };
 }
@@ -20,7 +23,7 @@ export function executeAcquisition(state: GameState, targetId: string): GameStat
 
   const updatedRivals = { ...state.entities.rivals };
   delete updatedRivals[targetId];
-  
+
   // Consolidation Logic: Deep-merge library and talent rosters
   const updatedProjects = { ...state.entities.projects };
   let targetProjectsCount = 0;
@@ -44,31 +47,31 @@ export function executeAcquisition(state: GameState, targetId: string): GameStat
     }
   }
 
-  const newPrestige = Math.min(100, state.studio.prestige + (target.strength * 0.2));
+  const newPrestige = Math.min(100, state.studio.prestige + target.strength * 0.2);
 
   return {
     ...state,
-    finance: { 
-      ...state.finance, 
-      cash: state.finance.cash - evalResult.price + (target.cash || 0) 
+    finance: {
+      ...state.finance,
+      cash: state.finance.cash - evalResult.price + (target.cash || 0),
     },
-    studio: { 
-      ...state.studio, 
+    studio: {
+      ...state.studio,
       prestige: newPrestige,
     },
     entities: {
       ...state.entities,
       projects: updatedProjects,
       contracts: updatedContracts,
-      rivals: updatedRivals
+      rivals: updatedRivals,
     },
     industry: {
       ...state.industry,
       newsHistory: [
         {
-          id: generateId('NEWS'),
+          id: generateId("NEWS"),
           week: state.week,
-          type: 'STUDIO_EVENT' as const,
+          type: "STUDIO_EVENT" as const,
           headline: `CONSOLIDATED: ${state.studio.name} absorbs ${target.name}!`,
           description: `The acquisition is finalized. ${targetProjectsCount} projects and ${targetContractsCount} talent contracts have been integrated into ${state.studio.name}.`,
         },
@@ -89,11 +92,11 @@ export function executeSabotage(state: GameState, targetId: string): GameState {
       ...state.industry,
       rumors: [
         {
-          id: generateId('RUM'),
+          id: generateId("RUM"),
           week: state.week,
           text: `Rumors swirl that ${target.name}'s upcoming blockbuster is facing massive reshoots.`,
           truthful: false,
-          category: 'rival' as const,
+          category: "rival" as const,
           resolved: false,
         },
         ...(state.industry.rumors || []),
@@ -109,7 +112,7 @@ export function executePoach(state: GameState, targetId: string): GameState {
   const stealAmount = Math.min(5, target.strength);
   const updatedRivals = {
     ...state.entities.rivals,
-    [targetId]: { ...target, strength: target.strength - stealAmount }
+    [targetId]: { ...target, strength: target.strength - stealAmount },
   };
 
   return {
@@ -118,15 +121,15 @@ export function executePoach(state: GameState, targetId: string): GameState {
     studio: { ...state.studio, prestige: Math.min(100, state.studio.prestige + stealAmount) },
     entities: {
       ...state.entities,
-      rivals: updatedRivals
+      rivals: updatedRivals,
     },
     industry: {
       ...state.industry,
       newsHistory: [
         {
-          id: generateId('NEWS'),
+          id: generateId("NEWS"),
           week: state.week,
-          type: 'STUDIO_EVENT' as const,
+          type: "STUDIO_EVENT" as const,
           headline: `${state.studio.name} poaches top executive from ${target.name}!`,
           description: `A major talent move shakes the industry.`,
         },

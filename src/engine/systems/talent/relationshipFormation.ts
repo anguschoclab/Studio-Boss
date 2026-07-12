@@ -1,11 +1,15 @@
-import { GameState, StateImpact, Talent } from '../../types';
-import { RandomGenerator } from '../../utils/rng';
-import { RelationshipFormation, RomanceData, TalentRelationship } from '../../types/relationship.types';
+import { GameState, StateImpact, Talent } from "../../types";
+import { RandomGenerator } from "../../utils/rng";
+import {
+  RelationshipFormation,
+  RomanceData,
+  TalentRelationship,
+} from "../../types/relationship.types";
 import {
   getRelationshipKey,
   calculateCompatibility,
   calculatePowerCoupleRating,
-} from './relationshipCompatibility';
+} from "./relationshipCompatibility";
 
 /**
  * Relationship formation logic
@@ -59,7 +63,7 @@ export function haveCompeted(
   }
 
   const awards = state.industry?.awards || [];
-  const awardedProjectIds = awards.map(a => a.projectId);
+  const awardedProjectIds = awards.map((a) => a.projectId);
   const projectsDict = state.entities.projects || {};
 
   for (const pid of Object.keys(projectsDict)) {
@@ -88,58 +92,74 @@ export function checkNaturalFormation(
   if (haveWorkedTogether(talentA.id, talentB.id, state, projectTalentMap)) {
     if (compatibility > 20 && rng.next() < 0.4) {
       return {
-        talentAId: talentA.id, talentBId: talentB.id,
-        type: 'friend', strength: Math.min(100, 50 + compatibility),
-        reason: 'Bonded while working together on set',
+        talentAId: talentA.id,
+        talentBId: talentB.id,
+        type: "friend",
+        strength: Math.min(100, 50 + compatibility),
+        reason: "Bonded while working together on set",
       };
     }
     if (compatibility < -20 && rng.next() < 0.3) {
       return {
-        talentAId: talentA.id, talentBId: talentB.id,
-        type: 'rival', strength: Math.max(-100, -50 + compatibility),
-        reason: 'Creative differences during production led to tension',
+        talentAId: talentA.id,
+        talentBId: talentB.id,
+        type: "rival",
+        strength: Math.max(-100, -50 + compatibility),
+        reason: "Creative differences during production led to tension",
       };
     }
   }
 
   if (haveCompeted(talentA.id, talentB.id, state, awardedProjectsTalentSets) && rng.next() < 0.3) {
     return {
-      talentAId: talentA.id, talentBId: talentB.id,
-      type: 'rival', strength: -40,
-      reason: 'Competitive tension after competing for the same award',
+      talentAId: talentA.id,
+      talentBId: talentB.id,
+      type: "rival",
+      strength: -40,
+      reason: "Competitive tension after competing for the same award",
     };
   }
 
   if (compatibility > 30 && rng.next() < 0.1) {
     return {
-      talentAId: talentA.id, talentBId: talentB.id,
-      type: 'friend', strength: 40,
-      reason: 'Met at industry event and hit it off immediately',
+      talentAId: talentA.id,
+      talentBId: talentB.id,
+      type: "friend",
+      strength: 40,
+      reason: "Met at industry event and hit it off immediately",
     };
   }
 
   const ageDiff = talentA.demographics.age - talentB.demographics.age;
   if (ageDiff > 15 && talentA.prestige > 70 && talentB.prestige < 60 && rng.next() < 0.15) {
     return {
-      talentAId: talentA.id, talentBId: talentB.id,
-      type: 'mentor', strength: 60,
+      talentAId: talentA.id,
+      talentBId: talentB.id,
+      type: "mentor",
+      strength: 60,
       reason: `${talentA.name} took ${talentB.name} under their wing`,
     };
   }
 
   if (compatibility > 40 && rng.next() < 0.05) {
     const existingRelationships = state.relationships?.relationships || {};
-    const existingRomance = Object.values(existingRelationships).some((r) =>
-      (r.talentAId === talentA.id || r.talentBId === talentA.id ||
-       r.talentAId === talentB.id || r.talentBId === talentB.id) &&
-      r.type === 'romantic' && r.strength > 50
+    const existingRomance = Object.values(existingRelationships).some(
+      (r) =>
+        (r.talentAId === talentA.id ||
+          r.talentBId === talentA.id ||
+          r.talentAId === talentB.id ||
+          r.talentBId === talentB.id) &&
+        r.type === "romantic" &&
+        r.strength > 50
     );
 
     if (!existingRomance) {
       return {
-        talentAId: talentA.id, talentBId: talentB.id,
-        type: 'romantic', strength: 70,
-        reason: 'Sparks flew at an after-party',
+        talentAId: talentA.id,
+        talentBId: talentB.id,
+        type: "romantic",
+        strength: 70,
+        reason: "Sparks flew at an after-party",
       };
     }
   }
@@ -162,18 +182,19 @@ export function formRelationship(
     talentBId: talentAId < talentBId ? talentBId : talentAId,
     type,
     strength,
-    isPublic: type === 'rival' || type === 'romantic',
-    history: [{ week, type: 'formed', impact: strength, description: reason }],
+    isPublic: type === "rival" || type === "romantic",
+    history: [{ week, type: "formed", impact: strength, description: reason }],
     formedWeek: week,
     lastUpdatedWeek: week,
   };
 
-  if (type === 'romantic') {
+  if (type === "romantic") {
     const talentA = state.entities.talents?.[talentAId];
     const talentB = state.entities.talents?.[talentBId];
     const powerCoupleRating = calculatePowerCoupleRating(talentA, talentB);
 
-    const romanceRel = relationship as import('../../types/relationship.types').RomanticRelationship;
+    const romanceRel =
+      relationship as import("../../types/relationship.types").RomanticRelationship;
     romanceRel.romanceData = {
       isMarried: false,
       isSecret: rng.next() < 0.3,
@@ -183,29 +204,29 @@ export function formRelationship(
 
     if (powerCoupleRating > 150) {
       impacts.push({
-        type: 'NEWS_ADDED',
+        type: "NEWS_ADDED",
         payload: {
-          id: rng.uuid('NWS'),
+          id: rng.uuid("NWS"),
           headline: `Hollywood Power Couple Alert: ${talentA?.name} and ${talentB?.name}`,
           description: `Two of Hollywood's biggest stars have been spotted together, sparking rumors of a romance that could shake up the industry.`,
-          category: 'talent',
-          publication: 'People Magazine',
+          category: "talent",
+          publication: "People Magazine",
         },
       });
     }
   }
 
-  if (type === 'rival' && strength < -70) {
+  if (type === "rival" && strength < -70) {
     const talentA = state.entities.talents?.[talentAId];
     const talentB = state.entities.talents?.[talentBId];
     impacts.push({
-      type: 'NEWS_ADDED',
+      type: "NEWS_ADDED",
       payload: {
-        id: rng.uuid('NWS'),
+        id: rng.uuid("NWS"),
         headline: `${talentA?.name} vs ${talentB?.name}: The Feud Escalates`,
         description: `Sources confirm the tension between these two stars has reached a boiling point. Industry insiders say they refuse to work together.`,
-        category: 'talent',
-        publication: 'The Hollywood Reporter',
+        category: "talent",
+        publication: "The Hollywood Reporter",
       },
     });
   }

@@ -1,23 +1,23 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { PipelineBoard } from '@/components/pipeline/PipelineBoard';
-import { useGameStore } from '@/store/gameStore';
-import { useUIStore } from '@/store/uiStore';
-import { Project } from '@/engine/types';
+import React from "react";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { PipelineBoard } from "@/components/pipeline/PipelineBoard";
+import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
+import { Project } from "@/engine/types";
 
-vi.mock('@/store/gameStore');
-vi.mock('@/store/uiStore');
+vi.mock("@/store/gameStore");
+vi.mock("@/store/uiStore");
 
 // Mock ProjectCard to simplify testing
-vi.mock('@/components/pipeline/ProjectCard', () => ({
+vi.mock("@/components/pipeline/ProjectCard", () => ({
   ProjectCard: ({ project }: { project: Project }) => (
     <div data-testid={`project-card-${project.id}`}>{project.title}</div>
-  )
+  ),
 }));
 
-describe('PipelineBoard', () => {
+describe("PipelineBoard", () => {
   const mockOpenCreateProject = vi.fn();
 
   beforeEach(() => {
@@ -27,90 +27,257 @@ describe('PipelineBoard', () => {
     } as any);
   });
 
-  it('renders title and New Project button', () => {
+  it("renders title and New Project button", () => {
     vi.mocked(useGameStore).mockReturnValue([]);
-    render(<TooltipProvider><PipelineBoard /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <PipelineBoard />
+      </TooltipProvider>
+    );
 
-    expect(screen.getByText('PRODUCTION SLATE')).toBeInTheDocument();
-    expect(screen.getByText('NEW IP VENTURE')).toBeInTheDocument();
+    expect(screen.getByText("PRODUCTION SLATE")).toBeInTheDocument();
+    expect(screen.getByText("NEW IP VENTURE")).toBeInTheDocument();
   });
 
-  it('calls openCreateProject when New Project button is clicked', () => {
+  it("calls openCreateProject when New Project button is clicked", () => {
     vi.mocked(useGameStore).mockReturnValue([]);
-    render(<TooltipProvider><PipelineBoard /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <PipelineBoard />
+      </TooltipProvider>
+    );
 
-    const button = screen.getByRole('button', { name: /NEW IP VENTURE/i });
+    const button = screen.getByRole("button", { name: /NEW IP VENTURE/i });
     fireEvent.click(button);
 
     expect(mockOpenCreateProject).toHaveBeenCalledTimes(1);
   });
 
-  it('renders all pipeline columns', () => {
+  it("renders all pipeline columns", () => {
     vi.mocked(useGameStore).mockReturnValue([]);
-    render(<TooltipProvider><PipelineBoard /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <PipelineBoard />
+      </TooltipProvider>
+    );
 
-    expect(screen.getByText('DEVELOPMENT')).toBeInTheDocument();
-    expect(screen.getByText('PITCHING')).toBeInTheDocument();
-    expect(screen.getByText('ACTIVE SLATE')).toBeInTheDocument();
-    expect(screen.getByText('CATALOG')).toBeInTheDocument();
+    expect(screen.getByText("DEVELOPMENT")).toBeInTheDocument();
+    expect(screen.getByText("PITCHING")).toBeInTheDocument();
+    expect(screen.getByText("ACTIVE SLATE")).toBeInTheDocument();
+    expect(screen.getByText("CATALOG")).toBeInTheDocument();
   });
 
-  it('distributes projects into correct columns', () => {
+  it("distributes projects into correct columns", () => {
     const mockProjects: Project[] = [
-      { id: '1', title: 'Project 1', state: 'development', budgetTier: 'low', format: 'film', type: 'FILM', genre: 'Action', targetAudience: 'general', flavor: 'Standard', budget: 10, weeklyCost: 1, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4, revenue: 0, weeklyRevenue: 0, releaseWeek: null, buzz: 0, activeCrisis: null, momentum: 50, progress: 0, accumulatedCost: 0, contentFlags: [], scriptHeat: 50, activeRoles: [], scriptEvents: [] } as Project,
-      { id: '2', title: 'Project 2', state: 'pitching', budgetTier: 'low', format: 'film', type: 'FILM', genre: 'Comedy', targetAudience: 'general', flavor: 'Standard', budget: 10, weeklyCost: 1, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4, revenue: 0, weeklyRevenue: 0, releaseWeek: null, buzz: 0, activeCrisis: null, momentum: 50, progress: 0, accumulatedCost: 0, contentFlags: [], scriptHeat: 50, activeRoles: [], scriptEvents: [] } as Project,
-      { id: '3', title: 'Project 3', state: 'production', budgetTier: 'low', format: 'film', type: 'FILM', genre: 'Drama', targetAudience: 'general', flavor: 'Standard', budget: 10, weeklyCost: 1, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4, revenue: 0, weeklyRevenue: 0, releaseWeek: null, buzz: 0, activeCrisis: null, momentum: 50, progress: 0, accumulatedCost: 0, contentFlags: [], scriptHeat: 50, activeRoles: [], scriptEvents: [] } as Project,
-      { id: '4', title: 'Project 4', state: 'released', budgetTier: 'low', format: 'film', type: 'FILM', genre: 'Horror', targetAudience: 'general', flavor: 'Standard', budget: 10, weeklyCost: 1, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4, revenue: 0, weeklyRevenue: 0, releaseWeek: null, buzz: 0, activeCrisis: null, momentum: 50, progress: 0, accumulatedCost: 0, contentFlags: [], scriptHeat: 50, activeRoles: [], scriptEvents: [] } as Project,
+      {
+        id: "1",
+        title: "Project 1",
+        state: "development",
+        budgetTier: "low",
+        format: "film",
+        type: "FILM",
+        genre: "Action",
+        targetAudience: "general",
+        flavor: "Standard",
+        budget: 10,
+        weeklyCost: 1,
+        weeksInPhase: 0,
+        developmentWeeks: 4,
+        productionWeeks: 4,
+        revenue: 0,
+        weeklyRevenue: 0,
+        releaseWeek: null,
+        buzz: 0,
+        activeCrisis: null,
+        momentum: 50,
+        progress: 0,
+        accumulatedCost: 0,
+        contentFlags: [],
+        scriptHeat: 50,
+        activeRoles: [],
+        scriptEvents: [],
+      } as Project,
+      {
+        id: "2",
+        title: "Project 2",
+        state: "pitching",
+        budgetTier: "low",
+        format: "film",
+        type: "FILM",
+        genre: "Comedy",
+        targetAudience: "general",
+        flavor: "Standard",
+        budget: 10,
+        weeklyCost: 1,
+        weeksInPhase: 0,
+        developmentWeeks: 4,
+        productionWeeks: 4,
+        revenue: 0,
+        weeklyRevenue: 0,
+        releaseWeek: null,
+        buzz: 0,
+        activeCrisis: null,
+        momentum: 50,
+        progress: 0,
+        accumulatedCost: 0,
+        contentFlags: [],
+        scriptHeat: 50,
+        activeRoles: [],
+        scriptEvents: [],
+      } as Project,
+      {
+        id: "3",
+        title: "Project 3",
+        state: "production",
+        budgetTier: "low",
+        format: "film",
+        type: "FILM",
+        genre: "Drama",
+        targetAudience: "general",
+        flavor: "Standard",
+        budget: 10,
+        weeklyCost: 1,
+        weeksInPhase: 0,
+        developmentWeeks: 4,
+        productionWeeks: 4,
+        revenue: 0,
+        weeklyRevenue: 0,
+        releaseWeek: null,
+        buzz: 0,
+        activeCrisis: null,
+        momentum: 50,
+        progress: 0,
+        accumulatedCost: 0,
+        contentFlags: [],
+        scriptHeat: 50,
+        activeRoles: [],
+        scriptEvents: [],
+      } as Project,
+      {
+        id: "4",
+        title: "Project 4",
+        state: "released",
+        budgetTier: "low",
+        format: "film",
+        type: "FILM",
+        genre: "Horror",
+        targetAudience: "general",
+        flavor: "Standard",
+        budget: 10,
+        weeklyCost: 1,
+        weeksInPhase: 0,
+        developmentWeeks: 4,
+        productionWeeks: 4,
+        revenue: 0,
+        weeklyRevenue: 0,
+        releaseWeek: null,
+        buzz: 0,
+        activeCrisis: null,
+        momentum: 50,
+        progress: 0,
+        accumulatedCost: 0,
+        contentFlags: [],
+        scriptHeat: 50,
+        activeRoles: [],
+        scriptEvents: [],
+      } as Project,
     ];
 
     vi.mocked(useGameStore).mockReturnValue(mockProjects);
-    render(<TooltipProvider><PipelineBoard /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <PipelineBoard />
+      </TooltipProvider>
+    );
 
-    expect(screen.getByTestId('project-card-1')).toBeInTheDocument();
-    expect(screen.getByTestId('project-card-2')).toBeInTheDocument();
-    expect(screen.getByTestId('project-card-3')).toBeInTheDocument();
-    expect(screen.getByTestId('project-card-4')).toBeInTheDocument();
+    expect(screen.getByTestId("project-card-1")).toBeInTheDocument();
+    expect(screen.getByTestId("project-card-2")).toBeInTheDocument();
+    expect(screen.getByTestId("project-card-3")).toBeInTheDocument();
+    expect(screen.getByTestId("project-card-4")).toBeInTheDocument();
   });
 
   it('shows "No projects" message for empty columns', () => {
     // Only one project in Development
     const mockProjects: Project[] = [
-      { id: '1', title: 'Project 1', state: 'development', budgetTier: 'low', format: 'film', type: 'FILM', genre: 'Action', targetAudience: 'general', flavor: 'Standard', budget: 10, weeklyCost: 1, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4, revenue: 0, weeklyRevenue: 0, releaseWeek: null, buzz: 0, activeCrisis: null, momentum: 50, progress: 0, accumulatedCost: 0, contentFlags: [], scriptHeat: 50, activeRoles: [], scriptEvents: [] } as Project,
+      {
+        id: "1",
+        title: "Project 1",
+        state: "development",
+        budgetTier: "low",
+        format: "film",
+        type: "FILM",
+        genre: "Action",
+        targetAudience: "general",
+        flavor: "Standard",
+        budget: 10,
+        weeklyCost: 1,
+        weeksInPhase: 0,
+        developmentWeeks: 4,
+        productionWeeks: 4,
+        revenue: 0,
+        weeklyRevenue: 0,
+        releaseWeek: null,
+        buzz: 0,
+        activeCrisis: null,
+        momentum: 50,
+        progress: 0,
+        accumulatedCost: 0,
+        contentFlags: [],
+        scriptHeat: 50,
+        activeRoles: [],
+        scriptEvents: [],
+      } as Project,
     ];
 
     vi.mocked(useGameStore).mockReturnValue(mockProjects);
-    render(<TooltipProvider><PipelineBoard /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <PipelineBoard />
+      </TooltipProvider>
+    );
 
-    expect(screen.getByTestId('project-card-1')).toBeInTheDocument();
+    expect(screen.getByTestId("project-card-1")).toBeInTheDocument();
 
     // 3 columns should be empty
     const noProjectsMessages = screen.queryAllByText(/LANE EMPTY/i);
     expect(noProjectsMessages.length).toBe(3);
   });
 
-  it('bookmark toggle button has focus-visible classes', () => {
+  it("bookmark toggle button has focus-visible classes", () => {
     vi.mocked(useGameStore).mockReturnValue([] as any);
-    render(<TooltipProvider><PipelineBoard /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <PipelineBoard />
+      </TooltipProvider>
+    );
 
-    const bookmarkBtn = screen.getByRole('button', { name: /Show bookmarks only/i });
-    expect(bookmarkBtn.className).toContain('focus-visible:ring-2');
-    expect(bookmarkBtn.className).toContain('focus-visible:ring-offset-2');
+    const bookmarkBtn = screen.getByRole("button", { name: /Show bookmarks only/i });
+    expect(bookmarkBtn.className).toContain("focus-visible:ring-2");
+    expect(bookmarkBtn.className).toContain("focus-visible:ring-offset-2");
   });
 
-  it('bookmark toggle button has aria-pressed attribute', () => {
+  it("bookmark toggle button has aria-pressed attribute", () => {
     vi.mocked(useGameStore).mockReturnValue([] as any);
-    render(<TooltipProvider><PipelineBoard /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <PipelineBoard />
+      </TooltipProvider>
+    );
 
-    const bookmarkBtn = screen.getByRole('button', { name: /Show bookmarks only/i });
-    expect(bookmarkBtn).toHaveAttribute('aria-pressed', 'false');
+    const bookmarkBtn = screen.getByRole("button", { name: /Show bookmarks only/i });
+    expect(bookmarkBtn).toHaveAttribute("aria-pressed", "false");
   });
 
-  it('bookmark icon has aria-hidden', () => {
+  it("bookmark icon has aria-hidden", () => {
     vi.mocked(useGameStore).mockReturnValue([] as any);
-    render(<TooltipProvider><PipelineBoard /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <PipelineBoard />
+      </TooltipProvider>
+    );
 
-    const bookmarkBtn = screen.getByRole('button', { name: /Show bookmarks only/i });
-    const svg = bookmarkBtn.querySelector('svg');
-    expect(svg).toHaveAttribute('aria-hidden', 'true');
+    const bookmarkBtn = screen.getByRole("button", { name: /Show bookmarks only/i });
+    const svg = bookmarkBtn.querySelector("svg");
+    expect(svg).toHaveAttribute("aria-hidden", "true");
   });
 });

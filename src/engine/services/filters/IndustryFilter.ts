@@ -1,22 +1,22 @@
-import { GameState } from '../../types';
-import { TickContext, WeekFilter } from './types';
+import { GameState } from "../../types";
+import { TickContext, WeekFilter } from "./types";
 
 // System Imports
-import { advanceRivals } from '../../systems/rivals';
-import { runAwardsCeremony, processRazzies } from '../../systems/awards/index';
-import { resolveFestivals } from '../../systems/festivals';
-import { RegulatorSystem } from '../../systems/industry/RegulatorSystem';
-import { runFestivalMarket } from '../../systems/festivals/festivalAuctionEngine';
-import { runUpfronts } from '../../systems/television/upfrontsEngine';
-import { AnnualScans } from './AnnualScans';
-import { InterestRateSimulator } from '../../systems/market/InterestRateSimulator';
+import { advanceRivals } from "../../systems/rivals";
+import { runAwardsCeremony, processRazzies } from "../../systems/awards/index";
+import { resolveFestivals } from "../../systems/festivals";
+import { RegulatorSystem } from "../../systems/industry/RegulatorSystem";
+import { runFestivalMarket } from "../../systems/festivals/festivalAuctionEngine";
+import { runUpfronts } from "../../systems/television/upfrontsEngine";
+import { AnnualScans } from "./AnnualScans";
+import { InterestRateSimulator } from "../../systems/market/InterestRateSimulator";
 
 /**
  * Industry Filter
  * Handles industry-wide events including rival advancement, awards, festivals, and annual scans
  */
 export const IndustryFilter: WeekFilter = {
-  name: 'IndustryFilter',
+  name: "IndustryFilter",
 
   execute(state: GameState, context: TickContext): void {
     // Advance rival studios (cash, strength, revenue, poaching)
@@ -26,27 +26,27 @@ export const IndustryFilter: WeekFilter = {
     const { year } = InterestRateSimulator.getWeekDisplay(context.week);
     const awardsImpacts = runAwardsCeremony(state, context.week, year, context.rng);
     context.impacts.push(...awardsImpacts);
-    
+
     const allNewAwards = awardsImpacts
-      .filter(i => i.type === 'INDUSTRY_UPDATE' && i.payload?.update)
-      .flatMap(i => Object.values((i.payload as any).update));
-    
+      .filter((i) => i.type === "INDUSTRY_UPDATE" && i.payload?.update)
+      .flatMap((i) => Object.values((i.payload as any).update));
+
     if (allNewAwards.length > 0) {
       context.impacts.push({
-        type: 'MODAL_TRIGGERED',
+        type: "MODAL_TRIGGERED",
         payload: {
-          modalType: 'AWARDS',
+          modalType: "AWARDS",
           priority: 50,
-          payload: { 
+          payload: {
             week: context.week,
             year,
             awards: allNewAwards,
-            body: (allNewAwards[0] as any)?.body || 'Annual Industry Awards'
-          }
-        }
+            body: (allNewAwards[0] as any)?.body || "Annual Industry Awards",
+          },
+        },
       });
     }
-    
+
     const weekDisplay = context.week % 52 === 0 ? 52 : context.week % 52;
     if (weekDisplay === 4) {
       context.impacts.push(...processRazzies(state, context.week, context.rng));
@@ -68,5 +68,5 @@ export const IndustryFilter: WeekFilter = {
 
     // Annual scans
     AnnualScans.execute(state, context);
-  }
-}
+  },
+};

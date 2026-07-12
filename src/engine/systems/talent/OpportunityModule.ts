@@ -1,9 +1,12 @@
-import { GameState, Opportunity } from '@/engine/types';
-import { RandomGenerator } from '../../utils/rng';
-import { generateOpportunity } from '../../generators/opportunities';
-import { getContractsByTalentId } from '../../utils';
+import { GameState, Opportunity } from "@/engine/types";
+import { RandomGenerator } from "../../utils/rng";
+import { generateOpportunity } from "../../generators/opportunities";
+import { getContractsByTalentId } from "../../utils";
 
-export function advanceOpportunityLifecycle(state: GameState, rng: RandomGenerator): { updatedOpportunities: Opportunity[]; uiNotifications: string[] } {
+export function advanceOpportunityLifecycle(
+  state: GameState,
+  rng: RandomGenerator
+): { updatedOpportunities: Opportunity[]; uiNotifications: string[] } {
   const uiNotifications: string[] = [];
   const currentOpportunities = state.market.opportunities || [];
   const updatedOpportunities: Opportunity[] = [];
@@ -17,7 +20,7 @@ export function advanceOpportunityLifecycle(state: GameState, rng: RandomGenerat
     }
   }
 
-  const oppTitles = new Set(updatedOpportunities.map(o => o.title));
+  const oppTitles = new Set(updatedOpportunities.map((o) => o.title));
 
   const tryAddOpp = (opp: Opportunity, message?: string) => {
     if (!oppTitles.has(opp.title)) {
@@ -42,20 +45,26 @@ export function advanceOpportunityLifecycle(state: GameState, rng: RandomGenerat
   }
   const availableTalentIds: string[] = [];
   for (const id in state.entities.talents) {
-      if (!activeTalentIds.has(id)) availableTalentIds.push(id);
+    if (!activeTalentIds.has(id)) availableTalentIds.push(id);
   }
 
   if (rng.next() < 0.25 && availableTalentIds.length > 0) {
-      const newOpp = generateOpportunity(rng, state.week, availableTalentIds);
-      tryAddOpp(newOpp, `A new package "${newOpp.title}" hit the market.`);
+    const newOpp = generateOpportunity(rng, state.week, availableTalentIds);
+    tryAddOpp(newOpp, `A new package "${newOpp.title}" hit the market.`);
   }
 
   if (rng.next() < 0.2) {
-    tryAddOpp(generateOpportunity(rng, state.week, availableTalentIds), `A new script is doing the rounds in town.`);
+    tryAddOpp(
+      generateOpportunity(rng, state.week, availableTalentIds),
+      `A new script is doing the rounds in town.`
+    );
   }
 
   if (rng.next() < 0.15) {
-    tryAddOpp(generateOpportunity(rng, state.week, availableTalentIds), `New opportunities have hit the market!`);
+    tryAddOpp(
+      generateOpportunity(rng, state.week, availableTalentIds),
+      `New opportunities have hit the market!`
+    );
   }
 
   if (updatedOpportunities.length < 4 && rng.next() < 0.3) {

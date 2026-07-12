@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   BarChart,
   Bar,
@@ -8,8 +8,8 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
-} from 'recharts';
-import { cn } from '@/lib/utils';
+} from "recharts";
+import { cn } from "@/lib/utils";
 
 interface StackedDataPoint {
   label: string;
@@ -45,24 +45,26 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
 }) => {
   if (!data || data.length === 0 || series.length === 0) {
     return (
-      <div className={cn('flex items-center justify-center h-[250px] text-muted-foreground', className)}>
+      <div
+        className={cn(
+          "flex items-center justify-center h-[250px] text-muted-foreground",
+          className
+        )}
+      >
         No data available
       </div>
     );
   }
 
   return (
-    <div className={cn('w-full', className)} style={{ height }}>
+    <div className={cn("w-full", className)} style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-          {showGrid && <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.3} />}
-          <XAxis 
-            dataKey="label" 
-            tick={{ fontSize: 10 }}
-            axisLine={false}
-            tickLine={false}
-          />
-          <YAxis 
+          {showGrid && (
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.3} />
+          )}
+          <XAxis dataKey="label" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} />
+          <YAxis
             tick={{ fontSize: 10 }}
             axisLine={false}
             tickLine={false}
@@ -72,20 +74,16 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
             <Tooltip
               formatter={(value: number, name: string) => [valueFormatter(value), name]}
               contentStyle={{
-                backgroundColor: 'hsl(var(--card))',
-                border: '1px solid hsl(var(--border))',
-                borderRadius: '6px',
-                fontSize: '12px',
-                color: 'inherit',
+                backgroundColor: "hsl(var(--card))",
+                border: "1px solid hsl(var(--border))",
+                borderRadius: "6px",
+                fontSize: "12px",
+                color: "inherit",
               }}
             />
           )}
           {showLegend && (
-            <Legend 
-              verticalAlign="bottom" 
-              height={24}
-              wrapperStyle={{ fontSize: '11px' }}
-            />
+            <Legend verticalAlign="bottom" height={24} wrapperStyle={{ fontSize: "11px" }} />
           )}
           {series.map((s) => (
             <Bar

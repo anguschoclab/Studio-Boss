@@ -11,8 +11,8 @@ The StateImpact system is the core architectural pattern used in Studio Boss for
 A `StateImpact` is an immutable object that describes a change to the game state. It contains:
 
 ```typescript
-export type StateImpact = BaseImpact & { 
-  type?: ImpactType; 
+export type StateImpact = BaseImpact & {
+  type?: ImpactType;
   payload?: any;
 };
 
@@ -46,15 +46,15 @@ Systems run simulation logic and **collect** StateImpact objects:
 ```typescript
 export function tickFinance(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
-  
+
   // Calculate financial changes
   const cashChange = calculateWeeklyExpenses(state);
-  
+
   impacts.push({
-    type: 'FUNDS_CHANGED',
-    payload: { amount: cashChange }
+    type: "FUNDS_CHANGED",
+    payload: { amount: cashChange },
   });
-  
+
   return impacts;
 }
 ```
@@ -66,7 +66,7 @@ The `WeekCoordinator` collects all impacts from systems and applies them via the
 ```typescript
 const context: TickContext = {
   week: state.week + 1,
-  impacts: []
+  impacts: [],
 };
 
 // Run all system filters
@@ -89,16 +89,16 @@ When creating a new simulation system, follow this pattern:
 ```typescript
 export function tickMySystem(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
-  
+
   // Calculate changes
   const newValue = calculateSomething(state);
-  
+
   // Describe the change as an impact
   impacts.push({
-    type: 'ENTITY_UPDATED',
-    payload: { entityId: 'id', update: { value: newValue } }
+    type: "ENTITY_UPDATED",
+    payload: { entityId: "id", update: { value: newValue } },
   });
-  
+
   return impacts;
 }
 ```
@@ -106,23 +106,27 @@ export function tickMySystem(state: GameState, rng: RandomGenerator): StateImpac
 #### 2. Never Mutate State Directly
 
 ❌ **Incorrect:**
+
 ```typescript
 export function tickMySystem(state: GameState): StateImpact[] {
-  state.entities.projects['p1'].buzz += 10; // Direct mutation!
+  state.entities.projects["p1"].buzz += 10; // Direct mutation!
   return [];
 }
 ```
 
 ✅ **Correct:**
+
 ```typescript
 export function tickMySystem(state: GameState): StateImpact[] {
-  return [{
-    type: 'PROJECT_UPDATED',
-    payload: {
-      projectId: 'p1',
-      update: { buzz: state.entities.projects['p1'].buzz + 10 }
-    }
-  }];
+  return [
+    {
+      type: "PROJECT_UPDATED",
+      payload: {
+        projectId: "p1",
+        update: { buzz: state.entities.projects["p1"].buzz + 10 },
+      },
+    },
+  ];
 }
 ```
 
@@ -180,18 +184,18 @@ static execute(state: GameState, rng: RandomGenerator): { newState: GameState; s
 ```typescript
 export function tickMultipleEntities(state: GameState): StateImpact[] {
   const impacts: StateImpact[] = [];
-  
-  Object.values(state.entities.projects).forEach(project => {
+
+  Object.values(state.entities.projects).forEach((project) => {
     const newBuzz = calculateBuzz(project);
     impacts.push({
-      type: 'PROJECT_UPDATED',
+      type: "PROJECT_UPDATED",
       payload: {
         projectId: project.id,
-        update: { buzz: newBuzz }
-      }
+        update: { buzz: newBuzz },
+      },
     });
   });
-  
+
   return impacts;
 }
 ```
@@ -201,18 +205,19 @@ export function tickMultipleEntities(state: GameState): StateImpact[] {
 ```typescript
 export function tickConditionalSystem(state: GameState): StateImpact[] {
   const impacts: StateImpact[] = [];
-  
-  if (state.week % 4 === 0) { // Every 4 weeks
+
+  if (state.week % 4 === 0) {
+    // Every 4 weeks
     impacts.push({
-      type: 'NEWS_ADDED',
+      type: "NEWS_ADDED",
       payload: {
-        id: rng.uuid('NWS'),
-        headline: 'Quarterly Report Released',
-        category: 'business'
-      }
+        id: rng.uuid("NWS"),
+        headline: "Quarterly Report Released",
+        category: "business",
+      },
     });
   }
-  
+
   return impacts;
 }
 ```
@@ -224,35 +229,35 @@ For complex changes that affect multiple entities, return multiple impacts:
 ```typescript
 export function tickComplexSystem(state: GameState): StateImpact[] {
   const impacts: StateImpact[] = [];
-  
+
   // Update project
   impacts.push({
-    type: 'PROJECT_UPDATED',
+    type: "PROJECT_UPDATED",
     payload: {
-      projectId: 'p1',
-      update: { state: 'released', revenue: 1000000 }
-    }
+      projectId: "p1",
+      update: { state: "released", revenue: 1000000 },
+    },
   });
-  
+
   // Update talent
   impacts.push({
-    type: 'TALENT_UPDATED',
+    type: "TALENT_UPDATED",
     payload: {
-      talentId: 't1',
-      update: { prestige: 75 }
-    }
+      talentId: "t1",
+      update: { prestige: 75 },
+    },
   });
-  
+
   // Add news
   impacts.push({
-    type: 'NEWS_ADDED',
+    type: "NEWS_ADDED",
     payload: {
-      id: rng.uuid('NWS'),
-      headline: 'Blockbuster Released!',
-      category: 'entertainment'
-    }
+      id: rng.uuid("NWS"),
+      headline: "Blockbuster Released!",
+      category: "entertainment",
+    },
   });
-  
+
   return impacts;
 }
 ```
@@ -264,23 +269,23 @@ export function tickComplexSystem(state: GameState): StateImpact[] {
 Test that your system returns the correct impacts:
 
 ```typescript
-describe('MySystem', () => {
-  it('should return PROJECT_UPDATED impact', () => {
+describe("MySystem", () => {
+  it("should return PROJECT_UPDATED impact", () => {
     const state = createMockGameState();
     const impacts = tickMySystem(state, rng);
-    
+
     expect(impacts.length).toBeGreaterThan(0);
-    expect(impacts[0].type).toBe('PROJECT_UPDATED');
+    expect(impacts[0].type).toBe("PROJECT_UPDATED");
   });
-  
-  it('should not mutate state directly', () => {
+
+  it("should not mutate state directly", () => {
     const state = createMockGameState();
-    const originalBuzz = state.entities.projects['p1'].buzz;
-    
+    const originalBuzz = state.entities.projects["p1"].buzz;
+
     tickMySystem(state, rng);
-    
+
     // State should be unchanged
-    expect(state.entities.projects['p1'].buzz).toBe(originalBuzz);
+    expect(state.entities.projects["p1"].buzz).toBe(originalBuzz);
   });
 });
 ```
@@ -290,14 +295,14 @@ describe('MySystem', () => {
 Test that impacts are correctly applied:
 
 ```typescript
-describe('MySystem Integration', () => {
-  it('should apply impacts correctly to state', () => {
+describe("MySystem Integration", () => {
+  it("should apply impacts correctly to state", () => {
     const state = createMockGameState();
     const impacts = tickMySystem(state, rng);
-    
+
     const newState = applyImpacts(state, impacts);
-    
-    expect(newState.entities.projects['p1'].buzz).not.toBe(state.entities.projects['p1'].buzz);
+
+    expect(newState.entities.projects["p1"].buzz).not.toBe(state.entities.projects["p1"].buzz);
   });
 });
 ```
@@ -336,6 +341,7 @@ If you encounter a legacy system that mutates state directly:
 Example migration:
 
 **Before:**
+
 ```typescript
 export function advanceProject(project: Project): { project: Project } {
   project.buzz += 10;
@@ -345,18 +351,21 @@ export function advanceProject(project: Project): { project: Project } {
 ```
 
 **After:**
+
 ```typescript
 export function advanceProject(project: Project): StateImpact[] {
-  return [{
-    type: 'PROJECT_UPDATED',
-    payload: {
-      projectId: project.id,
-      update: {
-        buzz: project.buzz + 10,
-        weeksInPhase: project.weeksInPhase + 1
-      }
-    }
-  }];
+  return [
+    {
+      type: "PROJECT_UPDATED",
+      payload: {
+        projectId: project.id,
+        update: {
+          buzz: project.buzz + 10,
+          weeksInPhase: project.weeksInPhase + 1,
+        },
+      },
+    },
+  ];
 }
 ```
 
@@ -392,7 +401,7 @@ Example:
 
 ```typescript
 // In state.types.ts
-export type ImpactType = 
+export type ImpactType =
   | 'FUNDS_CHANGED'
   | 'PROJECT_UPDATED'
   | 'MY_NEW_TYPE'  // Add here
@@ -414,7 +423,7 @@ To debug what impacts a system generates:
 
 ```typescript
 const impacts = tickMySystem(state, rng);
-console.log('Generated impacts:', JSON.stringify(impacts, null, 2));
+console.log("Generated impacts:", JSON.stringify(impacts, null, 2));
 ```
 
 ### Tracing Impact Application
@@ -423,8 +432,8 @@ To trace how impacts are applied:
 
 ```typescript
 const newState = applyImpacts(state, impacts);
-console.log('State before:', state);
-console.log('State after:', newState);
+console.log("State before:", state);
+console.log("State after:", newState);
 ```
 
 ## Performance Considerations

@@ -1,9 +1,9 @@
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/lib/utils';
-import { pageTransition, subTabTransition } from '@/lib/animations';
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { pageTransition, subTabTransition } from "@/lib/animations";
 
-type TransitionType = 'page' | 'subTab' | 'fade';
+type TransitionType = "page" | "subTab" | "fade";
 
 interface PageTransitionProps {
   /** Unique key for the content (triggers animation on change) */
@@ -32,7 +32,7 @@ const transitionVariants = {
 
 /**
  * PageTransition - Wrapper for page/sub-tab content transitions
- * 
+ *
  * Provides smooth animated transitions when switching between:
  * - Hubs (page transitions)
  * - Sub-tabs (subTab transitions)
@@ -41,7 +41,7 @@ const transitionVariants = {
 export const PageTransition: React.FC<PageTransitionProps> = ({
   key: transitionKey,
   children,
-  type = 'page',
+  type = "page",
   className,
   enableExit = true,
   delay = 0,
@@ -57,7 +57,7 @@ export const PageTransition: React.FC<PageTransitionProps> = ({
         animate="animate"
         exit={enableExit ? "exit" : undefined}
         transition={{ delay }}
-        className={cn('w-full h-full', className)}
+        className={cn("w-full h-full", className)}
       >
         {children}
       </motion.div>
@@ -124,7 +124,7 @@ export const AnimatedNumber: React.FC<{
   duration?: number;
   prefix?: string;
   suffix?: string;
-}> = ({ value, className, duration = 0.4, prefix = '', suffix = '' }) => {
+}> = ({ value, className, duration = 0.4, prefix = "", suffix = "" }) => {
   const [displayValue, setDisplayValue] = React.useState(0);
 
   React.useEffect(() => {

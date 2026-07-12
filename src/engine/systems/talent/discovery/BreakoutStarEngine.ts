@@ -1,9 +1,6 @@
-import { GameState, Talent, Project } from '../../../types';
-import { RandomGenerator } from '../../../utils/rng';
-import {
-  BreakoutStar,
-  BreakoutTrigger,
-} from '../../../types/discovery.types';
+import { GameState, Talent, Project } from "../../../types";
+import { RandomGenerator } from "../../../utils/rng";
+import { BreakoutStar, BreakoutTrigger } from "../../../types/discovery.types";
 
 // Base breakout chances
 const INDIE_HIT_CHANCE = 0.05;
@@ -19,32 +16,32 @@ export function checkForBreakout(
 ): BreakoutStar | null {
   // Skip if already a breakout or top tier
   if ((talent as any).isBreakout) return null;
-  if (talent.tier === 'A_LIST') return null;
+  if (talent.tier === "A_LIST") return null;
 
   const currentStarMeter = talent.starMeter || 50;
 
   // Indie film breakout
-  if (project.type === 'FILM' && project.budget < 5000000 && rng.next() < INDIE_HIT_CHANCE) {
+  if (project.type === "FILM" && project.budget < 5000000 && rng.next() < INDIE_HIT_CHANCE) {
     const starMeterJump = rng.rangeInt(25, 45);
-    return createBreakoutStar(talent, project, 'indie_hit', starMeterJump, state.week, rng);
+    return createBreakoutStar(talent, project, "indie_hit", starMeterJump, state.week, rng);
   }
 
   // Viral scene breakout
   if (rng.next() < VIRAL_SCENE_CHANCE && currentStarMeter < 70) {
     const starMeterJump = rng.rangeInt(20, 35);
-    return createBreakoutStar(talent, project, 'viral_scene', starMeterJump, state.week, rng);
+    return createBreakoutStar(talent, project, "viral_scene", starMeterJump, state.week, rng);
   }
 
   // Cameo steal breakout (small role, big impact)
-  if (project.type === 'FILM' && rng.next() < CAMEO_STEAL_CHANCE) {
+  if (project.type === "FILM" && rng.next() < CAMEO_STEAL_CHANCE) {
     const starMeterJump = rng.rangeInt(15, 30);
-    return createBreakoutStar(talent, project, 'cameo_steal', starMeterJump, state.week, rng);
+    return createBreakoutStar(talent, project, "cameo_steal", starMeterJump, state.week, rng);
   }
 
   // TV performance breakout
-  if (project.type === 'SERIES' && rng.next() < TV_PERFORMANCE_CHANCE) {
+  if (project.type === "SERIES" && rng.next() < TV_PERFORMANCE_CHANCE) {
     const starMeterJump = rng.rangeInt(15, 25);
-    return createBreakoutStar(talent, project, 'tv_performance', starMeterJump, state.week, rng);
+    return createBreakoutStar(talent, project, "tv_performance", starMeterJump, state.week, rng);
   }
 
   return null;
@@ -63,12 +60,12 @@ function createBreakoutStar(
 
   // Calculate new tier based on star meter
   let newTier = talent.tier;
-  if (newStarMeter > 80) newTier = 'A_LIST';
-  else if (newStarMeter > 60) newTier = 'B_LIST';
-  else if (newStarMeter > 40) newTier = 'C_LIST';
+  if (newStarMeter > 80) newTier = "A_LIST";
+  else if (newStarMeter > 60) newTier = "B_LIST";
+  else if (newStarMeter > 40) newTier = "C_LIST";
 
   // Fee multiplier based on jump size
-  const feeMultiplier = 1 + (starMeterJump / 20);
+  const feeMultiplier = 1 + starMeterJump / 20;
 
   // Hype duration (longer for bigger jumps)
   const hypeWeeksRemaining = rng.rangeInt(12, 52);
@@ -78,7 +75,7 @@ function createBreakoutStar(
   const oneHitWonder = !sustainedSuccess;
 
   return {
-    id: rng.uuid('BRK'),
+    id: rng.uuid("BRK"),
     talentId: talent.id,
     trigger,
     projectId: project.id,

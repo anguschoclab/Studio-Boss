@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useContext, useEffect, ReactNode } from 'react';
-import { useGameStore } from '../../store/gameStore';
+import React, { createContext, useContext, useEffect, ReactNode } from "react";
+import { useGameStore } from "../../store/gameStore";
 
 interface ThemeContextType {
   archetype: string | undefined;
@@ -11,7 +11,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error('useTheme must be used within a GlobalThemeProvider');
+    throw new Error("useTheme must be used within a GlobalThemeProvider");
   }
   return context;
 };
@@ -21,11 +21,11 @@ interface GlobalThemeProviderProps {
 }
 
 const GlobalThemeProvider: React.FC<GlobalThemeProviderProps> = ({ children }) => {
-  const archetype = useGameStore(s => s.gameState?.studio?.archetype);
+  const archetype = useGameStore((s) => s.gameState?.studio?.archetype);
 
   useEffect(() => {
     // Sync theme class to document element
-    const themes = ['theme-major', 'theme-mid-tier', 'theme-indie'];
+    const themes = ["theme-major", "theme-mid-tier", "theme-indie"];
     document.documentElement.classList.remove(...themes);
 
     if (archetype) {
@@ -33,11 +33,7 @@ const GlobalThemeProvider: React.FC<GlobalThemeProviderProps> = ({ children }) =
     }
   }, [archetype]);
 
-  return (
-    <ThemeContext.Provider value={{ archetype }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={{ archetype }}>{children}</ThemeContext.Provider>;
 };
 
 export { useTheme, GlobalThemeProvider };

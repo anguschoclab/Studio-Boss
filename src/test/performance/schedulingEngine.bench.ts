@@ -1,6 +1,6 @@
-import { describe, bench } from 'vitest';
-import { SchedulingEngine } from '../../engine/systems/schedulingEngine';
-import { GameState, Project, Talent, Contract } from '../../engine/types';
+import { describe, bench } from "vitest";
+import { SchedulingEngine } from "../../engine/systems/schedulingEngine";
+import { GameState, Project, Talent, Contract } from "../../engine/types";
 
 const PROJECT_COUNT = 200;
 const TOTAL_CONTRACTS = 2000;
@@ -15,7 +15,7 @@ function createMockState(): GameState {
     projects[projectId] = {
       id: projectId,
       title: `Project ${i}`,
-      state: 'production',
+      state: "production",
       weeksInPhase: 1,
     } as any;
   }
@@ -33,7 +33,7 @@ function createMockState(): GameState {
     talents[talentId] = {
       id: talentId,
       name: `Talent ${i}`,
-      commitments: []
+      commitments: [],
     } as any;
   }
 
@@ -44,15 +44,15 @@ function createMockState(): GameState {
       releasedProjectIds: [],
       contracts,
       talents,
-    }
+    },
   } as any;
 }
 
 const state = createMockState();
 const rng = { uuid: (prefix: string) => `${prefix}-${Math.random()}` } as any;
 
-describe('SchedulingEngine Performance', () => {
-  bench('SchedulingEngine.tick', () => {
+describe("SchedulingEngine Performance", () => {
+  bench("SchedulingEngine.tick", () => {
     SchedulingEngine.tick(state, rng);
   });
 });

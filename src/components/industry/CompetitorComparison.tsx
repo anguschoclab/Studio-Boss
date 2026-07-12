@@ -1,22 +1,36 @@
-import React, { useMemo } from 'react';
-import { useGameStore } from '@/store/gameStore';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, Cell } from 'recharts';
-import { formatMoney } from '@/engine/utils';
-import { cn } from '@/lib/utils';
-import { Building2, Wallet, Trophy, TrendingUp } from 'lucide-react';
+import React, { useMemo } from "react";
+import { useGameStore } from "@/store/gameStore";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
+  Legend,
+  Cell,
+} from "recharts";
+import { formatMoney } from "@/engine/utils";
+import { cn } from "@/lib/utils";
+import { Building2, Wallet, Trophy, TrendingUp } from "lucide-react";
 
 interface CompetitorComparisonProps {
   className?: string;
 }
 
 export const CompetitorComparison: React.FC<CompetitorComparisonProps> = ({ className }) => {
-  const gameState = useGameStore(s => s.gameState);
+  const gameState = useGameStore((s) => s.gameState);
 
   const { studio, rivals } = useMemo(() => {
     if (!gameState) {
       return {
-        studio: { name: '', prestige: 0 },
+        studio: { name: "", prestige: 0 },
         rivals: [],
       };
     }
@@ -32,8 +46,13 @@ export const CompetitorComparison: React.FC<CompetitorComparisonProps> = ({ clas
       return [];
     }
     const allStudios = [
-      { name: studio.name.slice(0, 10), cash: gameState.finance.cash, prestige: studio.prestige, isPlayer: true },
-      ...rivals.map(r => ({
+      {
+        name: studio.name.slice(0, 10),
+        cash: gameState.finance.cash,
+        prestige: studio.prestige,
+        isPlayer: true,
+      },
+      ...rivals.map((r) => ({
         name: r.name.slice(0, 10),
         cash: r.cash,
         prestige: r.prestige,
@@ -48,33 +67,40 @@ export const CompetitorComparison: React.FC<CompetitorComparisonProps> = ({ clas
     if (!gameState || !gameState.finance) {
       return [];
     }
-    const maxCash = Math.max(gameState.finance.cash, ...rivals.map(r => r.cash)) || 1;
-    const maxProjects = Math.max(
-      Object.keys(gameState.entities.projects).length,
-      ...rivals.map(r => r.projectIds?.length || 0)
-    ) || 1;
+    const maxCash = Math.max(gameState.finance.cash, ...rivals.map((r) => r.cash)) || 1;
+    const maxProjects =
+      Math.max(
+        Object.keys(gameState.entities.projects).length,
+        ...rivals.map((r) => r.projectIds?.length || 0)
+      ) || 1;
 
     return [
       {
-        metric: 'Cash',
+        metric: "Cash",
         player: (gameState.finance.cash / maxCash) * 100,
-        avgRival: rivals.reduce((sum, r) => sum + r.cash, 0) / (rivals.length || 1) / maxCash * 100,
+        avgRival:
+          (rivals.reduce((sum, r) => sum + r.cash, 0) / (rivals.length || 1) / maxCash) * 100,
       },
       {
-        metric: 'Prestige',
+        metric: "Prestige",
         player: studio.prestige,
         avgRival: rivals.reduce((sum, r) => sum + r.prestige, 0) / (rivals.length || 1),
       },
       {
-        metric: 'Projects',
+        metric: "Projects",
         player: (Object.keys(gameState.entities.projects).length / maxProjects) * 100,
-        avgRival: rivals.reduce((sum, r) => sum + (r.projectIds?.length || 0), 0) / (rivals.length || 1) / maxProjects * 100,
+        avgRival:
+          (rivals.reduce((sum, r) => sum + (r.projectIds?.length || 0), 0) /
+            (rivals.length || 1) /
+            maxProjects) *
+          100,
       },
       {
-        metric: 'Strength',
-        player: rivals.length > 0
-          ? 100 - (rivals.reduce((sum, r) => sum + r.strength, 0) / rivals.length)
-          : 50,
+        metric: "Strength",
+        player:
+          rivals.length > 0
+            ? 100 - rivals.reduce((sum, r) => sum + r.strength, 0) / rivals.length
+            : 50,
         avgRival: 50,
       },
     ];
@@ -83,13 +109,13 @@ export const CompetitorComparison: React.FC<CompetitorComparisonProps> = ({ clas
   if (!gameState) return null;
 
   const getRank = (value: number, values: number[], ascending = false) => {
-    const sorted = [...values].sort((a, b) => ascending ? a - b : b - a);
+    const sorted = [...values].sort((a, b) => (ascending ? a - b : b - a));
     return sorted.indexOf(value) + 1;
   };
 
-  const allCashValues = [gameState.finance.cash, ...rivals.map(r => r.cash)];
-  const allPrestigeValues = [studio.prestige, ...rivals.map(r => r.prestige)];
-  
+  const allCashValues = [gameState.finance.cash, ...rivals.map((r) => r.cash)];
+  const allPrestigeValues = [studio.prestige, ...rivals.map((r) => r.prestige)];
+
   const cashRank = getRank(gameState.finance.cash, allCashValues);
   const prestigeRank = getRank(studio.prestige, allPrestigeValues);
 
@@ -100,18 +126,22 @@ export const CompetitorComparison: React.FC<CompetitorComparisonProps> = ({ clas
         <div className="p-3 rounded-none bg-primary/5 border border-primary/20">
           <div className="flex items-center gap-2 mb-2">
             <Wallet className="w-4 h-4 text-primary" />
-            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Cash Rank</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Cash Rank
+            </span>
           </div>
           <div className="flex items-baseline gap-1">
             <span className="text-2xl font-black font-display text-primary">#{cashRank}</span>
             <span className="text-xs text-muted-foreground">of {allCashValues.length}</span>
           </div>
         </div>
-        
+
         <div className="p-3 rounded-none bg-secondary/5 border border-secondary/20">
           <div className="flex items-center gap-2 mb-2">
             <Trophy className="w-4 h-4 text-secondary" />
-            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Prestige Rank</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Prestige Rank
+            </span>
           </div>
           <div className="flex items-baseline gap-1">
             <span className="text-2xl font-black font-display text-secondary">#{prestigeRank}</span>
@@ -131,11 +161,15 @@ export const CompetitorComparison: React.FC<CompetitorComparisonProps> = ({ clas
         <CardContent>
           <div className="h-40">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={financialData} layout="vertical" margin={{ left: 0, right: 20, top: 5, bottom: 5 }}>
+              <BarChart
+                data={financialData}
+                layout="vertical"
+                margin={{ left: 0, right: 20, top: 5, bottom: 5 }}
+              >
                 <XAxis type="number" hide />
-                <YAxis 
-                  dataKey="name" 
-                  type="category" 
+                <YAxis
+                  dataKey="name"
+                  type="category"
                   width={80}
                   tick={{ fontSize: 10, fontWeight: 600 }}
                   axisLine={false}
@@ -147,8 +181,13 @@ export const CompetitorComparison: React.FC<CompetitorComparisonProps> = ({ clas
                       const data = payload[0].payload;
                       return (
                         <div className="bg-card border border-border p-2 rounded-none shadow-lg">
-                          <p className={cn("text-xs font-bold", data.isPlayer ? "text-primary" : "text-foreground")}>
-                            {data.name} {data.isPlayer && '(You)'}
+                          <p
+                            className={cn(
+                              "text-xs font-bold",
+                              data.isPlayer ? "text-primary" : "text-foreground"
+                            )}
+                          >
+                            {data.name} {data.isPlayer && "(You)"}
                           </p>
                           <p className="text-[10px] text-muted-foreground mt-1">
                             Cash: {formatMoney(data.cash)}
@@ -162,14 +201,17 @@ export const CompetitorComparison: React.FC<CompetitorComparisonProps> = ({ clas
                     return null;
                   }}
                 />
-                <Bar 
-                  dataKey="cash" 
-                  radius={[0, 4, 4, 0]} 
+                <Bar
+                  dataKey="cash"
+                  radius={[0, 4, 4, 0]}
                   maxBarSize={20}
                   fill="hsl(var(--primary))"
                 >
                   {financialData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.isPlayer ? 'hsl(var(--primary))' : 'hsl(var(--muted))'} />
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={entry.isPlayer ? "hsl(var(--primary))" : "hsl(var(--muted))"}
+                    />
                   ))}
                 </Bar>
               </BarChart>
@@ -191,9 +233,9 @@ export const CompetitorComparison: React.FC<CompetitorComparisonProps> = ({ clas
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart data={radarData}>
                 <PolarGrid stroke="hsl(var(--border))" />
-                <PolarAngleAxis 
-                  dataKey="metric" 
-                  tick={{ fontSize: 9, fontWeight: 600, fill: 'hsl(var(--muted-foreground))' }}
+                <PolarAngleAxis
+                  dataKey="metric"
+                  tick={{ fontSize: 9, fontWeight: 600, fill: "hsl(var(--muted-foreground))" }}
                 />
                 <PolarRadiusAxis angle={90} domain={[0, 100]} tick={false} axisLine={false} />
                 <Radar
@@ -213,10 +255,7 @@ export const CompetitorComparison: React.FC<CompetitorComparisonProps> = ({ clas
                   strokeWidth={1}
                   strokeDasharray="4 4"
                 />
-                <Legend 
-                  wrapperStyle={{ fontSize: '10px' }}
-                  iconType="circle"
-                />
+                <Legend wrapperStyle={{ fontSize: "10px" }} iconType="circle" />
               </RadarChart>
             </ResponsiveContainer>
           </div>
@@ -225,11 +264,13 @@ export const CompetitorComparison: React.FC<CompetitorComparisonProps> = ({ clas
 
       {/* Rival List */}
       <div className="space-y-2">
-        <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Active Rivals</h4>
+        <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+          Active Rivals
+        </h4>
         <div className="space-y-2">
           {rivals.slice(0, 5).map((rival, i) => (
-            <div 
-              key={rival.id} 
+            <div
+              key={rival.id}
               className="flex items-center justify-between p-2 rounded-none bg-background/50 hover:bg-background transition-colors"
             >
               <div className="flex items-center gap-2">

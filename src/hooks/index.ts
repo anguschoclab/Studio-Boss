@@ -4,5 +4,5 @@
  * Reusable React hooks for common functionality
  */
 
-export { useIsMobile } from './use-mobile';
-export { useTalentMap } from './useTalentMap';
+export { useIsMobile } from "./use-mobile";
+export { useTalentMap } from "./useTalentMap";

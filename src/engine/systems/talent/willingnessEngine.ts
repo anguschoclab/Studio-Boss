@@ -1,4 +1,4 @@
-import { Talent, Project, GameState } from '@/engine/types/index';
+import { Talent, Project, GameState } from "@/engine/types/index";
 
 /**
  * Studio Boss - Willingness Engine
@@ -9,7 +9,7 @@ import { Talent, Project, GameState } from '@/engine/types/index';
 export interface WillingnessReport {
   score: number; // 0-100
   reasons: string[];
-  finalVerdict: 'willing' | 'hesitant' | 'unwilling';
+  finalVerdict: "willing" | "hesitant" | "unwilling";
 }
 
 export function calculateWillingness(
@@ -21,18 +21,20 @@ export function calculateWillingness(
   const reasons: string[] = [];
 
   // 1. Genre Affinity
-  const isActionStar = talent.roles.includes('actor') && talent.draw > 70;
+  const isActionStar = talent.roles.includes("actor") && talent.draw > 70;
   const isPrestigeActor = talent.prestige > 80;
 
-  if (project.genre === 'Action' && isActionStar) {
+  if (project.genre === "Action" && isActionStar) {
     score += 15;
     reasons.push(`${talent.name} is a proven action draw and loves the genre.`);
-  } else if (project.genre === 'Drama' && isPrestigeActor) {
+  } else if (project.genre === "Drama" && isPrestigeActor) {
     score += 15;
     reasons.push(`${talent.name} is looking for prestige-driven material.`);
-  } else if (project.genre === 'Horror' && isPrestigeActor && project.budgetTier === 'low') {
+  } else if (project.genre === "Horror" && isPrestigeActor && project.budgetTier === "low") {
     score -= 25;
-    reasons.push(`${talent.name} feels this "low-budget horror" is beneath their current prestige level.`);
+    reasons.push(
+      `${talent.name} feels this "low-budget horror" is beneath their current prestige level.`
+    );
   }
 
   // 2. Prestige Gap
@@ -46,8 +48,8 @@ export function calculateWillingness(
   }
 
   // 🎭 The Method Actor Tuning: Auteurs (high-prestige directors) heavily prioritize the script heat and artistic merit over upfront cash.
-  const isAuteur = talent.roles.includes('director') && talent.prestige > 80;
-  const scriptHeat = 'scriptHeat' in project ? project.scriptHeat : 50;
+  const isAuteur = talent.roles.includes("director") && talent.prestige > 80;
+  const scriptHeat = "scriptHeat" in project ? project.scriptHeat : 50;
 
   // 3. Financial Incentive (Fee vs Star Meter)
   if (talent.fee > project.budget * 0.4) {
@@ -55,10 +57,14 @@ export function calculateWillingness(
     if (isAuteur && scriptHeat > 85) {
       // 🎭 The Method Actor Tuning: Auteurs actively drawn to masterpiece scripts despite low budgets.
       score += 15;
-      reasons.push(`${talent.name} is willing to take a massive pay cut because they consider the script a masterpiece of artistic merit.`);
+      reasons.push(
+        `${talent.name} is willing to take a massive pay cut because they consider the script a masterpiece of artistic merit.`
+      );
     } else {
       score -= 15;
-      reasons.push(`The talent's quote consumes ${Math.round((talent.fee / project.budget) * 100)}% of the production budget, causing friction.`);
+      reasons.push(
+        `The talent's quote consumes ${Math.round((talent.fee / project.budget) * 100)}% of the production budget, causing friction.`
+      );
     }
   }
 
@@ -75,7 +81,9 @@ export function calculateWillingness(
   const studioPrestige = gameState.studio.prestige;
   if (studioPrestige > 80) {
     score += 10;
-    reasons.push(`Working with a prestigious studio like ${gameState.studio.name} is a career goal.`);
+    reasons.push(
+      `Working with a prestigious studio like ${gameState.studio.name} is a career goal.`
+    );
   } else if (studioPrestige < 30) {
     score -= 15;
     reasons.push(`${talent.name}'s team is wary of the studio's current market standing.`);
@@ -83,11 +91,15 @@ export function calculateWillingness(
 
   // 6. Directorial Influence (Check if a director is already attached)
   const isDirectorAttached = gameState.studio.internal.contracts.some(
-    c => c.projectId === project.id && gameState.entities.talents[c.talentId]?.roles.includes('director')
+    (c) =>
+      c.projectId === project.id &&
+      gameState.entities.talents[c.talentId]?.roles.includes("director")
   );
   if (isDirectorAttached) {
     const directorId = gameState.studio.internal.contracts.find(
-      c => c.projectId === project.id && gameState.entities.talents[c.talentId]?.roles.includes('director')
+      (c) =>
+        c.projectId === project.id &&
+        gameState.entities.talents[c.talentId]?.roles.includes("director")
     )!.talentId;
     const director = gameState.entities.talents[directorId];
     if (director && director.prestige > 80) {
@@ -96,7 +108,9 @@ export function calculateWillingness(
     } else if (director && director.prestige < 40 && (isActionStar || isPrestigeActor)) {
       // 🎭 The Method Actor Tuning: Established stars fiercely protect their brand and will penalize projects helmed by unproven directors.
       score -= 25;
-      reasons.push(`${talent.name} feels it's too risky for their brand to work with an unproven director.`);
+      reasons.push(
+        `${talent.name} feels it's too risky for their brand to work with an unproven director.`
+      );
     }
   }
 
@@ -107,21 +121,23 @@ export function calculateWillingness(
     // 🎭 The Method Actor Tuning: High ego talent absolutely refuses to work with low-prestige studios.
     if (gameState.studio.prestige < 40) {
       score -= 25;
-      reasons.push(`${talent.name}'s ego prevents them from "slumming it" with a low-prestige studio.`);
+      reasons.push(
+        `${talent.name}'s ego prevents them from "slumming it" with a low-prestige studio.`
+      );
     }
   }
 
   // Final Bound and Verdict
   const finalScore = Math.max(0, Math.min(100, score));
-  let verdict: 'willing' | 'hesitant' | 'unwilling';
+  let verdict: "willing" | "hesitant" | "unwilling";
 
-  if (finalScore >= 70) verdict = 'willing';
-  else if (finalScore >= 40) verdict = 'hesitant';
-  else verdict = 'unwilling';
+  if (finalScore >= 70) verdict = "willing";
+  else if (finalScore >= 40) verdict = "hesitant";
+  else verdict = "unwilling";
 
   return {
     score: finalScore,
     reasons,
-    finalVerdict: verdict
+    finalVerdict: verdict,
   };
 }

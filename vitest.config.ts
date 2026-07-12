@@ -11,7 +11,11 @@ export default defineConfig({
     include: ["src/test/**/*.{test,spec}.{ts,tsx}"],
     coverage: {
       provider: "v8",
-      include: ["src/engine/**/*.{ts,tsx}", "src/persistence/**/*.{ts,tsx}", "src/store/**/*.{ts,tsx}"],
+      include: [
+        "src/engine/**/*.{ts,tsx}",
+        "src/persistence/**/*.{ts,tsx}",
+        "src/store/**/*.{ts,tsx}",
+      ],
       exclude: ["src/test/**", "src/**/*.d.ts", "src/engine/types.ts"],
       reporter: ["text", "json", "html"],
     },

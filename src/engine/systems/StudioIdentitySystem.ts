@@ -1,4 +1,4 @@
-import { GameState, StateImpact, StudioCulture } from '@/engine/types';
+import { GameState, StateImpact, StudioCulture } from "@/engine/types";
 
 /**
  * StudioIdentitySystem
@@ -20,7 +20,7 @@ export function tickStudioIdentity(state: GameState): StateImpact[] {
     talentFriendlyVsControlling: 50,
     nicheVsBroad: 50,
     filmFirstVsTvFirst: 50,
-    franchiseOriginal: 50
+    franchiseOriginal: 50,
   };
 
   const currentWeek = state.week;
@@ -37,15 +37,15 @@ export function tickStudioIdentity(state: GameState): StateImpact[] {
   const projects = state.entities.projects || {};
   for (const id in projects) {
     const p = projects[id];
-    if (p.state === 'released' && p.releaseWeek !== null && p.releaseWeek > currentWeek - WINDOW) {
+    if (p.state === "released" && p.releaseWeek !== null && p.releaseWeek > currentWeek - WINDOW) {
       recentReleasesCount++;
 
       // Prestige vs Commercial
-      const isAwardsPush = p.marketingAngle === 'AWARDS_PUSH';
+      const isAwardsPush = p.marketingAngle === "AWARDS_PUSH";
       const reviewHigh = (p.reviewScore ?? 0) > 75;
       const lowBudget = p.budget < 20_000_000;
       const highBudget = p.budget > 80_000_000;
-      const spectacle = p.marketingAngle === 'SELL_THE_SPECTACLE';
+      const spectacle = p.marketingAngle === "SELL_THE_SPECTACLE";
 
       if (isAwardsPush || reviewHigh || lowBudget) prestigeCount += 1;
       if (highBudget || spectacle) commercialCount += 1;
@@ -76,10 +76,12 @@ export function tickStudioIdentity(state: GameState): StateImpact[] {
     franchiseOriginal: Math.max(0, Math.min(100, newFO)),
   };
 
-  return [{
-    type: 'SYSTEM_TICK' as unknown as 'STUDIO_CULTURE_UPDATED',
-    payload: { studioCulture: updatedCulture },
-  } as unknown as StateImpact];
+  return [
+    {
+      type: "SYSTEM_TICK" as unknown as "STUDIO_CULTURE_UPDATED",
+      payload: { studioCulture: updatedCulture },
+    } as unknown as StateImpact,
+  ];
 }
 
 /**
@@ -89,9 +91,9 @@ export function getIdentityLabel(culture: StudioCulture): string {
   const pc = culture.prestigeVsCommercial;
   const fo = culture.franchiseOriginal;
 
-  if (pc > 70 && fo < 30) return 'Auteur Studio';
-  if (pc > 70 && fo > 70) return 'Prestige Franchise Factory';
-  if (pc < 30 && fo > 70) return 'Blockbuster Machine';
-  if (pc < 30 && fo < 30) return 'Genre Indie';
-  return 'Balanced Studio';
+  if (pc > 70 && fo < 30) return "Auteur Studio";
+  if (pc > 70 && fo > 70) return "Prestige Franchise Factory";
+  if (pc < 30 && fo > 70) return "Blockbuster Machine";
+  if (pc < 30 && fo < 30) return "Genre Indie";
+  return "Balanced Studio";
 }

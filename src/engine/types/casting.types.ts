@@ -1,10 +1,10 @@
 // Casting Constraint System Types
 // Handles nudity, stunts, intimacy, and other script requirements
 
-export type ComfortLevelNudity = 'none' | 'tasteful' | 'partial' | 'full';
-export type ComfortLevelStunts = 'none' | 'minor' | 'moderate' | 'extreme';
-export type ComfortLevelIntimacy = 'none' | 'tasteful' | 'passionate';
-export type ComfortLevelRisk = 'conservative' | 'moderate' | 'adventurous';
+export type ComfortLevelNudity = "none" | "tasteful" | "partial" | "full";
+export type ComfortLevelStunts = "none" | "minor" | "moderate" | "extreme";
+export type ComfortLevelIntimacy = "none" | "tasteful" | "passionate";
+export type ComfortLevelRisk = "conservative" | "moderate" | "adventurous";
 
 export interface TalentComfortLevel {
   nudity: ComfortLevelNudity;
@@ -15,12 +15,13 @@ export interface TalentComfortLevel {
 
 export interface ComfortPremiumRates {
   nudityMultiplier: number; // 1.0 - 3.0
-  stuntMultiplier: number;    // 1.0 - 2.5
+  stuntMultiplier: number; // 1.0 - 2.5
   intimacyMultiplier: number; // 1.0 - 2.0
 }
 
-export type ScriptRequirementType = 'nudity' | 'stunts' | 'intimacy' | 'physical_risk' | 'emotionally_intense';
-export type ScriptRequirementLevel = 'mild' | 'moderate' | 'extreme';
+export type ScriptRequirementType =
+  "nudity" | "stunts" | "intimacy" | "physical_risk" | "emotionally_intense";
+export type ScriptRequirementLevel = "mild" | "moderate" | "extreme";
 
 export interface ScriptRequirement {
   id: string;
@@ -49,7 +50,7 @@ export interface CastingConstraintViolation {
   projectId: string;
   talentId: string;
   requirement: ScriptRequirement;
-  severity: 'minor' | 'major' | 'dealbreaker';
+  severity: "minor" | "major" | "dealbreaker";
   options: CastingConstraintOption[];
 }
 
@@ -73,34 +74,34 @@ export interface CastingConstraintsState {
 
 // Requirement level to comfort level mapping
 export const REQUIREMENT_COMFORT_MAPPING: Record<ScriptRequirementLevel, string[]> = {
-  'mild': ['tasteful', 'partial', 'full'],
-  'moderate': ['partial', 'full'],
-  'extreme': ['full'],
+  mild: ["tasteful", "partial", "full"],
+  moderate: ["partial", "full"],
+  extreme: ["full"],
 };
 
 // Premium multipliers by comfort level (separate maps for each type to avoid duplicates)
 export const NUDITY_PREMIUM_RATES: Record<ComfortLevelNudity, number> = {
-  'none': 3.0,      // Won't do it - massive premium if convinced
-  'tasteful': 1.5,  // Some discomfort
-  'partial': 1.2,   // Moderate comfort
-  'full': 1.0,      // Fully comfortable - no premium
+  none: 3.0, // Won't do it - massive premium if convinced
+  tasteful: 1.5, // Some discomfort
+  partial: 1.2, // Moderate comfort
+  full: 1.0, // Fully comfortable - no premium
 };
 
 export const STUNT_PREMIUM_RATES: Record<ComfortLevelStunts, number> = {
-  'none': 2.0,
-  'minor': 1.2,
-  'moderate': 1.5,
-  'extreme': 2.5,
+  none: 2.0,
+  minor: 1.2,
+  moderate: 1.5,
+  extreme: 2.5,
 };
 
 export const INTIMACY_PREMIUM_RATES: Record<ComfortLevelIntimacy, number> = {
-  'none': 2.5,
-  'tasteful': 1.3,
-  'passionate': 1.8,
+  none: 2.5,
+  tasteful: 1.3,
+  passionate: 1.8,
 };
 
 export const RISK_PREMIUM_RATES: Record<ComfortLevelRisk, number> = {
-  'conservative': 2.0,
-  'moderate': 1.3,
-  'adventurous': 1.0,
+  conservative: 2.0,
+  moderate: 1.3,
+  adventurous: 1.0,
 };

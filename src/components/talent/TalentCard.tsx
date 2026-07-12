@@ -122,19 +122,21 @@ export const TalentCard: React.FC<TalentCardProps> = ({ talent, className, onCli
                 </h4>
                 <button
                   type="button"
-                  aria-label={isBookmarked(talent.id, 'talent') ? 'Remove bookmark' : 'Add bookmark'}
+                  aria-label={
+                    isBookmarked(talent.id, "talent") ? "Remove bookmark" : "Add bookmark"
+                  }
                   onClick={(e) => {
                     e.stopPropagation();
-                    toggleBookmark(talent.id, 'talent');
+                    toggleBookmark(talent.id, "talent");
                   }}
                   className={cn(
                     "shrink-0 h-7 w-7 flex items-center justify-center border transition-all duration-700 rounded-none",
-                    isBookmarked(talent.id, 'talent')
+                    isBookmarked(talent.id, "talent")
                       ? "bg-secondary/10 border-secondary/40 text-secondary shadow-[0_0_15px_rgba(var(--secondary),0.2)]"
                       : "bg-white/5 border-white/10 text-muted-foreground/40 hover:text-secondary hover:border-secondary/40"
                   )}
                 >
-                  {isBookmarked(talent.id, 'talent') ? (
+                  {isBookmarked(talent.id, "talent") ? (
                     <BookmarkCheck className="h-3.5 w-3.5" strokeWidth={3} />
                   ) : (
                     <Bookmark className="h-3.5 w-3.5" strokeWidth={2} />

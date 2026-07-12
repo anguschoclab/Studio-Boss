@@ -42,13 +42,16 @@ function createMockState(overrides: Partial<GameState> = {}): GameState {
   return { ...base, ...overrides } as unknown as GameState;
 }
 
-function createMockTalent(id: string, overrides: Partial<Talent> & Record<string, any> = {}): Talent {
+function createMockTalent(
+  id: string,
+  overrides: Partial<Talent> & Record<string, any> = {}
+): Talent {
   return {
     id,
     name: `Talent ${id}`,
     role: "actor",
     roles: ["actor"],
-    tier: 'C_LIST',
+    tier: "C_LIST",
     bio: "This Tier 3 talent is a rising star.",
     starMeter: 50,
     prestige: 50,
@@ -209,7 +212,7 @@ describe("tickBiographyGenerator", () => {
         relationships: {},
         cliques: {
           cliques: {
-            "clq1": {
+            clq1: {
               id: "clq1",
               name: "The Cool Kids",
               members: ["t1"],
@@ -250,7 +253,7 @@ describe("tickBiographyGenerator", () => {
         relationships: {},
         cliques: {
           cliques: {
-            "clq1": {
+            clq1: {
               id: "clq1",
               name: "The Old Kids",
               members: ["t1"],

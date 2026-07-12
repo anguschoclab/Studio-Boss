@@ -1,6 +1,11 @@
-import { Award, Talent, TalentTier } from '@/engine/types';
+import { Award, Talent, TalentTier } from "@/engine/types";
 type TalentProfile = Talent;
-import { isCannesEquivalentFestival, isSundanceEquivalentFestival, isMajorCategoryNomination, isSupportingCategoryNomination } from './awards';
+import {
+  isCannesEquivalentFestival,
+  isSundanceEquivalentFestival,
+  isMajorCategoryNomination,
+  isSupportingCategoryNomination,
+} from "./awards";
 
 export interface AwardBoosts {
   feeMultiplier: number;
@@ -33,7 +38,7 @@ export function applyAwardBoostsToTalent(
   const individualCategoryMultiplier = isMajorCategory ? 1.8 : isSupportingCategory ? 1.4 : 1.0;
   const finalMultiplier = multiplier * individualCategoryMultiplier;
 
-  if (award.status === 'won') {
+  if (award.status === "won") {
     if (isPrestige || isCannesEquivalent) {
       if (isMajorCategory) {
         prestigeBoost += 45 * finalMultiplier;
@@ -88,7 +93,7 @@ export function applyAwardBoostsToTalent(
     feeMultiplier,
     egoBoost,
     prestigeBoost,
-    drawBoost
+    drawBoost,
   };
 }
 
@@ -97,11 +102,11 @@ export function applyAwardBoostsToTalent(
  * and relative standing.
  */
 export function calculateTalentTier(prestige: number): TalentTier {
-  if (prestige >= 90) return 'A_LIST';
-  if (prestige >= 70) return 'B_LIST';
-  if (prestige >= 50) return 'C_LIST';
-  if (prestige >= 30) return 'RISING_STAR';
-  return 'NEWCOMER';
+  if (prestige >= 90) return "A_LIST";
+  if (prestige >= 70) return "B_LIST";
+  if (prestige >= 50) return "C_LIST";
+  if (prestige >= 30) return "RISING_STAR";
+  return "NEWCOMER";
 }
 
 /**
@@ -111,14 +116,14 @@ export function calculateTalentTier(prestige: number): TalentTier {
 export function calculateStarMeter(talent: Talent, globalAveragePrestige: number): number {
   const momentum = talent.momentum || 50;
   const prestige = talent.prestige;
-  
+
   // High prestige + high momentum = Star Meter peak
-  const rawMeter = (prestige * 0.6) + (momentum * 0.4);
-  
+  const rawMeter = prestige * 0.6 + momentum * 0.4;
+
   // Normalize against global average to ensure it doesn't inflate too much
   const ratio = prestige / globalAveragePrestige;
-  const adjustedMeter = rawMeter * (0.8 + (ratio * 0.2));
-  
+  const adjustedMeter = rawMeter * (0.8 + ratio * 0.2);
+
   return Math.min(100, Math.max(1, Math.floor(adjustedMeter)));
 }
 
@@ -131,7 +136,7 @@ export function calculatePrestigeShift(
   volatility: number = 50
 ): number {
   const baseShift = success ? 2 : -3;
-  const volMult = 1 + (volatility / 100);
-  
+  const volMult = 1 + volatility / 100;
+
   return Math.floor(baseShift * volMult);
 }

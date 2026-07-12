@@ -1,21 +1,23 @@
-import { StateCreator } from 'zustand';
-import { GameStore } from '../gameStore';
-import { WeeklyFinancialReport, FinanceState } from '@/engine/types';
-import { FinancialSnapshot } from '@/engine/types/state.types';
-import { type SnapshotId } from '@/engine/types/shared.types';
-import { RandomGenerator } from '@/engine/utils/rng';
+import { StateCreator } from "zustand";
+import { GameStore } from "../gameStore";
+import { WeeklyFinancialReport, FinanceState } from "@/engine/types";
+import { FinancialSnapshot } from "@/engine/types/state.types";
+import { type SnapshotId } from "@/engine/types/shared.types";
+import { RandomGenerator } from "@/engine/utils/rng";
 
 export interface FinanceLedgerSlice {
   addLedgerEntry: (report: WeeklyFinancialReport) => void;
 }
 
-export const createFinanceLedgerSlice: StateCreator<GameStore, [], [], FinanceLedgerSlice> = (set) => ({
+export const createFinanceLedgerSlice: StateCreator<GameStore, [], [], FinanceLedgerSlice> = (
+  set
+) => ({
   addLedgerEntry: (report: WeeklyFinancialReport) =>
     set((state) => {
       const gs = state.gameState;
       if (!gs) return state;
       const snapshot: FinancialSnapshot = {
-        id: new RandomGenerator(gs.rngState).uuid('SNP') as SnapshotId,
+        id: new RandomGenerator(gs.rngState).uuid("SNP") as SnapshotId,
         week: report.week,
         revenue: {
           theatrical: report.revenue.boxOffice,
@@ -32,7 +34,7 @@ export const createFinanceLedgerSlice: StateCreator<GameStore, [], [], FinanceLe
           interest: 0,
         },
         net: report.netProfit,
-        cash: report.endingCash
+        cash: report.endingCash,
       };
 
       return {
@@ -52,5 +54,5 @@ export const createFinanceLedgerSlice: StateCreator<GameStore, [], [], FinanceLe
           },
         },
       };
-    })
+    }),
 });

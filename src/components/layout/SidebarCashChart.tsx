@@ -1,5 +1,5 @@
-import React from 'react';
-import { LineChart, Line, ResponsiveContainer } from 'recharts';
+import React from "react";
+import { LineChart, Line, ResponsiveContainer } from "recharts";
 
 export interface SidebarCashChartProps {
   data: { cash: number }[];

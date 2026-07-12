@@ -1,13 +1,6 @@
-import React from 'react';
-import {
-  PieChart as RePieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-} from 'recharts';
-import { cn } from '@/lib/utils';
+import React from "react";
+import { PieChart as RePieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { cn } from "@/lib/utils";
 
 interface PieDataPoint {
   name: string;
@@ -38,29 +31,34 @@ export const PieChart: React.FC<PieChartProps> = ({
 }) => {
   if (!data || data.length === 0) {
     return (
-      <div className={cn('flex items-center justify-center h-[250px] text-muted-foreground', className)}>
+      <div
+        className={cn(
+          "flex items-center justify-center h-[250px] text-muted-foreground",
+          className
+        )}
+      >
         No data available
       </div>
     );
   }
 
   const defaultColors = [
-    'hsl(var(--primary))',   // Theatrical
-    'hsl(var(--secondary))', // Streaming
-    '#a78bfa',               // Merchandise (fixed per Design Bible 5.2)
-    '#34d399',               // Passive (fixed per Design Bible 5.2)
-    'hsl(var(--destructive))',
-    'hsl(var(--success))',
-    'hsl(var(--warning))',
-    'hsl(var(--accent))',
-    'hsl(var(--muted))',
-    'hsl(var(--foreground))'
+    "hsl(var(--primary))", // Theatrical
+    "hsl(var(--secondary))", // Streaming
+    "#a78bfa", // Merchandise (fixed per Design Bible 5.2)
+    "#34d399", // Passive (fixed per Design Bible 5.2)
+    "hsl(var(--destructive))",
+    "hsl(var(--success))",
+    "hsl(var(--warning))",
+    "hsl(var(--accent))",
+    "hsl(var(--muted))",
+    "hsl(var(--foreground))",
   ];
 
   const total = data.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <div className={cn('w-full', className)} style={{ height }}>
+    <div className={cn("w-full", className)} style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
         <RePieChart>
           <Pie
@@ -73,9 +71,9 @@ export const PieChart: React.FC<PieChartProps> = ({
             dataKey="value"
           >
             {data.map((entry, index) => (
-              <Cell 
-                key={`cell-${index}`} 
-                fill={entry.color || defaultColors[index % defaultColors.length]} 
+              <Cell
+                key={`cell-${index}`}
+                fill={entry.color || defaultColors[index % defaultColors.length]}
               />
             ))}
           </Pie>
@@ -86,20 +84,20 @@ export const PieChart: React.FC<PieChartProps> = ({
                 return [`${valueFormatter(value)} (${percentage}%)`, name];
               }}
               contentStyle={{
-                backgroundColor: '#1f2937',
-                border: 'none',
-                borderRadius: '6px',
-                fontSize: '12px',
-                color: '#fff',
+                backgroundColor: "#1f2937",
+                border: "none",
+                borderRadius: "6px",
+                fontSize: "12px",
+                color: "#fff",
               }}
             />
           )}
           {showLegend && (
-            <Legend 
-              verticalAlign="bottom" 
+            <Legend
+              verticalAlign="bottom"
               height={36}
               iconType="circle"
-              wrapperStyle={{ fontSize: '11px' }}
+              wrapperStyle={{ fontSize: "11px" }}
             />
           )}
         </RePieChart>

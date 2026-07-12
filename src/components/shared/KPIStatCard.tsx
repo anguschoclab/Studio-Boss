@@ -1,6 +1,6 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 
 interface KPIStatCardProps {
   label: string;
@@ -11,25 +11,25 @@ interface KPIStatCardProps {
     value: number | string;
     isPositive: boolean;
   };
-  variant?: 'primary' | 'secondary' | 'success' | 'destructive' | 'muted';
+  variant?: "primary" | "secondary" | "success" | "destructive" | "muted";
   tooltip?: string;
   className?: string;
 }
 
 const ACCENT = {
-  primary: 'text-primary',
-  secondary: 'text-secondary',
-  success: 'text-emerald-400',
-  destructive: 'text-rose-400',
-  muted: 'text-foreground',
+  primary: "text-primary",
+  secondary: "text-secondary",
+  success: "text-emerald-400",
+  destructive: "text-rose-400",
+  muted: "text-foreground",
 } as const;
 
 const BAR = {
-  primary: 'bg-primary',
-  secondary: 'bg-secondary',
-  success: 'bg-emerald-400',
-  destructive: 'bg-rose-400',
-  muted: 'bg-white/30',
+  primary: "bg-primary",
+  secondary: "bg-secondary",
+  success: "bg-emerald-400",
+  destructive: "bg-rose-400",
+  muted: "bg-white/30",
 } as const;
 
 export const KPIStatCard: React.FC<KPIStatCardProps> = ({
@@ -38,7 +38,7 @@ export const KPIStatCard: React.FC<KPIStatCardProps> = ({
   subLabel,
   icon,
   trend,
-  variant = 'muted',
+  variant = "muted",
   tooltip,
   className,
 }) => {
@@ -46,15 +46,15 @@ export const KPIStatCard: React.FC<KPIStatCardProps> = ({
     <TooltipWrapper tooltip={tooltip}>
       <div
         className={cn(
-          'group relative overflow-hidden rounded-none border border-white/10 bg-white/[0.015]',
-          'p-6 transition-colors duration-200 hover:border-white/25 hover:bg-white/[0.03]',
+          "group relative overflow-hidden rounded-none border border-white/10 bg-white/[0.015]",
+          "p-6 transition-colors duration-200 hover:border-white/25 hover:bg-white/[0.03]",
           className
         )}
       >
         {/* Single thin accent bar — brightens on hover. No glow blobs. */}
         <div
           className={cn(
-            'absolute left-0 top-0 h-full w-[3px] opacity-40 transition-opacity duration-200 group-hover:opacity-100',
+            "absolute left-0 top-0 h-full w-[3px] opacity-40 transition-opacity duration-200 group-hover:opacity-100",
             BAR[variant]
           )}
         />
@@ -64,7 +64,12 @@ export const KPIStatCard: React.FC<KPIStatCardProps> = ({
             {label}
           </span>
           {icon && (
-            <div className={cn('shrink-0 opacity-50 transition-opacity duration-200 group-hover:opacity-100', ACCENT[variant])}>
+            <div
+              className={cn(
+                "shrink-0 opacity-50 transition-opacity duration-200 group-hover:opacity-100",
+                ACCENT[variant]
+              )}
+            >
               {icon}
             </div>
           )}
@@ -72,7 +77,7 @@ export const KPIStatCard: React.FC<KPIStatCardProps> = ({
 
         <div
           className={cn(
-            'mt-4 font-display text-4xl font-bold not-italic normal-case tracking-tight tabular-nums leading-none',
+            "mt-4 font-display text-4xl font-bold not-italic normal-case tracking-tight tabular-nums leading-none",
             ACCENT[variant]
           )}
         >
@@ -84,12 +89,12 @@ export const KPIStatCard: React.FC<KPIStatCardProps> = ({
             {trend && (
               <span
                 className={cn(
-                  'inline-flex items-center gap-1 text-xs font-semibold tabular-nums not-italic',
-                  trend.isPositive ? 'text-emerald-400' : 'text-rose-400'
+                  "inline-flex items-center gap-1 text-xs font-semibold tabular-nums not-italic",
+                  trend.isPositive ? "text-emerald-400" : "text-rose-400"
                 )}
               >
                 <span aria-hidden className="text-[10px] leading-none">
-                  {trend.isPositive ? '▲' : '▼'}
+                  {trend.isPositive ? "▲" : "▼"}
                 </span>
                 {trend.value}
               </span>

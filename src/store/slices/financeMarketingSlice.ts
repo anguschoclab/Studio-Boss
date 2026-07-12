@@ -1,18 +1,29 @@
-import { StateCreator } from 'zustand';
-import { GameStore } from '../gameStore';
-import { handleReleasePhaseEntry } from '@/engine/systems/projects';
-import { executeMarketing } from '@/engine/systems/projectHandlers';
-import { Contract, Project, Talent, NewsId } from '@/engine/types';
-import { type ProjectId, type TalentId } from '@/engine/types/shared.types';
-import { RandomGenerator } from '@/engine/utils/rng';
-import { getContractsByProjectId } from '@/engine/utils';
+import { StateCreator } from "zustand";
+import { GameStore } from "../gameStore";
+import { handleReleasePhaseEntry } from "@/engine/systems/projects";
+import { executeMarketing } from "@/engine/systems/projectHandlers";
+import { Contract, Project, Talent, NewsId } from "@/engine/types";
+import { type ProjectId, type TalentId } from "@/engine/types/shared.types";
+import { RandomGenerator } from "@/engine/utils/rng";
+import { getContractsByProjectId } from "@/engine/utils";
 
 export interface FinanceMarketingSlice {
-  launchReleaseMarketing: (projectId: ProjectId, budget: number, domesticPct: number, angle: string) => void;
-  executeMarketingEvent: (eventName: 'superbowl_ad' | 'viral_campaign' | 'press_tour', cost: number, projectId: ProjectId) => void;
+  launchReleaseMarketing: (
+    projectId: ProjectId,
+    budget: number,
+    domesticPct: number,
+    angle: string
+  ) => void;
+  executeMarketingEvent: (
+    eventName: "superbowl_ad" | "viral_campaign" | "press_tour",
+    cost: number,
+    projectId: ProjectId
+  ) => void;
 }
 
-export const createFinanceMarketingSlice: StateCreator<GameStore, [], [], FinanceMarketingSlice> = (set) => ({
+export const createFinanceMarketingSlice: StateCreator<GameStore, [], [], FinanceMarketingSlice> = (
+  set
+) => ({
   launchReleaseMarketing: (projectId, budget, domesticPct, angle) => {
     set((s) => {
       const state = s.gameState;
@@ -20,7 +31,7 @@ export const createFinanceMarketingSlice: StateCreator<GameStore, [], [], Financ
       if (budget > state.finance.cash) return s;
 
       const originalProject = state.entities.projects[projectId];
-      if (!originalProject || originalProject.state !== 'marketing') return s;
+      if (!originalProject || originalProject.state !== "marketing") return s;
 
       const newCash = state.finance.cash - budget;
       const { project: p } = executeMarketing(originalProject, {
@@ -30,34 +41,36 @@ export const createFinanceMarketingSlice: StateCreator<GameStore, [], [], Financ
       });
 
       const projectContracts = getContractsByProjectId(
-        state.entities.contractsByProjectId, state.entities.contracts, p.id
+        state.entities.contractsByProjectId,
+        state.entities.contracts,
+        p.id
       );
 
       const talentPool = state.entities.talents;
       const talentMap: Record<string, Talent> = {};
-      Object.keys(talentPool).forEach(id => {
+      Object.keys(talentPool).forEach((id) => {
         talentMap[id] = talentPool[id];
       });
 
       const rng = new RandomGenerator(state.rngState);
 
       const result = handleReleasePhaseEntry(
-        p, 
-        state.week, 
-        state.studio.prestige, 
-        projectContracts, 
+        p,
+        state.week,
+        state.studio.prestige,
+        projectContracts,
         talentMap,
         rng
       );
 
       const headlines = [...state.news.headlines];
-      const newsImpact = result.find(r => r.type === 'NEWS_ADDED');
+      const newsImpact = result.find((r) => r.type === "NEWS_ADDED");
       if (newsImpact && newsImpact.payload) {
         headlines.unshift({
-          id: rng.uuid('NWS') as NewsId,
+          id: rng.uuid("NWS") as NewsId,
           week: state.week,
-          category: 'general' as const,
-          text: (newsImpact.payload as any).text || (newsImpact.payload as any).description || ''
+          category: "general" as const,
+          text: (newsImpact.payload as any).text || (newsImpact.payload as any).description || "",
         });
       }
 
@@ -65,8 +78,8 @@ export const createFinanceMarketingSlice: StateCreator<GameStore, [], [], Financ
 
       return {
         finance: {
-            ...s.finance,
-            cash: newCash
+          ...s.finance,
+          cash: newCash,
         },
         gameState: {
           ...state,
@@ -76,19 +89,19 @@ export const createFinanceMarketingSlice: StateCreator<GameStore, [], [], Financ
           },
           entities: {
             ...state.entities,
-            projects: updatedProjects
+            projects: updatedProjects,
           },
           news: {
             ...state.news,
             headlines,
           },
-          rngState: rng.getState()
-        }
+          rngState: rng.getState(),
+        },
       };
     });
   },
 
   executeMarketingEvent: (eventName, cost, projectId) => {
     // Marketing event execution - logic to be implemented
-  }
+  },
 });

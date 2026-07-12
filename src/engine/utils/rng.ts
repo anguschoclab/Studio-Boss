@@ -49,8 +49,11 @@ export class RandomGenerator {
   /**
    * Returns a deterministic UUID-like string.
    */
-  uuid(prefix: string = ''): string {
-    const part = () => Math.floor(this.next() * 0xffffffff).toString(16).padStart(8, '0');
+  uuid(prefix: string = ""): string {
+    const part = () =>
+      Math.floor(this.next() * 0xffffffff)
+        .toString(16)
+        .padStart(8, "0");
     const id = `${part()}-${part().slice(0, 4)}-${part().slice(0, 4)}-${part().slice(0, 4)}-${part().slice(0, 12)}`;
     return prefix ? `${prefix}-${id}` : id;
   }

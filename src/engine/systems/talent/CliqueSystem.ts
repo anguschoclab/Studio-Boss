@@ -1,13 +1,7 @@
-import { GameState, StateImpact, Talent } from '../../types';
-import { RandomGenerator } from '../../utils/rng';
-import {
-  Clique,
-  CliqueReputation,
-  CLIQUE_NAME_PATTERNS,
-} from '../../types/clique.types';
-import {
-  areFriends,
-} from './RelationshipSystem';
+import { GameState, StateImpact, Talent } from "../../types";
+import { RandomGenerator } from "../../utils/rng";
+import { Clique, CliqueReputation, CLIQUE_NAME_PATTERNS } from "../../types/clique.types";
+import { areFriends } from "./RelationshipSystem";
 
 /**
  * Clique System
@@ -30,12 +24,12 @@ const FAME_BONUS_PER_MEMBER = 8; // 8% per member, max 48% for 6 members
  */
 function generateCliqueName(members: Talent[], week: number, rng: RandomGenerator): string {
   const decade = Math.floor((week / 52 + 2020) / 10) * 10;
-  const locations = ['Hollywood', 'Beverly Hills', 'Malibu', 'New York', 'London'];
+  const locations = ["Hollywood", "Beverly Hills", "Malibu", "New York", "London"];
   const location = rng.pick(locations);
 
   const patterns = [
-    ...CLIQUE_NAME_PATTERNS.eraBased.map(p => p.replace('{decade}', String(decade))),
-    ...CLIQUE_NAME_PATTERNS.locationBased.map(p => p.replace('{location}', location)),
+    ...CLIQUE_NAME_PATTERNS.eraBased.map((p) => p.replace("{decade}", String(decade))),
+    ...CLIQUE_NAME_PATTERNS.locationBased.map((p) => p.replace("{location}", location)),
     ...CLIQUE_NAME_PATTERNS.personalityBased,
   ];
 
@@ -46,24 +40,24 @@ function generateCliqueName(members: Talent[], week: number, rng: RandomGenerato
  * Calculate clique reputation based on member personalities and scandals
  */
 function calculateCliqueReputation(members: Talent[], rng: RandomGenerator): CliqueReputation {
-  const scandalRisks = members.map(m => m.psychology?.scandalRisk || 50);
+  const scandalRisks = members.map((m) => m.psychology?.scandalRisk || 50);
   const avgScandalRisk = scandalRisks.reduce((a, b) => a + b, 0) / scandalRisks.length;
 
-  const difficultCount = members.filter(m => m.personality === 'difficult').length;
-  const prestigiousCount = members.filter(m => m.prestige > 80).length;
+  const difficultCount = members.filter((m) => m.personality === "difficult").length;
+  const prestigiousCount = members.filter((m) => m.prestige > 80).length;
 
   // Determine reputation
   if (avgScandalRisk > 70 || difficultCount >= 2) {
-    return rng.next() < 0.5 ? 'scandalous' : 'toxic';
+    return rng.next() < 0.5 ? "scandalous" : "toxic";
   }
   if (prestigiousCount >= members.length / 2) {
-    return 'prestigious';
+    return "prestigious";
   }
-  if (members.every(m => m.accessLevel === 'dynasty' || m.accessLevel === 'legacy')) {
-    return 'elitist';
+  if (members.every((m) => m.accessLevel === "dynasty" || m.accessLevel === "legacy")) {
+    return "elitist";
   }
 
-  return 'cool';
+  return "cool";
 }
 
 /**
@@ -80,8 +74,8 @@ function calculateExclusivity(members: Talent[]): number {
   // Based on member tier and dynasty status
   let exclusivity = 50;
 
-  const dynastyMembers = members.filter(m => m.accessLevel === 'dynasty').length;
-  const tier1Count = members.filter(m => m.tier === 'A_LIST').length;
+  const dynastyMembers = members.filter((m) => m.accessLevel === "dynasty").length;
+  const tier1Count = members.filter((m) => m.tier === "A_LIST").length;
 
   exclusivity += dynastyMembers * 10;
   exclusivity += tier1Count * 15;
@@ -102,12 +96,20 @@ function findPotentialCliques(state: GameState, _rng: RandomGenerator): string[]
     if (!Object.prototype.hasOwnProperty.call(talentsObj, tId)) continue;
     const talent = talentsObj[tId];
     if (!talent) continue;
-    const relationshipsObj = (state.relationships as unknown as { relationships?: Record<string, { talentAId: string; talentBId: string; type: string; strength: number }> })?.relationships || {};
+    const relationshipsObj =
+      (
+        state.relationships as unknown as {
+          relationships?: Record<
+            string,
+            { talentAId: string; talentBId: string; type: string; strength: number }
+          >;
+        }
+      )?.relationships || {};
     const friends = new Set<string>();
     for (const rId in relationshipsObj) {
       if (!Object.prototype.hasOwnProperty.call(relationshipsObj, rId)) continue;
       const r = relationshipsObj[rId];
-      if (r.type !== 'friend' || r.strength < CLIQUE_FRIENDSHIP_THRESHOLD) continue;
+      if (r.type !== "friend" || r.strength < CLIQUE_FRIENDSHIP_THRESHOLD) continue;
       if (r.talentAId === tId) friends.add(r.talentBId);
       else if (r.talentBId === tId) friends.add(r.talentAId);
     }
@@ -152,12 +154,17 @@ function findPotentialCliques(state: GameState, _rng: RandomGenerator): string[]
       const sortedIds = mutuallyFriendly.slice(0, MAX_CLIQUE_SIZE).sort();
 
       // Check if this exact clique already exists
-      const cliquesRecord = (state.relationships as unknown as { cliques?: { cliques?: Record<string, Clique> } })?.cliques?.cliques || {};
+      const cliquesRecord =
+        (state.relationships as unknown as { cliques?: { cliques?: Record<string, Clique> } })
+          ?.cliques?.cliques || {};
       let alreadyExists = false;
       for (const cliqueId in cliquesRecord) {
         if (!Object.prototype.hasOwnProperty.call(cliquesRecord, cliqueId)) continue;
         const c = cliquesRecord[cliqueId];
-        if (c.members.length === sortedIds.length && c.members.every(id => sortedIds.includes(id))) {
+        if (
+          c.members.length === sortedIds.length &&
+          c.members.every((id) => sortedIds.includes(id))
+        ) {
           alreadyExists = true;
           break;
         }
@@ -184,7 +191,7 @@ function formClique(
   const impacts: StateImpact[] = [];
 
   const members = memberIds
-    .map(id => state.entities.talents?.[id])
+    .map((id) => state.entities.talents?.[id])
     .filter((m): m is Talent => !!m);
 
   const name = generateCliqueName(members, week, rng);
@@ -194,11 +201,11 @@ function formClique(
   const exclusivity = calculateExclusivity(members);
 
   const clique: Clique = {
-    id: rng.uuid('CLQ'),
+    id: rng.uuid("CLQ"),
     name,
     members: memberIds,
     formedWeek: week,
-    status: 'active',
+    status: "active",
     fameBonus,
     reputation,
     exclusivity,
@@ -208,15 +215,15 @@ function formClique(
   };
 
   // News about new clique formation
-  const memberNames = members.map(m => m.name).join(', ');
+  const memberNames = members.map((m) => m.name).join(", ");
   impacts.push({
-    type: 'NEWS_ADDED',
+    type: "NEWS_ADDED",
     payload: {
-      id: rng.uuid('NWS'),
+      id: rng.uuid("NWS"),
       headline: `Hollywood's New Power Clique: "${name}"`,
       description: `${memberNames} have formed an exclusive ${reputation} clique that everyone wants to join. Industry insiders say this group is reshaping Hollywood's social hierarchy.`,
-      category: 'talent',
-      publication: 'The Hollywood Reporter',
+      category: "talent",
+      publication: "The Hollywood Reporter",
     },
   });
 
@@ -236,22 +243,22 @@ function evolveClique(
 
   // Get current members (filter out deceased)
   const livingMembers = clique.members
-    .map(id => state.entities.talents?.[id])
+    .map((id) => state.entities.talents?.[id])
     .filter((m): m is Talent => !!m);
 
   // Check if clique should disband
   if (livingMembers.length < MIN_CLIQUE_SIZE) {
-    updated.status = 'disbanded';
+    updated.status = "disbanded";
     updated.disbandedWeek = state.week;
 
     impacts.push({
-      type: 'NEWS_ADDED',
+      type: "NEWS_ADDED",
       payload: {
-        id: rng.uuid('NWS'),
+        id: rng.uuid("NWS"),
         headline: `"${clique.name}" Disbands`,
         description: `After losing key members, the famous clique has officially disbanded. Fans are mourning the end of an era.`,
-        category: 'talent',
-        publication: 'Variety',
+        category: "talent",
+        publication: "Variety",
       },
     });
 
@@ -262,7 +269,7 @@ function evolveClique(
   updated.combinedStarPower = calculateCombinedStarPower(livingMembers);
 
   // Internal conflicts (5% chance per week for active cliques)
-  if (clique.status === 'active' && rng.next() < 0.05) {
+  if (clique.status === "active" && rng.next() < 0.05) {
     // Find two members who might have tension
     const potentialConflicts: [string, string][] = [];
 
@@ -282,17 +289,17 @@ function evolveClique(
       if (!updated.internalConflicts.includes(conflictKey)) {
         updated.internalConflicts.push(conflictKey);
 
-        const talentA = livingMembers.find(m => m.id === memberA);
-        const talentB = livingMembers.find(m => m.id === memberB);
+        const talentA = livingMembers.find((m) => m.id === memberA);
+        const talentB = livingMembers.find((m) => m.id === memberB);
 
         impacts.push({
-          type: 'NEWS_ADDED',
+          type: "NEWS_ADDED",
           payload: {
-            id: rng.uuid('NWS'),
+            id: rng.uuid("NWS"),
             headline: `Tension in "${clique.name}"`,
             description: `Sources report friction between ${talentA?.name} and ${talentB?.name} within the exclusive clique.`,
-            category: 'talent',
-            publication: 'Page Six',
+            category: "talent",
+            publication: "Page Six",
           },
         });
       }
@@ -301,35 +308,35 @@ function evolveClique(
 
   // Check for disbandment due to too many conflicts
   if (updated.internalConflicts.length >= 2 && rng.next() < 0.1) {
-    updated.status = 'disbanded';
+    updated.status = "disbanded";
     updated.disbandedWeek = state.week;
 
     impacts.push({
-      type: 'NEWS_ADDED',
+      type: "NEWS_ADDED",
       payload: {
-        id: rng.uuid('NWS'),
+        id: rng.uuid("NWS"),
         headline: `"${clique.name}" Implodes Amid Drama`,
         description: `Internal conflicts have torn the clique apart. Members are going their separate ways.`,
-        category: 'talent',
-        publication: 'The Hollywood Reporter',
+        category: "talent",
+        publication: "The Hollywood Reporter",
       },
     });
   }
 
   // Check for reunion (disbanded cliques with high reunionPotential)
-  if (clique.status === 'disbanded' && rng.next() < (clique.reunionPotential / 5200)) {
+  if (clique.status === "disbanded" && rng.next() < clique.reunionPotential / 5200) {
     // 5200 weeks = 100 years, so very rare
-    updated.status = 'active';
+    updated.status = "active";
     updated.reunionPotential = Math.max(0, updated.reunionPotential - 20);
 
     impacts.push({
-      type: 'NEWS_ADDED',
+      type: "NEWS_ADDED",
       payload: {
-        id: rng.uuid('NWS'),
+        id: rng.uuid("NWS"),
         headline: `"${clique.name}" Reunites!`,
         description: `In a stunning move, the legendary clique has reunited. Nostalgia and mutual respect brought them back together.`,
-        category: 'talent',
-        publication: 'Variety',
+        category: "talent",
+        publication: "Variety",
       },
     });
   }
@@ -341,13 +348,13 @@ function evolveClique(
 
     if (updated.reputation !== oldReputation) {
       impacts.push({
-        type: 'NEWS_ADDED',
+        type: "NEWS_ADDED",
         payload: {
-          id: rng.uuid('NWS'),
+          id: rng.uuid("NWS"),
           headline: `"${clique.name}" Rebrands as ${updated.reputation}`,
           description: `The clique's public image has shifted from ${oldReputation} to ${updated.reputation}.`,
-          category: 'talent',
-          publication: 'The Hollywood Reporter',
+          category: "talent",
+          publication: "The Hollywood Reporter",
         },
       });
     }
@@ -374,7 +381,7 @@ export function tickCliqueSystem(state: GameState, rng: RandomGenerator): StateI
 
       // Store in state
       impacts.push({
-        type: 'CLIQUE_FORMED',
+        type: "CLIQUE_FORMED",
         payload: {
           cliqueId: clique.id,
           clique,
@@ -384,7 +391,7 @@ export function tickCliqueSystem(state: GameState, rng: RandomGenerator): StateI
       // Update member clique map for each member
       for (const memberId of memberIds) {
         impacts.push({
-          type: 'TALENT_UPDATED',
+          type: "TALENT_UPDATED",
           payload: {
             talentId: memberId,
             update: {
@@ -398,17 +405,20 @@ export function tickCliqueSystem(state: GameState, rng: RandomGenerator): StateI
   }
 
   // 2. Evolve existing cliques
-  const cliquesRecord = (state.relationships as unknown as { cliques?: { cliques?: Record<string, Clique> } })?.cliques?.cliques || {};
+  const cliquesRecord =
+    (state.relationships as unknown as { cliques?: { cliques?: Record<string, Clique> } })?.cliques
+      ?.cliques || {};
 
   for (const cliqueId in cliquesRecord) {
     if (!Object.prototype.hasOwnProperty.call(cliquesRecord, cliqueId)) continue;
     const clique = cliquesRecord[cliqueId];
-    if (rng.next() < 0.3) { // 30% chance to evolve each clique per week
+    if (rng.next() < 0.3) {
+      // 30% chance to evolve each clique per week
       const { updated, impacts: evolutionImpacts } = evolveClique(clique, state, rng);
 
       if (updated !== clique) {
         impacts.push({
-          type: 'CLIQUE_UPDATED',
+          type: "CLIQUE_UPDATED",
           payload: {
             cliqueId: clique.id,
             clique: updated,
@@ -427,13 +437,15 @@ export function tickCliqueSystem(state: GameState, rng: RandomGenerator): StateI
  * Get fame bonus for a talent based on clique membership
  */
 export function getCliqueFameBonus(talentId: string, state: GameState): number {
-  const cliquesRecord = (state.relationships as unknown as { cliques?: { cliques?: Record<string, Clique> } })?.cliques?.cliques || {};
+  const cliquesRecord =
+    (state.relationships as unknown as { cliques?: { cliques?: Record<string, Clique> } })?.cliques
+      ?.cliques || {};
 
   let maxBonus = 0;
   for (const cliqueId in cliquesRecord) {
     if (!Object.prototype.hasOwnProperty.call(cliquesRecord, cliqueId)) continue;
     const c = cliquesRecord[cliqueId];
-    if (c.status === 'active' && c.members.includes(talentId)) {
+    if (c.status === "active" && c.members.includes(talentId)) {
       if (c.fameBonus > maxBonus) {
         maxBonus = c.fameBonus;
       }
@@ -446,11 +458,15 @@ export function getCliqueFameBonus(talentId: string, state: GameState): number {
 /**
  * Check if casting entire clique would provide bonus
  */
-export function getCliqueCastingBonus(cliqueId: string, castTalentIds: string[], state: GameState): number {
+export function getCliqueCastingBonus(
+  cliqueId: string,
+  castTalentIds: string[],
+  state: GameState
+): number {
   const clique = (state as any).relationships?.cliques?.cliques?.[cliqueId] as Clique | undefined;
-  if (!clique || clique.status !== 'active') return 0;
+  if (!clique || clique.status !== "active") return 0;
 
-  const membersInCast = clique.members.filter(id => castTalentIds.includes(id)).length;
+  const membersInCast = clique.members.filter((id) => castTalentIds.includes(id)).length;
   const memberPercentage = membersInCast / clique.members.length;
 
   // If at least 60% of clique is cast, provide full bonus

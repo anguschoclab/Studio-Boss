@@ -1,24 +1,24 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { WeekSummaryModal } from '@/components/modals/WeekSummaryModal';
-import { useUIStore } from '@/store/uiStore';
-import { formatMoney } from '@/engine/utils';
-import { WeekSummary } from '@/engine/types';
+import React from "react";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { WeekSummaryModal } from "@/components/modals/WeekSummaryModal";
+import { useUIStore } from "@/store/uiStore";
+import { formatMoney } from "@/engine/utils";
+import { WeekSummary } from "@/engine/types";
 
-vi.mock('@/store/uiStore', () => ({
+vi.mock("@/store/uiStore", () => ({
   useUIStore: vi.fn(),
 }));
 
-vi.mock('@/store/gameStore', () => ({
+vi.mock("@/store/gameStore", () => ({
   useGameStore: vi.fn(() => []),
 }));
 
-vi.mock('@/components/modals/NewsStoryModal', () => ({
+vi.mock("@/components/modals/NewsStoryModal", () => ({
   NewsStoryModal: () => null,
 }));
 
-describe('WeekSummaryModal', () => {
+describe("WeekSummaryModal", () => {
   const mockCloseSummary = vi.fn();
   const mockUseUIStore = vi.mocked(useUIStore);
 
@@ -26,7 +26,7 @@ describe('WeekSummaryModal', () => {
     vi.clearAllMocks();
   });
 
-  it('renders nothing when weekSummary is null', () => {
+  it("renders nothing when weekSummary is null", () => {
     mockUseUIStore.mockReturnValue({
       activeModal: null,
       resolveCurrentModal: mockCloseSummary,
@@ -36,9 +36,9 @@ describe('WeekSummaryModal', () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it('renders nothing when showWeekSummary is false (Dialog handles open state, but if weekSummary is null it returns null anyway)', () => {
+  it("renders nothing when showWeekSummary is false (Dialog handles open state, but if weekSummary is null it returns null anyway)", () => {
     mockUseUIStore.mockReturnValue({
-      activeModal: { type: 'OTHER' } as any,
+      activeModal: { type: "OTHER" } as any,
       resolveCurrentModal: mockCloseSummary,
     } as unknown as ReturnType<typeof useUIStore>);
 
@@ -46,10 +46,10 @@ describe('WeekSummaryModal', () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it('renders correctly with positive net financial data', () => {
+  it("renders correctly with positive net financial data", () => {
     mockUseUIStore.mockReturnValue({
       activeModal: {
-        type: 'SUMMARY',
+        type: "SUMMARY",
         payload: {
           fromWeek: 1,
           toWeek: 2,
@@ -60,7 +60,7 @@ describe('WeekSummaryModal', () => {
           projectUpdates: [],
           newHeadlines: [],
           events: [],
-        } as WeekSummary
+        } as WeekSummary,
       },
       resolveCurrentModal: mockCloseSummary,
     } as unknown as ReturnType<typeof useUIStore>);
@@ -68,20 +68,20 @@ describe('WeekSummaryModal', () => {
     render(<WeekSummaryModal />);
 
     // Title uses new format
-    expect(screen.getByText('CYCLE W2 REPORT')).toBeDefined();
+    expect(screen.getByText("CYCLE W2 REPORT")).toBeDefined();
 
     // Financial section header
-    expect(screen.getByText('FINANCIAL SUMMARY')).toBeDefined();
+    expect(screen.getByText("FINANCIAL SUMMARY")).toBeDefined();
 
     // Revenue and costs use uppercase formatted money
     expect(screen.getByText(`+${formatMoney(1500).toUpperCase()}`)).toBeDefined();
     expect(screen.getByText(`-${formatMoney(500).toUpperCase()}`)).toBeDefined();
   });
 
-  it('renders correctly with negative net financial data', () => {
+  it("renders correctly with negative net financial data", () => {
     mockUseUIStore.mockReturnValue({
       activeModal: {
-        type: 'SUMMARY',
+        type: "SUMMARY",
         payload: {
           fromWeek: 1,
           toWeek: 2,
@@ -92,7 +92,7 @@ describe('WeekSummaryModal', () => {
           projectUpdates: [],
           newHeadlines: [],
           events: [],
-        } as WeekSummary
+        } as WeekSummary,
       },
       resolveCurrentModal: mockCloseSummary,
     } as unknown as ReturnType<typeof useUIStore>);
@@ -103,10 +103,10 @@ describe('WeekSummaryModal', () => {
     expect(screen.getByText(formatMoney(netDelta))).toBeDefined();
   });
 
-  it('renders project updates, events, and headlines if they exist', () => {
+  it("renders project updates, events, and headlines if they exist", () => {
     mockUseUIStore.mockReturnValue({
       activeModal: {
-        type: 'SUMMARY',
+        type: "SUMMARY",
         payload: {
           fromWeek: 1,
           toWeek: 2,
@@ -114,10 +114,12 @@ describe('WeekSummaryModal', () => {
           cashAfter: 1000,
           totalRevenue: 0,
           totalCosts: 0,
-          projectUpdates: ['Project A advanced to Post-Production'],
-          newHeadlines: [{ id: '1', text: 'Studio hit with major controversy', week: 2, category: 'general' }],
-          events: ['Market crashed'],
-        } as WeekSummary
+          projectUpdates: ["Project A advanced to Post-Production"],
+          newHeadlines: [
+            { id: "1", text: "Studio hit with major controversy", week: 2, category: "general" },
+          ],
+          events: ["Market crashed"],
+        } as WeekSummary,
       },
       resolveCurrentModal: mockCloseSummary,
     } as unknown as ReturnType<typeof useUIStore>);
@@ -125,17 +127,17 @@ describe('WeekSummaryModal', () => {
     render(<WeekSummaryModal />);
 
     // Financial section always renders
-    expect(screen.getByText('FINANCIAL SUMMARY')).toBeDefined();
+    expect(screen.getByText("FINANCIAL SUMMARY")).toBeDefined();
 
     // Headlines section renders when headlines exist
-    expect(screen.getByText('THE TRADES SUMMARY')).toBeDefined();
-    expect(screen.getByText('Studio hit with major controversy')).toBeDefined();
+    expect(screen.getByText("THE TRADES SUMMARY")).toBeDefined();
+    expect(screen.getByText("Studio hit with major controversy")).toBeDefined();
   });
 
-  it('calls closeSummary when the Continue button is clicked', () => {
+  it("calls closeSummary when the Continue button is clicked", () => {
     mockUseUIStore.mockReturnValue({
       activeModal: {
-        type: 'SUMMARY',
+        type: "SUMMARY",
         payload: {
           fromWeek: 1,
           toWeek: 2,
@@ -146,14 +148,14 @@ describe('WeekSummaryModal', () => {
           projectUpdates: [],
           newHeadlines: [],
           events: [],
-        } as WeekSummary
+        } as WeekSummary,
       },
       resolveCurrentModal: mockCloseSummary,
     } as unknown as ReturnType<typeof useUIStore>);
 
     render(<WeekSummaryModal />);
 
-    const button = screen.getByText('CONFIRM REPORT AND CONTINUE');
+    const button = screen.getByText("CONFIRM REPORT AND CONTINUE");
     fireEvent.click(button);
 
     expect(mockCloseSummary).toHaveBeenCalledTimes(1);

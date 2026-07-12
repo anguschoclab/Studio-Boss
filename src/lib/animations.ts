@@ -1,11 +1,11 @@
 /**
  * Animation System for Studio Boss
- * 
+ *
  * Provides consistent animation variants for Framer Motion
  * and CSS transitions. Use these instead of ad-hoc animation values.
  */
 
-import { Variants, Transition } from 'framer-motion';
+import { Variants, Transition } from "framer-motion";
 
 /**
  * Duration tokens (in seconds)
@@ -21,12 +21,12 @@ export const durations = {
  * Easing curves
  */
 export const easings = {
-  default: [0.25, 0.1, 0.25, 1],      // ease
-  in: [0.42, 0, 1, 1],                // ease-in
-  out: [0, 0, 0.58, 1],               // ease-out
-  inOut: [0.42, 0, 0.58, 1],          // ease-in-out
-  spring: { type: 'spring', stiffness: 300, damping: 30 },
-  bounce: { type: 'spring', stiffness: 400, damping: 10 },
+  default: [0.25, 0.1, 0.25, 1], // ease
+  in: [0.42, 0, 1, 1], // ease-in
+  out: [0, 0, 0.58, 1], // ease-out
+  inOut: [0.42, 0, 0.58, 1], // ease-in-out
+  spring: { type: "spring", stiffness: 300, damping: 30 },
+  bounce: { type: "spring", stiffness: 400, damping: 10 },
 } as const;
 
 /**
@@ -46,12 +46,12 @@ export const transitions = {
     ease: easings.out,
   },
   spring: {
-    type: 'spring' as const,
+    type: "spring" as const,
     stiffness: 300,
     damping: 30,
   },
   bounce: {
-    type: 'spring' as const,
+    type: "spring" as const,
     stiffness: 400,
     damping: 10,
   },
@@ -220,7 +220,7 @@ export const cardHover = {
     scale: 1.02,
     y: -2,
     transition: {
-      type: 'spring' as const,
+      type: "spring" as const,
       stiffness: 300,
       damping: 30,
     },
@@ -240,7 +240,7 @@ export const buttonTap = {
 /**
  * Slide in from specific direction
  */
-export const slideIn = (direction: 'left' | 'right' | 'up' | 'down' = 'right'): Variants => {
+export const slideIn = (direction: "left" | "right" | "up" | "down" = "right"): Variants => {
   const directions = {
     left: { x: -20, y: 0 },
     right: { x: 20, y: 0 },
@@ -274,7 +274,7 @@ export const pulseAnimation = {
     transition: {
       duration: 1.5,
       repeat: Infinity,
-      ease: 'easeInOut',
+      ease: "easeInOut",
     },
   },
 };
@@ -303,12 +303,12 @@ export const countUpTransition = {
  * Use when Framer Motion is overkill
  */
 export const cssTransitions = {
-  fast: 'transition-all duration-150 ease-in-out',
-  normal: 'transition-all duration-250 ease-in-out',
-  slow: 'transition-all duration-400 ease-out',
-  colors: 'transition-colors duration-150',
-  transform: 'transition-transform duration-200',
-  opacity: 'transition-opacity duration-200',
+  fast: "transition-all duration-150 ease-in-out",
+  normal: "transition-all duration-250 ease-in-out",
+  slow: "transition-all duration-400 ease-out",
+  colors: "transition-colors duration-150",
+  transform: "transition-transform duration-200",
+  opacity: "transition-opacity duration-200",
 };
 
 /**

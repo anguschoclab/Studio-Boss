@@ -34,16 +34,19 @@ The production build will be in the `dist/` directory.
 ### Electron Desktop Builds
 
 #### macOS
+
 ```bash
 bun run electron:build
 ```
 
 #### Windows
+
 ```bash
 bun run electron:build:win
 ```
 
 #### All Platforms
+
 ```bash
 bun run electron:build:all
 ```
@@ -64,10 +67,12 @@ The `dist/` folder can be deployed to any static hosting service:
 Desktop builds are created in the `release/` directory.
 
 #### macOS
+
 - Distribute the `.dmg` file
 - Requires code signing for distribution outside Mac App Store
 
 #### Windows
+
 - Distribute the `.exe` installer
 - Requires code signing for distribution
 
@@ -113,16 +118,19 @@ bun run build
 ## Troubleshooting
 
 ### Build Fails
+
 - Clear cache: `rm -rf node_modules .vite dist`
 - Reinstall dependencies: `bun install`
 - Check Node/Bun version compatibility
 
 ### Electron Build Fails
+
 - Ensure Electron Builder is properly configured in `package.json`
 - Check platform-specific build requirements
 - Verify code signing certificates (for distribution)
 
 ### Runtime Errors
+
 - Check browser console for errors
 - Verify environment variables are set
 - Ensure API keys are valid and have proper permissions

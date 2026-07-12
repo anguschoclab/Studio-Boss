@@ -1,4 +1,4 @@
-import { GameState } from '../types';
+import { GameState } from "../types";
 
 /**
  * Centralized player ownership check.

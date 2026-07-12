@@ -3,8 +3,7 @@
 **Version:** Master Draft 1.4 / Unified Non-Lossy v3.0  
 **Status:** Living Design Document  
 **Project:** Studio Boss  
-**Genre:** Single-player Hollywood studio management simulation  
-
+**Genre:** Single-player Hollywood studio management simulation
 
 ---
 
@@ -65,27 +64,35 @@ The guiding emotional promise is:
 ## 4. Design Pillars
 
 ### 4.1 Hollywood Fantasy with Real Stakes
+
 The player should feel like they are truly running a modern entertainment studio, with all the ambition, glamour, compromise, ego, and volatility that implies.
 
 ### 4.2 Systems That Create Stories
+
 Economic systems, talent systems, PR systems, awards systems, and rival AI systems should collide to generate memorable emergent outcomes rather than remain isolated spreadsheets.
 
 ### 4.3 Always-Playable Core
+
 At every development milestone, the game should remain playable end-to-end, even if some later systems are represented by placeholder interfaces or “Coming Soon” stubs.
 
 ### 4.4 Dashboard-First Decision-Making
+
 The player should spend most of their time in a clear, powerful studio dashboard that surfaces key information and keeps interactions flowing quickly.
 
 ### 4.5 Weekly Rhythm, Long-Term Consequences
+
 The game should feel paced in discrete weekly turns or cycles, while allowing projects and consequences to play out over months and years.
 
 ### 4.6 Prestige vs Profit Tension
+
 The game must sustain the tension between artistic ambition and commercial pragmatism. Neither should be a simple “correct” answer.
 
 ### 4.7 Rival Industry as a Living Ecosystem
+
 The player is not operating in a vacuum. Rival studios, agents, talent, critics, streamers, festivals, and market trends all need to feel active and reactive.
 
 ### 4.8 Legacy and Replayability
+
 The game should encourage multiple playstyles and many runs through varied studio archetypes, market shifts, rival behavior, talent dynamics, and long-term IP strategy.
 
 ---
@@ -116,18 +123,22 @@ The player is not meant to micromanage every granular production detail. Instead
 ## 6. Product Definition
 
 ### 6.1 Genre
+
 Single-player Hollywood studio management sim.
 
 ### 6.2 Platform
+
 Primary target is **macOS desktop**.
 
 ### 6.3 Session Structure
+
 The game is suitable for both:
 
 - short management sessions driven by weekly turns, and
 - long campaign play focused on studio growth and legacy.
 
 ### 6.4 Intended Feel
+
 The tone should combine:
 
 - polished executive decision-making
@@ -136,6 +147,7 @@ The tone should combine:
 - readable but deep management systems
 
 ### 6.5 Delivery Philosophy
+
 The game will be delivered in progressive **playable macOS ZIP builds** through development. Every build should provide a functioning loop from title screen into a playable dashboard with save/load.
 
 ---
@@ -156,27 +168,35 @@ The master gameplay loop is:
 These are not separate minigames. They are interconnected layers of one larger studio simulation.
 
 ### 7.1 Discovery
+
 The player finds scripts, rights packages, market opportunities, trends, and talent combinations worth pursuing.
 
 ### 7.2 Development
+
 Projects are shaped into viable productions through packaging, budget planning, creative leadership, talent attachment, and positioning.
 
 ### 7.3 Production
+
 Projects move through pre-production, shoot, and major milestone execution while budget, morale, quality, schedule, and risk remain in play.
 
 ### 7.4 Post
+
 Editing, rating concerns, market positioning, and release readiness become central. Creative control disputes may escalate here.
 
 ### 7.5 Marketing and Release
+
 The player decides how a project is presented to audiences, which audience is targeted, and how release strategy affects returns and reputation.
 
 ### 7.6 Festivals and Awards
+
 Prestige-focused projects can generate value beyond direct financial return through buzz, awards nominations, and studio identity enhancement.
 
 ### 7.7 Reporting and Finance
+
 The player continually reads outcomes through dashboards, forecasts, and project-level performance drilldowns.
 
 ### 7.8 Strategy and Growth
+
 The player responds to long-term trends by scaling operations, pursuing IP retention, reviving relationships, pursuing universes, and shaping the studio’s future direction.
 
 ---
@@ -186,6 +206,7 @@ The player responds to long-term trends by scaling operations, pursuing IP reten
 The project materials consistently point toward a **weekly pacing model**.
 
 ### 8.1 Weekly Flow
+
 A representative weekly round should feel like:
 
 - **Monday brief**: current state, fires to put out, opportunities, industry updates
@@ -193,6 +214,7 @@ A representative weekly round should feel like:
 - **Friday wrap**: project outcomes, revenue movement, press reactions, rival activity, events
 
 ### 8.2 Why Weekly Pacing Matters
+
 Weekly pacing provides:
 
 - strategic rhythm
@@ -202,6 +224,7 @@ Weekly pacing provides:
 - a steady drumbeat for headlines, crises, and project milestones
 
 ### 8.3 Long-Horizon Layer
+
 Although the game advances weekly, projects and studios should evolve over a longer-term horizon measured in months and years. The player must feel the cumulative effect of choices.
 
 ---
@@ -209,27 +232,35 @@ Although the game advances weekly, projects and studios should evolve over a lon
 ## 9. Major Gameplay Loops
 
 ### 9.1 Studio Loop
+
 Acquire opportunities, make bets, manage the slate, release work, reinvest success, survive failures.
 
 ### 9.2 Project Loop
+
 Source material or concept, package talent, greenlight, produce, release, track returns, evaluate legacy potential.
 
 ### 9.3 Talent Loop
+
 Find collaborators, negotiate terms, navigate egos, build loyalty, lose people to rivals, revive relationships.
 
 ### 9.4 Finance Loop
+
 Commit money, absorb weekly outflows, chase inflows, protect liquidity, service debt, forecast risk, recover from crises.
 
 ### 9.5 Reputation Loop
+
 Manage buzz, scandals, critics, fandom, awards prestige, and how all of that changes future negotiations and commercial outcomes.
 
 ### 9.6 Industry Loop
+
 Observe rivals, react to market trends, exploit competitor failures, defend against poaching, ride or resist genre cycles.
 
 ### 9.7 Legacy Loop
+
 Retain IP, create franchises, build shared universes, create catalog value, and shape what your studio is known for.
 
 ### 9.8 Cohesion Framework
+
 The game should explicitly treat all major systems as parts of one shared executive decision engine rather than separate minigames. The unifying player question is:
 
 **What projects do I bet on, how do I package and finance them, where do I place them, and how do I survive the consequences?**
@@ -245,6 +276,7 @@ Every major system should either:
 If a system does not affect one of those outcomes, it should be simplified, folded into another layer, or treated as flavor rather than strategy.
 
 #### 9.8.1 The Project Card as the Center of Gravity
+
 The project card should be the main point where the simulation comes together. Each active project or series should surface a shared set of executive-facing dimensions so the player can understand the full strategic picture without opening ten disconnected panels.
 
 Recommended shared dimensions:
@@ -262,6 +294,7 @@ Recommended shared dimensions:
 This creates a common language across film, scripted TV, unscripted TV, remakes, prestige plays, commercial plays, and M&A opportunities.
 
 #### 9.8.2 Three Macro Resources
+
 Most systems should ultimately roll up into three macro resources that remain visible across the entire game:
 
 - **Cash**
@@ -275,6 +308,7 @@ Leverage represents negotiating power: talent loyalty, buyer appetite, rights ow
 Secondary variables should usually feed one or more of these rather than remaining isolated score tracks.
 
 #### 9.8.3 Cause Chains Instead of Stat Soup
+
 Outcomes should be readable as cause chains. A healthy pattern is:
 
 **Discovery** -> **Packaging** -> **Financing** -> **Production/Post** -> **Distribution/Release** -> **Outcome** -> **Next Opportunities**
@@ -290,6 +324,7 @@ This means, for example:
 The player should be able to look backward after a result and understand the chain that produced it.
 
 #### 9.8.4 Weekly Agenda Integration
+
 The weekly rhythm should be the container that ties all systems together. Every week should deliver:
 
 - a concise Monday brief framing opportunities, fires, and market shifts
@@ -299,6 +334,7 @@ The weekly rhythm should be the container that ties all systems together. Every 
 This ensures finance, talent, TV buyer politics, awards, PR, and M&A all show up in the same cadence rather than feeling like competing timers.
 
 #### 9.8.5 Shared Vocabulary Across Systems
+
 The UI and simulation should reuse the same executive vocabulary everywhere possible. Terms like the following should remain consistent across project cards, buyer dossiers, talent screens, finance views, and postmortems:
 
 - audience heat
@@ -313,6 +349,7 @@ The UI and simulation should reuse the same executive vocabulary everywhere poss
 Consistent terms improve readability and help the player build a mental model of the whole industry.
 
 #### 9.8.6 Studio Identity as the Meta-Layer
+
 The long campaign should be tied together by the evolving identity of the player’s studio. Repeated choices should move the studio along recognizable axes such as:
 
 - prestige vs commercial
@@ -325,6 +362,7 @@ The long campaign should be tied together by the evolving identity of the player
 Studio identity should then influence which projects arrive, which buyers trust the studio, what talent accepts a call, how scandals are interpreted, and which M&A opportunities appear believable.
 
 #### 9.8.7 Cross-System Collision Moments
+
 To keep the game cohesive and memorable, the design should deliberately create recurring moments where many systems collide at once. Good examples include:
 
 - pilot pickup week
@@ -338,6 +376,7 @@ To keep the game cohesive and memorable, the design should deliberately create r
 These are the moments where the game most clearly fulfills its promise of art, commerce, politics, ego, and survival colliding.
 
 #### 9.8.8 One Strategic Question per Project per Week
+
 As a practical cohesion rule, every active project should ideally present one clear executive question in a given week. Examples:
 
 - Do we spend more to broaden this audience?
@@ -349,6 +388,7 @@ As a practical cohesion rule, every active project should ideally present one cl
 This rule keeps the game decision-dense without making it administratively bloated.
 
 #### 9.8.9 Dashboard and Newsfeed as Connective Tissue
+
 The dashboard and newsfeed should translate system interactions into readable, story-rich updates. Headlines should not merely report isolated events; they should explain how one system is influencing another.
 
 Examples:
@@ -390,6 +430,7 @@ The master scope from the existing files includes these major system families:
 One of the first loops is identifying what to make.
 
 ### 11.1 Sources of Opportunity
+
 Projects may originate from:
 
 - scripts
@@ -400,6 +441,7 @@ Projects may originate from:
 - event-driven opportunities such as a “Black List” style discovery beat
 
 ### 11.2 Design Intent
+
 Discovery should not feel like pulling random cards with no context. It should create meaningful strategic decisions:
 
 - chase prestige material
@@ -409,6 +451,7 @@ Discovery should not feel like pulling random cards with no context. It should c
 - walk away from hot material when terms are bad
 
 ### 11.3 Strategic Variables
+
 Discovery choices should interact with:
 
 - budget size
@@ -427,9 +470,11 @@ Discovery choices should interact with:
 The project pipeline is one of the most important organizing structures in the game.
 
 ### 12.1 Purpose
+
 The pipeline gives the player a readable operational view of all active and completed work across the studio.
 
 ### 12.2 Core Columns
+
 A baseline pipeline includes:
 
 - **Development**
@@ -446,6 +491,7 @@ The broader lifecycle should also conceptually support:
 - Awards / Legacy
 
 ### 12.3 Project Card Information
+
 Each project card should surface essential, glanceable information such as:
 
 - title
@@ -459,6 +505,7 @@ Each project card should surface essential, glanceable information such as:
 - financial status
 
 ### 12.4 Project Detail View
+
 Each project should support a detail modal or full view containing tabs such as:
 
 - Overview
@@ -471,6 +518,7 @@ Each project should support a detail modal or full view containing tabs such as:
 - Episodes, if applicable
 
 ### 12.5 Design Intent
+
 The pipeline should make the player feel like an executive surveying a live slate, not a spreadsheet operator lost in menus.
 
 ---
@@ -480,6 +528,7 @@ The pipeline should make the player feel like an executive surveying a live slat
 Studio Boss includes both film and television projects. They should share a common studio framework while retaining distinct business logic.
 
 ### 13.1 Film
+
 Film projects generally emphasize:
 
 - concentrated budget commitments
@@ -489,6 +538,7 @@ Film projects generally emphasize:
 - sequel and universe potential
 
 ### 13.2 Television
+
 Television projects generally emphasize:
 
 - episodic or season-based staffing and payment structures
@@ -498,6 +548,7 @@ Television projects generally emphasize:
 - crossover and transmedia potential
 
 ### 13.3 Shared Framework
+
 Both films and series should feed into:
 
 - studio brand
@@ -509,6 +560,7 @@ Both films and series should feed into:
 - long-term catalog legacy
 
 ### 13.4 Television as a Distinct Game Pillar
+
 Television production should not feel like “film, but longer.” It should be one of the game’s deepest and most replayable systems, because series creation is where executive strategy, creative relationships, scheduling pressure, staffing, audience retention, and network politics all collide.
 
 The TV side of Studio Boss should allow the player to pursue very different fantasies, including:
@@ -521,9 +573,11 @@ The TV side of Studio Boss should allow the player to pursue very different fant
 - spinning a breakout supporting character into a companion series
 
 ### 13.5 TV Series Format Categories
+
 Television projects should be created using clear format archetypes so that the player immediately understands what kind of machine they are building. Each format should carry different cost logic, staffing needs, awards pathways, renewal expectations, audience behavior, and production risks.
 
 #### 13.5.1 Half-Hour Sitcom
+
 Core traits:
 
 - lower to mid budget per episode
@@ -540,6 +594,7 @@ Gameplay identity:
 - awards path leans toward comedy performance and writing
 
 #### 13.5.2 One-Hour Procedural
+
 Core traits:
 
 - medium to high episode count potential
@@ -555,6 +610,7 @@ Gameplay identity:
 - cast exits can be survivable if the format engine is strong
 
 #### 13.5.3 Prestige Serial Drama
+
 Core traits:
 
 - high creative ambition
@@ -570,6 +626,7 @@ Gameplay identity:
 - final-cut, notes, and auteur conflict are especially important
 
 #### 13.5.4 Limited Series / Miniseries
+
 Core traits:
 
 - fixed episode plan from the start
@@ -585,6 +642,7 @@ Gameplay identity:
 - ideal for true-story adaptations, literary projects, and high-end awards plays
 
 #### 13.5.5 Animated Comedy / Animated Family Series
+
 Core traits:
 
 - longer development and production lead times
@@ -600,6 +658,7 @@ Gameplay identity:
 - holiday specials and crossover events can drive periodic spikes
 
 #### 13.5.6 Animated Prestige / Adult Animation
+
 Core traits:
 
 - narrower but passionate audiences
@@ -614,9 +673,11 @@ Gameplay identity:
 - cult recovery arcs should be common and satisfying
 
 #### 13.5.7 Reality / Competition / Unscripted (Optional Expansion Track)
+
 This format is not required for the first full TV pass, but the design bible should leave room for it because unscripted programming can become a vital low-cost counterweight to expensive scripted slates.
 
 ### 13.6 TV Lifecycle Overview
+
 A TV series should move through a more granular lifecycle than a film, because the central fantasy is not just greenlighting a title but managing an evolving machine.
 
 Recommended lifecycle:
@@ -635,6 +696,7 @@ Recommended lifecycle:
 12. Franchise Extension / Syndication / Catalog Afterlife
 
 ### 13.7 Series Creation Inputs
+
 When creating a television project, the player should define more than just genre and budget. The game should ask for a concise but rich set of executive-facing choices that are intuitive on first use and deep over time.
 
 Recommended series setup inputs:
@@ -651,9 +713,11 @@ Recommended series setup inputs:
 - production complexity (contained, standard, ambitious, effects-heavy, global)
 
 ### 13.8 Development Materials: Bible, Pilot, and Proof of Concept
+
 TV development should revolve around concrete package elements rather than a single generic “script quality” number.
 
 #### 13.8.1 Series Bible
+
 The series bible should represent the show’s long-term engine. It influences:
 
 - executive confidence in renewability
@@ -665,6 +729,7 @@ The series bible should represent the show’s long-term engine. It influences:
 A weak bible can still produce a flashy pilot, but it should create later-season instability.
 
 #### 13.8.2 Pilot Script
+
 The pilot script should matter separately from the series bible. It influences:
 
 - whether buyers respond to the initial concept
@@ -674,6 +739,7 @@ The pilot script should matter separately from the series bible. It influences:
 - conversion from marketing awareness into actual viewership
 
 #### 13.8.3 Sizzle Reel / Table Read / Animatic
+
 Depending on format, the project may also benefit from optional proof materials:
 
 - live-action sizzle reel for tone-selling
@@ -684,9 +750,11 @@ Depending on format, the project may also benefit from optional proof materials:
 These should cost time and money but improve order odds and buyer confidence.
 
 ### 13.9 Order Models: Pilot vs Straight-to-Series
+
 A central TV decision should be whether the project earns a small commitment first or a full season pickup.
 
 #### 13.9.1 Pilot Order
+
 Advantages:
 
 - lower initial risk
@@ -700,6 +768,7 @@ Disadvantages:
 - creates a public failure point if the pilot underperforms
 
 #### 13.9.2 Straight-to-Series
+
 Advantages:
 
 - faster path to market
@@ -713,9 +782,11 @@ Disadvantages:
 - cancellation after one season is more painful financially and reputationally
 
 #### 13.9.3 Backdoor Pilot
+
 Some projects should support backdoor pilots embedded inside an existing series or universe. These are lower-risk franchise plays and excellent for crossovers, but fans may resent blatant spin-off engineering if the execution is clumsy.
 
 ### 13.10 Showrunners as Core Power Players
+
 Television should elevate showrunners into one of the game’s most important talent classes. They are not just head writers; they are the operational heart of a series.
 
 Showrunner attributes should influence:
@@ -741,9 +812,11 @@ Showrunner archetypes may include:
 A great showrunner can rescue a flawed premise. A bad showrunner can sink even a hot package.
 
 ### 13.11 Writers Rooms and Season Breaking
+
 Unlike film writing, TV writing should feel like a collaborative production engine. The writers room is where cost, pace, consistency, and season shape are won or lost.
 
 #### 13.11.1 Room Configuration
+
 The player should be able to influence:
 
 - room size
@@ -753,6 +826,7 @@ The player should be able to influence:
 - use of freelance scripts versus tightly controlled in-room writing
 
 #### 13.11.2 Break Quality
+
 Before production, the room “breaks” the season. Strong breaks improve:
 
 - arc coherence
@@ -762,6 +836,7 @@ Before production, the room “breaks” the season. Strong breaks improve:
 - reduced mid-season panic rewrites
 
 #### 13.11.3 Room Problems
+
 Typical TV events should include:
 
 - room factionalism
@@ -772,6 +847,7 @@ Typical TV events should include:
 - sudden topical relevance creating a rewrite opportunity
 
 ### 13.12 Season Structure and Episode Orders
+
 The player should make explicit decisions about episode counts and structure because these choices define risk and upside.
 
 Typical order ranges:
@@ -789,9 +865,11 @@ Tradeoffs:
 - short seasons concentrate marketing and awards focus
 
 ### 13.13 Production Planning by Format
+
 TV production should use format-specific rules rather than a single generic schedule.
 
 #### 13.13.1 Sitcom Production
+
 Potential modifiers:
 
 - single-cam vs multi-cam
@@ -800,6 +878,7 @@ Potential modifiers:
 - set reusability and bottle episode savings
 
 #### 13.13.2 Procedural Production
+
 Potential modifiers:
 
 - standing set efficiency
@@ -808,6 +887,7 @@ Potential modifiers:
 - guest cast reliability
 
 #### 13.13.3 Prestige Drama Production
+
 Potential modifiers:
 
 - location complexity
@@ -816,6 +896,7 @@ Potential modifiers:
 - serialized continuity risk
 
 #### 13.13.4 Animation Production
+
 Potential modifiers:
 
 - script-to-screen lag
@@ -825,9 +906,11 @@ Potential modifiers:
 - voice cast scheduling flexibility
 
 ### 13.14 Weekly Release Models and Audience Behavior
+
 Television should support multiple audience-consumption models because they materially change how a show lives in culture.
 
 #### 13.14.1 Weekly Release
+
 Benefits:
 
 - stronger conversation persistence
@@ -840,6 +923,7 @@ Risks:
 - churn risk if momentum drops
 
 #### 13.14.2 Full-Season Drop
+
 Benefits:
 
 - explosive launch-week attention
@@ -853,6 +937,7 @@ Risks:
 - finale discussion may collapse quickly
 
 #### 13.14.3 Split Season / Event Batch
+
 Benefits:
 
 - extends relevance window
@@ -865,6 +950,7 @@ Risks:
 - momentum loss if the gap is mishandled
 
 ### 13.15 Performance Metrics Unique to TV
+
 TV success should not be represented by a single number. The player needs a readable dashboard that surfaces why a series is healthy or in danger.
 
 Recommended TV metrics:
@@ -882,9 +968,11 @@ Recommended TV metrics:
 - syndication threshold progress
 
 ### 13.16 Renewal, Cancellation, and Final Season Decisions
+
 Renewals should be one of the most satisfying and stressful moments in the TV game. They are not automatic rewards; they are executive judgment calls informed by data, cost, strategy, awards value, and schedule realities.
 
 #### 13.16.1 Renewal Inputs
+
 A renewal decision should weigh:
 
 - audience size
@@ -898,6 +986,7 @@ A renewal decision should weigh:
 - library strategy and backend economics
 
 #### 13.16.2 Renewal Outcomes
+
 Possible outcomes:
 
 - full renewal
@@ -909,6 +998,7 @@ Possible outcomes:
 - pickup by another buyer or internal label
 
 #### 13.16.3 Painful TV Stories the Game Should Generate
+
 The system should be able to produce stories like:
 
 - a critically adored season one that is too expensive to renew
@@ -918,6 +1008,7 @@ The system should be able to produce stories like:
 - an animated series that launches slowly, then becomes a merchandising powerhouse
 
 ### 13.17 Multi-Season Evolution
+
 A show should not feel static after season one. Ongoing series need visible aging, escalation, fatigue, and reinvention.
 
 Multi-season factors should include:
@@ -931,6 +1022,7 @@ Multi-season factors should include:
 - fan attachment to status quo versus appetite for reinvention
 
 ### 13.18 Cast Contracts, Options, and Series Regular Status
+
 TV contracting should create longer-term planning pressure.
 
 Important contract concepts:
@@ -946,6 +1038,7 @@ Important contract concepts:
 These systems are ideal for emergent drama because a cast member can become far more valuable after a breakout season than they were when first signed.
 
 ### 13.19 TV-Specific Event Deck
+
 To keep the feature fun and alive, television should have a robust event deck tuned to format and season stage.
 
 Example events:
@@ -964,6 +1057,7 @@ Example events:
 - awards buzz revives renewal chances
 
 ### 13.20 TV Awards and Recognition Pathways
+
 TV series should feed different recognition lanes depending on format.
 
 Examples:
@@ -981,6 +1075,7 @@ Awards should matter because they can:
 - increase library value and cultural prestige
 
 ### 13.21 Fun-First, Intuitive UX for TV Management
+
 The system should be deep, but the player should never feel buried in a scheduling spreadsheet. TV management must be executive-readable.
 
 Recommended UX structure:
@@ -994,6 +1089,7 @@ Recommended UX structure:
 The player should feel like they are steering a show, not filling out production accounting forms.
 
 ### 13.22 AI Rival Television Behavior
+
 Rival studios should actively participate in the television market so the player feels pressure from a living slate.
 
 Rival TV behavior should include:
@@ -1005,6 +1101,7 @@ Rival TV behavior should include:
 - launching spin-offs after your breakout hits prove a lane exists
 
 ### 13.23 Strategic Role of TV Inside the Full Studio Simulation
+
 TV should serve several strategic functions within the overall game economy and identity system:
 
 - steadying cashflow between risky films
@@ -1016,6 +1113,7 @@ TV should serve several strategic functions within the overall game economy and 
 A studio with no TV presence should feel more volatile. A studio overcommitted to TV should risk brand flattening, executive overload, and creative sameness.
 
 ### 13.24 Canonical TV Design Principle
+
 Television in Studio Boss should be designed around one core truth:
 
 > **A series is not just a project. It is an organism.**
@@ -1023,6 +1121,7 @@ Television in Studio Boss should be designed around one core truth:
 The player should feel the difference between launching a movie and nurturing a show through pilots, seasons, renewals, cast crises, format fatigue, awards runs, and eventual legacy value.
 
 ### 13.25 Buyer Ecosystem: Networks, Streamers, Premium, and Self-Distribution
+
 A studio does not simply make television and magically reach an audience. In most cases, it needs a buyer, commissioner, platform partner, or owned outlet strategy. That dependency should be a major source of leverage, tension, and fun.
 
 TV buyers should exist as active market actors with brand identity, appetite, budget behavior, and executive personalities. The player should regularly ask:
@@ -1057,6 +1156,7 @@ Each buyer should expose visible traits such as:
 - international footprint
 
 ### 13.26 Greenlight, Pitch, and Pickup Negotiation Layer
+
 Series projects should enter a dedicated buyer-facing phase after internal development. The player is no longer only deciding whether a show is good. They are deciding how to position it to get made.
 
 The pitch-to-pickup loop should support:
@@ -1086,9 +1186,11 @@ Negotiation variables should include:
 This phase should feel like one of the game’s signature executive arenas, sitting beside talent negotiation and final-cut conflict.
 
 ### 13.27 Distribution Models for Television
+
 TV business models should be meaningfully different, not cosmetic wrappers over the same math.
 
 #### 13.27.1 Linear Network Commission
+
 Core behavior:
 
 - buyer pays a license fee or cost-plus structure
@@ -1104,6 +1206,7 @@ Gameplay effects:
 - long-running procedurals, sitcoms, and competition formats thrive here
 
 #### 13.27.2 Streaming License / Original
+
 Core behavior:
 
 - buyer may fund heavily up front or in milestone installments
@@ -1119,6 +1222,7 @@ Gameplay effects:
 - streamer notes may emphasize hook strength and global portability
 
 #### 13.27.3 Premium Channel / Prestige Outlet
+
 Core behavior:
 
 - lower volume, higher brand curation
@@ -1132,6 +1236,7 @@ Gameplay effects:
 - talent cachet matters more than pure mass appeal
 
 #### 13.27.4 International Co-Production and Presales
+
 Core behavior:
 
 - financing assembled from multiple territory partners
@@ -1146,6 +1251,7 @@ Gameplay effects:
 - may create conflicting note chains and delivery obligations
 
 #### 13.27.5 Studio-Owned Outlet
+
 Core behavior:
 
 - the studio owns the release window and data
@@ -1160,6 +1266,7 @@ Gameplay effects:
 - poor platform health can drag down even good shows
 
 ### 13.28 Scheduling, Slotting, and Launch Strategy
+
 Once a show is sold or self-scheduled, placement should matter.
 
 For linear and hybrid outlets, the player or buyer-facing simulation should consider:
@@ -1186,9 +1293,11 @@ Placement outcomes should influence:
 - long-tail library value
 
 ### 13.29 Robust Television Genre Matrix
+
 Television should support a broad, readable genre matrix across scripted and unscripted production.
 
 #### 13.29.1 Scripted Genres
+
 The core scripted genre families should include:
 
 - sitcom
@@ -1228,6 +1337,7 @@ Each genre family should connect to:
 - international export strength
 
 #### 13.29.2 Unscripted and Reality Genres
+
 Unscripted television should be fully supported as a major business lane rather than a footnote.
 
 Core unscripted families should include:
@@ -1264,6 +1374,7 @@ This gives the player meaningful reasons to use unscripted as:
 - a feeder into spinoffs, reunion specials, and all-star returns
 
 ### 13.30 Format Rights, Foreign IP Licensing, and Local Remakes
+
 One of the most fun and authentic TV-business systems should be format rights and remake licensing.
 
 The player should be able to acquire television IP in multiple ways:
@@ -1314,11 +1425,13 @@ The remake system should include adaptation choices such as:
 A well-adapted remake should feel clever and commercially sharp. A badly adapted one should feel like expensive executive cynicism.
 
 ### 13.31 Buyer Mandates, Platform Politics, and Taste Profiles
+
 TV buyers should not behave like static vending machines. Every outlet should feel like it is run by human executives under pressure, with changing mandates, changing bosses, changing financial constraints, and changing taste priorities.
 
 This system should make the act of selling television feel alive from year to year. A buyer that loved edgy auteur dramas two years ago may now want cheaper broad-audience comfort fare because of subscriber churn, a merger, an ad-tier pivot, or a new content chief.
 
 #### 13.31.1 Buyer Identity Layer
+
 Each buyer should have a readable but dynamic identity card containing:
 
 - brand promise to audiences
@@ -1335,6 +1448,7 @@ Each buyer should have a readable but dynamic identity card containing:
 This should appear in a buyer dossier UI so the player can quickly understand not just what a company says it wants, but what it is likely to reward in practice.
 
 #### 13.31.2 Mandate Shifts
+
 Mandates should be semi-predictable strategic changes that reshape what buyers want over time.
 
 Examples include:
@@ -1372,6 +1486,7 @@ Gameplay effects of mandate shifts:
 Mandate shifts should be telegraphed through trades, earnings-call headlines, executive gossip, and buyer-relationship meetings so they feel legible rather than random punishment.
 
 #### 13.31.3 Budget Freezes and Austerity Windows
+
 Buyers should periodically enter constrained states where even good projects become harder to sell or renew.
 
 Budget freeze states may include:
@@ -1403,6 +1518,7 @@ Gameplay consequences:
 The goal is not to make the player powerless. The fun comes from reading the market early and adjusting slate strategy before the freeze hits hardest.
 
 #### 13.31.4 Buyer-Specific Taste Profiles
+
 Every buyer should maintain a taste profile that is more specific than genre labels.
 
 Taste-profile dimensions may include:
@@ -1427,6 +1543,7 @@ This means two buyers may both “want crime,” but for different reasons:
 The system should reward the player for understanding the buyer beneath the headline mandate.
 
 #### 13.31.5 Named Executive Archetypes
+
 At key buyers, the player should interact with specific executive personas rather than an abstract corporate blob.
 
 Relevant roles may include:
@@ -1467,6 +1584,7 @@ Each executive should have attributes such as:
 This creates more dramatic outcomes such as a project surviving because one buyer champion loves it, or dying because a new regime sees it as a symbol of the old boss.
 
 #### 13.31.6 Buyer Politics and Internal Friction
+
 Buyers should contain internal disagreement. Development, finance, marketing, ad sales, and international divisions may not want the same thing.
 
 Examples:
@@ -1487,6 +1605,7 @@ Gameplay expression:
 This gives TV dealmaking more texture than a single yes/no score check.
 
 #### 13.31.7 Buyer Health States
+
 Each buyer should operate in a visible but not perfectly transparent health state.
 
 Possible health states:
@@ -1513,6 +1632,7 @@ Health states should alter:
 This lets the player learn which buyers are dependable homes and which ones are seductive but volatile.
 
 #### 13.31.8 Mandates and Renewals
+
 Renewal decisions should not depend only on ratings or completion. They should be interpreted through the buyer’s current strategic lens.
 
 Examples:
@@ -1525,6 +1645,7 @@ Examples:
 This keeps renewal drama grounded in believable executive logic rather than purely hidden math.
 
 #### 13.31.9 Player Counterplay Against Buyer Volatility
+
 The player should have tools to mitigate buyer volatility.
 
 Counterplay options should include:
@@ -1541,6 +1662,7 @@ Counterplay options should include:
 A sophisticated player should feel rewarded for behaving like a real executive strategist instead of merely chasing the highest script score.
 
 #### 13.31.10 Buyer Dossier UI
+
 The buyer UI should be one of the most valuable television-management screens in the game.
 
 Recommended dossier elements:
@@ -1561,6 +1683,7 @@ Recommended dossier elements:
 The player should be able to compare buyers side by side when choosing where to take a project.
 
 #### 13.31.11 News, Gossip, and Discovery Surface
+
 Mandate shifts and freezes should surface through multiple channels:
 
 - trade headlines
@@ -1574,6 +1697,7 @@ Mandate shifts and freezes should surface through multiple channels:
 A skilled player should be able to piece together the real story before it is officially announced.
 
 #### 13.31.12 Canonical Buyer-Politics Principle
+
 The TV market should follow one more governing truth:
 
 > **A good show does not sell into a vacuum. It sells into a moving target shaped by mandates, politics, and money.**
@@ -1581,6 +1705,7 @@ The TV market should follow one more governing truth:
 The player fantasy improves when success depends not only on making strong material, but on understanding who is buying, why they are buying, and what has changed since last quarter.
 
 ### 13.32 Ownership, Backend, and Renewal Leverage in TV Deals
+
 TV dealmaking should make rights ownership matter over years, not just weeks.
 
 The player should be able to negotiate or track:
@@ -1604,6 +1729,7 @@ These variables should shape long-term leverage such as:
 - whether a studio-owned outlet becomes viable thanks to retained library strength
 
 ### 13.33 Canonical TV Market Principle
+
 The television market should be governed by one additional truth:
 
 > **Making the show is only half the game. Getting it picked up, placed, renewed, and retained is the other half.**
@@ -1617,9 +1743,11 @@ A great series without the right buyer, deal, slot, or rights structure should s
 The financial model is a cornerstone of the game.
 
 ### 14.1 Core Principle
+
 The game’s economic layer should make cashflow feel alive, legible, and dangerous. Money is not just a score. It is a pressure source that drives narrative and strategic tradeoffs.
 
 ### 14.2 Design Intent
+
 The desired outcome is not punitive bookkeeping. The desired outcome is that finance creates stories:
 
 - risky expansion leading to a short-term cash crunch
@@ -1628,6 +1756,7 @@ The desired outcome is not punitive bookkeeping. The desired outcome is that fin
 - a bad quarter forcing the player into painful financing decisions
 
 ### 14.3 Dynamic Inflows and Outflows
+
 Finances should move dynamically based on project stage and business model.
 
 Examples include:
@@ -1643,22 +1772,25 @@ Examples include:
 - debt servicing
 
 ### 14.4 Film Cash Cycle
+
 The baseline film cycle is:
 
 **Greenlight (-) → Production (-) → Marketing (-) → Box Office (+ weekly) → Streaming (+ lump) → Backend (-)**
 
 ### 14.5 Television Models
+
 The design source identifies three TV structures:
 
-| Model | Cash Flow Character | Risk Profile |
-|---|---|---|
-| Linear / Network Commission | Paid on delivery or via license fee milestones | Low |
-| Streaming License / Original | Paid in installments with platform opacity | Medium |
-| Premium / Prestige Outlet | More curated, prestige-sensitive payment profile | Medium |
-| International Co-Production | Mixed financing from multiple partners | Medium |
-| Self-Owned Airing / Studio-Owned Outlet | Weekly revenue and library upside | High |
+| Model                                   | Cash Flow Character                              | Risk Profile |
+| --------------------------------------- | ------------------------------------------------ | ------------ |
+| Linear / Network Commission             | Paid on delivery or via license fee milestones   | Low          |
+| Streaming License / Original            | Paid in installments with platform opacity       | Medium       |
+| Premium / Prestige Outlet               | More curated, prestige-sensitive payment profile | Medium       |
+| International Co-Production             | Mixed financing from multiple partners           | Medium       |
+| Self-Owned Airing / Studio-Owned Outlet | Weekly revenue and library upside                | High         |
 
 ### 14.6 Salary Structures
+
 Compensation may include:
 
 - actors: flat or per episode
@@ -1668,6 +1800,7 @@ Compensation may include:
 - crew: weekly
 
 ### 14.7 Weekly Financial Pressure
+
 Because the simulation advances weekly, the player should feel recurring economic movement rather than static balance-sheet snapshots.
 
 ---
@@ -1677,6 +1810,7 @@ Because the simulation advances weekly, the player should feel recurring economi
 The liquidity model adds existential stakes to the business simulation.
 
 ### 15.1 Cashflow Crunch
+
 A crunch occurs when the studio cannot comfortably sustain current obligations. Earlier design material proposes a trigger like cash remaining below zero for multiple weeks.
 
 Likely player responses include:
@@ -1687,16 +1821,18 @@ Likely player responses include:
 - seeking loans
 
 ### 15.2 Bridge Financing
+
 The source documents identify several possible financing channels:
 
-| Source | Flavor | Tradeoff |
-|---|---|---|
-| Hedge Fund | Fast money | Punishing terms and loss of leverage |
-| Bank Loan | Larger institutional support | Requires collateral |
-| Streamer Advance | Cleaner cash support | Loss of rights or control |
-| Talent Consortium | Relationship-driven bailout | Creative control concessions |
+| Source            | Flavor                       | Tradeoff                             |
+| ----------------- | ---------------------------- | ------------------------------------ |
+| Hedge Fund        | Fast money                   | Punishing terms and loss of leverage |
+| Bank Loan         | Larger institutional support | Requires collateral                  |
+| Streamer Advance  | Cleaner cash support         | Loss of rights or control            |
+| Talent Consortium | Relationship-driven bailout  | Creative control concessions         |
 
 ### 15.3 Default and Restructure
+
 At more severe levels of crisis, the player may face options like:
 
 - selling the studio to a rival
@@ -1706,9 +1842,11 @@ At more severe levels of crisis, the player may face options like:
 - exiting the industry
 
 ### 15.4 Recovery Arc
+
 A strong recovery should matter emotionally and narratively. The design explicitly calls out a “Phoenix Studio” comeback arc where morale and perception improve after survival.
 
 ### 15.5 Mergers, Acquisitions, and Asset Strategy
+
 M&A should be a major strategic layer rather than a rare end-state cutscene. In Studio Boss, acquisition activity should appear in three main forms:
 
 - **asset acquisitions** such as buying a library, label, format catalog, rights package, or production facility
@@ -1716,9 +1854,11 @@ M&A should be a major strategic layer rather than a rare end-state cutscene. In 
 - **defensive transactions** such as selling a minority stake, accepting a strategic investor, merging to survive, or using a white-knight partner to avoid a hostile takeover
 
 #### 15.5.1 Why M&A Exists in the Design
+
 M&A connects finance, rights, talent, TV buyer politics, studio identity, and rival simulation. It gives the player a way to turn cash or leverage into lasting structural advantage rather than only funding individual projects.
 
 #### 15.5.2 Acquisition Targets
+
 Possible acquisition and merger targets include:
 
 - distressed rival studios
@@ -1734,6 +1874,7 @@ Possible acquisition and merger targets include:
 Each target should have a distinct reason to buy it: rights depth, buyer access, talent relationships, production efficiency, demographic reach, awards credibility, or immediate cash generation.
 
 #### 15.5.3 Deal Structures
+
 M&A should support multiple deal types rather than a single buyout button. Recommended structures include:
 
 - cash acquisition
@@ -1748,6 +1889,7 @@ M&A should support multiple deal types rather than a single buyout button. Recom
 Different structures should shift risk between liquidity, integration complexity, control, and future upside.
 
 #### 15.5.4 Integration and Post-Deal Friction
+
 Buying a company should create opportunities and headaches. Integration factors should include:
 
 - retained executive loyalty
@@ -1762,6 +1904,7 @@ Buying a company should create opportunities and headaches. Integration factors 
 The player should sometimes choose between tight integration, loose label autonomy, or eventual asset stripping.
 
 #### 15.5.5 Hostile vs Friendly Deals
+
 Not every deal should feel the same.
 
 - **Friendly deals** are easier to integrate and preserve talent goodwill, but often cost more.
@@ -1769,6 +1912,7 @@ Not every deal should feel the same.
 - **Rescue mergers** can save both parties but may create years of operational drag.
 
 #### 15.5.6 Gameplay Uses of M&A
+
 M&A should solve or create real strategic problems. Examples:
 
 - buying an unscripted label during a budget freeze to stabilize cashflow
@@ -1778,6 +1922,7 @@ M&A should solve or create real strategic problems. Examples:
 - buying a struggling network or streamer shell to secure distribution for future series
 
 #### 15.5.7 M&A UI Concept
+
 The player should manage this system through a dedicated **Corporate Strategy / M&A** layer connected to the finance screen and rival dossiers. It should show:
 
 - target valuation
@@ -1791,9 +1936,11 @@ The player should manage this system through a dedicated **Corporate Strategy / 
 - effect on cash, reputation, and leverage
 
 #### 15.5.8 Design Rule
+
 M&A should never be mandatory for every run, but it should be one of the clearest ways advanced players reshape the board itself instead of merely reacting to it.
 
 ### 15.6 Rival Use
+
 Rival studios should use the same broad liquidity framework so that the player can witness collapses, mergers, asset sales, and opportunistic acquisitions.
 
 ---
@@ -1803,6 +1950,7 @@ Rival studios should use the same broad liquidity framework so that the player c
 The financial systems need excellent presentation to remain understandable.
 
 ### 16.1 Top-Bar Finance Widget
+
 At minimum, the top bar should communicate:
 
 - cash on hand
@@ -1810,6 +1958,7 @@ At minimum, the top bar should communicate:
 - next major inflow
 
 ### 16.2 Finance Screen Core Components
+
 The source materials point to a rich finance interface containing:
 
 - stacked weekly cashflow chart
@@ -1819,9 +1968,11 @@ The source materials point to a rich finance interface containing:
 - forecast and warning indicators
 
 ### 16.3 Charting Intent
+
 The finance UI should make complex simulation readable through visuals, not force the player to parse tables first.
 
 ### 16.4 Drilldown Hierarchy
+
 Preferred drilldown flow:
 
 - category overview
@@ -1830,6 +1981,7 @@ Preferred drilldown flow:
 - expandable line items
 
 ### 16.5 Standard Filters
+
 Suggested filter layers include:
 
 - time: week, month, quarter
@@ -1837,6 +1989,7 @@ Suggested filter layers include:
 - status: active, released
 
 ### 16.6 Threshold and Alerting
+
 The system should support banners or threshold watchers to warn about liquidity risk, forecasted collapses, and unusual performance swings.
 
 ---
@@ -1846,6 +1999,7 @@ The system should support banners or threshold watchers to warn about liquidity 
 Studio Boss treats talent as a major simulation pillar, not cosmetic flavor.
 
 ### 17.1 Core Talent Types
+
 The attached materials identify these key groups:
 
 - actors
@@ -1856,6 +2010,7 @@ The attached materials identify these key groups:
 - agencies and agents
 
 ### 17.2 Talent Systems Goals
+
 The talent layer should support:
 
 - attachment decisions
@@ -1867,6 +2022,7 @@ The talent layer should support:
 - poaching and agency leverage
 
 ### 17.3 Agencies and Agents
+
 Agencies are not passive lists. They should have traits, agendas, and strategic behavior.
 
 Possible functions include:
@@ -1879,19 +2035,23 @@ Possible functions include:
 - using controversy as leverage
 
 ### 17.4 Descriptor-Based Personality Model
+
 Earlier versions mention descriptor-based personalities. This should remain the preferred abstraction so talent behavior feels readable without becoming needlessly simulation-heavy.
 
 ### 17.5 Design Intent
+
 Talent should feel like people with leverage and history, not stat containers.
 
 ---
 
 ### 17.6 Family, Lineage, and Hollywood Dynasty System
+
 Studio Boss should explicitly model entertainment families and lineage networks as a major sub-layer of the talent ecosystem. The real-world industry repeatedly produces sibling collaborations, multi-generation dynasties, famous surnames, child stars who grow into adult performers, and “nepo baby” debates. This system should capture the strategic upside of family networks while also generating jealousy, entitlement, legacy pressure, and public skepticism.
 
 The design goal is not celebrity parody. It is to represent a recurring Hollywood truth: talent does not enter the industry on a level playing field, and family ties often act as both accelerant and curse.
 
 ### 17.7 Core Design Goals of the Lineage System
+
 The family and lineage layer should:
 
 - make some talent enter the world with pre-existing access, reputation, or pressure
@@ -1903,6 +2063,7 @@ The family and lineage layer should:
 - interact with awards, fandom, press, agent leverage, and studio culture
 
 ### 17.8 Family Entities and Lineage Data Model
+
 Each talent character may optionally belong to a **Family / Lineage entity**.
 
 A family entity should track:
@@ -1924,6 +2085,7 @@ This allows the game to create several recognizable dynasty patterns:
 - chaotic tabloid families with recurring PR blowups
 
 ### 17.9 Family Archetypes
+
 Families should be generated or authored around archetypes so they feel distinct.
 
 Suggested archetypes include:
@@ -1947,6 +2109,7 @@ Massive name recognition, erratic behavior, unstable loyalty, and recurring PR f
 A once-famous family trying to reclaim relevance through one breakout member. Strong comeback storytelling and legacy-pressure hooks.
 
 ### 17.10 Relationship Types Within Families
+
 Family ties should be more specific than a generic “related to” flag.
 
 Supported relationships should include:
@@ -1970,6 +2133,7 @@ This enables combinations such as:
 - a former child star protecting a younger sibling from exploitation
 
 ### 17.11 Sibling Collaborations and Duos
+
 A major expression of the system should be **sibling collaboration teams**, inspired by real-world patterns such as the Coen brothers’ long-running partnership and other family-based creative duos. Sibling teams should not be limited to directing. They can appear as:
 
 - co-director siblings
@@ -1994,6 +2158,7 @@ But sibling teams should also carry special risks:
 - family loyalty overriding studio schedule needs
 
 ### 17.12 Family Rivalries and Succession Drama
+
 Not all lineage is cooperative. Rivalries are one of the most fertile drama generators in the system.
 
 Possible rivalry forms include:
@@ -2017,6 +2182,7 @@ Rivalries should affect:
 Families should also experience **succession pressure**. When an elder legend retires, dies, or becomes inactive, the family may enter a volatile phase where heirs compete to define the next chapter of the brand.
 
 ### 17.13 Nepotism, Access, and the “Nepo Baby” Layer
+
 The game should include an explicit but nuanced **Access / Nepotism** model.
 
 Talent may enter the simulation with one of several access origins:
@@ -2052,6 +2218,7 @@ The player should frequently face strategic questions such as:
 - does pairing a nepo baby with a respected veteran legitimize them or create resentment?
 
 ### 17.14 Talent Attribute Expansion for Lineage Play
+
 To support family dynamics, the talent model should expand beyond basic reputation and skill.
 
 Recommended additional attributes:
@@ -2070,6 +2237,7 @@ Recommended additional attributes:
 These values should combine with the existing descriptor-based personality system rather than replace it.
 
 ### 17.15 Child Stars and Early-Career Family Pipelines
+
 Child stars should become a dedicated sub-system, especially because they are one of the clearest ways lineage, access, exploitation risk, and long-term career arcs intersect.
 
 A child performer should track:
@@ -2092,6 +2260,7 @@ Child stars may originate from:
 - prestige-family protégés being launched carefully
 
 #### Child Star Lifecycle
+
 A child-star career should evolve through multiple phases:
 
 1. **Discovery / Cute Novelty**  
@@ -2107,6 +2276,7 @@ A child-star career should evolve through multiple phases:
    Former child stars may become producers, directors, scandal magnets, comeback stories, or guardians to a new generation.
 
 #### Child Star Design Tensions
+
 This system should generate stories such as:
 
 - a child actor carrying a prestige film with shocking maturity
@@ -2116,6 +2286,7 @@ This system should generate stories such as:
 - siblings forced into direct competition for “next generation” branding
 
 ### 17.16 Family Packaging and Slate Strategy
+
 Families should matter at the dealmaking layer, not just in biography text.
 
 Possible package behaviors:
@@ -2134,6 +2305,7 @@ Family packages can also create negative leverage:
 - rival studios accuse the player of favoritism and insider dealing
 
 ### 17.17 Public Perception, PR, and Fandom Effects
+
 The lineage system should heavily interact with the press and fandom loops.
 
 Public narratives may include:
@@ -2156,6 +2328,7 @@ PR posture should matter. The studio may choose to:
 Fandom reactions should differ by audience segment. Some viewers adore legacy casting; others punish anything that feels inherited rather than earned.
 
 ### 17.18 Awards, Prestige, and Backlash Interactions
+
 Lineage should matter during festivals and awards season.
 
 Potential effects include:
@@ -2169,6 +2342,7 @@ Potential effects include:
 In other words, lineage should amplify both triumph and humiliation.
 
 ### 17.19 Rival Studio Use of Family Systems
+
 Rival AI studios should actively exploit dynasty logic.
 
 They should be able to:
@@ -2183,6 +2357,7 @@ They should be able to:
 This ensures the lineage system affects the whole industry, not only the player’s roster.
 
 ### 17.20 Studio Culture Interactions
+
 Different studio identities should interpret family-driven talent differently.
 
 Examples:
@@ -2195,6 +2370,7 @@ Examples:
 This makes lineage feel native to the broader culture system already defined in the bible.
 
 ### 17.21 Example Event and Story Hooks
+
 This system should generate reusable event patterns such as:
 
 - “Sibling Duo Wants Joint Credit”
@@ -2207,6 +2383,7 @@ This system should generate reusable event patterns such as:
 - “Awards Narrative Turns Into Nepotism Debate”
 
 ### 17.22 Design Balance Rules
+
 To keep the system interesting and fair:
 
 - lineage should provide access, not guaranteed excellence
@@ -2217,6 +2394,7 @@ To keep the system interesting and fair:
 - rivalry and loyalty should both be capable of driving major outcomes
 
 ### 17.23 Implementation Notes
+
 At the simulation level, the family system should be a lightweight graph layer connected to the talent database.
 
 Each talent record should support:
@@ -2232,6 +2410,7 @@ Each talent record should support:
 This allows the existing talent, negotiation, PR, awards, and rival systems to query family state without requiring a separate heavy simulation.
 
 ### 17.24 Why This System Matters
+
 The family and lineage system is a strong fit for Studio Boss because it reinforces nearly every major pillar already established in the project:
 
 - talent with memory and leverage
@@ -2243,8 +2422,8 @@ The family and lineage system is a strong fit for Studio Boss because it reinfor
 
 It turns the roster from a flat talent marketplace into a truly Hollywood social web.
 
-
 ### 17.25 Greenlighting as a Multi-Stage Commitment System
+
 Projects should not jump directly from “interesting idea” to “fully active production.” The greenlight process should be one of the game’s central executive rituals and should model the real-world truth that a studio often develops, packages, re-prices, delays, and re-evaluates a project several times before cameras roll.
 
 Recommended project commitment ladder:
@@ -2270,6 +2449,7 @@ Recommended project commitment ladder:
 This ladder creates room for stories such as a prestige film being packaged for two years, a commercial project rushing to market after one star signs, or a series pilot falling apart at the last moment because a director left for a rival streamer job.
 
 ### 17.26 Greenlight Committee Logic
+
 The game should present greenlighting as a structured evaluation rather than a simple button press. Even though the player is the final authority, the simulation should surface an internal “committee readout” that summarizes whether the current package justifies the spend.
 
 A project’s greenlight recommendation should be built from multiple inputs:
@@ -2299,6 +2479,7 @@ The recommendation can be expressed as a weighted readout such as:
 This does not remove player agency. It simply frames the choice in readable Hollywood terms.
 
 ### 17.27 Packaging Before Greenlight
+
 Attaching talent before greenlight should be a core pre-production game layer. In many cases, the package is the project. A mediocre script with an elite star and director may be financeable, while a strong script without bankable attachment may remain trapped in development.
 
 Common package slots should include:
@@ -2328,33 +2509,40 @@ Each attachment should affect more than quality. It should also influence:
 A package can therefore be “good” in different ways. One package might maximize opening weekend, another festival heat, another international presales, and another franchise durability.
 
 ### 17.28 Required vs Optional Attachment Slots
+
 Not every project should need the same package shape. The game should define required and optional attachments by format and ambition level.
 
 Examples:
 
 **Commercial Studio Film**
+
 - usually wants director + at least one lead + core producer before full greenlight
 - major tentpoles may require a star, franchise steward, or VFX-capable director before approval
 
 **Prestige Film**
+
 - can greenlight on script + auteur director + financing confidence even without broad stars
 - respected producers and awards-friendly supporting cast materially improve confidence
 
 **Low-Budget Genre Film**
+
 - can greenlight with fewer attachments if cost is low enough
 - a single cult actor or horror name may replace a traditional star package
 
 **Scripted TV Series**
+
 - showrunner is usually mandatory
 - lead cast and pilot director strongly affect buyer confidence
 - ensemble depth matters more than one superstar in many formats
 
 **Unscripted Format**
+
 - may rely more on concept, host, production company, and buyer mandate fit than on traditional cast heat
 
 This makes project setup feel distinct instead of formulaic.
 
 ### 17.29 Talent Market Value and Compensation Curves
+
 Every major talent record should carry both a creative profile and a market profile. The player should care not only whether someone is good, but what they currently cost and whether the market believes they are worth it.
 
 Recommended market-facing fields for actors, directors, producers, writers, and showrunners:
@@ -2371,6 +2559,7 @@ Recommended market-facing fields for actors, directors, producers, writers, and 
 The quote should move dynamically over time. Strong box office, breakout streaming metrics, awards wins, critical raves, hot festival debuts, and rival bidding wars can push it upward. Flops, scandals, difficult productions, poor test scores, genre fatigue, aging out of a lane, or oversupply can push it downward.
 
 ### 17.30 Value Is Not the Same as Cost
+
 A crucial design rule is that expensive talent should not always be efficient talent.
 
 The simulation should distinguish between:
@@ -2389,6 +2578,7 @@ Examples:
 This prevents a simplistic “always hire the most famous person” strategy.
 
 ### 17.31 Success and Failure Feedback on Talent Pricing
+
 Talent economics should be reflexive. The outcomes of projects should feed back into future negotiation power.
 
 Career outcomes that should raise quote and leverage:
@@ -2416,6 +2606,7 @@ Career outcomes that should lower quote or increase discount willingness:
 Different talent classes should respond differently. Actors may swing more on public heat; directors on critical reputation and delivery record; producers on package strength, cost discipline, and buyer trust.
 
 ### 17.32 Packaging Score and Greenlight Confidence
+
 The project should compute a **Package Score** that feeds directly into greenlight confidence, financial forecast, and market positioning. This score should not be a hidden black box. The player should see why the package is helping or hurting.
 
 Inputs can include:
@@ -2444,6 +2635,7 @@ Suggested outputs:
 A package can therefore justify a greenlight even when script quality is merely solid, or fail to justify it when the costs have become absurd.
 
 ### 17.33 Budget Construction and Above-the-Line Inflation
+
 Attaching talent should immediately reshape the budget. The player should see the budget update in real time as package choices are made.
 
 Major budget effects from talent should include:
@@ -2464,6 +2656,7 @@ Major budget effects from talent should include:
 Some talent should also cause indirect cost inflation. A perfectionist auteur may increase shoot days. A star with limited windows may compress the schedule and raise daily burn. A prestige ensemble may add coordination costs but improve awards odds.
 
 ### 17.34 Deal Structures and Conditional Commitments
+
 Before greenlight, not every attachment should be equally binding. The system should support several commitment levels:
 
 - **Wishlist**: purely aspirational; no market effect except planning.
@@ -2477,6 +2670,7 @@ Before greenlight, not every attachment should be equally binding. The system sh
 This creates an important executive choice: whether to package broadly with soft attachments, or spend money and leverage to truly lock the project.
 
 ### 17.35 Casting Director / Casting Agent System
+
 The game should include a dedicated **casting agent** or **casting director** support function that can automate some or all slot-filling on a project. This gives the player a way to move quickly across a larger slate without manually auditioning every role.
 
 The casting function should have its own quality attributes:
@@ -2495,6 +2689,7 @@ The casting function should have its own quality attributes:
 A better casting professional should generate stronger shortlists, discover underpriced breakouts earlier, reduce time-to-package, and sometimes unlock talent that would ignore a weaker studio.
 
 ### 17.36 Auto-Fill Rules for Casting Agents
+
 When the player asks the casting function to fill open slots, it should not simply choose the highest-rated names. It should evaluate “best available talent” according to project context.
 
 Selection logic should consider:
@@ -2525,6 +2720,7 @@ The player should be able to set casting priorities such as:
 This keeps automation useful without removing strategy.
 
 ### 17.37 Availability, Calendars, and Schedule Conflicts
+
 Every significant talent should exist on an industry calendar with windows of availability rather than being permanently selectable.
 
 Calendar pressures should include:
@@ -2552,6 +2748,7 @@ Availability should be readable as windows such as:
 This turns scheduling into a strategic resource instead of an invisible rule.
 
 ### 17.38 Waiting on Talent and Start-Date Strategy
+
 The player should be allowed to wait for desired talent rather than instantly replacing them. Waiting, however, should be a real gamble.
 
 Potential player options:
@@ -2576,6 +2773,7 @@ Waiting should have meaningful consequences:
 This is one of the most Hollywood-feeling decision spaces in the game.
 
 ### 17.39 Hold Fees, Option Windows, and Expiry Pressure
+
 To make waiting meaningful, the game should support contractual time pressure.
 
 Recommended mechanics:
@@ -2590,6 +2788,7 @@ Recommended mechanics:
 This gives the player the classic studio problem of having to either move now, pay to wait, or watch the package unravel.
 
 ### 17.40 Bow-Outs, Replacements, and Cascading Package Collapse
+
 Once a project is greenlit, schedule slippage should threaten attached talent. Some people will stay loyal; others will leave when conflicting obligations begin.
 
 Common triggers for bowing out:
@@ -2614,6 +2813,7 @@ The player should then choose among:
 - shut down entirely and take reputational damage
 
 ### 17.41 Replacement Talent and Repackaging Logic
+
 Replacing talent should not simply restore the old state. The new attachment should change the project’s identity.
 
 Replacement effects may include:
@@ -2630,6 +2830,7 @@ Replacement effects may include:
 This creates rich stories such as a flop-bound blockbuster being saved by an inspired recast, or a prestige film losing all awards heat after the original auteur leaves.
 
 ### 17.42 Agency, Producer, and Packaging Politics
+
 Real projects are often packaged through relationship webs rather than isolated hires. The system should model that some producers, managers, and agencies act as dealmakers who can fill multiple slots at once.
 
 Useful behaviors:
@@ -2644,6 +2845,7 @@ Useful behaviors:
 This makes the packaging game feel like networked Hollywood politics rather than a clean menu.
 
 ### 17.43 Talent Availability as Competitive Terrain
+
 Rival studios should compete for the same calendar space. The player should feel they are operating in a crowded industry where the best people are never idle for long.
 
 Rival behavior should include:
@@ -2657,6 +2859,7 @@ Rival behavior should include:
 This turns availability into part of the competitive layer, not just an internal planning stat.
 
 ### 17.44 UI and Dashboard Requirements
+
 To keep the system readable, the design bible should call for several concrete interface elements.
 
 Recommended project-facing panels:
@@ -2671,6 +2874,7 @@ Recommended project-facing panels:
 The player should never have to guess why a project cannot start.
 
 ### 17.45 Stories This System Should Generate
+
 This combined greenlight, packaging, and scheduling system should regularly create stories such as:
 
 - a script sitting for a year until one superstar finally becomes available
@@ -2683,6 +2887,7 @@ This combined greenlight, packaging, and scheduling system should regularly crea
 - a rival studio stealing the same director the player was waiting on
 
 ### 17.46 Implementation Notes for Simulation
+
 At the data-model level, this system can be layered onto the existing project and talent simulation with several additional fields.
 
 Recommended talent-side additions:
@@ -2723,6 +2928,7 @@ These are sufficient to make the system feel deep without requiring a full legal
 Negotiation is one of the game’s signature dramatic layers.
 
 ### 18.1 Scope
+
 Negotiations may include:
 
 - salary
@@ -2736,9 +2942,11 @@ Negotiations may include:
 - first-look arrangements
 
 ### 18.2 Narrative Presentation
+
 The source materials identify **Ink-based** dialogue or event structures as a core presentation method for contract and negotiation interactions.
 
 ### 18.3 Desired Feel
+
 Negotiation should sit between strategy and interactive drama:
 
 - concise enough not to stall the sim
@@ -2746,6 +2954,7 @@ Negotiation should sit between strategy and interactive drama:
 - systemic enough to affect long-term relationships and press outcomes
 
 ### 18.4 Long-Term Consequences
+
 A negotiation outcome may influence:
 
 - loyalty
@@ -2762,9 +2971,11 @@ A negotiation outcome may influence:
 One of the most important expansions in the later design direction is the inclusion of **director archetypes**, **final cut negotiations**, and related creative tensions.
 
 ### 19.1 Purpose
+
 This system represents the reality that not all directors want the same level of control, and the studio’s handling of them should affect both project outcomes and the studio’s identity.
 
 ### 19.2 Core Dynamics
+
 The system should account for:
 
 - director archetype or temperament
@@ -2775,6 +2986,7 @@ The system should account for:
 - loyalty effects after conflict or support
 
 ### 19.3 Strategic Tension
+
 The player may need to choose between:
 
 - protecting a strong director’s vision
@@ -2783,6 +2995,7 @@ The player may need to choose between:
 - taking the PR hit from a creative dispute
 
 ### 19.4 Outcome Effects
+
 Creative control disputes should potentially influence:
 
 - film quality or coherence
@@ -2794,6 +3007,7 @@ Creative control disputes should potentially influence:
 - internal studio culture
 
 ### 19.5 Design Importance
+
 This is a defining system because it embodies the game’s core thesis: the studio business is a negotiation between art, commerce, ego, and survival.
 
 ---
@@ -2803,9 +3017,11 @@ This is a defining system because it embodies the game’s core thesis: the stud
 Later design materials explicitly add **age, gender, and region** as meaningful audience dimensions.
 
 ### 20.1 Purpose
+
 Projects should not target a generic audience blob. The player should think in terms of who the project is for and how different groups may respond.
 
 ### 20.2 Dimensions
+
 The current intended demographic structure includes:
 
 - **Age**
@@ -2813,6 +3029,7 @@ The current intended demographic structure includes:
 - **Region**
 
 ### 20.3 Design Use
+
 Demographics should influence:
 
 - project greenlight confidence
@@ -2824,9 +3041,11 @@ Demographics should influence:
 - franchise viability
 
 ### 20.4 Weighted Audience Index
+
 The v7.6 material specifically references a **Weighted Audience Index**, suggesting a formalized projection layer for targeting and forecast quality.
 
 ### 20.5 Strategy Implications
+
 The player may choose to:
 
 - build broad four-quadrant crowd-pleasers
@@ -2842,6 +3061,7 @@ The player may choose to:
 Another later-stage expansion is the integration of ratings and content-based audience restrictions.
 
 ### 21.1 Scope
+
 The ratings system should cover:
 
 - film ratings
@@ -2851,6 +3071,7 @@ The ratings system should cover:
 - possible editing or alternate cut hooks
 
 ### 21.2 Why It Matters
+
 Ratings are not just labels. They affect:
 
 - accessible audience size
@@ -2861,6 +3082,7 @@ Ratings are not just labels. They affect:
 - commercial upside vs creative freedom
 
 ### 21.3 Editing and Dual-Cut Possibilities
+
 The source documents mention editing hooks and dual cuts. This opens design space for:
 
 - toning down a project for broader release
@@ -2868,6 +3090,7 @@ The source documents mention editing hooks and dual cuts. This opens design spac
 - managing conflict between ratings and final-cut demands
 
 ### 21.4 Regional Rules
+
 Different territories may react differently to the same content, influencing release strategy and revenue mix.
 
 ---
@@ -2877,6 +3100,7 @@ Different territories may react differently to the same content, influencing rel
 The game’s PR layer is essential to its Hollywood identity.
 
 ### 22.1 Core Components
+
 The roadmap and design materials point to:
 
 - press tone and sentiment
@@ -2887,6 +3111,7 @@ The roadmap and design materials point to:
 - newsfeed integration
 
 ### 22.2 PR Response Modes
+
 A core interaction model includes modal responses such as:
 
 - deny
@@ -2896,6 +3121,7 @@ A core interaction model includes modal responses such as:
 Each should carry mechanical and tonal tradeoffs rather than merely flavor text.
 
 ### 22.3 Possible Event Sources
+
 PR events may emerge from:
 
 - talent behavior
@@ -2908,6 +3134,7 @@ PR events may emerge from:
 - awards campaign dynamics
 
 ### 22.4 Design Intent
+
 PR should not merely punish the player. It should create opportunities for strategic positioning, damage control, or calculated exploitation.
 
 ---
@@ -2917,6 +3144,7 @@ PR should not merely punish the player. It should create opportunities for strat
 The player is not only managing press headlines but also public sentiment.
 
 ### 23.1 Fandom Layer
+
 The roadmap mentions fandom segments, loyalty, and backlash.
 
 This implies systems for:
@@ -2927,12 +3155,15 @@ This implies systems for:
 - audience identity alignment
 
 ### 23.2 Critic Layer
+
 Procedural critic reviews should provide flavor and meaningful consequences without requiring large-scale authored content.
 
 ### 23.3 Prestige vs Commercial Metering
+
 The roadmap explicitly references prestige and commercial meters. These should not be mutually exclusive, but tradeoffs between them should create texture.
 
 ### 23.4 Recovery and Reappraisal
+
 Some projects should improve in reputation over time, allowing “cult recovery” stories or rediscovery arcs.
 
 ---
@@ -2942,6 +3173,7 @@ Some projects should improve in reputation over time, allowing “cult recovery�
 The game’s prestige layer is heavily tied to festivals and awards. This system should function as a full annual prestige metagame rather than a light cosmetic bonus layer. It should connect release strategy, campaign spending, critical reception, creative risk, talent leverage, studio identity, and long-tail catalog value.
 
 ### 24.1 Goals of the Awards System
+
 The awards system should do five jobs at once:
 
 - reward prestige-minded projects and elite craft execution
@@ -2953,12 +3185,15 @@ The awards system should do five jobs at once:
 Awards should never be only decorative. A nomination or win should have downstream effects on business outcomes, studio culture, future development choices, and talent relationships.
 
 ### 24.2 Annual Awards Cycle
+
 The system should run on a recurring yearly structure with five stages.
 
 #### 24.2.1 Eligibility Stage
+
 Projects first need to qualify for a given award body. Qualification should be determined by project format, release method, release window, distribution scale, budget bracket, campaign support, and category fit.
 
 #### 24.2.2 Awards Profile Generation
+
 Every film and television project should generate a hidden awards profile based on the project’s creative and market identity. Suggested attributes include:
 
 - prestige score
@@ -2973,9 +3208,11 @@ Every film and television project should generate a hidden awards profile based 
 - festival momentum
 
 #### 24.2.3 Nomination Stage
+
 Each award body should evaluate projects according to its own preferences. Some institutions should skew toward prestige dramas and serious auteurs, while others should favor accessible star vehicles, indie credibility, audience warmth, or television craft.
 
 #### 24.2.4 Campaign Stage
+
 The player should be able to campaign actively. Campaign actions may include:
 
 - For Your Consideration pushes
@@ -2991,12 +3228,15 @@ The player should be able to campaign actively. Campaign actions may include:
 Campaigning should consume money, executive attention, PR bandwidth, and sometimes reputation. Over-campaigning should risk backlash.
 
 #### 24.2.5 Outcome and Aftermath Stage
+
 Nominations, wins, and losses should change the simulation. Even a high-profile snub should create consequences, such as morale shifts, ego clashes, press narratives, and market reassessments.
 
 ### 24.3 Core Awards Stats
+
 The awards system should draw from a blend of visible and hidden values.
 
 #### 24.3.1 Visible Values
+
 - critic score
 - audience score
 - buzz
@@ -3007,6 +3247,7 @@ The awards system should draw from a blend of visible and hidden values.
 - festival performance
 
 #### 24.3.2 Hidden Values
+
 - academy appeal
 - guild appeal
 - foreign appeal
@@ -3021,9 +3262,11 @@ The awards system should draw from a blend of visible and hidden values.
 The industry narrative score is especially important. Awards momentum often depends on factors such as comeback stories, overdue veterans, breakout newcomers, scandal drag, and a studio’s broader reputation in a given season.
 
 ### 24.4 Festival Pipeline
+
 Festivals should feed awards momentum, project valuation, and studio identity.
 
 #### 24.4.1 Festivals Included
+
 The festival layer should include at minimum:
 
 - Cannes
@@ -3036,6 +3279,7 @@ The festival layer should include at minimum:
 - Tribeca
 
 #### 24.4.2 Festival Identities
+
 Each festival should tilt toward different project types.
 
 - **Cannes**: auteur cinema, prestige drama, international art film, high-status premieres
@@ -3048,6 +3292,7 @@ Each festival should tilt toward different project types.
 - **Tribeca**: urban prestige, indie credibility, strong launch support for smaller titles
 
 #### 24.4.3 Festival Outcomes
+
 Festival play should create changes to:
 
 - critic score reveal or revision
@@ -3059,12 +3304,15 @@ Festival play should create changes to:
 - rival imitation or poaching pressure
 
 #### 24.4.4 Festival Buzz Meter
+
 The roadmap highlights a **Festival Buzz Meter**. That meter should represent the project’s momentum in prestige circles and should react to premiere response, critic sentiment, audience warmth, deal chatter, and scandal noise.
 
 ### 24.5 Award Bodies Included
+
 The game should support multiple overlapping award ecosystems so that more project types can find meaningful success.
 
 #### 24.5.1 Major Film Awards
+
 - **Academy Awards / Oscars**
 - **BAFTA Film Awards**
 - **Golden Globes** (film)
@@ -3081,6 +3329,7 @@ The game should support multiple overlapping award ecosystems so that more proje
 - **VES Awards**
 
 #### 24.5.2 Major Television Awards
+
 - **Primetime Emmys**
 - **BAFTA Television Awards**
 - **Golden Globes** (television)
@@ -3093,6 +3342,7 @@ The game should support multiple overlapping award ecosystems so that more proje
 - **Television Critics Association Awards**
 
 #### 24.5.3 Specialty and Flavor Awards
+
 These should expand the emotional and strategic texture of the system:
 
 - **Gotham Awards**
@@ -3108,9 +3358,11 @@ These should expand the emotional and strategic texture of the system:
 These do not all need the same depth as the Oscars or Emmys, but they help different genres, demographics, and studio identities feel recognized.
 
 ### 24.6 Gameplay Award Categories
+
 The awards system should include the categories that make the most gameplay sense, rather than only mirroring reality in a narrow way.
 
 #### 24.6.1 Universal Top-Line Categories
+
 - Best Picture / Best Series
 - Best Director
 - Best Original Screenplay
@@ -3122,6 +3374,7 @@ The awards system should include the categories that make the most gameplay sens
 - Best Ensemble
 
 #### 24.6.2 Film Craft Categories
+
 - Cinematography
 - Editing
 - Production Design
@@ -3138,6 +3391,7 @@ The awards system should include the categories that make the most gameplay sens
 - Debut Feature
 
 #### 24.6.3 Television Categories
+
 - Best Drama Series
 - Best Comedy Series
 - Best Limited Series
@@ -3155,6 +3409,7 @@ The awards system should include the categories that make the most gameplay sens
 - Documentary or Nonfiction Series
 
 #### 24.6.4 Audience and Market-Facing Meta Categories
+
 These can be game-specific abstraction categories used by press, fan communities, or lower-prestige shows:
 
 - Breakout Hit
@@ -3166,12 +3421,15 @@ These can be game-specific abstraction categories used by press, fan communities
 - Best Debut Creator
 
 ### 24.7 Award-Specific Requirements and Preferences
+
 Each major body should have both a qualification gate and a taste profile.
 
 #### 24.7.1 Academy Awards / Oscars
+
 **Best for:** prestige films, major craft showcases, serious dramas, prestige animation, and auteur work.
 
 **Gameplay requirements:**
+
 - must be a film rather than a television project
 - must receive a qualifying theatrical release
 - must release within the eligible awards window
@@ -3179,6 +3437,7 @@ Each major body should have both a qualification gate and a taste profile.
 - must match category-specific identity for categories such as Animated Feature, Documentary Feature, International Feature, Original Song, and Original Score
 
 **Preference profile:**
+
 - critic score
 - prestige score
 - festival momentum
@@ -3188,6 +3447,7 @@ Each major body should have both a qualification gate and a taste profile.
 - strong studio reputation
 
 **Gameplay effects:**
+
 - very large prestige gain
 - stronger talent leverage
 - improved investor and distributor confidence
@@ -3195,15 +3455,18 @@ Each major body should have both a qualification gate and a taste profile.
 - major legacy milestone tracking
 
 #### 24.7.2 Primetime Emmys
+
 **Best for:** prestige television drama, comedy, limited series, and TV movies.
 
 **Gameplay requirements:**
+
 - must be an eligible television-format project
 - must air or release in the eligible TV window
 - must fit format buckets such as drama series, comedy series, limited series, or TV movie
 - acting, writing, and directing bids should depend on episode-level strength and season-wide momentum
 
 **Preference profile:**
+
 - season consistency
 - critic score
 - platform strength
@@ -3212,20 +3475,24 @@ Each major body should have both a qualification gate and a taste profile.
 - campaign support
 
 **Gameplay effects:**
+
 - improves renewal and ordering confidence
 - raises value of showrunners, TV writers, and lead casts
 - increases series library value
 - strengthens streamer or network leverage
 
 #### 24.7.3 BAFTAs
+
 **Best for:** prestige film and prestige television with strong craft and international resonance.
 
 **Gameplay requirements:**
+
 - must match film or television eligibility
 - must release within the correct timing window
 - performs best with proper awards support and strong creative identity
 
 **Preference profile:**
+
 - craft excellence
 - critic score
 - prestige score
@@ -3233,19 +3500,23 @@ Each major body should have both a qualification gate and a taste profile.
 - director reputation
 
 **Gameplay effects:**
+
 - strong international prestige bonus
 - improved overseas sales positioning
 - greater value for craft-led productions
 
 #### 24.7.4 Golden Globes
+
 **Best for:** star-driven prestige, accessible dramas, comedy-musicals, and glamorous, highly visible film and television projects.
 
 **Gameplay requirements:**
+
 - must release in-window
 - must fit correct drama, comedy, musical, or television category bucket
 - benefits from strong PR and celebrity visibility
 
 **Preference profile:**
+
 - star power
 - media buzz
 - critic score
@@ -3254,19 +3525,23 @@ Each major body should have both a qualification gate and a taste profile.
 - glamour factor
 
 **Gameplay effects:**
+
 - major PR burst
 - audience awareness boost
 - can elevate commercial projects into prestige conversation
 
 #### 24.7.5 Independent Spirit Awards
+
 **Best for:** indie films, lower-budget prestige projects, unconventional auteur work, and breakout debuts.
 
 **Gameplay requirements:**
+
 - must be a film
 - must fall under an indie budget or scale threshold in gameplay terms
 - should generally benefit from lower-budget positioning, strong critic support, and festival breakout status
 
 **Preference profile:**
+
 - indie credibility
 - originality
 - critic score
@@ -3274,136 +3549,166 @@ Each major body should have both a qualification gate and a taste profile.
 - debut energy
 
 **Gameplay effects:**
+
 - creates a real prestige path for smaller studios
 - increases discovery value for emerging talent
 - can define the studio as an indie tastemaker
 
 #### 24.7.6 SAG Awards
+
 **Best for:** performance-driven projects and ensemble showcases.
 
 **Gameplay requirements:**
+
 - must feature standout acting metrics
 - ensemble categories require multiple strong cast performances
 - film and TV categories should be tracked separately
 
 **Preference profile:**
+
 - cast quality
 - ensemble chemistry
 - emotional accessibility
 - role showcase strength
 
 **Gameplay effects:**
+
 - raises actor quote demands
 - improves future casting leverage
 - can push momentum into Oscars and Emmys
 
 #### 24.7.7 Writers Guild Awards
+
 **Best for:** script- and writer-driven projects.
 
 **Gameplay requirements:**
+
 - requires strong writing metrics
 - should split original versus adapted for film and major format buckets for television
 
 **Preference profile:**
+
 - script quality
 - structure
 - dialogue
 - originality or adaptation strength
 
 **Gameplay effects:**
+
 - boosts writer prestige
 - raises value of writer-first projects
 - improves later top-tier awards positioning
 
 #### 24.7.8 Directors Guild Awards
+
 **Best for:** auteur projects and films or shows with a clear directorial signature.
 
 **Gameplay requirements:**
+
 - requires high directing score and project coherence
 - works especially well for prestige and visually confident projects
 
 **Preference profile:**
+
 - directing score
 - visual identity
 - critical acclaim
 - creative control payoff
 
 **Gameplay effects:**
+
 - increases director leverage in future negotiations
 - strengthens final-cut pressure from auteurs
 - raises director market price
 
 #### 24.7.9 Producers Guild Awards
+
 **Best for:** holistically successful projects with strong execution and awards-season professionalism.
 
 **Gameplay requirements:**
+
 - strong overall project package
 - disciplined campaign operation
 - broad industry respect
 
 **Preference profile:**
+
 - production execution
 - package quality
 - awards consistency
 - campaign professionalism
 
 **Gameplay effects:**
+
 - boosts studio-wide reputation
 - improves co-financing and investor confidence
 - supports Best Picture or Best Series momentum
 
 #### 24.7.10 Critics Choice Awards
+
 **Best for:** critic-friendly projects with enough visibility to break through.
 
 **Gameplay requirements:**
+
 - must release in-window on film or television side
 - best supported by strong review averages and baseline visibility
 
 **Preference profile:**
+
 - critic score
 - craft score
 - prestige score
 
 **Gameplay effects:**
+
 - early momentum support
 - improves nomination chains into larger shows
 
 #### 24.7.11 Annie Awards
+
 **Best for:** animated films and animated television.
 
 **Gameplay requirements:**
+
 - must be an animated project
 - should demonstrate strong animation craft and either family appeal or artistic distinction
 
 **Preference profile:**
+
 - animation quality
 - visual identity
 - family or demographic fit
 - music and voice-cast appeal
 
 **Gameplay effects:**
+
 - boosts animation brand value
 - supports awards runs in animation categories elsewhere
 - improves sequel and franchise confidence for animated IP
 
 #### 24.7.12 Peabody Awards
+
 **Best for:** culturally significant television, nonfiction, and issue-driven storytelling.
 
 **Gameplay requirements:**
+
 - best suited to television, documentary, or socially resonant projects
 - cultural and thematic impact should matter more than glamour
 
 **Preference profile:**
+
 - thematic depth
 - social resonance
 - writing quality
 - prestige seriousness
 
 **Gameplay effects:**
+
 - prestige gain without relying on mainstream popularity
 - strengthens the studio’s identity in serious storytelling
 
 ### 24.8 Release Strategy and Eligibility Logic
+
 Awards should push the player to think carefully about how a project is released.
 
 The system should consider:
@@ -3419,6 +3724,7 @@ The system should consider:
 This should create meaningful strategic tension. A project released for pure commercial optimization may weaken its awards chances, while an awards-first release path may reduce short-term financial efficiency.
 
 ### 24.9 Campaigning and Trade-Offs
+
 Awards campaigning should be a deliberate executive system, not an automatic bonus.
 
 The player should make choices about:
@@ -3439,9 +3745,11 @@ Possible campaign outcomes include:
 - improved industry goodwill
 
 ### 24.10 Awards Consequences
+
 Awards should matter immediately, in the medium term, and over the life of the studio.
 
 #### 24.10.1 Immediate Effects
+
 - PR burst
 - morale increase
 - revenue or viewership bump
@@ -3449,18 +3757,21 @@ Awards should matter immediately, in the medium term, and over the life of the s
 - better negotiating position on late distribution or licensing deals
 
 #### 24.10.2 Medium-Term Effects
+
 - talent quote inflation
 - more inbound scripts and packages
 - greater trust from agencies, investors, and co-production partners
 - stronger leverage in future financing and platform negotiations
 
 #### 24.10.3 Long-Term Effects
+
 - permanent studio legacy gains
 - catalog value increase
 - studio culture drift toward prestige, indie, or commercial identity
 - timeline recognition for banner titles and landmark seasons
 
 ### 24.11 Snubs, Scandals, and Drama
+
 To preserve the emotional unpredictability of Hollywood, the awards system should also support negative and chaotic outcomes.
 
 Possible events include:
@@ -3477,9 +3788,11 @@ Possible events include:
 These outcomes should reinforce the broader design pillar that Studio Boss is a story-generating system where intersecting mechanics create memorable industry drama.
 
 ### 24.12 Red Carpet and Presentation Flavor
+
 Awards season should be visually and tonally rewarding. Red carpet beats, acceptance speech flavor text, gossip headlines, and prestige dashboards should heighten emotion without forcing long non-interactive ceremonies.
 
 ### 24.13 Summary of the Awards System
+
 The awards system should be understood as an annual prestige metagame in which film and television projects qualify for specific award bodies based on format, release path, scale, campaign choices, and creative profile, then compete across performance, writing, directing, craft, audience, and prestige categories. Success should reshape studio reputation, finances, talent leverage, future negotiations, and long-term legacy.
 
 ---
@@ -3489,9 +3802,11 @@ The awards system should be understood as an annual prestige metagame in which f
 Studio Boss is explicitly designed as a living industry simulation.
 
 ### 25.1 Rival Count
+
 The baseline expectation is **9 AI rival studios**, with additional offscreen smaller competitors possible.
 
 ### 25.2 Rival Roles
+
 Rivals should be able to:
 
 - develop competing projects
@@ -3504,6 +3819,7 @@ Rivals should be able to:
 - serve as acquisition or merger targets
 
 ### 25.3 Strategy Differentiation
+
 Not all rivals should behave the same. They should exhibit strategic identities such as:
 
 - prestige hunters
@@ -3513,12 +3829,15 @@ Not all rivals should behave the same. They should exhibit strategic identities 
 - debt-heavy gamblers
 
 ### 25.4 Offscreen Industry Pressure
+
 The player should feel that deals happen even when the player is not directly acting. This keeps the world moving.
 
 ### 25.5 Industry Trend Board
+
 The roadmap identifies a **Trend Board** showing genre and market movement. This creates a macro layer above individual projects.
 
 ### 25.6 Mergers, Acquisitions, and Corporate Control in the Rival Ecosystem
+
 The rival simulation should treat corporate control as part of the living industry, not an edge case. Rival studios should be able to:
 
 - acquire distressed competitors
@@ -3545,9 +3864,11 @@ The player should be able to react to rival M&A through:
 The design materials call for a **Studio Culture / Vibe** system.
 
 ### 26.1 Purpose
+
 The studio should feel like it develops a recognizable internal identity, affecting both aesthetics and simulation outcomes.
 
 ### 26.2 Example Cultures
+
 The roadmap references examples such as:
 
 - Creative Chaos
@@ -3556,6 +3877,7 @@ The roadmap references examples such as:
 Other culture identities could plausibly define how talent, agents, and audiences perceive the studio.
 
 ### 26.3 Mechanical Value
+
 Studio culture may influence:
 
 - who wants to work with you
@@ -3566,6 +3888,7 @@ Studio culture may influence:
 - staff morale or executive effectiveness
 
 ### 26.4 Narrative Value
+
 Studio culture helps the player tell a story about what kind of company they built.
 
 ---
@@ -3575,6 +3898,7 @@ Studio culture helps the player tell a story about what kind of company they bui
 One of the later roadmap expansions adds strong flavor systems that reinforce Hollywood drama.
 
 ### 27.1 Rumor Mill
+
 A rumor layer can spread:
 
 - casting friction
@@ -3584,9 +3908,11 @@ A rumor layer can spread:
 - internal panic
 
 ### 27.2 Casting Gossip Cards
+
 The roadmap gives an illustrative example like a star refusing to work with a specific director. This suggests cardized or eventized conflict beats that alter player options.
 
 ### 27.3 Production Catastrophes
+
 Examples mentioned include:
 
 - set fire
@@ -3596,6 +3922,7 @@ Examples mentioned include:
 These events should produce both immediate and long-tail consequences.
 
 ### 27.4 Design Role
+
 These systems add drama, unpredictability, and storytelling energy without requiring high-frequency micromanagement.
 
 ---
@@ -3605,6 +3932,7 @@ These systems add drama, unpredictability, and storytelling energy without requi
 Rights and ownership are important strategic differentiators.
 
 ### 28.1 Scope
+
 The later design summary references:
 
 - regional rights
@@ -3614,9 +3942,11 @@ The later design summary references:
 - merchandise rights
 
 ### 28.2 Why It Matters
+
 A project’s direct revenue may matter less in the long run than what rights the studio keeps.
 
 ### 28.3 Design Implication
+
 The player should be able to make “good business, bad vanity” or “great prestige, bad ownership” deals, and feel the difference later.
 
 ---
@@ -3640,6 +3970,7 @@ In **Studio Boss**, first-look deals should sit at the intersection of:
 The goal is to create the feeling that the player is not just picking projects from a neutral market. They are building a network of semi-exclusive relationships that shape the future flow of the business.
 
 ### 29.1 What a First-Look Deal Is in Game Terms
+
 A first-look deal gives the player’s studio a contractual priority window on projects generated by a specific partner.
 
 That partner can be:
@@ -3664,6 +3995,7 @@ A first-look deal should not mean total exclusivity by default. Instead, it usua
 This distinction is important because first-look deals are powerful, but they should not function as absolute ownership of a creator.
 
 ### 29.2 Why the System Matters
+
 This system creates a more realistic content pipeline and stronger long-term strategy.
 
 It allows the player to:
@@ -3686,9 +4018,11 @@ It also creates great stories:
 - a rival poaches your first-look partner after you underfund their overhead
 
 ### 29.3 Deal Types
+
 Not all recurring relationships should be identical. The game should support several contract archetypes.
 
 #### 29.3.1 Standard First-Look
+
 The studio gets the first opportunity to evaluate projects from the partner for a fixed term.
 
 Typical properties:
@@ -3702,6 +4036,7 @@ Typical properties:
 This should be the most common entry-level deal type.
 
 #### 29.3.2 Overhead / Pod Deal
+
 The studio funds a producer or mini-label’s office, assistants, development executives, and active slate operations.
 
 Typical properties:
@@ -3715,6 +4050,7 @@ Typical properties:
 These deals are strategically powerful but can become costly dead weight.
 
 #### 29.3.3 Overall Deal
+
 Most common for TV-oriented writer-producers and major multi-hyphenates, but can also exist for star producers or label heads.
 
 Typical properties:
@@ -3729,6 +4065,7 @@ Typical properties:
 Overall deals should be rare, expensive, and identity-defining.
 
 #### 29.3.4 First-Look + Distribution / Output Hybrid
+
 Useful for indie labels, international banners, documentary shops, or genre divisions.
 
 Typical properties:
@@ -3739,6 +4076,7 @@ Typical properties:
 - useful when you want volume without full overhead control
 
 #### 29.3.5 Talent Incubator Deal
+
 A lower-cost deal for emerging creators, child stars transitioning into producers, second-generation family members, or festival breakouts.
 
 Typical properties:
@@ -3752,6 +4090,7 @@ Typical properties:
 This is where “discover the next mogul early” gameplay lives.
 
 ### 29.4 Eligible Partners
+
 Any recurring collaborator with enough reputation, ambition, and business orientation can eventually ask for or be offered a deal.
 
 Common partner archetypes:
@@ -3782,9 +4121,11 @@ Eligibility should depend on a mix of:
 - awards heat or commercial heat
 
 ### 29.5 Core Contract Variables
+
 Every first-look or overall deal should be assembled from core variables rather than a single flat status effect.
 
 #### 29.5.1 Term Length
+
 Usually 1 to 5 years in simulation terms.
 
 Longer terms:
@@ -3800,6 +4141,7 @@ Shorter terms:
 - make breakout partners easier to lose
 
 #### 29.5.2 Exclusivity Level
+
 The spectrum should include:
 
 - non-exclusive preferred relationship
@@ -3812,6 +4154,7 @@ The spectrum should include:
 Exclusivity affects project flow, poaching risk, and partner resentment.
 
 #### 29.5.3 Overhead Cost
+
 A regular fixed cost representing office staff, assistants, execs, and general operations.
 
 This cost should vary by:
@@ -3823,6 +4166,7 @@ This cost should vary by:
 - how many active projects the pod is allowed to maintain
 
 #### 29.5.4 Development Fund Access
+
 Separate from overhead, this is money the partner can deploy toward:
 
 - script commissions
@@ -3836,6 +4180,7 @@ Separate from overhead, this is money the partner can deploy toward:
 The player may choose between tight control and broad autonomy.
 
 #### 29.5.5 Submission Quota / Expected Output
+
 The deal should track whether the partner is delivering enough active packages.
 
 Metrics can include:
@@ -3850,11 +4195,13 @@ Metrics can include:
 A low-output partner may still be worth it if their few swings are elite.
 
 #### 29.5.6 Pass Window
+
 How long the studio has to decide after receiving a package.
 
 A short window creates pressure and can force fast staffing, budgeting, and taste decisions.
 
 #### 29.5.7 Rights Structure
+
 When a first-look package arrives, the deal should specify default rights assumptions:
 
 - full buyout on greenlight
@@ -3865,11 +4212,13 @@ When a first-look package arrives, the deal should specify default rights assump
 - TV, film, merchandising, or international carve-outs
 
 #### 29.5.8 Key-Person Clause
+
 If the deal is built around one person, illness, scandal, death, retirement, burnout, imprisonment, rehab, or sudden rival defection can destabilize the agreement.
 
 This is especially useful for dynastic banners and vanity labels where the brand depends on one family member.
 
 #### 29.5.9 Renewal Options and Sunset Clauses
+
 Deals should not just end abruptly. They can include:
 
 - studio option to renew
@@ -3879,6 +4228,7 @@ Deals should not just end abruptly. They can include:
 - automatic sunset if no project reaches greenlight by a threshold date
 
 ### 29.6 First-Look Pipeline Flow
+
 A first-look deal should generate its own mini gameplay loop.
 
 1. **Relationship Formation**  
@@ -3905,6 +4255,7 @@ A first-look deal should generate its own mini gameplay loop.
 This loop should make first-look relationships feel alive, not passive.
 
 ### 29.7 Deal Health and Partner Satisfaction
+
 Every deal should have a hidden and partially visible health model.
 
 Inputs should include:
@@ -3935,6 +4286,7 @@ Low health results in:
 - press leaks and messy departures
 
 ### 29.8 Prestige Partners vs Commercial Partners
+
 The system should distinguish between partners who create status and partners who create reliable monetization.
 
 A prestige pod may:
@@ -3954,6 +4306,7 @@ A commercial pod may:
 The best studios should eventually learn to balance both.
 
 ### 29.9 Family Dynasties, Nepo Heirs, and Inherited Labels
+
 First-look deals are a perfect place to connect the family / lineage system to the project pipeline.
 
 Examples of gameplay patterns:
@@ -3978,6 +4331,7 @@ Family-run pods should have special traits:
 This lets first-look deals become a major delivery mechanism for Hollywood dynasty storytelling.
 
 ### 29.10 Child Stars and Transition Deals
+
 Child stars who survive early fame can evolve into:
 
 - actor-producers
@@ -4003,6 +4357,7 @@ Downside:
 - family interference
 
 ### 29.11 Producer Pods and Label Identity
+
 Some deals should create sub-brands inside the studio.
 
 Examples:
@@ -4027,6 +4382,7 @@ These labels can influence:
 A good pod is not only a source of projects. It becomes part of the studio’s identity architecture.
 
 ### 29.12 Negotiation Layer
+
 Negotiating a first-look or overall deal should feel like a genuine Hollywood business conversation, not a simple yes/no button.
 
 Negotiable points should include:
@@ -4051,6 +4407,7 @@ Negotiable points should include:
 Who represents the partner should matter. A powerful agency or attorney can demand better economics, more approvals, or packaging rights for sibling clients.
 
 ### 29.13 Approval Rights and Creative Control
+
 Some first-look partners will want more than money. They may seek:
 
 - director approval
@@ -4064,6 +4421,7 @@ Some first-look partners will want more than money. They may seek:
 These rights increase happiness and package quality, but reduce player flexibility.
 
 ### 29.14 Project Flow Generated by the Deal
+
 A partner under deal should create content in ways that reflect their personality and resources.
 
 Possible outputs:
@@ -4081,6 +4439,7 @@ Possible outputs:
 Their internal traits should shape the mix.
 
 ### 29.15 First-Look Queue UI
+
 The player should have a dedicated **Deals / Pods / First-Look** screen showing:
 
 - active deal partners
@@ -4105,6 +4464,7 @@ Each incoming package should show:
 - estimated package potential if nurtured
 
 ### 29.16 Pass, Hold, Turnaround, and Market Escape
+
 When a first-look project arrives, the player should not only choose “yes” or “no.”
 
 Options should include:
@@ -4120,6 +4480,7 @@ Options should include:
 If you pass too often, the partner becomes frustrated. If you hold too long, you may block the pod and create bottlenecks.
 
 ### 29.17 Turnaround and Reversion
+
 Projects should not disappear when declined.
 
 Possible outcomes after a pass:
@@ -4133,6 +4494,7 @@ Possible outcomes after a pass:
 Watching a rival turn your passed project into an awards hit or a giant franchise should be one of the best emotional pain points in the simulation.
 
 ### 29.18 Co-Production Hooks
+
 First-look deals should naturally generate co-productions.
 
 For example:
@@ -4146,6 +4508,7 @@ For example:
 This ties first-look deals directly into the rights and financing systems rather than leaving them as pure talent flavor.
 
 ### 29.19 Schedule Conflicts Within Deal Slates
+
 Because first-look partners feed the development queue, they must interact with the scheduling conflict system.
 
 Examples:
@@ -4166,6 +4529,7 @@ The player may choose to:
 This makes first-look deals feel integrated with real production pressure.
 
 ### 29.20 Renewal Negotiations
+
 As the term nears expiration, a deal should enter a renewal phase.
 
 Renewal leverage depends on:
@@ -4189,6 +4553,7 @@ Renewal outcomes:
 - rival poach with industry press impact
 
 ### 29.21 Rival Studio Competition and Poaching
+
 Rivals should actively pursue your best deal partners, especially when:
 
 - your liquidity weakens
@@ -4206,6 +4571,7 @@ Poaching pressure can appear as:
 - surprise opt-out clauses becoming active after underperformance
 
 ### 29.22 Strategic Trade-Offs
+
 A strong first-look system works because every benefit has a cost.
 
 Benefits:
@@ -4227,6 +4593,7 @@ Costs and risks:
 - blowback if you cannot support all partners equally
 
 ### 29.23 AI Behavior for Partners
+
 Partners under deal should not be static resource generators. They should have their own behavior profiles.
 
 Useful internal traits:
@@ -4247,6 +4614,7 @@ Useful internal traits:
 These traits influence what kinds of projects the partner produces and whether the deal is worth renewing.
 
 ### 29.24 Metrics That Determine Whether a Deal Was Worth It
+
 The player needs tools to evaluate deal performance.
 
 Suggested metrics:
@@ -4266,6 +4634,7 @@ Suggested metrics:
 A deal can be “worth it” even if not wildly profitable, if it builds prestige, future stars, or a franchise beachhead.
 
 ### 29.25 Staff Roles That Interact with First-Look Deals
+
 Internal executives should matter here.
 
 Relevant roles:
@@ -4283,6 +4652,7 @@ Relevant roles:
 A great executive team can turn a mediocre deal into a solid engine. A weak team can waste elite access.
 
 ### 29.26 Event and Drama Hooks
+
 This system should generate rich event chains.
 
 Possible events:
@@ -4298,6 +4668,7 @@ Possible events:
 - a quiet low-cost pod suddenly delivers a culture-shaping breakout
 
 ### 29.27 Interaction with Awards, PR, and Studio Brand
+
 Deals should have reputational consequences.
 
 A prestigious overall deal:
@@ -4319,6 +4690,7 @@ A scandal-plagued family banner:
 - can contaminate sibling or child-star relatives by association
 
 ### 29.28 Interaction with Greenlight Logic
+
 First-look partners should meaningfully affect greenlight decisions.
 
 Positive modifiers:
@@ -4340,6 +4712,7 @@ Negative modifiers:
 This is important: first-look deals should create temptation to throw good money after bad.
 
 ### 29.29 Recommended Data Model
+
 A first-look / overall deal entity should track:
 
 - partner type
@@ -4362,6 +4735,7 @@ A first-look / overall deal entity should track:
 - key person dependency
 
 ### 29.30 Design Role
+
 A robust first-look system turns the studio from a passive buyer of projects into an active curator of creative ecosystems.
 
 It deepens:
@@ -4384,15 +4758,19 @@ It should become one of the clearest ways the player feels they are no longer ju
 The game is expected to support empire-building beyond one-off projects.
 
 ### 30.1 Shared Universe Builder
+
 The player should be able to create linked projects with continuity and strategic dependencies.
 
 ### 30.2 Crossovers
+
 TV-to-film and film-to-TV crossovers are explicitly in scope.
 
 ### 30.3 Legacy Mode Lite
+
 The roadmap refers to a studio timeline and catalog view, suggesting a persistent record of the studio’s history and output.
 
 ### 30.4 Why It Matters
+
 These systems create long-tail goals and identity:
 
 - franchise momentum
@@ -4408,6 +4786,7 @@ These systems create long-tail goals and identity:
 The dashboard is the player’s studio lot control center.
 
 ### 31.1 Top Bar
+
 Baseline top bar information includes:
 
 - cash
@@ -4416,6 +4795,7 @@ Baseline top bar information includes:
 - headlines
 
 ### 31.2 Main Dashboard Sections
+
 The existing design calls for:
 
 - inline pipeline
@@ -4425,9 +4805,11 @@ The existing design calls for:
 - calendar
 
 ### 31.3 Slide-In or Context Panels
+
 Secondary systems such as Talent, Material, Press, and Finance should open contextually instead of forcing heavy navigation.
 
 ### 31.4 UX Goal
+
 The dashboard must support fast, informed decisions while reinforcing the fantasy that the player is surveying an active studio operation.
 
 ---
@@ -4437,6 +4819,7 @@ The dashboard must support fast, informed decisions while reinforcing the fantas
 Although the files are not exhaustive on accessibility, the roadmap and tech direction establish some baseline expectations.
 
 ### 32.1 Accessibility Standards
+
 The game should support:
 
 - keyboard navigation
@@ -4446,9 +4829,11 @@ The game should support:
 - at least AA-oriented visual accessibility goals
 
 ### 32.2 Motion Philosophy
+
 Motion should support tone and clarity, not spectacle for its own sake.
 
 ### 32.3 Information Density
+
 The UI should be rich but readable. The player should be able to understand studio state at a glance.
 
 ---
@@ -4458,9 +4843,11 @@ The UI should be rich but readable. The player should be able to understand stud
 The v7.6 materials introduce a meaningful framing layer for early player experience.
 
 ### 33.1 FTUE
+
 FTUE stands for first-time user experience. It should help the player understand the game’s complex systems without flattening its personality.
 
 ### 33.2 Studio Archetype Selection
+
 The player may begin with a studio archetype such as:
 
 - Major
@@ -4468,6 +4855,7 @@ The player may begin with a studio archetype such as:
 - Indie
 
 ### 33.3 Impact of Archetype
+
 This choice should affect:
 
 - tone
@@ -4478,6 +4866,7 @@ This choice should affect:
 - assistant voice and guidance style
 
 ### 33.4 Assistant Personas
+
 The source materials name assistant voices such as:
 
 - **Fixer** for Major
@@ -4493,17 +4882,20 @@ These should help tutorialize while reinforcing the player’s chosen fantasy.
 The current thematic styles are:
 
 ### 34.1 Major
+
 - gold and deep teal
 - smooth motion
 - corporate polish
 - assistant voice: Fixer
 
 ### 34.2 Mid-Tier
+
 - neon and glass
 - snappy motion
 - assistant voice: Insider
 
 ### 34.3 Indie
+
 - sepia and grain
 - organic motion
 - assistant voice: Dreamer
@@ -4517,6 +4909,7 @@ These themes should flavor the experience while preserving usability and a share
 Studio Boss is a management sim, but its emotional texture should be narrative-forward.
 
 ### 35.1 Core Tone
+
 The game should feel:
 
 - glamorous
@@ -4526,6 +4919,7 @@ The game should feel:
 - wry but not parody-first
 
 ### 35.2 Narrative Engines
+
 Narrative should emerge through:
 
 - negotiation scenes
@@ -4537,6 +4931,7 @@ Narrative should emerge through:
 - competitor actions
 
 ### 35.3 Design Principle
+
 The systems should generate stories the player can retell.
 
 ---
@@ -4546,6 +4941,7 @@ The systems should generate stories the player can retell.
 The latest attached direction clearly updates the project’s technical posture.
 
 ### 36.1 Canonical Client Stack
+
 The master current stack is:
 
 - **Language:** TypeScript
@@ -4560,12 +4956,14 @@ The master current stack is:
 - **Charts:** Recharts, with targeted D3 helpers as needed
 
 ### 36.2 Simulation and Performance Stack
+
 - game logic in pure TypeScript modules
 - Web Workers via Comlink
 - deterministic RNG via seedrandom
 - validation via Zod
 
 ### 36.3 Data, Saves, and Packaging
+
 - Dexie.js over IndexedDB for persistence
 - versioned migrations
 - JSZip and pako for export/import
@@ -4574,9 +4972,11 @@ The master current stack is:
 - macOS ZIP delivery with a one-click `Run.command`
 
 ### 36.4 Change in Direction
+
 The master current direction explicitly removes Next.js from the client in favor of a Vite-only SPA. This simplifies offline packaging and supports the ZIP-first release model.
 
 ### 36.5 Python Use
+
 The materials indicate that Python should preferably be used for build-time generation rather than broad runtime dependency, with Pyodide reserved for narrow runtime needs only.
 
 ---
@@ -4584,18 +4984,23 @@ The materials indicate that Python should preferably be used for build-time gene
 ## 37. Simulation Architecture Principles
 
 ### 37.1 Workerized Simulation
+
 Simulation ticks should run in Web Workers so the UI stays responsive.
 
 ### 37.2 Centralized State with Selectors
+
 The UI should subscribe to domain slices and derived selectors rather than handling business logic directly.
 
 ### 37.3 Determinism
+
 Seeds should be serialized into saves to ensure reproducible outcomes, debugging clarity, and consistent replays where appropriate.
 
 ### 37.4 Feature Flagging
+
 Incomplete systems should be gated cleanly so the build remains coherent and playable.
 
 ### 37.5 Save Compatibility
+
 Migration discipline is mandatory if the game is shipped incrementally across many milestone builds.
 
 ---
@@ -4620,12 +5025,15 @@ This separation should support maintainability, performance, and easier feature 
 The attached roadmap is explicit about delivery posture.
 
 ### 39.1 Playable Build Rule
+
 Every sprint should ship a playable macOS ZIP build.
 
 ### 39.2 Use of Placeholders
+
 “Coming Soon” stubs are allowed only for systems planned for future sprints, and the core loop must remain functional.
 
 ### 39.3 Minimum Done Criteria per Sprint
+
 A sprint should generally be considered done when:
 
 - the game is playable from title to dashboard to meaningful actions
@@ -4641,11 +5049,13 @@ A sprint should generally be considered done when:
 The attached documents include two overlapping roadmap structures. This master bible reconciles them into a single chronological progression. The earlier roadmap is feature-rich and production-oriented; the later roadmap is more implementation-structured and Vite-aligned. Both are useful.
 
 ### 40.1 Delivery Model
+
 Build labels continue in milestone form, with playable ZIP builds throughout development.
 
 ### 40.2 Master Sprint Sequence
 
 #### Sprint A — Playable Core Prototype / Foundation
+
 Goals:
 
 - Vite + React SPA scaffold
@@ -4664,6 +5074,7 @@ Outcome:
 A working playable skeleton where the player can create a studio, greenlight projects, advance time, and see basic financial and headline outcomes.
 
 #### Sprint B — FTUE, Archetypes, Talent, and Production Foundations
+
 Goals:
 
 - FTUE framework
@@ -4678,6 +5089,7 @@ Outcome:
 The player now understands the game’s fantasy and can manage people systems around projects.
 
 #### Sprint C — Economic Core and Finance UI v1
+
 Goals:
 
 - budget and ROI simulation
@@ -4692,6 +5104,7 @@ Outcome:
 Finance becomes a visible, interpretable system rather than a hidden ledger.
 
 #### Sprint D — Distribution, Rights, Liquidity, and Crisis
+
 Goals:
 
 - TV buyer ecosystem and distribution structures
@@ -4705,6 +5118,7 @@ Outcome:
 The player must think about rights and survival, not just project quality.
 
 #### Sprint E — Talent Packaging and IP Retention
+
 Goals:
 
 - stronger packaging systems
@@ -4718,6 +5132,7 @@ Outcome:
 Deals begin to matter long after signing.
 
 #### Sprint F — Rival AI Economy, Genre Trends, and Studio Culture
+
 Goals:
 
 - differentiated rival strategies
@@ -4730,6 +5145,7 @@ Outcome:
 The industry becomes a living ecosystem with identifiable studio personalities, market consolidations, and strategic takeover opportunities.
 
 #### Sprint G — Festivals, Valuation, Marketplace Events, and Flavor Systems
+
 Goals:
 
 - festival valuation effects
@@ -4744,6 +5160,7 @@ Outcome:
 The game gains strong Hollywood drama and prestige-market texture.
 
 #### Sprint H — Ratings System and Regional Rules
+
 Goals:
 
 - ratings framework
@@ -4755,6 +5172,7 @@ Outcome:
 The player must think about what form of the project is commercially and culturally viable.
 
 #### Sprint I — Demographics and Marketing Targeting
+
 Goals:
 
 - age, gender, and region model
@@ -4766,6 +5184,7 @@ Outcome:
 Audience strategy becomes specific and legible.
 
 #### Sprint J — Director Negotiations and Final Cut
+
 Goals:
 
 - director archetypes
@@ -4777,6 +5196,7 @@ Outcome:
 The central tension between creative autonomy and commercial control becomes systemic.
 
 #### Sprint K — Ratings and Demographics Dashboard / Scenario Forecasting
+
 Goals:
 
 - integrated ratings and demographics dashboard
@@ -4787,6 +5207,7 @@ Outcome:
 The player receives stronger decision support before release.
 
 #### Sprint L — Press, Fandom, Controversies, and Recovery
+
 Goals:
 
 - press system expansion
@@ -4799,6 +5220,7 @@ Outcome:
 Perception becomes one of the studio’s key resources.
 
 #### Sprint M — Full UI/UX Polish
+
 Goals:
 
 - icons
@@ -4811,6 +5233,7 @@ Outcome:
 The game’s visual identity locks into place.
 
 #### Sprint N — Refactor, Performance, QA, and Tech Debt
+
 Goals:
 
 - type hardening
@@ -4824,6 +5247,7 @@ Outcome:
 The codebase becomes stable and maintainable enough for final release.
 
 #### Sprint O — Gold Master and Epilogue
+
 Goals:
 
 - final balancing
@@ -4909,7 +5333,6 @@ When updating this document in the future:
 
 ---
 
-
 ## 30. Vanity Shingles, Star Production Companies, Writers as Talent, and TV Leadership Expansion
 
 This section expands the first-look, packaging, and talent systems so they better reflect the way real Hollywood actually works while still remaining readable and fun in play. In practice, many major stars, directors, writer-producers, comedians, animation creators, and prestige filmmakers do not simply appear as individual freelancers in the market. They often operate through **production companies**, **vanity shingles**, **pods**, or **creator banners** that sit on a studio lot or under an overall / first-look arrangement.
@@ -4939,18 +5362,23 @@ The system should be rooted in reality, but the UX should stay intuitive:
 This expansion should achieve six goals at once.
 
 #### 30.1.1 Make Hollywood Relationships Feel Structural
+
 A star with a vanity company should feel different from a normal freelancer. They bring projects in, ask for producers’ fees, want office overhead, hire favored collaborators, and often expect a louder voice in creative decisions.
 
 #### 30.1.2 Elevate Writers into a Full Talent Class
+
 Writers should no longer feel like a hidden project stat. They should be market participants with quotes, availability, prestige, volatility, voice, agency relationships, and career arcs.
 
 #### 30.1.3 Make Multi-Hyphenates Matter
+
 Many important real-world creators are writer-directors, actor-producers, writer-showrunners, director-producers, or actor-writer-comedians. The simulation should support that naturally.
 
 #### 30.1.4 Distinguish Film and TV Leadership
+
 A film can survive with a rewrite and a producer-heavy package. A TV series lives or dies on the creative and managerial competence of the showrunner and room leadership.
 
 #### 30.1.5 Keep Systems Understandable
+
 The player should not have to study Hollywood trade law to use the system. Every deal and attachment should answer simple questions:
 
 - Who is this person?
@@ -4961,6 +5389,7 @@ The player should not have to study Hollywood trade law to use the system. Every
 - What happens if I delay?
 
 #### 30.1.6 Support Emergent Drama
+
 Vanity labels and multi-hyphenates should generate stories such as:
 
 - a movie star uses their shingle to force a passion project onto the slate
@@ -5010,43 +5439,53 @@ Each production entity should track:
 Not every shingle should function identically. Variety is what makes the feature fun.
 
 #### 30.3.1 Star Vanity Label
+
 Usually controlled by a major actor or performer. Strengths include packaging speed, cast access, PR heat, and talent magnetism. Weaknesses include ego cost, vanity development spend, and a tendency toward star vehicles.
 
 Typical behavior:
+
 - brings vehicle ideas for the founder
 - pushes specific directors or co-stars
 - wants producing credit and meaningful set influence
 - may overvalue personal passion projects
 
 #### 30.3.2 Director Banner
+
 Usually prestige-heavy or brand-heavy. Strengths include tone control, filmmaker loyalty, and strong package identity. Weaknesses include slower iteration, stronger creative demands, and schedule fragility.
 
 Typical behavior:
+
 - incubates hand-picked material
 - keeps a stable of writers, editors, and department heads
 - may insist on first-look rights over remakes or spin-offs connected to their work
 
 #### 30.3.3 Writer / Showrunner Pod
+
 Usually TV-facing, though film writers can also use this model. Strengths include pipeline volume, repeatable development output, and staffing leverage. Weaknesses include high overhead, room costs, and burnout risk.
 
 Typical behavior:
+
 - generates several concepts per year
 - recruits upper-level writers into orbit
 - demands meaningful development funds
 - creates strong renewal pressure if it breaks out
 
 #### 30.3.4 Family or Sibling Banner
+
 A family-run shingle may include siblings, spouses, cousins, parents and children, or dynasty protégés. Strengths include loyalty and chemistry. Weaknesses include nepotism optics, group conflicts, and succession drama.
 
 Typical behavior:
+
 - packages internal collaborators first
 - may split after a feud
 - creates strong PR narratives, good or bad
 
 #### 30.3.5 Prestige Mini-Label / Genre House
+
 These entities sit between an indie label and a vanity company. They are useful for horror, awards cinema, YA, faith, romcom, animation, documentary, and elevated genre niches.
 
 Typical behavior:
+
 - spots undervalued material faster
 - has a strong taste signature
 - can outperform its budget tier when market windows align
@@ -5184,6 +5623,7 @@ An auteur should feel like both a strategic edge and a concentration of risk.
 The game should clearly distinguish writer value by format.
 
 #### 30.8.1 Film Writers
+
 Film writers usually matter most during development and rewrite phases. Their impact is strongest on:
 
 - script quality
@@ -5195,6 +5635,7 @@ Film writers usually matter most during development and rewrite phases. Their im
 Film writers may remain influential into production, but usually less than the director and producers unless they are also the director or a powerful producer.
 
 #### 30.8.2 TV Writers
+
 TV writers matter throughout the life of the series. Their impact should touch:
 
 - pilot quality
@@ -5579,6 +6020,7 @@ This system makes TV feel meaningfully different from film and creates real-worl
 When a project originates from a shingle or pod, the development flow should reflect that.
 
 Typical pipeline:
+
 1. company develops concept internally
 2. first-look submission arrives at studio
 3. player funds exploratory development or passes
@@ -5681,6 +6123,7 @@ These policies help the player shape house culture without micromanaging every c
 The existing quote system should be expanded so both **people** and **companies** gain or lose value over time.
 
 #### 30.30.1 Personal Value Changes
+
 Actor, director, writer, producer, and showrunner quotes should move based on:
 
 - box office or audience performance
@@ -5694,6 +6137,7 @@ Actor, director, writer, producer, and showrunner quotes should move based on:
 - comeback narrative
 
 #### 30.30.2 Company Value Changes
+
 Vanity company leverage should move based on:
 
 - hit rate
@@ -5731,7 +6175,9 @@ The system will only feel intuitive if the presentation is clean.
 Important screens and drawers:
 
 #### 30.32.1 Talent Card
+
 Should show:
+
 - primary roles
 - secondary roles
 - quote by role
@@ -5743,7 +6189,9 @@ Should show:
 - awards / prestige badges
 
 #### 30.32.2 Company / Shingle Card
+
 Should show:
+
 - controlling talent
 - deal type
 - overhead cost
@@ -5755,7 +6203,9 @@ Should show:
 - studio sentiment
 
 #### 30.32.3 TV Leadership Screen
+
 Should show:
+
 - creator
 - showrunner
 - pilot writer
@@ -5765,7 +6215,9 @@ Should show:
 - staffing risk warnings
 
 #### 30.32.4 Project Packaging Screen
+
 Should clearly distinguish:
+
 - required roles still unfilled
 - optional value-adding attachments
 - company-linked attachments
@@ -5831,11 +6283,9 @@ The following design rules should now be treated as canonical for the rest of th
 7. **TV staffing and room leadership are formal systems**, not just flavor text, whenever the project is a scripted series.
 8. **Company health, overhead, and orbit politics matter** and should feed events, economics, PR, and project success.
 
-
-
 ## 31. Trade Press, Industry News, Rumors, Box Office, TV Performance Reporting, and Talent Compensation Escalation
 
-This section formalizes the industry-information layer of **Studio Boss** by turning the entertainment trades into a playable system rather than mere flavor text. In real Hollywood, publications such as *Deadline*, *Variety*, *The Hollywood Reporter*, *Screen International*, awards columnists, TV ratings roundups, box office analysts, and social-buzz aggregators shape perception, leak information, influence negotiations, and create momentum. In the game, the player should feel that the industry is always talking — about projects in development, packages coming together, who is circling what, who is overpaid, which awards horses are surging, and whether a hit is “real” or “soft.”
+This section formalizes the industry-information layer of **Studio Boss** by turning the entertainment trades into a playable system rather than mere flavor text. In real Hollywood, publications such as _Deadline_, _Variety_, _The Hollywood Reporter_, _Screen International_, awards columnists, TV ratings roundups, box office analysts, and social-buzz aggregators shape perception, leak information, influence negotiations, and create momentum. In the game, the player should feel that the industry is always talking — about projects in development, packages coming together, who is circling what, who is overpaid, which awards horses are surging, and whether a hit is “real” or “soft.”
 
 The goal is to make information itself a strategic resource. Good trade coverage can improve talent attachment odds, awards positioning, buyer confidence, and investor sentiment. Bad coverage can inflate costs, trigger rival bidding, unsettle casts, cause panic in greenlight committees, or make a project feel “damaged” before cameras roll.
 
@@ -5875,6 +6325,7 @@ The trades are not just generic “press.” Each outlet has a personality, stre
 Fast, deal-driven, rumor-forward, casting-focused, and highly influential in project momentum. This outlet breaks who is attached, who is circling, bidding wars, exits, replacements, pod deals, launch dates, renewals, cancellations, and first-look signings.
 
 Primary gameplay functions:
+
 - break casting and director attachment stories early
 - surface package heat before greenlight
 - intensify bidding wars and competitive pressure
@@ -5886,6 +6337,7 @@ Primary gameplay functions:
 More institutional and awards-literate, blending business, craft, industry analysis, and prestige framing. This outlet is particularly strong for awards charts, executive transitions, market narratives, and “what this means” trade analysis.
 
 Primary gameplay functions:
+
 - shape prestige narratives and awards respectability
 - publish nominee and winner predictions
 - amplify strategic stories about your studio identity
@@ -5896,6 +6348,7 @@ Primary gameplay functions:
 Useful as the middle zone between speed and polish: strong for features, power lists, profile pieces, development updates, think pieces, and talent-business ecosystem coverage.
 
 Primary gameplay functions:
+
 - produce talent profiles and rehabilitation stories
 - highlight behind-the-scenes friction or creative tensions
 - raise or lower perceived cultural legitimacy
@@ -5906,6 +6359,7 @@ Primary gameplay functions:
 These represent market-facing industry publications focused on sales, festivals, international buyers, rights movement, co-productions, and worldwide commercial temperature.
 
 Primary gameplay functions:
+
 - affect foreign pre-sales confidence
 - influence co-financing and festival buyer traffic
 - boost or damage international value perception
@@ -5916,6 +6370,7 @@ Primary gameplay functions:
 These are specialized reporting channels for weekend box office, Nielsen-style reports, live-plus-delayed TV performance, franchise trend analysis, and annual winner/loser scorecards.
 
 Primary gameplay functions:
+
 - publish revenue-facing scoreboards
 - trigger value/cost changes automatically
 - supply sequel, spin-off, renewal, and cancellation leverage
@@ -5929,6 +6384,7 @@ The game’s weekly newsfeed should be divided into a few distinct content types
 
 Short, immediate updates with direct action implications.
 Examples:
+
 - “A-list star circling your crime thriller”
 - “Director exits two weeks before production start”
 - “Buyer mandates shift away from YA fantasy”
@@ -5938,6 +6394,7 @@ Examples:
 
 Longer trade framing that changes confidence, prestige, or market sentiment.
 Examples:
+
 - “Is your studio over-indexing on mid-budget originals?”
 - “Awards insiders souring on crowded fall slate”
 - “TV ad softness changing appetite for expensive procedurals”
@@ -5946,6 +6403,7 @@ Examples:
 
 Scheduled or event-driven performance drops.
 Examples:
+
 - weekend domestic box office chart
 - international cume update
 - opening weekend ranking
@@ -5957,6 +6415,7 @@ Examples:
 
 Low-certainty items that may still move behavior.
 Examples:
+
 - “Whispers that a star wants script changes before committing”
 - “Talk of showrunner fatigue on expensive sophomore drama”
 - “One awards consultant says a frontrunner is losing momentum”
@@ -5965,6 +6424,7 @@ Examples:
 
 Awards, box office, and renewal predictions generated at key calendar moments.
 Examples:
+
 - early Emmy watch list
 - Oscar top 10 projection
 - weekend box office forecast
@@ -5975,6 +6435,7 @@ Examples:
 Every trade item carries a hidden and sometimes visible credibility profile.
 
 Core values:
+
 - **certainty**: how likely the item is true
 - **source quality**: insider, agent leak, set leak, executive quote, analyst estimate, anonymous chatter
 - **reach**: how widely the item spreads
@@ -5982,6 +6443,7 @@ Core values:
 - **half-life**: how long the story meaningfully affects behavior
 
 This lets the game differentiate between:
+
 - confirmed deal announcements
 - highly credible early scoops
 - speculative chatter
@@ -5996,6 +6458,7 @@ This expands the existing gossip layer into a formal simulation.
 #### 31.5.1 Rumor Categories
 
 Rumors can emerge in several domains:
+
 - casting and attachments
 - script quality or development trouble
 - budget overruns
@@ -6012,6 +6475,7 @@ Rumors can emerge in several domains:
 #### 31.5.2 Rumor Lifecycle
 
 A rumor generally moves through five states:
+
 1. **whisper** — only low-level industry chatter; limited gameplay effect
 2. **trade item** — appears as a rumor/scoop; moderate effect on leverage and morale
 3. **follow-up coverage** — more outlets echo it; market starts pricing it in
@@ -6021,6 +6485,7 @@ A rumor generally moves through five states:
 #### 31.5.3 Who Starts Rumors
 
 Rumors may be seeded by:
+
 - agents trying to inflate a client quote
 - producers trying to create momentum for financing
 - awards consultants boosting their contender
@@ -6034,6 +6499,7 @@ This creates a high-value strategic layer: sometimes you are managing rumors, so
 #### 31.5.4 Player Interactions with Rumors
 
 The player can choose among actions such as:
+
 - ignore the item
 - deny publicly
 - leak a competing story
@@ -6054,6 +6520,7 @@ Film performance should not arrive as a single “success/failure” verdict. Th
 #### 31.6.1 Core Box Office Values Reported
 
 For each theatrical title, the system can surface:
+
 - preview gross
 - opening day
 - opening weekend domestic gross
@@ -6071,6 +6538,7 @@ For each theatrical title, the system can surface:
 #### 31.6.2 Framing Labels
 
 To keep the system intuitive, the trades convert raw numbers into language such as:
+
 - breakout hit
 - solid hold
 - front-loaded opening
@@ -6086,6 +6554,7 @@ These labels help non-expert players understand what matters.
 #### 31.6.3 Box Office Momentum
 
 The important gameplay value is not just gross but **momentum narrative**. A $40M opening can be good or bad depending on budget, genre, comp titles, and expectations. Momentum affects:
+
 - sequel confidence
 - star quote inflation
 - director prestige
@@ -6096,12 +6565,13 @@ The important gameplay value is not just gross but **momentum narrative**. A $40
 #### 31.6.4 Comparative Context
 
 Trades often compare results to comps. The game should do the same through short contextual notes:
+
 - “Best opening for this actor in five years”
 - “Below genre comps despite strong awareness”
 - “Outperforming similar budget originals”
 - “Strong international start offsets soft domestic debut”
 
-This helps the player understand *why* talent value moved.
+This helps the player understand _why_ talent value moved.
 
 ### 31.7 Television Ratings and Audience Report System
 
@@ -6110,6 +6580,7 @@ Television needs its own trade-reporting grammar rather than simply imitating fi
 #### 31.7.1 Core TV Metrics Surface
 
 Depending on buyer type and era flavor, the game can report:
+
 - overnight or same-day rating/share
 - live-plus-3 and live-plus-7 lift
 - total viewers
@@ -6127,6 +6598,7 @@ Depending on buyer type and era flavor, the game can report:
 #### 31.7.2 Nielsen-Style Weekly Reports
 
 At the end of each broadcast week, the player receives a digest of:
+
 - top shows by total viewers
 - top shows in key demo(s)
 - biggest gainers and fallers
@@ -6139,6 +6611,7 @@ This should feel like the player is opening a simplified, readable version of we
 #### 31.7.3 Platform-Sensitive Interpretation
 
 The exact meaning of a “win” differs by model:
+
 - broadcast cares heavily about share, demo, and ad-friendly consistency
 - cable/premium cares more about identity and subscriber loyalty
 - streaming cares about completion, acquisition, retention, and global long-tail performance
@@ -6149,6 +6622,7 @@ Therefore the trades should not just print numbers; they should print interpreta
 #### 31.7.4 TV Success Labels
 
 Examples:
+
 - breakout freshman hit
 - sturdy utility performer
 - binge phenomenon
@@ -6165,6 +6639,7 @@ This section connects reporting to the labor market.
 #### 31.8.1 Film Talent Value Feedback
 
 After a movie release, actor/director/producer/writer value shifts based on:
+
 - budget-relative box office performance
 - audience reception
 - critic response
@@ -6177,6 +6652,7 @@ A star in a surprise hit may gain quote and attachment magnetism. A star blamed 
 #### 31.8.2 TV Talent Value Feedback
 
 TV talent value changes based on:
+
 - premiere strength
 - season retention
 - renewal probability
@@ -6190,6 +6666,7 @@ A showrunner behind two reliable renewals becomes expensive and highly sought-af
 #### 31.8.3 Attribution Rules
 
 Not every success or failure affects everyone equally. The game should attribute outcome credit with weighted logic:
+
 - actor-heavy star vehicle gives more performance weight to lead cast
 - auteur project gives more weight to director/writer-director
 - franchise machine with weak reviews may reward producers more than actors
@@ -6206,6 +6683,7 @@ Trade reporting should also update the perceived value of the underlying propert
 #### 31.9.1 IP Value Drivers
 
 An IP or original title’s exploitation value changes through:
+
 - theatrical profitability
 - sustained TV performance
 - awards prestige
@@ -6218,6 +6696,7 @@ An IP or original title’s exploitation value changes through:
 #### 31.9.2 Film Sequel Logic
 
 If a film overperforms, the trades may trigger sequel and spin-off chatter. This raises:
+
 - cast asking prices for returns
 - director quote if they are deemed central to the brand
 - backend participation demands
@@ -6227,6 +6706,7 @@ If a film overperforms, the trades may trigger sequel and spin-off chatter. This
 #### 31.9.3 TV Renewal and Extra-Season Value
 
 A successful series raises value in several overlapping ways:
+
 - renewal confidence
 - cost of cast re-ups
 - showrunner quote inflation
@@ -6237,6 +6717,7 @@ A successful series raises value in several overlapping ways:
 #### 31.9.4 Success Creates Expensive Problems
 
 An important fun principle: hits should not merely make life easier. They should create new negotiation headaches. Surprise success often leads to:
+
 - cast demanding raises
 - creators asking for more control
 - first-look partners wanting richer terms
@@ -6250,6 +6731,7 @@ This makes pay structures legible and distinct for film and television.
 #### 31.10.1 Film Compensation
 
 Movie talent is generally paid upfront for principal participation, especially above-the-line roles. Core components include:
+
 - upfront acting fee
 - directing fee
 - producing fee
@@ -6263,6 +6745,7 @@ The player sees this on the package screen as a mix of guaranteed spend and cont
 #### 31.10.2 Backend Participation for Films
 
 Major stars, top directors, marquee producers, and elite writer-directors can negotiate backend such as:
+
 - first-dollar gross style participation (rare, expensive, prestige/high-power only)
 - adjusted gross participation
 - net participation approximation
@@ -6274,6 +6757,7 @@ Gameplay rule: backend lowers immediate cash burden versus giant upfront quotes 
 #### 31.10.3 Television Compensation
 
 TV cast are generally paid per episode, with season structure shaping real cost. Key components include:
+
 - per-episode acting fee
 - guaranteed minimum episode count
 - pilot premium or series regular premium
@@ -6289,6 +6773,7 @@ This makes TV budget modeling more dynamic than film because order count and ren
 #### 31.10.4 Showrunner and Writer Compensation
 
 Writers and showrunners require special handling:
+
 - pilot script fee
 - series bible / development fee
 - room-running fee
@@ -6300,6 +6785,7 @@ Writers and showrunners require special handling:
 #### 31.10.5 Per-Episode Escalation
 
 Long-running TV hits should become materially more expensive as cast and producing talent renegotiate. The system should support:
+
 - automatic option-year bumps
 - market reset demands after breakout seasons
 - parity disputes among ensemble cast
@@ -6313,6 +6799,7 @@ Television should earn value beyond first-run release.
 #### 31.11.1 Syndication as a Revenue Phase
 
 Once a series accumulates enough episodes and reaches the appropriate performance profile, it can become eligible for syndication-style or library exploitation value. This may take different forms depending on era and buyer model:
+
 - off-network package sale
 - cable rerun package
 - streamer catalog license
@@ -6322,6 +6809,7 @@ Once a series accumulates enough episodes and reaches the appropriate performanc
 #### 31.11.2 Syndication Value Inputs
 
 Syndication strength depends on:
+
 - episode count
 - repeat-watch friendliness
 - broad audience familiarity
@@ -6334,6 +6822,7 @@ Syndication strength depends on:
 #### 31.11.3 Strategic Effects of Syndication
 
 Syndication or catalog value should:
+
 - increase the long-term strategic value of renewals
 - justify keeping a “solid but uncool” show alive
 - change how much the studio will tolerate cast raises
@@ -6347,6 +6836,7 @@ The trades should act as the public consciousness of the awards race.
 #### 31.12.1 Awards Prediction Content Types
 
 The outlets can publish:
+
 - early watch lists
 - monthly top-ten contender rankings
 - nomination bubble pieces
@@ -6358,6 +6848,7 @@ The outlets can publish:
 #### 31.12.2 Gameplay Effects of Awards Coverage
 
 Awards prediction content affects:
+
 - campaign efficiency
 - prestige momentum
 - voter perception proxy
@@ -6372,6 +6863,7 @@ Each columnist or outlet can have a rolling awards-prediction credibility score.
 #### 31.12.4 Snub Shock and Momentum Crashes
 
 If a once-favored contender misses nominations, that should have secondary consequences:
+
 - campaign spend seen as wasted
 - talent disappointment and blame
 - prestige brand setback for the studio
@@ -6382,12 +6874,14 @@ If a once-favored contender misses nominations, that should have secondary conse
 Agents, managers, producers, buyers, and talent should cite the trades in actual negotiations.
 
 Examples:
+
 - “Deadline says three buyers are chasing this package.”
 - “Variety has your actor at the top of every Emmy list.”
 - “The latest ratings column calls the show a breakout, so our per-episode ask just changed.”
 - “Weekend charts say this is underperforming; we need to revisit backend.”
 
 Mechanically, trade coverage can modify ongoing negotiation stances by creating:
+
 - quote pressure
 - urgency pressure
 - morale pressure
@@ -6401,6 +6895,7 @@ The player needs clean, fun controls to interact with this system.
 #### 31.14.1 Press Office Functions
 
 The studio’s PR/comms operation can perform actions like:
+
 - issue statement
 - grant exclusive interview
 - set controlled leak
@@ -6414,6 +6909,7 @@ The studio’s PR/comms operation can perform actions like:
 #### 31.14.2 Information Strategy Modes
 
 At the studio-policy level, the player may prefer:
+
 - stealthy and controlled
 - aggressive hype machine
 - prestige seriousness
@@ -6431,6 +6927,7 @@ Strong studio relationships with certain outlets can modestly improve placement 
 The trade system should be a backbone of the week-advance event engine.
 
 Each week may generate:
+
 - one or more major trade headlines
 - scheduled metrics reports for active releases
 - one rumor item from your orbit or rivals
@@ -6444,6 +6941,7 @@ This means the player is always reading the week not just through internal dashb
 #### 31.16.1 Trades Tab
 
 A dedicated screen aggregates stories by category:
+
 - breaking deals
 - your studio coverage
 - rivals coverage
@@ -6456,13 +6954,14 @@ A dedicated screen aggregates stories by category:
 #### 31.16.2 Story Cards
 
 Every story card should show:
+
 - outlet name
 - certainty level
 - what changed mechanically
 - one-sentence interpretation
 - optional follow-up action
 
-Example: “Variety Awards Watch: *The Glass Harbor* rises to #3 in Best Picture projection. Prestige Heat +6, Campaign Efficiency +4%, Lead Actor Quote Pressure +2.”
+Example: “Variety Awards Watch: _The Glass Harbor_ rises to #3 in Best Picture projection. Prestige Heat +6, Campaign Efficiency +4%, Lead Actor Quote Pressure +2.”
 
 #### 31.16.3 Performance Reports Screen
 
@@ -6477,6 +6976,7 @@ When talks are underway, the UI should visibly show any current trade items affe
 Rivals should use the trade ecosystem too.
 
 They can:
+
 - leak casting to create false momentum
 - bury bad test-screening chatter with shiny first-look announcements
 - exploit your negative box office narrative to poach talent
@@ -6532,12 +7032,12 @@ Build the slate. Package the talent. Survive the quarter. Win the awards. Outlas
 
 Studio Boss is a Hollywood studio sim about making great bets under pressure and living with the consequences.
 
-
 ## Appendix C — Legacy Technical Snapshot (v7.6)
 
 The following points are preserved from the v7.6 design/delivery sync because they contain implementation-facing detail that remains useful even where the main bible already reflects the same direction:
 
 ### C.1 Final Tech Stack Snapshot
+
 - **Language:** TypeScript
 - **Framework:** React SPA with Vite
 - **State:** Zustand with Immer
@@ -6559,11 +7059,13 @@ The following points are preserved from the v7.6 design/delivery sync because th
 - **Delivery:** offline macOS ZIP with one-click launcher
 
 ### C.2 Why Next.js Was Removed
+
 - SSR and ISR add little value in an offline ZIP product.
 - Vite produces smaller bundles and simpler worker setup.
 - The packaging path for macOS builds is cleaner.
 
 ### C.3 Acceptance Checklist Preserved from v7.6
+
 - repo/game assumes Vite-only client
 - Worker/Comlink config verified under Vite
 - PWA offline install works from ZIP
@@ -6591,6 +7093,7 @@ FinancePanel
 The roadmap in the main body is canonical. This appendix preserves the older A→K framing because it is still useful as a milestone compression view for planning conversations.
 
 ### E.1 Sprint Compression View
+
 - **A:** playable core prototype
 - **B:** talent and production loop
 - **C:** finance and cash flow simulation
@@ -6604,12 +7107,13 @@ The roadmap in the main body is canonical. This appendix preserves the older A�
 - **K:** gold master and epilogue
 
 ### E.2 Guiding Principle Preserved
-Every sprint should ship a fully playable macOS ZIP, using “Coming Soon” placeholders only for future systems.
 
+Every sprint should ship a fully playable macOS ZIP, using “Coming Soon” placeholders only for future systems.
 
 ## 32. Unmade Screenplay Market, Heat Lists, and Passion Projects
 
 ### 32.1 Purpose
+
 The game should include a **prestige-driven speculative script market** inspired by the real-world ecosystem around annual “best unmade screenplay” lists, hosted screenplay platforms, executive recommendation lists, coverage buzz, and agency circulation. In Hollywood, many projects gain value long before production begins because they are talked about, passed around, championed by executives, or become signature passion material for talent trying to get a project made. Studio Boss should turn this into a readable, exciting gameplay system.
 
 This system creates a bridge between:
@@ -6626,6 +7130,7 @@ This system creates a bridge between:
 The fantasy is that the player can discover a script everybody is suddenly talking about, option it before a rival, shepherd a difficult personal project for years, or deliberately gamble on a beloved but risky “town script” that the market loves even if the forecast is shaky.
 
 ### 32.2 Real-World Inspiration
+
 The real-world inspiration is the ecosystem around **The Black List**, the annual survey of executives’ favorite unproduced screenplays, which has been published annually since 2005 and ranks the “most liked” rather than formally adjudicating the “best” scripts. The Black List’s founder and the platform’s own materials also describe a broader ecosystem where scripts, pilots, plays, and manuscripts can be surfaced to industry professionals, and where annual lists, evaluations, and curated programs can increase visibility for unmade material. citeturn878410view0turn726001search1turn726001search2
 
 The annual list has historically mattered because appearing on it can raise a writer’s profile, help scripts move into production, and create cultural heat around material that is not yet made. Official Black List materials state that hundreds of listed scripts have later been produced and that the annual list is compiled from surveys of Hollywood executives about their favorite unproduced screenplays from that calendar year. citeturn878410view0turn726001search0turn726001search2
@@ -6633,6 +7138,7 @@ The annual list has historically mattered because appearing on it can raise a wr
 Studio Boss should not merely copy one brand name. Instead, it should build a broader fictionalized gameplay layer that captures the **spec script market**, **heat lists**, **annual discovery surveys**, **insider recommendation boards**, and **passion project circulation** in a way that feels intuitive and dramatically useful.
 
 ### 32.3 Core Feature Summary
+
 Add a new discovery and development layer built around five connected systems:
 
 1. **The Heat List** — a rolling in-game list of the most talked-about unmade projects in town
@@ -6644,6 +7150,7 @@ Add a new discovery and development layer built around five connected systems:
 Together these systems should make “finding the next great thing” feel like a major part of the studio fantasy rather than a flat content shop.
 
 ### 32.4 New Discovery Categories
+
 Projects entering the market should now be tagged by discovery origin. This origin shapes cost, prestige, risk, and who is likely to care.
 
 Discovery origins include:
@@ -6666,6 +7173,7 @@ Discovery origins include:
 This matters because a project discovered as an **open spec** behaves differently from a **star passion project** or a **pod-submitted script**.
 
 ### 32.5 The Heat List
+
 The **Heat List** is a living weekly screen inside the development dashboard. It represents the current “town conversation” around unmade material.
 
 Each Heat List entry should include:
@@ -6701,6 +7209,7 @@ The Heat List is not a simple ranking of quality. It is a composite of:
 This makes the Heat List a dynamic market dashboard rather than a static shopping list.
 
 ### 32.6 Annual Unmade List
+
 Once per in-game year, a formal **Annual Unmade List** event should fire. This is a prestige-heavy awards-season-adjacent ritual in which executives, producers, buyers, development heads, and pod leaders effectively surface their favorite unmade screenplays and pilot scripts of the year.
 
 The Annual Unmade List should:
@@ -6721,6 +7230,7 @@ This annual event should feel like a hybrid between:
 - a late-year development scramble
 
 ### 32.7 Fictionalization Approach
+
 For legal and tonal reasons, the game should present fictionalized outlets and lists, such as:
 
 - **The Heat List**
@@ -6732,6 +7242,7 @@ For legal and tonal reasons, the game should present fictionalized outlets and l
 The system can still be transparently inspired by real industry behavior, but fictional naming gives the game freedom to tune rules and UI clarity.
 
 ### 32.8 Script Attributes for the Unmade Market
+
 To support this system, scripts and unmade projects need a richer attribute model.
 
 Add the following fields to screenplay and pilot assets:
@@ -6766,6 +7277,7 @@ Add the following fields to screenplay and pilot assets:
 These values should not all be visible numerically. Many should be surfaced through tags and readable descriptors.
 
 ### 32.9 Readable User-Facing Tags
+
 To keep the system fun and intuitive, scripts should use clear shorthand tags such as:
 
 - Town Hot
@@ -6789,6 +7301,7 @@ To keep the system fun and intuitive, scripts should use clear shorthand tags su
 This lets players read the market quickly without drowning in hidden equations.
 
 ### 32.10 Script Supply Channels
+
 New scripts should enter the ecosystem from multiple supply channels each week or month.
 
 Supply channels include:
@@ -6813,6 +7326,7 @@ The source channel should influence:
 - rival interest intensity
 
 ### 32.11 Coverage, Readers, and Internal Taste
+
 Studios should not automatically know whether a new script is good. Add a lightweight **coverage system**.
 
 Scripts can be:
@@ -6837,6 +7351,7 @@ Coverage returns should include:
 Internal executives should also have personal taste profiles. Some love prestige dramas, some love four-quadrant commercial material, some are drawn to edgy auteur scripts, some are skeptical of risky original films. This makes the discovery process feel human and political.
 
 ### 32.12 Executive Champions
+
 A script becomes much more actionable when an internal executive **champions** it.
 
 Championing provides:
@@ -6850,6 +7365,7 @@ Championing provides:
 But championing also creates politics. If a pet script fails, the champion’s credibility drops. If a championed script becomes a smash hit or awards giant, that executive gains influence.
 
 ### 32.13 Passion Projects
+
 A **Passion Project** is material that a specific talent or executive deeply wants to make for personal, artistic, thematic, image, or legacy reasons.
 
 Any of the following can generate or adopt a passion project:
@@ -6879,6 +7395,7 @@ Passion projects should arise from causes such as:
 - auteur obsession
 
 ### 32.14 Passion Meter
+
 Each passion project gets a **Passion Meter** indicating how emotionally and strategically important it is to the champion.
 
 Low passion means:
@@ -6905,6 +7422,7 @@ Extreme passion means:
 - may leave the studio, move the package elsewhere, or publicly express frustration if mishandled
 
 ### 32.15 Why Passion Projects Matter to Gameplay
+
 Passion projects create drama because they are not always rational.
 
 They may:
@@ -6923,6 +7441,7 @@ This gives the player classic Hollywood dilemmas:
 - Do you quietly bury a beloved internal pet project because the numbers do not work?
 
 ### 32.16 Passion Project Lifecycle
+
 A passion project should move through distinct states:
 
 1. Discovered
@@ -6946,6 +7465,7 @@ A stalled passion project should remain in the simulation. It can resurface year
 - renewed public relevance
 
 ### 32.17 Dormant Scripts and Turnaround
+
 Not every bought script gets made. Add a **Dormant Project Library** and **Turnaround Market**.
 
 Dormant scripts are projects that:
@@ -6969,6 +7489,7 @@ These dormant assets can later be:
 This gives unmade material a second life and makes the world feel historically layered.
 
 ### 32.18 Spec Auctions
+
 Some hot scripts should trigger a **spec auction** event.
 
 Auction conditions include:
@@ -6995,6 +7516,7 @@ In an auction, the player may compete via:
 The highest cash bid should not always win. Relationship strength, speed, prestige fit, and talent alignment should matter.
 
 ### 32.19 Option vs Purchase Structure
+
 The player should usually choose between:
 
 - shopping agreement
@@ -7007,6 +7529,7 @@ The player should usually choose between:
 This matters because many players will not want to fully buy every hot script. Optioning is cheaper but riskier; a rival may poach later if milestones are missed.
 
 ### 32.20 Writing Talent as a Market Class
+
 Because this system centers unmade material, **writers** must now have even deeper market behavior.
 
 Writers should have:
@@ -7033,6 +7556,7 @@ A writer with a famous annual-list hit but no produced credits should be treated
 - a commercial franchise script doctor
 
 ### 32.21 The Writer Career Flywheel
+
 The system should allow an unmade script to improve a writer’s career even if the project itself never gets produced.
 
 Possible benefits:
@@ -7048,6 +7572,7 @@ Possible benefits:
 This is realistic, dramatically satisfying, and important for emergent storytelling.
 
 ### 32.22 Auteurs and Material Pairing
+
 Auteurs, writer-directors, showrunners, and star-producers should have preference profiles for the kind of unmade material they respond to.
 
 Examples:
@@ -7061,6 +7586,7 @@ Examples:
 This creates a **matching game** where the right script plus the right champion can suddenly unlock viability.
 
 ### 32.23 The Development Marketplace UI
+
 Add a dedicated **Development Marketplace** screen.
 
 Key tabs:
@@ -7088,6 +7614,7 @@ Each entry should surface:
 The player should then be able to take immediate actions from the same screen.
 
 ### 32.24 Key Player Actions
+
 From this system, the player can:
 
 - request script
@@ -7110,6 +7637,7 @@ From this system, the player can:
 This keeps the system active rather than decorative.
 
 ### 32.25 Trade Integration
+
 Because the bible already includes a trade-press system, the new unmade market should feed directly into trades.
 
 Trades can publish stories such as:
@@ -7130,6 +7658,7 @@ These headlines affect:
 - studio brand as tastemaker or trend-chaser
 
 ### 32.26 Awards Integration
+
 Although unmade scripts do not win film awards directly, the annual unmade list and spec market should influence the **awards ecosystem indirectly**.
 
 Effects include:
@@ -7142,6 +7671,7 @@ Effects include:
 This helps the player understand why development choices matter years before release.
 
 ### 32.27 Passion Projects and Awards Bait
+
 Some passion projects should be explicitly flagged as:
 
 - performance bait
@@ -7155,6 +7685,7 @@ Some passion projects should be explicitly flagged as:
 This is where fun and intuition matter. The player should instantly understand that some projects are exciting precisely because they are dangerous.
 
 ### 32.28 Budget Pressure from Hot Material
+
 A hot script should get more expensive in several ways:
 
 - purchase price rises
@@ -7167,6 +7698,7 @@ A hot script should get more expensive in several ways:
 A cold script can sometimes become a bargain if bought quietly before the market wakes up.
 
 ### 32.29 Talent Discounts on Passion Projects
+
 To avoid purely punitive economics, talent should sometimes reduce cost on true passion projects.
 
 Possible concessions:
@@ -7180,6 +7712,7 @@ Possible concessions:
 This lets passion compete with money in a way that feels strategically rich.
 
 ### 32.30 Packaging Synergy Bonuses
+
 When the right script meets the right people, the game should award **synergy bonuses**.
 
 Examples:
@@ -7199,6 +7732,7 @@ Synergy can increase:
 - internal morale
 
 ### 32.31 Failed Heat and Overhype
+
 Not every hyped script should work.
 
 The system should support:
@@ -7212,6 +7746,7 @@ The system should support:
 This is crucial because the fun comes from evaluating heat, not blindly following it.
 
 ### 32.32 Assistant and Advisor Support
+
 Because the system adds density, advisors should translate it into plain English.
 
 Examples:
@@ -7224,6 +7759,7 @@ Examples:
 This makes the feature intuitive for players who do not know real Hollywood jargon.
 
 ### 32.33 AI Studio Behavior
+
 Rival studios should interact with the system intelligently.
 
 Different archetypes should behave differently:
@@ -7237,6 +7773,7 @@ Different archetypes should behave differently:
 This keeps the player from always having first pick.
 
 ### 32.34 Family and Dynasty Interactions
+
 The family system should plug into this naturally.
 
 Examples:
@@ -7249,6 +7786,7 @@ Examples:
 This extends the lineage system rather than creating a siloed feature.
 
 ### 32.35 TV and Showrunner Extension
+
 The unmade market should not only be features. It should also support:
 
 - pilots
@@ -7261,9 +7799,11 @@ The unmade market should not only be features. It should also support:
 Pilot scripts can appear on hot lists, attract cast, or become room-launch engines. Showrunners should be able to champion or originate passion TV projects much like film auteurs do.
 
 ### 32.36 Data Model Additions
+
 Add or expand these entities and fields:
 
 **Script / Project Asset**
+
 - discovery_origin
 - heat_score
 - annual_list_score
@@ -7278,6 +7818,7 @@ Add or expand these entities and fields:
 - synergy_tags
 
 **Writer Talent**
+
 - spec_heat
 - annual_list_history
 - coverage_avg
@@ -7287,12 +7828,14 @@ Add or expand these entities and fields:
 - sample_strength
 
 **Studio / Executive**
+
 - taste_profile
 - champion_capacity
 - discovery_bonus
 - market_reputation_as_buyer
 
 **Event System**
+
 - annual_unmade_list_drop
 - spec_auction_open
 - hot_script_leak
@@ -7301,6 +7844,7 @@ Add or expand these entities and fields:
 - lab_breakout
 
 ### 32.37 Suggested Weekly Rhythm Integration
+
 A simple cadence could be:
 
 - weekly: 3 to 12 new materials enter circulation depending on studio scale
@@ -7312,6 +7856,7 @@ A simple cadence could be:
 This rhythm ensures the market feels alive without becoming spammy.
 
 ### 32.38 Player Stories the System Should Generate
+
 This feature is succeeding when the player gets stories like:
 
 - “We bought a quiet script before it hit the annual list, attached a director, and turned it into our awards breakout.”
@@ -7321,6 +7866,7 @@ This feature is succeeding when the player gets stories like:
 - “Our rival got the town-hot script, but we signed the writer to an overall deal and won the long game.”
 
 ### 32.39 Balancing Principles
+
 To keep the system fun and intuitive:
 
 - present clear tags, not wall-to-wall hidden numbers
@@ -7332,14 +7878,15 @@ To keep the system fun and intuitive:
 - let quiet early discovery beat expensive late chasing
 
 ### 32.40 Canonical Design Rule
-**Unmade material is not just inventory. It is a living market of taste, status, ambition, and obsession. Studio Boss should treat scripts, pilots, and passion projects as social objects whose value changes based on who loves them, who is talking about them, and whether the player can turn heat into an actual production.**
 
+**Unmade material is not just inventory. It is a living market of taste, status, ambition, and obsession. Studio Boss should treat scripts, pilots, and passion projects as social objects whose value changes based on who loves them, who is talking about them, and whether the player can turn heat into an actual production.**
 
 ---
 
 ## 33. Talent Agencies, Agents, Managers, and Packaging Ecosystem
 
 ### 33.1 Purpose
+
 This system models the representation layer that sits between the studio and the people who actually make the content. In the real industry, agencies and agents do far more than merely pass messages. They discover talent, shape careers, create leverage, steer clients toward prestige or commercial work, assemble combinations of clients into packages, move rumors into the trades, and quietly influence which projects feel “real” in the marketplace.
 
 In **Studio Boss**, the agency system should make the player feel like they are operating inside a living ecosystem of power brokers rather than shopping from a static list of available talent.
@@ -7360,6 +7907,7 @@ This system should be **fun and intuitive**, which means the player should not n
 - **delegated**: let casting, business affairs, or creative executives work agency channels automatically
 
 ### 33.2 Real-World Inspiration
+
 The system should draw inspiration from the broad structure of the modern Hollywood agency business without reproducing any one company literally. Large agencies in the real market are broad, cross-disciplinary firms representing actors, directors, writers, producers, creators, books, brands, sports, and more, while other firms emphasize a more boutique, hands-on identity. CAA describes its motion picture business as representing actors, directors, writers, and producers and highlights film packaging and financing work. WME presents itself as a long-running agency spanning books, digital media, fashion, film, food, music, sports, television, and theater. UTA describes itself as a full-service global talent, sports, entertainment, and advisory company. Gersh positions itself as a major but more hands-on client-first firm. citeturn133249search20turn133249search8turn133249search6turn133249search12
 
 That real-world variety should inform the game’s fictional market:
@@ -7372,6 +7920,7 @@ That real-world variety should inform the game’s fictional market:
 The game should use **fictional agencies and fictional agents**, but their behavior should feel legible to anyone who knows Hollywood.
 
 ### 33.3 Core Design Summary
+
 The representation system introduces the following pillars:
 
 1. **Agencies as organizations** with scale, specialties, leverage, culture, and reputations.
@@ -7384,10 +7933,13 @@ The representation system introduces the following pillars:
 8. **Visibility surfaces** where the player can inspect agencies, agents, rosters, and their strategic fit.
 
 ### 33.4 New Entity Layer
+
 Add the following simulation entities:
 
 #### Agency
+
 Fields:
+
 - agency name
 - agency tier
 - market positioning
@@ -7407,7 +7959,9 @@ Fields:
 - diversity and discovery strength
 
 #### Agent
+
 Fields:
+
 - name
 - agency affiliation
 - department
@@ -7427,7 +7981,9 @@ Fields:
 - relationship values with studios, buyers, and individual executives
 
 #### Representation Contract
+
 Fields:
+
 - represented client
 - agent
 - agency
@@ -7442,7 +7998,9 @@ Fields:
 - recent losses together
 
 #### Talent Representation Preferences
+
 Fields:
+
 - wants power agency
 - wants boutique attention
 - values awards positioning
@@ -7454,6 +8012,7 @@ Fields:
 - values creator-business expansion
 
 ### 33.5 Supported Client Types
+
 All major talent classes should be representable:
 
 - actors
@@ -7472,10 +8031,13 @@ All major talent classes should be representable:
 Important rule: **writers are fully integrated into agency systems**, not treated as a hidden backend variable. Literary departments should be major feeders of the development pipeline.
 
 ### 33.6 Agency Archetypes
+
 The game should ship with a large fictionalized roster of agencies across the market spectrum.
 
 #### 33.6.1 Powerhouse Agencies
+
 Traits:
+
 - strongest access to A-list talent
 - highest packaging leverage
 - most cross-department coordination
@@ -7484,31 +8046,39 @@ Traits:
 - most likely to play studios against one another
 
 Strengths:
+
 - ideal for tentpoles, awards campaigns, and premium TV packages
 - deep rosters make replacements easier
 - can assemble impressive bundles quickly
 
 Weaknesses:
+
 - players may feel pushed into costly deals
 - major clients are harder to lock without concessions
 - these firms may punish a studio that repeatedly lowballs their roster
 
 #### 33.6.2 Prestige-Centric Major Agencies
+
 Traits:
+
 - strong literary and director departments
 - festival credibility
 - awards positioning strength
 - better for passion projects and auteur cinema
 
 #### 33.6.3 Commercial Mid-Tier Agencies
+
 Traits:
+
 - high hustle
 - aggressive pitching
 - strong relationship selling
 - willing to discount rising talent to create breakout stars
 
 #### 33.6.4 Boutique Relationship Agencies
+
 Traits:
+
 - fewer clients per agent
 - stronger loyalty
 - higher probability of hand-crafted pairings
@@ -7516,7 +8086,9 @@ Traits:
 - lower pure market leverage
 
 #### 33.6.5 Specialist Agencies
+
 Possible specialties:
+
 - writers and showrunners
 - prestige directors
 - comedy talent
@@ -7526,6 +8098,7 @@ Possible specialties:
 - creators and digital-native voices
 
 ### 33.7 Agency Identity and Culture
+
 Every agency should have readable identity tags shown in UI, such as:
 
 - Awards Hunters
@@ -7544,9 +8117,11 @@ Every agency should have readable identity tags shown in UI, such as:
 These tags should summarize the numbers beneath them and help the player understand who to work with.
 
 ### 33.8 Agency Relationship Scores
+
 The studio tracks a relationship score with each agency. This is not purely “friendship”; it reflects how pleasant, profitable, credible, and strategically useful your studio seems from the agency’s perspective.
 
 Relationship score is influenced by:
+
 - whether you pay on time
 - how often your projects actually go forward after attachments
 - whether you honor creative promises
@@ -7559,6 +8134,7 @@ Relationship score is influenced by:
 - whether you rescued one of their clients from a troubled project
 
 High relationship effects:
+
 - better access to premium clients
 - earlier looks at hot specs and packages
 - more favorable initial negotiations
@@ -7566,6 +8142,7 @@ High relationship effects:
 - fewer rumor leaks
 
 Low relationship effects:
+
 - fewer premium pitches
 - tougher negotiations
 - less willingness to hold talent while your project wobbles
@@ -7573,9 +8150,11 @@ Low relationship effects:
 - rival studios receiving first shot at top clients
 
 ### 33.9 Agents as Distinct Characters
+
 The player should not only deal with “the agency”; they should increasingly recognize individual agents.
 
 Each notable agent should feel like a character archetype, for example:
+
 - the feared rainmaker who always pushes for backend and top billing
 - the literary agent who can smell a breakout script before anyone else
 - the boutique nurturer who cultivates loyalty for decades
@@ -7586,15 +8165,18 @@ Each notable agent should feel like a character archetype, for example:
 Agent traits should materially affect gameplay.
 
 Examples:
+
 - an aggressive agent raises cost but increases urgency and market heat
 - a collaborative agent makes replacements and saves easier
 - a high-taste literary agent can identify sleeper scripts and unexpected pairings
 - a burnished awards strategist boosts nominee odds when their clients are in the conversation
 
 ### 33.10 Agency and Agent Directory UI
+
 Add a **Representation Hub** to the dashboard.
 
 Primary tabs:
+
 - Agencies
 - Agents
 - Clients
@@ -7603,7 +8185,9 @@ Primary tabs:
 - Movement Watch
 
 #### Agencies View
+
 For each agency show:
+
 - logo / badge
 - tier
 - specialties
@@ -7616,6 +8200,7 @@ For each agency show:
 - rivalry notes
 
 Clicking an agency opens:
+
 - overview
 - department breakdown
 - list of agents under the agency
@@ -7625,7 +8210,9 @@ Clicking an agency opens:
 - recent deals with your studio
 
 #### Agents View
+
 For each agent show:
+
 - name
 - agency
 - department
@@ -7637,6 +8224,7 @@ For each agent show:
 - recent successful placements
 
 Clicking an agent opens:
+
 - bio summary
 - their full client list
 - current active pitches
@@ -7646,7 +8234,9 @@ Clicking an agent opens:
 This directly satisfies the fantasy of being able to **see an agency, all its agents, and all their clients** in a readable way.
 
 ### 33.11 Client Lists and Cross-Representation Readability
+
 Every talent profile should show:
+
 - current agent
 - agency
 - department
@@ -7657,14 +8247,17 @@ Every talent profile should show:
 - whether their agent is pushing them toward film, TV, producing, prestige, franchise work, or awards bait
 
 Every project package view should show representation badges so the player can immediately see:
+
 - how many attached people come from one shop
 - whether an agency is effectively trying to package the project
 - where leverage is concentrated
 
 ### 33.12 Agency Pitches
+
 Agencies should proactively approach the studio with offers. These should arrive in weekly updates, inbox items, trade blurbs, or direct pitch events.
 
 Pitch categories:
+
 - single-client push
 - pairing suggestion
 - full package bundle
@@ -7675,6 +8268,7 @@ Pitch categories:
 - “take this package before rivals do” heat pitch
 
 Each pitch should surface:
+
 - who is being offered
 - why they fit
 - cost implications
@@ -7683,17 +8277,20 @@ Each pitch should surface:
 - hidden agenda hints
 
 Example pitch:
+
 - agency proposes a mid-budget thriller starring one of their TV breakouts, directed by one of their genre directors, from a script by one of their literary clients
 - cost is favorable if all three are hired together
 - acceptance improves relationship with that agency
 - rejection may send the same package to a rival studio next week
 
 ### 33.13 Package Deals
+
 Package deals are a major part of the fun.
 
 A package is an agency-brokered bundle of two or more compatible clients offered together to accelerate financing, greenlight confidence, or awards potential.
 
 Possible package structures:
+
 - actor + director
 - actor + writer
 - actor + producer + director
@@ -7703,6 +8300,7 @@ Possible package structures:
 - showrunner + room staffing mini-bundle
 
 Package benefits:
+
 - faster packaging
 - greenlight score bonus
 - chemistry bonus if clients have prior success together
@@ -7711,13 +8309,16 @@ Package benefits:
 - lower search friction
 
 Package risks:
+
 - concentrated leverage
 - if one person drops out the package may collapse
 - bundled discount may be offset by stronger backend demands
 - agency relationship damage if you cherry-pick one client and reject the rest
 
 ### 33.14 Packaging Logic
+
 Each agency has a **Packaging Ability** stat derived from:
+
 - cross-department roster depth
 - reputation
 - relationship with your studio
@@ -7726,6 +8327,7 @@ Each agency has a **Packaging Ability** stat derived from:
 - senior agent quality
 
 Each proposed package has a **Package Cohesion Score** derived from:
+
 - genre fit
 - audience fit
 - prior collaboration chemistry
@@ -7738,9 +8340,11 @@ Each proposed package has a **Package Cohesion Score** derived from:
 A high cohesion package can create emergent “why didn’t I think of that?” moments that feel clever rather than random.
 
 ### 33.15 Cherry-Picking and Package Etiquette
+
 The player can attempt to break a package apart.
 
 Options:
+
 - accept full package
 - counter with partial package
 - take only one client
@@ -7748,6 +8352,7 @@ Options:
 - shop other agencies for competing combinations
 
 Consequences of cherry-picking:
+
 - minor or major relationship damage depending on agency culture
 - agent-specific resentment
 - reduced willingness to package for your studio later
@@ -7756,9 +8361,11 @@ Consequences of cherry-picking:
 However, some agencies are pragmatic and will allow disassembly if the project still benefits a favored client.
 
 ### 33.16 Talent Movement Between Agents and Agencies
+
 Talent should not remain permanently represented by the same people.
 
 Movement types:
+
 - client changes agent inside same agency
 - client leaves agency for rival agency
 - client follows departing agent to new firm
@@ -7769,6 +8376,7 @@ Movement types:
 - young breakout talent is aggressively poached by higher-tier agencies
 
 Movement triggers:
+
 - breakout success
 - awards nomination or win
 - commercial breakout
@@ -7783,14 +8391,17 @@ Movement triggers:
 Movement should create real market motion. After a hit, half the town may call a previously modest actor.
 
 ### 33.17 Free Agency Windows
+
 Some talent may periodically enter a soft or hard free-agency state.
 
 Soft free agency:
+
 - still represented, but open to change
 - easier to court indirectly
 - more likely to entertain rebrand packages
 
 Hard free agency:
+
 - currently without reps
 - harder to negotiate efficiently
 - may be undervalued or chaotic
@@ -7799,22 +8410,27 @@ Hard free agency:
 This creates opportunities for savvy players to move early on talent before the rest of the industry resets their value.
 
 ### 33.18 Poaching and Follow-the-Agent Behavior
+
 When a powerful agent moves from Agency A to Agency B, some clients may follow.
 
 Simulation effects:
+
 - agencies can lose department strength suddenly
 - boutique agencies can be gutted or suddenly become hot
 - package networks can break and reform
 - studio relationship maps can shift overnight
 
 The game should occasionally generate town-shaking events like:
+
 - three prestige directors and a star writer follow an agent to a rising boutique
 - a weakened major agency becomes more aggressive in pitches to rebuild momentum
 
 ### 33.19 Agency-Specific Negotiation Flavor
+
 Negotiations should feel different depending on representation.
 
 Examples:
+
 - one agency prioritizes quote and billing
 - one prioritizes backend and producing rights
 - one prioritizes awards release windows
@@ -7826,7 +8442,9 @@ Examples:
 This gives agency choice texture without turning it into law-school simulation.
 
 ### 33.20 Packaging Through Agencies vs Through Vanity Shingles
+
 Packages can originate from:
+
 - agency initiative
 - your internal executives
 - a vanity shingle
@@ -7835,25 +8453,31 @@ Packages can originate from:
 - a family dynasty banner
 
 Important interaction:
+
 - if a star with a vanity shingle is represented by an aggressive package-oriented agency, that star may attach both **as performer and producer**, increasing leverage and reducing your freedom to alter the team later
 
 ### 33.21 Agencies and First-Look / Overall Deals
+
 Agencies should care about where their clients’ banners and overall deals land.
 
 Effects:
+
 - agencies may steer producer pods toward studios with better buyer relationships
 - agencies may pitch packages that exploit your current first-look network
 - an agency that distrusts your studio may push its clients to sign with rivals instead
 - big agencies may try to load your first-look lane with their own roster, creating soft capture of your slate
 
 This creates a meaningful tension between:
+
 - convenience and speed from working heavily with one agency
-n- overdependence on one pipeline of taste and talent
+  n- overdependence on one pipeline of taste and talent
 
 ### 33.22 Agencies and Casting
+
 The **Casting Agent / Casting Director automation system** added earlier should now understand representation.
 
 When the player delegates casting, the casting team evaluates:
+
 - talent fit
 - quote
 - availability
@@ -7864,6 +8488,7 @@ When the player delegates casting, the casting team evaluates:
 - risk of leverage concentration
 
 Auto-casting modes:
+
 - Best Creative Fit
 - Best Value
 - Best Awards Play
@@ -7874,9 +8499,11 @@ Auto-casting modes:
 This means automation does not simply choose the top-rated actor; it chooses within the logic of the agency market.
 
 ### 33.23 Agency Pitch Meetings
+
 Add periodic **Agency Day** or **General Meeting** events.
 
 Meeting types:
+
 - annual relationship summit
 - awards-season alignment meeting
 - staffing season meeting for TV
@@ -7884,6 +8511,7 @@ Meeting types:
 - crisis-control meeting after a client scandal or production collapse
 
 In these interactions the player can set posture:
+
 - open for package pitches
 - looking for undervalued talent
 - prioritizing TV staffing
@@ -7895,9 +8523,11 @@ In these interactions the player can set posture:
 This subtly changes the kind of pitches agencies send in following weeks.
 
 ### 33.24 Writers, Showrunners, and Literary Departments
+
 Literary representation should be especially rich because it connects directly to development.
 
 Literary departments can:
+
 - pitch open writing assignments
 - propose rewrite specialists
 - pair a writer with a director or star
@@ -7906,15 +8536,18 @@ Literary departments can:
 - send mini-room staffing bundles for an accelerated series launch
 
 TV-specific representation mechanics:
+
 - agencies can pitch creator + showrunner pairings
 - a high-powered TV agent can assemble room leaders quickly
 - cast holding deals become harder if showrunner negotiations drag
 - renewal negotiations may be coordinated across multiple cast clients at the same agency
 
 ### 33.25 Agency Clusters and TV Cast Renegotiations
+
 If several cast members on a successful TV show share representation from one agency, they may coordinate renewal pressure.
 
 Possible outcomes:
+
 - synchronized per-episode raises
 - demand for producer credits
 - season order guarantees before signing
@@ -7924,18 +8557,22 @@ Possible outcomes:
 If the cast is represented by multiple agencies, negotiations may fragment and become easier to manage — or slower due to competing agendas.
 
 ### 33.26 Agencies and Child Talent
+
 Child actors and former child stars need special handling.
 
 Agency effects:
+
 - family-focused agencies are better at managing burnout and schedule limits
 - exploitative agencies increase short-term booking intensity but raise meltdown risk
 - prestige-oriented agencies may steer child talent toward awards bait at the cost of normalcy
 - a savvy boutique may protect a former child actor during reinvention years, increasing long-term career stability
 
 ### 33.27 Agencies and Family / Dynasty Systems
+
 Agency relationships should interact with the Family / Lineage system.
 
 Examples:
+
 - sibling teams may insist on staying with the same agent
 - nepo-baby launches may be engineered by power agencies
 - legacy families may have long-term preferred agencies
@@ -7945,9 +8582,11 @@ Examples:
 A dynasty-focused agency may proactively build packages around known Hollywood families, while another may deliberately seek outsider narratives.
 
 ### 33.28 Agencies and the Trades
+
 Agencies are a major source of rumor energy.
 
 Agency rumor traits influence whether trade stories appear such as:
+
 - “agency shopping hot package to buyers”
 - “talks intensify with A-list actor”
 - “client eyeing move into directing”
@@ -7958,7 +8597,9 @@ Agency rumor traits influence whether trade stories appear such as:
 High-leak agencies generate more news heat but also more volatility. Tight-lipped boutiques reduce rumor exposure but may lose hype momentum.
 
 ### 33.29 Agencies and Awards Strategy
+
 Awards-oriented agencies should increase the chance that clients:
+
 - choose prestige roles over commercial work in key windows
 - push for festival premieres
 - accept lower upfront pay for awards heat
@@ -7968,7 +8609,9 @@ Awards-oriented agencies should increase the chance that clients:
 This should not guarantee nominations, but it should shape the behavior of ambitious talent and their reps.
 
 ### 33.30 Agency Reputation and Market Power
+
 Each agency has a **Market Power** score made of:
+
 - client roster heat
 - awards success
 - box office/rating success
@@ -7979,20 +8622,24 @@ Each agency has a **Market Power** score made of:
 - trade perception
 
 High market power means:
+
 - their pitches command attention
 - their packages generate stronger greenlight bonuses
 - their unhappy clients become expensive to pursue
 - other agencies may react to them
 
 Low market power means:
+
 - more favorable pricing opportunities for the player
 - more hunger and hustle in pitches
 - greater chance of losing clients to bigger firms
 
 ### 33.31 Internal Agency Stability
+
 Agencies should not be static. Each firm has a hidden or visible stability value.
 
 Threats to stability:
+
 - too many client departures
 - rainmaker leaving
 - merger gone wrong
@@ -8001,15 +8648,18 @@ Threats to stability:
 - a perception that the agency is losing the culture war or awards war
 
 Effects of instability:
+
 - clients become movable
 - package quality falls
 - internal feuds leak to trades
 - studio relationships become inconsistent
 
 ### 33.32 Agency Mergers, Splits, and New Shops
+
 At longer campaign lengths, the market may evolve.
 
 Possible events:
+
 - two boutiques merge into a stronger mid-tier firm
 - a major agency spins off a prestige-focused breakaway shop
 - a disgraced office head starts a boutique
@@ -8018,9 +8668,11 @@ Possible events:
 These structural changes keep the agency ecosystem alive across many in-game years.
 
 ### 33.33 Agency-Assisted Talent Discovery
+
 Agencies should be one of several ways new talent enters the player’s awareness.
 
 Discovery channels via reps:
+
 - rising theater actor pitched for film debut
 - TV staff writer ready for feature jump
 - indie director with festival heat
@@ -8032,9 +8684,11 @@ Discovery channels via reps:
 This makes agencies part of the broader discovery loop alongside festivals, heat lists, coverage, and trade news.
 
 ### 33.34 Package Pressure and Anti-Monoculture Safeguards
+
 A game with agencies can accidentally push the player into always using the same giant firm. The design must actively prevent this.
 
 Safeguards:
+
 - overreliance on one agency creates leverage inflation
 - same-agency rosters can trigger coordinated renegotiations later
 - rival agencies may freeze you out of their best clients
@@ -8044,9 +8698,11 @@ Safeguards:
 The game should make focused relationships useful, but **not obviously dominant**.
 
 ### 33.35 Agency Strategy Settings for the Player
+
 Allow the player to set representation policy at the studio level.
 
 Possible policies:
+
 - Favor top agencies
 - Mix majors and boutiques
 - Prioritize fresh voices
@@ -8058,7 +8714,9 @@ Possible policies:
 These settings guide AI assistants and delegated staffing.
 
 ### 33.36 Key Player Actions
+
 The player should be able to:
+
 - browse agencies and agents
 - inspect full client rosters
 - favorite agencies and agents
@@ -8072,9 +8730,11 @@ The player should be able to:
 - exploit a destabilized agency market
 
 ### 33.37 AI Studio Behavior
+
 Rival studios should also have agency relationships.
 
 AI behaviors:
+
 - one studio may become tightly aligned with a prestige boutique ecosystem
 - another may become the preferred home of power-agency tentpoles
 - some studios overpay due to weak relationships and desperation
@@ -8083,7 +8743,9 @@ AI behaviors:
 This helps the player feel the agency market as a competitive terrain, not a menu.
 
 ### 33.38 Suggested Events
+
 Example events:
+
 - **Rainmaker Exit:** a top agent leaves a major firm; several clients may follow.
 - **Package of the Week:** an agency offers a time-limited premium package with cost discount but backend demands.
 - **Client Unhappy:** a talent profile indicates rep dissatisfaction, making them easier to sign onto your passion project.
@@ -8093,7 +8755,9 @@ Example events:
 - **Shingle Launch:** an actor’s reps pitch a vanity-shingle producing attachment along with acting services.
 
 ### 33.39 UX Rules
+
 To keep the system intuitive:
+
 - summarize complex agency data into tags and meters
 - show only the most relevant three to five agencies for each project by default
 - explain why a package is attractive in plain language
@@ -8102,7 +8766,9 @@ To keep the system intuitive:
 - keep deeper roster browsing optional for players who enjoy the full fantasy
 
 ### 33.40 Data Model Additions
+
 Add or extend:
+
 - `Agency`
 - `AgencyDepartment`
 - `Agent`
@@ -8116,6 +8782,7 @@ Add or extend:
 - `AgencyMarketPowerSnapshot`
 
 Add new links from existing entities:
+
 - Talent → Agent → Agency
 - Project → PackageOffer(s)
 - Studio → AgencyRelationship(s)
@@ -8123,6 +8790,7 @@ Add new links from existing entities:
 - VanityShingle → affiliated agency / reps
 
 ### 33.41 Balancing Principles
+
 - agencies should make the world richer, not merely pricier
 - package deals should save time and increase excitement, but not remove strategic choice
 - boutiques should matter, not just majors
@@ -8130,19 +8798,21 @@ Add new links from existing entities:
 - player overreliance on one rep ecosystem should create elegant future complications
 
 ### 33.42 Canonical Design Rule
-**Agencies and agents are a core market layer in Studio Boss. Every major talent type can be represented. Agencies maintain visible rosters of agents and clients, proactively pitch talent and packages, influence negotiations and rumors, and create a living competitive layer between the studio and the talent economy.**
 
+**Agencies and agents are a core market layer in Studio Boss. Every major talent type can be represented. Agencies maintain visible rosters of agents and clients, proactively pitch talent and packages, influence negotiations and rumors, and create a living competitive layer between the studio and the talent economy.**
 
 ---
 
 ## 34. NPC AI, Motivations, Rivalries, and Industry Lifecycles
 
 ### 34.1 System Purpose
+
 Studio Boss already contains many simulation layers: greenlights, agencies, trades, family dynasties, awards, packaging, rumors, first-look deals, vanity shingles, and the project marketplace. To make those systems truly come alive in a single-player game, the world needs a robust **NPC AI framework** that powers the behavior of talent, agencies, competing studios, streamers, buyers, executives, producers, critics, guild-aligned power brokers, and emerging hopefuls.
 
 This system is the engine that turns static content into a living entertainment ecosystem.
 
 It should answer questions such as:
+
 - why does this director keep chasing risky prestige material?
 - why does this actor suddenly refuse to work with that producer?
 - why is a once-dominant studio entering a slump?
@@ -8151,6 +8821,7 @@ It should answer questions such as:
 - why is a sibling duo thriving for a decade, then bitterly splitting apart?
 
 The system should create the feeling that every important entity in the world has:
+
 - goals
 - memory
 - taste
@@ -8165,6 +8836,7 @@ The system should create the feeling that every important entity in the world ha
 This is one of the main pillars for replayability.
 
 ### 34.2 Design Goals
+
 The NPC AI should deliver the following outcomes:
 
 1. **Believable motivation.** Entities should make decisions for reasons the player can understand.
@@ -8175,9 +8847,11 @@ The NPC AI should deliver the following outcomes:
 6. **Single-player robustness.** The AI must create enough pressure, adaptation, and surprise that the game remains engaging without human opponents.
 
 ### 34.3 Core Principle: Every Entity Has a Playstyle
+
 Every major NPC-controlled entity should have a recognizable operating style.
 
 Examples:
+
 - one studio is conservative, franchise-minded, and risk-averse
 - another is prestige-hungry and willing to lose money for awards
 - one actor prioritizes acclaim above salary
@@ -8190,10 +8864,13 @@ Examples:
 These preferences should be legible through tags, behavior patterns, dialogue, rumor items, and outcomes.
 
 ### 34.4 AI Actor Classes
+
 The NPC AI framework should support multiple categories of world actors.
 
 #### 34.4.1 Talent AI
+
 Applies to:
+
 - actors
 - writers
 - directors
@@ -8204,14 +8881,18 @@ Applies to:
 - child stars, former child stars, nepo babies, auteur dynasties, and legacy families
 
 #### 34.4.2 Representation AI
+
 Applies to:
+
 - agencies
 - individual agents
 - managers if added later
 - publicists if modeled separately later
 
 #### 34.4.3 Company AI
+
 Applies to:
+
 - rival film studios
 - streamers
 - broadcasters
@@ -8220,7 +8901,9 @@ Applies to:
 - vanity shingles and pods
 
 #### 34.4.4 Executive AI
+
 Applies to:
+
 - studio presidents
 - division heads
 - development executives
@@ -8229,7 +8912,9 @@ Applies to:
 - awards campaign chiefs
 
 #### 34.4.5 Market Influence AI
+
 Applies to:
+
 - trade reporters
 - critics and awards pundits
 - festival programmers
@@ -8239,9 +8924,11 @@ Applies to:
 Not every category needs identical simulation depth, but all should share a common AI grammar.
 
 ### 34.5 Shared AI Attribute Model
+
 Every major AI-controlled entity should have a common attribute skeleton, then role-specific extensions.
 
 Shared attributes:
+
 - **Ambition:** desire for status, scale, domination, and legacy
 - **Risk Appetite:** willingness to pursue unstable, expensive, or controversial opportunities
 - **Ego:** sensitivity to disrespect, billing, control, and public perception
@@ -8262,9 +8949,11 @@ Shared attributes:
 These values should not be displayed as raw spreadsheets for every NPC by default, but they should drive visible behavior.
 
 ### 34.6 Motivation Stack
+
 Each AI entity should operate from a ranked stack of motivations, not just one label.
 
 For example, a director might rank:
+
 1. win major awards
 2. protect creative control
 3. work with favored cinematographer and sibling editor
@@ -8272,6 +8961,7 @@ For example, a director might rank:
 5. prove they are not a one-hit wonder
 
 An actor might rank:
+
 1. rebuild credibility after flop era
 2. earn enough cash to finance vanity shingle overhead
 3. transition into producing
@@ -8279,6 +8969,7 @@ An actor might rank:
 5. get top billing over rivals
 
 A streamer might rank:
+
 1. increase subscriber retention
 2. build one flagship prestige drama
 3. stop overspending on underperforming genre shows
@@ -8288,9 +8979,11 @@ A streamer might rank:
 This gives AI behavior nuance and allows the same entity to make different choices in different contexts.
 
 ### 34.7 Personality Archetypes
+
 Each entity can roll one or two archetypes that influence interpretation of its stats.
 
 Sample talent archetypes:
+
 - Auteur Visionary
 - Charming Mercenary
 - Fragile Genius
@@ -8308,6 +9001,7 @@ Sample talent archetypes:
 - Washed-but-Dangerous Veteran
 
 Sample studio/company archetypes:
+
 - Franchise Factory
 - Prestige Fortress
 - Lean Indie Gambler
@@ -8319,6 +9013,7 @@ Sample studio/company archetypes:
 - Opportunistic Upstart
 
 Sample agent archetypes:
+
 - Rainmaker
 - Bulldog Negotiator
 - Packaging Architect
@@ -8331,9 +9026,11 @@ Sample agent archetypes:
 Archetypes should shape behavior, dialogue snippets, event flavor, and rivalry triggers.
 
 ### 34.8 Relationship Model
+
 At the heart of the AI system should be a relationship graph.
 
 Each pairwise relationship can track:
+
 - trust
 - affection / fondness
 - respect
@@ -8349,6 +9046,7 @@ Each pairwise relationship can track:
 - preferred future collaboration score
 
 Relationships should exist between:
+
 - talent ↔ talent
 - talent ↔ agents
 - talent ↔ studios
@@ -8362,9 +9060,11 @@ Relationships should exist between:
 This turns the world into a social simulation rather than a set of isolated contract checks.
 
 ### 34.9 Memory System
+
 AI must remember what happened to it.
 
 Memory categories:
+
 - successful collaborations
 - humiliating flops
 - late payments or broken promises
@@ -8381,12 +9081,14 @@ Memory categories:
 Memories should decay at different rates based on personality.
 
 Examples:
+
 - a forgiving producer may let go of a messy shoot after 18 months
 - an ego-heavy actor may remember a billing slight for 10 years
 - a studio may remember a reliable showrunner as “safe in crisis” forever
 - a rivalry between siblings may cool professionally but remain emotionally volatile
 
 ### 34.10 Decision Engine Overview
+
 Each AI decision should consider four layers:
 
 1. **Identity:** who am I?
@@ -8397,6 +9099,7 @@ Each AI decision should consider four layers:
 This means a talent acceptance decision is not just “highest offer wins.”
 
 A talent might accept lower pay because:
+
 - they want an awards run
 - they trust the director
 - they are repairing their image
@@ -8405,9 +9108,11 @@ A talent might accept lower pay because:
 - they are scared their heat is fading and need visibility now
 
 ### 34.11 Utility Scoring With Controlled Drama Bias
+
 Under the hood, AI decisions should use weighted utility scoring, but with a deliberate **drama bias** layer.
 
 Core score inputs:
+
 - money
 - prestige potential
 - awards potential
@@ -8423,6 +9128,7 @@ Core score inputs:
 - alternative offers available
 
 Drama bias modifiers:
+
 - public revenge opportunities
 - comeback temptation
 - sibling one-upmanship
@@ -8435,19 +9141,23 @@ Drama bias modifiers:
 Drama bias keeps the world entertaining without making it feel random. It should mostly activate when ego, stress, rivalry, or desperation are high.
 
 ### 34.12 AI Planning Horizons
+
 Different entities should think on different time scales.
 
 Short horizon actors:
+
 - desperate actors chasing immediate visibility
 - agencies trying to close a quarter strongly
 - streamers chasing subscriber spikes
 
 Medium horizon actors:
+
 - studios managing yearly slates
 - showrunners staffing next season
 - producers building a pod slate
 
 Long horizon actors:
+
 - dynasty families building legacy
 - auteurs shaping prestige careers
 - studio bosses building franchises and libraries
@@ -8456,9 +9166,11 @@ Long horizon actors:
 This creates asymmetry and conflict. Long-term plans collide with short-term panic.
 
 ### 34.13 Rivalry and Conflict System
+
 The AI should power a formal rivalry/conflict layer.
 
 #### 34.13.1 Rivalry Types
+
 - personal rivalry
 - creative rivalry
 - awards rivalry
@@ -8471,6 +9183,7 @@ The AI should power a formal rivalry/conflict layer.
 - mentor/protege rupture
 
 #### 34.13.2 Rivalry Triggers
+
 - project poaching
 - awards category competition
 - quote/billing disputes
@@ -8482,6 +9195,7 @@ The AI should power a formal rivalry/conflict layer.
 - a streamer stealing a signature showrunner or franchise creator
 
 #### 34.13.3 Rivalry Effects
+
 - refusal to work together
 - salary inflation when forced together
 - higher blowup risk during production
@@ -8492,9 +9206,11 @@ The AI should power a formal rivalry/conflict layer.
 - stronger press attention when they reunite
 
 #### 34.13.4 Rivalry Resolution
+
 Rivalries should not be permanent by default.
 
 They can thaw through:
+
 - hit collaborations
 - mutual need during career slumps
 - awards reconciliation arcs
@@ -8504,9 +9220,11 @@ They can thaw through:
 - tribute events, memorials, retirements, or late-career legacy plays
 
 ### 34.14 Refusal and Blacklist Logic
+
 Some entities should refuse to work with others.
 
 Refusal causes:
+
 - abuse history or toxic set experience
 - betrayal in negotiations
 - repeated missed start dates
@@ -8519,6 +9237,7 @@ Refusal causes:
 - creative incompatibility becoming culturally known
 
 Refusals can be:
+
 - hard refusals
 - soft resistance
 - requires apology or concession
@@ -8529,9 +9248,11 @@ Refusals can be:
 This adds meaningful friction to packaging and staffing.
 
 ### 34.15 Career Lifecycle Framework
+
 Every talent and many executives should move through life and career stages.
 
 #### 34.15.1 Talent Stages
+
 - Child Discovery
 - Child Star
 - Transitional Teen Talent
@@ -8547,6 +9268,7 @@ Every talent and many executives should move through life and career stages.
 - Elder Statesperson / Mentor
 
 #### 34.15.2 Studio/Company Stages
+
 - scrappy upstart
 - breakout contender
 - dominant major
@@ -8557,6 +9279,7 @@ Every talent and many executives should move through life and career stages.
 - reinvented second act
 
 #### 34.15.3 Agency Stages
+
 - hungry boutique
 - rising disruptor
 - elite power broker
@@ -8568,9 +9291,11 @@ Every talent and many executives should move through life and career stages.
 Each stage should affect leverage, incoming opportunities, PR narratives, and AI confidence.
 
 ### 34.16 Rise and Fall Arcs
+
 The game should actively generate arcs, not just static ratings drift.
 
 Possible talent rise triggers:
+
 - surprise breakout performance
 - hit franchise launch
 - festival discovery
@@ -8580,6 +9305,7 @@ Possible talent rise triggers:
 - successful reinvention from child star or flop era
 
 Possible fall triggers:
+
 - repeated bombs
 - on-set chaos reputation
 - scandal
@@ -8590,6 +9316,7 @@ Possible fall triggers:
 - failed vanity shingle overhead burden
 
 Rise/fall arcs should alter:
+
 - quote/value
 - package desirability
 - awards heat
@@ -8600,9 +9327,11 @@ Rise/fall arcs should alter:
 - public identity tags
 
 ### 34.17 Retirement and Exit Logic
+
 Retirements should matter. They keep the world from stagnating and create openings.
 
 Retirement styles:
+
 - graceful exit after long run
 - abrupt burnout disappearance
 - public farewell project
@@ -8613,6 +9342,7 @@ Retirement styles:
 Executives, agents, showrunners, and directors should also retire or shift roles.
 
 Consequences:
+
 - succession battles
 - roster migrations
 - unfinished passion projects re-entering market
@@ -8621,9 +9351,11 @@ Consequences:
 - protégés inheriting clout or expectations
 
 ### 34.18 Fresh Hopeful Generation
+
 The world needs churn. New people must arrive constantly.
 
 New entrant pipelines:
+
 - drama schools and theater scene
 - indie festival breakouts
 - spec script heat list discoveries
@@ -8636,6 +9368,7 @@ New entrant pipelines:
 - assistant-to-executive or assistant-to-producer ladders for future reps/executives
 
 Every year, the game should inject new hopefuls with distinct:
+
 - talent ceiling
 - starting polish
 - hunger
@@ -8648,7 +9381,9 @@ Every year, the game should inject new hopefuls with distinct:
 This prevents the talent pool from becoming solved.
 
 ### 34.19 Talent Potential, Ceiling, and Development
+
 The AI system should distinguish between:
+
 - current skill
 - current heat
 - market quote
@@ -8657,6 +9392,7 @@ The AI system should distinguish between:
 - career instincts
 
 This allows real-world-feeling mismatches:
+
 - highly talented but difficult artist
 - mediocre nepo baby with giant access advantages
 - extremely commercial but critically ignored star
@@ -8667,9 +9403,11 @@ This allows real-world-feeling mismatches:
 The player should sometimes win by seeing around the market’s current opinion.
 
 ### 34.20 NPC Learning and Adaptation
+
 To sustain replayability, AI entities should learn from outcomes.
 
 Examples:
+
 - a studio burned by expensive auteur flops becomes more risk-averse
 - a streamer embarrassed by churn-heavy strategy pivots toward retention-friendly comfort hits
 - an actor who chased money and lost status may pivot to indie credibility plays
@@ -8679,9 +9417,11 @@ Examples:
 Adaptation should not erase personality. It should bend it.
 
 ### 34.21 Confidence, Momentum, and Panic
+
 Each major entity should have a dynamic emotional-state layer.
 
 State meters:
+
 - confidence
 - momentum
 - pressure
@@ -8690,6 +9430,7 @@ State meters:
 - satisfaction
 
 Examples:
+
 - a studio on a five-hit run becomes bold, expensive, and slightly arrogant
 - a talent in panic mode accepts weak material for fast visibility
 - a showrunner under fatigue becomes more likely to feud with network notes
@@ -8698,9 +9439,11 @@ Examples:
 These temporary states create readable, volatile eras without rewriting core personality.
 
 ### 34.22 Collaboration Chemistry
+
 When entities work together, the AI should calculate chemistry.
 
 Chemistry dimensions:
+
 - creative alignment
 - trust
 - work speed compatibility
@@ -8712,6 +9455,7 @@ Chemistry dimensions:
 - family baggage
 
 High chemistry effects:
+
 - smoother productions
 - better performance uplift
 - lower blowup chance
@@ -8719,6 +9463,7 @@ High chemistry effects:
 - increased chance to form recurring teams or vanity shingles
 
 Low chemistry effects:
+
 - more delays
 - walk risk
 - expensive rewrites
@@ -8727,9 +9472,11 @@ Low chemistry effects:
 - weak awards unity
 
 ### 34.23 Team Identities and Creative Cliques
+
 The AI should support recurring ecosystems.
 
 Examples:
+
 - actor/director duos
 - sibling teams
 - writer/director auteur circles
@@ -8742,21 +9489,25 @@ Examples:
 These cliques should have identities and reputations.
 
 Benefits:
+
 - easy packaging
 - quality uplift from familiarity
 - fan/trade narrative strength
 - stronger loyalty
 
 Risks:
+
 - stagnation
 - monoculture accusations
 - harder renegotiations as everyone levels up together
 - clique implosion if one relationship ruptures
 
 ### 34.24 Studio and Streamer AI Strategy Brains
+
 Competing companies need robust strategic AI.
 
 Each studio/streamer should manage:
+
 - genre priorities
 - slate balance
 - cash discipline
@@ -8769,6 +9520,7 @@ Each studio/streamer should manage:
 - willingness to poach or outbid
 
 Potential AI company behaviors:
+
 - flood market with mid-budget thrillers
 - poach family-friendly IP after your animated hit
 - aggressively pursue one awards season lane
@@ -8778,9 +9530,11 @@ Potential AI company behaviors:
 - overcommit to one genre and later suffer market fatigue
 
 ### 34.25 Hidden Information and Readability
+
 The AI should be sophisticated, but the player must be able to read enough of it to strategize.
 
 Surface to player through:
+
 - tags such as “Prestige Hungry,” “Burned by Flops,” “Agency Loyal,” “Family Loyalist,” “Control Freak,” “Comeback Mode,” “Panic Spending,” “Retirement Watch”
 - brief explanation strings on decisions
 - trade and rumor coverage interpreting motives
@@ -8791,9 +9545,11 @@ Surface to player through:
 Do not expose every formula. Expose the story meaning.
 
 ### 34.26 Event Integration
+
 The AI system should be one of the main generators of events.
 
 Event families driven by AI:
+
 - feud eruptions
 - surprise reconciliations
 - agent exits and client migrations
@@ -8808,9 +9564,11 @@ Event families driven by AI:
 - ex-child-star reinvention narrative wave
 
 ### 34.27 Life Outside the Player’s Studio
+
 A robust single-player world must keep evolving off-screen.
 
 Simulation should continue for NPCs even when the player is not interacting with them:
+
 - rival studios greenlight and cancel projects
 - agencies lose agents and gain clients
 - stars sign to outside films and become unavailable
@@ -8823,9 +9581,11 @@ Simulation should continue for NPCs even when the player is not interacting with
 The player should feel like they entered a living town, not a waiting room.
 
 ### 34.28 AI-Assisted Difficulty and Replayability
+
 Because this is a single-player game, AI should also function as the main source of dynamic difficulty.
 
 How AI keeps runs fresh:
+
 - different studios emerge as primary rivals each run
 - different agencies dominate each era
 - different genres become oversupplied because competitors pursue them
@@ -8838,9 +9598,11 @@ How AI keeps runs fresh:
 Replayability should come from the world recombining these forces, not from stat inflation alone.
 
 ### 34.29 Delegation AI and Assistant Logic
+
 The player will sometimes automate or delegate searches, staffing, and negotiations. Those assistants should use the same AI-readable world model.
 
 Examples:
+
 - “Find me a reliable commercial director who is not in feud with this lead actor.”
 - “Package a prestige TV drama around a rising showrunner with low meltdown risk.”
 - “Identify undervalued actors in comeback mode.”
@@ -8849,7 +9611,9 @@ Examples:
 This makes assistant tools feel smart and grounded.
 
 ### 34.30 Data Architecture Overview
+
 Suggested core entities:
+
 - `NPCIdentity`
 - `AIPersonalityProfile`
 - `AIMotivationStack`
@@ -8869,10 +9633,13 @@ Suggested core entities:
 Each major talent/company/agent entity should reference these rather than inventing separate one-off systems.
 
 ### 34.31 UI Surfaces
+
 Recommended player-facing surfaces:
 
 #### 34.31.1 Person Profile
+
 Shows:
+
 - core role and archetype tags
 - current heat/value/career stage
 - motivations summary
@@ -8883,7 +9650,9 @@ Shows:
 - recent history timeline
 
 #### 34.31.2 Company Profile
+
 Shows:
+
 - strategy tags
 - confidence and pressure level
 - active priorities
@@ -8893,7 +9662,9 @@ Shows:
 - enemy/rival companies
 
 #### 34.31.3 Relationship View
+
 Shows:
+
 - collaboration history
 - trust/respect/resentment bars
 - key memory events
@@ -8901,7 +9672,9 @@ Shows:
 - thaw opportunities
 
 #### 34.31.4 Industry Pulse Dashboard
+
 Shows:
+
 - rising hopefuls
 - retirement watch list
 - active feuds
@@ -8911,6 +9684,7 @@ Shows:
 - stability leaders
 
 ### 34.32 Example Emergent Scenarios
+
 Examples of stories the system should generate:
 
 1. A prestige sibling directing duo with family baggage wins major awards, then collapses when one is publicly credited as the real auteur.
@@ -8922,7 +9696,9 @@ Examples of stories the system should generate:
 7. A beloved veteran showrunner retires, setting off a chain reaction of staffing moves, pod instability, and franchise uncertainty across the TV market.
 
 ### 34.33 Balance Rules
+
 To keep the system fun and intuitive:
+
 - AI should have strong identity, not pure randomness
 - no single variable should dominate every decision
 - relationships should matter, but not make the world impossibly sticky
@@ -8933,7 +9709,9 @@ To keep the system fun and intuitive:
 - dramatic outcomes should feel earned by state, not scripted inevitability
 
 ### 34.34 Optional Future Extensions
+
 Potential expansions later:
+
 - managers and publicists as separate AI classes
 - guild politics and labor-alignment behavior
 - international co-production taste differences by territory
@@ -8943,12 +9721,13 @@ Potential expansions later:
 - political ideology or activism posture as a limited public-risk system if handled carefully and abstractly
 
 ### 34.35 Canonical Design Rule
-**Studio Boss uses a unified NPC AI framework to power talent, agencies, studios, streamers, executives, and other industry entities. Each major entity has motivations, personality, memory, relationships, lifecycles, rivalry logic, and adaptive strategy. The result is a living single-player Hollywood ecosystem with believable behavior, emergent conflict, constant talent churn, and strong replayability.**
 
+**Studio Boss uses a unified NPC AI framework to power talent, agencies, studios, streamers, executives, and other industry entities. Each major entity has motivations, personality, memory, relationships, lifecycles, rivalry logic, and adaptive strategy. The result is a living single-player Hollywood ecosystem with believable behavior, emergent conflict, constant talent churn, and strong replayability.**
 
 ## 35. Production Roles, Role Counts, Script Drafting, Talent Age Curves, and Awards-Driven Salary Escalation
 
 ### 35.1 System Purpose
+
 This system formalizes how a project determines **which roles exist**, **how many performers and creative leads are needed**, **how those needs are inferred from script and genre**, and **how those role requirements feed directly into development, packaging, greenlight readiness, and budget forecasting**.
 
 It also expands the talent economy with:
@@ -8964,6 +9743,7 @@ It also expands the talent economy with:
 The design goal is to make pre-production feel like real Hollywood package building without forcing the player to manually fill dozens of meaningless slots.
 
 ### 35.2 Core Principle
+
 A project should not ask the player to invent cast size from scratch. Instead, every project generates a **Role Map** from three sources:
 
 1. **Format and Genre Template**
@@ -8982,9 +9762,11 @@ The Role Map then determines:
 - greenlight confidence
 
 ### 35.3 Production Role Framework
+
 Every project should organize roles into five broad buckets.
 
 #### 35.3.1 Core Creative Leadership
+
 Common slots include:
 
 - writer
@@ -8998,6 +9780,7 @@ Common slots include:
 These roles influence script quality, package value, tone coherence, schedule control, and note resistance.
 
 #### 35.3.2 Principal On-Screen Cast
+
 These are the most market-facing performance roles.
 
 Common role classes include:
@@ -9016,6 +9799,7 @@ Common role classes include:
 - child lead / teen lead / child supporting
 
 #### 35.3.3 Voice and Performance Capture Roles
+
 These are especially important in animation and some VFX-heavy projects.
 
 Common classes include:
@@ -9030,6 +9814,7 @@ Common classes include:
 - singing voice when distinct from speaking voice
 
 #### 35.3.4 TV-Specific Staffing Roles
+
 Television should require additional role logic beyond film.
 
 Common classes include:
@@ -9049,6 +9834,7 @@ Common classes include:
 This extends the existing TV leadership model and showrunner importance already established elsewhere in the bible. fileciteturn6file2 fileciteturn6file7
 
 #### 35.3.5 Prestige and Specialist Optional Roles
+
 Some projects may optionally benefit from specialist attachments.
 
 Examples include:
@@ -9063,6 +9849,7 @@ Examples include:
 - voice star for animation marketing
 
 ### 35.4 Role Count Generation: The Role Map
+
 Every script or concept should generate a **Role Map** with counts rather than fixed names.
 
 The game should present role counts using three levels:
@@ -9086,6 +9873,7 @@ A Role Map should be expressed in a compact executive style such as:
 The player should be free to over-package within reason, but excessive cast or creative bloat should increase budget, ego risk, and schedule complexity.
 
 ### 35.5 Script Analysis Inputs That Generate Role Counts
+
 A screenplay or pilot should generate role counts from hidden analysis tags.
 
 Relevant tags include:
@@ -9108,9 +9896,11 @@ Relevant tags include:
 These tags do not need literal NLP simulation. For gameplay purposes they can be produced through structured generation rules plus draft outcomes.
 
 ### 35.6 Genre-Based Role Templates
+
 Genre should strongly influence the initial Role Map before draft-specific modifiers are applied.
 
 #### 35.6.1 Romantic Comedy
+
 Typical baseline:
 
 - 2 leads or 1 lead + 1 romantic lead
@@ -9127,6 +9917,7 @@ System notes:
 - awards upside is modest unless elevated prestige dramedy
 
 #### 35.6.2 Prestige Drama
+
 Typical baseline:
 
 - 1 lead or 2 co-leads
@@ -9142,6 +9933,7 @@ System notes:
 - script quality and director cohesion matter more than raw cast count
 
 #### 35.6.3 Comedy Ensemble
+
 Typical baseline:
 
 - 1 lead or 2 co-leads
@@ -9156,6 +9948,7 @@ System notes:
 - large ensembles create more scheduling risk
 
 #### 35.6.4 Action / Thriller
+
 Typical baseline:
 
 - 1 lead
@@ -9172,6 +9965,7 @@ System notes:
 - stunt-heavy productions can use fewer speaking roles but higher cost per role
 
 #### 35.6.5 Horror
+
 Typical baseline:
 
 - 1 lead or young ensemble
@@ -9187,6 +9981,7 @@ System notes:
 - child roles may raise both marketing novelty and ethics/PR risk
 
 #### 35.6.6 Family Adventure / Four-Quadrant Fantasy
+
 Typical baseline:
 
 - 1 child/teen lead or young-adult lead
@@ -9203,6 +9998,7 @@ System notes:
 - merch and sequel value are sensitive to role archetype clarity
 
 #### 35.6.7 Animated Family Film
+
 Typical baseline:
 
 - 1 lead voice
@@ -9220,6 +10016,7 @@ System notes:
 - narrators, celebrity voices, and animal/creature specialty voices become meaningful package slots
 
 #### 35.6.8 Adult Animation
+
 Typical baseline:
 
 - 1 to 3 lead voice roles
@@ -9233,6 +10030,7 @@ System notes:
 - quote demands can be high for iconic voice stars despite low physical scheduling friction
 
 #### 35.6.9 Scripted TV Procedural
+
 Typical baseline for a new series:
 
 - 1 lead or pair of leads
@@ -9248,6 +10046,7 @@ System notes:
 - cast count is moderate-to-high, but not every role requires major star heat
 
 #### 35.6.10 Prestige TV Drama
+
 Typical baseline:
 
 - 1 to 2 leads
@@ -9261,6 +10060,7 @@ System notes:
 - supporting cast depth improves awards odds and late-season retention
 
 #### 35.6.11 Sitcom
+
 Typical baseline:
 
 - 1 lead or 2 co-leads
@@ -9276,6 +10076,7 @@ System notes:
 - syndication upside scales with ensemble durability
 
 #### 35.6.12 Limited Series / Miniseries
+
 Typical baseline:
 
 - 1 to 2 leads
@@ -9289,7 +10090,9 @@ System notes:
 - awards appeal is very sensitive to lead/supporting role clarity
 
 ### 35.7 Special Role Types
+
 #### 35.7.1 Romantic Lead / Love Interest
+
 A script may generate a distinct **romantic lead** slot when romance intensity crosses a threshold.
 
 This role should matter because:
@@ -9300,6 +10103,7 @@ This role should matter because:
 - replacing this role late is especially damaging to tone
 
 #### 35.7.2 Narrator
+
 A narrator slot should only appear when the script has a narration tag, literary framing, mockumentary framing, anthology structure, fairy-tale framing, or prestige memoir energy.
 
 A narrator can:
@@ -9310,6 +10114,7 @@ A narrator can:
 - slightly reduce subtlety if the narrator is used as a crutch on weak drafts
 
 #### 35.7.3 Antagonist / Villain
+
 The system should distinguish a generic supporting role from a proper antagonist slot.
 
 A true antagonist role boosts:
@@ -9319,6 +10124,7 @@ A true antagonist role boosts:
 - trailer and market identity
 
 #### 35.7.4 Child Roles and Child Stars
+
 If the script generates child or teen roles, those become special slots with extra considerations:
 
 - guardianship / welfare complexity
@@ -9328,6 +10134,7 @@ If the script generates child or teen roles, those become special slots with ext
 - hidden personal attributes when under 18
 
 ### 35.8 Role Count by Script Quality and Draft Evolution
+
 The number and clarity of roles should evolve as drafts evolve.
 
 A weak early draft may create:
@@ -9349,6 +10156,7 @@ A stronger later draft may:
 This means script development is not only about “quality up/down”; it also changes **cast architecture**.
 
 ### 35.9 Multi-Draft Screenplay Development System
+
 The development pipeline should treat screenplay work as a staged process, not one hidden roll.
 
 Recommended stages:
@@ -9381,6 +10189,7 @@ Possible outcomes at each draft stage:
 This makes development a real gameplay loop rather than a binary wait state.
 
 ### 35.10 Draft Approval Gates
+
 The player should not be forced to approve every tiny revision, but major gates should require executive approval.
 
 Recommended approvals:
@@ -9395,12 +10204,13 @@ At each gate the player may:
 - approve and continue
 - request another pass
 - replace writer
-n- hire script doctor
+  n- hire script doctor
 - downgrade scope
 - repurpose for TV or film
 - shelve the project
 
 ### 35.11 Script Doctors
+
 Script doctors should exist as a distinct writer subtype. They are not just generic rewrite writers.
 
 Common script doctor archetypes:
@@ -9432,6 +10242,7 @@ Possible risks:
 A great script doctor can save a greenlight. A bad one can make the script feel committee-built and dead.
 
 ### 35.12 Hiring Talent as Writer and/or Director
+
 Talent should be hireable into writer and director roles exactly as they are for acting or producing.
 
 This should support:
@@ -9457,6 +10268,7 @@ Risks include:
 - stronger disruption if that one talent bows out
 
 ### 35.13 Greenlight Integration: Role Completeness Score
+
 The existing greenlight committee should gain a **Role Completeness Score** that sits beside package strength and schedule certainty. Existing greenlight logic already evaluates script strength, talent package strength, schedule certainty, funding strain, and package cost inflation. fileciteturn6file0
 
 Role Completeness should evaluate:
@@ -9480,6 +10292,7 @@ This score can produce warnings like:
 - **Awards-Friendly Supporting Role Available**
 
 ### 35.14 Greenlight Integration: Role Forecast Panel
+
 Every project in development should surface a **Role Forecast Panel** before full greenlight.
 
 Recommended display:
@@ -9495,6 +10308,7 @@ Recommended display:
 - whether the draft is stable enough to cast deeply
 
 ### 35.15 Role Count Scaling by Budget and Ambition
+
 Genre creates the baseline, but budget and ambition modify it.
 
 Examples:
@@ -9507,6 +10321,7 @@ Examples:
 This keeps role count intuitive while still allowing variety.
 
 ### 35.16 TV Role Count Logic
+
 Television should distinguish between:
 
 - series regulars
@@ -9525,6 +10340,7 @@ Examples:
 - animation: 3 to 6 core voice anchors with flexible guest voices
 
 ### 35.17 Animation and Voice Casting Rules
+
 Animation should use a distinct casting logic.
 
 Key rules:
@@ -9537,6 +10353,7 @@ Key rules:
 - child voice roles may be filled by adults, teens, or actual children depending tone and authenticity goals
 
 ### 35.18 Chemistry Architecture
+
 Certain role pairings should be explicitly chemistry-sensitive.
 
 High-importance pairings include:
@@ -9552,6 +10369,7 @@ High-importance pairings include:
 The game should evaluate chemistry at the pairing layer, not just the full cast average.
 
 ### 35.19 Sex Appeal Age Curve System
+
 Talent should have a **Sex Appeal** attribute that can shift at age milestones of 30, 40, 50, 60, and 70.
 
 At each milestone, the game should roll or infer one of three outcomes:
@@ -9577,6 +10395,7 @@ System effects:
 - interacts with public image, reinvention, scandal, and awards narrative
 
 ### 35.20 Under-18 Data Privacy and Hidden Attributes
+
 Talent under age 18 should have partially hidden or masked attributes.
 
 Design rules:
@@ -9597,6 +10416,7 @@ Visible information for under-18 talent should focus on:
 This keeps the system safer, cleaner, and more intuitive.
 
 ### 35.21 Talent List Sorting by Salary
+
 Talent search and roster screens should support **sorting by Salary / Quote**.
 
 Recommended salary-related sort modes:
@@ -9611,11 +10431,13 @@ Recommended salary-related sort modes:
 This should be available for actors, writers, directors, producers, showrunners, and voice actors.
 
 ### 35.22 Awards Prestige Tiers and Salary Inflation
+
 Awards should not produce flat quote bumps. The increase should depend on the prestige of the award body and category. The existing awards system already establishes that SAG wins raise actor quote demands, Writers Guild wins boost writer prestige, Directors Guild wins raise director market price, and top-tier awards create broad downstream leverage. fileciteturn6file12 fileciteturn6file17
 
 Recommended award prestige tiers:
 
 #### 35.22.1 Tier S — Industry-Crowning Awards
+
 Examples in game terms:
 
 - Oscars
@@ -9630,6 +10452,7 @@ Effects:
 - better packaging pull for future projects
 
 #### 35.22.2 Tier A — Major Global Prestige / Industry Momentum Awards
+
 Examples:
 
 - BAFTAs
@@ -9646,6 +10469,7 @@ Effects:
 - improved awards credibility and package heat
 
 #### 35.22.3 Tier B — Strong Specialty / Indie / Breakout Awards
+
 Examples:
 
 - Independent Spirit-style wins
@@ -9658,12 +10482,14 @@ Effects:
 - better access to prestige projects
 
 #### 35.22.4 Tier C — Niche, Genre, or Breakthrough Recognition
+
 Effects:
 
 - modest quote increase
 - stronger effect inside specialty lanes than mass-market work
 
 ### 35.23 Nomination vs Win Effects
+
 Nominations should matter, but less than wins.
 
 Recommended structure:
@@ -9674,6 +10500,7 @@ Recommended structure:
 - overdue narrative win: may increase prestige more than raw quote if the talent is already expensive
 
 ### 35.24 Award Effects by Talent Type
+
 Awards should raise salary demands differently by role class.
 
 Examples:
@@ -9686,6 +10513,7 @@ Examples:
 - TV acting awards raise **per-episode** demands more than flat season fees
 
 ### 35.25 TV vs Film Compensation Rules
+
 The game should clearly surface the distinction between film and TV pay structure.
 
 Film:
@@ -9703,6 +10531,7 @@ TV:
 This is already aligned with the broader compensation model in the bible and should now be made visible inside role screens and contract previews. fileciteturn6file6
 
 ### 35.26 Replacement Pressure When Role Archetypes Matter
+
 When a production loses talent after greenlight, replacement logic should respect role archetype.
 
 Examples:
@@ -9714,24 +10543,31 @@ Examples:
 - losing a script doctor mid-rescue may freeze draft readiness
 
 ### 35.27 Suggested UI Surfaces
+
 Recommended interfaces:
 
 #### 35.27.1 Role Map Panel
+
 Shows generated role counts by class, chemistry dependencies, and optional slots.
 
 #### 35.27.2 Draft Tracker
+
 Shows stage, quality movement, recent rewrite notes, role-map changes, and approval status.
 
 #### 35.27.3 Salary and Quote Sorts
+
 Allows quick ranking by salary, value, awards heat, role fit, and availability.
 
 #### 35.27.4 Youth Talent Safe View
+
 A restricted, cleaner profile view for under-18 talent.
 
 #### 35.27.5 Awards Quote Impact Tooltip
+
 Shows why a quote rose: for example “Won Tier A supporting-acting award last season” or “Oscar nominee two years ago; prestige floor retained.”
 
 ### 35.28 Example Emergent Stories
+
 The system should create stories like:
 
 - a weak first draft becoming greenlightable after a structure fixer creates a real antagonist role
@@ -9743,6 +10579,7 @@ The system should create stories like:
 - a TV supporting actor winning a major award and demanding a huge per-episode bump for season two
 
 ### 35.29 Balancing Principles
+
 - Role generation should feel legible, not random.
 - Draft iteration should usually help but should never be risk-free.
 - Script doctors should be powerful but expensive and imperfect.
@@ -9751,10 +10588,10 @@ The system should create stories like:
 - Genre should strongly shape role counts, but the script should always be able to modify them.
 
 ### 35.30 Canonical Design Rule
+
 Production roles in Studio Boss should follow one core truth:
 
 > **You do not greenlight a title. You greenlight a script shape, a role map, and a package that can actually be cast, financed, and made.**
-
 
 ---
 
@@ -9782,6 +10619,7 @@ The guiding principle for this section is:
 > **The player should be able to understand what a project is, what stage it is in, what it costs, what is going wrong, what it earned, and what strategic levers still remain.**
 
 ### 36.1 Project Command Center and Information Architecture
+
 The screenshots show a useful truth: a Hollywood studio game becomes much easier to play when each project acts like a **command center** with a stable set of tabs.
 
 Studio Boss should formalize this into a consistent project shell for both films and series.
@@ -9813,6 +10651,7 @@ Example:
 This creates strong phase readability without requiring the player to remember hidden states.
 
 ### 36.2 Project List Status Language
+
 The current project list should gain explicit **phase labels** and **warning labels** that are readable at a glance.
 
 Recommended standardized statuses:
@@ -9855,6 +10694,7 @@ Recommended warning tags:
 These labels should appear in the project row and in the project header.
 
 ### 36.3 Cost To Date and Spend Transparency
+
 The screenshots reveal the value of a simple **Cost To Date** callout.
 
 Studio Boss should track and show at least four spend buckets on every project:
@@ -9873,6 +10713,7 @@ These should roll into:
 This matters because the player often needs to decide whether to continue, delay, recast, reshoot, or kill a project. A raw budget number is not enough. The real decision is about **sunk cost versus remaining exposure**.
 
 ### 36.4 Story Page Expansion
+
 The screenshots imply a story page that surfaces not only genre but also content shape.
 
 Studio Boss should formalize a **Story Diagnostic Panel** for both films and series.
@@ -9921,6 +10762,7 @@ These attributes should not all be equally precise at early stages. Early-stage 
 This makes story development feel like discovery rather than omniscience.
 
 ### 36.5 Production Design Layer and Monthly Burn Breakdown
+
 The screenshots show a production screen with cost per month and craft dimensions such as VFX, stunts, explosions, set design, and costume complexity.
 
 Studio Boss should deepen production planning using **Production Demand Axes**.
@@ -9963,6 +10805,7 @@ The player should not need to hand-tune dozens of numbers every time. By default
 Advanced players can manually override individual axes.
 
 ### 36.6 Shoot Format and Presentation Features
+
 The production screen suggests format choices such as 3-D and large format.
 
 Studio Boss should include optional **premium presentation features** that can be attached at production or release planning stages.
@@ -9989,6 +10832,7 @@ These features should affect:
 These should never be automatic wins. Many projects are better without them.
 
 ### 36.7 Shoot Location and Incentive Planning
+
 One screenshot shows a location block with the ability to add shoot locations.
 
 Studio Boss should formalize a **location planning system** for projects in production.
@@ -10029,6 +10873,7 @@ The system should present the player with readable tradeoffs:
 Location choices should also feed later production problems.
 
 ### 36.8 Vendor, Facility, and Specialist Partner Layer
+
 The screenshots reference animation studio and visual effects studio issues.
 
 Studio Boss should add a **specialist vendor layer** for projects that need external partners.
@@ -10059,6 +10904,7 @@ Vendors should have:
 Vendor selection should matter for both quality and production stability.
 
 ### 36.9 Production Problems Log and Incident Lifecycle
+
 The screenshots show a **Production Problems** page plus a modal describing a specific incident and cost increase.
 
 Studio Boss should make production incidents a first-class system instead of one-off popups.
@@ -10098,6 +10944,7 @@ Incident categories should include:
 The player should be able to open each incident to see who caused it, how severe it is, and what choices are available.
 
 ### 36.10 Incident Response Choices
+
 When a production problem occurs, the player should usually get 2 to 5 response choices, for example:
 
 - absorb the delay and protect quality
@@ -10122,6 +10969,7 @@ Each response should affect some combination of:
 - relationship damage
 
 ### 36.11 Problem Traits and Persistent Production Personalities
+
 The incident screen suggests a personality issue like **Perfectionist**.
 
 Studio Boss should turn production volatility into persistent, reusable talent traits.
@@ -10154,6 +11002,7 @@ A perfectionist actor or director may:
 - trigger conflict with efficient producers
 
 ### 36.12 Studio Library Browser
+
 The screenshots show studio libraries for the player and rivals.
 
 Studio Boss should include a **Library Browser** that lets the player inspect completed projects by studio.
@@ -10184,6 +11033,7 @@ Each library item should show:
 This makes the industry feel historical rather than only present-tense.
 
 ### 36.13 Rival Studio Intelligence Feed
+
 One screenshot shows a monthly feed listing rival greenlights and key attachments.
 
 Studio Boss should add a **Monthly Industry Intelligence Feed** sourced through the trades and your internal market analysts.
@@ -10213,6 +11063,7 @@ Examples:
 This feed should help the player read the market and feel the passage of time each month.
 
 ### 36.14 Release Planning: Theater Footprint Model
+
 The release screenshot shows a formula-driven theater count influenced by budget, audience, stars, and advertising.
 
 Studio Boss should explicitly model **release footprint capacity** for theatrical titles.
@@ -10239,7 +11090,7 @@ The initial theater footprint should be driven by factors such as:
 - seasonal competition
 - awards-platform strategy
 
-The game should show a breakdown so the player understands *why* the footprint is what it is.
+The game should show a breakdown so the player understands _why_ the footprint is what it is.
 
 Example display:
 
@@ -10252,6 +11103,7 @@ Example display:
 - Final Opening Footprint: 2,700
 
 ### 36.15 Distribution Partnerships and Territorial Splits
+
 The final accounting screenshot implies foreign partner distribution revenue and adjusted foreign rentals.
 
 Studio Boss should deepen **distribution partnership design**.
@@ -10282,6 +11134,7 @@ Important economic outputs should include:
 This should connect cleanly to the existing rights and co-production systems.
 
 ### 36.16 Final Accounting Screen
+
 The screenshots show a very legible post-release accounting breakdown.
 
 Studio Boss should ensure every completed project gets a **Final Accounting Screen** with standardized sections.
@@ -10289,6 +11142,7 @@ Studio Boss should ensure every completed project gets a **Final Accounting Scre
 Recommended sections:
 
 #### 36.16.1 Revenue Overview
+
 - worldwide gross
 - domestic gross
 - foreign gross
@@ -10303,6 +11157,7 @@ Recommended sections:
 - airline / hotel / educational / specialty windows where relevant
 
 #### 36.16.2 Cost Overview
+
 - development cost
 - production cost
 - marketing cost
@@ -10313,6 +11168,7 @@ Recommended sections:
 - financing cost where relevant
 
 #### 36.16.3 Net Outcome
+
 - project P&L
 - ROI
 - break-even threshold
@@ -10321,6 +11177,7 @@ Recommended sections:
 - sequel / renewal trigger eligibility
 
 #### 36.16.4 Legacy Outcome
+
 - critic score band
 - audience reception band
 - awards tally
@@ -10331,6 +11188,7 @@ Recommended sections:
 The point is not just realism. It is feedback clarity. The player must learn from each release.
 
 ### 36.17 Reviews and Critical Reception Screen
+
 The screenshots include a dedicated critics and reviews area.
 
 Studio Boss should explicitly present **review clusters** rather than a single score.
@@ -10358,6 +11216,7 @@ Example:
 This should connect to word-of-mouth, holds, streaming afterlife, and sequel logic.
 
 ### 36.18 Merchandising Contracts and Threshold Gating
+
 A screenshot shows **manufacturer interest** and minimum production / advertising thresholds for product categories.
 
 Studio Boss should add a clearer **merchandising contract layer** before or during release planning.
@@ -10397,6 +11256,7 @@ The game should present outcomes like:
 This gives the player reasons to invest in family, sci-fi, fantasy, action, animation, and youth-skewing titles beyond the box office alone.
 
 ### 36.19 Sequel and Franchise Trigger Panel
+
 The screenshots show a clear **Create a Sequel** action after a film succeeds.
 
 Studio Boss should expose sequel readiness through a formal panel rather than burying it.
@@ -10425,6 +11285,7 @@ Possible states:
 This should also apply to TV spin-offs, extra seasons, sequel films, animated specials, and prequels.
 
 ### 36.20 Contract Riders and Negotiation Surface Area
+
 The talent negotiation screenshot reveals a few specific contractual asks that should be fully visible in Studio Boss.
 
 Add contract rider fields for:
@@ -10448,6 +11309,7 @@ Add contract rider fields for:
 These terms should influence both acceptance chance and downstream project constraints.
 
 #### 36.20.1 Name Above Title
+
 This should be mostly cosmetic on paper, but meaningful in simulation.
 
 Effects may include:
@@ -10459,6 +11321,7 @@ Effects may include:
 - small poster/layout marketing constraints
 
 #### 36.20.2 Sequel Option Ladder
+
 For sequel-capable projects, major talent should often want pre-negotiated escalation tables.
 
 Example:
@@ -10471,6 +11334,7 @@ Example:
 This makes franchise success exciting but expensive.
 
 ### 36.21 Agency Offer Presentation and Negotiation Framing
+
 The screenshot shows multiple agency offers for a single deal.
 
 Studio Boss should frame some negotiations as **structured offer exchanges** rather than hidden math.
@@ -10489,6 +11353,7 @@ This is especially useful for stars, directors, showrunners, and top writers.
 It makes representation feel active and readable.
 
 ### 36.22 Talent Search, Sorting, and Audition Workflow Upgrades
+
 The screenshots show sortable talent lists with salary columns, audition indicators, and profile comparisons.
 
 Studio Boss should extend talent search with richer list controls:
@@ -10517,6 +11382,7 @@ Talent rows should also show quick-status flags:
 - sequel obligation elsewhere
 
 ### 36.23 Monthly Studio Pulse and End-Month Ritual
+
 The screenshots repeatedly emphasize an **End Month** button and a monthly news cadence.
 
 Studio Boss already uses turn cadence, but this should be formalized into a stronger **monthly pulse ritual**.
@@ -10537,6 +11403,7 @@ At the end of each month, the game should summarize:
 This creates a satisfying sense of rhythm and makes the game easier to read at scale.
 
 ### 36.24 Project Final Breakdown as a Teachable Postmortem
+
 The screenshots show a final breakdown that functions almost like a postmortem.
 
 Studio Boss should embrace this as a learning tool.
@@ -10555,6 +11422,7 @@ Examples:
 This helps the player build intuition rather than just reading numbers.
 
 ### 36.25 Series-Specific Counterparts
+
 Any feature added from the screenshots must have a TV equivalent where sensible.
 
 Examples:
@@ -10566,6 +11434,7 @@ Examples:
 - production problems log includes writers’ room instability, showrunner burnout, cast holdouts, and episode overrun
 
 ### 36.26 UX Rule: Everything Should Explain Itself
+
 The benchmark screenshots are useful because they make many numbers visible, but they also risk opacity.
 
 Studio Boss should modernize this by ensuring that every major value has at least one of:
@@ -10579,9 +11448,11 @@ Studio Boss should modernize this by ensuring that every major value has at leas
 The game should feel deep, never obscure.
 
 ### 36.27 New Data Fields Required
+
 Add the following data points where not already present:
 
 #### 36.27.1 Project Dashboard Fields
+
 - project phase label
 - warning tags
 - total cost to date
@@ -10592,6 +11463,7 @@ Add the following data points where not already present:
 - sequel readiness state
 
 #### 36.27.2 Production Planning Fields
+
 - monthly burn baseline
 - stunt load
 - destruction load
@@ -10605,6 +11477,7 @@ Add the following data points where not already present:
 - primary vendor links
 
 #### 36.27.3 Production Incident Fields
+
 - incident id
 - month/week
 - source entity
@@ -10615,6 +11488,7 @@ Add the following data points where not already present:
 - resolution state
 
 #### 36.27.4 Release and Accounting Fields
+
 - opening footprint
 - exhibitor share estimate
 - domestic rentals
@@ -10625,6 +11499,7 @@ Add the following data points where not already present:
 - franchise trigger score
 
 #### 36.27.5 Contract Rider Fields
+
 - name above title
 - billing rank
 - sequel option ladder
@@ -10633,6 +11508,7 @@ Add the following data points where not already present:
 - scheduling hold end date
 
 ### 36.28 Example Emergent Stories from These Additions
+
 The system should now be able to produce stories like:
 
 - a studio overcommits to premium large-format spectacle, gets a bigger opening, but suffers painful VFX overruns
@@ -10645,12 +11521,13 @@ The system should now be able to produce stories like:
 - a foreign distributor’s fee structure makes an apparently strong overseas gross far less valuable than the player expected
 
 ### 36.29 Canonical Design Rule
+
 The benchmark-inspired additions should be governed by one rule:
 
 > **Every project should read like a living business case, a creative package, and a production history all at once.**
 
-
 ### 36.30 Distribution Rights Sales, Pre-Sales, and Territorial Deal-Making
+
 A new set of screenshots highlights a more explicit **distribution-rights selling layer** than the current bible spells out.
 
 Studio Boss should add a full **Rights Sales and Distribution Partnerships Market** that lets the player retain distribution, sell rights early, or carve projects into domestic and international territory deals.
@@ -10658,6 +11535,7 @@ Studio Boss should add a full **Rights Sales and Distribution Partnerships Marke
 This system should sit between greenlight and release, and it should remain relevant again at completion when library and secondary-window rights are resold.
 
 #### 36.30.1 Core Rights Sale Modes
+
 For eligible film projects, and for some premium limited series or specials, the player may choose among:
 
 - self-distribute domestically
@@ -10680,6 +11558,7 @@ Each option should trade off:
 - franchise and sequel leverage
 
 #### 36.30.2 Domestic Distribution Offers
+
 If the player chooses to shop domestic rights, different buyers should generate offers with distinct logic.
 
 Offer variables include:
@@ -10699,6 +11578,7 @@ Boutique prestige distributors may offer smaller guarantees but stronger awards 
 Streamer-first buyers may skip theatrical upside but reduce risk.
 
 #### 36.30.3 Foreign Territory Carve-Outs
+
 Foreign rights should be sellable one territory or regional cluster at a time.
 
 Illustrative market buckets:
@@ -10733,6 +11613,7 @@ A broad action film may get strong Asian and Latin American bids.
 A dialogue-heavy prestige drama may travel better through festivals, awards, and selective European buyers.
 
 #### 36.30.4 Pre-Sales as Financing Tools
+
 The player should be able to use pre-sales to make borderline projects financeable.
 
 Pre-sales can:
@@ -10754,6 +11635,7 @@ Possible downside flags:
 - loss of sequel leverage outside retained markets
 
 #### 36.30.5 Rights Retention Strategy Layer
+
 The player should be able to set a **rights retention posture** per project:
 
 - Hold Everything
@@ -10768,6 +11650,7 @@ A cash-starved indie player may routinely pre-sell.
 A rising prestige banner may retain more rights to build long-term library value.
 
 #### 36.30.6 Rights Sale UI Rules
+
 The rights screen should show:
 
 - estimated self-release value
@@ -10782,11 +11665,13 @@ The rights screen should show:
 The player must understand not just **how much money is on the table**, but **what control and upside is being surrendered**.
 
 ### 36.31 Advanced Merchandising Deal Structure and Partner Quality
+
 The new screenshots reveal extra detail inside merchandising that goes beyond threshold gating alone.
 
 Studio Boss should expand merchandising into a true **licensing deal system** with partner quality, royalty rate, category depth, and contract-signing choices.
 
 #### 36.31.1 Category-by-Category Merchandising Contracts
+
 Each merch category should be evaluated separately.
 
 Suggested categories:
@@ -10815,6 +11700,7 @@ Each category should have its own:
 - cancellation or underperformance risk
 
 #### 36.31.2 Manufacturer Quality
+
 Partner quality should matter, not just whether interest exists.
 
 Quality bands:
@@ -10843,6 +11729,7 @@ Lower-quality partners may offer:
 - low long-tail revenue
 
 #### 36.31.3 Royalty Share and License Economics
+
 The player should negotiate or choose among royalty structures such as:
 
 - flat minimum guarantee
@@ -10862,6 +11749,7 @@ Visible fields should include:
 - approval cost / oversight burden
 
 #### 36.31.4 Soundtrack as a Separate Ancillary System
+
 The screenshots imply soundtrack or music-related licensing should be first-class rather than hidden in generic ancillary revenue.
 
 Studio Boss should separate **Soundtrack / Music Commercialization** from generic ancillary revenue.
@@ -10884,6 +11772,7 @@ Soundtrack outcomes can influence:
 - cross-promotion deals
 
 #### 36.31.5 Merchandising Readiness from Role and Story Design
+
 Merchandising should draw from more than genre.
 It should also reflect whether the project actually has:
 
@@ -10899,11 +11788,13 @@ It should also reflect whether the project actually has:
 This ties merchandising back to script, role, costume, and franchise design.
 
 ### 36.32 Expanded Role Specification and Performance Modality
+
 The new role screenshots suggest a more explicit role-spec sheet than the bible currently spells out.
 
 Studio Boss should deepen the role system so each role is not only a billing slot, but a **performance brief** that informs casting, budget, risk, and awards potential.
 
 #### 36.32.1 Role Spec Sheet Fields
+
 Every meaningful cast role should be able to store:
 
 - billing class
@@ -10927,6 +11818,7 @@ Every meaningful cast role should be able to store:
 This should still stay readable through defaults and auto-generated templates.
 
 #### 36.32.2 Performance Type
+
 Role performance type should drive who is considered a good fit.
 
 Suggested values:
@@ -10945,6 +11837,7 @@ Suggested values:
 This helps animation, creature features, fantasy, superhero, and hybrid productions behave differently from grounded dramas.
 
 #### 36.32.3 Performance Focus
+
 Each role should express what kind of acting challenge is central.
 
 Possible focus tags:
@@ -10967,6 +11860,7 @@ A role may have one primary focus and one secondary focus.
 This gives the casting agent and player a better reason why a talent fits or misses.
 
 #### 36.32.4 Character Traits and Casting Signals
+
 Role specs should also generate a simple readable trait bundle such as:
 
 - brave
@@ -10986,6 +11880,7 @@ These are not moral judgments. They are casting signals.
 They influence chemistry, audience fantasy, and actor fit.
 
 #### 36.32.5 Role Count Expansion from Script Drafts
+
 The screenshots show an explicit **additional roles** count.
 
 Studio Boss should formalize the idea that drafts can:
@@ -11011,6 +11906,7 @@ This should feed directly into:
 - awards category spread
 
 #### 36.32.6 Add / Delete Role During Development
+
 The player should be able to intentionally add, remove, or merge meaningful roles during script development.
 
 Examples:
@@ -11027,11 +11923,13 @@ A bloated role map may raise cost and scheduling friction.
 An over-trimmed role map may flatten the story.
 
 ### 36.33 Talent Attachment Locks and Change Control
+
 One screenshot strongly implies that hiring certain talent can **lock changes** to story, roles, production assumptions, or release type.
 
 Studio Boss should add a formal **Attachment Lock System**.
 
 #### 36.33.1 What Can Be Locked
+
 When attaching major talent, the contract or handshake may lock:
 
 - the current story direction
@@ -11045,6 +11943,7 @@ When attaching major talent, the contract or handshake may lock:
 - merchandising restrictions where talent is protective
 
 #### 36.33.2 Lock Strength
+
 Locks should come in tiers:
 
 - **Soft Preference**: changing it causes mild relationship damage
@@ -11052,6 +11951,7 @@ Locks should come in tiers:
 - **Contract Lock**: changing it may trigger walk-away, pay-or-play, or lawsuit risk
 
 #### 36.33.3 Who Tends to Demand Locks
+
 Typical lock-demanders:
 
 - prestige directors protecting script and tone
@@ -11061,22 +11961,26 @@ Typical lock-demanders:
 - vanity shingle talent protecting their banner identity
 
 #### 36.33.4 Player Benefit
+
 Locks add friction, but they also make attachments meaningful.
 
 A top actor agreeing to star in your film should not feel like a reversible icon swap.
 Once attached, that package should become more committed, more expensive to change, and more narratively alive.
 
 #### 36.33.5 Casting Agent Interaction with Locks
+
 When the player chooses **Open Casting Call** or **Use a Casting Agent**, the system should respect locks automatically.
 
 If the story, role, or release posture is locked, the agent should only search within those guardrails unless the player first decides to reopen negotiation.
 
 ### 36.34 Open Casting Calls, Fast-Cast Modes, and Agent Automation
+
 The screenshots suggest a clearer flow between manual casting, open calls, and agent-assisted shortlisting.
 
 Studio Boss should turn this into a full **Casting Workflow Mode Selector**.
 
 #### 36.34.1 Casting Modes
+
 For any open role, the player can choose:
 
 - Manual Targeting
@@ -11088,6 +11992,7 @@ For any open role, the player can choose:
 - Voice Ensemble Search
 
 #### 36.34.2 Open Casting Call
+
 An open call should:
 
 - surface more unknowns and rising hopefuls
@@ -11106,6 +12011,7 @@ Open calls are especially strong for:
 - fresh TV ensembles
 
 #### 36.34.3 Casting Director / Casting Agent Shortlist
+
 A casting professional should generate a shortlist based on configurable priorities:
 
 - cheapest viable
@@ -11119,6 +12025,7 @@ A casting professional should generate a shortlist based on configurable priorit
 - unexpected but inspired options
 
 #### 36.34.4 Emergency Replacement Search
+
 If a talent drops out close to production, the player should be able to trigger an emergency search mode that prioritizes:
 
 - immediate availability
@@ -11131,11 +12038,13 @@ This should usually yield worse or more expensive options than normal casting.
 That is the point.
 
 ### 36.35 Compatibility Forecasts and Production Friction Prediction
+
 A new screenshot shows a very specific **Potential Conflicts** panel comparing a director and cast members across traits like **On Budget**, **Perfectionist**, and **Script As Written**.
 
 Studio Boss should formalize this as a visible **Compatibility Forecast Screen** whenever the player is assembling a package.
 
 #### 36.35.1 Forecast Axes
+
 Key tension axes should include:
 
 - On Budget discipline
@@ -11153,6 +12062,7 @@ Key tension axes should include:
 - comfort with child performers or animals where relevant
 
 #### 36.35.2 Forecast Outcomes
+
 The screen should not guarantee disaster. It should forecast tendencies such as:
 
 - low risk
@@ -11168,6 +12078,7 @@ The screen should not guarantee disaster. It should forecast tendencies such as:
 This helps the player decide whether a difficult but brilliant package is worth the pain.
 
 #### 36.35.3 Script-As-Written as a Distinct Axis
+
 The screenshots make this axis important enough that it should become a first-class simulation variable.
 
 **Script-As-Written** measures how strictly a talent wants to follow the page.
@@ -11194,6 +12105,7 @@ This should be especially meaningful in:
 - action productions with constantly revised set-pieces
 
 #### 36.35.4 On Budget as Behavior, Not Just Math
+
 **On Budget** should be a personal discipline trait.
 
 High On Budget talent:
@@ -11212,11 +12124,13 @@ Low On Budget talent:
 This ties personality to financial gameplay in a readable way.
 
 ### 36.36 Monthly Quote Repricing, Award Winner Renegotiations, and Market Heat
+
 The end-month screenshots show talent quotes changing as a result of awards and performance.
 
 Studio Boss should add a more ceremonial **Monthly Market Repricing Layer**.
 
 #### 36.36.1 End-Month Quote Movers
+
 At month end, the game should identify notable movers:
 
 - award winners demanding more money
@@ -11229,6 +12143,7 @@ At month end, the game should identify notable movers:
 These should be surfaced in a **Quote Movers** digest with clear explanation.
 
 #### 36.36.2 Awards Winner Contract Reset Events
+
 When a talent wins a meaningful award, the market should often react before the player does.
 
 Possible automatic effects:
@@ -11243,6 +12158,7 @@ Possible automatic effects:
 Award prestige tier should continue to determine magnitude, but the monthly event feed should make this visible as town gossip and agent behavior.
 
 #### 36.36.3 Representation Follow-Through
+
 Agencies and managers should immediately use momentum.
 
 After a win or hot streak, their behavior may shift to:
@@ -11254,11 +12170,13 @@ After a win or hot streak, their behavior may shift to:
 - pushing passion projects that were previously ignored
 
 ### 36.37 Talent Rating Drift by Genre and Performance Outcome
+
 A screenshot shows role-by-role **Talent Rating Change** messages like “Comedy star rating increase” or decrease.
 
 Studio Boss should make performance outcome updates more genre-specific.
 
 #### 36.37.1 Skill Domains That Can Move
+
 Projects may move talent market perception in specific lanes such as:
 
 - action star power
@@ -11271,6 +12189,7 @@ Projects may move talent market perception in specific lanes such as:
 - international draw
 
 #### 36.37.2 Role-Specific Aftermath
+
 The same film can change different cast members in different ways.
 
 Examples:
@@ -11284,6 +12203,7 @@ Examples:
 This makes each project’s aftermath more nuanced than a flat fame increase.
 
 #### 36.37.3 Negative Repricing
+
 Ratings can also fall when:
 
 - the role miscasts the actor badly
@@ -11295,11 +12215,13 @@ Ratings can also fall when:
 This keeps the town churning.
 
 ### 36.38 Awards Ceremony Presentation and Broadcast Layer
+
 The awards screenshot suggests a more theatrical presentation layer than the bible currently spells out.
 
 Studio Boss should add a formal **Awards Ceremony Presentation System**.
 
 #### 36.38.1 Ceremony Presentation Goals
+
 Ceremonies should feel like:
 
 - payoff for long-term campaigning
@@ -11308,6 +12230,7 @@ Ceremonies should feel like:
 - a memory-generating spectacle
 
 #### 36.38.2 Ceremony Flow
+
 A major ceremony can present:
 
 - category splash screen
@@ -11321,6 +12244,7 @@ The key dramatic beat is the reveal moment.
 The player should feel the tension before the winner is announced.
 
 #### 36.38.3 Ceremony Outcomes Beyond Trophies
+
 Ceremony results should feed into:
 
 - quote spikes
@@ -11332,6 +12256,7 @@ Ceremony results should feed into:
 - rival jealousy and poaching attempts
 
 #### 36.38.4 Minor vs Major Ceremony Treatment
+
 Not every award needs a full animation or long reveal.
 
 Treatment bands:
@@ -11343,11 +12268,13 @@ Treatment bands:
 This keeps the system dramatic without becoming tedious.
 
 ### 36.39 Audience Strategy and Advertising Focus Planner
+
 A screenshot shows a much more explicit audience/marketing planning screen than the current bible fully details.
 
 Studio Boss should deepen the **Audience Strategy Planner** and tie it directly into release and advertising.
 
 #### 36.39.1 Audience Definition Layer
+
 For every project, the player should specify or approve:
 
 - primary audience
@@ -11363,6 +12290,7 @@ These should be forecast suggestions, not blind guesses.
 The script, genre, talent, rating, and release posture should all contribute suggested target audiences.
 
 #### 36.39.2 Marketing Focus Modes
+
 The player should choose a primary and secondary messaging strategy such as:
 
 - broad four-quadrant marketing
@@ -11382,6 +12310,7 @@ A mismatch between audience and message should waste money.
 A sharp match should improve campaign efficiency.
 
 #### 36.39.3 Domestic vs Foreign Campaign Split
+
 The advertising screen should allow a readable split between:
 
 - domestic campaign budget
@@ -11392,6 +12321,7 @@ The advertising screen should allow a readable split between:
 Some projects should justify much stronger foreign spend than domestic, and vice versa.
 
 #### 36.39.4 Campaign Efficiency Feedback
+
 The player should be told why a campaign is effective or wasteful.
 
 Examples:
@@ -11405,6 +12335,7 @@ Examples:
 This turns marketing from a blunt slider into a meaningful strategy layer.
 
 ### 36.40 Canonical Rule for This Expansion Round
+
 The second benchmark-inspired pass should follow this rule:
 
 > **The player must be able to see not only what a project is, but how the town intends to sell it, fight over it, exploit it, and suffer through making it.**

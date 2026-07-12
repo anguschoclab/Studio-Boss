@@ -1,4 +1,4 @@
-import { Project, MarketingCampaign } from '../../types';
+import { Project, MarketingCampaign } from "../../types";
 
 export function evaluateMarketingEfficiency(
   project: Project,
@@ -12,16 +12,16 @@ export function evaluateMarketingEfficiency(
 
   // 1. Angle Match Logic
   const genre = project.genre.toUpperCase();
-  
+
   const matches: Record<string, string[]> = {
-    'ACTION': ['SELL_THE_SPECTACLE', 'SELL_THE_STARS'],
-    'SCI-FI': ['SELL_THE_SPECTACLE', 'SELL_THE_STORY'],
-    'DRAMA': ['SELL_THE_STORY', 'AWARDS_PUSH'],
-    'ANIMATION': ['FAMILY_ADVENTURE', 'SELL_THE_SPECTACLE'],
-    'FAMILY': ['FAMILY_ADVENTURE'],
-    'COMEDY': ['SELL_THE_STARS', 'SELL_THE_STORY'],
-    'HORROR': ['SELL_THE_SPECTACLE', 'SELL_THE_STORY'],
-    'ROMANCE': ['SELL_THE_STARS', 'SELL_THE_STORY'],
+    ACTION: ["SELL_THE_SPECTACLE", "SELL_THE_STARS"],
+    "SCI-FI": ["SELL_THE_SPECTACLE", "SELL_THE_STORY"],
+    DRAMA: ["SELL_THE_STORY", "AWARDS_PUSH"],
+    ANIMATION: ["FAMILY_ADVENTURE", "SELL_THE_SPECTACLE"],
+    FAMILY: ["FAMILY_ADVENTURE"],
+    COMEDY: ["SELL_THE_STARS", "SELL_THE_STORY"],
+    HORROR: ["SELL_THE_SPECTACLE", "SELL_THE_STORY"],
+    ROMANCE: ["SELL_THE_STARS", "SELL_THE_STORY"],
   };
 
   if (matches[genre]?.includes(primaryAngle)) {
@@ -48,8 +48,8 @@ export function evaluateMarketingEfficiency(
     feedbackText += " Hype has begun to sour as the film lingers in marketing for too long.";
   }
 
-  return { 
-    multiplier: Math.max(0.1, multiplier), 
-    feedbackText 
+  return {
+    multiplier: Math.max(0.1, multiplier),
+    feedbackText,
   };
 }

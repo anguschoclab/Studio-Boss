@@ -1,6 +1,6 @@
-import { Project, IPAsset } from '../../types';
-import { randRange, clamp } from '../../utils';
-import { determineSyndicationTier, getSyndicationImpact } from './syndicationEngine';
+import { Project, IPAsset } from "../../types";
+import { randRange, clamp } from "../../utils";
+import { determineSyndicationTier, getSyndicationImpact } from "./syndicationEngine";
 
 /**
  * Logic for initial IP value and weekly cultural decay.
@@ -9,7 +9,7 @@ import { determineSyndicationTier, getSyndicationImpact } from './syndicationEng
 export function calculateInitialIPValue(project: Project): IPAsset {
   // Base value: roughly 20% of total revenue as catalog potential
   let baseValue = project.revenue * 0.2;
-  
+
   // Prestige/Awards bonus: 50% spike
   if (project.awardsProfile && project.awardsProfile.prestigeScore > 80) {
     baseValue *= 1.5;
@@ -18,16 +18,16 @@ export function calculateInitialIPValue(project: Project): IPAsset {
   // Genre Multiplier: Franchise friendly genres get higher multipliers
   let merchandisingMultiplier = 1.0;
   const genre = project.genre.toUpperCase();
-  if (genre === 'SCI-FI' || genre === 'ANIMATION' || genre === 'SUPERHERO') {
+  if (genre === "SCI-FI" || genre === "ANIMATION" || genre === "SUPERHERO") {
     merchandisingMultiplier = 2.5;
-  } else if (genre === 'HORROR' || genre === 'FANTASY') {
+  } else if (genre === "HORROR" || genre === "FANTASY") {
     merchandisingMultiplier = 1.8;
   }
 
   // Syndication Tiering: Delegate to the logic engine
   const episodes = (project as any).tvDetails?.episodesAired || 0;
   const syndicationTier = determineSyndicationTier(episodes, project.genre);
-  const syndicationStatus = (syndicationTier !== 'NONE') ? 'SYNDICATED' : 'NONE';
+  const syndicationStatus = syndicationTier !== "NONE" ? "SYNDICATED" : "NONE";
 
   // Rights Expiry: 10 years (520 weeks) by default
   const rightsExpirationWeek = (project.releaseWeek || 0) + 520;
@@ -35,7 +35,7 @@ export function calculateInitialIPValue(project: Project): IPAsset {
   return {
     id: `ip-${project.id}`,
     originalProjectId: project.id,
-    franchiseId: project.franchiseId, 
+    franchiseId: project.franchiseId,
     title: project.title,
     baseValue: Math.floor(baseValue),
     decayRate: 1.0, // Cultural peak at launch
@@ -44,7 +44,7 @@ export function calculateInitialIPValue(project: Project): IPAsset {
     syndicationTier,
     totalEpisodes: episodes,
     rightsExpirationWeek,
-    rightsOwner: 'STUDIO'
+    rightsOwner: "STUDIO",
   };
 }
 
@@ -56,13 +56,13 @@ export function applyIPDecay(asset: IPAsset): IPAsset {
   const baseDecay = 0.01; // 1% weekly drop by default
   const impact = getSyndicationImpact(asset.syndicationTier);
 
-  // Syndication halts or slows decay: 
+  // Syndication halts or slows decay:
   // Gold (1.0) = 0% decay, Silver (0.9) = 0.1% decay, Bronze (0.5) = 0.5% decay
   const effectiveDecay = baseDecay * (1 - impact.decayShield);
 
   return {
     ...asset,
-    decayRate: clamp(asset.decayRate - effectiveDecay, 0.05, 1.0)
+    decayRate: clamp(asset.decayRate - effectiveDecay, 0.05, 1.0),
   };
 }
 
@@ -75,8 +75,10 @@ export function detectCultClassic(project: Project, currentWeek: number): boolea
   const age = currentWeek - (project.releaseWeek || 0);
   if (age < 52) return false;
 
-  const isNicheGenre = ['SCI-FI', 'HORROR', 'FANTASY', 'CULT'].includes(project.genre.toUpperCase());
-  const boxOfficeSuccess = project.revenue > (project.budget * 1.5);
+  const isNicheGenre = ["SCI-FI", "HORROR", "FANTASY", "CULT"].includes(
+    project.genre.toUpperCase()
+  );
+  const boxOfficeSuccess = project.revenue > project.budget * 1.5;
   const awardWinner = project.awardsProfile && project.awardsProfile.prestigeScore > 60;
 
   // Logic: Niche genre + Moderate success + Aging = Chance of Cult Classic

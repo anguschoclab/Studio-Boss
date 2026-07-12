@@ -14,7 +14,7 @@ describe("initializeGame", () => {
   it("assigns player streamer ownerId to the actual studio ID", () => {
     const state = initializeGame("My Studio", "major");
     const playerStreamer = state.market.buyers.find(
-      b => b.archetype === 'streamer' && b.ownerId === state.studio.id
+      (b) => b.archetype === "streamer" && b.ownerId === state.studio.id
     );
     expect(playerStreamer).toBeDefined();
     expect(playerStreamer!.ownerId).toBe(state.studio.id);
@@ -24,7 +24,7 @@ describe("initializeGame", () => {
   it("does not assign a streamer for indie archetype", () => {
     const state = initializeGame("Indie Studio", "indie");
     const playerStreamer = state.market.buyers.find(
-      b => b.archetype === 'streamer' && b.ownerId === state.studio.id
+      (b) => b.archetype === "streamer" && b.ownerId === state.studio.id
     );
     expect(playerStreamer).toBeUndefined();
   });

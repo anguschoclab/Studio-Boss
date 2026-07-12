@@ -1,5 +1,5 @@
-import { useGameStore } from '@/store/gameStore';
-import { FinancialSnapshot } from '@/engine/types/state.types';
+import { useGameStore } from "@/store/gameStore";
+import { FinancialSnapshot } from "@/engine/types/state.types";
 
 /**
  * Hook for accessing financial history from Zustand store.
@@ -7,7 +7,7 @@ import { FinancialSnapshot } from '@/engine/types/state.types';
  */
 
 export const useFinanceHistory = (): FinancialSnapshot[] => {
-  const gameState = useGameStore(s => s.gameState);
+  const gameState = useGameStore((s) => s.gameState);
   return gameState?.finance.weeklyHistory || [];
 };
 

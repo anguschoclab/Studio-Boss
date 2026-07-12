@@ -1,8 +1,8 @@
 // Clique/Group System Types
 // Defines talent cliques (Rat Pack style groups) that form and gain fame together
 
-export type CliqueStatus = 'active' | 'dormant' | 'disbanded';
-export type CliqueReputation = 'cool' | 'elitist' | 'scandalous' | 'prestigious' | 'toxic';
+export type CliqueStatus = "active" | "dormant" | "disbanded";
+export type CliqueReputation = "cool" | "elitist" | "scandalous" | "prestigious" | "toxic";
 
 export interface Clique {
   id: string;
@@ -41,19 +41,7 @@ export const CLIQUE_NAME_PATTERNS = {
     "The {decade}s Rat Pack",
     "The Millennium Crew",
   ],
-  locationBased: [
-    "The {location} Mafia",
-    "{location} Royalty",
-    "The {location} Circle",
-  ],
-  personalityBased: [
-    "The Bad Boys",
-    "The It Girls",
-    "The Drama Club",
-    "The Golden Circle",
-  ],
-  movieBased: [
-    "The {movieTitle} Gang",
-    "The {movieTitle} Collective",
-  ],
+  locationBased: ["The {location} Mafia", "{location} Royalty", "The {location} Circle"],
+  personalityBased: ["The Bad Boys", "The It Girls", "The Drama Club", "The Golden Circle"],
+  movieBased: ["The {movieTitle} Gang", "The {movieTitle} Collective"],
 };

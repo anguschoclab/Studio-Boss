@@ -1,14 +1,30 @@
-import React from 'react';
-import { useGameStore } from '@/store/gameStore';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Tv, Minus, BarChart3, Radio, Trophy, ArrowUp, ArrowDown, Activity } from 'lucide-react';
-import { SeriesProject, Project } from '@/engine/types';
-import { useShallow } from 'zustand/react/shallow';
-import { cn } from '@/lib/utils';
-import { NielsenSnapshot, NielsenProfile, NielsenDemographic, TIME_SLOTS } from '@/engine/systems/television/nielsenSystem';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, CartesianGrid } from 'recharts';
+import React from "react";
+import { useGameStore } from "@/store/gameStore";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tv, Minus, BarChart3, Radio, Trophy, ArrowUp, ArrowDown, Activity } from "lucide-react";
+import { SeriesProject, Project } from "@/engine/types";
+import { useShallow } from "zustand/react/shallow";
+import { cn } from "@/lib/utils";
+import {
+  NielsenSnapshot,
+  NielsenProfile,
+  NielsenDemographic,
+  TIME_SLOTS,
+} from "@/engine/systems/television/nielsenSystem";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  Cell,
+  CartesianGrid,
+} from "recharts";
 
 // Color map for demographics
 const DEMO_COLORS: Record<NielsenDemographic, string> = {
@@ -23,9 +39,11 @@ const DEMO_COLORS: Record<NielsenDemographic, string> = {
 };
 
 export const NielsenDashboard = () => {
-  const projects = useGameStore(useShallow(s => Object.values(s.gameState?.studio.internal.projects || {})));
-  const week = useGameStore(s => s.gameState?.week || 0);
-  
+  const projects = useGameStore(
+    useShallow((s) => Object.values(s.gameState?.studio.internal.projects || {}))
+  );
+  const week = useGameStore((s) => s.gameState?.week || 0);
+
   const tvShows = React.useMemo(
     () =>
       projects.filter(
@@ -43,8 +61,9 @@ export const NielsenDashboard = () => {
   // Weekly rankings by key demo
   const weeklyRankings = React.useMemo(() => {
     return airingShows
-      .map(show => {
-        const profile = (show as unknown as Record<string, unknown>).nielsenProfile as NielsenProfile | undefined;
+      .map((show) => {
+        const profile = (show as unknown as Record<string, unknown>).nielsenProfile as
+          NielsenProfile | undefined;
         const latest = profile?.snapshots?.[profile.snapshots.length - 1];
         return { show, profile, latest };
       })
@@ -316,7 +335,8 @@ const WeeklyRankingsTable = ({ rankings }: { rankings: RankingEntry[] }) => {
 };
 
 const ShowDetailCard = ({ show }: { show: SeriesProject }) => {
-  const profile = (show as unknown as Record<string, unknown>).nielsenProfile as NielsenProfile | undefined;
+  const profile = (show as unknown as Record<string, unknown>).nielsenProfile as
+    NielsenProfile | undefined;
   if (!profile || profile.snapshots.length === 0) return null;
 
   const chartData = profile.snapshots.map((snap) => ({
@@ -457,7 +477,8 @@ const ShowDetailCard = ({ show }: { show: SeriesProject }) => {
 };
 
 const DemoBreakdownCard = ({ show }: { show: SeriesProject }) => {
-  const profile = (show as unknown as Record<string, unknown>).nielsenProfile as NielsenProfile | undefined;
+  const profile = (show as unknown as Record<string, unknown>).nielsenProfile as
+    NielsenProfile | undefined;
   if (!profile || profile.snapshots.length === 0) return null;
 
   const latest = profile.snapshots[profile.snapshots.length - 1];

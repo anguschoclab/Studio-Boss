@@ -3,7 +3,7 @@ name: Autonomous Narrative Refill
 on:
   schedule:
     # Every day at midnight UTC
-    - cron: '0 0 * * *'
+    - cron: "0 0 * * *"
   workflow_dispatch:
     # Allows manual trigger from Actions tab
 

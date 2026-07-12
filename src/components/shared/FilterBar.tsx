@@ -1,9 +1,9 @@
-import React from 'react';
-import { Search, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import React from "react";
+import { Search, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-import { Button } from '@/components/ui/button';
-import { Stack, HorizontalStack } from '@/components/layout/Stack';
+import { Button } from "@/components/ui/button";
+import { Stack, HorizontalStack } from "@/components/layout/Stack";
 
 interface FilterOption {
   value: string;
@@ -47,7 +47,7 @@ interface FilterBarProps {
 
 /**
  * FilterBar - Standardized filter/search/sort controls
- * 
+ *
  * Provides consistent filtering interface with:
  * - Search input with clear button
  * - Filter dropdowns
@@ -58,7 +58,7 @@ interface FilterBarProps {
 export const FilterBar: React.FC<FilterBarProps> = ({
   searchValue,
   onSearchChange,
-  searchPlaceholder = 'SEARCH DATABASE...',
+  searchPlaceholder = "SEARCH DATABASE...",
   filters,
   sortOptions,
   sortValue,
@@ -74,12 +74,9 @@ export const FilterBar: React.FC<FilterBarProps> = ({
 
   return (
     <Stack
-      direction={compact ? 'vertical' : 'horizontal'}
+      direction={compact ? "vertical" : "horizontal"}
       gap="sm"
-      className={cn(
-        'p-2 bg-white/[0.02] border border-white/5 rounded-none',
-        className
-      )}
+      className={cn("p-2 bg-white/[0.02] border border-white/5 rounded-none", className)}
     >
       {/* Search */}
       {onSearchChange && (
@@ -87,25 +84,25 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/20 group-focus-within:text-primary transition-colors pointer-events-none" />
           <input
             type="text"
-            value={searchValue || ''}
+            value={searchValue || ""}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={searchPlaceholder}
             className={cn(
-              'w-full pl-12 pr-12 py-3',
-              'bg-white/5 border border-white/10 rounded-none',
-              'text-[10px] font-black uppercase tracking-[0.3em] italic placeholder:text-muted-foreground/10',
-              'focus:outline-none focus:border-primary/50 focus:bg-white/10',
-              'transition-all duration-700'
+              "w-full pl-12 pr-12 py-3",
+              "bg-white/5 border border-white/10 rounded-none",
+              "text-[10px] font-black uppercase tracking-[0.3em] italic placeholder:text-muted-foreground/10",
+              "focus:outline-none focus:border-primary/50 focus:bg-white/10",
+              "transition-all duration-700"
             )}
           />
           {searchValue && (
             <button
-              onClick={() => onSearchChange('')}
+              onClick={() => onSearchChange("")}
               className={cn(
-                'absolute right-3 top-1/2 -translate-y-1/2',
-                'p-2 rounded-none',
-                'hover:bg-white/10 text-muted-foreground/40 hover:text-foreground',
-                'transition-all duration-300'
+                "absolute right-3 top-1/2 -translate-y-1/2",
+                "p-2 rounded-none",
+                "hover:bg-white/10 text-muted-foreground/40 hover:text-foreground",
+                "transition-all duration-300"
               )}
             >
               <X className="w-4 h-4" />
@@ -123,14 +120,16 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               value={filter.value}
               onChange={(e) => filter.onChange(e.target.value)}
               className={cn(
-                'px-4 py-3',
-                'bg-white/5 border border-white/10 rounded-none',
-                'text-[10px] font-black uppercase tracking-[0.2em] italic',
-                'focus:outline-none focus:border-primary/50 focus:bg-white/10',
-                'transition-all duration-700 appearance-none min-w-[120px]'
+                "px-4 py-3",
+                "bg-white/5 border border-white/10 rounded-none",
+                "text-[10px] font-black uppercase tracking-[0.2em] italic",
+                "focus:outline-none focus:border-primary/50 focus:bg-white/10",
+                "transition-all duration-700 appearance-none min-w-[120px]"
               )}
             >
-              <option value="" className="bg-black/60">{filter.label.toUpperCase()}</option>
+              <option value="" className="bg-black/60">
+                {filter.label.toUpperCase()}
+              </option>
               {filter.options.map((option) => (
                 <option key={option.value} value={option.value} className="bg-black/60">
                   {option.label.toUpperCase()}
@@ -147,14 +146,16 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           value={sortValue}
           onChange={(e) => onSortChange(e.target.value)}
           className={cn(
-            'px-4 py-3',
-            'bg-white/5 border border-white/10 rounded-none',
-            'text-[10px] font-black uppercase tracking-[0.2em] italic',
-            'focus:outline-none focus:border-primary/50 focus:bg-white/10',
-            'transition-all duration-700 appearance-none min-w-[140px]'
+            "px-4 py-3",
+            "bg-white/5 border border-white/10 rounded-none",
+            "text-[10px] font-black uppercase tracking-[0.2em] italic",
+            "focus:outline-none focus:border-primary/50 focus:bg-white/10",
+            "transition-all duration-700 appearance-none min-w-[140px]"
           )}
         >
-          <option value="" className="bg-black/60">SORT BY...</option>
+          <option value="" className="bg-black/60">
+            SORT BY...
+          </option>
           {sortOptions.map((option) => (
             <option key={option.value} value={option.value} className="bg-black/60">
               {option.label.toUpperCase()}
@@ -170,8 +171,8 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           size="sm"
           onClick={onClearFilters}
           className={cn(
-            'text-muted-foreground/20 hover:text-red-400 hover:bg-red-400/5 transition-all duration-700 rounded-none px-4',
-            'text-[9px] font-black uppercase tracking-[0.2em] italic'
+            "text-muted-foreground/20 hover:text-red-400 hover:bg-red-400/5 transition-all duration-700 rounded-none px-4",
+            "text-[9px] font-black uppercase tracking-[0.2em] italic"
           )}
         >
           <X className="w-3 h-3 mr-2" />
@@ -185,11 +186,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
       )}
 
       {/* Actions */}
-      {actions && (
-        <div className="ml-auto flex items-center gap-2">
-          {actions}
-        </div>
-      )}
+      {actions && <div className="ml-auto flex items-center gap-2">{actions}</div>}
     </Stack>
   );
 };

@@ -1,4 +1,4 @@
-import { Project } from '../../types';
+import { Project } from "../../types";
 
 /**
  * Pure function to advance production progress and calculate costs.
@@ -6,16 +6,16 @@ import { Project } from '../../types';
  */
 export function advanceProjectProgress(project: Project): Project {
   // Use momentum to modify base progress/burn
-  const momentumFactor = 0.5 + (project.momentum / 200); // 0.55 to 1.0 multiplier
-  
+  const momentumFactor = 0.5 + project.momentum / 200; // 0.55 to 1.0 multiplier
+
   const p = { ...project };
 
-  if (p.state !== 'production') return p;
+  if (p.state !== "production") return p;
 
   // Halt logic: Still burns budget (overheads/delay costs) but no progress
   if (p.activeCrisis?.haltedProduction) {
     p.momentum = Math.max(0, p.momentum - 5);
-    const costStep = (project.budget * 0.05) / momentumFactor; 
+    const costStep = (project.budget * 0.05) / momentumFactor;
     p.accumulatedCost += costStep;
     return p;
   }
@@ -26,9 +26,9 @@ export function advanceProjectProgress(project: Project): Project {
   p.progress = Math.min(100, p.progress + actualProgress);
 
   // Budget burn logic (Accelerated by low momentum)
-  const costStep = (project.budget * 0.10) / momentumFactor; 
+  const costStep = (project.budget * 0.1) / momentumFactor;
   p.accumulatedCost += costStep;
-  
+
   p.weeksInPhase += 1;
 
   return p;

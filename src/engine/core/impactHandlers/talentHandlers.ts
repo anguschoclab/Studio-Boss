@@ -1,4 +1,4 @@
-import { GameState, StateImpact } from '@/engine/types';
+import { GameState, StateImpact } from "@/engine/types";
 
 /**
  * Talent-related impact handlers
@@ -17,8 +17,8 @@ export function handleTalentUpdated(state: GameState, impact: StateImpact): Game
     ...state,
     entities: {
       ...state.entities,
-      talents
-    }
+      talents,
+    },
   };
 }
 
@@ -30,8 +30,8 @@ export function handleTalentAdded(state: GameState, impact: StateImpact): GameSt
     ...state,
     entities: {
       ...state.entities,
-      talents: { ...state.entities.talents, [talent.id]: talent }
-    }
+      talents: { ...state.entities.talents, [talent.id]: talent },
+    },
   };
 }
 
@@ -45,8 +45,8 @@ export function handleTalentRemoved(state: GameState, impact: StateImpact): Game
     ...state,
     entities: {
       ...state.entities,
-      talents
-    }
+      talents,
+    },
   };
 }
 

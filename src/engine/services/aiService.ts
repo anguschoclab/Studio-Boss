@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 /**
  * AI Service for Studio Boss Narrative Engine
@@ -6,7 +6,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
  */
 
 // The PR Spin Doctor: Fetch API Key from environment to prevent leaks in repo history.
-const API_KEY = process.env.GEMINI_API_KEY || '';
+const API_KEY = process.env.GEMINI_API_KEY || "";
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 export const AIService = {
@@ -18,23 +18,23 @@ export const AIService = {
     subDomain: string,
     tier: string,
     count: number = 10,
-    options: { 
-      styleGuide?: string, 
-      history?: string[], 
-      tone?: string 
+    options: {
+      styleGuide?: string;
+      history?: string[];
+      tone?: string;
     } = {}
   ): Promise<string[]> {
-    const { 
-      styleGuide = "Snarky, Hollywood-cynical, fast-paced.", 
-      history = [], 
-      tone = "Standard" 
+    const {
+      styleGuide = "Snarky, Hollywood-cynical, fast-paced.",
+      history = [],
+      tone = "Standard",
     } = options;
 
-    const model = genAI.getGenerativeModel({ 
-      model: 'gemini-2.5-flash',
+    const model = genAI.getGenerativeModel({
+      model: "gemini-2.5-flash",
       generationConfig: {
         responseMimeType: "application/json",
-      }
+      },
     });
 
     const prompt = `
@@ -47,7 +47,7 @@ export const AIService = {
       
       Style Guide: ${styleGuide}
       
-      ${history.length > 0 ? `HISTORY CONTEXT (Use these to create continuing arcs): \n${history.join('\n')}` : ''}
+      ${history.length > 0 ? `HISTORY CONTEXT (Use these to create continuing arcs): \n${history.join("\n")}` : ""}
       
       Requirements:
       1. Generate EXACTLY ${count} unique templates.
@@ -66,14 +66,14 @@ export const AIService = {
       const response = result.response;
       const text = response.text();
       const parsed = JSON.parse(text);
-      
+
       if (parsed && Array.isArray(parsed.templates)) {
         return parsed.templates;
       }
       return [];
     } catch (error) {
-      console.error('Gemini Narrative Generation Error:', error);
+      console.error("Gemini Narrative Generation Error:", error);
       return [];
     }
-  }
+  },
 };

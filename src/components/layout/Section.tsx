@@ -1,7 +1,7 @@
-import React from 'react';
-import { LucideIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { tokens } from '@/lib/tokens';
+import React from "react";
+import { LucideIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { tokens } from "@/lib/tokens";
 
 interface SectionProps {
   /** Section title */
@@ -17,7 +17,7 @@ interface SectionProps {
   /** Include a divider below the header */
   divider?: boolean;
   /** Visual variant */
-  variant?: 'default' | 'card' | 'flush';
+  variant?: "default" | "card" | "flush";
   /** Custom className for container */
   className?: string;
   /** Custom className for content area */
@@ -26,25 +26,26 @@ interface SectionProps {
 
 const variantStyles = {
   default: {
-    container: '',
-    header: 'pb-6 mb-6',
-    content: '',
+    container: "",
+    header: "pb-6 mb-6",
+    content: "",
   },
   card: {
-    container: 'bg-white/[0.01] border border-white/5 rounded-none p-10 backdrop-blur-3xl shadow-2xl',
-    header: 'pb-6 mb-6 border-b border-white/5',
-    content: '',
+    container:
+      "bg-white/[0.01] border border-white/5 rounded-none p-10 backdrop-blur-3xl shadow-2xl",
+    header: "pb-6 mb-6 border-b border-white/5",
+    content: "",
   },
   flush: {
-    container: '',
-    header: 'pb-4 mb-4',
-    content: '',
+    container: "",
+    header: "pb-4 mb-4",
+    content: "",
   },
 };
 
 /**
  * Section - Standardized page section with header
- * 
+ *
  * Provides consistent section headers with optional icon, subtitle,
  * and actions. Use this for all major content sections.
  */
@@ -55,7 +56,7 @@ export const Section: React.FC<SectionProps> = ({
   actions,
   children,
   divider = true,
-  variant = 'default',
+  variant = "default",
   className,
   contentClassName,
 }) => {
@@ -66,9 +67,9 @@ export const Section: React.FC<SectionProps> = ({
       {/* Header */}
       <div
         className={cn(
-          'flex items-start justify-between gap-6',
+          "flex items-start justify-between gap-6",
           styles.header,
-          divider && 'border-b border-white/5'
+          divider && "border-b border-white/5"
         )}
       >
         <div className="flex items-center gap-6">
@@ -78,25 +79,31 @@ export const Section: React.FC<SectionProps> = ({
             </div>
           )}
           <div>
-            <h2 className={cn(tokens.text.heading, "text-2xl font-black uppercase italic tracking-tight leading-none mb-2")}>{title.toUpperCase()}</h2>
+            <h2
+              className={cn(
+                tokens.text.heading,
+                "text-2xl font-black uppercase italic tracking-tight leading-none mb-2"
+              )}
+            >
+              {title.toUpperCase()}
+            </h2>
             {subtitle && (
-              <p className={cn(tokens.text.caption, 'text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic leading-none')}>
+              <p
+                className={cn(
+                  tokens.text.caption,
+                  "text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic leading-none"
+                )}
+              >
                 {subtitle.toUpperCase()}
               </p>
             )}
           </div>
         </div>
-        {actions && (
-          <div className="flex items-center gap-4 shrink-0">
-            {actions}
-          </div>
-        )}
+        {actions && <div className="flex items-center gap-4 shrink-0">{actions}</div>}
       </div>
 
       {/* Content */}
-      <div className={cn(styles.content, contentClassName, 'pt-4')}>
-        {children}
-      </div>
+      <div className={cn(styles.content, contentClassName, "pt-4")}>{children}</div>
     </section>
   );
 };
@@ -107,19 +114,15 @@ export const Section: React.FC<SectionProps> = ({
 export const SectionGroup: React.FC<{
   children: React.ReactNode;
   className?: string;
-  spacing?: 'sm' | 'md' | 'lg';
-}> = ({ children, className, spacing = 'lg' }) => {
+  spacing?: "sm" | "md" | "lg";
+}> = ({ children, className, spacing = "lg" }) => {
   const spacingClass = {
-    sm: 'space-y-8',
-    md: 'space-y-12',
-    lg: 'space-y-20',
+    sm: "space-y-8",
+    md: "space-y-12",
+    lg: "space-y-20",
   };
 
-  return (
-    <div className={cn(spacingClass[spacing], className)}>
-      {children}
-    </div>
-  );
+  return <div className={cn(spacingClass[spacing], className)}>{children}</div>;
 };
 
 /**
@@ -131,16 +134,19 @@ export const SubSection: React.FC<{
   className?: string;
   action?: React.ReactNode;
 }> = ({ title, children, className, action }) => (
-  <div className={cn('space-y-6', className)}>
+  <div className={cn("space-y-6", className)}>
     <div className="flex items-center justify-between border-l-2 border-primary/40 pl-4 py-1">
-      <h3 className={cn(tokens.text.label, 'text-sm font-black uppercase italic tracking-widest text-foreground/80 leading-none')}>
+      <h3
+        className={cn(
+          tokens.text.label,
+          "text-sm font-black uppercase italic tracking-widest text-foreground/80 leading-none"
+        )}
+      >
         {title.toUpperCase()}
       </h3>
       {action}
     </div>
-    <div className="pl-4">
-      {children}
-    </div>
+    <div className="pl-4">{children}</div>
   </div>
 );
 

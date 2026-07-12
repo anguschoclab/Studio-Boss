@@ -1,5 +1,5 @@
-import React from 'react';
-import { Talent, TalentCommitment } from '@/engine/types';
+import React from "react";
+import { Talent, TalentCommitment } from "@/engine/types";
 
 interface TalentGanttChartProps {
   talent: Talent;
@@ -15,13 +15,15 @@ export const TalentGanttChart: React.FC<TalentGanttChartProps> = ({ talent, curr
   const commitments = talent.commitments || [];
 
   const getCommitmentAtWeek = (week: number): TalentCommitment | undefined => {
-    return commitments.find(c => week >= c.startWeek && week <= c.endWeek);
+    return commitments.find((c) => week >= c.startWeek && week <= c.endWeek);
   };
 
   return (
     <div className="talent-gantt-container p-4 bg-black/40 rounded-none border border-slate-700">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">Availability Schedule (Next 52 Weeks)</h3>
+        <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">
+          Availability Schedule (Next 52 Weeks)
+        </h3>
         {talent.onMedicalLeave && (
           <span className="px-2 py-1 bg-red-500/20 text-red-400 text-xs font-bold rounded animate-pulse">
             ON MEDICAL LEAVE (Weeks remaining: {(talent.medicalLeaveEndsWeek || 0) - currentWeek})
@@ -34,24 +36,24 @@ export const TalentGanttChart: React.FC<TalentGanttChartProps> = ({ talent, curr
           {weeks.map((week) => {
             const commitment = getCommitmentAtWeek(week);
             const isOnLeave = talent.onMedicalLeave && week < (talent.medicalLeaveEndsWeek || 0);
-            
-            let bgColor = 'bg-slate-700/30';
+
+            let bgColor = "bg-slate-700/30";
             let icon = null;
             let tooltip = `Week ${week}: Available`;
 
             if (isOnLeave) {
-              bgColor = 'bg-red-500/40';
+              bgColor = "bg-red-500/40";
               tooltip = `Week ${week}: Medical Leave`;
             } else if (commitment) {
               tooltip = `Week ${week}: ${commitment.projectTitle} (${commitment.role})`;
-              if (commitment.format === 'animation') {
-                bgColor = 'bg-blue-500/60 transition-colors hover:bg-blue-400/80';
+              if (commitment.format === "animation") {
+                bgColor = "bg-blue-500/60 transition-colors hover:bg-blue-400/80";
                 icon = <span className="text-[10px] scale-75 opacity-70">🎨</span>;
-              } else if (commitment.format === 'series') {
-                bgColor = 'bg-purple-500/60 transition-colors hover:bg-purple-400/80';
+              } else if (commitment.format === "series") {
+                bgColor = "bg-purple-500/60 transition-colors hover:bg-purple-400/80";
                 icon = <span className="text-[10px] scale-75 opacity-70">📺</span>;
               } else {
-                bgColor = 'bg-amber-500/60 transition-colors hover:bg-amber-400/80';
+                bgColor = "bg-amber-500/60 transition-colors hover:bg-amber-400/80";
                 icon = <span className="text-[10px] scale-75 opacity-70">🎬</span>;
               }
             }

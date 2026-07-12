@@ -1,7 +1,7 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { ChevronDown, LucideIcon } from 'lucide-react';
-import { tokens } from '@/lib/tokens';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { ChevronDown, LucideIcon } from "lucide-react";
+import { tokens } from "@/lib/tokens";
 
 interface FormSectionProps {
   title: string;
@@ -27,16 +27,19 @@ export const FormSection: React.FC<FormSectionProps> = ({
   const [isOpen, setIsOpen] = React.useState(defaultOpen);
 
   return (
-    <div className={cn('space-y-4', className)}>
+    <div className={cn("space-y-4", className)}>
       <div
         className={cn(
-          'flex items-center justify-between',
-          collapsible && 'cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md'
+          "flex items-center justify-between",
+          collapsible &&
+            "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md"
         )}
-        role={collapsible ? "button" : undefined} aria-expanded={collapsible ? isOpen : undefined} aria-label={collapsible ? `Toggle ${title}` : undefined}
+        role={collapsible ? "button" : undefined}
+        aria-expanded={collapsible ? isOpen : undefined}
+        aria-label={collapsible ? `Toggle ${title}` : undefined}
         tabIndex={collapsible ? 0 : undefined}
         onKeyDown={(e) => {
-          if (collapsible && (e.key === 'Enter' || e.key === ' ')) {
+          if (collapsible && (e.key === "Enter" || e.key === " ")) {
             e.preventDefault();
             setIsOpen(!isOpen);
           }
@@ -45,17 +48,13 @@ export const FormSection: React.FC<FormSectionProps> = ({
       >
         <div className="flex items-center gap-3">
           {Icon && (
-            <div className={cn('p-2 rounded-none bg-primary/10', tokens.border.default)}>
+            <div className={cn("p-2 rounded-none bg-primary/10", tokens.border.default)}>
               <Icon className="h-4 w-4 text-primary" />
             </div>
           )}
           <div>
-            <h3 className={cn('font-bold text-base', tokens.text.heading)}>
-              {title}
-            </h3>
-            {description && (
-              <p className={cn('mt-0.5', tokens.text.caption)}>{description}</p>
-            )}
+            <h3 className={cn("font-bold text-base", tokens.text.heading)}>{title}</h3>
+            {description && <p className={cn("mt-0.5", tokens.text.caption)}>{description}</p>}
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -63,17 +62,15 @@ export const FormSection: React.FC<FormSectionProps> = ({
           {collapsible && (
             <ChevronDown
               className={cn(
-                'h-5 w-5 text-muted-foreground transition-transform duration-200',
-                !isOpen && '-rotate-90'
+                "h-5 w-5 text-muted-foreground transition-transform duration-200",
+                !isOpen && "-rotate-90"
               )}
             />
           )}
         </div>
       </div>
 
-      {(!collapsible || isOpen) && (
-        <div className={cn('pt-2', tokens.spacing.md)}>{children}</div>
-      )}
+      {(!collapsible || isOpen) && <div className={cn("pt-2", tokens.spacing.md)}>{children}</div>}
     </div>
   );
 };

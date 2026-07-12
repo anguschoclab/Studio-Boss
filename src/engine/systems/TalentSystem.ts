@@ -1,14 +1,14 @@
-import { GameState, Talent, Project, Contract, Award, Opportunity } from '@/engine/types';
+import { GameState, Talent, Project, Contract, Award, Opportunity } from "@/engine/types";
 type TalentProfile = Talent;
-import { StateImpact } from '../types/state.types';
-import { generateOpportunity } from '../generators/opportunities';
-import { clamp, secureRandom, getContractsByTalentId } from '../utils';
-import { isPlayerOwner } from '../utils/ownership';
-import { applyAwardBoostsToTalent } from './talentStats';
-import { calculateTalentTier } from '../utils/prestigeCalculator';
+import { StateImpact } from "../types/state.types";
+import { generateOpportunity } from "../generators/opportunities";
+import { clamp, secureRandom, getContractsByTalentId } from "../utils";
+import { isPlayerOwner } from "../utils/ownership";
+import { applyAwardBoostsToTalent } from "./talentStats";
+import { calculateTalentTier } from "../utils/prestigeCalculator";
 
 /**
- * TalentSystem encapsulates all logic related to talent lifecycle, 
+ * TalentSystem encapsulates all logic related to talent lifecycle,
  * stat progression, and market opportunity generation.
  */
 export class TalentSystem {
@@ -17,7 +17,7 @@ export class TalentSystem {
    */
   static advance(state: GameState): StateImpact {
     const uiNotifications: string[] = [];
-    
+
     const currentOpportunities = state.market.opportunities || [];
     const updatedOpportunities: Opportunity[] = [];
 
@@ -31,7 +31,7 @@ export class TalentSystem {
       }
     }
 
-    const oppTitles = new Set(updatedOpportunities.map(o => o.title));
+    const oppTitles = new Set(updatedOpportunities.map((o) => o.title));
 
     // 2. Market Generation Logic
     const tryAddOpp = (opp: Opportunity, message?: string) => {
@@ -90,10 +90,9 @@ export class TalentSystem {
 
     return {
       newOpportunities: updatedOpportunities,
-      uiNotifications
+      uiNotifications,
     };
   }
-
 
   /**
    * Updates talent stats based on project performance and awards.
@@ -106,7 +105,7 @@ export class TalentSystem {
   ): TalentProfile[] {
     if (contracts.length === 0) return [];
 
-    const talentPoolMap = new Map(talentPool.map(t => [t.id, t]));
+    const talentPoolMap = new Map(talentPool.map((t) => [t.id, t]));
     const totalCost = project.budget + (project.marketingBudget || 0);
     const ROI = totalCost > 0 ? project.revenue / totalCost : 0;
 
@@ -115,11 +114,27 @@ export class TalentSystem {
     let prestigeChange = 0;
     let feeMultiplier = 1.0;
 
-    if (ROI > 4.0) { drawChange = 12; prestigeChange = 6; feeMultiplier = 1.6; }
-    else if (ROI > 2.0) { drawChange = 6; prestigeChange = 3; feeMultiplier = 1.3; }
-    else if (ROI > 1.0) { drawChange = 2; prestigeChange = 1; feeMultiplier = 1.1; }
-    else if (ROI < 0.4) { drawChange = -12; prestigeChange = -6; feeMultiplier = 0.75; }
-    else if (ROI < 0.8) { drawChange = -6; prestigeChange = -3; feeMultiplier = 0.85; }
+    if (ROI > 4.0) {
+      drawChange = 12;
+      prestigeChange = 6;
+      feeMultiplier = 1.6;
+    } else if (ROI > 2.0) {
+      drawChange = 6;
+      prestigeChange = 3;
+      feeMultiplier = 1.3;
+    } else if (ROI > 1.0) {
+      drawChange = 2;
+      prestigeChange = 1;
+      feeMultiplier = 1.1;
+    } else if (ROI < 0.4) {
+      drawChange = -12;
+      prestigeChange = -6;
+      feeMultiplier = 0.75;
+    } else if (ROI < 0.8) {
+      drawChange = -6;
+      prestigeChange = -3;
+      feeMultiplier = 0.85;
+    }
 
     const updatedTalent: TalentProfile[] = [];
 
@@ -133,20 +148,39 @@ export class TalentSystem {
       let talentAwardsEgoBoost = 0;
 
       for (const award of projectAwards) {
-        const isDirector = talent.roles.includes('director');
-        const isActor = talent.roles.includes('actor');
-        const isWriter = talent.roles.includes('writer');
+        const isDirector = talent.roles.includes("director");
+        const isActor = talent.roles.includes("actor");
+        const isWriter = talent.roles.includes("writer");
 
         let qualifiesForBonus;
-        if (award.category.includes('Director')) { qualifiesForBonus = isDirector; }
-        else if (award.category.includes('Actor') || award.category.includes('Actress') || award.category.includes('Ensemble')) { qualifiesForBonus = isActor; }
-        else if (award.category.includes('Screenplay')) { qualifiesForBonus = isWriter; }
-        else { qualifiesForBonus = true; } // Best Picture etc.
+        if (award.category.includes("Director")) {
+          qualifiesForBonus = isDirector;
+        } else if (
+          award.category.includes("Actor") ||
+          award.category.includes("Actress") ||
+          award.category.includes("Ensemble")
+        ) {
+          qualifiesForBonus = isActor;
+        } else if (award.category.includes("Screenplay")) {
+          qualifiesForBonus = isWriter;
+        } else {
+          qualifiesForBonus = true;
+        } // Best Picture etc.
 
         if (qualifiesForBonus) {
-          const multiplier = (award.category.includes('Director') || award.category.includes('Actor') || award.category.includes('Actress') || award.category.includes('Screenplay')) ? 1.0 : 0.5;
-          const isPrestige = ['Academy Awards', 'Cannes Film Festival', 'Venice Film Festival'].includes(award.body);
-          
+          const multiplier =
+            award.category.includes("Director") ||
+            award.category.includes("Actor") ||
+            award.category.includes("Actress") ||
+            award.category.includes("Screenplay")
+              ? 1.0
+              : 0.5;
+          const isPrestige = [
+            "Academy Awards",
+            "Cannes Film Festival",
+            "Venice Film Festival",
+          ].includes(award.body);
+
           const boosts = applyAwardBoostsToTalent(talent, award, multiplier, isPrestige);
 
           talentAwardsPrestigeBonus += boosts.prestigeBoost;
@@ -156,22 +190,26 @@ export class TalentSystem {
           // (Note: previous code used additive `+=`, we can either add the net boost or change to multiplier)
           // The old code did `talentAwardsFeeMultiplier += (isPrestige ? 0.5 : 0.2) * multiplier;`
           // So we accumulate the boost amount above 1.0 returned by our function:
-          talentAwardsFeeMultiplier += (boosts.feeMultiplier - 1.0);
+          talentAwardsFeeMultiplier += boosts.feeMultiplier - 1.0;
 
           talentAwardsEgoBoost += boosts.egoBoost;
         }
       }
 
       const finalFeeMultiplier = feeMultiplier * talentAwardsFeeMultiplier;
-      
-      const newPrestige = clamp(talent.prestige + prestigeChange + talentAwardsPrestigeBonus, 0, 100);
+
+      const newPrestige = clamp(
+        talent.prestige + prestigeChange + talentAwardsPrestigeBonus,
+        0,
+        100
+      );
       const newTalent = {
         ...talent,
         draw: clamp(talent.draw + drawChange + talentAwardsDrawBonus, 0, 100),
         prestige: newPrestige,
         tier: calculateTalentTier(newPrestige),
         fee: Math.round(clamp(talent.fee * finalFeeMultiplier, 10000, 75000000)),
-        ego: clamp((talent.psychology?.ego || 50) + talentAwardsEgoBoost, 0, 100)
+        ego: clamp((talent.psychology?.ego || 50) + talentAwardsEgoBoost, 0, 100),
       };
 
       updatedTalent.push(newTalent);

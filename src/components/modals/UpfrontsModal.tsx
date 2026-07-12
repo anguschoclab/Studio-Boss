@@ -1,37 +1,47 @@
-import React from 'react';
-import { useUIStore } from '@/store/uiStore';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tv, CheckCircle2, XCircle, Minus } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import type { UpfrontResult } from '@/engine/systems/television/upfrontsEngine';
+import React from "react";
+import { useUIStore } from "@/store/uiStore";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tv, CheckCircle2, XCircle, Minus } from "lucide-react";
+import { cn } from "@/lib/utils";
+import type { UpfrontResult } from "@/engine/systems/television/upfrontsEngine";
 
 export const UpfrontsModal: React.FC = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
 
-  if (!activeModal || activeModal.type !== 'UPFRONTS') return null;
+  if (!activeModal || activeModal.type !== "UPFRONTS") return null;
 
   const { results = [], week = 0 } = (activeModal.payload || {}) as {
     results: UpfrontResult[];
     week: number;
   };
 
-  const pickups = results.filter(r => r.decision === 'pickup');
-  const limited = results.filter(r => r.decision === 'limited_order');
-  const passes = results.filter(r => r.decision === 'pass');
+  const pickups = results.filter((r) => r.decision === "pickup");
+  const limited = results.filter((r) => r.decision === "limited_order");
+  const passes = results.filter((r) => r.decision === "pass");
 
-  const decisionIcon = (decision: UpfrontResult['decision']) => {
-    if (decision === 'pickup') return <CheckCircle2 className="h-4 w-4 text-emerald-500" />;
-    if (decision === 'limited_order') return <Minus className="h-4 w-4 text-amber-500" />;
+  const decisionIcon = (decision: UpfrontResult["decision"]) => {
+    if (decision === "pickup") return <CheckCircle2 className="h-4 w-4 text-emerald-500" />;
+    if (decision === "limited_order") return <Minus className="h-4 w-4 text-amber-500" />;
     return <XCircle className="h-4 w-4 text-destructive" />;
   };
 
-  const decisionLabel = (decision: UpfrontResult['decision']) => {
-    if (decision === 'pickup') return { label: 'Full Order', variant: 'default' as const, cls: 'bg-emerald-500 text-white' };
-    if (decision === 'limited_order') return { label: 'Limited Order', variant: 'outline' as const, cls: 'border-amber-500 text-amber-500' };
-    return { label: 'Pass', variant: 'destructive' as const, cls: 'bg-destructive/20 text-destructive border-destructive/30' };
+  const decisionLabel = (decision: UpfrontResult["decision"]) => {
+    if (decision === "pickup")
+      return { label: "Full Order", variant: "default" as const, cls: "bg-emerald-500 text-white" };
+    if (decision === "limited_order")
+      return {
+        label: "Limited Order",
+        variant: "outline" as const,
+        cls: "border-amber-500 text-amber-500",
+      };
+    return {
+      label: "Pass",
+      variant: "destructive" as const,
+      cls: "bg-destructive/20 text-destructive border-destructive/30",
+    };
   };
 
   return (
@@ -46,7 +56,9 @@ export const UpfrontsModal: React.FC = () => {
               <DialogTitle className="text-lg font-black uppercase tracking-tight">
                 Upfronts — Week {week}
               </DialogTitle>
-              <p className="text-xs text-muted-foreground">Network buyer decisions on your TV slate</p>
+              <p className="text-xs text-muted-foreground">
+                Network buyer decisions on your TV slate
+              </p>
             </div>
           </div>
         </DialogHeader>
@@ -68,7 +80,7 @@ export const UpfrontsModal: React.FC = () => {
 
         <ScrollArea className="max-h-72 pr-2">
           <div className="space-y-2">
-            {results.map(result => {
+            {results.map((result) => {
               const { label, cls } = decisionLabel(result.decision);
               return (
                 <div
@@ -80,21 +92,20 @@ export const UpfrontsModal: React.FC = () => {
                     <div>
                       <p className="text-sm font-bold">{result.projectTitle}</p>
                       {result.episodesOrdered && (
-                        <p className="text-[10px] text-muted-foreground">{result.episodesOrdered} episodes ordered</p>
+                        <p className="text-[10px] text-muted-foreground">
+                          {result.episodesOrdered} episodes ordered
+                        </p>
                       )}
                     </div>
                   </div>
-                  <Badge className={cn('text-[9px] font-bold', cls)}>{label}</Badge>
+                  <Badge className={cn("text-[9px] font-bold", cls)}>{label}</Badge>
                 </div>
               );
             })}
           </div>
         </ScrollArea>
 
-        <Button
-          className="w-full mt-4"
-          onClick={() => resolveCurrentModal()}
-        >
+        <Button className="w-full mt-4" onClick={() => resolveCurrentModal()}>
           Acknowledge
         </Button>
       </DialogContent>

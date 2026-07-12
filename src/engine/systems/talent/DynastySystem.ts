@@ -1,7 +1,7 @@
-import { GameState, StateImpact, Talent, TalentTier, Family } from '../../types';
-import { RandomGenerator } from '../../utils/rng';
-import { generateTalent } from '../../generators/talent/index';
-import type { DeathEvent } from './DeathSystem';
+import { GameState, StateImpact, Talent, TalentTier, Family } from "../../types";
+import { RandomGenerator } from "../../utils/rng";
+import { generateTalent } from "../../generators/talent/index";
+import type { DeathEvent } from "./DeathSystem";
 
 /**
  * Dynasty System
@@ -21,7 +21,7 @@ export interface Pregnancy {
 export interface FamilyRelationship {
   parentId: string;
   childId: string;
-  relationshipType: 'biological' | 'adopted' | 'step';
+  relationshipType: "biological" | "adopted" | "step";
   acknowledged: boolean;
   influenceLevel: number; // 0-100
 }
@@ -63,8 +63,8 @@ export function checkPregnancies(state: GameState, rng: RandomGenerator): StateI
     if (talent.id > spouse.id) continue;
 
     // Age check - both parents should be of appropriate age
-    const mother = talent.demographics.gender === 'FEMALE' ? talent : spouse;
-    const father = talent.demographics.gender === 'FEMALE' ? spouse : talent;
+    const mother = talent.demographics.gender === "FEMALE" ? talent : spouse;
+    const father = talent.demographics.gender === "FEMALE" ? spouse : talent;
 
     if (mother.demographics.age < 18 || mother.demographics.age > 45) continue;
     if (father.demographics.age < 18 || father.demographics.age > 70) continue;
@@ -76,7 +76,7 @@ export function checkPregnancies(state: GameState, rng: RandomGenerator): StateI
     // Pregnancy check
     if (rng.next() < PREGNANCY_BASE_CHANCE) {
       const pregnancy: Pregnancy = {
-        id: rng.uuid('PRG'),
+        id: rng.uuid("PRG"),
         motherId: mother.id,
         fatherId: father.id,
         conceptionWeek: state.week,
@@ -87,13 +87,13 @@ export function checkPregnancies(state: GameState, rng: RandomGenerator): StateI
       newPregnancies.push(pregnancy);
 
       impacts.push({
-        type: 'NEWS_ADDED',
+        type: "NEWS_ADDED",
         payload: {
-          id: rng.uuid('NWS'),
+          id: rng.uuid("NWS"),
           headline: `${mother.name} and ${father.name} Expecting!`,
           description: `The Hollywood power couple announced they are expecting their ${getChildOrdinal(mother.id, state)} child together.`,
-          category: 'talent',
-          publication: 'People Magazine',
+          category: "talent",
+          publication: "People Magazine",
         },
       });
     }
@@ -102,7 +102,7 @@ export function checkPregnancies(state: GameState, rng: RandomGenerator): StateI
   // Store pregnancies in state (would be in dynasty state slice)
   if (newPregnancies.length > 0) {
     impacts.push({
-      type: 'SYSTEM_TICK',
+      type: "SYSTEM_TICK",
       payload: {
         newPregnancies,
       },
@@ -145,19 +145,20 @@ export function processComingOfAge(state: GameState, rng: RandomGenerator): Stat
     const parent = talentsObj[tId];
     if (!parent) continue;
     if (parent.demographics.age < 40) continue;
-    if (parent.tier !== 'A_LIST' && parent.tier !== 'B_LIST') continue; // Only A-listers and B-listers have nepo babies
+    if (parent.tier !== "A_LIST" && parent.tier !== "B_LIST") continue; // Only A-listers and B-listers have nepo babies
 
     // Skip if already has children in pool
     if (parent.childIds && parent.childIds.length > 0) continue;
 
     // Chance to have adult child enter pool
-    if (rng.next() < 0.1) { // 10% chance per eligible parent per year
+    if (rng.next() < 0.1) {
+      // 10% chance per eligible parent per year
       const childTalent = generateNepoBaby(parent, state, rng);
       newTalents.push(childTalent);
 
       // Update parent with child reference
       impacts.push({
-        type: 'TALENT_UPDATED',
+        type: "TALENT_UPDATED",
         payload: {
           talentId: parent.id,
           update: {
@@ -167,13 +168,13 @@ export function processComingOfAge(state: GameState, rng: RandomGenerator): Stat
       });
 
       impacts.push({
-        type: 'NEWS_ADDED',
+        type: "NEWS_ADDED",
         payload: {
-          id: rng.uuid('NWS'),
+          id: rng.uuid("NWS"),
           headline: `${childTalent.name}: The Next Generation`,
-          description: `${parent.name}'s ${childTalent.demographics.gender === 'FEMALE' ? 'daughter' : 'son'} enters the industry, sparking nepotism debates and excitement alike.`,
-          category: 'talent',
-          publication: 'Variety',
+          description: `${parent.name}'s ${childTalent.demographics.gender === "FEMALE" ? "daughter" : "son"} enters the industry, sparking nepotism debates and excitement alike.`,
+          category: "talent",
+          publication: "Variety",
         },
       });
     }
@@ -181,7 +182,7 @@ export function processComingOfAge(state: GameState, rng: RandomGenerator): Stat
 
   if (newTalents.length > 0) {
     impacts.push({
-      type: 'TALENT_ADDED',
+      type: "TALENT_ADDED",
       payload: { newTalents },
     } as any);
   }
@@ -199,21 +200,22 @@ function generateNepoBaby(parent: Talent, state: GameState, rng: RandomGenerator
 
   // 30% chance to choose different role
   if (roleRoll < 0.3) {
-    const roles = ['actor', 'director', 'writer', 'producer'] as const;
-    childRole = rng.pick(roles.filter(r => r !== parent.role));
+    const roles = ["actor", "director", "writer", "producer"] as const;
+    childRole = rng.pick(roles.filter((r) => r !== parent.role));
   }
 
   // Generate base talent
   const childTalent = generateTalent({
     role: childRole,
-    tier: 'NEWCOMER', // Start as new talent
+    tier: "NEWCOMER", // Start as new talent
   });
 
   // Override with nepo baby characteristics
-  const lastName = parent.name.split(' ').pop() || 'Legacy';
-  const firstNames = childTalent.demographics.gender === 'FEMALE'
-    ? ['Emma', 'Olivia', 'Sophia', 'Ava', 'Mia', 'Charlotte', 'Amelia', 'Harper']
-    : ['Liam', 'Noah', 'Oliver', 'Elijah', 'James', 'William', 'Benjamin', 'Lucas'];
+  const lastName = parent.name.split(" ").pop() || "Legacy";
+  const firstNames =
+    childTalent.demographics.gender === "FEMALE"
+      ? ["Emma", "Olivia", "Sophia", "Ava", "Mia", "Charlotte", "Amelia", "Harper"]
+      : ["Liam", "Noah", "Oliver", "Elijah", "James", "William", "Benjamin", "Lucas"];
 
   childTalent.name = `${rng.pick(firstNames)} ${lastName}`;
 
@@ -230,23 +232,35 @@ function generateNepoBaby(parent: Talent, state: GameState, rng: RandomGenerator
   if (parent.skills) {
     const inheritFactor = 0.4; // 40% inheritance
     childTalent.skills = {
-      acting: Math.round(childTalent.skills.acting * (1 - inheritFactor) + (parent.skills.acting || 50) * inheritFactor),
-      directing: Math.round(childTalent.skills.directing * (1 - inheritFactor) + (parent.skills.directing || 50) * inheritFactor),
-      writing: Math.round(childTalent.skills.writing * (1 - inheritFactor) + (parent.skills.writing || 50) * inheritFactor),
-      stardom: Math.round(childTalent.skills.stardom * (1 - inheritFactor) + (parent.skills.stardom || 50) * inheritFactor),
+      acting: Math.round(
+        childTalent.skills.acting * (1 - inheritFactor) +
+          (parent.skills.acting || 50) * inheritFactor
+      ),
+      directing: Math.round(
+        childTalent.skills.directing * (1 - inheritFactor) +
+          (parent.skills.directing || 50) * inheritFactor
+      ),
+      writing: Math.round(
+        childTalent.skills.writing * (1 - inheritFactor) +
+          (parent.skills.writing || 50) * inheritFactor
+      ),
+      stardom: Math.round(
+        childTalent.skills.stardom * (1 - inheritFactor) +
+          (parent.skills.stardom || 50) * inheritFactor
+      ),
     };
   }
 
   // Nepo baby bonuses
   const parentPrestige = parent.prestige || 50;
-  const nepoBonus = parent.tier === 'A_LIST' ? 25 : parent.tier === 'B_LIST' ? 15 : 10;
+  const nepoBonus = parent.tier === "A_LIST" ? 25 : parent.tier === "B_LIST" ? 15 : 10;
 
   childTalent.prestige = Math.min(100, childTalent.prestige + nepoBonus);
   childTalent.draw = Math.min(100, childTalent.draw + nepoBonus);
-  childTalent.fee = childTalent.fee + (parent.tier === 'A_LIST' ? 1_000_000 : 500_000);
+  childTalent.fee = childTalent.fee + (parent.tier === "A_LIST" ? 1_000_000 : 500_000);
 
   // Archetype inheritance tendency
-  if (parent.actorArchetype && childRole === 'actor') {
+  if (parent.actorArchetype && childRole === "actor") {
     // 60% chance to inherit parent's archetype
     if (rng.next() < 0.6) {
       childTalent.actorArchetype = parent.actorArchetype;
@@ -259,11 +273,11 @@ function generateNepoBaby(parent: Talent, state: GameState, rng: RandomGenerator
   }
 
   // Bio mentions parent
-  childTalent.bio = `${childTalent.name} is the ${childTalent.demographics.gender === 'FEMALE' ? 'daughter' : 'son'} of acclaimed ${parent.role} ${parent.name}. With a famous last name and undeniable talent, they're poised to make their own mark in Hollywood.`;
+  childTalent.bio = `${childTalent.name} is the ${childTalent.demographics.gender === "FEMALE" ? "daughter" : "son"} of acclaimed ${parent.role} ${parent.name}. With a famous last name and undeniable talent, they're poised to make their own mark in Hollywood.`;
 
   // Access level - nepo babies get better access
-  if (parent.accessLevel === 'dynasty' || parent.accessLevel === 'legacy') {
-    childTalent.accessLevel = 'soft-access';
+  if (parent.accessLevel === "dynasty" || parent.accessLevel === "legacy") {
+    childTalent.accessLevel = "soft-access";
   }
 
   return childTalent;
@@ -283,8 +297,8 @@ export function calculateDynastyReputation(familyId: string, state: GameState): 
     const t = talentsObj[tId];
     if (!t || t.familyId !== familyId) continue;
     familyCount++;
-    totalPrestige += (t.prestige || 50);
-    if (t.tier === 'A_LIST') tier1Count++;
+    totalPrestige += t.prestige || 50;
+    if (t.tier === "A_LIST") tier1Count++;
   }
 
   if (familyCount === 0) return 50;
@@ -318,15 +332,15 @@ export function processDeathInFamily(
       if (!child) continue;
 
       // Child gains some prestige from parent's legacy
-      const legacyBoost = deceased.tier === 'A_LIST' ? 5 : deceased.tier === 'B_LIST' ? 3 : 1;
+      const legacyBoost = deceased.tier === "A_LIST" ? 5 : deceased.tier === "B_LIST" ? 3 : 1;
 
       impacts.push({
-        type: 'TALENT_UPDATED',
+        type: "TALENT_UPDATED",
         payload: {
           talentId: childId,
           update: {
             prestige: Math.min(100, child.prestige + legacyBoost),
-            bio: `${child.name} continues the legacy of their late ${deceased.demographics.gender === 'FEMALE' ? 'mother' : 'father'}, ${deceased.name}.`,
+            bio: `${child.name} continues the legacy of their late ${deceased.demographics.gender === "FEMALE" ? "mother" : "father"}, ${deceased.name}.`,
           },
         },
       });
@@ -361,7 +375,7 @@ function getChildOrdinal(parentId: string, state: GameState): string {
   const parent = state.entities.talents?.[parentId];
   const childCount = parent?.childIds?.length || 0;
 
-  const ordinals = ['first', 'second', 'third', 'fourth', 'fifth'];
+  const ordinals = ["first", "second", "third", "fourth", "fifth"];
   return ordinals[childCount] || `${childCount + 1}th`;
 }
 
@@ -375,13 +389,13 @@ export function createFamily(
   rng: RandomGenerator
 ): Family {
   return {
-    id: rng.uuid('FAM'),
+    id: rng.uuid("FAM"),
     name: familyName,
     recognition: 50,
     prestigeLegacy: 50,
     commercialLegacy: 50,
     scandalLegacy: 0,
     volatility: rng.rangeInt(20, 80),
-    status: 'active',
+    status: "active",
   };
 }

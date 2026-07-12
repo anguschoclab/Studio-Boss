@@ -1,43 +1,51 @@
-import { StateCreator } from 'zustand';
-import { GameStore } from '../gameStore';
-import { CampaignData } from '@/engine/types/state.types';
-import { RandomGenerator } from '@/engine/utils/rng';
-import { AudienceQuadrant, MarketingAngle } from '@/engine/types';
-import { calculateAudienceIndex } from '@/engine/systems/demographics';
-import { applyImpacts } from '@/engine/core/impactReducer';
+import { StateCreator } from "zustand";
+import { GameStore } from "../gameStore";
+import { CampaignData } from "@/engine/types/state.types";
+import { RandomGenerator } from "@/engine/utils/rng";
+import { AudienceQuadrant, MarketingAngle } from "@/engine/types";
+import { calculateAudienceIndex } from "@/engine/systems/demographics";
+import { applyImpacts } from "@/engine/core/impactReducer";
 
 export interface CampaignTier {
   cost: number;
   buzz: number;
   risk: number;
-  type: 'awards' | 'marketing';
+  type: "awards" | "marketing";
 }
 
 export const CAMPAIGN_TIERS: Record<string, CampaignTier> = {
   // Awards Campaigns (FYC)
-  Grassroots: { cost: 250_000, buzz: 5, risk: 0, type: 'awards' },
-  Trade: { cost: 1_000_000, buzz: 15, risk: 2, type: 'awards' },
-  Blitz: { cost: 5_000_000, buzz: 40, risk: 12, type: 'awards' },
-  
+  Grassroots: { cost: 250_000, buzz: 5, risk: 0, type: "awards" },
+  Trade: { cost: 1_000_000, buzz: 15, risk: 2, type: "awards" },
+  Blitz: { cost: 5_000_000, buzz: 40, risk: 12, type: "awards" },
+
   // Marketing Campaigns (Revenue/Buzz)
-  Standard: { cost: 2_000_000, buzz: 10, risk: 1, type: 'marketing' },
-  Tentpole: { cost: 10_000_000, buzz: 25, risk: 3, type: 'marketing' },
-  Saturation: { cost: 50_000_000, buzz: 60, risk: 8, type: 'marketing' },
+  Standard: { cost: 2_000_000, buzz: 10, risk: 1, type: "marketing" },
+  Tentpole: { cost: 10_000_000, buzz: 25, risk: 3, type: "marketing" },
+  Saturation: { cost: 50_000_000, buzz: 60, risk: 8, type: "marketing" },
 };
 
 function checkCampaignBacklash(score: number, tier: string, rng: RandomGenerator): boolean {
-  if (tier === 'Grassroots') return false;
-  if (tier === 'Trade' && score < 70 && rng.next() < 0.1) return true;
-  if (tier === 'Blitz' && score < 80 && rng.next() < 0.2) return true;
+  if (tier === "Grassroots") return false;
+  if (tier === "Trade" && score < 70 && rng.next() < 0.1) return true;
+  if (tier === "Blitz" && score < 80 && rng.next() < 0.2) return true;
   return false;
 }
 
 export interface MarketingSlice {
-  launchAwardsCampaign: (projectId: string, tierKey: 'Grassroots' | 'Trade' | 'Blitz') => void;
-  launchMarketingCampaign: (projectId: string, tierKey: 'Standard' | 'Tentpole' | 'Saturation', angle: MarketingAngle, target: AudienceQuadrant) => void;
+  launchAwardsCampaign: (projectId: string, tierKey: "Grassroots" | "Trade" | "Blitz") => void;
+  launchMarketingCampaign: (
+    projectId: string,
+    tierKey: "Standard" | "Tentpole" | "Saturation",
+    angle: MarketingAngle,
+    target: AudienceQuadrant
+  ) => void;
 }
 
-export const createMarketingSlice: StateCreator<GameStore, [], [], MarketingSlice> = (set, get) => ({
+export const createMarketingSlice: StateCreator<GameStore, [], [], MarketingSlice> = (
+  set,
+  get
+) => ({
   launchAwardsCampaign: (projectId, tierKey) => {
     const tier = CAMPAIGN_TIERS[tierKey];
     const state = get().gameState;
@@ -50,52 +58,52 @@ export const createMarketingSlice: StateCreator<GameStore, [], [], MarketingSlic
     const rng = new RandomGenerator(state.rngState);
     const project = state.entities.projects[projectId];
     const metaScore = project?.reception?.metaScore || project?.reviewScore || 60;
-    
+
     const hasBacklash = checkCampaignBacklash(metaScore, tierKey, rng);
 
     set((s) => {
       if (!s.gameState) return s;
 
       const newCampaign: CampaignData = {
-        id: rng.uuid('OPP'),
+        id: rng.uuid("OPP"),
         projectId,
         budget: tier.cost,
-        targetCategories: ['Best Picture'], // Default
+        targetCategories: ["Best Picture"], // Default
         buzzBonus: tier.buzz,
-        scandalRisk: tier.risk
+        scandalRisk: tier.risk,
       };
 
       const newState = {
         ...s.gameState,
         finance: {
           ...s.gameState.finance,
-          cash: s.gameState.finance.cash - tier.cost
+          cash: s.gameState.finance.cash - tier.cost,
         },
         studio: {
           ...s.gameState.studio,
           activeCampaigns: {
             ...s.gameState.studio.activeCampaigns,
-            [projectId]: newCampaign
-          }
+            [projectId]: newCampaign,
+          },
         },
-        rngState: rng.getState()
+        rngState: rng.getState(),
       };
 
       if (hasBacklash) {
         const scandalHeadline = {
-          id: rng.uuid('NWS'),
+          id: rng.uuid("NWS"),
           text: `BACKLASH: Aggressive awards campaigning for "${project?.title}" sparks industry outcry!`,
           week: s.gameState.week,
-          category: 'scandal' as const
+          category: "scandal" as const,
         };
         newState.news.headlines.unshift(scandalHeadline);
       }
-      
+
       newState.rngState = rng.getState();
 
       return {
         gameState: newState,
-        finance: newState.finance
+        finance: newState.finance,
       };
     });
   },
@@ -118,20 +126,20 @@ export const createMarketingSlice: StateCreator<GameStore, [], [], MarketingSlic
       const rng = new RandomGenerator(s.gameState.rngState);
 
       const impact = {
-        type: 'PROJECT_UPDATED',
+        type: "PROJECT_UPDATED",
         payload: {
           projectId,
           update: {
             buzz: Math.min(100, (project.buzz || 0) + finalBuzzGain),
             targetDemographic: target,
-            marketingBudget: (project.marketingBudget || 0) + tier.cost
-          }
-        }
+            marketingBudget: (project.marketingBudget || 0) + tier.cost,
+          },
+        },
       };
 
       const fundsImpact = {
-        type: 'FUNDS_CHANGED',
-        payload: { amount: -tier.cost }
+        type: "FUNDS_CHANGED",
+        payload: { amount: -tier.cost },
       };
 
       const newState = applyImpacts(s.gameState, [impact as any, fundsImpact as any]);
@@ -139,10 +147,10 @@ export const createMarketingSlice: StateCreator<GameStore, [], [], MarketingSlic
       return {
         gameState: {
           ...newState,
-          rngState: rng.getState()
+          rngState: rng.getState(),
         },
-        finance: newState.finance
+        finance: newState.finance,
       };
     });
-  }
+  },
 });

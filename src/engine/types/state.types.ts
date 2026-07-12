@@ -326,7 +326,10 @@ export interface ShingleDissolvedImpact extends BaseImpact {
 }
 export interface TVRecommendationCreatedImpact extends BaseImpact {
   type: "TV_RECOMMENDATION_CREATED";
-  payload: { recommendation: import("./tv-recommendations.types").TVShowRecommendation; notification?: string };
+  payload: {
+    recommendation: import("./tv-recommendations.types").TVShowRecommendation;
+    notification?: string;
+  };
 }
 export interface TVRecommendationAcceptedImpact extends BaseImpact {
   type: "TV_RECOMMENDATION_ACCEPTED";
@@ -334,7 +337,9 @@ export interface TVRecommendationAcceptedImpact extends BaseImpact {
 }
 export interface TVRecommendationStateUpdatedImpact extends BaseImpact {
   type: "TV_RECOMMENDATION_STATE_UPDATED";
-  payload: { tvRecommendations: Record<string, import("./tv-recommendations.types").TVShowRecommendation> };
+  payload: {
+    tvRecommendations: Record<string, import("./tv-recommendations.types").TVShowRecommendation>;
+  };
 }
 export interface IndustryUpdateImpact extends BaseImpact {
   type: "INDUSTRY_UPDATE";
@@ -348,38 +353,102 @@ export interface IndustryUpdateImpact extends BaseImpact {
 }
 
 // Generic impact interfaces for typed impacts whose payloads are handled by their respective handler modules
-export interface AwardWonImpact extends BaseImpact { type: "AWARD_WON"; }
-export interface TalentAddedImpact extends BaseImpact { type: "TALENT_ADDED"; }
-export interface TalentRemovedImpact extends BaseImpact { type: "TALENT_REMOVED"; }
-export interface CastingConstraintCheckedImpact extends BaseImpact { type: "CASTING_CONSTRAINT_CHECKED"; }
-export interface MedicalLeaveTriggeredImpact extends BaseImpact { type: "MEDICAL_LEAVE_TRIGGERED"; }
-export interface RelationshipFormedImpact extends BaseImpact { type: "RELATIONSHIP_FORMED"; }
-export interface RelationshipUpdatedImpact extends BaseImpact { type: "RELATIONSHIP_UPDATED"; }
-export interface CliqueFormedImpact extends BaseImpact { type: "CLIQUE_FORMED"; }
-export interface CliqueUpdatedImpact extends BaseImpact { type: "CLIQUE_UPDATED"; }
-export interface ScreenplayNoteCreatedImpact extends BaseImpact { type: "SCREENPLAY_NOTE_CREATED"; }
-export interface ScreenplayNoteImplementedImpact extends BaseImpact { type: "SCREENPLAY_NOTE_IMPLEMENTED"; }
-export interface ProductionAdditionCreatedImpact extends BaseImpact { type: "PRODUCTION_ADDITION_CREATED"; }
-export interface CreditSceneCreatedImpact extends BaseImpact { type: "CREDIT_SCENE_CREATED"; }
-export interface CreditSceneUpdatedImpact extends BaseImpact { type: "CREDIT_SCENE_UPDATED"; }
-export interface TalkShowAppearanceCreatedImpact extends BaseImpact { type: "TALK_SHOW_APPEARANCE_CREATED"; }
-export interface PhotoshootCreatedImpact extends BaseImpact { type: "PHOTOSHOOT_CREATED"; }
-export interface PressTourCreatedImpact extends BaseImpact { type: "PRESS_TOUR_CREATED"; }
-export interface BreakoutStarCreatedImpact extends BaseImpact { type: "BREAKOUT_STAR_CREATED"; }
-export interface BreakoutStarUpdatedImpact extends BaseImpact { type: "BREAKOUT_STAR_UPDATED"; }
-export interface GuestStarOpportunityImpact extends BaseImpact { type: "GUEST_STAR_OPPORTUNITY"; }
-export interface GuestStarBookedImpact extends BaseImpact { type: "GUEST_STAR_BOOKED"; }
-export interface DiscoveryStateUpdatedImpact extends BaseImpact { type: "DISCOVERY_STATE_UPDATED"; }
-export interface MergerOfferedImpact extends BaseImpact { type: "MERGER_OFFERED"; }
-export interface MergerResolvedImpact extends BaseImpact { type: "MERGER_RESOLVED"; }
-export interface FranchiseUpdatedImpact extends BaseImpact { type: "FRANCHISE_UPDATED"; }
-export interface VaultAssetUpdatedImpact extends BaseImpact { type: "VAULT_ASSET_UPDATED"; }
-export interface FormatLicensedImpact extends BaseImpact { type: "FORMAT_LICENSED"; }
-export interface DealUpdatedImpact extends BaseImpact { type: "DEAL_UPDATED"; }
-export interface CastingConstraintViolationImpact extends BaseImpact { type: "CASTING_CONSTRAINT_VIOLATION"; }
-export interface CastingPremiumDemandImpact extends BaseImpact { type: "CASTING_PREMIUM_DEMAND"; }
-export interface CastingAlternativeSuggestedImpact extends BaseImpact { type: "CASTING_ALTERNATIVE_SUGGESTED"; }
-export interface ContractAddedImpact extends BaseImpact { type: "CONTRACT_ADDED"; }
+export interface AwardWonImpact extends BaseImpact {
+  type: "AWARD_WON";
+}
+export interface TalentAddedImpact extends BaseImpact {
+  type: "TALENT_ADDED";
+}
+export interface TalentRemovedImpact extends BaseImpact {
+  type: "TALENT_REMOVED";
+}
+export interface CastingConstraintCheckedImpact extends BaseImpact {
+  type: "CASTING_CONSTRAINT_CHECKED";
+}
+export interface MedicalLeaveTriggeredImpact extends BaseImpact {
+  type: "MEDICAL_LEAVE_TRIGGERED";
+}
+export interface RelationshipFormedImpact extends BaseImpact {
+  type: "RELATIONSHIP_FORMED";
+}
+export interface RelationshipUpdatedImpact extends BaseImpact {
+  type: "RELATIONSHIP_UPDATED";
+}
+export interface CliqueFormedImpact extends BaseImpact {
+  type: "CLIQUE_FORMED";
+}
+export interface CliqueUpdatedImpact extends BaseImpact {
+  type: "CLIQUE_UPDATED";
+}
+export interface ScreenplayNoteCreatedImpact extends BaseImpact {
+  type: "SCREENPLAY_NOTE_CREATED";
+}
+export interface ScreenplayNoteImplementedImpact extends BaseImpact {
+  type: "SCREENPLAY_NOTE_IMPLEMENTED";
+}
+export interface ProductionAdditionCreatedImpact extends BaseImpact {
+  type: "PRODUCTION_ADDITION_CREATED";
+}
+export interface CreditSceneCreatedImpact extends BaseImpact {
+  type: "CREDIT_SCENE_CREATED";
+}
+export interface CreditSceneUpdatedImpact extends BaseImpact {
+  type: "CREDIT_SCENE_UPDATED";
+}
+export interface TalkShowAppearanceCreatedImpact extends BaseImpact {
+  type: "TALK_SHOW_APPEARANCE_CREATED";
+}
+export interface PhotoshootCreatedImpact extends BaseImpact {
+  type: "PHOTOSHOOT_CREATED";
+}
+export interface PressTourCreatedImpact extends BaseImpact {
+  type: "PRESS_TOUR_CREATED";
+}
+export interface BreakoutStarCreatedImpact extends BaseImpact {
+  type: "BREAKOUT_STAR_CREATED";
+}
+export interface BreakoutStarUpdatedImpact extends BaseImpact {
+  type: "BREAKOUT_STAR_UPDATED";
+}
+export interface GuestStarOpportunityImpact extends BaseImpact {
+  type: "GUEST_STAR_OPPORTUNITY";
+}
+export interface GuestStarBookedImpact extends BaseImpact {
+  type: "GUEST_STAR_BOOKED";
+}
+export interface DiscoveryStateUpdatedImpact extends BaseImpact {
+  type: "DISCOVERY_STATE_UPDATED";
+}
+export interface MergerOfferedImpact extends BaseImpact {
+  type: "MERGER_OFFERED";
+}
+export interface MergerResolvedImpact extends BaseImpact {
+  type: "MERGER_RESOLVED";
+}
+export interface FranchiseUpdatedImpact extends BaseImpact {
+  type: "FRANCHISE_UPDATED";
+}
+export interface VaultAssetUpdatedImpact extends BaseImpact {
+  type: "VAULT_ASSET_UPDATED";
+}
+export interface FormatLicensedImpact extends BaseImpact {
+  type: "FORMAT_LICENSED";
+}
+export interface DealUpdatedImpact extends BaseImpact {
+  type: "DEAL_UPDATED";
+}
+export interface CastingConstraintViolationImpact extends BaseImpact {
+  type: "CASTING_CONSTRAINT_VIOLATION";
+}
+export interface CastingPremiumDemandImpact extends BaseImpact {
+  type: "CASTING_PREMIUM_DEMAND";
+}
+export interface CastingAlternativeSuggestedImpact extends BaseImpact {
+  type: "CASTING_ALTERNATIVE_SUGGESTED";
+}
+export interface ContractAddedImpact extends BaseImpact {
+  type: "CONTRACT_ADDED";
+}
 
 export type StateImpact =
   | FundsImpact

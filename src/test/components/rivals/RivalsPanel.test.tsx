@@ -1,126 +1,126 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { RivalsPanel } from '@/components/rivals/RivalsPanel';
-import { useGameStore } from '@/store/gameStore';
-import { ArchetypeKey } from '@/engine/types';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { RivalsPanel } from "@/components/rivals/RivalsPanel";
+import { useGameStore } from "@/store/gameStore";
+import { ArchetypeKey } from "@/engine/types";
 
-describe('RivalsPanel', () => {
+describe("RivalsPanel", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     useGameStore.setState({
       gameState: {
-        entities: { rivals: {} }
-      }
+        entities: { rivals: {} },
+      },
     } as any);
   });
 
-  it('renders correctly with an empty rivals list', () => {
+  it("renders correctly with an empty rivals list", () => {
     render(<RivalsPanel />);
-    expect(screen.getByText((c) => c.includes('STUDIO INTELLIGENCE') || c.includes('RIVAL'))).toBeInTheDocument();
+    expect(
+      screen.getByText((c) => c.includes("STUDIO INTELLIGENCE") || c.includes("RIVAL"))
+    ).toBeInTheDocument();
   });
 
-  it('renders rivals correctly', () => {
+  it("renders rivals correctly", () => {
     const mockRivals = [
       {
-        id: 'r1',
-        name: 'Alpha Pictures',
-        archetype: 'major' as ArchetypeKey,
-        recentActivity: 'Released a blockbuster',
+        id: "r1",
+        name: "Alpha Pictures",
+        archetype: "major" as ArchetypeKey,
+        recentActivity: "Released a blockbuster",
         strength: 80,
         projectCount: 5,
         cash: 1000,
         prestige: 100,
-        motto: 'Always winning',
+        motto: "Always winning",
       },
       {
-        id: 'r2',
-        name: 'Beta Indies',
-        archetype: 'indie' as ArchetypeKey,
-        recentActivity: 'Won a festival award',
+        id: "r2",
+        name: "Beta Indies",
+        archetype: "indie" as ArchetypeKey,
+        recentActivity: "Won a festival award",
         strength: 30,
         projectCount: 2,
         cash: 50,
         prestige: 60,
-        motto: 'Art first',
+        motto: "Art first",
       },
       {
-        id: 'r3',
-        name: 'Gamma Mid',
-        archetype: 'mid-tier' as ArchetypeKey,
-        recentActivity: 'Signed a new director',
+        id: "r3",
+        name: "Gamma Mid",
+        archetype: "mid-tier" as ArchetypeKey,
+        recentActivity: "Signed a new director",
         strength: 50,
         projectCount: 3,
         cash: 200,
         prestige: 50,
-        motto: 'Middle of the road',
-      }
+        motto: "Middle of the road",
+      },
     ];
 
-    const rivalsMap = Object.fromEntries(mockRivals.map(r => [r.id, r]));
+    const rivalsMap = Object.fromEntries(mockRivals.map((r) => [r.id, r]));
     useGameStore.setState({
       gameState: {
-        entities: { rivals: rivalsMap }
-      }
+        entities: { rivals: rivalsMap },
+      },
     } as any);
     render(<RivalsPanel />);
 
-    expect(screen.getByText('Alpha Pictures')).toBeInTheDocument();
-    expect(screen.getByText('Beta Indies')).toBeInTheDocument();
-    expect(screen.getByText('Gamma Mid')).toBeInTheDocument();
+    expect(screen.getByText("Alpha Pictures")).toBeInTheDocument();
+    expect(screen.getByText("Beta Indies")).toBeInTheDocument();
+    expect(screen.getByText("Gamma Mid")).toBeInTheDocument();
   });
 
-
-  it('applies correct strength styling based on strength value', () => {
+  it("applies correct strength styling based on strength value", () => {
     const mockRivals = [
       {
-        id: 'r1',
-        name: 'Strong Rival',
-        archetype: 'major' as ArchetypeKey,
+        id: "r1",
+        name: "Strong Rival",
+        archetype: "major" as ArchetypeKey,
         strength: 75,
         projectCount: 1,
-        recentActivity: 'Strong',
+        recentActivity: "Strong",
         cash: 100,
         prestige: 100,
-        motto: '1'
+        motto: "1",
       },
       {
-        id: 'r2',
-        name: 'Medium Rival',
-        archetype: 'mid-tier' as ArchetypeKey,
+        id: "r2",
+        name: "Medium Rival",
+        archetype: "mid-tier" as ArchetypeKey,
         strength: 50,
         projectCount: 1,
-        recentActivity: 'Medium',
+        recentActivity: "Medium",
         cash: 100,
         prestige: 100,
-        motto: '2'
+        motto: "2",
       },
       {
-        id: 'r3',
-        name: 'Weak Rival',
-        archetype: 'indie' as ArchetypeKey,
+        id: "r3",
+        name: "Weak Rival",
+        archetype: "indie" as ArchetypeKey,
         strength: 30,
         projectCount: 1,
-        recentActivity: 'Weak',
+        recentActivity: "Weak",
         cash: 100,
         prestige: 100,
-        motto: '3'
-      }
+        motto: "3",
+      },
     ];
 
-    const rivalsMap = Object.fromEntries(mockRivals.map(r => [r.id, r]));
+    const rivalsMap = Object.fromEntries(mockRivals.map((r) => [r.id, r]));
     useGameStore.setState({
       gameState: {
-        entities: { rivals: rivalsMap }
-      }
+        entities: { rivals: rivalsMap },
+      },
     } as any);
 
     render(<RivalsPanel />);
 
     // Check that 3 rivals are rendered by checking for their names
-    expect(screen.getByText('Strong Rival')).toBeInTheDocument();
-    expect(screen.getByText('Medium Rival')).toBeInTheDocument();
-    expect(screen.getByText('Weak Rival')).toBeInTheDocument();
+    expect(screen.getByText("Strong Rival")).toBeInTheDocument();
+    expect(screen.getByText("Medium Rival")).toBeInTheDocument();
+    expect(screen.getByText("Weak Rival")).toBeInTheDocument();
   });
-
 });

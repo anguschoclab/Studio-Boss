@@ -1,11 +1,11 @@
-import React from 'react';
-import { useGameStore } from '@/store/gameStore';
-import { Button } from '@/components/ui/button';
-import { Target } from 'lucide-react';
+import React from "react";
+import { useGameStore } from "@/store/gameStore";
+import { Button } from "@/components/ui/button";
+import { Target } from "lucide-react";
 
-import { MADashboard } from '../industry/MADashboard';
-import { cn } from '@/lib/utils';
-import { RivalCard } from './RivalCard';
+import { MADashboard } from "../industry/MADashboard";
+import { cn } from "@/lib/utils";
+import { RivalCard } from "./RivalCard";
 
 export const RivalsPanel = () => {
   const [activeSubTab, setActiveSubTab] = React.useState<"intel" | "market">("intel");
@@ -63,7 +63,7 @@ export const RivalsPanel = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {rivals.map(rival => (
+              {rivals.map((rival) => (
                 <RivalCard
                   key={rival.id}
                   rival={rival}

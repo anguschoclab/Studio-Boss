@@ -1,6 +1,6 @@
-import React from 'react';
-import { useUIStore } from '@/store/uiStore';
-import { cn } from '@/lib/utils';
+import React from "react";
+import { useUIStore } from "@/store/uiStore";
+import { cn } from "@/lib/utils";
 
 interface TalentNameLinkProps {
   talentId: string;
@@ -25,7 +25,7 @@ export const TalentNameLink: React.FC<TalentNameLinkProps> = ({ talentId, name, 
         selectTalent(talentId);
       }}
       onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
+        if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           selectTalent(talentId);
         }

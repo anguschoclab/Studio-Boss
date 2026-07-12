@@ -1,12 +1,25 @@
-import { useUIStore } from '@/store/uiStore';
-import { useGameStore } from '@/store/gameStore';
-import { formatMoney } from '@/engine/utils';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { useState } from 'react';
-import { Headline, NarrativeEvent } from '@/engine/types';
-import { NewsStoryModal } from './NewsStoryModal';
-import { cn } from '@/lib/utils';
-import { AlertTriangle, DollarSign, ArrowRight, Newspaper, Trophy, MessageSquare } from 'lucide-react';
+import { useUIStore } from "@/store/uiStore";
+import { useGameStore } from "@/store/gameStore";
+import { formatMoney } from "@/engine/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { useState } from "react";
+import { Headline, NarrativeEvent } from "@/engine/types";
+import { NewsStoryModal } from "./NewsStoryModal";
+import { cn } from "@/lib/utils";
+import {
+  AlertTriangle,
+  DollarSign,
+  ArrowRight,
+  Newspaper,
+  Trophy,
+  MessageSquare,
+} from "lucide-react";
 
 export const WeekSummaryModal = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
@@ -16,7 +29,17 @@ export const WeekSummaryModal = () => {
   if (!activeModal || activeModal.type !== "SUMMARY") return null;
 
   const weekSummary = activeModal.payload;
-  const { toWeek, cashBefore, cashAfter, totalRevenue, totalCosts, projectUpdates, newHeadlines, narrativeEvents, isQuietWeek } = weekSummary;
+  const {
+    toWeek,
+    cashBefore,
+    cashAfter,
+    totalRevenue,
+    totalCosts,
+    projectUpdates,
+    newHeadlines,
+    narrativeEvents,
+    isQuietWeek,
+  } = weekSummary;
   const netDelta = cashAfter - cashBefore;
 
   // Categorize narrative events

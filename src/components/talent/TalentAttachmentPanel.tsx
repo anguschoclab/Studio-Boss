@@ -50,7 +50,11 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
 
   const attachedTalentIds = useMemo(() => {
     if (!gameState) return new Set<string>();
-    const projectContracts = getContractsByProjectId(gameState.entities.contractsByProjectId, gameState.entities.contracts, project.id);
+    const projectContracts = getContractsByProjectId(
+      gameState.entities.contractsByProjectId,
+      gameState.entities.contracts,
+      project.id
+    );
     return new Set(projectContracts.map((c) => c.talentId));
   }, [gameState, project.id]);
 
@@ -136,7 +140,10 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
         <div className="w-full lg:w-3/5 flex flex-col border-r border-white/5">
           <div className="p-4 space-y-4 bg-black/20">
             <div className="relative">
-              <Search aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+              <Search
+                aria-hidden="true"
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"
+              />
               <Input
                 aria-label="Search industry database"
                 placeholder="Search industry database..."
@@ -148,7 +155,10 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
 
             <div className="flex gap-2">
               <Select value={selectedTier} onValueChange={(v: string) => setSelectedTier(v)}>
-                <SelectTrigger aria-label="Filter by tier" className="flex-1 bg-black/60 border-slate-700 h-9 text-[10px] font-bold uppercase">
+                <SelectTrigger
+                  aria-label="Filter by tier"
+                  className="flex-1 bg-black/60 border-slate-700 h-9 text-[10px] font-bold uppercase"
+                >
                   <SelectValue placeholder="Tier" />
                 </SelectTrigger>
                 <SelectContent className="bg-black border-white/5 text-slate-200">
@@ -160,8 +170,16 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
                 </SelectContent>
               </Select>
 
-              <Select value={selectedRole} onValueChange={(v: 'ALL' | 'actor' | 'director' | 'writer' | 'producer') => setSelectedRole(v)}>
-                <SelectTrigger aria-label="Filter by role" className="flex-1 bg-black/60 border-slate-700 h-9 text-[10px] font-bold uppercase">
+              <Select
+                value={selectedRole}
+                onValueChange={(v: "ALL" | "actor" | "director" | "writer" | "producer") =>
+                  setSelectedRole(v)
+                }
+              >
+                <SelectTrigger
+                  aria-label="Filter by role"
+                  className="flex-1 bg-black/60 border-slate-700 h-9 text-[10px] font-bold uppercase"
+                >
                   <SelectValue placeholder="Role" />
                 </SelectTrigger>
                 <SelectContent className="bg-black border-white/5 text-slate-200">

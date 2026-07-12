@@ -1,12 +1,12 @@
-import { StatCard } from '@/components/shared/StatCard';
-import { Clapperboard, DollarSign, Award, Users } from 'lucide-react';
-import { formatMoney } from '@/engine/utils';
-import { SparklineChart } from '@/components/shared/SparklineChart';
-import { ProgressIndicator } from '@/components/shared/ProgressIndicator';
-import { GameState } from '@/engine/types';
+import { StatCard } from "@/components/shared/StatCard";
+import { Clapperboard, DollarSign, Award, Users } from "lucide-react";
+import { formatMoney } from "@/engine/utils";
+import { SparklineChart } from "@/components/shared/SparklineChart";
+import { ProgressIndicator } from "@/components/shared/ProgressIndicator";
+import { GameState } from "@/engine/types";
 
 interface StudioStatsGridProps {
-  finance: GameState['finance'];
+  finance: GameState["finance"];
   activeProjectsCount: number;
   releasedProjectsCount: number;
   prestige: number;
@@ -24,7 +24,7 @@ export const StudioStatsGrid = ({
   talentCount,
   rivalCount,
   cashHistory,
-  cashTrend
+  cashTrend,
 }: StudioStatsGridProps) => {
   return (
     <div className="lg:col-span-2 grid grid-cols-2 gap-8">
@@ -33,21 +33,23 @@ export const StudioStatsGrid = ({
         value={formatMoney(finance.cash)}
         subtitle="AVAILABLE FISCAL ASSETS"
         icon={DollarSign}
-        color={finance.cash > 100000000 ? 'success' : finance.cash > 50000000 ? 'primary' : 'warning'}
-        trend={cashTrend > 5 ? 'up' : cashTrend < -5 ? 'down' : 'neutral'}
+        color={
+          finance.cash > 100000000 ? "success" : finance.cash > 50000000 ? "primary" : "warning"
+        }
+        trend={cashTrend > 5 ? "up" : cashTrend < -5 ? "down" : "neutral"}
         trendValue={cashTrend !== 0 ? `${Math.abs(Math.round(cashTrend))}%` : undefined}
         size="md"
       >
         {cashHistory.length > 1 && (
-          <SparklineChart 
-            data={cashHistory} 
-            width={240} 
+          <SparklineChart
+            data={cashHistory}
+            width={240}
             height={40}
-            trend={cashTrend > 5 ? 'up' : cashTrend < -5 ? 'down' : 'neutral'}
+            trend={cashTrend > 5 ? "up" : cashTrend < -5 ? "down" : "neutral"}
           />
         )}
       </StatCard>
-      
+
       <StatCard
         title="Active Pipeline"
         value={activeProjectsCount}
@@ -57,7 +59,7 @@ export const StudioStatsGrid = ({
         trend="up"
         size="md"
       />
-      
+
       <StatCard
         title="Prestige Rating"
         value={prestige}
@@ -66,16 +68,16 @@ export const StudioStatsGrid = ({
         color="secondary"
         size="md"
       >
-        <ProgressIndicator 
-          value={prestige} 
-          max={100} 
-          size="sm" 
+        <ProgressIndicator
+          value={prestige}
+          max={100}
+          size="sm"
           color="secondary"
           showValue={false}
           className="h-1 rounded-none mt-2"
         />
       </StatCard>
-      
+
       <StatCard
         title="Talent Network"
         value={talentCount}

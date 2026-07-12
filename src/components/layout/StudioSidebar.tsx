@@ -252,7 +252,10 @@ export const StudioSidebar = () => {
               className="w-full flex items-center gap-4 h-12 px-6 text-muted-foreground/30 hover:bg-white/5 hover:text-foreground transition-all duration-500 group overflow-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none"
               onClick={() => setShowSettings(true)}
             >
-              <Settings aria-hidden="true" className="h-5 w-5 shrink-0 group-hover:rotate-90 transition-transform duration-700" />
+              <Settings
+                aria-hidden="true"
+                className="h-5 w-5 shrink-0 group-hover:rotate-90 transition-transform duration-700"
+              />
               {!isCollapsed && (
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] italic">
                   CONFIGURATION

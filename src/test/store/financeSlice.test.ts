@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { useGameStore } from '../../store/gameStore';
-import { WeeklyFinancialReport } from '../../engine/types';
+import { describe, it, expect, beforeEach } from "vitest";
+import { useGameStore } from "../../store/gameStore";
+import { WeeklyFinancialReport } from "../../engine/types";
 
-describe('financeSlice', () => {
+describe("financeSlice", () => {
   beforeEach(() => {
     // Reset store before each test
     useGameStore.setState({
@@ -11,17 +11,17 @@ describe('financeSlice', () => {
           cash: 100000000,
           ledger: [],
           weeklyHistory: [],
-        }
-      } as any
+        },
+      } as any,
     });
   });
 
-  it('should initialize with an empty ledger', () => {
+  it("should initialize with an empty ledger", () => {
     const state = useGameStore.getState().gameState;
     expect(state?.finance.ledger).toEqual([]);
   });
 
-  it('should append a WeeklyFinancialReport to the ledger via addLedgerEntry', () => {
+  it("should append a WeeklyFinancialReport to the ledger via addLedgerEntry", () => {
     const mockReport: WeeklyFinancialReport = {
       week: 1,
       year: 2026,

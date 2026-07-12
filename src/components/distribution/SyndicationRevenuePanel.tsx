@@ -1,12 +1,12 @@
-import React from 'react';
-import { cn, formatCompactCurrency } from '@/lib/utils';
-import { Globe, TrendingUp, Tv, ChevronRight, Zap } from 'lucide-react';
+import React from "react";
+import { cn, formatCompactCurrency } from "@/lib/utils";
+import { Globe, TrendingUp, Tv, ChevronRight, Zap } from "lucide-react";
 
 interface SyndicationMarket {
   region: string;
   revenue: number;
   deals: number;
-  trend: 'up' | 'down' | 'stable';
+  trend: "up" | "down" | "stable";
   growth: number; // percentage
 }
 
@@ -34,8 +34,12 @@ export const SyndicationRevenuePanel: React.FC<SyndicationRevenuePanelProps> = (
               <Globe className="h-6 w-6 text-primary group-hover:text-black transition-colors" />
             </div>
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic mb-2">TOTAL REVENUE</p>
-              <p className="text-3xl font-display font-black italic tracking-tighter text-foreground group-hover:text-primary transition-colors">{formatCompactCurrency(totalRevenue)}</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic mb-2">
+                TOTAL REVENUE
+              </p>
+              <p className="text-3xl font-display font-black italic tracking-tighter text-foreground group-hover:text-primary transition-colors">
+                {formatCompactCurrency(totalRevenue)}
+              </p>
             </div>
           </div>
         </div>
@@ -46,8 +50,12 @@ export const SyndicationRevenuePanel: React.FC<SyndicationRevenuePanelProps> = (
               <Tv className="h-6 w-6 text-emerald-500 group-hover:text-black transition-colors" />
             </div>
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic mb-2">ACTIVE DEALS</p>
-              <p className="text-3xl font-display font-black italic tracking-tighter text-foreground group-hover:text-emerald-500 transition-colors">{totalDeals}</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic mb-2">
+                ACTIVE DEALS
+              </p>
+              <p className="text-3xl font-display font-black italic tracking-tighter text-foreground group-hover:text-emerald-500 transition-colors">
+                {totalDeals}
+              </p>
             </div>
           </div>
         </div>
@@ -58,8 +66,12 @@ export const SyndicationRevenuePanel: React.FC<SyndicationRevenuePanelProps> = (
               <TrendingUp className="h-6 w-6 text-amber-500 group-hover:text-black transition-colors" />
             </div>
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic mb-2">TOP PERFORMING REGION</p>
-              <p className="text-3xl font-display font-black italic tracking-tighter text-foreground group-hover:text-amber-500 transition-colors">{topPerformingRegion.toUpperCase() || 'NULL'}</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic mb-2">
+                TOP PERFORMING REGION
+              </p>
+              <p className="text-3xl font-display font-black italic tracking-tighter text-foreground group-hover:text-amber-500 transition-colors">
+                {topPerformingRegion.toUpperCase() || "NULL"}
+              </p>
             </div>
           </div>
         </div>
@@ -70,7 +82,9 @@ export const SyndicationRevenuePanel: React.FC<SyndicationRevenuePanelProps> = (
         <div className="flex items-center gap-4 border-l-4 border-primary pl-6 py-2">
           <Globe className="h-6 w-6 text-primary" strokeWidth={2} />
           <div>
-            <h3 className="text-xl font-display font-black uppercase italic tracking-tighter text-foreground leading-none mb-2">REGIONAL SYNDICATION ARRAYS</h3>
+            <h3 className="text-xl font-display font-black uppercase italic tracking-tighter text-foreground leading-none mb-2">
+              REGIONAL SYNDICATION ARRAYS
+            </h3>
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
               GLOBAL REVENUE DISTRIBUTION BY MARKET NODE
             </p>
@@ -78,7 +92,11 @@ export const SyndicationRevenuePanel: React.FC<SyndicationRevenuePanelProps> = (
         </div>
 
         {byRegion.length === 0 ? (
-          <div className={cn('text-center py-20 bg-white/[0.01] border border-white/5 border-dashed rounded-none')}>
+          <div
+            className={cn(
+              "text-center py-20 bg-white/[0.01] border border-white/5 border-dashed rounded-none"
+            )}
+          >
             <Globe className="h-16 w-16 mx-auto mb-6 text-primary/20" strokeWidth={1} />
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/20 italic">
               NO SYNDICATION DEALS ACTIVE IN BUFFER
@@ -97,28 +115,41 @@ export const SyndicationRevenuePanel: React.FC<SyndicationRevenuePanelProps> = (
                       <Globe className="h-6 w-6 text-primary/40 group-hover/row:text-primary transition-colors" />
                     </div>
                     <div>
-                      <h4 className="font-display font-black text-lg uppercase italic tracking-tight text-foreground group-hover/row:text-primary transition-colors leading-none mb-2">{market.region}</h4>
+                      <h4 className="font-display font-black text-lg uppercase italic tracking-tight text-foreground group-hover/row:text-primary transition-colors leading-none mb-2">
+                        {market.region}
+                      </h4>
                       <div className="flex items-center gap-6">
                         <div className="px-2 py-0.5 border border-white/10 text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
                           {market.deals} ACTIVE UNITS
                         </div>
                         <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/30 italic">
-                          {market.growth > 0 ? '+' : ''}{market.growth}% DELTA VS PERIOD PREV
+                          {market.growth > 0 ? "+" : ""}
+                          {market.growth}% DELTA VS PERIOD PREV
                         </span>
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="text-right space-y-2">
-                    <p className="text-2xl font-display font-black italic tracking-tighter text-foreground leading-none">{formatCompactCurrency(market.revenue)}</p>
-                    <p className={cn(
-                      'text-[9px] font-black uppercase tracking-[0.2em] italic flex items-center justify-end gap-2',
-                      market.trend === 'up' ? 'text-emerald-500' :
-                      market.trend === 'down' ? 'text-rose-500' : 'text-muted-foreground/30'
-                    )}>
-                      {market.trend === 'up' && <Zap className="h-3 w-3 fill-current" />}
-                      {market.trend === 'up' ? 'STATUS GROWING' :
-                       market.trend === 'down' ? 'STATUS DECLINING' : 'STATUS STABLE'}
+                    <p className="text-2xl font-display font-black italic tracking-tighter text-foreground leading-none">
+                      {formatCompactCurrency(market.revenue)}
+                    </p>
+                    <p
+                      className={cn(
+                        "text-[9px] font-black uppercase tracking-[0.2em] italic flex items-center justify-end gap-2",
+                        market.trend === "up"
+                          ? "text-emerald-500"
+                          : market.trend === "down"
+                            ? "text-rose-500"
+                            : "text-muted-foreground/30"
+                      )}
+                    >
+                      {market.trend === "up" && <Zap className="h-3 w-3 fill-current" />}
+                      {market.trend === "up"
+                        ? "STATUS GROWING"
+                        : market.trend === "down"
+                          ? "STATUS DECLINING"
+                          : "STATUS STABLE"}
                       <ChevronRight className="h-3 w-3" />
                     </p>
                   </div>

@@ -1,10 +1,10 @@
-import { Talent, Project, Contract, StateImpact } from '@/engine/types';
-import { TalentUpdate } from '@/engine/types/state.types';
-import { type TalentId, type ProjectId, type ContractId } from '@/engine/types/shared.types';
+import { Talent, Project, Contract, StateImpact } from "@/engine/types";
+import { TalentUpdate } from "@/engine/types/state.types";
+import { type TalentId, type ProjectId, type ContractId } from "@/engine/types/shared.types";
 
 /**
  * Talent Morale & Behavioral Psychology System
- * 
+ *
  * Logic:
  * - Talent mood (Morale) drifts toward 50 over time.
  * - Project delays or low momentum reduce mood.
@@ -19,7 +19,7 @@ export const TalentMoraleSystem = {
   getProductionSpeedMultiplier(talent: Talent[]): number {
     if (talent.length === 0) return 1.0;
 
-    const lowMoraleTalent = talent.filter(t => t.psychology.mood < 30);
+    const lowMoraleTalent = talent.filter((t) => t.psychology.mood < 30);
     if (lowMoraleTalent.length > 0) {
       // 20% drag if there's significant unhappiness
       return 0.8;
@@ -36,11 +36,11 @@ export const TalentMoraleSystem = {
     if (talent.length === 0) return 1.0;
 
     const avgMood = talent.reduce((acc, t) => acc + t.psychology.mood, 0) / talent.length;
-    
+
     // Scale from 0.85 (miserable) to 1.1 (inspired)
     if (avgMood < 30) return 0.85;
     if (avgMood > 85) return 1.1;
-    
+
     return 1.0;
   },
 
@@ -73,7 +73,7 @@ export const TalentMoraleSystem = {
       if (!Object.prototype.hasOwnProperty.call(talentDict, talentId)) continue;
       const t = talentDict[talentId as TalentId];
       let moodChange = 0;
-      
+
       // 1. Natural drift toward 50
       if (t.psychology.mood > 55) moodChange -= 1;
       else if (t.psychology.mood < 45) moodChange += 1;
@@ -87,10 +87,10 @@ export const TalentMoraleSystem = {
           if (p.momentum < 30) moodChange -= 2;
           else if (p.momentum > 80) moodChange += 1;
 
-            // Crisis impact
-            if (p.activeCrisis && !p.activeCrisis.resolved) moodChange -= 5;
-          }
+          // Crisis impact
+          if (p.activeCrisis && !p.activeCrisis.resolved) moodChange -= 5;
         }
+      }
 
       if (moodChange !== 0) {
         updates.push({
@@ -98,13 +98,13 @@ export const TalentMoraleSystem = {
           update: {
             psychology: {
               ...t.psychology,
-              mood: Math.max(0, Math.min(100, t.psychology.mood + moodChange))
-            }
-          }
+              mood: Math.max(0, Math.min(100, t.psychology.mood + moodChange)),
+            },
+          },
         });
       }
     }
 
     return updates;
-  }
+  },
 };

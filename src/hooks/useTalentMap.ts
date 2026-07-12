@@ -1,7 +1,7 @@
-import { useMemo } from 'react';
-import { useGameStore } from '@/store/gameStore';
-import { Talent, Agency } from '@/engine/types';
-import { selectTalentPool } from '@/store/selectors';
+import { useMemo } from "react";
+import { useGameStore } from "@/store/gameStore";
+import { Talent, Agency } from "@/engine/types";
+import { selectTalentPool } from "@/store/selectors";
 
 /**
  * Hook to create a Map of talent by ID for efficient lookups
@@ -9,7 +9,7 @@ import { selectTalentPool } from '@/store/selectors';
  * @returns Map of talent ID to talent object
  */
 export function useTalentMap(talentPool?: Talent[] | Record<string, Talent>): Map<string, Talent> {
-  const gameState = useGameStore(s => s.gameState);
+  const gameState = useGameStore((s) => s.gameState);
 
   // Memoize defaultPool
   const defaultPool = useMemo(() => selectTalentPool(gameState) || [], [gameState]);
@@ -27,8 +27,8 @@ export function useTalentMap(talentPool?: Talent[] | Record<string, Talent>): Ma
  * @returns Map of agency ID to agency object
  */
 export function useAgencyMap(): Map<string, Agency> {
-  const gameState = useGameStore(s => s.gameState);
-  
+  const gameState = useGameStore((s) => s.gameState);
+
   return useMemo(() => {
     const agencies = gameState?.industry?.agencies || [];
     const agenciesArray = Array.isArray(agencies) ? agencies : Object.values(agencies);

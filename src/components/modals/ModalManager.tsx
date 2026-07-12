@@ -1,21 +1,51 @@
-import React from 'react';
-import { useUIStore } from '@/store/uiStore';
+import React from "react";
+import { useUIStore } from "@/store/uiStore";
 // Lazy Loaded Modals
-const WeekSummaryModal = React.lazy(() => import('./WeekSummaryModal').then(m => ({ default: m.WeekSummaryModal })));
-const CrisisModal = React.lazy(() => import('./CrisisModal').then(m => ({ default: m.CrisisModal })));
-const AwardsCeremonyModal = React.lazy(() => import('./AwardsCeremonyModal').then(m => ({ default: m.AwardsCeremonyModal })));
-const FestivalMarketModal = React.lazy(() => import('./FestivalMarketModal').then(m => ({ default: m.FestivalMarketModal })));
-const DirectorsCutModal = React.lazy(() => import('./DirectorsCutModal').then(m => ({ default: m.DirectorsCutModal })));
-const UpfrontsModal = React.lazy(() => import('./UpfrontsModal').then(m => ({ default: m.UpfrontsModal })));
-const BiddingWarModal = React.lazy(() => import('./BiddingWarModal').then(m => ({ default: m.BiddingWarModal })));
-const BreakoutBiddingWarModal = React.lazy(() => import('./BreakoutBiddingWarModal').then(m => ({ default: m.BreakoutBiddingWarModal })));
-const RebootOpportunityModal = React.lazy(() => import('./RebootOpportunityModal').then(m => ({ default: m.RebootOpportunityModal })));
-const GameOverModal = React.lazy(() => import('./GameOverModal').then(m => ({ default: m.GameOverModal })));
-const ReleaseStrategyModal = React.lazy(() => import('./ReleaseStrategyModal').then(m => ({ default: m.ReleaseStrategyModal })));
-const PostProductionModal = React.lazy(() => import('./PostProductionModal').then(m => ({ default: m.PostProductionModal })));
-const AchievementUnlockedModal = React.lazy(() => import('./AchievementUnlockedModal').then(m => ({ default: m.AchievementUnlockedModal })));
-const PackageDealOfferedModal = React.lazy(() => import('./PackageDealOfferedModal').then(m => ({ default: m.PackageDealOfferedModal })));
-const DistressedAssetOfferModal = React.lazy(() => import('./DistressedAssetOfferModal').then(m => ({ default: m.DistressedAssetOfferModal })));
+const WeekSummaryModal = React.lazy(() =>
+  import("./WeekSummaryModal").then((m) => ({ default: m.WeekSummaryModal }))
+);
+const CrisisModal = React.lazy(() =>
+  import("./CrisisModal").then((m) => ({ default: m.CrisisModal }))
+);
+const AwardsCeremonyModal = React.lazy(() =>
+  import("./AwardsCeremonyModal").then((m) => ({ default: m.AwardsCeremonyModal }))
+);
+const FestivalMarketModal = React.lazy(() =>
+  import("./FestivalMarketModal").then((m) => ({ default: m.FestivalMarketModal }))
+);
+const DirectorsCutModal = React.lazy(() =>
+  import("./DirectorsCutModal").then((m) => ({ default: m.DirectorsCutModal }))
+);
+const UpfrontsModal = React.lazy(() =>
+  import("./UpfrontsModal").then((m) => ({ default: m.UpfrontsModal }))
+);
+const BiddingWarModal = React.lazy(() =>
+  import("./BiddingWarModal").then((m) => ({ default: m.BiddingWarModal }))
+);
+const BreakoutBiddingWarModal = React.lazy(() =>
+  import("./BreakoutBiddingWarModal").then((m) => ({ default: m.BreakoutBiddingWarModal }))
+);
+const RebootOpportunityModal = React.lazy(() =>
+  import("./RebootOpportunityModal").then((m) => ({ default: m.RebootOpportunityModal }))
+);
+const GameOverModal = React.lazy(() =>
+  import("./GameOverModal").then((m) => ({ default: m.GameOverModal }))
+);
+const ReleaseStrategyModal = React.lazy(() =>
+  import("./ReleaseStrategyModal").then((m) => ({ default: m.ReleaseStrategyModal }))
+);
+const PostProductionModal = React.lazy(() =>
+  import("./PostProductionModal").then((m) => ({ default: m.PostProductionModal }))
+);
+const AchievementUnlockedModal = React.lazy(() =>
+  import("./AchievementUnlockedModal").then((m) => ({ default: m.AchievementUnlockedModal }))
+);
+const PackageDealOfferedModal = React.lazy(() =>
+  import("./PackageDealOfferedModal").then((m) => ({ default: m.PackageDealOfferedModal }))
+);
+const DistressedAssetOfferModal = React.lazy(() =>
+  import("./DistressedAssetOfferModal").then((m) => ({ default: m.DistressedAssetOfferModal }))
+);
 
 /**
  * Unified Modal Manager.
@@ -30,35 +60,35 @@ export const ModalManager: React.FC = () => {
     <React.Suspense fallback={null}>
       {(() => {
         switch (activeModal.type) {
-          case 'SUMMARY':
+          case "SUMMARY":
             return <WeekSummaryModal key={activeModal.id} />;
-          case 'CRISIS':
+          case "CRISIS":
             return <CrisisModal key={activeModal.id} />;
-          case 'AWARDS':
+          case "AWARDS":
             return <AwardsCeremonyModal key={activeModal.id} />;
-          case 'FESTIVAL_MARKET':
+          case "FESTIVAL_MARKET":
             return <FestivalMarketModal key={activeModal.id} />;
-          case 'DIRECTORS_CUT_AVAILABLE':
+          case "DIRECTORS_CUT_AVAILABLE":
             return <DirectorsCutModal key={activeModal.id} />;
-          case 'UPFRONTS':
+          case "UPFRONTS":
             return <UpfrontsModal key={activeModal.id} />;
-          case 'BIDDING_WAR':
+          case "BIDDING_WAR":
             return <BiddingWarModal key={activeModal.id} />;
-          case 'BREAKOUT_BIDDING_WAR':
+          case "BREAKOUT_BIDDING_WAR":
             return <BreakoutBiddingWarModal key={activeModal.id} />;
-          case 'REBOOT_OPPORTUNITY':
+          case "REBOOT_OPPORTUNITY":
             return <RebootOpportunityModal key={activeModal.id} />;
-          case 'GAME_OVER':
+          case "GAME_OVER":
             return <GameOverModal key={activeModal.id} />;
-          case 'RELEASE_STRATEGY':
+          case "RELEASE_STRATEGY":
             return <ReleaseStrategyModal key={activeModal.id} />;
-          case 'POST_PRODUCTION':
+          case "POST_PRODUCTION":
             return <PostProductionModal key={activeModal.id} />;
-          case 'ACHIEVEMENT_UNLOCKED':
+          case "ACHIEVEMENT_UNLOCKED":
             return <AchievementUnlockedModal key={activeModal.id} payload={activeModal.payload} />;
-          case 'PACKAGE_DEAL_OFFERED':
+          case "PACKAGE_DEAL_OFFERED":
             return <PackageDealOfferedModal key={activeModal.id} />;
-          case 'DISTRESSED_ASSET_OFFER':
+          case "DISTRESSED_ASSET_OFFER":
             return <DistressedAssetOfferModal key={activeModal.id} />;
           default:
             return null;

@@ -1,7 +1,7 @@
-import React from 'react';
-import { Buyer } from '@/engine/types';
-import { formatMoney } from '@/engine/utils';
-import { History, Calendar, DollarSign, ArrowRight } from 'lucide-react';
+import React from "react";
+import { Buyer } from "@/engine/types";
+import { formatMoney } from "@/engine/utils";
+import { History, Calendar, DollarSign, ArrowRight } from "lucide-react";
 
 interface MAHistoryFeedProps {
   buyer: Buyer;
@@ -15,7 +15,9 @@ export const MAHistoryFeed: React.FC<MAHistoryFeedProps> = ({ buyer }) => {
       <div className="flex flex-col items-center justify-center p-8 text-center glass-panel border-dashed border-border/40 opacity-40">
         <History className="w-8 h-8 mb-2" />
         <p className="text-[10px] uppercase font-bold tracking-widest leading-normal">
-          No corporate M&A activity<br />recorded for this entity
+          No corporate M&A activity
+          <br />
+          recorded for this entity
         </p>
       </div>
     );
@@ -25,15 +27,17 @@ export const MAHistoryFeed: React.FC<MAHistoryFeedProps> = ({ buyer }) => {
     <div className="space-y-3">
       <div className="flex items-center gap-2 mb-4">
         <History className="w-4 h-4 text-primary" />
-        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Corporate Timeline</h4>
+        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+          Corporate Timeline
+        </h4>
       </div>
-      
+
       <div className="relative pl-4 space-y-4 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-gradient-to-b before:from-primary/40 before:to-transparent">
         {history.map((event, idx) => (
           <div key={idx} className="relative group">
             {/* Timeline Dot */}
             <div className="absolute -left-[10px] top-1.5 w-[10px] h-[10px] rounded-none bg-background border-2 border-primary group-hover:scale-125 transition-transform" />
-            
+
             <div className="glass-panel p-3 rounded-none border border-white/5 hover:border-primary/30 transition-colors shadow-lg">
               <div className="flex items-center justify-between gap-4">
                 <div className="min-w-0">

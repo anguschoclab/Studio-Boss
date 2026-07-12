@@ -1,22 +1,22 @@
-import React, { useState, useMemo } from 'react';
-import { useGameStore } from '@/store/gameStore';
-import { MarketingAngle, MarketingCampaign } from '@/engine/types';
-import { Button } from '@/components/ui/button';
-import { Slider } from '@/components/ui/slider';
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from '@/components/ui/select';
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Globe, Home, Target, TrendingUp, AlertCircle } from 'lucide-react';
-import { evaluateMarketingEfficiency } from '@/engine/systems/marketing/efficiencyEvaluator';
-import { formatCurrency } from '@/lib/utils'; // Assuming this exists
-import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
+import React, { useState, useMemo } from "react";
+import { useGameStore } from "@/store/gameStore";
+import { MarketingAngle, MarketingCampaign } from "@/engine/types";
+import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Globe, Home, Target, TrendingUp, AlertCircle } from "lucide-react";
+import { evaluateMarketingEfficiency } from "@/engine/systems/marketing/efficiencyEvaluator";
+import { formatCurrency } from "@/lib/utils"; // Assuming this exists
+import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 
 interface MarketingWarRoomProps {
   projectId: string;
@@ -24,30 +24,38 @@ interface MarketingWarRoomProps {
 }
 
 export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, onClose }) => {
-  const gameState = useGameStore(s => s.gameState);
-  const updateProject = useGameStore(s => s.updateProject);
+  const gameState = useGameStore((s) => s.gameState);
+  const updateProject = useGameStore((s) => s.updateProject);
   const studioCash = gameState?.finance.cash || 0;
 
-  const project = useMemo(() => 
-    Object.values(gameState?.studio.internal.projects || {}).find(p => p.id === projectId),
+  const project = useMemo(
+    () => Object.values(gameState?.studio.internal.projects || {}).find((p) => p.id === projectId),
     [gameState, projectId]
   );
 
-  const [domesticBudget, setDomesticBudget] = useState(project?.marketingCampaign?.domesticBudget || 0);
-  const [foreignBudget, setForeignBudget] = useState(project?.marketingCampaign?.foreignBudget || 0);
-  const [angle, setAngle] = useState<MarketingAngle>(project?.marketingCampaign?.primaryAngle || 'SELL THE STORY');
-  const [secondaryAngle, setSecondaryAngle] = useState<MarketingAngle | undefined>(project?.marketingCampaign?.secondaryAngle);
+  const [domesticBudget, setDomesticBudget] = useState(
+    project?.marketingCampaign?.domesticBudget || 0
+  );
+  const [foreignBudget, setForeignBudget] = useState(
+    project?.marketingCampaign?.foreignBudget || 0
+  );
+  const [angle, setAngle] = useState<MarketingAngle>(
+    project?.marketingCampaign?.primaryAngle || "SELL THE STORY"
+  );
+  const [secondaryAngle, setSecondaryAngle] = useState<MarketingAngle | undefined>(
+    project?.marketingCampaign?.secondaryAngle
+  );
 
   const totalMarketingBudget = domesticBudget + foreignBudget;
   const isOverBudget = totalMarketingBudget > studioCash;
 
   const efficiencyPreview = useMemo(() => {
-    if (!project) return { multiplier: 1, feedbackText: '' };
+    if (!project) return { multiplier: 1, feedbackText: "" };
     const tempCampaign: MarketingCampaign = {
       domesticBudget,
       foreignBudget,
       primaryAngle: angle,
-      weeksInMarketing: project.marketingCampaign?.weeksInMarketing || 1
+      weeksInMarketing: project.marketingCampaign?.weeksInMarketing || 1,
     };
     return evaluateMarketingEfficiency(project, tempCampaign);
   }, [project, domesticBudget, foreignBudget, angle]);
@@ -56,17 +64,17 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
 
   const handleSave = () => {
     if (isOverBudget) return;
-    
+
     updateProject(projectId, {
       marketingCampaign: {
         domesticBudget,
         foreignBudget,
         primaryAngle: angle,
         secondaryAngle,
-        weeksInMarketing: project.marketingCampaign?.weeksInMarketing || 1
-      }
+        weeksInMarketing: project.marketingCampaign?.weeksInMarketing || 1,
+      },
     });
-    
+
     if (onClose) onClose();
   };
 
@@ -75,11 +83,21 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
       <CardHeader className="bg-primary/10 border-b border-white/5">
         <div className="flex justify-between items-center">
           <div>
-            <CardTitle className="text-2xl font-black uppercase italic tracking-tighter">Marketing War Room</CardTitle>
+            <CardTitle className="text-2xl font-black uppercase italic tracking-tighter">
+              Marketing War Room
+            </CardTitle>
             <p className="text-muted-foreground text-sm font-medium">Project: {project.title}</p>
           </div>
-          <Badge variant="outline" className={isOverBudget ? "text-destructive border-destructive" : "text-primary border-primary"}>
-            Studio Cash: {formatCurrency ? formatCurrency(studioCash) : `$${(studioCash / 1_000_000).toFixed(1)}M`}
+          <Badge
+            variant="outline"
+            className={
+              isOverBudget ? "text-destructive border-destructive" : "text-primary border-primary"
+            }
+          >
+            Studio Cash:{" "}
+            {formatCurrency
+              ? formatCurrency(studioCash)
+              : `$${(studioCash / 1_000_000).toFixed(1)}M`}
           </Badge>
         </div>
       </CardHeader>
@@ -90,46 +108,66 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
           <div className="space-y-6">
             <div className="space-y-4">
               <div className="flex justify-between">
-                <TooltipWrapper tooltip="Marketing expenditure focused on the primary home market (North America)." side="top">
+                <TooltipWrapper
+                  tooltip="Marketing expenditure focused on the primary home market (North America)."
+                  side="top"
+                >
                   <label className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 cursor-help">
                     <Home className="w-4 h-4" /> Domestic Spend
                   </label>
                 </TooltipWrapper>
-                <span className="font-mono text-primary">{formatCurrency ? formatCurrency(domesticBudget) : `$${(domesticBudget / 1_000_000).toFixed(1)}M`}</span>
+                <span className="font-mono text-primary">
+                  {formatCurrency
+                    ? formatCurrency(domesticBudget)
+                    : `$${(domesticBudget / 1_000_000).toFixed(1)}M`}
+                </span>
               </div>
-              <Slider 
-                value={[domesticBudget]} 
-                max={Math.min(studioCash, project.budget * 2)} 
-                step={100000} 
+              <Slider
+                value={[domesticBudget]}
+                max={Math.min(studioCash, project.budget * 2)}
+                step={100000}
                 onValueChange={([v]) => setDomesticBudget(v)}
               />
             </div>
 
             <div className="space-y-4">
               <div className="flex justify-between">
-                <TooltipWrapper tooltip="Marketing expenditure for international territories and global syndication markets." side="top">
+                <TooltipWrapper
+                  tooltip="Marketing expenditure for international territories and global syndication markets."
+                  side="top"
+                >
                   <label className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 cursor-help">
                     <Globe className="w-4 h-4" /> Foreign Spend
                   </label>
                 </TooltipWrapper>
-                <span className="font-mono text-primary">{formatCurrency ? formatCurrency(foreignBudget) : `$${(foreignBudget / 1_000_000).toFixed(1)}M`}</span>
+                <span className="font-mono text-primary">
+                  {formatCurrency
+                    ? formatCurrency(foreignBudget)
+                    : `$${(foreignBudget / 1_000_000).toFixed(1)}M`}
+                </span>
               </div>
-              <Slider 
-                value={[foreignBudget]} 
-                max={Math.min(studioCash, project.budget * 2)} 
-                step={100000} 
+              <Slider
+                value={[foreignBudget]}
+                max={Math.min(studioCash, project.budget * 2)}
+                step={100000}
                 onValueChange={([v]) => setForeignBudget(v)}
               />
             </div>
 
             <div className="space-y-4">
-              <TooltipWrapper tooltip="The strategic creative direction for the campaign. Effectiveness depends on matching the angle to the project's core strengths." side="right">
+              <TooltipWrapper
+                tooltip="The strategic creative direction for the campaign. Effectiveness depends on matching the angle to the project's core strengths."
+                side="right"
+              >
                 <label className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 cursor-help">
                   <Target className="w-4 h-4" /> Primary Angle
                 </label>
               </TooltipWrapper>
               <Select value={angle} onValueChange={(v) => setAngle(v as MarketingAngle)}>
-                <SelectTrigger aria-label="Select Angle" className="w-full bg-white/5 border-white/10">
+                <SelectTrigger
+                  aria-label="Select Angle"
+                  className="w-full bg-white/5 border-white/10"
+                >
                   <SelectValue placeholder="Select Angle" />
                 </SelectTrigger>
                 <SelectContent>
@@ -143,16 +181,24 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
             </div>
 
             <div className="space-y-4">
-              <TooltipWrapper tooltip="A secondary creative message layered under the primary angle. Adds up to +30% of its fit bonus to campaign effectiveness (see marketing_mechanics.md §36.39.2)." side="right">
+              <TooltipWrapper
+                tooltip="A secondary creative message layered under the primary angle. Adds up to +30% of its fit bonus to campaign effectiveness (see marketing_mechanics.md §36.39.2)."
+                side="right"
+              >
                 <label className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 cursor-help">
                   <Target className="w-4 h-4" /> Secondary Angle (optional)
                 </label>
               </TooltipWrapper>
               <Select
-                value={secondaryAngle ?? '__none__'}
-                onValueChange={(v) => setSecondaryAngle(v === '__none__' ? undefined : (v as MarketingAngle))}
+                value={secondaryAngle ?? "__none__"}
+                onValueChange={(v) =>
+                  setSecondaryAngle(v === "__none__" ? undefined : (v as MarketingAngle))
+                }
               >
-                <SelectTrigger aria-label="Select Secondary Angle" className="w-full bg-white/5 border-white/10">
+                <SelectTrigger
+                  aria-label="Select Secondary Angle"
+                  className="w-full bg-white/5 border-white/10"
+                >
                   <SelectValue placeholder="None" />
                 </SelectTrigger>
                 <SelectContent>
@@ -171,12 +217,17 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
           <div className="glass-panel p-6 bg-white/5 space-y-6">
             <div className="space-y-2">
               <div className="flex justify-between items-center">
-                <TooltipWrapper tooltip="Projected effectiveness of your marketing spend based on budget balance, chosen angle, and project appeal." side="top">
+                <TooltipWrapper
+                  tooltip="Projected effectiveness of your marketing spend based on budget balance, chosen angle, and project appeal."
+                  side="top"
+                >
                   <h4 className="text-sm font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2 cursor-help">
                     <TrendingUp className="w-4 h-4" /> Efficiency Multiplier
                   </h4>
                 </TooltipWrapper>
-                <span className={`text-xl font-black ${efficiencyPreview.multiplier >= 1 ? 'text-green-400' : 'text-red-400'}`}>
+                <span
+                  className={`text-xl font-black ${efficiencyPreview.multiplier >= 1 ? "text-green-400" : "text-red-400"}`}
+                >
                   {efficiencyPreview.multiplier.toFixed(2)}x
                 </span>
               </div>
@@ -185,7 +236,10 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
 
             <div className="space-y-2">
               <div className="flex justify-between items-center">
-                <TooltipWrapper tooltip="Projected market awareness after one more week of this campaign, before competitive share-of-voice. Drives opening-week gross at release." side="top">
+                <TooltipWrapper
+                  tooltip="Projected market awareness after one more week of this campaign, before competitive share-of-voice. Drives opening-week gross at release."
+                  side="top"
+                >
                   <h4 className="text-sm font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2 cursor-help">
                     <Zap className="w-4 h-4" /> Projected Awareness
                   </h4>
@@ -195,14 +249,28 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
                     Math.min(
                       100,
                       (project.awareness ?? 0) +
-                        ((totalMarketingBudget / Math.max(1, project.marketingCampaign?.weeksInMarketing || 1)) / 1_000_000) *
+                        (totalMarketingBudget /
+                          Math.max(1, project.marketingCampaign?.weeksInMarketing || 1) /
+                          1_000_000) *
                           1.2 *
                           efficiencyPreview.multiplier
                     )
-                  )}%
+                  )}
+                  %
                 </span>
               </div>
-              <Progress value={Math.min(100, (project.awareness ?? 0) + ((totalMarketingBudget / Math.max(1, project.marketingCampaign?.weeksInMarketing || 1)) / 1_000_000) * 1.2 * efficiencyPreview.multiplier)} className="h-2" />
+              <Progress
+                value={Math.min(
+                  100,
+                  (project.awareness ?? 0) +
+                    (totalMarketingBudget /
+                      Math.max(1, project.marketingCampaign?.weeksInMarketing || 1) /
+                      1_000_000) *
+                      1.2 *
+                      efficiencyPreview.multiplier
+                )}
+                className="h-2"
+              />
             </div>
 
             <div className="p-4 rounded bg-black/40 border border-white/5">
@@ -223,15 +291,25 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
 
       <CardFooter className="bg-white/5 p-6 flex justify-between border-t border-white/10">
         <div className="flex flex-col">
-          <span className="text-xs text-muted-foreground font-bold uppercase">Total Campaign Cost</span>
-          <span className={`text-2xl font-black ${isOverBudget ? 'text-destructive' : 'text-white'}`}>
-            {formatCurrency ? formatCurrency(totalMarketingBudget) : `$${(totalMarketingBudget / 1_000_000).toFixed(1)}M`}
+          <span className="text-xs text-muted-foreground font-bold uppercase">
+            Total Campaign Cost
+          </span>
+          <span
+            className={`text-2xl font-black ${isOverBudget ? "text-destructive" : "text-white"}`}
+          >
+            {formatCurrency
+              ? formatCurrency(totalMarketingBudget)
+              : `$${(totalMarketingBudget / 1_000_000).toFixed(1)}M`}
           </span>
         </div>
         <div className="flex gap-3">
-          {onClose && <Button variant="ghost" onClick={onClose}>Cancel</Button>}
-          <Button 
-            disabled={isOverBudget} 
+          {onClose && (
+            <Button variant="ghost" onClick={onClose}>
+              Cancel
+            </Button>
+          )}
+          <Button
+            disabled={isOverBudget}
             tooltip="Finalize marketing strategy and commit budget"
             className="bg-primary text-primary-foreground font-bold uppercase px-8"
             onClick={handleSave}

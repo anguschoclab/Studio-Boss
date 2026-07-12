@@ -1,107 +1,114 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { advanceRumors } from '../../../engine/systems/rumors';
-import { Rumor, Talent } from '../../../engine/types';
-import { createMockGameState } from '../../utils/mockFactories';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { advanceRumors } from "../../../engine/systems/rumors";
+import { Rumor, Talent } from "../../../engine/types";
+import { createMockGameState } from "../../utils/mockFactories";
 
-import * as utils from '../../../engine/utils';
-import { secureRandom } from '../../../engine/utils';
+import * as utils from "../../../engine/utils";
+import { secureRandom } from "../../../engine/utils";
 
-
-describe('advanceRumors', () => {
+describe("advanceRumors", () => {
   beforeEach(() => {
-    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.99); // Reset to default behavior before each test
+    vi.spyOn(utils, "secureRandom").mockReturnValue(0.99); // Reset to default behavior before each test
   });
 
-  it('handles missing rumors array gracefully', () => {
+  it("handles missing rumors array gracefully", () => {
     const stateWithoutRumors = createMockGameState({
       week: 10,
-      industry: { ...createMockGameState().industry, rumors: undefined }
+      industry: { ...createMockGameState().industry, rumors: undefined },
     });
     const impact = advanceRumors(stateWithoutRumors);
     expect(impact.newRumors).toBeDefined();
     expect(impact.newRumors).toEqual([]);
   });
 
-  it('resolves truthful rumors and generates CONFIRMED headlines', () => {
+  it("resolves truthful rumors and generates CONFIRMED headlines", () => {
     vi.mocked(secureRandom).mockReturnValue(0.99);
     const rumor: Rumor = {
-      id: 'r1',
-      text: 'Test truthful rumor',
+      id: "r1",
+      text: "Test truthful rumor",
       week: 5,
       truthful: true,
-      category: 'project',
+      category: "project",
       resolved: false,
-      resolutionWeek: 10
+      resolutionWeek: 10,
     };
 
     const stateWithRumor = createMockGameState({
       week: 10,
-      industry: { ...createMockGameState().industry, rumors: [rumor] }
+      industry: { ...createMockGameState().industry, rumors: [rumor] },
     });
 
-    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.99);
+    vi.spyOn(utils, "secureRandom").mockReturnValue(0.99);
     const impact = advanceRumors(stateWithRumor);
 
     expect(impact.newHeadlines?.length).toBeGreaterThanOrEqual(1);
-    expect(impact.newHeadlines![0].text).toBe('CONFIRMED: Test truthful rumor');
+    expect(impact.newHeadlines![0].text).toBe("CONFIRMED: Test truthful rumor");
   });
 
-  it('resolves false rumors and generates DEBUNKED headlines', () => {
+  it("resolves false rumors and generates DEBUNKED headlines", () => {
     vi.mocked(secureRandom).mockReturnValue(0.99);
     const rumor: Rumor = {
-      id: 'r1',
-      text: 'Test false rumor',
+      id: "r1",
+      text: "Test false rumor",
       week: 5,
       truthful: false,
-      category: 'project',
+      category: "project",
       resolved: false,
-      resolutionWeek: 10
+      resolutionWeek: 10,
     };
 
     const stateWithRumor = createMockGameState({
       week: 10,
-      industry: { ...createMockGameState().industry, rumors: [rumor] }
+      industry: { ...createMockGameState().industry, rumors: [rumor] },
     });
 
-    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.99);
+    vi.spyOn(utils, "secureRandom").mockReturnValue(0.99);
     const impact = advanceRumors(stateWithRumor);
 
     expect(impact.newHeadlines?.length).toBeGreaterThanOrEqual(1);
-    expect(impact.newHeadlines![0].text).toBe('DEBUNKED: Previous rumors regarding test false rumor turn out to be false.');
+    expect(impact.newHeadlines![0].text).toBe(
+      "DEBUNKED: Previous rumors regarding test false rumor turn out to be false."
+    );
   });
 
-  it('generates new rumors when random conditions are met', () => {
+  it("generates new rumors when random conditions are met", () => {
     const talent: Talent = {
-      id: 't1',
-      name: 'Star Actor',
-      role: 'actor',
-      roles: ['actor'],
-      tier: 'A_LIST',
+      id: "t1",
+      name: "Star Actor",
+      role: "actor",
+      roles: ["actor"],
+      tier: "A_LIST",
       prestige: 50,
       fee: 1_000_000,
       draw: 50,
-      accessLevel: 'outsider',
+      accessLevel: "outsider",
       momentum: 50,
-      demographics: { age: 30, gender: 'MALE', ethnicity: 'White', country: 'USA' },
-      psychology: { ego: 50, mood: 100, scandalRisk: 0, synergyAffinities: [], synergyConflicts: [] }
+      demographics: { age: 30, gender: "MALE", ethnicity: "White", country: "USA" },
+      psychology: {
+        ego: 50,
+        mood: 100,
+        scandalRisk: 0,
+        synergyAffinities: [],
+        synergyConflicts: [],
+      },
     } as Talent;
 
     const stateWithTalent = createMockGameState({
       week: 10,
-      entities: { 
+      entities: {
         ...createMockGameState().entities,
-        talents: { [talent.id]: talent } 
-      }
+        talents: { [talent.id]: talent },
+      },
     });
 
-    vi.spyOn(utils, 'secureRandom').mockReturnValueOnce(0.01).mockReturnValueOnce(0.9);
-    
+    vi.spyOn(utils, "secureRandom").mockReturnValueOnce(0.01).mockReturnValueOnce(0.9);
+
     const impact = advanceRumors(stateWithTalent);
 
     if (impact.newRumors && impact.newRumors.length > 0) {
       const newRumor = impact.newRumors[0];
       expect(newRumor.resolved).toBe(false);
-      expect(impact.newHeadlines![0].text).toContain('RUMOR:');
+      expect(impact.newHeadlines![0].text).toContain("RUMOR:");
     }
   });
 });

@@ -1,8 +1,8 @@
-import { Agency, Talent, GameState, StateImpact } from '@/engine/types';
-import { MarketState } from '@/engine/types/state.types';
-import { RandomGenerator } from '../../utils/rng';
-import { AGENCY_ARCHETYPES } from '../../data/archetypes';
-import { AgencyLeverageEngine } from './AgencyLeverage';
+import { Agency, Talent, GameState, StateImpact } from "@/engine/types";
+import { MarketState } from "@/engine/types/state.types";
+import { RandomGenerator } from "../../utils/rng";
+import { AGENCY_ARCHETYPES } from "../../data/archetypes";
+import { AgencyLeverageEngine } from "./AgencyLeverage";
 
 function getAgencyArchetype(agency: Agency) {
   const key = agency.archetype as keyof typeof AGENCY_ARCHETYPES;
@@ -22,25 +22,34 @@ export function evaluatePackageOffer(
   rng: RandomGenerator
 ): { requiredTalentId?: string; packageDiscount?: number; reason: string } {
   const archetype = getAgencyArchetype(agency);
-  const motivation = agency.currentMotivation || 'VOLUME_RETAIL';
+  const motivation = agency.currentMotivation || "VOLUME_RETAIL";
 
   // 🎭 The Method Actor Tuning: Auteur directors have maximum leverage to force collaborator bundling.
-  const isAuteur = leadTalent.roles?.includes('director') && leadTalent.prestige > 85;
+  const isAuteur = leadTalent.roles?.includes("director") && leadTalent.prestige > 85;
 
-  const leverage = AgencyLeverageEngine.calculateNegotiationLeverage(leadTalent, agency, undefined, market);
+  const leverage = AgencyLeverageEngine.calculateNegotiationLeverage(
+    leadTalent,
+    agency,
+    undefined,
+    market
+  );
 
-  const baseProbability = motivation === 'THE_PACKAGER' ? 0.40 : (isAuteur ? 0.50 : archetype.pact_aggression);
+  const baseProbability =
+    motivation === "THE_PACKAGER" ? 0.4 : isAuteur ? 0.5 : archetype.pact_aggression;
   const leverageBonus = (archetype.leverage_base / 100) * 0.3;
-  const packageProbability = baseProbability + (leverage.score * 0.2) + leverageBonus;
+  const packageProbability = baseProbability + leverage.score * 0.2 + leverageBonus;
 
-  const prefersPackageDeal = isAuteur || archetype.negotiation_tactic_preferences.includes('PACKAGE_DEAL');
+  const prefersPackageDeal =
+    isAuteur || archetype.negotiation_tactic_preferences.includes("PACKAGE_DEAL");
 
   if (prefersPackageDeal && rng.next() < packageProbability) {
-    const otherClients = talentPool.filter(t => t.agencyId === agency.id && t.id !== leadTalent.id);
+    const otherClients = talentPool.filter(
+      (t) => t.agencyId === agency.id && t.id !== leadTalent.id
+    );
 
     if (otherClients.length > 0) {
       const bundled = rng.pick(otherClients);
-      const discount = motivation === 'THE_PACKAGER' ? 0.20 : (isAuteur ? 0.15 : 0.10);
+      const discount = motivation === "THE_PACKAGER" ? 0.2 : isAuteur ? 0.15 : 0.1;
 
       return {
         requiredTalentId: bundled.id,
@@ -52,7 +61,7 @@ export function evaluatePackageOffer(
     }
   }
 
-  return { reason: 'No package deal offered.' };
+  return { reason: "No package deal offered." };
 }
 
 /**
@@ -95,13 +104,13 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
     }
   }
 
-  state.industry.agencies.forEach(agency => {
+  state.industry.agencies.forEach((agency) => {
     const archetype = getAgencyArchetype(agency);
 
     // --- Rumor / Poach Pass ---
-    if (agency.culture === 'shark' || agency.currentMotivation === 'THE_SHARK') {
+    if (agency.culture === "shark" || agency.currentMotivation === "THE_SHARK") {
       if (rng.next() < 0.1) {
-        const brands: import('@/engine/types').RivalStudio[] = [];
+        const brands: import("@/engine/types").RivalStudio[] = [];
         const rivalsObj = state.entities.rivals || {};
         for (const id in rivalsObj) {
           brands.push(rivalsObj[id]);
@@ -110,13 +119,18 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
           let rival = rng.pick(brands);
 
           // 🎭 The Method Actor Tuning: Shark agencies smell blood in the water and specifically target vulnerable studios.
-          const vulnerableRivals = brands.filter(r => r.prestige < 50 || r.currentMotivation === 'CASH_CRUNCH' || (r.prestige < 60 && r.cash > 10_000_000));
+          const vulnerableRivals = brands.filter(
+            (r) =>
+              r.prestige < 50 ||
+              r.currentMotivation === "CASH_CRUNCH" ||
+              (r.prestige < 60 && r.cash > 10_000_000)
+          );
           if (vulnerableRivals.length > 0 && rng.next() < 0.8) {
             rival = rng.pick(vulnerableRivals);
           }
 
           impacts.push({
-            type: 'NEWS_ADDED',
+            type: "NEWS_ADDED",
             payload: {
               headline: `${agency.name} is looking to poach top talent from ${rival.name}.`,
               description: `Industry whispers suggest ${agency.name} is making aggressive overtures to talent currently under contract at ${rival.name}.`,
@@ -130,20 +144,32 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
     if (archetype.pact_aggression > 0 && rng.next() < archetype.pact_aggression) {
       // Find the highest-prestige player-contracted talent at this agency
       const agencyPlayerTalents = (talentsByAgency[agency.id] || [])
-        .filter(t => playerContractedTalentIds.has(t.id))
+        .filter((t) => playerContractedTalentIds.has(t.id))
         .sort((a, b) => b.prestige - a.prestige);
 
       if (agencyPlayerTalents.length > 0) {
         const leadTalent = agencyPlayerTalents[0];
-        const marketState = state.finance?.marketState ?? { baseRate: 0.045, savingsYield: 0.025, debtRate: 0.095, loanRate: 0.07, rateHistory: [] };
-        const result = evaluatePackageOffer(agency, leadTalent, talentsByAgency[agency.id] || [], marketState, rng);
+        const marketState = state.finance?.marketState ?? {
+          baseRate: 0.045,
+          savingsYield: 0.025,
+          debtRate: 0.095,
+          loanRate: 0.07,
+          rateHistory: [],
+        };
+        const result = evaluatePackageOffer(
+          agency,
+          leadTalent,
+          talentsByAgency[agency.id] || [],
+          marketState,
+          rng
+        );
 
         if (result.requiredTalentId) {
           const bundledTalent = state.entities.talents?.[result.requiredTalentId];
           impacts.push({
-            type: 'MODAL_TRIGGERED',
+            type: "MODAL_TRIGGERED",
             payload: {
-              modalType: 'PACKAGE_DEAL_OFFERED',
+              modalType: "PACKAGE_DEAL_OFFERED",
               priority: 75,
               payload: {
                 agencyId: agency.id,
@@ -153,18 +179,18 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
                 leadTalentId: leadTalent.id,
                 leadTalentName: leadTalent.name,
                 bundledTalentId: result.requiredTalentId,
-                bundledTalentName: bundledTalent?.name ?? 'Unknown',
+                bundledTalentName: bundledTalent?.name ?? "Unknown",
                 packageDiscount: result.packageDiscount ?? 0,
                 reason: result.reason,
               },
             },
           });
           impacts.push({
-            type: 'NEWS_ADDED',
+            type: "NEWS_ADDED",
             payload: {
-              headline: `${agency.name} demands package deal: ${leadTalent.name} + ${bundledTalent?.name ?? 'Unknown'}`,
+              headline: `${agency.name} demands package deal: ${leadTalent.name} + ${bundledTalent?.name ?? "Unknown"}`,
               description: result.reason,
-              category: 'talent',
+              category: "talent",
             },
           });
         }
@@ -176,19 +202,19 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
   const rivalsObj = state.entities.rivals || {};
   for (const rId in rivalsObj) {
     const rival = rivalsObj[rId];
-    if (rival.currentMotivation === 'CASH_CRUNCH') continue;
+    if (rival.currentMotivation === "CASH_CRUNCH") continue;
 
     if (rng.next() < 0.02) {
       const crisisCost = rival.cash * 0.05;
       impacts.push({
-        type: 'RIVAL_UPDATED',
+        type: "RIVAL_UPDATED",
         payload: {
           rivalId: rival.id,
           update: { cash: Math.max(0, rival.cash - crisisCost) },
         },
       });
       impacts.push({
-        type: 'NEWS_ADDED',
+        type: "NEWS_ADDED",
         payload: {
           headline: `${rival.name} faces production setback, sources say costs have escalated.`,
           description: `Industry sources confirm ${rival.name} is dealing with an unexpected production issue that has impacted their Q${Math.floor(state.week / 13) + 1} budget.`,

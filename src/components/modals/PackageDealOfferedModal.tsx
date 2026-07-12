@@ -1,5 +1,5 @@
-import { useUIStore } from '@/store/uiStore';
-import { useGameStore } from '@/store/gameStore';
+import { useUIStore } from "@/store/uiStore";
+import { useGameStore } from "@/store/gameStore";
 import {
   Dialog,
   DialogContent,
@@ -7,11 +7,11 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Package, AlertTriangle, Users, Percent } from 'lucide-react';
-import { TalentNameLink } from '@/components/shared/TalentNameLink';
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Package, AlertTriangle, Users, Percent } from "lucide-react";
+import { TalentNameLink } from "@/components/shared/TalentNameLink";
 
 interface PackageDealPayload {
   agencyId: string;
@@ -28,7 +28,7 @@ interface PackageDealPayload {
 
 export const PackageDealOfferedModal = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
-  const gameState = useGameStore(s => s.gameState);
+  const gameState = useGameStore((s) => s.gameState);
 
   const data = activeModal?.payload as PackageDealPayload | null;
 
@@ -89,7 +89,9 @@ export const PackageDealOfferedModal = () => {
                 )}
               </div>
               <div className="p-3 border border-yellow-400/20 rounded-none bg-yellow-400/5 space-y-1">
-                <p className="text-xs text-muted-foreground uppercase tracking-wider">They require</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wider">
+                  They require
+                </p>
                 <p className="font-semibold">
                   {bundledTalent ? (
                     <TalentNameLink talentId={bundledTalent.id} name={bundledTalent.name} />
@@ -111,8 +113,12 @@ export const PackageDealOfferedModal = () => {
             <div className="flex items-center gap-3 p-3 border border-green-400/20 bg-green-400/5 rounded-none">
               <Percent className="h-4 w-4 text-green-400" />
               <div>
-                <p className="text-sm font-semibold text-green-400">{discountPercent}% fee discount offered</p>
-                <p className="text-xs text-muted-foreground">Applied to {data.bundledTalentName}'s contract if you accept</p>
+                <p className="text-sm font-semibold text-green-400">
+                  {discountPercent}% fee discount offered
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Applied to {data.bundledTalentName}'s contract if you accept
+                </p>
               </div>
             </div>
           )}

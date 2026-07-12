@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   RadarChart as ReRadarChart,
   PolarGrid,
@@ -8,8 +8,8 @@ import {
   ResponsiveContainer,
   Tooltip,
   Legend,
-} from 'recharts';
-import { cn } from '@/lib/utils';
+} from "recharts";
+import { cn } from "@/lib/utils";
 
 interface RadarDataPoint {
   metric: string;
@@ -32,9 +32,9 @@ interface RadarChartProps {
 export const RadarChart: React.FC<RadarChartProps> = ({
   data,
   height = 250,
-  color = 'hsl(var(--secondary))',
+  color = "hsl(var(--secondary))",
   secondaryData,
-  secondaryColor = 'hsl(var(--success))',
+  secondaryColor = "hsl(var(--success))",
   showTooltip = true,
   showLegend = false,
   className,
@@ -42,33 +42,38 @@ export const RadarChart: React.FC<RadarChartProps> = ({
 }) => {
   if (!data || data.length === 0) {
     return (
-      <div className={cn('flex items-center justify-center h-[250px] text-muted-foreground', className)}>
+      <div
+        className={cn(
+          "flex items-center justify-center h-[250px] text-muted-foreground",
+          className
+        )}
+      >
         No data available
       </div>
     );
   }
 
   // Transform data for recharts
-  const chartData = data.map(d => ({
+  const chartData = data.map((d) => ({
     metric: d.metric,
     primary: d.value,
-    secondary: secondaryData?.find(s => s.metric === d.metric)?.value,
+    secondary: secondaryData?.find((s) => s.metric === d.metric)?.value,
     fullMark: d.fullMark || 100,
   }));
 
   return (
-    <div className={cn('w-full', className)} style={{ height }}>
+    <div className={cn("w-full", className)} style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
         <ReRadarChart data={chartData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
           <PolarGrid stroke="hsl(var(--border))" />
           <PolarAngleAxis
             dataKey="metric"
-            tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+            tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
           />
           <PolarRadiusAxis
             angle={90}
-            domain={[0, 'auto']}
-            tick={{ fontSize: 8, fill: 'hsl(var(--muted-foreground))' }}
+            domain={[0, "auto"]}
+            tick={{ fontSize: 8, fill: "hsl(var(--muted-foreground))" }}
             tickCount={5}
           />
           <Radar
@@ -93,20 +98,16 @@ export const RadarChart: React.FC<RadarChartProps> = ({
             <Tooltip
               formatter={(value: number, name: string) => [valueFormatter(value), name]}
               contentStyle={{
-                backgroundColor: 'hsl(var(--card))',
-                border: '1px solid hsl(var(--border))',
-                borderRadius: '6px',
-                fontSize: '12px',
-                color: 'inherit',
+                backgroundColor: "hsl(var(--card))",
+                border: "1px solid hsl(var(--border))",
+                borderRadius: "6px",
+                fontSize: "12px",
+                color: "inherit",
               }}
             />
           )}
           {showLegend && (
-            <Legend 
-              verticalAlign="bottom" 
-              height={24}
-              wrapperStyle={{ fontSize: '11px' }}
-            />
+            <Legend verticalAlign="bottom" height={24} wrapperStyle={{ fontSize: "11px" }} />
           )}
         </ReRadarChart>
       </ResponsiveContainer>

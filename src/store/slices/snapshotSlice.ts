@@ -1,6 +1,6 @@
-import { StateCreator } from 'zustand';
-import { GameStore } from '../gameStore';
-import { StudioSnapshot } from '@/engine/types/studio.types';
+import { StateCreator } from "zustand";
+import { GameStore } from "../gameStore";
+import { StudioSnapshot } from "@/engine/types/studio.types";
 
 export interface SnapshotSlice {
   snapshots: StudioSnapshot[];
@@ -17,13 +17,13 @@ export const createSnapshotSlice: StateCreator<GameStore, [], [], SnapshotSlice>
     // Derived counts
     const projectsArray = Object.values(state.entities.projects || {});
     // Completed projects are those that have been released (including post-release and archived)
-    const completedProjects = projectsArray.filter(p => 
-      p.state === 'released' || p.state === 'post_release' || p.state === 'archived'
+    const completedProjects = projectsArray.filter(
+      (p) => p.state === "released" || p.state === "post_release" || p.state === "archived"
     ).length;
 
     // Active projects are those currently in development, production, or marketing
-    const activeProjects = projectsArray.filter(p => 
-      p.state !== 'released' && p.state !== 'post_release' && p.state !== 'archived'
+    const activeProjects = projectsArray.filter(
+      (p) => p.state !== "released" && p.state !== "post_release" && p.state !== "archived"
     ).length;
 
     const currentYear = Math.floor((state.week - 1) / 52) + 1;
@@ -36,11 +36,11 @@ export const createSnapshotSlice: StateCreator<GameStore, [], [], SnapshotSlice>
       activeProjects,
       completedProjects,
       totalPrestige: state.studio.prestige,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     set((s) => ({
-      snapshots: [...s.snapshots, snapshot]
+      snapshots: [...s.snapshots, snapshot],
     }));
-  }
+  },
 });

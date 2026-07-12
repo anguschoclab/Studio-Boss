@@ -1,7 +1,7 @@
-import { GameState, StateImpact, Project, MarketingCampaign } from '../../types';
-import { RandomGenerator } from '../../utils/rng';
-import { computeCampaignMultiplier } from '../projectHandlers/MarketingHandler';
-import { evaluateMarketingEfficiency } from './efficiencyEvaluator';
+import { GameState, StateImpact, Project, MarketingCampaign } from "../../types";
+import { RandomGenerator } from "../../utils/rng";
+import { computeCampaignMultiplier } from "../projectHandlers/MarketingHandler";
+import { evaluateMarketingEfficiency } from "./efficiencyEvaluator";
 
 /**
  * MarketingSystem — weekly awareness accrual loop.
@@ -28,10 +28,7 @@ function totalSpend(campaign: MarketingCampaign): number {
   return (campaign.domesticBudget || 0) + (campaign.foreignBudget || 0);
 }
 
-function computeShareOfVoice(
-  campaignSpend: number,
-  industryIntensity: number,
-): number {
+function computeShareOfVoice(campaignSpend: number, industryIntensity: number): number {
   if (industryIntensity <= 0) return 1;
   return Math.min(1, campaignSpend / industryIntensity);
 }
@@ -48,7 +45,7 @@ export function accrueAwareness(
   project: Project,
   campaign: MarketingCampaign,
   industryIntensity: number,
-  rng: RandomGenerator,
+  rng: RandomGenerator
 ): { awareness: number; shareOfVoice: number } {
   const spend = totalSpend(campaign);
   const weeksInMarketing = campaign.weeksInMarketing || project.weeksInPhase || 0;
@@ -91,7 +88,7 @@ export function accrueAwareness(
 export function tickMarketing(
   state: GameState,
   rng: RandomGenerator,
-  rivalSpend: number = 0,
+  rivalSpend: number = 0
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
 
@@ -100,7 +97,7 @@ export function tickMarketing(
   const marketingProjects: Project[] = [];
   for (const id in state.entities.projects) {
     const p = state.entities.projects[id];
-    if (p.state === 'marketing' && p.marketingCampaign) {
+    if (p.state === "marketing" && p.marketingCampaign) {
       industryIntensity += totalSpend(p.marketingCampaign);
       marketingProjects.push(p);
     }
@@ -112,7 +109,7 @@ export function tickMarketing(
     const { awareness, shareOfVoice } = accrueAwareness(p, campaign, industryIntensity, rng);
 
     impacts.push({
-      type: 'PROJECT_UPDATED',
+      type: "PROJECT_UPDATED",
       payload: {
         projectId: p.id,
         update: {
@@ -132,7 +129,7 @@ export function tickMarketing(
   // 3. Publish the aggregate for this week.
   if (industryIntensity > 0) {
     impacts.push({
-      type: 'MARKET_EVENT_UPDATED',
+      type: "MARKET_EVENT_UPDATED",
       payload: {
         marketingIntensity: industryIntensity,
       } as any,

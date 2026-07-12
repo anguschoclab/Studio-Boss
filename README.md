@@ -21,6 +21,7 @@
 ## Tech Stack
 
 This project is built using a modern frontend stack:
+
 - **TypeScript** - Type safety
 - **React + Vite** - UI Library and Build tool
 - **TanStack Router** - Navigation
@@ -41,13 +42,9 @@ This project is built using a modern frontend stack:
 
 ## Welcome to your Lovable project
 
-
-
 ### How can I edit this code?
 
 There are several ways of editing your application.
-
-
 
 **Use your preferred IDE**
 
@@ -84,8 +81,6 @@ npm run dev # (run in background)
 - Select the "Codespaces" tab.
 - Click on "New codespace" to launch a new Codespace environment.
 - Edit files directly within the Codespace and commit and push your changes once you're done.
-
-
 
 ### Can I connect a custom domain to my Lovable project?
 

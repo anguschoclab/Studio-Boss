@@ -2,12 +2,7 @@
 // Talk shows, magazine photoshoots, press tours
 
 export type TalkShowType =
-  | 'late_night'
-  | 'morning_show'
-  | 'podcast'
-  | 'variety'
-  | 'comedy_central'
-  | 'serious_interview';
+  "late_night" | "morning_show" | "podcast" | "variety" | "comedy_central" | "serious_interview";
 
 export interface TalkShowAppearance {
   id: string;
@@ -28,12 +23,12 @@ export interface TalkShowAppearance {
 }
 
 export type PhotoshootType =
-  | 'magazine_cover'
-  | 'fashion_editorial'
-  | 'promotional'
-  | 'candid'
-  | 'red_carpet'
-  | 'controversial';
+  | "magazine_cover"
+  | "fashion_editorial"
+  | "promotional"
+  | "candid"
+  | "red_carpet"
+  | "controversial";
 
 export interface MagazinePhotoshoot {
   id: string;
@@ -73,56 +68,31 @@ export interface MarketingPromotionsState {
 
 // Famous talk shows
 export const FAMOUS_TALK_SHOWS: Record<TalkShowType, string[]> = {
-  'late_night': [
-    'The Tonight Show',
-    'Late Night with...',
-    'Jimmy Kimmel Live!',
-    'The Late Show',
+  late_night: ["The Tonight Show", "Late Night with...", "Jimmy Kimmel Live!", "The Late Show"],
+  morning_show: ["Good Morning America", "Today Show", "CBS Mornings", "Morning Joe"],
+  podcast: [
+    "The Joe Rogan Experience",
+    "WTF with Marc Maron",
+    "Conan O'Brien Needs a Friend",
+    "SmartLess",
   ],
-  'morning_show': [
-    'Good Morning America',
-    'Today Show',
-    'CBS Mornings',
-    'Morning Joe',
-  ],
-  'podcast': [
-    'The Joe Rogan Experience',
-    'WTF with Marc Maron',
-    'Conan O\'Brien Needs a Friend',
-    'SmartLess',
-  ],
-  'variety': [
-    'Saturday Night Live',
-    'The Daily Show',
-    'Last Week Tonight',
-    'Full Frontal',
-  ],
-  'comedy_central': [
-    'Comedy Central Roast',
-    '@midnight',
-    'The Opposition',
-    'Drunk History',
-  ],
-  'serious_interview': [
-    '60 Minutes',
-    'CBS Sunday Morning',
-    'Frontline',
-    'Real Time with Bill Maher',
-  ],
+  variety: ["Saturday Night Live", "The Daily Show", "Last Week Tonight", "Full Frontal"],
+  comedy_central: ["Comedy Central Roast", "@midnight", "The Opposition", "Drunk History"],
+  serious_interview: ["60 Minutes", "CBS Sunday Morning", "Frontline", "Real Time with Bill Maher"],
 };
 
 // Prestigious magazines
 export const PRESTIGIOUS_MAGAZINES = [
-  'Vanity Fair',
-  'Vogue',
-  'The Hollywood Reporter',
-  'Variety',
-  'Entertainment Weekly',
-  'GQ',
-  'Elle',
-  'Harper\'s Bazaar',
-  'People',
-  'Rolling Stone',
-  'Time',
-  'Esquire',
+  "Vanity Fair",
+  "Vogue",
+  "The Hollywood Reporter",
+  "Variety",
+  "Entertainment Weekly",
+  "GQ",
+  "Elle",
+  "Harper's Bazaar",
+  "People",
+  "Rolling Stone",
+  "Time",
+  "Esquire",
 ];

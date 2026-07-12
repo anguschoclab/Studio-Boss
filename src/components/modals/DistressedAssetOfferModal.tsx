@@ -1,21 +1,21 @@
-import React from 'react';
-import { useUIStore } from '@/store/uiStore';
-import { useGameStore } from '@/store/gameStore';
-import { selectDistressedOffer } from '@/store/selectors';
-import { formatMoney } from '@/engine/utils';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { AlertTriangle, DollarSign, Clock, Building2 } from 'lucide-react';
+import React from "react";
+import { useUIStore } from "@/store/uiStore";
+import { useGameStore } from "@/store/gameStore";
+import { selectDistressedOffer } from "@/store/selectors";
+import { formatMoney } from "@/engine/utils";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { AlertTriangle, DollarSign, Clock, Building2 } from "lucide-react";
 
 export const DistressedAssetOfferModal: React.FC = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
-  const acquireDistressedAsset = useGameStore(s => s.acquireDistressedAsset);
-  const declineDistressedAsset = useGameStore(s => s.declineDistressedAsset);
-  const gameState = useGameStore(s => s.gameState);
+  const acquireDistressedAsset = useGameStore((s) => s.acquireDistressedAsset);
+  const declineDistressedAsset = useGameStore((s) => s.declineDistressedAsset);
+  const gameState = useGameStore((s) => s.gameState);
 
-  if (!activeModal || activeModal.type !== 'DISTRESSED_ASSET_OFFER') return null;
+  if (!activeModal || activeModal.type !== "DISTRESSED_ASSET_OFFER") return null;
 
-  const { offerId = '' } = (activeModal.payload || {}) as { offerId: string };
+  const { offerId = "" } = (activeModal.payload || {}) as { offerId: string };
   const offer = gameState ? selectDistressedOffer(gameState, offerId) : null;
 
   if (!offer) {
@@ -70,7 +70,9 @@ export const DistressedAssetOfferModal: React.FC = () => {
 
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <Clock className="h-4 w-4" />
-            <span>Expires in {weeksRemaining} week{weeksRemaining !== 1 ? 's' : ''}</span>
+            <span>
+              Expires in {weeksRemaining} week{weeksRemaining !== 1 ? "s" : ""}
+            </span>
           </div>
 
           <div className="flex items-center gap-2 text-xs text-muted-foreground">

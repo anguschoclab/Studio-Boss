@@ -5,9 +5,9 @@ import {
   StateImpact,
   BudgetTierKey,
   ProjectType,
-} from '@/engine/types';
-import { RandomGenerator } from '@/engine/utils/rng';
-import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
+} from "@/engine/types";
+import { RandomGenerator } from "@/engine/utils/rng";
+import { BUDGET_TIERS } from "@/engine/data/budgetTiers";
 
 const ARCHETYPE_SPAWN_CHANCE: Record<string, number> = {
   major: 0.5,
@@ -16,10 +16,10 @@ const ARCHETYPE_SPAWN_CHANCE: Record<string, number> = {
   prestige: 0.3,
 };
 
-const TIER_KEYS: BudgetTierKey[] = ['low', 'mid', 'high', 'blockbuster'];
+const TIER_KEYS: BudgetTierKey[] = ["low", "mid", "high", "blockbuster"];
 
-const GENRES = ['Action', 'Drama', 'Comedy', 'Horror', 'Sci-Fi', 'Romance', 'Thriller'];
-const FORMATS: ProjectType[] = ['FILM', 'SERIES'];
+const GENRES = ["Action", "Drama", "Comedy", "Horror", "Sci-Fi", "Romance", "Thriller"];
+const FORMATS: ProjectType[] = ["FILM", "SERIES"];
 
 /**
  * Weekly rival studio production tick.
@@ -32,7 +32,11 @@ const FORMATS: ProjectType[] = ['FILM', 'SERIES'];
  * Emits PROJECT_ADDED / PROJECT_UPDATED impacts only — never mutates state.
  */
 export function tickRivalProduction(state: GameState, rng: RandomGenerator): StateImpact[] {
-  const rivals = state.entities?.rivals ? Object.values(state.entities.rivals) : [];
+  const rivalsObj = state.entities?.rivals || {};
+  const rivals: RivalStudio[] = [];
+  for (const rid in rivalsObj) {
+    rivals.push(rivalsObj[rid]);
+  }
   if (rivals.length === 0) return [];
 
   const impacts: StateImpact[] = [];
@@ -40,13 +44,14 @@ export function tickRivalProduction(state: GameState, rng: RandomGenerator): Sta
 
   for (const rival of rivals) {
     // 1. Advance existing rival-owned projects.
-    for (const project of Object.values(existing)) {
+    for (const pid in existing) {
+      const project = existing[pid];
       if (project.ownerId !== rival.id) continue;
       const advanced = advanceRivalProject(project, rng);
       if (advanced) {
         impacts.push({
-          type: 'PROJECT_UPDATED',
-          payload: { projectId: advanced.id, updates: advanced },
+          type: "PROJECT_UPDATED",
+          payload: { projectId: advanced.id, update: advanced },
         });
       }
     }
@@ -60,7 +65,7 @@ export function tickRivalProduction(state: GameState, rng: RandomGenerator): Sta
 
     const project = buildRivalProject(rival, tier, rng, state.week);
     impacts.push({
-      type: 'PROJECT_ADDED',
+      type: "PROJECT_CREATED",
       payload: { project },
     });
   }
@@ -72,10 +77,10 @@ function pickAffordableTier(rng: RandomGenerator, rival: RivalStudio): BudgetTie
   // Weight tiers by rival strength, then filter to what they can afford.
   const s = Math.max(1, rival.strength);
   const weighted: { tier: BudgetTierKey; w: number }[] = [
-    { tier: 'low', w: Math.max(0.05, 1 - s / 100) },
-    { tier: 'mid', w: 0.8 },
-    { tier: 'high', w: Math.max(0.05, s / 120) },
-    { tier: 'blockbuster', w: Math.max(0.01, s / 200) },
+    { tier: "low", w: Math.max(0.05, 1 - s / 100) },
+    { tier: "mid", w: 0.8 },
+    { tier: "high", w: Math.max(0.05, s / 120) },
+    { tier: "blockbuster", w: Math.max(0.01, s / 200) },
   ];
 
   const affordable = weighted.filter((x) => BUDGET_TIERS[x.tier].budget <= rival.cash);
@@ -94,7 +99,7 @@ function buildRivalProject(
   rival: RivalStudio,
   tier: BudgetTierKey,
   rng: RandomGenerator,
-  week: number,
+  week: number
 ): Project {
   const data = BUDGET_TIERS[tier];
   const genre = GENRES[Math.floor(rng.next() * GENRES.length)];
@@ -105,14 +110,14 @@ function buildRivalProject(
     id,
     title: `${rival.name} ${genre} ${tier}`,
     type,
-    format: type === 'SERIES' ? 'tv' : 'film',
+    format: type === "SERIES" ? "tv" : "film",
     genre,
     budgetTier: tier,
     budget: data.budget,
     weeklyCost: data.weeklyCost,
-    targetAudience: 'Broad',
+    targetAudience: "Broad",
     flavor: `${rival.name} production`,
-    state: 'development',
+    state: "development",
     buzz: 40 + Math.floor(rng.next() * 30),
     weeksInPhase: 0,
     developmentWeeks: data.developmentWeeks,
@@ -126,22 +131,22 @@ function buildRivalProject(
 }
 
 function advanceRivalProject(project: Project, rng: RandomGenerator): Project | null {
-  if (project.state === 'released') return null;
+  if (project.state === "released") return null;
 
   const weeksInPhase = (project.weeksInPhase ?? 0) + 1;
 
-  if (project.state === 'development') {
+  if (project.state === "development") {
     if (weeksInPhase >= (project.developmentWeeks ?? 10)) {
-      return { ...project, state: 'production', weeksInPhase: 0 };
+      return { ...project, state: "production", weeksInPhase: 0 };
     }
     return { ...project, weeksInPhase };
   }
 
-  if (project.state === 'production') {
+  if (project.state === "production") {
     if (weeksInPhase >= (project.productionWeeks ?? 20)) {
       return {
         ...project,
-        state: 'released',
+        state: "released",
         weeksInPhase: 0,
         releaseWeek: project.releaseWeek ?? 0,
         boxOffice: {
@@ -151,7 +156,7 @@ function advanceRivalProject(project: Project, rng: RandomGenerator): Project | 
           totalForeign: 0,
           multiplier: 1,
         },
-        rating: 'PG-13',
+        rating: "PG-13",
       } as unknown as Project;
     }
     return { ...project, weeksInPhase };

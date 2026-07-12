@@ -1,5 +1,5 @@
-import { GameState, SaveSlotMeta } from '@/engine/types';
-import { persistenceService } from './PersistenceService';
+import { GameState, SaveSlotMeta } from "@/engine/types";
+import { persistenceService } from "./PersistenceService";
 
 /**
  * High-level orchestration for Game State Persistence.
@@ -13,7 +13,7 @@ export async function saveGame(slot: number, state: GameState): Promise<void> {
 
     // 2. We skip synchronous metadata cache for now, or we could store it in OPFS too.
   } catch (e) {
-    console.error('[SaveLoad] Failed to save game state', e);
+    console.error("[SaveLoad] Failed to save game state", e);
   }
 }
 
@@ -25,7 +25,7 @@ export async function loadGame(slot: number): Promise<GameState | null> {
 
     return state as GameState;
   } catch (e) {
-    console.error('[SaveLoad] Failed to load game state', e);
+    console.error("[SaveLoad] Failed to load game state", e);
     return null;
   }
 }
@@ -46,8 +46,8 @@ export async function getSaveSlots(): Promise<SaveSlotInfo[]> {
       slots.push({
         slot: i,
         exists: true,
-        studioName: state.studio.name || 'Active Game',
-        archetype: state.studio.archetype || 'major',
+        studioName: state.studio.name || "Active Game",
+        archetype: state.studio.archetype || "major",
         week: state.week || 1,
         cash: state.finance.cash || 0,
         timestamp: Date.now(), // ideally state.saveTimestamp
@@ -56,8 +56,8 @@ export async function getSaveSlots(): Promise<SaveSlotInfo[]> {
       slots.push({
         slot: i,
         exists: false,
-        studioName: '',
-        archetype: 'indie',
+        studioName: "",
+        archetype: "indie",
         week: 0,
         cash: 0,
         timestamp: 0,

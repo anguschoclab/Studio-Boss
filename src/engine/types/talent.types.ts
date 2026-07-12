@@ -2,19 +2,27 @@
 
 export interface MotivationProfile {
   financial: number; // 0-100, prioritizing profit/cash
-  prestige: number;  // 0-100, prioritizing awards/critics
-  legacy: number;    // 0-100, prioritizing long-term IP/history (talent only: artistry)
+  prestige: number; // 0-100, prioritizing awards/critics
+  legacy: number; // 0-100, prioritizing long-term IP/history (talent only: artistry)
   aggression: number; // 0-100, likelihood of hostile moves
 }
 
-export type TalentMotivation = 'FAME_SEEKER' | 'PRESTIGE_HUNTER' | 'MONEY_GRABBER' | 'REHAB_ARC' | 'CREATIVE_FREEDOM' | 'NONE';
-export type AgencyMotivation = 'THE_PACKAGER' | 'THE_CLIMBER' | 'THE_PROTECTOR' | 'THE_SHARK' | 'VOLUME_RETAIL';
-export type RivalStrategy = 'blockbuster_focused' | 'prestige_chaser' | 'genre_specialist' | 'acquirer' | 'poacher' | 'balanced';
+export type TalentMotivation =
+  "FAME_SEEKER" | "PRESTIGE_HUNTER" | "MONEY_GRABBER" | "REHAB_ARC" | "CREATIVE_FREEDOM" | "NONE";
+export type AgencyMotivation =
+  "THE_PACKAGER" | "THE_CLIMBER" | "THE_PROTECTOR" | "THE_SHARK" | "VOLUME_RETAIL";
+export type RivalStrategy =
+  | "blockbuster_focused"
+  | "prestige_chaser"
+  | "genre_specialist"
+  | "acquirer"
+  | "poacher"
+  | "balanced";
 
-export type DirectorArchetype = 'auteur' | 'journeyman' | 'visionary' | 'commercial_hack';
-export type TalentTier = 'A_LIST' | 'B_LIST' | 'C_LIST' | 'RISING_STAR' | 'NEWCOMER';
+export type DirectorArchetype = "auteur" | "journeyman" | "visionary" | "commercial_hack";
+export type TalentTier = "A_LIST" | "B_LIST" | "C_LIST" | "RISING_STAR" | "NEWCOMER";
 
-export type ScandalType = 'financial' | 'personal' | 'onset_behavior' | 'legal' | 'feud';
+export type ScandalType = "financial" | "personal" | "onset_behavior" | "legal" | "feud";
 
 export interface Scandal {
   id: string;
@@ -24,35 +32,41 @@ export interface Scandal {
   weeksRemaining: number;
 }
 
-export type AgencyArchetype = 'powerhouse' | 'boutique' | 'shark' | 'comedy_specialist' | 'lit_agency' | 'mega_corp' | 'streaming_titan' | 'indie_darling' | 'nepotism_mill' | 'international_broker';
+export type AgencyArchetype =
+  | "powerhouse"
+  | "boutique"
+  | "shark"
+  | "comedy_specialist"
+  | "lit_agency"
+  | "mega_corp"
+  | "streaming_titan"
+  | "indie_darling"
+  | "nepotism_mill"
+  | "international_broker";
 
 export type AgentPersonality =
-  | 'shark'
-  | 'diplomat'
-  | 'prestige'
-  | 'volume'
-  | 'protector'
-  | 'visionary';
+  "shark" | "diplomat" | "prestige" | "volume" | "protector" | "visionary";
 
 export type TalentPersonality =
-  | 'perfectionist'
-  | 'collaborative'
-  | 'difficult'
-  | 'charismatic'
-  | 'method'
-  | 'pragmatic'
-  | 'artistic'
-  | 'commercial'
-  | 'loyal'
-  | 'ambitious';
+  | "perfectionist"
+  | "collaborative"
+  | "difficult"
+  | "charismatic"
+  | "method"
+  | "pragmatic"
+  | "artistic"
+  | "commercial"
+  | "loyal"
+  | "ambitious";
 
-export type CareerTrajectory = 'rising' | 'peak' | 'declining' | 'resurgent';
-export type AccessLevel = 'outsider' | 'soft-access' | 'legacy' | 'dynasty' | 'comeback';
-export type ProjectRole = 'actor' | 'director' | 'writer' | 'producer' | 'showrunner';
-export type TalentRole = 'actor' | 'director' | 'writer' | 'producer';
-export type AgencyTier = 'powerhouse' | 'major' | 'mid-tier' | 'boutique' | 'specialist';
-export type AgencyCulture = 'shark' | 'family' | 'volume' | 'prestige';
-export type AgentSpecialty = 'film_packaging' | 'tv_packaging' | 'literary' | 'talent' | 'comedy' | 'unscripted';
+export type CareerTrajectory = "rising" | "peak" | "declining" | "resurgent";
+export type AccessLevel = "outsider" | "soft-access" | "legacy" | "dynasty" | "comeback";
+export type ProjectRole = "actor" | "director" | "writer" | "producer" | "showrunner";
+export type TalentRole = "actor" | "director" | "writer" | "producer";
+export type AgencyTier = "powerhouse" | "major" | "mid-tier" | "boutique" | "specialist";
+export type AgencyCulture = "shark" | "family" | "volume" | "prestige";
+export type AgentSpecialty =
+  "film_packaging" | "tv_packaging" | "literary" | "talent" | "comedy" | "unscripted";
 
 export interface Agency {
   id: string;
@@ -95,17 +109,17 @@ export interface Family {
 
 export interface TalentDemographics {
   age: number;
-  gender: 'MALE' | 'FEMALE' | 'NON_BINARY';
+  gender: "MALE" | "FEMALE" | "NON_BINARY";
   ethnicity: string;
   country: string;
 }
 
 export interface TalentPsychology {
-  ego: number;         // 1-100
-  mood: number;        // 1-100
+  ego: number; // 1-100
+  mood: number; // 1-100
   scandalRisk: number; // 1-100
   synergyAffinities: string[]; // Talent IDs
-  synergyConflicts: string[];  // Talent IDs
+  synergyConflicts: string[]; // Talent IDs
 }
 
 export interface Talent {
@@ -127,7 +141,7 @@ export interface Talent {
   wasNewcomerWhenSigned?: boolean;
   demographics: TalentDemographics;
   psychology: TalentPsychology;
-  
+
   preferredGenres?: string[];
   personality?: string;
   careerTrajectory?: string;
@@ -145,24 +159,24 @@ export interface Talent {
     role: string;
     gross: number;
     salary: number;
-    type: 'movie' | 'tv';
+    type: "movie" | "tv";
   }[];
   careerGross?: number;
   highestSalary?: {
     amount: number;
     project: string;
-    type: 'movie' | 'tv';
+    type: "movie" | "tv";
   };
   hasRazzie?: boolean;
   razzieWinner?: boolean;
   commitments?: TalentCommitment[];
-  
+
   // SBDB & Career Tracking
   knownFor?: string[]; // Top 3 Project IDs
   starMeter?: number; // 0-100 derived metric
   showrunningExperience?: number; // 0-100 (Writers only)
   unscriptedExperience?: number; // 0-100 (Transition potential)
-  
+
   // Advanced Relational Data
   highestSalaryMovie?: {
     amount: number;
@@ -175,11 +189,11 @@ export interface Talent {
     year: number;
   };
   trivia?: string[];
-  
+
   // AI Motivations
   motivationProfile?: MotivationProfile;
   currentMotivation?: TalentMotivation;
-  motivationImpulse?: 'CASH_OUT' | 'AWARDS_RUN' | 'REHAB' | 'VANITY' | 'NONE';
+  motivationImpulse?: "CASH_OUT" | "AWARDS_RUN" | "REHAB" | "VANITY" | "NONE";
 }
 
 export interface Contract {
@@ -200,12 +214,12 @@ export interface TalentPact {
   id: string;
   talentId: string;
   studioId: string;
-  type: 'first_look' | 'overall' | 'housekeeping';
+  type: "first_look" | "overall" | "housekeeping";
   startDate: number;
   endDate: number;
   weeklyOverhead: number;
   exclusivity: boolean;
-  status: 'active' | 'expiring' | 'expired' | 'terminated';
+  status: "active" | "expiring" | "expired" | "terminated";
 }
 
 export interface TalentCommitment {
@@ -228,9 +242,9 @@ export interface FirstLookDeal {
 // Vanity shingle / production company — producer or A-list talent-owned banner
 // with a structural home-studio deal (Bad Robot / Plan B / LuckyChap parallels).
 // PLAYER studio id is the string 'PLAYER'; rivals use their rival id.
-export type ShingleDealType = 'FIRST_LOOK' | 'OVERALL' | 'HOUSEKEEPING' | 'POD';
+export type ShingleDealType = "FIRST_LOOK" | "OVERALL" | "HOUSEKEEPING" | "POD";
 
-export type ShingleMedium = 'FILM' | 'TV';
+export type ShingleMedium = "FILM" | "TV";
 
 export interface ProducerShingle {
   id: string;

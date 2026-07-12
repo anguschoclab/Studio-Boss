@@ -1,14 +1,25 @@
-import { StateCreator } from 'zustand';
-import { GameStore } from '../gameStore';
-import { handleReleasePhaseEntry, executeMarketing } from '@/engine/systems/projects';
-import { WeeklyFinancialReport, FinanceState, Contract, Project, Buyer, RivalStudio } from '@/engine/types';
-import { FinancialSnapshot, MarketState } from '@/engine/types/state.types';
-import { InterestRateSimulator } from '@/engine/systems/market/InterestRateSimulator';
+import { StateCreator } from "zustand";
+import { GameStore } from "../gameStore";
+import { handleReleasePhaseEntry, executeMarketing } from "@/engine/systems/projects";
+import {
+  WeeklyFinancialReport,
+  FinanceState,
+  Contract,
+  Project,
+  Buyer,
+  RivalStudio,
+} from "@/engine/types";
+import { FinancialSnapshot, MarketState } from "@/engine/types/state.types";
+import { InterestRateSimulator } from "@/engine/systems/market/InterestRateSimulator";
 
 export interface FinanceSlice {
   finance: FinanceState;
   addLedgerEntry: (report: WeeklyFinancialReport) => void;
-  executeMarketingEvent: (eventName: 'superbowl_ad' | 'viral_campaign' | 'press_tour', cost: number, projectId: string) => void;
+  executeMarketingEvent: (
+    eventName: "superbowl_ad" | "viral_campaign" | "press_tour",
+    cost: number,
+    projectId: string
+  ) => void;
   addFunds: (amount: number) => void;
 }
 
@@ -39,7 +50,7 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
           interest: 0,
         },
         net: report.netProfit,
-        cash: report.endingCash
+        cash: report.endingCash,
       };
 
       return {
@@ -72,15 +83,15 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
       return {
         finance: {
           ...s.finance,
-          cash: newCash
+          cash: newCash,
         },
         gameState: {
           ...s.gameState,
           finance: {
             ...s.gameState.finance,
-            cash: newCash
-          }
-        }
+            cash: newCash,
+          },
+        },
       };
     });
   },

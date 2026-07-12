@@ -1,8 +1,8 @@
-import archiveData from '../data/narrative/archive.json';
-import { ResolutionRequest, NarrativeArchive } from '../data/narrative/archive';
-import { RandomGenerator } from '../utils/rng';
+import archiveData from "../data/narrative/archive.json";
+import { ResolutionRequest, NarrativeArchive } from "../data/narrative/archive";
+import { RandomGenerator } from "../utils/rng";
 
-const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+const FORBIDDEN_KEYS = new Set(["__proto__", "constructor", "prototype"]);
 
 /**
  * The Bard Resolver
@@ -13,20 +13,20 @@ export const BardResolver = {
    * Resolves a narrative string based on domain, sub-domain, and intensity.
    */
   resolve<D extends NarrativeDomainKey>(request: ResolutionRequest<D>): string {
-    const { domain, subDomain, intensity, context, tone = 'Standard', variant } = request;
+    const { domain, subDomain, intensity, context, tone = "Standard", variant } = request;
     const archive = archiveData as unknown as NarrativeArchive;
 
     const domainData = archive[domain];
     if (!domainData) return `[MISSING DOMAIN: ${domain}]`;
 
     let subDomainData: unknown = domainData;
-    const subDomainParts = subDomain.split('.');
-    
+    const subDomainParts = subDomain.split(".");
+
     for (const part of subDomainParts) {
       if (FORBIDDEN_KEYS.has(part)) {
         return `[INVALID SUB-DOMAIN: ${subDomain}]`;
       }
-      if (subDomainData && typeof subDomainData === 'object' && part in subDomainData) {
+      if (subDomainData && typeof subDomainData === "object" && part in subDomainData) {
         if (FORBIDDEN_KEYS.has(part)) return `[INVALID KEY: ${part}]`;
         subDomainData = (subDomainData as Record<string, unknown>)[part];
       } else {
@@ -46,7 +46,12 @@ export const BardResolver = {
     }
 
     // 1. Variant-Specific Resolution (High Priority)
-    if (variant && subDomainData !== null && typeof subDomainData === 'object' && variant in subDomainData) {
+    if (
+      variant &&
+      subDomainData !== null &&
+      typeof subDomainData === "object" &&
+      variant in subDomainData
+    ) {
       const variantData = (subDomainData as Record<string, string[]>)[variant];
       if (Array.isArray(variantData)) {
         return pickAndResolve(variantData) || `[EMPTY VARIANT: ${variant}]`;
@@ -58,10 +63,16 @@ export const BardResolver = {
     const data = subDomainData as Record<string, unknown>;
 
     // Try finding templates in order of specificity:
-    const templates = 
-      (data[tone] && typeof data[tone] === 'object' && (data[tone] as Record<string, string[]>)[tierKey]) ||
-      (data['Trade'] && typeof data['Trade'] === 'object' && (data['Trade'] as Record<string, string[]>)[tierKey]) ||
-      (data['Standard'] && typeof data['Standard'] === 'object' && (data['Standard'] as Record<string, string[]>)[tierKey]) ||
+    const templates =
+      (data[tone] &&
+        typeof data[tone] === "object" &&
+        (data[tone] as Record<string, string[]>)[tierKey]) ||
+      (data["Trade"] &&
+        typeof data["Trade"] === "object" &&
+        (data["Trade"] as Record<string, string[]>)[tierKey]) ||
+      (data["Standard"] &&
+        typeof data["Standard"] === "object" &&
+        (data["Standard"] as Record<string, string[]>)[tierKey]) ||
       (data[tierKey] as string[]);
 
     if (Array.isArray(templates)) {
@@ -76,7 +87,7 @@ export const BardResolver = {
       if (Array.isArray(potentialTierData)) {
         const result = pickAndResolve(potentialTierData);
         if (result) return result;
-      } else if (typeof potentialTierData === 'object' && potentialTierData !== null) {
+      } else if (typeof potentialTierData === "object" && potentialTierData !== null) {
         const folder = potentialTierData as Record<string, string[]>;
         const nestedTiers = Object.keys(folder);
         for (const t of nestedTiers) {
@@ -95,24 +106,24 @@ export const BardResolver = {
    * Logic to map 0-100 score to a Tier name.
    */
   getTier(domain: NarrativeDomainKey, score: number): string {
-    if (domain === 'Review') {
-      if (score >= 75) return 'Acclaimed';
-      if (score >= 40) return 'Mixed';
-      return 'Panned';
+    if (domain === "Review") {
+      if (score >= 75) return "Acclaimed";
+      if (score >= 40) return "Mixed";
+      return "Panned";
     }
-    if (domain === 'Greenlight') {
-      if (score >= 70) return 'Prestige';
-      if (score >= 40) return 'Solid';
-      return 'Risky';
+    if (domain === "Greenlight") {
+      if (score >= 70) return "Prestige";
+      if (score >= 40) return "Solid";
+      return "Risky";
     }
-    if (domain === 'Talent' || domain === 'Industry') {
-      if (score >= 80) return 'Elite';
-      return 'Standard';
+    if (domain === "Talent" || domain === "Industry") {
+      if (score >= 80) return "Elite";
+      return "Standard";
     }
     // Default tiering behavior
-    if (score >= 80) return 'Elite';
-    if (score >= 40) return 'Standard';
-    return 'Common';
+    if (score >= 80) return "Elite";
+    if (score >= 40) return "Standard";
+    return "Common";
   },
 
   /**
@@ -121,19 +132,19 @@ export const BardResolver = {
    */
   interpolate(template: string, context: NarrativeContext, rng?: RandomGenerator): string {
     const archive = archiveData as unknown as NarrativeArchive;
-    const dictionary = (archive['Dictionary'] as unknown as Record<string, string[]>) || {};
+    const dictionary = (archive["Dictionary"] as unknown as Record<string, string[]>) || {};
 
     let result = template;
     let limit = 5; // Prevent infinite loops
 
-    while (result.includes('{{') && limit > 0) {
+    while (result.includes("{{") && limit > 0) {
       const nextResult = result.replace(/\{\{(.*?)\}\}/g, (match: string, key: string) => {
         const trimmedKey = key.trim();
-        
+
         // 1. Check direct context
         const ctx = context as Record<string, unknown>;
         const val = ctx[trimmedKey];
-        if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
+        if (typeof val === "string" || typeof val === "number" || typeof val === "boolean") {
           return String(val);
         }
 
@@ -163,5 +174,5 @@ export const BardResolver = {
       return rng.pick(items);
     }
     return items[0];
-  }
+  },
 };

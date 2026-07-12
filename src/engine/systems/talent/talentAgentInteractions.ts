@@ -1,9 +1,15 @@
-import { Talent, Agent, Agency, TalentPersonality, AgentPersonality } from '../../types/talent.types';
-import { AGENCY_ARCHETYPES } from '../../data/archetypes';
-import { PERSONALITY_TRAITS } from '../../data/talentArchetypes';
-import { RandomGenerator } from '../../utils/rng';
+import {
+  Talent,
+  Agent,
+  Agency,
+  TalentPersonality,
+  AgentPersonality,
+} from "../../types/talent.types";
+import { AGENCY_ARCHETYPES } from "../../data/archetypes";
+import { PERSONALITY_TRAITS } from "../../data/talentArchetypes";
+import { RandomGenerator } from "../../utils/rng";
 
-export type { AgentPersonality } from '../../types/talent.types';
+export type { AgentPersonality } from "../../types/talent.types";
 
 /**
  * Agent personality configuration
@@ -22,53 +28,53 @@ export interface AgentPersonalityConfig {
  */
 export const AGENT_PERSONALITIES: Record<AgentPersonality, AgentPersonalityConfig> = {
   shark: {
-    personality: 'shark',
-    description: 'Aggressive negotiator who maximizes profit at all costs',
+    personality: "shark",
+    description: "Aggressive negotiator who maximizes profit at all costs",
     negotiationBonus: 20,
     relationshipGrowthRate: 30,
     loyaltyBonus: 20,
-    riskTolerance: 80
+    riskTolerance: 80,
   },
   diplomat: {
-    personality: 'diplomat',
-    description: 'Relationship-focused agent who prioritizes harmony and long-term partnerships',
+    personality: "diplomat",
+    description: "Relationship-focused agent who prioritizes harmony and long-term partnerships",
     negotiationBonus: 0,
     relationshipGrowthRate: 80,
     loyaltyBonus: 60,
-    riskTolerance: 40
+    riskTolerance: 40,
   },
   prestige: {
-    personality: 'prestige',
-    description: 'Awards-focused agent who seeks high-profile projects and critical acclaim',
+    personality: "prestige",
+    description: "Awards-focused agent who seeks high-profile projects and critical acclaim",
     negotiationBonus: 10,
     relationshipGrowthRate: 50,
     loyaltyBonus: 40,
-    riskTolerance: 60
+    riskTolerance: 60,
   },
   volume: {
-    personality: 'volume',
-    description: 'High-volume agent who prioritizes deal velocity over maximizing individual deals',
+    personality: "volume",
+    description: "High-volume agent who prioritizes deal velocity over maximizing individual deals",
     negotiationBonus: -10,
     relationshipGrowthRate: 40,
     loyaltyBonus: 30,
-    riskTolerance: 50
+    riskTolerance: 50,
   },
   protector: {
-    personality: 'protector',
-    description: 'Talent welfare-focused agent who protects clients from exploitation',
+    personality: "protector",
+    description: "Talent welfare-focused agent who protects clients from exploitation",
     negotiationBonus: 5,
     relationshipGrowthRate: 90,
     loyaltyBonus: 80,
-    riskTolerance: 20
+    riskTolerance: 20,
   },
   visionary: {
-    personality: 'visionary',
-    description: 'Long-term career planner who focuses on strategic career development',
+    personality: "visionary",
+    description: "Long-term career planner who focuses on strategic career development",
     negotiationBonus: 10,
     relationshipGrowthRate: 60,
     loyaltyBonus: 50,
-    riskTolerance: 70
-  }
+    riskTolerance: 70,
+  },
 };
 
 /**
@@ -116,46 +122,102 @@ export const TalentAgentInteractionEngine = {
     // Personality trait compatibility matrix
     const compatibilityMatrix: Record<TalentPersonality, Record<AgentPersonality, number>> = {
       perfectionist: {
-        shark: -20, diplomat: 10, prestige: 20, volume: -10, protector: 15, visionary: 10
+        shark: -20,
+        diplomat: 10,
+        prestige: 20,
+        volume: -10,
+        protector: 15,
+        visionary: 10,
       },
       collaborative: {
-        shark: -15, diplomat: 30, prestige: 15, volume: 10, protector: 25, visionary: 20
+        shark: -15,
+        diplomat: 30,
+        prestige: 15,
+        volume: 10,
+        protector: 25,
+        visionary: 20,
       },
       difficult: {
-        shark: 20, diplomat: -20, prestige: 10, volume: -10, protector: -15, visionary: 5
+        shark: 20,
+        diplomat: -20,
+        prestige: 10,
+        volume: -10,
+        protector: -15,
+        visionary: 5,
       },
       charismatic: {
-        shark: 15, diplomat: 20, prestige: 25, volume: 15, protector: 10, visionary: 20
+        shark: 15,
+        diplomat: 20,
+        prestige: 25,
+        volume: 15,
+        protector: 10,
+        visionary: 20,
       },
       method: {
-        shark: -10, diplomat: 5, prestige: 25, volume: -20, protector: 10, visionary: 20
+        shark: -10,
+        diplomat: 5,
+        prestige: 25,
+        volume: -20,
+        protector: 10,
+        visionary: 20,
       },
       pragmatic: {
-        shark: 10, diplomat: 15, prestige: 5, volume: 25, protector: 10, visionary: 15
+        shark: 10,
+        diplomat: 15,
+        prestige: 5,
+        volume: 25,
+        protector: 10,
+        visionary: 15,
       },
       artistic: {
-        shark: -25, diplomat: 10, prestige: 30, volume: -15, protector: 15, visionary: 25
+        shark: -25,
+        diplomat: 10,
+        prestige: 30,
+        volume: -15,
+        protector: 15,
+        visionary: 25,
       },
       commercial: {
-        shark: 25, diplomat: 5, prestige: -10, volume: 20, protector: -5, visionary: 10
+        shark: 25,
+        diplomat: 5,
+        prestige: -10,
+        volume: 20,
+        protector: -5,
+        visionary: 10,
       },
       loyal: {
-        shark: -20, diplomat: 30, prestige: 15, volume: 10, protector: 30, visionary: 20
+        shark: -20,
+        diplomat: 30,
+        prestige: 15,
+        volume: 10,
+        protector: 30,
+        visionary: 20,
       },
       ambitious: {
-        shark: 20, diplomat: 10, prestige: 20, volume: 15, protector: -10, visionary: 25
-      }
+        shark: 20,
+        diplomat: 10,
+        prestige: 20,
+        volume: 15,
+        protector: -10,
+        visionary: 25,
+      },
     };
 
     const baseScore = compatibilityMatrix[talentPersonality]?.[agentPersonality] || 0;
     score += baseScore;
 
     if (baseScore > 15) {
-      factors.push(`Strong natural compatibility between ${talentPersonality} talent and ${agentPersonality} agent`);
+      factors.push(
+        `Strong natural compatibility between ${talentPersonality} talent and ${agentPersonality} agent`
+      );
     } else if (baseScore < -15) {
-      factors.push(`Potential conflict between ${talentPersonality} talent and ${agentPersonality} agent`);
+      factors.push(
+        `Potential conflict between ${talentPersonality} talent and ${agentPersonality} agent`
+      );
     } else {
-      factors.push(`Neutral compatibility between ${talentPersonality} talent and ${agentPersonality} agent`);
+      factors.push(
+        `Neutral compatibility between ${talentPersonality} talent and ${agentPersonality} agent`
+      );
     }
 
     // Agency archetype influence
@@ -163,9 +225,9 @@ export const TalentAgentInteractionEngine = {
     score += agencyBonus;
 
     if (agencyBonus > 10) {
-      factors.push('Agency archetype aligns well with talent personality');
+      factors.push("Agency archetype aligns well with talent personality");
     } else if (agencyBonus < -10) {
-      factors.push('Agency archetype may clash with talent personality');
+      factors.push("Agency archetype may clash with talent personality");
     }
 
     const synergy = Math.min(50, Math.max(-50, score / 2));
@@ -173,7 +235,7 @@ export const TalentAgentInteractionEngine = {
     return {
       score: Math.min(100, Math.max(-100, score)),
       factors,
-      synergy
+      synergy,
     };
   },
 
@@ -181,7 +243,10 @@ export const TalentAgentInteractionEngine = {
    * Get agency archetype compatibility bonus for a talent personality
    * Enhanced with more nuanced archetype matching
    */
-  getAgencyArchetypeCompatibility(talentPersonality: TalentPersonality, agencyArchetype?: string): number {
+  getAgencyArchetypeCompatibility(
+    talentPersonality: TalentPersonality,
+    agencyArchetype?: string
+  ): number {
     // Enhanced archetype compatibility matrix
     const archetypeCompatibility: Record<TalentPersonality, number> = {
       perfectionist: 5,
@@ -193,22 +258,22 @@ export const TalentAgentInteractionEngine = {
       artistic: 15,
       commercial: -5,
       loyal: 10,
-      ambitious: 5
+      ambitious: 5,
     };
-    
+
     const baseBonus = archetypeCompatibility[talentPersonality] || 0;
-    
+
     // Additional bonus based on agency archetype if provided
     if (agencyArchetype) {
       const agencyBonus: Record<string, number> = {
-        'powerhouse': 5,  // Major agencies have more leverage
-        'major': 3,
-        'boutique': 10,  // Boutique agencies offer more personalized service
-        'independent': 8
+        powerhouse: 5, // Major agencies have more leverage
+        major: 3,
+        boutique: 10, // Boutique agencies offer more personalized service
+        independent: 8,
       };
       return baseBonus + (agencyBonus[agencyArchetype] || 0);
     }
-    
+
     return baseBonus;
   },
 
@@ -275,19 +340,23 @@ export const TalentAgentInteractionEngine = {
     agentPersonality: AgentPersonality,
     agencyArchetype?: string
   ): TalentAgentRelationship {
-    const compatibility = this.calculateCompatibility(talentPersonality, agentPersonality, agencyArchetype);
+    const compatibility = this.calculateCompatibility(
+      talentPersonality,
+      agentPersonality,
+      agencyArchetype
+    );
 
     return {
       talentId,
       agentId,
-      relationshipScore: 50 + (compatibility.score / 4), // 25 to 75 based on compatibility
+      relationshipScore: 50 + compatibility.score / 4, // 25 to 75 based on compatibility
       history: {
         successfulDeals: 0,
         failedDeals: 0,
         totalDeals: 0,
-        yearsTogether: 0
+        yearsTogether: 0,
       },
-      synergy: compatibility.synergy
+      synergy: compatibility.synergy,
     };
   },
 
@@ -303,17 +372,22 @@ export const TalentAgentInteractionEngine = {
     const updated = { ...relationship };
 
     // Relationship decay over time if no recent interaction
-    if (weeksSinceLastInteraction > 52) { // 1 year
+    if (weeksSinceLastInteraction > 52) {
+      // 1 year
       updated.relationshipScore = Math.max(0, updated.relationshipScore - 10);
       updated.history.yearsTogether++;
-    } else if (weeksSinceLastInteraction > 26) { // 6 months
+    } else if (weeksSinceLastInteraction > 26) {
+      // 6 months
       updated.relationshipScore = Math.max(0, updated.relationshipScore - 5);
     }
 
     // Small random fluctuation
     if (rng.next() < 0.1) {
       const fluctuation = rng.rangeInt(-2, 3);
-      updated.relationshipScore = Math.min(100, Math.max(0, updated.relationshipScore + fluctuation));
+      updated.relationshipScore = Math.min(
+        100,
+        Math.max(0, updated.relationshipScore + fluctuation)
+      );
     }
 
     // Recalculate synergy
@@ -358,20 +432,25 @@ export const TalentAgentInteractionEngine = {
 
       for (const [agentId, agent] of Object.entries(agents)) {
         // Get agent personality from agent or agency
-        let agentPersonality: AgentPersonality = 'diplomat'; // default
-        
+        let agentPersonality: AgentPersonality = "diplomat"; // default
+
         if ((agent as any).personality) {
           agentPersonality = (agent as any).personality;
         } else if (agent.agencyId && agencies[agent.agencyId]) {
           // Derive from agency archetype
           const agency = agencies[agent.agencyId];
-          const archetype = agency.culture ? AGENCY_ARCHETYPES[agency.culture as keyof typeof AGENCY_ARCHETYPES] : null;
+          const archetype = agency.culture
+            ? AGENCY_ARCHETYPES[agency.culture as keyof typeof AGENCY_ARCHETYPES]
+            : null;
           if (archetype) {
             agentPersonality = this.mapArchetypeToPersonality(archetype.key);
           }
         }
 
-        const compatibility = this.calculateCompatibility(talent.personality as TalentPersonality, agentPersonality);
+        const compatibility = this.calculateCompatibility(
+          talent.personality as TalentPersonality,
+          agentPersonality
+        );
         matrix.set(`${talentId}-${agentId}`, compatibility);
       }
     }
@@ -384,16 +463,16 @@ export const TalentAgentInteractionEngine = {
    */
   mapArchetypeToPersonality(archetypeKey: string): AgentPersonality {
     const mapping: Record<string, AgentPersonality> = {
-      powerhouse: 'shark',
-      boutique: 'visionary',
-      shark: 'shark',
-      comedy_specialist: 'volume',
-      lit_agency: 'prestige',
-      mega_corp: 'volume',
-      streaming_titan: 'visionary',
-      indie_darling: 'protector'
+      powerhouse: "shark",
+      boutique: "visionary",
+      shark: "shark",
+      comedy_specialist: "volume",
+      lit_agency: "prestige",
+      mega_corp: "volume",
+      streaming_titan: "visionary",
+      indie_darling: "protector",
     };
 
-    return mapping[archetypeKey] || 'diplomat';
-  }
+    return mapping[archetypeKey] || "diplomat";
+  },
 };

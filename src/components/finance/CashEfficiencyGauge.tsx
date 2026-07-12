@@ -1,5 +1,5 @@
-import React from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Label } from 'recharts';
+import React from "react";
+import { PieChart, Pie, Cell, ResponsiveContainer, Label } from "recharts";
 
 interface CashEfficiencyGaugeProps {
   score: number; // 0 to 100
@@ -7,11 +7,11 @@ interface CashEfficiencyGaugeProps {
 
 export const CashEfficiencyGauge: React.FC<CashEfficiencyGaugeProps> = ({ score }) => {
   const data = [
-    { name: 'Efficiency', value: score },
-    { name: 'Remaining', value: 100 - score },
+    { name: "Efficiency", value: score },
+    { name: "Remaining", value: 100 - score },
   ];
 
-  const COLORS = ['rgba(var(--primary), 1)', 'rgba(255,255,255,0.02)'];
+  const COLORS = ["rgba(var(--primary), 1)", "rgba(255,255,255,0.02)"];
 
   return (
     <div className="h-full w-full">
@@ -30,15 +30,15 @@ export const CashEfficiencyGauge: React.FC<CashEfficiencyGaugeProps> = ({ score 
             stroke="none"
           >
             {data.map((entry, index) => (
-              <Cell 
-                key={`cell-${index}`} 
-                fill={COLORS[index % COLORS.length]} 
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
                 className={index === 0 ? "drop-shadow-[0_0_15px_rgba(var(--primary),0.3)]" : ""}
               />
             ))}
-            <Label 
+            <Label
               content={({ viewBox }) => {
-                const { cx, cy } = viewBox as { cx: number, cy: number };
+                const { cx, cy } = viewBox as { cx: number; cy: number };
                 return (
                   <g>
                     <text

@@ -1,11 +1,11 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { tokens } from '@/lib/tokens';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { tokens } from "@/lib/tokens";
 
-type GapSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-type Direction = 'vertical' | 'horizontal' | 'v' | 'h';
-type AlignItems = 'start' | 'center' | 'end' | 'stretch';
-type JustifyContent = 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
+type GapSize = "xs" | "sm" | "md" | "lg" | "xl";
+type Direction = "vertical" | "horizontal" | "v" | "h";
+type AlignItems = "start" | "center" | "end" | "stretch";
+type JustifyContent = "start" | "center" | "end" | "between" | "around" | "evenly";
 
 interface StackProps {
   /** Child elements */
@@ -31,60 +31,60 @@ interface StackProps {
 }
 
 const gapMap: Record<GapSize, string> = {
-  xs: 'gap-1',
-  sm: 'gap-2',
-  md: 'gap-3',
-  lg: 'gap-4',
-  xl: 'gap-6',
+  xs: "gap-1",
+  sm: "gap-2",
+  md: "gap-3",
+  lg: "gap-4",
+  xl: "gap-6",
 };
 
 const alignMap: Record<AlignItems, string> = {
-  start: 'items-start',
-  center: 'items-center',
-  end: 'items-end',
-  stretch: 'items-stretch',
+  start: "items-start",
+  center: "items-center",
+  end: "items-end",
+  stretch: "items-stretch",
 };
 
 const justifyMap: Record<JustifyContent, string> = {
-  start: 'justify-start',
-  center: 'justify-center',
-  end: 'justify-end',
-  between: 'justify-between',
-  around: 'justify-around',
-  evenly: 'justify-evenly',
+  start: "justify-start",
+  center: "justify-center",
+  end: "justify-end",
+  between: "justify-between",
+  around: "justify-around",
+  evenly: "justify-evenly",
 };
 
 /**
  * Stack - Standardized flex container with token-based spacing
- * 
+ *
  * Use this instead of arbitrary `flex gap-X` classes.
  * Provides consistent spacing across all components.
  */
 export const Stack: React.FC<StackProps> = ({
   children,
-  gap = 'md',
-  direction = 'vertical',
-  align = 'stretch',
-  justify = 'start',
+  gap = "md",
+  direction = "vertical",
+  align = "stretch",
+  justify = "start",
   wrap = false,
   fullWidth = false,
   fullHeight = false,
   className,
-  as: Component = 'div',
+  as: Component = "div",
 }) => {
-  const isHorizontal = direction === 'horizontal' || direction === 'h';
+  const isHorizontal = direction === "horizontal" || direction === "h";
 
   return (
     <Component
       className={cn(
-        'flex',
-        isHorizontal ? 'flex-row' : 'flex-col',
+        "flex",
+        isHorizontal ? "flex-row" : "flex-col",
         gapMap[gap],
         alignMap[align],
         justifyMap[justify],
-        wrap && 'flex-wrap',
-        fullWidth && 'w-full',
-        fullHeight && 'h-full',
+        wrap && "flex-wrap",
+        fullWidth && "w-full",
+        fullHeight && "h-full",
         className
       )}
     >
@@ -96,32 +96,32 @@ export const Stack: React.FC<StackProps> = ({
 /**
  * VerticalStack - Convenience wrapper for vertical stacks
  */
-export const VerticalStack: React.FC<Omit<StackProps, 'direction'>> = (props) => (
+export const VerticalStack: React.FC<Omit<StackProps, "direction">> = (props) => (
   <Stack direction="vertical" {...props} />
 );
 
 /**
  * HorizontalStack - Convenience wrapper for horizontal stacks
  */
-export const HorizontalStack: React.FC<Omit<StackProps, 'direction'>> = (props) => (
+export const HorizontalStack: React.FC<Omit<StackProps, "direction">> = (props) => (
   <Stack direction="horizontal" {...props} />
 );
 
 /**
  * Space - Creates consistent vertical spacing between sections
- * 
+ *
  * Use this instead of margin-top/margin-bottom on individual components.
  */
 export const Space: React.FC<{
   size?: GapSize;
   className?: string;
-}> = ({ size = 'md', className }) => {
+}> = ({ size = "md", className }) => {
   const sizeMap: Record<GapSize, string> = {
-    xs: 'h-1',
-    sm: 'h-2',
-    md: 'h-3',
-    lg: 'h-4',
-    xl: 'h-6',
+    xs: "h-1",
+    sm: "h-2",
+    md: "h-3",
+    lg: "h-4",
+    xl: "h-6",
   };
 
   return <div className={cn(sizeMap[size], className)} />;
@@ -131,13 +131,13 @@ export const Space: React.FC<{
  * Divider - Horizontal or vertical divider with consistent styling
  */
 export const Divider: React.FC<{
-  direction?: 'horizontal' | 'vertical';
+  direction?: "horizontal" | "vertical";
   className?: string;
-}> = ({ direction = 'horizontal', className }) => (
+}> = ({ direction = "horizontal", className }) => (
   <div
     className={cn(
       tokens.border.divider,
-      direction === 'horizontal' ? 'h-px w-full' : 'w-px h-full',
+      direction === "horizontal" ? "h-px w-full" : "w-px h-full",
       className
     )}
   />

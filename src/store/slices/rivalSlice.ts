@@ -1,6 +1,6 @@
-import { StateCreator } from 'zustand';
-import { GameStore } from '../gameStore';
-import { executeAcquisition, executeSabotage, executePoach } from '@/engine/systems/mergers';
+import { StateCreator } from "zustand";
+import { GameStore } from "../gameStore";
+import { executeAcquisition, executeSabotage, executePoach } from "@/engine/systems/mergers";
 
 export interface RivalSlice {
   acquireRival: (targetId: string) => void;
@@ -38,4 +38,3 @@ export const createRivalSlice: StateCreator<GameStore, [], [], RivalSlice> = (se
     });
   },
 });
-

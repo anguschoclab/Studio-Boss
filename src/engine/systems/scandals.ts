@@ -127,7 +127,7 @@ export function advanceScandals(state: GameState): StateImpact[] {
   });
 
   // Active scandals for project penalties include both continuing AND just finishing this week
-  currentScandals.forEach(s => {
+  currentScandals.forEach((s) => {
     activeScandalTalent.add(s.talentId);
   });
 

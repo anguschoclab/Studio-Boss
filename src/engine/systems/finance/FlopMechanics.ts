@@ -1,16 +1,16 @@
-import { GameState, Project, StateImpact } from '@/engine/types';
-import { clamp } from '../../utils';
-import { isPlayerOwner } from '../../utils/ownership';
+import { GameState, Project, StateImpact } from "@/engine/types";
+import { clamp } from "../../utils";
+import { isPlayerOwner } from "../../utils/ownership";
 
 /**
  * Flop Mechanics System
  */
 
 export enum FlopSeverity {
-  NONE = 'none',
-  MINOR = 'minor',
-  MAJOR = 'major',
-  CATASTROPHIC = 'catastrophic'
+  NONE = "none",
+  MINOR = "minor",
+  MAJOR = "major",
+  CATASTROPHIC = "catastrophic",
 }
 
 export interface FlopResult {
@@ -21,30 +21,33 @@ export interface FlopResult {
   shouldRestructure: boolean;
 }
 
-const FLOP_PENALTY_CONFIGS: Record<Exclude<FlopSeverity, FlopSeverity.NONE>, {
-  writeOffPct: number;
-  prestigePenalty: number;
-  ipDevaluation: number;
-  shouldRestructure: boolean;
-}> = {
+const FLOP_PENALTY_CONFIGS: Record<
+  Exclude<FlopSeverity, FlopSeverity.NONE>,
+  {
+    writeOffPct: number;
+    prestigePenalty: number;
+    ipDevaluation: number;
+    shouldRestructure: boolean;
+  }
+> = {
   [FlopSeverity.MINOR]: {
     writeOffPct: 0.3,
     prestigePenalty: -5,
     ipDevaluation: 0.2,
-    shouldRestructure: false
+    shouldRestructure: false,
   },
   [FlopSeverity.MAJOR]: {
     writeOffPct: 0.5,
     prestigePenalty: -10,
     ipDevaluation: 0.4,
-    shouldRestructure: false
+    shouldRestructure: false,
   },
   [FlopSeverity.CATASTROPHIC]: {
     writeOffPct: 0.7,
     prestigePenalty: -20,
     ipDevaluation: 0.6,
-    shouldRestructure: true
-  }
+    shouldRestructure: true,
+  },
 };
 
 /**
@@ -77,7 +80,7 @@ export function calculateFlopPenalties(project: Project, severity: FlopSeverity)
       writeOffCost: 0,
       prestigePenalty: 0,
       ipDevaluation: 0,
-      shouldRestructure: false
+      shouldRestructure: false,
     };
   }
 
@@ -86,7 +89,7 @@ export function calculateFlopPenalties(project: Project, severity: FlopSeverity)
     writeOffCost: Math.floor(totalCost * config.writeOffPct),
     prestigePenalty: config.prestigePenalty,
     ipDevaluation: config.ipDevaluation,
-    shouldRestructure: config.shouldRestructure
+    shouldRestructure: config.shouldRestructure,
   };
 }
 
@@ -106,10 +109,10 @@ export function shouldRestructureStudio(rivalId: string, currentWeek: number): b
   const oneYearAgo = currentWeek - 52;
   const twoYearsAgo = currentWeek - 104;
 
-  const majorFlopsLastYear = history.flopWeeks.filter(w => w >= oneYearAgo).length;
+  const majorFlopsLastYear = history.flopWeeks.filter((w) => w >= oneYearAgo).length;
   if (majorFlopsLastYear >= 3) return true;
 
-  const majorFlopsLastTwoYears = history.flopWeeks.filter(w => w >= twoYearsAgo).length;
+  const majorFlopsLastTwoYears = history.flopWeeks.filter((w) => w >= twoYearsAgo).length;
   if (majorFlopsLastTwoYears >= 5) return true;
 
   if (history.catastrophicFlops > 0) return true;
@@ -147,23 +150,23 @@ export function applyFlopPenalties(
 
     if (shouldRestructureStudio(ownerId, state.week)) {
       impacts.push({
-        type: 'RIVAL_UPDATED',
+        type: "RIVAL_UPDATED",
         payload: {
           rivalId: ownerId,
           update: {
-            strategy: 'prestige_chaser',
-            recentActivity: 'Executive shakeup after series of flops'
-          }
-        }
+            strategy: "prestige_chaser",
+            recentActivity: "Executive shakeup after series of flops",
+          },
+        },
       });
 
       impacts.push({
-        type: 'NEWS_ADDED',
+        type: "NEWS_ADDED",
         payload: {
           headline: `${isRival.name} restructures after flop streak`,
           description: `After multiple failed releases, ${isRival.name} has shaken up its executive team and reset its strategy.`,
-          category: 'rival' as any
-        }
+          category: "rival" as any,
+        },
       });
     }
   }
@@ -171,20 +174,20 @@ export function applyFlopPenalties(
   if (penalties.writeOffCost > 0) {
     if (isRival) {
       impacts.push({
-        type: 'RIVAL_UPDATED',
+        type: "RIVAL_UPDATED",
         payload: {
           rivalId: ownerId,
           update: {
-            cash: Math.max(0, isRival.cash - penalties.writeOffCost)
-          }
-        }
+            cash: Math.max(0, isRival.cash - penalties.writeOffCost),
+          },
+        },
       });
     } else if (isPlayerOwner(state, ownerId)) {
       impacts.push({
-        type: 'FUNDS_DEDUCTED',
+        type: "FUNDS_DEDUCTED",
         payload: {
-          amount: penalties.writeOffCost
-        }
+          amount: penalties.writeOffCost,
+        },
       });
     }
   }
@@ -192,36 +195,36 @@ export function applyFlopPenalties(
   if (penalties.prestigePenalty !== 0) {
     if (isRival) {
       impacts.push({
-        type: 'RIVAL_UPDATED',
+        type: "RIVAL_UPDATED",
         payload: {
           rivalId: ownerId,
           update: {
-            prestige: clamp(isRival.prestige + penalties.prestigePenalty, 0, 100)
-          }
-        }
+            prestige: clamp(isRival.prestige + penalties.prestigePenalty, 0, 100),
+          },
+        },
       });
     } else if (isPlayerOwner(state, ownerId)) {
       impacts.push({
-        type: 'PRESTIGE_CHANGED',
+        type: "PRESTIGE_CHANGED",
         payload: {
-          amount: penalties.prestigePenalty
-        }
+          amount: penalties.prestigePenalty,
+        },
       });
     }
   }
 
   if (severity === FlopSeverity.MAJOR || severity === FlopSeverity.CATASTROPHIC) {
     const ownerName = isRival ? isRival.name : state.studio.name;
-    const severityText = severity === FlopSeverity.CATASTROPHIC ? 'catastrophic' : 'major';
+    const severityText = severity === FlopSeverity.CATASTROPHIC ? "catastrophic" : "major";
     const costText = `$${(penalties.writeOffCost / 1_000_000).toFixed(1)}M`;
 
     impacts.push({
-      type: 'NEWS_ADDED',
+      type: "NEWS_ADDED",
       payload: {
         headline: `${ownerName} writes off ${costText} after ${severityText} flop`,
         description: `${project.title} failed to perform, forcing ${ownerName} to take a significant write-off.`,
-        category: 'general' as any
-      }
+        category: "general" as any,
+      },
     });
   }
 
@@ -234,7 +237,11 @@ export function processFlops(state: GameState): StateImpact[] {
 
   for (const projId in projectsMap) {
     const project = projectsMap[projId];
-    if (project.state === 'released' && (project.releaseWeek || 0) === state.week && project.ownerId) {
+    if (
+      project.state === "released" &&
+      (project.releaseWeek || 0) === state.week &&
+      project.ownerId
+    ) {
       const flopImpacts = applyFlopPenalties(state, project, project.ownerId);
       impacts.push(...flopImpacts);
     }

@@ -1,11 +1,14 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { simulateMarketingCampaign, calculateAudienceIndex } from "../../../engine/systems/demographics";
+import {
+  simulateMarketingCampaign,
+  calculateAudienceIndex,
+} from "../../../engine/systems/demographics";
 import { GameState, Project, ContentFlag } from "../../../engine/types";
 
 const mockProject: Project = {
   id: "p1",
   title: "Test Project",
-  type: 'FILM',
+  type: "FILM",
   format: "film",
   genre: "Drama",
   budgetTier: "mid",
@@ -25,8 +28,8 @@ const mockProject: Project = {
   momentum: 50,
   progress: 0,
   activeCrisis: null,
-  rating: 'PG-13',
-  contentFlags: [] as ContentFlag[]
+  rating: "PG-13",
+  contentFlags: [] as ContentFlag[],
 } as Project;
 
 describe("Demographics System", () => {
@@ -64,30 +67,30 @@ describe("Demographics System", () => {
         ip: { vault: [], franchises: {} },
         entities: {
           projects: {
-            "p1": { ...mockProject }
+            p1: { ...mockProject },
           },
           talents: {},
           contracts: {},
-          rivals: {}
+          rivals: {},
         },
         studio: {
           name: "Test Studio",
-          archetype: 'major',
+          archetype: "major",
           prestige: 50,
           internal: {
             projectHistory: [],
-          }
+          },
         },
         market: { opportunities: [], buyers: [] },
         industry: {
           families: [],
           agencies: [],
           agents: [],
-          newsHistory: []
+          newsHistory: [],
         },
         culture: { genrePopularity: {} },
         history: [],
-        eventHistory: []
+        eventHistory: [],
       } as unknown as GameState;
     });
 

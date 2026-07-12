@@ -7,17 +7,25 @@ import { Talent, Project, GameState } from "../../engine/types";
 vi.mock("../../persistence/saveLoad", () => ({
   saveGame: vi.fn(),
   loadGame: vi.fn(async (slot) => {
-    if (slot === 1) return { 
-      week: 1, 
-      finance: { cash: 1000000, ledger: [] },
-      news: { headlines: [] },
-      studio: { name: "Loaded Studio", archetype: 'major', prestige: 50, internal: { projects: {}, contracts: [] } }, 
-      industry: { talentPool: {}, rivals: [], newsHistory: [] },
-      market: { buyers: [], opportunities: [] }
-    } as unknown as GameState;
+    if (slot === 1)
+      return {
+        week: 1,
+        finance: { cash: 1000000, ledger: [] },
+        news: { headlines: [] },
+        studio: {
+          name: "Loaded Studio",
+          archetype: "major",
+          prestige: 50,
+          internal: { projects: {}, contracts: [] },
+        },
+        industry: { talentPool: {}, rivals: [], newsHistory: [] },
+        market: { buyers: [], opportunities: [] },
+      } as unknown as GameState;
     return null;
   }),
-  getSaveSlots: vi.fn(async () => [{ id: 1, name: 'Slot 1', date: '2026-03-31', week: 1, studio: 'Studio' }]),
+  getSaveSlots: vi.fn(async () => [
+    { id: 1, name: "Slot 1", date: "2026-03-31", week: 1, studio: "Studio" },
+  ]),
 }));
 
 describe("gameStore", () => {
@@ -60,7 +68,7 @@ describe("gameStore", () => {
       genre: "Comedy",
       budgetTier: "low",
       targetAudience: "General",
-      flavor: "Funny"
+      flavor: "Funny",
     });
 
     const state = useGameStore.getState().gameState;
@@ -80,17 +88,33 @@ describe("gameStore", () => {
     const state = useGameStore.getState().gameState!;
     state.finance.cash = 1000000;
     state.entities.talents = {
-      "t1": { 
-          id: "t1", name: "Star", roles: ["actor"], prestige: 85, draw: 80, fee: 100000, 
-          agencyId: 'a1'
-      } as any
+      t1: {
+        id: "t1",
+        name: "Star",
+        roles: ["actor"],
+        prestige: 85,
+        draw: 80,
+        fee: 100000,
+        agencyId: "a1",
+      } as any,
     };
     state.entities.projects = {
-      "p1": { 
-        id: "p1", title: "Test", format: "film", genre: "Action", budgetTier: "low", budget: 500000, weeklyCost: 10000,
-        state: "development", weeksInPhase: 0, productionWeeks: 10, developmentWeeks: 10,
-        revenue: 0, weeklyRevenue: 0, releaseWeek: null 
-      } as any
+      p1: {
+        id: "p1",
+        title: "Test",
+        format: "film",
+        genre: "Action",
+        budgetTier: "low",
+        budget: 500000,
+        weeklyCost: 10000,
+        state: "development",
+        weeksInPhase: 0,
+        productionWeeks: 10,
+        developmentWeeks: 10,
+        revenue: 0,
+        weeklyRevenue: 0,
+        releaseWeek: null,
+      } as any,
     };
     useGameStore.setState({ gameState: state });
 

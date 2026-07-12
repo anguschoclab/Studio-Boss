@@ -1,10 +1,10 @@
-import { GameState } from '../../types';
-import { TickContext } from './types';
+import { GameState } from "../../types";
+import { TickContext } from "./types";
 
 // System Imports
-import { detectCultClassic } from '../../systems/ip/ipValuation';
-import { shouldAttemptHostileTakeover } from '../../systems/ai/BehaviorEngine';
-import { generateRebootProposal } from '../../systems/ip/ipRebootEngine';
+import { detectCultClassic } from "../../systems/ip/ipValuation";
+import { shouldAttemptHostileTakeover } from "../../systems/ai/BehaviorEngine";
+import { generateRebootProposal } from "../../systems/ip/ipRebootEngine";
 
 /**
  * Annual Scans
@@ -40,9 +40,9 @@ export const AnnualScans = {
         if (!target.isAcquirable) continue;
         if (shouldAttemptHostileTakeover(attacker, target, state)) {
           context.impacts.push({
-            type: 'MODAL_TRIGGERED',
+            type: "MODAL_TRIGGERED",
             payload: {
-              modalType: 'BIDDING_WAR',
+              modalType: "BIDDING_WAR",
               priority: 60,
               payload: {
                 attackerId: attacker.id,
@@ -50,17 +50,17 @@ export const AnnualScans = {
                 targetId: target.id,
                 targetName: target.name,
                 offerAmount: Math.round(target.cash * 2 + target.strength * 1_000_000),
-                week: context.week
-              }
-            }
+                week: context.week,
+              },
+            },
           });
           context.impacts.push({
-            type: 'NEWS_ADDED',
+            type: "NEWS_ADDED",
             payload: {
               headline: `${attacker.name} makes hostile bid for ${target.name}`,
               description: `Industry insiders confirm an unsolicited acquisition offer has been made.`,
-              category: 'market'
-            }
+              category: "market",
+            },
           });
           break; // one hostile move per attacker per year
         }
@@ -79,41 +79,41 @@ export const AnnualScans = {
     const projectHistoryMap = new Map();
     const history = state.studio.internal.projectHistory || [];
     for (let i = 0; i < history.length; i++) {
-       projectHistoryMap.set(history[i].id, history[i]);
+      projectHistoryMap.set(history[i].id, history[i]);
     }
 
-    vault.forEach(asset => {
-       const project = projectHistoryMap.get(asset.originalProjectId);
-       if (project && !project.isCultClassic && detectCultClassic(project, context.week)) {
-          context.impacts.push({
-             type: 'VAULT_ASSET_UPDATED',
-             payload: { assetId: asset.id, update: { tier: 'CULT_CLASSIC' } }
-          });
-          context.impacts.push({
-             type: 'NEWS_ADDED',
-             payload: {
-                headline: `"${project.title}" achieves cult status!`,
-                description: `Years later, fans have rediscovered this hidden gem. Catalog value is surging.`,
-                category: 'general'
-             }
-          });
-       }
+    vault.forEach((asset) => {
+      const project = projectHistoryMap.get(asset.originalProjectId);
+      if (project && !project.isCultClassic && detectCultClassic(project, context.week)) {
+        context.impacts.push({
+          type: "VAULT_ASSET_UPDATED",
+          payload: { assetId: asset.id, update: { tier: "CULT_CLASSIC" } },
+        });
+        context.impacts.push({
+          type: "NEWS_ADDED",
+          payload: {
+            headline: `"${project.title}" achieves cult status!`,
+            description: `Years later, fans have rediscovered this hidden gem. Catalog value is surging.`,
+            category: "general",
+          },
+        });
+      }
     });
 
     // 2. Reboot Proposal
-    const internalIP = vault.filter(v => v.rightsOwner === 'STUDIO');
+    const internalIP = vault.filter((v) => v.rightsOwner === "STUDIO");
     if (internalIP.length > 0 && context.rng.next() < 0.2) {
-       const proposal = generateRebootProposal(internalIP, context.rng);
-       if (proposal) {
-          context.impacts.push({
-             type: 'MODAL_TRIGGERED',
-             payload: {
-                modalType: 'REBOOT_OPPORTUNITY',
-                priority: 30,
-                payload: proposal
-             }
-          });
-       }
+      const proposal = generateRebootProposal(internalIP, context.rng);
+      if (proposal) {
+        context.impacts.push({
+          type: "MODAL_TRIGGERED",
+          payload: {
+            modalType: "REBOOT_OPPORTUNITY",
+            priority: 30,
+            payload: proposal,
+          },
+        });
+      }
     }
-  }
+  },
 };

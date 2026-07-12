@@ -23,8 +23,6 @@ const isElectron = typeof window !== "undefined" && "electronAPI" in window;
 const needRefresh = false;
 const updateServiceWorker = () => {};
 
-
-
 export function InstallPrompt() {
   const [installEvent, setInstallEvent] = useState<BeforeInstallPromptEvent | null>(null);
   const [dismissed, setDismissed] = useState(false);

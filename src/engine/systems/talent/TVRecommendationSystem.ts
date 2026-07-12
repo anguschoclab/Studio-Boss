@@ -1,6 +1,6 @@
-import { GameState, StateImpact, Talent } from '../../types';
-import { TalentTier } from '../../types/talent.types';
-import { RandomGenerator } from '../../utils/rng';
+import { GameState, StateImpact, Talent } from "../../types";
+import { TalentTier } from "../../types/talent.types";
+import { RandomGenerator } from "../../utils/rng";
 import {
   TVShowRecommendation,
   TVRecommendationCriteria,
@@ -12,14 +12,14 @@ import {
   PLATFORM_PRESTIGE,
   ROLE_PRESTIGE_MULTIPLIERS,
   TV_SHOW_TEMPLATES,
-} from '../../types/tv-recommendations.types';
+} from "../../types/tv-recommendations.types";
 
 const TIER_TO_NUMBER: Record<TalentTier, number> = {
-  'A_LIST': 1,
-  'B_LIST': 2,
-  'C_LIST': 3,
-  'RISING_STAR': 4,
-  'NEWCOMER': 5,
+  A_LIST: 1,
+  B_LIST: 2,
+  C_LIST: 3,
+  RISING_STAR: 4,
+  NEWCOMER: 5,
 };
 
 /**
@@ -42,13 +42,13 @@ function calculateMatchScore(
 
   // Tier alignment
   const tierRoleMap: Record<number, TVRoleType[]> = {
-    1: ['lead', 'showrunner', 'creator'],
-    2: ['lead', 'series_regular', 'showrunner'],
-    3: ['series_regular', 'recurring', 'guest_star'],
-    4: ['guest_star', 'recurring'],
+    1: ["lead", "showrunner", "creator"],
+    2: ["lead", "series_regular", "showrunner"],
+    3: ["series_regular", "recurring", "guest_star"],
+    4: ["guest_star", "recurring"],
   };
 
-  const appropriateRoles = tierRoleMap[criteria.currentTier] || ['guest_star'];
+  const appropriateRoles = tierRoleMap[criteria.currentTier] || ["guest_star"];
   if (appropriateRoles.includes(roleType)) {
     score += 20;
   } else {
@@ -56,7 +56,7 @@ function calculateMatchScore(
   }
 
   // Genre preference alignment
-  if (criteria.preferredGenres.some(g => g.toLowerCase().includes(genre))) {
+  if (criteria.preferredGenres.some((g) => g.toLowerCase().includes(genre))) {
     score += 15;
   }
 
@@ -70,10 +70,10 @@ function calculateMatchScore(
 
   // Personality fit
   const personalityGenreMap: Record<string, TVGenre[]> = {
-    'charismatic': ['comedy', 'romance', 'action'],
-    'difficult': ['drama', 'thriller'],
-    'perfectionist': ['drama', 'thriller', 'sci-fi'],
-    'collaborative': ['comedy', 'drama'],
+    charismatic: ["comedy", "romance", "action"],
+    difficult: ["drama", "thriller"],
+    perfectionist: ["drama", "thriller", "sci-fi"],
+    collaborative: ["comedy", "drama"],
   };
 
   if (criteria.personality && personalityGenreMap[criteria.personality]?.includes(genre)) {
@@ -81,33 +81,33 @@ function calculateMatchScore(
   }
 
   // Career trajectory alignment
-  if (criteria.careerTrajectory === 'rising' && roleType === 'series_regular') {
+  if (criteria.careerTrajectory === "rising" && roleType === "series_regular") {
     score += 15;
-  } else if (criteria.careerTrajectory === 'comeback' && roleType === 'guest_star') {
+  } else if (criteria.careerTrajectory === "comeback" && roleType === "guest_star") {
     score += 10;
-  } else if (criteria.careerTrajectory === 'plateau' && roleType === 'recurring') {
+  } else if (criteria.careerTrajectory === "plateau" && roleType === "recurring") {
     score += 10;
   }
 
   // Skill alignment
-  if (roleType === 'showrunner' || roleType === 'creator') {
-    score += (criteria.skills.writing * 0.3) + (criteria.skills.directing * 0.2);
-  } else if (roleType === 'lead') {
-    score += (criteria.skills.acting * 0.4) + (criteria.skills.stardom * 0.3);
+  if (roleType === "showrunner" || roleType === "creator") {
+    score += criteria.skills.writing * 0.3 + criteria.skills.directing * 0.2;
+  } else if (roleType === "lead") {
+    score += criteria.skills.acting * 0.4 + criteria.skills.stardom * 0.3;
   } else {
-    score += (criteria.skills.acting * 0.3) + (criteria.skills.stardom * 0.2);
+    score += criteria.skills.acting * 0.3 + criteria.skills.stardom * 0.2;
   }
 
   // Age appropriateness for role
-  if (criteria.age < 25 && (roleType === 'lead' || roleType === 'showrunner')) {
+  if (criteria.age < 25 && (roleType === "lead" || roleType === "showrunner")) {
     score -= 10;
-  } else if (criteria.age > 55 && roleType === 'guest_star') {
+  } else if (criteria.age > 55 && roleType === "guest_star") {
     score += 10; // Veteran guest stars
   }
 
   // Apply genre and platform weights
-  score *= (config.genreWeights[genre] || 1.0);
-  score *= (config.platformWeights[platform] || 1.0);
+  score *= config.genreWeights[genre] || 1.0;
+  score *= config.platformWeights[platform] || 1.0;
 
   return Math.max(0, Math.min(100, score));
 }
@@ -125,10 +125,10 @@ function generateReasoning(
   const reasons: string[] = [];
 
   if (matchScore > 75) {
-    reasons.push(`Strong match based on ${criteria.preferredGenres[0] || 'genre'} preference`);
+    reasons.push(`Strong match based on ${criteria.preferredGenres[0] || "genre"} preference`);
   }
 
-  if (criteria.preferredGenres.some(g => g.toLowerCase().includes(genre))) {
+  if (criteria.preferredGenres.some((g) => g.toLowerCase().includes(genre))) {
     reasons.push(`Aligns with preferred genre: ${genre}`);
   }
 
@@ -140,16 +140,18 @@ function generateReasoning(
     reasons.push(`${criteria.personality} personality suits ${genre} content`);
   }
 
-  if (criteria.careerTrajectory === 'rising' && roleType === 'series_regular') {
+  if (criteria.careerTrajectory === "rising" && roleType === "series_regular") {
     reasons.push(`Career trajectory suggests ready for series regular role`);
   }
 
-  if (criteria.skills.acting > 70 && roleType !== 'showrunner' && roleType !== 'creator') {
+  if (criteria.skills.acting > 70 && roleType !== "showrunner" && roleType !== "creator") {
     reasons.push(`Strong acting skills (${criteria.skills.acting}) support this role`);
   }
 
-  if (criteria.skills.writing > 70 && (roleType === 'showrunner' || roleType === 'creator')) {
-    reasons.push(`Strong writing skills (${criteria.skills.writing}) suitable for creative leadership`);
+  if (criteria.skills.writing > 70 && (roleType === "showrunner" || roleType === "creator")) {
+    reasons.push(
+      `Strong writing skills (${criteria.skills.writing}) suitable for creative leadership`
+    );
   }
 
   if (reasons.length === 0) {
@@ -162,19 +164,39 @@ function generateReasoning(
 /**
  * Generate suggested show titles
  */
-function generateShowTitles(
-  genre: TVGenre,
-  platform: TVPlatform,
-  rng: RandomGenerator
-): string[] {
-  const templates = TV_SHOW_TEMPLATES[genre]?.[platform] || ['Untitled Series'];
+function generateShowTitles(genre: TVGenre, platform: TVPlatform, rng: RandomGenerator): string[] {
+  const templates = TV_SHOW_TEMPLATES[genre]?.[platform] || ["Untitled Series"];
   const titles: string[] = [];
 
   for (let i = 0; i < 3; i++) {
     const template = rng.pick(templates);
-    const adjectives = ['The New', 'Lost', 'Dark', 'Secret', 'American', 'Modern', 'Final', 'Eternal'];
-    const nouns = ['Chronicles', 'Stories', 'Legacy', 'Mystery', 'Saga', 'Tales', 'Files', 'Diaries'];
-    const locations = ['of Hollywood', 'in the City', 'from the Studio', 'Behind the Scenes', 'Uncovered'];
+    const adjectives = [
+      "The New",
+      "Lost",
+      "Dark",
+      "Secret",
+      "American",
+      "Modern",
+      "Final",
+      "Eternal",
+    ];
+    const nouns = [
+      "Chronicles",
+      "Stories",
+      "Legacy",
+      "Mystery",
+      "Saga",
+      "Tales",
+      "Files",
+      "Diaries",
+    ];
+    const locations = [
+      "of Hollywood",
+      "in the City",
+      "from the Studio",
+      "Behind the Scenes",
+      "Uncovered",
+    ];
 
     if (rng.next() < 0.3) {
       titles.push(`${rng.pick(adjectives)} ${template}`);
@@ -199,30 +221,40 @@ function generateRecommendation(
   // Determine eligible role types based on tier
   const eligibleRoles: TVRoleType[] = [];
   if (criteria.currentTier === 1) {
-    eligibleRoles.push('lead', 'showrunner', 'creator');
+    eligibleRoles.push("lead", "showrunner", "creator");
   } else if (criteria.currentTier === 2) {
-    eligibleRoles.push('lead', 'series_regular', 'showrunner', 'recurring');
+    eligibleRoles.push("lead", "series_regular", "showrunner", "recurring");
   } else if (criteria.currentTier === 3) {
-    eligibleRoles.push('series_regular', 'recurring', 'guest_star');
+    eligibleRoles.push("series_regular", "recurring", "guest_star");
   } else {
-    eligibleRoles.push('guest_star', 'recurring');
+    eligibleRoles.push("guest_star", "recurring");
   }
 
   const roleType = rng.pick(eligibleRoles);
 
   // Select genre (weighted by preferences)
-  const genres: TVGenre[] = ['drama', 'comedy', 'thriller', 'sci-fi', 'horror', 'action', 'romance', 'reality', 'documentary'];
+  const genres: TVGenre[] = [
+    "drama",
+    "comedy",
+    "thriller",
+    "sci-fi",
+    "horror",
+    "action",
+    "romance",
+    "reality",
+    "documentary",
+  ];
   let genre = rng.pick(genres);
 
   // Prefer talent's preferred genres
   if (criteria.preferredGenres.length > 0 && rng.next() < 0.6) {
     const preferredGenre = rng.pick(criteria.preferredGenres);
-    const matchedGenre = genres.find(g => preferredGenre.toLowerCase().includes(g));
+    const matchedGenre = genres.find((g) => preferredGenre.toLowerCase().includes(g));
     if (matchedGenre) genre = matchedGenre;
   }
 
   // Select platform
-  const platforms: TVPlatform[] = ['broadcast', 'cable', 'streaming', 'premium_cable'];
+  const platforms: TVPlatform[] = ["broadcast", "cable", "streaming", "premium_cable"];
   const platform = rng.pick(platforms);
 
   // Calculate match score
@@ -239,16 +271,23 @@ function generateRecommendation(
   const suggestedShowTitles = generateShowTitles(genre, platform, rng);
 
   // Calculate estimated fee and boosts
-  const baseFee = criteria.currentTier === 1 ? 500000 : criteria.currentTier === 2 ? 200000 : criteria.currentTier === 3 ? 50000 : 10000;
+  const baseFee =
+    criteria.currentTier === 1
+      ? 500000
+      : criteria.currentTier === 2
+        ? 200000
+        : criteria.currentTier === 3
+          ? 50000
+          : 10000;
   const roleMultiplier = ROLE_PRESTIGE_MULTIPLIERS[roleType];
   const platformMultiplier = PLATFORM_PRESTIGE[platform] / 50;
   const estimatedFee = Math.floor(baseFee * roleMultiplier * platformMultiplier);
 
   const prestigeBoost = Math.floor((PLATFORM_PRESTIGE[platform] * roleMultiplier) / 10);
-  const starMeterBoost = Math.floor((platformMultiplier * 10) + (matchScore / 10));
+  const starMeterBoost = Math.floor(platformMultiplier * 10 + matchScore / 10);
 
   return {
-    id: rng.uuid('TVR'),
+    id: rng.uuid("TVR"),
     talentId: criteria.talentId,
     roleType,
     genre,
@@ -283,12 +322,12 @@ export function generateTVRecommendationsForTalent(
     currentPrestige: talent.prestige || 50,
     starMeter: talent.starMeter || 50,
     preferredGenres: talent.preferredGenres || [],
-    personality: talent.personality || '',
-    careerTrajectory: talent.careerTrajectory || 'plateau',
+    personality: talent.personality || "",
+    careerTrajectory: talent.careerTrajectory || "plateau",
     skills: talent.skills || { acting: 50, writing: 50, directing: 50, stardom: 50 },
     recentProjectTypes: [],
     age: talent.demographics?.age || 30,
-    gender: talent.demographics?.gender || 'MALE',
+    gender: talent.demographics?.gender || "MALE",
   };
 
   // Generate multiple recommendations
@@ -300,7 +339,7 @@ export function generateTVRecommendationsForTalent(
     if (recommendation) {
       // Check for duplicates
       const isDuplicate = recommendations.some(
-        r => r.roleType === recommendation.roleType && r.genre === recommendation.genre
+        (r) => r.roleType === recommendation.roleType && r.genre === recommendation.genre
       );
 
       if (!isDuplicate) {
@@ -348,7 +387,7 @@ export function tickTVRecommendationSystem(
     if (recommendations.length > 0) {
       for (const recommendation of recommendations) {
         impacts.push({
-          type: 'TV_RECOMMENDATION_CREATED',
+          type: "TV_RECOMMENDATION_CREATED",
           payload: {
             recommendation,
             notification: `TV Opportunity: ${talent.name} recommended for ${recommendation.roleType} role in ${recommendation.genre} series`,
@@ -368,9 +407,11 @@ export function getTVRecommendationsForTalent(
   talentId: string,
   state: GameState
 ): TVShowRecommendation[] {
-  const recommendations: Record<string, TVShowRecommendation> = state.tvRecommendations?.recommendations || {};
-  return Object.values(recommendations)
-    .filter((r) => r.talentId === talentId && r.expiresWeek > state.week);
+  const recommendations: Record<string, TVShowRecommendation> =
+    state.tvRecommendations?.recommendations || {};
+  return Object.values(recommendations).filter(
+    (r) => r.talentId === talentId && r.expiresWeek > state.week
+  );
 }
 
 /**
@@ -392,7 +433,7 @@ export function acceptTVRecommendation(
 
   // Mark as accepted
   impacts.push({
-    type: 'TV_RECOMMENDATION_ACCEPTED',
+    type: "TV_RECOMMENDATION_ACCEPTED",
     payload: {
       recommendationId,
       talentId: recommendation.talentId,

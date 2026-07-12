@@ -1,33 +1,33 @@
-import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { useUIStore } from '@/store/uiStore';
-import { useGameStore } from '@/store/gameStore';
-import { cn } from '@/lib/utils';
-import { Clapperboard, Clock, Zap, Film, ChevronRight } from 'lucide-react';
-import { Project } from '@/engine/types';
+import React, { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { useUIStore } from "@/store/uiStore";
+import { useGameStore } from "@/store/gameStore";
+import { cn } from "@/lib/utils";
+import { Clapperboard, Clock, Zap, Film, ChevronRight } from "lucide-react";
+import { Project } from "@/engine/types";
 
 // ─── Post-production timeline steps ──────────────────────────────────────────
 
 const TIMELINE_STEPS = [
-  { week: 1, label: 'Editing & Assembly Cut', icon: '✂️' },
-  { week: 2, label: 'Colour Grading & Sound Mix', icon: '🎨' },
-  { week: 3, label: 'Ratings Board Submission', icon: '📋' },
+  { week: 1, label: "Editing & Assembly Cut", icon: "✂️" },
+  { week: 2, label: "Colour Grading & Sound Mix", icon: "🎨" },
+  { week: 3, label: "Ratings Board Submission", icon: "📋" },
 ];
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export const PostProductionModal: React.FC = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
-  const updateProject = useGameStore(s => s.updateProject);
+  const updateProject = useGameStore((s) => s.updateProject);
   // @ts-expect-error - addFunds might not be typed
-  const addFunds = useGameStore(s => s.addFunds);
-  const gameState = useGameStore(s => s.gameState);
+  const addFunds = useGameStore((s) => s.addFunds);
+  const gameState = useGameStore((s) => s.gameState);
 
-  const [choice, setChoice] = useState<'none' | 'rush' | 'extended'>('none');
+  const [choice, setChoice] = useState<"none" | "rush" | "extended">("none");
 
-  if (!activeModal || activeModal.type !== 'POST_PRODUCTION') return null;
+  if (!activeModal || activeModal.type !== "POST_PRODUCTION") return null;
 
   const { projectId, projectTitle } = (activeModal.payload ?? {}) as {
     projectId: string;
@@ -36,7 +36,8 @@ export const PostProductionModal: React.FC = () => {
 
   const project = gameState?.entities?.projects?.[projectId];
   const weeksRemaining: number =
-    (project as Project & { postProductionWeeksRemaining?: number })?.postProductionWeeksRemaining ?? 3;
+    (project as Project & { postProductionWeeksRemaining?: number })
+      ?.postProductionWeeksRemaining ?? 3;
 
   const handleConfirm = () => {
     if (!projectId || !project) {
@@ -44,13 +45,13 @@ export const PostProductionModal: React.FC = () => {
       return;
     }
 
-    if (choice === 'rush') {
+    if (choice === "rush") {
       // Rush: costs $2M, reduces to 1 week
       if (addFunds) addFunds(-2_000_000);
       updateProject(projectId, {
         postProductionWeeksRemaining: 1,
       } as Partial<Project>);
-    } else if (choice === 'extended') {
+    } else if (choice === "extended") {
       // Extended cut: +2 weeks, +5 prestige, +10 buzz
       updateProject(projectId, {
         postProductionWeeksRemaining: weeksRemaining + 2,
@@ -69,8 +70,9 @@ export const PostProductionModal: React.FC = () => {
 
   // Director's cut sub-section — shown if project has been marked for a cut
   const directorsCutPending =
-    project && (project as Project & { directorsCutNotified?: boolean }).directorsCutNotified === true &&
-    !(project as Project).availableCuts?.some((c: { type: string }) => c.type === 'directors_cut');
+    project &&
+    (project as Project & { directorsCutNotified?: boolean }).directorsCutNotified === true &&
+    !(project as Project).availableCuts?.some((c: { type: string }) => c.type === "directors_cut");
 
   return (
     <Dialog
@@ -102,7 +104,7 @@ export const PostProductionModal: React.FC = () => {
           {/* Timeline */}
           <div className="p-4 rounded-none bg-card/60 border border-border/40 space-y-3">
             <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">
-              Timeline — {weeksRemaining} week{weeksRemaining !== 1 ? 's' : ''} remaining
+              Timeline — {weeksRemaining} week{weeksRemaining !== 1 ? "s" : ""} remaining
             </p>
             <div className="space-y-2">
               {TIMELINE_STEPS.map((step) => {
@@ -112,9 +114,9 @@ export const PostProductionModal: React.FC = () => {
                   <div
                     key={step.week}
                     className={cn(
-                      'flex items-center gap-3 text-sm',
-                      isComplete && 'opacity-40 line-through',
-                      isCurrent && 'text-primary font-bold'
+                      "flex items-center gap-3 text-sm",
+                      isComplete && "opacity-40 line-through",
+                      isCurrent && "text-primary font-bold"
                     )}
                   >
                     <span className="text-base w-6 text-center">{step.icon}</span>
@@ -127,9 +129,7 @@ export const PostProductionModal: React.FC = () => {
                         Current
                       </Badge>
                     )}
-                    {isComplete && (
-                      <span className="text-success text-xs font-bold">Done</span>
-                    )}
+                    {isComplete && <span className="text-success text-xs font-bold">Done</span>}
                   </div>
                 );
               })}
@@ -145,13 +145,13 @@ export const PostProductionModal: React.FC = () => {
             {/* Rush */}
             <button
               type="button"
-              aria-pressed={choice === 'rush'}
-              onClick={() => setChoice(choice === 'rush' ? 'none' : 'rush')}
+              aria-pressed={choice === "rush"}
+              onClick={() => setChoice(choice === "rush" ? "none" : "rush")}
               className={cn(
-                'w-full glass-card hover-glow cursor-pointer p-3 rounded-none border-2 text-left transition-all duration-200',
-                choice === 'rush'
-                  ? 'border-warning shadow-[0_0_16px_rgba(var(--warning-rgb),0.3)]'
-                  : 'border-white/10'
+                "w-full glass-card hover-glow cursor-pointer p-3 rounded-none border-2 text-left transition-all duration-200",
+                choice === "rush"
+                  ? "border-warning shadow-[0_0_16px_rgba(var(--warning-rgb),0.3)]"
+                  : "border-white/10"
               )}
             >
               <div className="flex items-center gap-2">
@@ -169,13 +169,13 @@ export const PostProductionModal: React.FC = () => {
             {/* Extended cut */}
             <button
               type="button"
-              aria-pressed={choice === 'extended'}
-              onClick={() => setChoice(choice === 'extended' ? 'none' : 'extended')}
+              aria-pressed={choice === "extended"}
+              onClick={() => setChoice(choice === "extended" ? "none" : "extended")}
               className={cn(
-                'w-full glass-card hover-glow cursor-pointer p-3 rounded-none border-2 text-left transition-all duration-200',
-                choice === 'extended'
-                  ? 'border-secondary shadow-[0_0_16px_rgba(var(--secondary-rgb),0.3)]'
-                  : 'border-white/10'
+                "w-full glass-card hover-glow cursor-pointer p-3 rounded-none border-2 text-left transition-all duration-200",
+                choice === "extended"
+                  ? "border-secondary shadow-[0_0_16px_rgba(var(--secondary-rgb),0.3)]"
+                  : "border-white/10"
               )}
             >
               <div className="flex items-center gap-2">
@@ -205,8 +205,8 @@ export const PostProductionModal: React.FC = () => {
                 </p>
               </div>
               <p className="text-xs text-muted-foreground">
-                The director has requested a final cut be prepared. You'll be prompted to approve
-                it separately once the film releases.
+                The director has requested a final cut be prepared. You'll be prompted to approve it
+                separately once the film releases.
               </p>
             </div>
           )}
@@ -217,7 +217,7 @@ export const PostProductionModal: React.FC = () => {
               variant="outline"
               className="flex-1"
               onClick={() => {
-                setChoice('none');
+                setChoice("none");
                 resolveCurrentModal();
               }}
             >
@@ -226,12 +226,12 @@ export const PostProductionModal: React.FC = () => {
             </Button>
             <Button
               className={cn(
-                'flex-1 font-display font-black uppercase tracking-wider',
-                choice !== 'none'
-                  ? 'bg-primary hover:bg-primary/90 text-primary-foreground'
-                  : 'bg-muted text-muted-foreground cursor-not-allowed'
+                "flex-1 font-display font-black uppercase tracking-wider",
+                choice !== "none"
+                  ? "bg-primary hover:bg-primary/90 text-primary-foreground"
+                  : "bg-muted text-muted-foreground cursor-not-allowed"
               )}
-              disabled={choice === 'none'}
+              disabled={choice === "none"}
               onClick={handleConfirm}
             >
               Confirm

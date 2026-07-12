@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   LineChart,
   Line,
@@ -9,8 +9,8 @@ import {
   ResponsiveContainer,
   Area,
   ComposedChart,
-} from 'recharts';
-import { cn } from '@/lib/utils';
+} from "recharts";
+import { cn } from "@/lib/utils";
 
 interface TimePoint {
   date: string | number;
@@ -35,15 +35,20 @@ export const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   height = 250,
   showGrid = true,
   showArea = false,
-  lineColor = 'hsl(var(--primary))',
-  secondaryLineColor = 'hsl(var(--success))',
+  lineColor = "hsl(var(--primary))",
+  secondaryLineColor = "hsl(var(--success))",
   className,
   valueFormatter = (v) => v.toString(),
   yAxisLabel,
 }) => {
   if (!data || data.length === 0) {
     return (
-      <div className={cn('flex items-center justify-center h-[250px] text-muted-foreground', className)}>
+      <div
+        className={cn(
+          "flex items-center justify-center h-[250px] text-muted-foreground",
+          className
+        )}
+      >
         No data available
       </div>
     );
@@ -52,34 +57,33 @@ export const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   const ChartComponent = showArea ? ComposedChart : LineChart;
 
   return (
-    <div className={cn('w-full', className)} style={{ height }}>
+    <div className={cn("w-full", className)} style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
         <ChartComponent data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
           {showGrid && <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />}
-          <XAxis 
-            dataKey="date" 
-            tick={{ fontSize: 10 }}
-            axisLine={false}
-            tickLine={false}
-          />
-          <YAxis 
+          <XAxis dataKey="date" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} />
+          <YAxis
             tick={{ fontSize: 10 }}
             axisLine={false}
             tickLine={false}
             tickFormatter={valueFormatter}
-            label={yAxisLabel ? { value: yAxisLabel, angle: -90, position: 'insideLeft', fontSize: 10 } : undefined}
+            label={
+              yAxisLabel
+                ? { value: yAxisLabel, angle: -90, position: "insideLeft", fontSize: 10 }
+                : undefined
+            }
           />
           <Tooltip
             formatter={(value: number, name: string) => [
-              valueFormatter(value), 
-              name === 'value' ? 'Primary' : 'Secondary'
+              valueFormatter(value),
+              name === "value" ? "Primary" : "Secondary",
             ]}
             contentStyle={{
-              backgroundColor: '#1f2937',
-              border: 'none',
-              borderRadius: '6px',
-              fontSize: '12px',
-              color: '#fff',
+              backgroundColor: "#1f2937",
+              border: "none",
+              borderRadius: "6px",
+              fontSize: "12px",
+              color: "#fff",
             }}
           />
           {showArea && (

@@ -1,11 +1,11 @@
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 
-import { EmptyState } from './EmptyState';
-import { SkeletonList } from './SkeletonCard';
-import { staggerContainer, staggerItem } from '@/lib/animations';
-import { Search, AlertCircle } from 'lucide-react';
+import { EmptyState } from "./EmptyState";
+import { SkeletonList } from "./SkeletonCard";
+import { staggerContainer, staggerItem } from "@/lib/animations";
+import { Search, AlertCircle } from "lucide-react";
 
 interface DataListProps<T> {
   /** Array of items to display */
@@ -16,7 +16,11 @@ interface DataListProps<T> {
   keyExtractor: (item: T, index: number) => string;
   /** Empty state configuration */
   emptyState?: {
-    icon?: React.ComponentType<{ className?: string; size?: number | string; strokeWidth?: number | string }>;
+    icon?: React.ComponentType<{
+      className?: string;
+      size?: number | string;
+      strokeWidth?: number | string;
+    }>;
     title: string;
     description?: string;
     action?: {
@@ -48,7 +52,7 @@ interface DataListProps<T> {
 
 /**
  * DataList - Standardized list component with loading, empty, and animation states
- * 
+ *
  * Provides consistent list rendering with:
  * - Skeleton loading states
  * - Empty state handling
@@ -91,7 +95,7 @@ export function DataList<T>({
         {customEmptyState || (
           <EmptyState
             icon={emptyState?.icon || AlertCircle}
-            title={emptyState?.title || 'No items found'}
+            title={emptyState?.title || "No items found"}
             description={emptyState?.description}
             action={emptyState?.action}
             variant="card"
@@ -102,22 +106,19 @@ export function DataList<T>({
     );
   }
 
-  const ListWrapper = animate ? motion.div : 'div';
-  const ItemWrapper = animate ? motion.div : 'div';
+  const ListWrapper = animate ? motion.div : "div";
+  const ItemWrapper = animate ? motion.div : "div";
 
   return (
     <div className={className}>
       {header}
-      
+
       <ListWrapper
-        className={cn(
-          'space-y-2',
-          dividers && 'divide-y divide-white/5'
-        )}
+        className={cn("space-y-2", dividers && "divide-y divide-white/5")}
         {...(animate && {
           variants: staggerContainer,
-          initial: 'initial',
-          animate: 'animate',
+          initial: "initial",
+          animate: "animate",
         })}
       >
         <AnimatePresence mode="popLayout">
@@ -126,10 +127,10 @@ export function DataList<T>({
               key={keyExtractor(item, index)}
               className={cn(
                 interactive && [
-                  'rounded-none border border-transparent',
-                  'hover:bg-white/[0.03] hover:border-white/5',
-                  'cursor-pointer',
-                  'transition-all duration-700',
+                  "rounded-none border border-transparent",
+                  "hover:bg-white/[0.03] hover:border-white/5",
+                  "cursor-pointer",
+                  "transition-all duration-700",
                 ],
                 itemClassName
               )}
@@ -143,7 +144,7 @@ export function DataList<T>({
           ))}
         </AnimatePresence>
       </ListWrapper>
-      
+
       {footer}
     </div>
   );
@@ -167,9 +168,9 @@ interface FilterableDataListProps<T> extends DataListProps<T> {
 
 export function FilterableDataList<T>({
   items,
-  searchQuery = '',
+  searchQuery = "",
   filterFn,
-  searchPlaceholder = 'SEARCH DATABASE...',
+  searchPlaceholder = "SEARCH DATABASE...",
   onSearchChange,
   showSearch = true,
   ...props
@@ -177,19 +178,19 @@ export function FilterableDataList<T>({
   // Filter items based on search query
   const filteredItems = React.useMemo(() => {
     if (!searchQuery || !filterFn) return items;
-    return items.filter(item => filterFn(item, searchQuery));
+    return items.filter((item) => filterFn(item, searchQuery));
   }, [items, searchQuery, filterFn]);
 
   // Empty state for search with no results
   const searchEmptyState = searchQuery
     ? {
         icon: Search,
-        title: 'NO RESULTS FOUND',
+        title: "NO RESULTS FOUND",
         description: `NO MATCHES FOR "${searchQuery.toUpperCase()}"`,
         action: onSearchChange
           ? {
-              label: 'CLEAR SEARCH',
-              onClick: () => onSearchChange(''),
+              label: "CLEAR SEARCH",
+              onClick: () => onSearchChange(""),
             }
           : undefined,
       }
@@ -206,16 +207,16 @@ export function FilterableDataList<T>({
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={searchPlaceholder}
             className={cn(
-              'w-full pl-12 pr-6 py-4',
-              'bg-white/[0.02] border border-white/5 rounded-none',
-              'text-[10px] font-black uppercase tracking-[0.3em] italic placeholder:text-muted-foreground/10',
-              'focus:outline-none focus:border-primary/40 focus:bg-white/[0.05]',
-              'transition-all duration-700'
+              "w-full pl-12 pr-6 py-4",
+              "bg-white/[0.02] border border-white/5 rounded-none",
+              "text-[10px] font-black uppercase tracking-[0.3em] italic placeholder:text-muted-foreground/10",
+              "focus:outline-none focus:border-primary/40 focus:bg-white/[0.05]",
+              "transition-all duration-700"
             )}
           />
         </div>
       )}
-      
+
       <DataList
         {...props}
         items={filteredItems}
@@ -234,7 +235,7 @@ export function CompactList<T>({
   keyExtractor,
   isLoading,
   className,
-}: Omit<DataListProps<T>, 'emptyState' | 'animate'>) {
+}: Omit<DataListProps<T>, "emptyState" | "animate">) {
   return (
     <DataList
       items={items}
@@ -246,7 +247,7 @@ export function CompactList<T>({
       interactive
       emptyState={{
         icon: AlertCircle,
-        title: 'NO ITEMS FOUND',
+        title: "NO ITEMS FOUND",
       }}
     />
   );

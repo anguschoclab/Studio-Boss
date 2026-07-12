@@ -1,30 +1,27 @@
-import {
-  ContentFlag,
-  ProjectRating,
-  Project,
-  RegionalRating,
-  RatingMarket,
-} from '@/engine/types';
-import { MARKET_CONFIGS, getBannedMarkets, getRestrictedMarkets } from '../../data/ratingMarkets';
+import { ContentFlag, ProjectRating, Project, RegionalRating, RatingMarket } from "@/engine/types";
+import { MARKET_CONFIGS, getBannedMarkets, getRestrictedMarkets } from "../../data/ratingMarkets";
 
 /**
  * Returns a per-market rating and ban status for all 8 markets.
  * Stored on project.regionalRatings at greenlight time.
  */
-export function evaluateRegionalRatings(flags: ContentFlag[], baseRating: ProjectRating): RegionalRating[] {
+export function evaluateRegionalRatings(
+  flags: ContentFlag[],
+  baseRating: ProjectRating
+): RegionalRating[] {
   const bannedMarkets = getBannedMarkets(flags);
   const restrictedMarkets = getRestrictedMarkets(flags);
 
-  return (Object.keys(MARKET_CONFIGS) as RatingMarket[]).map(market => {
+  return (Object.keys(MARKET_CONFIGS) as RatingMarket[]).map((market) => {
     const isBanned = bannedMarkets.includes(market);
     const isRestricted = restrictedMarkets.includes(market);
-    const restrictionLevel = isBanned ? 'banned' : isRestricted ? 'major' : 'none';
+    const restrictionLevel = isBanned ? "banned" : isRestricted ? "major" : "none";
 
     return {
       market,
       rating: baseRating,
       isBanned,
-      restrictionLevel
+      restrictionLevel,
     } as RegionalRating;
   });
 }
@@ -45,8 +42,8 @@ export function calculateRegionalPenalties(project: Project): number {
 
   for (const market of Object.keys(MARKET_CONFIGS) as RatingMarket[]) {
     const config = MARKET_CONFIGS[market];
-    const isBanned = config.bannedFlags.some(f => flags.includes(f));
-    const isRestricted = config.restrictedFlags.some(f => flags.includes(f));
+    const isBanned = config.bannedFlags.some((f) => flags.includes(f));
+    const isRestricted = config.restrictedFlags.some((f) => flags.includes(f));
 
     if (isBanned) {
       totalLoss += config.boxOfficeSharePct;

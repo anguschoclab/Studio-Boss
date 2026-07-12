@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach, vi, } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { saveGame, loadGame, getSaveSlots } from "../../persistence/saveLoad";
 import { persistenceService } from "../../persistence/PersistenceService";
-import { } from "../../engine/types";
+import {} from "../../engine/types";
 import { initializeGame } from "../../engine/core/gameInit";
 
 // Mock the persistenceService
@@ -10,7 +10,7 @@ vi.mock("../../persistence/PersistenceService", () => ({
     save: vi.fn(),
     load: vi.fn(),
     exists: vi.fn(),
-  }
+  },
 }));
 
 describe("saveLoad", () => {
@@ -45,15 +45,15 @@ describe("saveLoad", () => {
 
   it("retrieves save slots info asynchronously", async () => {
     const mockState = initializeGame("Save Studio", "major");
-    
+
     // Setup: Slot 1 exists, Slot 0 and 2 do not
     vi.mocked(persistenceService.load).mockImplementation(async (slot) => {
-        if (slot === 1) return mockState;
-        return null;
+      if (slot === 1) return mockState;
+      return null;
     });
 
     const slots = await getSaveSlots();
-    
+
     expect(slots).toHaveLength(3);
     expect(slots[0].exists).toBe(false);
     expect(slots[1].exists).toBe(true);
@@ -64,12 +64,15 @@ describe("saveLoad", () => {
   it("logs errors when save fails", async () => {
     const mockState = initializeGame("Error Studio", "indie");
     vi.mocked(persistenceService.save).mockRejectedValue(new Error("Write failure"));
-    
+
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-    
+
     await saveGame(5, mockState);
-    
-    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("Failed to save game state"), expect.any(Error));
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining("Failed to save game state"),
+      expect.any(Error)
+    );
     consoleSpy.mockRestore();
   });
 });

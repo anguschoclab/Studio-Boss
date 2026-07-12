@@ -1,6 +1,6 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { LucideIcon } from 'lucide-react';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { LucideIcon } from "lucide-react";
 
 interface PanelHeaderProps {
   title: string;
@@ -12,7 +12,7 @@ interface PanelHeaderProps {
 
 /**
  * Panel Header - Design Bible Section 8
- * 
+ *
  * Standardized panel header with gradient text title, icon, sub-label, and optional action.
  * Used across all dashboard screens for consistent layout.
  */
@@ -24,7 +24,7 @@ export const PanelHeader: React.FC<PanelHeaderProps> = ({
   className,
 }) => {
   return (
-    <div className={cn('flex items-center justify-between mb-12', className)}>
+    <div className={cn("flex items-center justify-between mb-12", className)}>
       <div className="flex items-center gap-6">
         {Icon && (
           <div className="w-14 h-14 rounded-none bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0 transition-all duration-700 hover:bg-primary/20">

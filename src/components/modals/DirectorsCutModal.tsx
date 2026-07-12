@@ -1,17 +1,17 @@
-import React from 'react';
-import { useUIStore } from '@/store/uiStore';
-import { useGameStore } from '@/store/gameStore';
-import { formatMoney } from '@/engine/utils';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Film, Sparkles, TrendingUp, DollarSign } from 'lucide-react';
+import React from "react";
+import { useUIStore } from "@/store/uiStore";
+import { useGameStore } from "@/store/gameStore";
+import { formatMoney } from "@/engine/utils";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Film, Sparkles, TrendingUp, DollarSign } from "lucide-react";
 
 export const DirectorsCutModal: React.FC = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
-  const releaseDirectorsCutAction = useGameStore(s => s.releaseDirectorsCutAction);
-  const gameState = useGameStore(s => s.gameState);
+  const releaseDirectorsCutAction = useGameStore((s) => s.releaseDirectorsCutAction);
+  const gameState = useGameStore((s) => s.gameState);
 
-  if (!activeModal || activeModal.type !== 'DIRECTORS_CUT_AVAILABLE') return null;
+  if (!activeModal || activeModal.type !== "DIRECTORS_CUT_AVAILABLE") return null;
 
   const { projectId, projectTitle } = (activeModal.payload || {}) as {
     projectId: string;
@@ -20,8 +20,10 @@ export const DirectorsCutModal: React.FC = () => {
 
   const project = gameState?.entities?.projects?.[projectId];
   const estimatedRevenue = project
-    ? formatMoney(Math.round((project.boxOffice?.openingWeekendDomestic ?? project.budget * 0.1) * 0.3))
-    : 'N/A';
+    ? formatMoney(
+        Math.round((project.boxOffice?.openingWeekendDomestic ?? project.budget * 0.1) * 0.3)
+      )
+    : "N/A";
 
   const handleRelease = () => {
     if (projectId) releaseDirectorsCutAction(projectId);
@@ -70,11 +72,7 @@ export const DirectorsCutModal: React.FC = () => {
           </div>
 
           <div className="flex gap-3">
-            <Button
-              variant="outline"
-              className="flex-1"
-              onClick={() => resolveCurrentModal()}
-            >
+            <Button variant="outline" className="flex-1" onClick={() => resolveCurrentModal()}>
               Pass
             </Button>
             <Button

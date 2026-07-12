@@ -1,6 +1,6 @@
-import React from 'react';
-import { LineChart, Line, ResponsiveContainer, YAxis, Area, AreaChart } from 'recharts';
-import { cn } from '@/lib/utils';
+import React from "react";
+import { LineChart, Line, ResponsiveContainer, YAxis, Area, AreaChart } from "recharts";
+import { cn } from "@/lib/utils";
 
 interface SparklineChartProps {
   data: number[];
@@ -12,7 +12,7 @@ interface SparklineChartProps {
   strokeWidth?: number;
   className?: string;
   animate?: boolean;
-  trend?: 'up' | 'down' | 'neutral';
+  trend?: "up" | "down" | "neutral";
 }
 
 export const SparklineChart: React.FC<SparklineChartProps> = ({
@@ -28,43 +28,56 @@ export const SparklineChart: React.FC<SparklineChartProps> = ({
   trend,
 }) => {
   // Auto-detect trend if not provided
-  const detectedTrend = trend || (() => {
-    if (data.length < 2) return 'neutral';
-    const first = data[0];
-    const last = data[data.length - 1];
-    if (last > first * 1.05) return 'up';
-    if (last < first * 0.95) return 'down';
-    return 'neutral';
-  })();
+  const detectedTrend =
+    trend ||
+    (() => {
+      if (data.length < 2) return "neutral";
+      const first = data[0];
+      const last = data[data.length - 1];
+      if (last > first * 1.05) return "up";
+      if (last < first * 0.95) return "down";
+      return "neutral";
+    })();
 
-  const trendColor = color || (() => {
-    switch (detectedTrend) {
-      case 'up': return '#10b981';
-      case 'down': return '#ef4444';
-      default: return 'rgba(var(--primary), 1)';
-    }
-  })();
+  const trendColor =
+    color ||
+    (() => {
+      switch (detectedTrend) {
+        case "up":
+          return "#10b981";
+        case "down":
+          return "#ef4444";
+        default:
+          return "rgba(var(--primary), 1)";
+      }
+    })();
 
   const chartData = data.map((value, index) => ({ value, index }));
 
   if (showArea) {
     return (
-      <div className={cn('inline-block', className)} style={{ width, height }}>
+      <div className={cn("inline-block", className)} style={{ width, height }}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={chartData}>
             <defs>
-              <linearGradient id={`sparklineGradient-${trendColor.replace(/[^a-zA-Z0-9]/g, '')}`} x1="0" y1="0" x2="0" y2="1">
+              <linearGradient
+                id={`sparklineGradient-${trendColor.replace(/[^a-zA-Z0-9]/g, "")}`}
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="1"
+              >
                 <stop offset="5%" stopColor={trendColor} stopOpacity={fillOpacity} />
                 <stop offset="95%" stopColor={trendColor} stopOpacity={0} />
               </linearGradient>
             </defs>
-            <YAxis domain={['dataMin', 'dataMax']} hide />
+            <YAxis domain={["dataMin", "dataMax"]} hide />
             <Area
               type="monotone"
               dataKey="value"
               stroke={trendColor}
               strokeWidth={strokeWidth}
-              fill={`url(#sparklineGradient-${trendColor.replace(/[^a-zA-Z0-9]/g, '')})`}
+              fill={`url(#sparklineGradient-${trendColor.replace(/[^a-zA-Z0-9]/g, "")})`}
               animationDuration={animate ? 1500 : 0}
               dot={false}
             />
@@ -75,10 +88,10 @@ export const SparklineChart: React.FC<SparklineChartProps> = ({
   }
 
   return (
-    <div className={cn('inline-block', className)} style={{ width, height }}>
+    <div className={cn("inline-block", className)} style={{ width, height }}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={chartData}>
-          <YAxis domain={['dataMin', 'dataMax']} hide />
+          <YAxis domain={["dataMin", "dataMax"]} hide />
           <Line
             type="monotone"
             dataKey="value"
@@ -108,21 +121,21 @@ export const MultiSparkline: React.FC<MultiSparklineProps> = ({
   className,
 }) => {
   // Combine all series into chart data format
-  const maxLength = Math.max(...data.map(d => d.values.length));
+  const maxLength = Math.max(...data.map((d) => d.values.length));
   const chartData = Array.from({ length: maxLength }, (_, i) => {
     const point: Record<string, number | string> = { index: i };
-    data.forEach(series => {
+    data.forEach((series) => {
       point[series.label] = series.values[i] ?? null;
     });
     return point;
   });
 
   return (
-    <div className={cn('space-y-4', className)}>
+    <div className={cn("space-y-4", className)}>
       <div style={{ width, height }}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData}>
-            <YAxis domain={['dataMin', 'dataMax']} hide />
+            <YAxis domain={["dataMin", "dataMax"]} hide />
             {data.map((series, i) => (
               <Line
                 key={series.label}
@@ -138,10 +151,10 @@ export const MultiSparkline: React.FC<MultiSparklineProps> = ({
           </LineChart>
         </ResponsiveContainer>
       </div>
-      
+
       {/* Legend */}
       <div className="flex flex-wrap gap-4">
-        {data.map(series => (
+        {data.map((series) => (
           <div key={series.label} className="flex items-center gap-2">
             <div className="w-1.5 h-1.5 rounded-none" style={{ backgroundColor: series.color }} />
             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
@@ -168,7 +181,7 @@ export const BarSparkline: React.FC<BarSparklineProps> = ({
   data,
   width = 100,
   height = 30,
-  barColor = 'rgba(var(--primary), 1)',
+  barColor = "rgba(var(--primary), 1)",
   className,
   maxBarWidth = 8,
 }) => {
@@ -176,10 +189,7 @@ export const BarSparkline: React.FC<BarSparklineProps> = ({
   const barWidth = Math.min(maxBarWidth, width / data.length - 2);
 
   return (
-    <div 
-      className={cn('flex items-end gap-1', className)} 
-      style={{ width, height }}
-    >
+    <div className={cn("flex items-end gap-1", className)} style={{ width, height }}>
       {data.map((value, i) => {
         const barHeight = (value / maxValue) * height;
         return (

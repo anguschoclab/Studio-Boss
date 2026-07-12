@@ -1,11 +1,18 @@
-import React from 'react';
-import { cn, formatCurrency } from '@/lib/utils';
-import { AlertTriangle, DollarSign, TrendingUp, AlertOctagon, CheckCircle2, Clock } from 'lucide-react';
-import { Section } from '@/components/layout/Section';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { tokens } from '@/lib/tokens';
+import React from "react";
+import { cn, formatCurrency } from "@/lib/utils";
+import {
+  AlertTriangle,
+  DollarSign,
+  TrendingUp,
+  AlertOctagon,
+  CheckCircle2,
+  Clock,
+} from "lucide-react";
+import { Section } from "@/components/layout/Section";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { tokens } from "@/lib/tokens";
 
 interface OverrunCause {
   category: string;
@@ -21,7 +28,7 @@ interface BudgetAlert {
   projectedFinal: number;
   overrunAmount: number;
   overrunPercentage: number;
-  severity: 'warning' | 'critical' | 'catastrophic';
+  severity: "warning" | "critical" | "catastrophic";
   weeksRemaining: number;
   causes: OverrunCause[];
   recommendations: string[];
@@ -40,39 +47,36 @@ export const BudgetOverrunAlert: React.FC<BudgetOverrunAlertProps> = ({
   onCutCosts,
   onApproveOverrun,
 }) => {
-  const critical = alerts.filter(a => a.severity === 'critical' || a.severity === 'catastrophic');
-  const warnings = alerts.filter(a => a.severity === 'warning');
+  const critical = alerts.filter((a) => a.severity === "critical" || a.severity === "catastrophic");
+  const warnings = alerts.filter((a) => a.severity === "warning");
   const totalOverrun = alerts.reduce((sum, a) => sum + a.overrunAmount, 0);
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'catastrophic': return 'bg-red-600';
-      case 'critical': return 'bg-red-500';
-      default: return 'bg-amber-500';
+      case "catastrophic":
+        return "bg-red-600";
+      case "critical":
+        return "bg-red-500";
+      default:
+        return "bg-amber-500";
     }
   };
 
   const getSeverityBadge = (severity: string) => {
     const colors: Record<string, string> = {
-      catastrophic: 'bg-red-600 text-white',
-      critical: 'bg-red-500 text-white',
-      warning: 'bg-amber-500 text-white',
+      catastrophic: "bg-red-600 text-white",
+      critical: "bg-red-500 text-white",
+      warning: "bg-amber-500 text-white",
     };
-    return (
-      <Badge className={cn('text-[9px]', colors[severity])}>
-        {severity.toUpperCase()}
-      </Badge>
-    );
+    return <Badge className={cn("text-[9px]", colors[severity])}>{severity.toUpperCase()}</Badge>;
   };
 
   if (alerts.length === 0) {
     return (
-      <div className={cn('text-center py-12', tokens.border.default, 'border-dashed rounded-none')}>
+      <div className={cn("text-center py-12", tokens.border.default, "border-dashed rounded-none")}>
         <CheckCircle2 className="h-12 w-12 mx-auto mb-4 text-emerald-500 opacity-50" />
         <p className={tokens.text.label}>All Projects On Budget</p>
-        <p className={cn('text-sm mt-2', tokens.text.caption)}>
-          No budget overruns detected
-        </p>
+        <p className={cn("text-sm mt-2", tokens.text.caption)}>No budget overruns detected</p>
       </div>
     );
   }
@@ -80,25 +84,30 @@ export const BudgetOverrunAlert: React.FC<BudgetOverrunAlertProps> = ({
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Summary Alert */}
-      <div className={cn(
-        'border rounded-none p-4',
-        critical.length > 0 ? 'bg-red-500/10 border-red-500/50' : 'bg-amber-500/10 border-amber-500/50'
-      )}>
+      <div
+        className={cn(
+          "border rounded-none p-4",
+          critical.length > 0
+            ? "bg-red-500/10 border-red-500/50"
+            : "bg-amber-500/10 border-amber-500/50"
+        )}
+      >
         <div className="flex items-start gap-3">
-          <AlertOctagon className={cn(
-            'h-6 w-6 flex-shrink-0',
-            critical.length > 0 ? 'text-red-500' : 'text-amber-500'
-          )} />
+          <AlertOctagon
+            className={cn(
+              "h-6 w-6 flex-shrink-0",
+              critical.length > 0 ? "text-red-500" : "text-amber-500"
+            )}
+          />
           <div className="flex-1">
-            <h3 className={cn(
-              'font-bold',
-              critical.length > 0 ? 'text-red-500' : 'text-amber-500'
-            )}>
-              Budget Overrun{critical.length > 1 ? 's' : ''} Detected
+            <h3
+              className={cn("font-bold", critical.length > 0 ? "text-red-500" : "text-amber-500")}
+            >
+              Budget Overrun{critical.length > 1 ? "s" : ""} Detected
             </h3>
             <p className="text-sm opacity-70 mt-1">
-              {alerts.length} project{alerts.length > 1 ? 's' : ''} exceeding budget • 
-              Total overrun: {formatCurrency(totalOverrun)}
+              {alerts.length} project{alerts.length > 1 ? "s" : ""} exceeding budget • Total
+              overrun: {formatCurrency(totalOverrun)}
             </p>
           </div>
         </div>
@@ -106,37 +115,37 @@ export const BudgetOverrunAlert: React.FC<BudgetOverrunAlertProps> = ({
 
       {/* Summary Cards */}
       <div className="grid grid-cols-3 gap-4">
-        <Card className={cn('p-4', tokens.border.default)}>
+        <Card className={cn("p-4", tokens.border.default)}>
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-none bg-red-500/10">
               <AlertTriangle className="h-5 w-5 text-red-500" />
             </div>
             <div>
-              <p className={cn('text-[10px] uppercase', tokens.text.caption)}>Critical</p>
+              <p className={cn("text-[10px] uppercase", tokens.text.caption)}>Critical</p>
               <p className="text-2xl font-bold">{critical.length}</p>
             </div>
           </div>
         </Card>
 
-        <Card className={cn('p-4', tokens.border.default)}>
+        <Card className={cn("p-4", tokens.border.default)}>
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-none bg-amber-500/10">
               <DollarSign className="h-5 w-5 text-amber-500" />
             </div>
             <div>
-              <p className={cn('text-[10px] uppercase', tokens.text.caption)}>Total Overrun</p>
+              <p className={cn("text-[10px] uppercase", tokens.text.caption)}>Total Overrun</p>
               <p className="text-xl font-bold">{formatCurrency(totalOverrun)}</p>
             </div>
           </div>
         </Card>
 
-        <Card className={cn('p-4', tokens.border.default)}>
+        <Card className={cn("p-4", tokens.border.default)}>
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-none bg-blue-500/10">
               <Clock className="h-5 w-5 text-blue-500" />
             </div>
             <div>
-              <p className={cn('text-[10px] uppercase', tokens.text.caption)}>Alerts</p>
+              <p className={cn("text-[10px] uppercase", tokens.text.caption)}>Alerts</p>
               <p className="text-2xl font-bold">{alerts.length}</p>
             </div>
           </div>
@@ -155,7 +164,7 @@ export const BudgetOverrunAlert: React.FC<BudgetOverrunAlertProps> = ({
               <Card
                 key={alert.projectId}
                 className={cn(
-                  'p-4 border-l-4',
+                  "p-4 border-l-4",
                   tokens.border.default,
                   getSeverityColor(alert.severity)
                 )}
@@ -166,7 +175,7 @@ export const BudgetOverrunAlert: React.FC<BudgetOverrunAlertProps> = ({
                       <h4 className="font-bold text-sm">{alert.projectTitle}</h4>
                       {getSeverityBadge(alert.severity)}
                     </div>
-                    <p className={cn('text-[10px]', tokens.text.caption)}>
+                    <p className={cn("text-[10px]", tokens.text.caption)}>
                       {alert.weeksRemaining} weeks remaining in production
                     </p>
                   </div>
@@ -174,7 +183,7 @@ export const BudgetOverrunAlert: React.FC<BudgetOverrunAlertProps> = ({
                     <p className="text-xl font-bold text-red-500">
                       +{alert.overrunPercentage.toFixed(0)}%
                     </p>
-                    <p className={cn('text-[10px]', tokens.text.caption)}>
+                    <p className={cn("text-[10px]", tokens.text.caption)}>
                       {formatCurrency(alert.overrunAmount)} over
                     </p>
                   </div>
@@ -193,13 +202,15 @@ export const BudgetOverrunAlert: React.FC<BudgetOverrunAlertProps> = ({
                   <div className="h-3 bg-muted rounded-none overflow-hidden">
                     <div
                       className="h-full bg-primary rounded-none"
-                      style={{ width: `${Math.min((alert.currentSpend / alert.originalBudget) * 100, 100)}%` }}
+                      style={{
+                        width: `${Math.min((alert.currentSpend / alert.originalBudget) * 100, 100)}%`,
+                      }}
                     />
                     <div
                       className="h-full bg-red-500 rounded-none -mt-3"
-                      style={{ 
+                      style={{
                         width: `${Math.min(((alert.projectedFinal - alert.originalBudget) / alert.originalBudget) * 100, 100)}%`,
-                        marginLeft: `${Math.min((alert.currentSpend / alert.originalBudget) * 100, 100)}%`
+                        marginLeft: `${Math.min((alert.currentSpend / alert.originalBudget) * 100, 100)}%`,
                       }}
                     />
                   </div>
@@ -207,10 +218,17 @@ export const BudgetOverrunAlert: React.FC<BudgetOverrunAlertProps> = ({
 
                 {/* Causes */}
                 <div className="space-y-2 mb-4">
-                  <p className={cn('text-[10px] font-medium', tokens.text.caption)}>Overrun Causes:</p>
+                  <p className={cn("text-[10px] font-medium", tokens.text.caption)}>
+                    Overrun Causes:
+                  </p>
                   {alert.causes.map((cause, idx) => (
-                    <div key={idx} className="flex items-center justify-between text-[10px] p-2 bg-muted/30 rounded">
-                      <span>{cause.category}: {cause.reason}</span>
+                    <div
+                      key={idx}
+                      className="flex items-center justify-between text-[10px] p-2 bg-muted/30 rounded"
+                    >
+                      <span>
+                        {cause.category}: {cause.reason}
+                      </span>
                       <span className="text-red-500">+{formatCurrency(cause.amount)}</span>
                     </div>
                   ))}
@@ -259,21 +277,17 @@ export const BudgetOverrunAlert: React.FC<BudgetOverrunAlertProps> = ({
 
       {/* Warning Level */}
       {warnings.length > 0 && (
-        <Section
-          title="Budget Warnings"
-          subtitle="Projects approaching limit"
-          icon={TrendingUp}
-        >
+        <Section title="Budget Warnings" subtitle="Projects approaching limit" icon={TrendingUp}>
           <div className="space-y-3">
             {warnings.map((alert) => (
               <Card
                 key={alert.projectId}
-                className={cn('p-4 border-l-4 border-l-amber-500', tokens.border.default)}
+                className={cn("p-4 border-l-4 border-l-amber-500", tokens.border.default)}
               >
                 <div className="flex items-center justify-between">
                   <div>
                     <h4 className="font-bold text-sm">{alert.projectTitle}</h4>
-                    <p className={cn('text-[10px]', tokens.text.caption)}>
+                    <p className={cn("text-[10px]", tokens.text.caption)}>
                       {formatCurrency(alert.currentSpend)} / {formatCurrency(alert.originalBudget)}
                     </p>
                   </div>

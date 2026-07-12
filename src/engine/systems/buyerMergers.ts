@@ -1,6 +1,6 @@
-import { Buyer, StreamerPlatform, GameState } from '@/engine/types';
-import { StateImpact } from '../types/state.types';
-import { pick, rand, generateId, randRange } from '../utils';
+import { Buyer, StreamerPlatform, GameState } from "@/engine/types";
+import { StateImpact } from "../types/state.types";
+import { pick, rand, generateId, randRange } from "../utils";
 
 const MERGER_HEADLINES = [
   (a: string, b: string) => `BREAKING: ${a} acquires ${b} in landmark media deal!`,
@@ -40,7 +40,7 @@ export function advanceBuyers(state: GameState): StateImpact {
 
   const currWeek = state.week;
   const buyers = state.market.buyers;
-  const activeBuyers = buyers.filter(b => !b.acquiredBy);
+  const activeBuyers = buyers.filter((b) => !b.acquiredBy);
 
   // Update each active buyer's financial health
   for (const buyer of activeBuyers) {
@@ -48,11 +48,11 @@ export function advanceBuyers(state: GameState): StateImpact {
     const currentCash = buyer.cash ?? 50_000_000;
     const currentStrength = buyer.strength ?? 60;
 
-    if (buyer.archetype === 'streamer') {
+    if (buyer.archetype === "streamer") {
       const streamer = buyer as StreamerPlatform;
       // Financials based on existing subscribers (updated in platformEngine)
-      const revenue = streamer.subscribers * 0.8; 
-      const costs = (streamer.marketingSpend || 0) + (streamer.contentLibraryQuality * 50_000);
+      const revenue = streamer.subscribers * 0.8;
+      const costs = (streamer.marketingSpend || 0) + streamer.contentLibraryQuality * 50_000;
       const newCash = currentCash + revenue - costs;
 
       update.cash = newCash;
@@ -62,10 +62,12 @@ export function advanceBuyers(state: GameState): StateImpact {
 
       if (rand() < 0.02) {
         impact.newHeadlines!.push({
-          id: generateId('HL'),
+          id: generateId("HL"),
           week: currWeek,
-          category: 'market',
-          text: pick(performance > 0 ? STREAMER_GROWTH_EVENTS : STREAMER_DECLINE_EVENTS)(buyer.name),
+          category: "market",
+          text: pick(performance > 0 ? STREAMER_GROWTH_EVENTS : STREAMER_DECLINE_EVENTS)(
+            buyer.name
+          ),
         });
       }
     } else {
@@ -82,9 +84,9 @@ export function advanceBuyers(state: GameState): StateImpact {
       if (!buyer.isAcquirable) {
         update.isAcquirable = true;
         impact.newHeadlines!.push({
-          id: generateId('HL'),
+          id: generateId("HL"),
           week: currWeek,
-          category: 'market',
+          category: "market",
           text: pick(VULNERABILITY_HEADLINES)(buyer.name),
         });
       }
@@ -96,9 +98,9 @@ export function advanceBuyers(state: GameState): StateImpact {
   }
 
   // M&A Execution
-  if (rand() < 0.08) { 
-    const vulnerable = activeBuyers.filter(b => b.isAcquirable);
-    const strong = activeBuyers.filter(b => !b.isAcquirable && (b.strength ?? 60) > 70);
+  if (rand() < 0.08) {
+    const vulnerable = activeBuyers.filter((b) => b.isAcquirable);
+    const strong = activeBuyers.filter((b) => !b.isAcquirable && (b.strength ?? 60) > 70);
 
     if (vulnerable.length > 0 && strong.length > 0) {
       const acquirer = pick(strong);
@@ -109,7 +111,7 @@ export function advanceBuyers(state: GameState): StateImpact {
         maHistory.push({
           week: currWeek,
           event: `Acquired by ${acquirer.name}`,
-          value: target.cash // Using cash as proxy for valuation
+          value: target.cash, // Using cash as proxy for valuation
         });
 
         impact.buyerUpdates!.push({
@@ -117,8 +119,8 @@ export function advanceBuyers(state: GameState): StateImpact {
           update: {
             acquiredBy: acquirer.id,
             parentCompany: acquirer.name,
-            maHistory
-          }
+            maHistory,
+          },
         });
 
         impact.buyerUpdates!.push({
@@ -126,13 +128,13 @@ export function advanceBuyers(state: GameState): StateImpact {
           update: {
             ownedPlatforms: [...(acquirer.ownedPlatforms || []), target.id],
             strength: Math.min(100, (acquirer.strength ?? 60) + 12),
-          }
+          },
         });
 
         impact.newHeadlines!.push({
-          id: generateId('HL'),
+          id: generateId("HL"),
           week: currWeek,
-          category: 'market',
+          category: "market",
           text: pick(MERGER_HEADLINES)(acquirer.name, target.name),
         });
       }

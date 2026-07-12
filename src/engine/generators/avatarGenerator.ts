@@ -1,13 +1,13 @@
 /**
  * Procedural Avatar Generator (Refactored)
- * 
+ *
  * Generates deterministic SVG human face avatars from talent demographics.
  * This is now a facade for the modular avatar engine.
  */
 
-import { Talent, TalentDemographics } from '../types/talent.types';
-import { deriveFeatures } from './avatar/core';
-import { renderAvatarSVG } from './avatar/renderer';
+import { Talent, TalentDemographics } from "../types/talent.types";
+import { deriveFeatures } from "./avatar/core";
+import { renderAvatarSVG } from "./avatar/renderer";
 
 /**
  * The primary entry point for generating an avatar SVG string.
@@ -34,9 +34,13 @@ function demographicsAge(baseAge: number, currentWeek: number): number {
  * Returns a compact demographic summary string for display.
  * Re-exported for backward compatibility.
  */
-export function getDemographicLabel(demographics: TalentDemographics, currentWeek: number = 1): string {
+export function getDemographicLabel(
+  demographics: TalentDemographics,
+  currentWeek: number = 1
+): string {
   const age = demographicsAge(demographics.age, currentWeek);
-  const genderIcon = demographics.gender === 'MALE' ? '♂' : demographics.gender === 'FEMALE' ? '♀' : '⚧';
+  const genderIcon =
+    demographics.gender === "MALE" ? "♂" : demographics.gender === "FEMALE" ? "♀" : "⚧";
   return `${age}y • ${genderIcon} • ${demographics.ethnicity} • ${demographics.country}`;
 }
 
@@ -46,20 +50,20 @@ export function getDemographicLabel(demographics: TalentDemographics, currentWee
  */
 export function getCountryFlag(country: string): string {
   const flags: Record<string, string> = {
-    'USA': '🇺🇸',
-    'UK': '🇬🇧',
-    'Canada': '🇨🇦',
-    'Australia': '🇦🇺',
-    'Japan': '🇯🇵',
-    'Mexico': '🇲🇽',
-    'South Korea': '🇰🇷',
-    'France': '🇫🇷',
-    'India': '🇮🇳',
-    'China': '🇨🇳',
-    'Italy': '🇮🇹',
-    'Germany': '🇩🇪',
-    'Brazil': '🇧🇷',
-    'Spain': '🇪🇸'
+    USA: "🇺🇸",
+    UK: "🇬🇧",
+    Canada: "🇨🇦",
+    Australia: "🇦🇺",
+    Japan: "🇯🇵",
+    Mexico: "🇲🇽",
+    "South Korea": "🇰🇷",
+    France: "🇫🇷",
+    India: "🇮🇳",
+    China: "🇨🇳",
+    Italy: "🇮🇹",
+    Germany: "🇩🇪",
+    Brazil: "🇧🇷",
+    Spain: "🇪🇸",
   };
-  return flags[country] || '🌐';
+  return flags[country] || "🌐";
 }
