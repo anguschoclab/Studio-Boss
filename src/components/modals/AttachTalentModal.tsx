@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Project, TalentRole } from '@/engine/types';
-import { formatMoney } from '@/engine/utils';
+import { formatMoney, getContractsByProjectId } from '@/engine/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { TalentAvatar } from '@/components/talent/TalentAvatar';
@@ -40,12 +40,14 @@ export const TalentAttachmentPanel: React.FC<{ project: Project }> = ({ project 
   const [selectedTalent, setSelectedTalent] = useState<string[]>([]);
   const [phase, setPhase] = useState<AttachmentPhase>('producers_writers');
 
-  const talentPool = useMemo(() => Object.values(gameState?.industry?.talentPool || {}), [gameState?.industry?.talentPool]);
+  const talentPool = useMemo(() => Object.values(gameState?.entities?.talents || {}), [gameState?.entities?.talents]);
   const contracts = useMemo(() => gameState?.studio.internal.contracts || [], [gameState?.studio.internal.contracts]);
   
   const attachedTalentIds = useMemo(() => {
-    return new Set(contracts.filter(c => c.projectId === project.id).map(c => c.talentId));
-  }, [contracts, project.id]);
+    if (!gameState) return new Set<string>();
+    const projectContracts = getContractsByProjectId(gameState.entities.contractsByProjectId, gameState.entities.contracts, project.id);
+    return new Set(projectContracts.map(c => c.talentId));
+  }, [gameState, project.id]);
 
   const attachedTalent = useMemo(() => {
     return talentPool.filter(t => attachedTalentIds.has(t.id));

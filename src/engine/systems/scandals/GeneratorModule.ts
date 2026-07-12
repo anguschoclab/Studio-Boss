@@ -1,4 +1,4 @@
-import { pick } from '../../utils';
+import { pick, getContractsByTalentId } from '../../utils';
 import { GameState, Scandal, ScandalType } from '@/engine/types';
 import { StateImpact } from '../../types/state.types';
 import { RandomGenerator } from '../../utils/rng';
@@ -15,13 +15,16 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
   };
   
   const contractsDict = state.entities.contracts || {};
+  const talentIdx = state.entities.contractsByTalentId || {};
   const talentToProjectMap = new Map<string, string>();
   let numContracts = 0;
-  for (const id in contractsDict) {
-    if (Object.prototype.hasOwnProperty.call(contractsDict, id)) {
-      const c = contractsDict[id];
-      talentToProjectMap.set(c.talentId, c.projectId);
-      numContracts++;
+  for (const talentId in talentIdx) {
+    if (Object.prototype.hasOwnProperty.call(talentIdx, talentId)) {
+      const talentContracts = getContractsByTalentId(talentIdx, contractsDict, talentId);
+      for (const c of talentContracts) {
+        talentToProjectMap.set(c.talentId, c.projectId);
+        numContracts++;
+      }
     }
   }
 

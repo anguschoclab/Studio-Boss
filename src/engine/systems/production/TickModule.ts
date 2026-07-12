@@ -2,6 +2,7 @@
 // src/engine/systems/productionEngine.ts and src/engine/services/filters/ProductionFilter.ts.
 import { GameState, Project, StateImpact, Contract, Talent } from '../../types';
 import { RandomGenerator } from '../../utils/rng';
+import { getContractsByProjectId } from '../../utils';
 import { TalentMoraleSystem } from '../talent/TalentMoraleSystem';
 import { processDirectorDisputes } from '../directors';
 import { SchedulingEngine } from '../schedulingEngine';
@@ -110,13 +111,19 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
   const activeTalentIds = new Set<string>();
 
   const contractsObj = state.entities.contracts || {};
-  for (const key in contractsObj) {
-    if (!Object.prototype.hasOwnProperty.call(contractsObj, key)) continue;
-    const contract = contractsObj[key];
-    const list = contractMap.get(contract.projectId) || [];
-    list.push(contract);
-    contractMap.set(contract.projectId, list);
-    activeTalentIds.add(contract.talentId);
+  const idx = state.entities.contractsByProjectId || {};
+  for (const pid in idx) {
+    if (!Object.prototype.hasOwnProperty.call(idx, pid)) continue;
+    const contractIds = idx[pid];
+    const list: Contract[] = [];
+    for (const cId of contractIds) {
+      const contract = contractsObj[cId];
+      if (contract) {
+        list.push(contract);
+        activeTalentIds.add(contract.talentId);
+      }
+    }
+    contractMap.set(pid, list);
   }
 
   const rivalsMap = state.entities.rivals || {};
@@ -128,14 +135,15 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
     }
   }
 
-  const contractsRaw = state.entities.contracts;
-  for (const key in contractsRaw) {
-    if (Object.prototype.hasOwnProperty.call(contractsRaw, key)) {
-      const contract = contractsRaw[key];
-      if (contract.ownerId && rivalIds.has(contract.ownerId)) {
-        const list = contractMap.get(contract.projectId) || [];
+  const contractsRaw = state.entities.contracts || {};
+  for (const pid in idx) {
+    if (!Object.prototype.hasOwnProperty.call(idx, pid)) continue;
+    for (const cId of idx[pid]) {
+      const contract = contractsRaw[cId];
+      if (contract && contract.ownerId && rivalIds.has(contract.ownerId)) {
+        const list = contractMap.get(pid) || [];
         list.push(contract);
-        contractMap.set(contract.projectId, list);
+        contractMap.set(pid, list);
       }
     }
   }

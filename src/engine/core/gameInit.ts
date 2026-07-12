@@ -227,6 +227,8 @@ export function initializeGame(
       contracts: {},
       rivals: rivalsRecord,
       shingles: {},
+      contractsByProjectId: {},
+      contractsByTalentId: {},
     },
     studio: {
       id: studioId,

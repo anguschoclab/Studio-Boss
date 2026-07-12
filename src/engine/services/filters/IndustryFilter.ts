@@ -3,7 +3,7 @@ import { TickContext, WeekFilter } from './types';
 
 // System Imports
 import { advanceRivals } from '../../systems/rivals';
-import { runAwardsCeremony, processRazzies } from '../../systems/awards';
+import { runAwardsCeremony, processRazzies } from '../../systems/awards/index';
 import { resolveFestivals } from '../../systems/festivals';
 import { RegulatorSystem } from '../../systems/industry/RegulatorSystem';
 import { runFestivalMarket } from '../../systems/festivals/festivalAuctionEngine';
@@ -24,10 +24,12 @@ export const IndustryFilter: WeekFilter = {
     context.impacts.push(rivalImpacts);
 
     const { year } = InterestRateSimulator.getWeekDisplay(context.week);
-    const awardsImpacts = runAwardsCeremony(state, context.week, year);
-    context.impacts.push(awardsImpacts);
+    const awardsImpacts = runAwardsCeremony(state, context.week, year, context.rng);
+    context.impacts.push(...awardsImpacts);
     
-    const allNewAwards = awardsImpacts.newAwards || [];
+    const allNewAwards = awardsImpacts
+      .filter(i => i.type === 'INDUSTRY_UPDATE' && i.payload?.update)
+      .flatMap(i => Object.values((i.payload as any).update));
     
     if (allNewAwards.length > 0) {
       context.impacts.push({
@@ -39,7 +41,7 @@ export const IndustryFilter: WeekFilter = {
             week: context.week,
             year,
             awards: allNewAwards,
-            body: allNewAwards[0]?.body || 'Annual Industry Awards'
+            body: (allNewAwards[0] as any)?.body || 'Annual Industry Awards'
           }
         }
       });
@@ -47,7 +49,7 @@ export const IndustryFilter: WeekFilter = {
     
     const weekDisplay = context.week % 52 === 0 ? 52 : context.week % 52;
     if (weekDisplay === 4) {
-      context.impacts.push(processRazzies(state, context.week));
+      context.impacts.push(...processRazzies(state, context.week, context.rng));
     }
 
     context.impacts.push(resolveFestivals(state));

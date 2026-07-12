@@ -1,5 +1,6 @@
 import { GameState, StateImpact, Talent, Project } from '../../types';
 import { RandomGenerator } from '../../utils/rng';
+import { getContractsByProjectId } from '../../utils';
 import {
   BreakoutStar,
   BreakoutTrigger,
@@ -29,17 +30,6 @@ const DISCOVERY_CHANCE = 0.05; // 5% per week per studio
 export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
 
-  // 1. Check for breakout stars from recent releases
-  const contractsByProject: Record<string, string[]> = {};
-  const contractsDict = state.entities.contracts || {};
-  for (const cId in contractsDict) {
-    const c = contractsDict[cId];
-    if (!contractsByProject[c.projectId]) {
-      contractsByProject[c.projectId] = [];
-    }
-    contractsByProject[c.projectId].push(c.talentId);
-  }
-
   const projectsDict = state.entities.projects || {};
   for (const pId in projectsDict) {
     const project = projectsDict[pId];
@@ -48,7 +38,8 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
       continue;
     }
 
-    const talentIds = contractsByProject[project.id] || [];
+    const projectContracts = getContractsByProjectId(state.entities.contractsByProjectId, state.entities.contracts, project.id);
+    const talentIds = projectContracts.map(c => c.talentId);
 
     for (const tId of talentIds) {
       const talent = state.entities.talents?.[tId];

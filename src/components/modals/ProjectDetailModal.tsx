@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
-import { formatMoney } from '@/engine/utils';
+import { formatMoney, getContractsByProjectId } from '@/engine/utils';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { evaluateGreenlight } from '@/engine/systems/greenlight';
 import { FESTIVALS } from '@/engine/systems/festivals';
@@ -52,13 +52,13 @@ export const ProjectDetailModal = () => {
   const renewProject = useGameStore(s => s.renewProject);
   const greenlightProject = useGameStore(s => s.greenlightProject);
   const exploitFranchise = useGameStore(s => s.exploitFranchise);
-  const lockMarketingCampaign = useGameStore(s => s.lockMarketingCampaign);
+  const launchMarketingCampaign = useGameStore(s => s.launchMarketingCampaign);
   const submitToFestival = useGameStore(s => s.submitToFestival);
   const launchAwardsCampaign = useGameStore(s => s.launchAwardsCampaign);
 
   const projects = useMemo(() => Object.values(gameState?.studio.internal.projects || {}), [gameState?.studio.internal.projects]);
   const project = useMemo(() => projects.find(p => p.id === selectedProjectId), [projects, selectedProjectId]);
-  const talentPool = useMemo(() => Object.values(gameState?.industry.talentPool || {}), [gameState?.industry.talentPool]);
+  const talentPool = useMemo(() => Object.values(gameState?.entities?.talents || {}), [gameState?.entities?.talents]);
   const contracts = useMemo(() => gameState?.studio.internal.contracts || [], [gameState?.studio.internal.contracts]);
   const talentMap = useMemo(() => new Map(talentPool.map(t => [t.id, t])), [talentPool]);
 
@@ -91,14 +91,14 @@ export const ProjectDetailModal = () => {
     const groups = new Map<string, { attached: Talent[], available: Talent[] }>();
     const rolesToTrack = scriptedProject?.activeRoles || ['director', 'writer', 'producer', 'protagonist'];
 
-    if (!project) {
+    if (!project || !gameState) {
       for (const r of rolesToTrack) {
         groups.set(r, { attached: [], available: [] });
       }
       return groups;
     }
 
-    const projectContracts = contracts.filter(c => c.projectId === project.id);
+    const projectContracts = getContractsByProjectId(gameState.entities.contractsByProjectId, gameState.entities.contracts, project.id);
     const projectTalentIds = new Set(projectContracts.map(c => c.talentId));
 
     for (const r of rolesToTrack) {
@@ -123,7 +123,7 @@ export const ProjectDetailModal = () => {
 
   const greenlightReport = useMemo(() => {
     if (!project || project.state !== 'needs_greenlight' || !gameState) return null;
-    const projectContracts = contracts.filter(c => c.projectId === project.id);
+    const projectContracts = getContractsByProjectId(gameState.entities.contractsByProjectId, gameState.entities.contracts, project.id);
     const attachedTalent = projectContracts.reduce((acc, c) => {
       const t = talentMap.get(c.talentId);
       if (t) acc.push(t);
@@ -136,7 +136,7 @@ export const ProjectDetailModal = () => {
       gameState.week,
       gameState.entities ? Object.values(gameState.entities.projects) : [],
       contracts,
-      talentMap
+      Object.fromEntries(talentMap)
     );
   }, [project, gameState, contracts, talentMap]);
 
@@ -539,7 +539,11 @@ export const ProjectDetailModal = () => {
                      <Button 
                        className="w-full h-16 bg-primary text-black hover:bg-primary/90 font-black text-sm uppercase tracking-[0.3em] rounded-none shadow-2xl transition-all active:scale-[0.98]"
                        disabled={!selectedTier || (gameState ? gameState.finance.cash < (selectedTier === 'basic' ? project.budget * 0.1 : selectedTier === 'blockbuster' ? project.budget * 0.5 : 0) : false)}
-                       onClick={() => { lockMarketingCampaign(project.id, selectedTier); selectProject(null); }}
+                       onClick={() => {
+                        if (selectedTier === 'basic') launchMarketingCampaign(project.id, 'Standard', 'SELL_THE_STORY', 'four_quadrant');
+                        else if (selectedTier === 'blockbuster') launchMarketingCampaign(project.id, 'Saturation', 'SELL_THE_SPECTACLE', 'four_quadrant');
+                        selectProject(null);
+                      }}
                      >
                        Authorize Global Release & Dedicate Reserves
                      </Button>
@@ -576,7 +580,7 @@ export const ProjectDetailModal = () => {
                         <Button 
                           variant="outline" 
                           className="w-full h-12 border-amber-600/30 text-amber-500 hover:bg-amber-600/10 font-black uppercase text-[10px] tracking-widest" 
-                          onClick={() => { launchAwardsCampaign(project.id, 500_000); selectProject(null); }}
+                          onClick={() => { launchAwardsCampaign(project.id, 'Grassroots'); selectProject(null); }}
                         >
                            Expand "For Your Consideration" Outreach ($500k)
                         </Button>

@@ -51,4 +51,10 @@ describe('IndustryFilter', () => {
       mockState.week = 52;
       expect(() => IndustryFilter.execute(mockState, mockContext)).not.toThrow();
   });
+
+  it('should trigger processRazzies on week 4 without errors', () => {
+      mockContext.week = 4;
+      mockState.week = 4;
+      expect(() => IndustryFilter.execute(mockState, mockContext)).not.toThrow();
+  });
 });

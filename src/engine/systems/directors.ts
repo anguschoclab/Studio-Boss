@@ -2,7 +2,7 @@ import { GameState, Project, Talent, Contract, ActiveCrisis } from "@/engine/typ
 type TalentProfile = Talent;
 type Crisis = ActiveCrisis;
 import { RandomGenerator } from "../utils/rng";
-import { generateId } from "../utils";
+import { generateId, getContractsByProjectId } from "../utils";
 
 export interface DirectorDispute {
   projectId: string;
@@ -16,13 +16,10 @@ export interface DirectorDispute {
  * Checks if the director for a given project has final cut / creative control.
  */
 export function hasCreativeControl(projectId: string, state: GameState): boolean {
-  const contracts = state.entities?.contracts || {};
-  for (const key in contracts) {
-    if (Object.prototype.hasOwnProperty.call(contracts, key)) {
-      const c = contracts[key];
-      if (c.projectId === projectId && state.entities?.talents?.[c.talentId]?.roles?.includes("director")) {
-        return !!c.creativeControl;
-      }
+  const projectContracts = getContractsByProjectId(state.entities?.contractsByProjectId, state.entities?.contracts || {}, projectId);
+  for (const c of projectContracts) {
+    if (state.entities?.talents?.[c.talentId]?.roles?.includes("director")) {
+      return !!c.creativeControl;
     }
   }
   return false;

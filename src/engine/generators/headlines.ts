@@ -1,24 +1,33 @@
 import { Headline, RivalStudio, HeadlineCategory, Project, Contract, Talent } from '@/engine/types';
 type TalentProfile = Talent;
-import { fillTemplate, pick, secureRandom } from '../utils';
+import { fillTemplate, pick, secureRandom, getContractsByProjectId } from '../utils';
 import { MARKET_HEADLINES, TALENT_HEADLINES, RIVAL_TEMPLATES } from '../data/headlines.data';
 
 let counter = 0;
 
 export function generateHeadlines(
-  week: number, 
+  week: number,
   rivals: RivalStudio[],
   projects: Project[] = [],
-  contracts: Contract[] = [],
-  talentPool: TalentProfile[] = []
+  talentPool: TalentProfile[] = [],
+  contractsByProjectId?: Record<string, string[]>,
+  contractsRecord?: Record<string, Contract>
 ): Headline[] {
   const count = 1 + Math.floor(secureRandom() * 3);
   const headlines: Headline[] = [];
   const genrePool = ['sci-fi', 'drama', 'action', 'thriller', 'comedy', 'horror', 'fantasy'];
 
+  // Helper: get contracts for a project using the contractsByProjectId index
+  const getProjectContracts = (projectId: string): Contract[] => {
+    if (contractsByProjectId && contractsRecord) {
+      return getContractsByProjectId(contractsByProjectId, contractsRecord, projectId);
+    }
+    return [];
+  };
+
   // Prepare context for talent headlines
   const projectsWithDirectors = projects.filter(p => {
-    const projectContracts = contracts.filter(c => c.projectId === p.id);
+    const projectContracts = getProjectContracts(p.id);
     return projectContracts.some(c => {
       const talent = talentPool.find(t => t.id === c.talentId);
       return talent?.roles.includes('director');
@@ -27,7 +36,7 @@ export function generateHeadlines(
 
   const selectedProject = pick(projectsWithDirectors.length > 0 ? projectsWithDirectors : projects);
   const selectedDirector = selectedProject ? (() => {
-    const pContracts = contracts.filter(c => c.projectId === selectedProject.id);
+    const pContracts = getProjectContracts(selectedProject.id);
     const dContract = pContracts.find(c => {
       const talent = talentPool.find(t => t.id === c.talentId);
       return talent?.roles.includes('director');

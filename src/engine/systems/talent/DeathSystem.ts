@@ -1,5 +1,6 @@
 import { GameState, StateImpact, Talent, Project, Contract } from '../../types';
 import { RandomGenerator } from '../../utils/rng';
+import { getContractsByProjectId } from '../../utils';
 
 /**
  * Death System
@@ -166,8 +167,7 @@ function calculateGriefImpact(deadTalent: Talent, state: GameState): { coStarIds
     .filter(p => p.state === 'production' || p.state === 'marketing');
 
   for (const project of activeProjects) {
-    const contracts = Object.values(state.entities.contracts || {})
-      .filter(c => c.projectId === project.id);
+    const contracts = getContractsByProjectId(state.entities.contractsByProjectId, state.entities.contracts, project.id);
 
     const isDeadTalentInProject = contracts.some(c => c.talentId === deadTalent.id);
     if (isDeadTalentInProject) {

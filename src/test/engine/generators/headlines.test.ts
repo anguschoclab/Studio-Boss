@@ -6,7 +6,7 @@ describe('generateHeadlines', () => {
   it('should generate between 1 and 3 headlines', () => {
     const week = 1;
     const rivals: RivalStudio[] = [];
-    const headlines = generateHeadlines(week, rivals, [], [], []);
+    const headlines = generateHeadlines(week, rivals);
 
     expect(headlines.length).toBeGreaterThanOrEqual(1);
     expect(headlines.length).toBeLessThanOrEqual(3);
@@ -15,7 +15,7 @@ describe('generateHeadlines', () => {
   it('should return headlines with the correct structure', () => {
     const week = 5;
     const rivals: RivalStudio[] = [];
-    const headlines = generateHeadlines(week, rivals, [], [], []);
+    const headlines = generateHeadlines(week, rivals);
 
     headlines.forEach(headline => {
       expect(headline).toHaveProperty('id');
@@ -43,7 +43,7 @@ describe('generateHeadlines', () => {
     // Run multiple times to ensure we hit the 35% chance for a rival headline
     let foundRivalHeadline = false;
     for (let i = 0; i < 20; i++) {
-      const headlines = generateHeadlines(week, rivals, [], [], []);
+      const headlines = generateHeadlines(week, rivals);
       if (headlines.some(h => h.category === 'rival')) {
         foundRivalHeadline = true;
         break;
@@ -59,7 +59,7 @@ describe('generateHeadlines', () => {
 
     // Run multiple times to ensure we don't accidentally generate a rival headline
     for (let i = 0; i < 20; i++) {
-      const headlines = generateHeadlines(week, rivals, [], [], []);
+      const headlines = generateHeadlines(week, rivals);
       const hasRivalHeadline = headlines.some(h => h.category === 'rival');
       expect(hasRivalHeadline).toBe(false);
     }
@@ -114,9 +114,17 @@ describe('generateHeadlines', () => {
       weekStarted: 1 
     }];
 
+    const contractsRecord: Record<string, typeof contracts[number]> = {};
+    const contractsByProjectId: Record<string, string[]> = {};
+    contracts.forEach(c => {
+      contractsRecord[c.id] = c;
+      if (!contractsByProjectId[c.projectId]) contractsByProjectId[c.projectId] = [];
+      contractsByProjectId[c.projectId].push(c.id);
+    });
+
     let foundInterpolatedHeadline = false;
     for (let i = 0; i < 50; i++) {
-      const headlines = generateHeadlines(1, rivals, projects as any, contracts as any, talent as any);
+      const headlines = generateHeadlines(1, rivals, projects as any, talent as any, contractsByProjectId, contractsRecord as any);
       const talentHeadline = headlines.find(h => h.category === 'talent');
       if (talentHeadline) {
         if (talentHeadline.text.includes('Test Movie') || talentHeadline.text.includes('James Cameron')) {

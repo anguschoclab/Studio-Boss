@@ -8,7 +8,6 @@ import { calculateReviewScore, calculateOpeningWeekend, simulateWeeklyBoxOffice 
 import { calculateRegionalPenalties } from './ratings';
 import { calculateAudienceIndex } from './demographics';
 import { GameState, WeekSummary, Headline } from '@/engine/types';
-import { groupContractsByProject } from '../utils';
 import { checkAndTriggerCrisis } from './crises';
 import { calculateBoxOfficeRanks, BoxOfficeEntry } from './releaseSimulation';
 import { generateAwardsProfile } from './awards';

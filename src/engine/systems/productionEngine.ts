@@ -1,6 +1,7 @@
 import { GameState, Project, StateImpact } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
 import { processDirectorDisputes } from './directors';
+import { getContractsByProjectId } from '@/engine/utils';
 
 /**
  * Pure function to advance a single project's weekly production logic.
@@ -68,13 +69,6 @@ function tickProject(project: Project, rng: RandomGenerator): StateImpact[] {
 export function tickProduction(state: GameState, rng: RandomGenerator): StateImpact[] {
   const allImpacts: StateImpact[] = [];
 
-  const contractMap = new Map<string, import('@/engine/types').Contract[]>();
-  for (const cId in state.entities.contracts) {
-    const c = state.entities.contracts[cId];
-    const list = contractMap.get(c.projectId) || [];
-    list.push(c);
-    contractMap.set(c.projectId, list);
-  }
   const talentMap = new Map(Object.entries(state.entities.talents));
 
   // ⚡ Bolt: Iterate over global projects record to advance all active titles (Player & Rivals)
@@ -83,7 +77,7 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
     allImpacts.push(...tickProject(project, rng));
 
     if (project.state === 'production' && !project.activeCrisis) {
-      const projectContracts = contractMap.get(project.id) || [];
+      const projectContracts = getContractsByProjectId(state.entities.contractsByProjectId, state.entities.contracts, project.id);
       const disputeResult = processDirectorDisputes(project, projectContracts, talentMap, rng);
       disputeResult.newCrises.forEach(({ projectId, crisis }) => {
         allImpacts.push({

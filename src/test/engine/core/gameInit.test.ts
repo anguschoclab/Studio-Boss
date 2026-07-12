@@ -28,4 +28,10 @@ describe("initializeGame", () => {
     );
     expect(playerStreamer).toBeUndefined();
   });
+
+  it("initializes contractsByProjectId as empty object in entities", () => {
+    const state = initializeGame("My Studio", "major");
+    expect(state.entities.contractsByProjectId).toBeDefined();
+    expect(state.entities.contractsByProjectId).toEqual({});
+  });
 });

@@ -8,7 +8,6 @@ import { InterestRateSimulator } from '@/engine/systems/market/InterestRateSimul
 export interface FinanceSlice {
   finance: FinanceState;
   addLedgerEntry: (report: WeeklyFinancialReport) => void;
-  launchMarketingCampaign: (projectId: string, budget: number, domesticPct: number, angle: string) => void;
   executeMarketingEvent: (eventName: 'superbowl_ad' | 'viral_campaign' | 'press_tour', cost: number, projectId: string) => void;
   addFunds: (amount: number) => void;
 }
@@ -61,80 +60,6 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
         },
       };
     }),
-
-  launchMarketingCampaign: (projectId, budget, domesticPct, angle) => {
-    set((s) => {
-      if (!s.gameState) return s;
-      const state = s.gameState;
-      if (budget > state.finance.cash) return s;
-
-      // Extract original project directly using O(1) property access
-      const originalProject = state.studio.internal.projects[projectId];
-      if (!originalProject) return s;
-      if (originalProject.state !== 'marketing') return s;
-
-      const newCash = state.finance.cash - budget;
-      const { project: p } = executeMarketing(originalProject, {
-        domesticBudget: budget * (domesticPct / 100),
-        foreignBudget: budget * (1 - domesticPct / 100),
-        primaryAngle: angle as any,
-      });
-
-      const contracts: Contract[] = [];
-      const allContracts = state.studio.internal.contracts;
-      for (let i = 0; i < allContracts.length; i++) {
-        const c = allContracts[i];
-        if (c.projectId === p.id) {
-          contracts.push(c);
-        }
-      }
-
-      const talentPool = state.industry.talentPool;
-      const talentMap = new Map<string, any>();
-      Object.keys(talentPool).forEach(id => {
-        talentMap.set(id, talentPool[id]);
-      });
-
-      const result = handleReleasePhaseEntry(p, state.week, state.studio.prestige, contracts, talentMap);
-
-      const headlines = [...state.news.headlines];
-      if (result.update) {
-        headlines.unshift({
-          id: crypto.randomUUID(),
-          week: state.week,
-          category: 'general' as const,
-          text: result.update
-        });
-      }
-
-      const updatedProjects = { ...state.studio.internal.projects, [p.id]: p };
-
-      return {
-        finance: {
-            ...s.finance,
-            cash: newCash
-        },
-        gameState: {
-          ...state,
-          finance: {
-            ...state.finance,
-            cash: newCash,
-          },
-          studio: {
-            ...state.studio,
-            internal: {
-              ...state.studio.internal,
-              projects: updatedProjects,
-            }
-          },
-          news: {
-            ...state.news,
-            headlines,
-          }
-        }
-      };
-    });
-  },
 
   executeMarketingEvent: (eventName, cost, projectId) => {
     // Marketing event executed

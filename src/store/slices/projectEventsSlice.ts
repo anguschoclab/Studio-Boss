@@ -5,6 +5,7 @@ import { resolveCrisis } from '@/engine/systems/crises';
 import * as festivalsEngine from '@/engine/systems/festivals';
 import { releaseDirectorsCut } from '@/engine/systems/ratings/directorsCuts';
 import { RandomGenerator } from '@/engine/utils/rng';
+import { getContractsByProjectId } from '@/engine/utils';
 import { Project, GameState, AwardBody, MarketingCampaign } from '@/engine/types';
 import { type ProjectId, type StudioId, type TalentId } from '@/engine/types/shared.types';
 
@@ -50,8 +51,8 @@ export const createProjectEventsSlice: StateCreator<GameStore, [], [], ProjectEv
       const project = state.entities.projects[projectId as ProjectId];
       if (!project) return s;
       const rng = new RandomGenerator(state.rngState);
-      const contractsArr = Object.values(state.entities.contracts || {});
-      const directorContract = contractsArr.find(c => c.projectId === projectId && c.role === 'director');
+      const projectContracts = getContractsByProjectId(state.entities.contractsByProjectId, state.entities.contracts, projectId);
+      const directorContract = projectContracts.find(c => c.role === 'director');
       const directorId = directorContract?.talentId ?? null;
       const impacts = releaseDirectorsCut(project, directorId, rng);
       const newState = applyStateImpact(state, impacts);

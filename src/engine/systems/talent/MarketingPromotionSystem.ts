@@ -1,5 +1,6 @@
 import { GameState, StateImpact, Talent, Project, Contract } from '../../types';
 import { RandomGenerator } from '../../utils/rng';
+import { getContractsByProjectId } from '../../utils';
 import {
   TalkShowAppearance,
   TalkShowType,
@@ -407,7 +408,6 @@ export function tickMarketingPromotionSystem(
 
   // 3. Press tours for upcoming releases
   const projectsRecord = state.entities.projects || {};
-  let contractsByProject: Record<string, Contract[]> | null = null;
 
   for (const id in projectsRecord) {
     const project = projectsRecord[id];
@@ -415,21 +415,8 @@ export function tickMarketingPromotionSystem(
     // Release window check (2-6 weeks out)
     if (project.releaseWeek && project.releaseWeek - state.week >= 2 && project.releaseWeek - state.week <= 6) {
       if (rng.next() < PRESS_TOUR_CHANCE) {
-        // Lazy initialize contracts map
-        if (!contractsByProject) {
-          contractsByProject = {};
-          const contractsRecord = state.entities.contracts || {};
-          for (const cid in contractsRecord) {
-            const c = contractsRecord[cid];
-            if (!contractsByProject[c.projectId]) {
-              contractsByProject[c.projectId] = [];
-            }
-            contractsByProject[c.projectId].push(c);
-          }
-        }
-
-        // Gather attached talent
-        const projectContracts = contractsByProject[project.id] || [];
+        // Gather attached talent via index
+        const projectContracts = getContractsByProjectId(state.entities.contractsByProjectId, state.entities.contracts, project.id);
         const projectTalents: Talent[] = [];
         for (let i = 0; i < projectContracts.length; i++) {
           const t = state.entities.talents?.[projectContracts[i].talentId];

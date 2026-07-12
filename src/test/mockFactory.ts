@@ -14,6 +14,8 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
     contracts: {},
     talents: {},
     rivals: {},
+    contractsByProjectId: {},
+    contractsByTalentId: {},
   },
   finance: {
     cash: 5000000,

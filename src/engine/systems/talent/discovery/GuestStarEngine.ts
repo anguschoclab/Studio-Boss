@@ -1,6 +1,7 @@
 import { GameState, Talent, Project, Contract } from '../../../types';
 import { RandomGenerator } from '../../../utils/rng';
 import { GuestStarBooking } from '../../../types/discovery.types';
+import { getContractsByProjectId } from '../../../utils';
 
 // Guest star thresholds
 const MIN_STARMETER_FOR_GUEST = 60; // Must be somewhat famous
@@ -13,8 +14,7 @@ export function generateGuestStarBooking(
   rng: RandomGenerator
 ): GuestStarBooking | null {
   // Check if series has regular cast
-  const seriesContracts = Object.values(state.entities.contracts || {})
-    .filter(c => c.projectId === series.id);
+  const seriesContracts = getContractsByProjectId(state.entities.contractsByProjectId, state.entities.contracts, series.id);
 
   if (seriesContracts.length === 0) return null;
 

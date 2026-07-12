@@ -2,6 +2,7 @@ import { GameState, StateImpact, Talent } from '@/engine/types';
 import { ProducerShingle, ShingleDealType, ShingleMedium } from '@/engine/types/talent.types';
 import { RandomGenerator } from '@/engine/utils/rng';
 import { isPlayerOwner, getPlayerId } from '@/engine/utils/ownership';
+import { getContractsByTalentId } from '@/engine/utils';
 
 /**
  * ShingleSystem — models vanity-shingle / production-company deals (Bad Robot,
@@ -256,10 +257,13 @@ function createShingle(
   const twoYearWeek = Math.max(0, state.week - 104);
   // ⚡ The Framerate Fanatic: Replaced Object.values().some() with a direct for...in loop
   let playerHasRecentContractWithOwner = false;
-  const contracts = state.entities.contracts || {};
-  for (const id in contracts) {
-    const c = contracts[id] as import('@/engine/types').Contract;
-    if (c.talentId === owner.id && (isPlayerOwner(state, c.ownerId) || !c.ownerId) && ((c.signedWeek || 0) >= twoYearWeek || (c.weeksRemaining || 0) > 0)) {
+  const ownerContracts = getContractsByTalentId(
+    state.entities.contractsByTalentId,
+    state.entities.contracts || {},
+    owner.id
+  );
+  for (const c of ownerContracts) {
+    if ((isPlayerOwner(state, c.ownerId) || !c.ownerId) && ((c.signedWeek || 0) >= twoYearWeek || (c.weeksRemaining || 0) > 0)) {
       playerHasRecentContractWithOwner = true;
       break;
     }

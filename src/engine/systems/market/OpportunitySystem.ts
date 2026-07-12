@@ -66,10 +66,9 @@ export const OpportunitySystem = {
           payload: { amount: bidData.amount }
         });
         impacts.push({
-          type: 'PROJECT_UPDATED', // Just a placeholder type, fields below do the work
           newProjects: [winnerProject],
           newContracts: newContracts
-        });
+        } as StateImpact);
         impacts.push({
           type: 'NEWS_ADDED',
           payload: {

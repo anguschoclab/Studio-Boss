@@ -20,6 +20,8 @@ describe('TickModule - tickProduction', () => {
     state.entities.projects['p1'] = project;
     state.entities.talents['t1'] = talent;
     state.entities.contracts['c1'] = contract;
+    state.entities.contractsByProjectId['p1'] = ['c1'];
+    state.entities.contractsByTalentId['t1'] = ['c1'];
 
     const rng = new RandomGenerator(42);
 

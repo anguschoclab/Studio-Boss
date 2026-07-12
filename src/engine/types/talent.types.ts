@@ -154,6 +154,8 @@ export interface Talent {
     type: 'movie' | 'tv';
   };
   hasRazzie?: boolean;
+  razzieWinner?: boolean;
+  commitments?: TalentCommitment[];
   
   // SBDB & Career Tracking
   knownFor?: string[]; // Top 3 Project IDs
@@ -190,6 +192,30 @@ export interface Contract {
   creativeControl?: boolean;
   sequelOption?: boolean;
   backendEscalator?: number; // % bump if revenue exceeds threshold
+  ownerId?: string;
+  role?: TalentRole;
+}
+
+export interface TalentPact {
+  id: string;
+  talentId: string;
+  studioId: string;
+  type: 'first_look' | 'overall' | 'housekeeping';
+  startDate: number;
+  endDate: number;
+  weeklyOverhead: number;
+  exclusivity: boolean;
+  status: 'active' | 'expiring' | 'expired' | 'terminated';
+}
+
+export interface TalentCommitment {
+  projectId: string;
+  projectTitle: string;
+  startWeek: number;
+  endWeek: number;
+  role: string;
+  format: string;
+  isHoldingDeal?: boolean;
 }
 
 export interface FirstLookDeal {

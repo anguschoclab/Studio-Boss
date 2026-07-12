@@ -1,6 +1,7 @@
 import { useUIStore } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';
 import { evaluateGreenlight } from '@/engine/systems/greenlight';
+import { getContractsByProjectId } from '@/engine/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -26,7 +27,7 @@ export const GreenlightDecisionModal = () => {
 
   const contracts = gameState.entities.contracts;
   const talentMap = gameState.entities.talents;
-  const projectContracts = Object.values(contracts).filter((c) => c.projectId === projectId);
+  const projectContracts = getContractsByProjectId(gameState.entities.contractsByProjectId, contracts, projectId!);
   const attachedTalent = projectContracts.reduce((acc, c) => {
     const t = talentMap[c.talentId];
     if (t) acc.push(t);

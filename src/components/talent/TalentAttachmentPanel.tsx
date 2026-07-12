@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { useGameStore } from "@/store/gameStore";
 import { Project, TalentRole } from "@/engine/types";
-import { formatMoney } from "@/engine/utils";
+import { formatMoney, getContractsByProjectId } from "@/engine/utils";
 import { getRecommendedTalentForProject } from "@/engine/utils/projectUtils";
 import { selectTalentPool } from "@/store/selectors";
 import { Button } from "@/components/ui/button";
@@ -42,15 +42,17 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
   const [showMatchesOnly, setShowMatchesOnly] = useState(false);
   const [hoveredTalentId, setHoveredTalentId] = useState<string | null>(null);
 
-  const talentPool = useMemo(() => selectTalentPool(gameState), [gameState]);
+  const talentPool = useMemo(() => Object.values(selectTalentPool(gameState)), [gameState]);
   const contracts = useMemo(
     () => Object.values(gameState?.entities.contracts || {}),
     [gameState?.entities.contracts]
   );
 
   const attachedTalentIds = useMemo(() => {
-    return new Set(contracts.filter((c) => c.projectId === project.id).map((c) => c.talentId));
-  }, [contracts, project.id]);
+    if (!gameState) return new Set<string>();
+    const projectContracts = getContractsByProjectId(gameState.entities.contractsByProjectId, gameState.entities.contracts, project.id);
+    return new Set(projectContracts.map((c) => c.talentId));
+  }, [gameState, project.id]);
 
   const attachedTalent = useMemo(() => {
     return talentPool.filter((t) => attachedTalentIds.has(t.id));

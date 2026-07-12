@@ -1,5 +1,6 @@
 import { GameState, StateImpact, Talent, Project } from "../../types";
 import { RandomGenerator } from "../../utils/rng";
+import { getContractsByProjectId } from "../../utils";
 import {
   ScreenplayNote,
   ScreenplayNoteType,
@@ -382,18 +383,16 @@ export function tickProductionEnhancementSystem(
 
   // Pre-compute talents by project ID — single O(C) pass instead of O(P×C)
   const talentsByProject = new Map<string, Talent[]>();
-  const contractsRecord = state.entities.contracts || {};
   const talentsRecord = state.entities.talents || {};
-  for (const cId in contractsRecord) {
-    const c = contractsRecord[cId];
-    const t = talentsRecord[c.talentId];
-    if (t) {
-      const list = talentsByProject.get(c.projectId);
-      if (list) {
-        list.push(t);
-      } else {
-        talentsByProject.set(c.projectId, [t]);
-      }
+  for (const pId in state.entities.projects || {}) {
+    const projectContracts = getContractsByProjectId(state.entities.contractsByProjectId, state.entities.contracts, pId);
+    const talentList: Talent[] = [];
+    for (let i = 0; i < projectContracts.length; i++) {
+      const t = talentsRecord[projectContracts[i].talentId];
+      if (t) talentList.push(t);
+    }
+    if (talentList.length > 0) {
+      talentsByProject.set(pId, talentList);
     }
   }
 

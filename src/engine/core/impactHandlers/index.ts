@@ -1,4 +1,5 @@
 import { GameState, StateImpact, ImpactType } from '@/engine/types';
+import { addContractsToIndex, addContractsToTalentIndex, removeContractsByTalentFromIndex, removeContractsByProjectFromTalentIndex } from '@/engine/utils';
 
 // Import all handler modules
 import * as financeHandlers from './financeHandlers';
@@ -30,7 +31,7 @@ const handlerRegistry: Record<Exclude<ImpactType, undefined>, (state: GameState,
   'PROJECT_UPDATED': projectHandlers.handleProjectUpdated,
   'PROJECT_REMOVED': projectHandlers.handleProjectRemoved,
   'PROJECT_CREATED': (state: GameState, impact: import("@/engine/types").StateImpact) => {
-    const { project } = impact.payload;
+    const { project } = impact.payload as { project: import("@/engine/types").Project };
     const projects = { ...state.entities.projects };
     projects[project.id] = project;
     return {
@@ -80,16 +81,16 @@ const handlerRegistry: Record<Exclude<ImpactType, undefined>, (state: GameState,
   'SCANDAL_ADDED': industryHandlers.handleScandalAdded,
   'SCANDAL_REMOVED': industryHandlers.handleScandalRemoved,
   'SCANDAL_UPDATED': (state: GameState, impact: import("@/engine/types").StateImpact) => {
-    const { scandalUpdates } = impact.payload;
+    const { scandalUpdates } = impact.payload as { scandalUpdates: import("@/engine/types/state.types").ScandalUpdate[] };
     if (!scandalUpdates || scandalUpdates.length === 0) return state;
 
-    const updatesMap = new Map(scandalUpdates.map((u: import("@/engine/types").StateImpact) => [u.scandalId, u.update]));
+    const updatesMap = new Map(scandalUpdates.map((u) => [u.scandalId, u.update]));
 
     return {
       ...state,
       industry: {
         ...state.industry,
-        scandals: (state.industry.scandals || []).map((s: import("@/engine/types").StateImpact) => {
+        scandals: (state.industry.scandals || []).map((s) => {
           const update = updatesMap.get(s.id);
           if (update) {
             return { ...s, ...update };
@@ -129,19 +130,19 @@ const handlerRegistry: Record<Exclude<ImpactType, undefined>, (state: GameState,
 
   // Shingle handlers
   'SHINGLE_CREATED': (state: GameState, impact: import("@/engine/types").StateImpact) => {
-    const { shingle } = impact.payload;
-    const existing = (state.entities as unknown).shingles || {};
+    const { shingle } = impact.payload as { shingle: import("@/engine/types").ProducerShingle };
+    const existing = state.entities.shingles || {};
     return {
       ...state,
       entities: {
         ...state.entities,
         shingles: { ...existing, [shingle.id]: shingle },
-      } as unknown,
+      },
     };
   },
   'SHINGLE_UPDATED': (state: GameState, impact: import("@/engine/types").StateImpact) => {
-    const { shingleId, update } = impact.payload;
-    const existing = (state.entities as unknown).shingles || {};
+    const { shingleId, update } = impact.payload as { shingleId: string; update: Partial<import("@/engine/types").ProducerShingle> };
+    const existing = state.entities.shingles || {};
     const cur = existing[shingleId];
     if (!cur) return state;
     return {
@@ -149,19 +150,37 @@ const handlerRegistry: Record<Exclude<ImpactType, undefined>, (state: GameState,
       entities: {
         ...state.entities,
         shingles: { ...existing, [shingleId]: { ...cur, ...update } },
-      } as unknown,
+      },
     };
   },
   'SHINGLE_DISSOLVED': (state: GameState, impact: import("@/engine/types").StateImpact) => {
-    const { shingleId } = impact.payload;
-    const existing = { ...((state.entities as unknown).shingles || {}) };
+    const { shingleId } = impact.payload as { shingleId: string };
+    const existing = { ...(state.entities.shingles || {}) };
     delete existing[shingleId];
     return {
       ...state,
       entities: {
         ...state.entities,
         shingles: existing,
-      } as unknown,
+      },
+    };
+  },
+
+  // Contract handlers
+  'CONTRACT_ADDED': (state: GameState, impact: import("@/engine/types").StateImpact) => {
+    const { contract } = impact.payload as { contract: import("@/engine/types").Contract };
+    const contracts = { ...state.entities.contracts, [contract.id]: contract };
+    const newContracts = [contract];
+    const contractsByProjectId = addContractsToIndex(state.entities.contractsByProjectId, newContracts);
+    const contractsByTalentId = addContractsToTalentIndex(state.entities.contractsByTalentId, newContracts);
+    return {
+      ...state,
+      entities: {
+        ...state.entities,
+        contracts,
+        contractsByProjectId,
+        contractsByTalentId,
+      },
     };
   },
 };
@@ -236,7 +255,7 @@ export function applySingleImpact(state: GameState, impact: StateImpact): GameSt
           projects[award.projectId] = {
             ...project,
             awards: [...(project.awards || []), award],
-          } as unknown;
+          };
         }
         newState = { ...newState, entities: { ...newState.entities, projects } };
       });
@@ -246,7 +265,7 @@ export function applySingleImpact(state: GameState, impact: StateImpact): GameSt
         const projects = { ...newState.entities.projects };
         const project = projects[id];
         if (project) {
-          projects[id] = { ...project, isCultClassic: true } as unknown;
+          projects[id] = { ...project, isCultClassic: true };
         }
         newState = { ...newState, entities: { ...newState.entities, projects } };
       });
@@ -256,10 +275,62 @@ export function applySingleImpact(state: GameState, impact: StateImpact): GameSt
         const talents = { ...newState.entities.talents };
         const talent = talents[id];
         if (talent) {
-          talents[id] = { ...talent, razzieWinner: true } as unknown;
+          talents[id] = { ...talent, razzieWinner: true };
         }
         newState = { ...newState, entities: { ...newState.entities, talents } };
       });
+    }
+    if (impact.newContracts && impact.newContracts.length > 0) {
+      const contracts = { ...newState.entities.contracts };
+      impact.newContracts.forEach((c) => { contracts[c.id] = c; });
+      const contractsByProjectId = addContractsToIndex(newState.entities.contractsByProjectId, impact.newContracts);
+      const contractsByTalentId = addContractsToTalentIndex(newState.entities.contractsByTalentId, impact.newContracts);
+      newState = {
+        ...newState,
+        entities: {
+          ...newState.entities,
+          contracts,
+          contractsByProjectId,
+          contractsByTalentId,
+        },
+      };
+    }
+    if (impact.newProjects && impact.newProjects.length > 0) {
+      const projects = { ...newState.entities.projects };
+      impact.newProjects.forEach((p) => { projects[p.id] = p; });
+      newState = {
+        ...newState,
+        entities: {
+          ...newState.entities,
+          projects,
+        },
+      };
+    }
+    if (impact.removeContracts && impact.removeContracts.length > 0) {
+      const contracts = { ...newState.entities.contracts };
+      let contractsByProjectId = newState.entities.contractsByProjectId;
+      let contractsByTalentId = newState.entities.contractsByTalentId;
+      for (const entry of impact.removeContracts) {
+        const [pid, tid] = entry.split(':');
+        if (pid && tid) {
+          const result = removeContractsByTalentFromIndex(contractsByProjectId, contracts, pid, tid);
+          contractsByProjectId = result.index;
+          const talentResult = removeContractsByProjectFromTalentIndex(contractsByTalentId, contracts, pid, tid);
+          contractsByTalentId = talentResult.index;
+          for (const cId of result.removedIds) {
+            delete contracts[cId];
+          }
+        }
+      }
+      newState = {
+        ...newState,
+        entities: {
+          ...newState.entities,
+          contracts,
+          contractsByProjectId,
+          contractsByTalentId,
+        },
+      };
     }
     if (impact.scandalUpdates && impact.scandalUpdates.length > 0) {
       newState = applySingleImpact(newState, {

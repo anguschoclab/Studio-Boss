@@ -3,7 +3,7 @@ import { StateImpact, FinancialSnapshot } from '../types/state.types';
 import { RevenueProcessor } from './finance/RevenueProcessor';
 import { ExpenseProcessor } from './finance/ExpenseProcessor';
 import { InterestRateSimulator } from './market/InterestRateSimulator';
-import { formatMoney } from '../utils';
+import { formatMoney, getContractsByProjectId } from '../utils';
 
 export function calculateProjectROI(project: Project): number {
   const totalCost = project.budget + (project.marketingBudget || 0);
@@ -124,7 +124,8 @@ export function generateWeeklyFinancialReport(
       }
 
       // Deduct Talent Royalties (Net Points Logic)
-      totalRoyalties += RevenueProcessor.calculateNetPointsRoyalty(p, weeklyGross + weeklyMerch, state.studio.internal.contracts);
+      const projectContracts = getContractsByProjectId(state.entities?.contractsByProjectId, state.entities?.contracts || {}, p.id);
+      totalRoyalties += RevenueProcessor.calculateNetPointsRoyalty(p, weeklyGross + weeklyMerch, projectContracts);
     }
   });
 

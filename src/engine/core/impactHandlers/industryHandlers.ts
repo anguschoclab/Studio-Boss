@@ -1,4 +1,5 @@
 import { GameState, StateImpact } from '@/engine/types';
+import { getContractsByTalentId } from '../../utils';
 
 const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
 
@@ -17,7 +18,7 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
     const nextProjects = { ...nextState.entities.projects };
     payload.projects.forEach(
       (u: {
-        projectId: import("@/engine/shared.types").ProjectId;
+        projectId: string;
         update: Partial<import("@/engine/types").Project>;
       }) => {
         if (nextProjects[u.projectId]) {
@@ -36,7 +37,7 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
     const nextRivals = { ...nextState.entities.rivals };
     payload.rivals.forEach(
       (u: {
-        rivalId: import("@/engine/shared.types").StudioId;
+        rivalId: string;
         update: Partial<import("@/engine/types").RivalStudio>;
       }) => {
         if (nextRivals[u.rivalId]) {
@@ -52,7 +53,7 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
     const nextTalents = { ...nextState.entities.talents };
     payload.talents.forEach(
       (u: {
-        talentId: import("@/engine/shared.types").TalentId;
+        talentId: string;
         update: Partial<import("@/engine/types").Talent>;
       }) => {
         if (nextTalents[u.talentId]) {
@@ -86,7 +87,7 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
           }
           clonedRefs.add(current[part]);
         }
-        current = current[part];
+        current = current[part] as Record<string, unknown>;
       }
 
       const lastPart = parts[parts.length - 1];
@@ -104,7 +105,7 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
       if (acquirerId === "player") {
         const mergedVault = nextState.ip.vault.map((asset) => {
           if (asset.ownerStudioId === mergedRivalId) {
-            return { ...asset, rightsOwner: "STUDIO" as const, ownerStudioId: undefined };
+            return { ...asset, rightsOwner: "STUDIO" as const, ownerStudioId: undefined } as import("@/engine/types").IPAsset;
           }
           return asset;
         });
@@ -119,7 +120,7 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
           const acquirer = rivals[acquirerId];
           rivals[acquirerId] = {
             ...acquirer,
-            projectIds: [...(acquirer.projectIds || []), ...(target.projectIds || [])],
+            projects: { ...acquirer.projects, ...target.projects },
             ownedPlatforms: [...(acquirer.ownedPlatforms || []), ...(target.ownedPlatforms || [])],
           };
         }
@@ -129,8 +130,8 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
             return {
               ...asset,
               rightsOwner: "RIVAL" as const,
-              ownerStudioId: acquirerId as import("@/engine/shared.types").StudioId,
-            };
+              ownerStudioId: acquirerId,
+            } as import("@/engine/types").IPAsset;
           }
           return asset;
         });
@@ -154,7 +155,7 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
   if (payload["market.opportunities"]) {
     nextState = {
       ...nextState,
-      market: { ...nextState.market, opportunities: payload["market.opportunities"] },
+      market: { ...nextState.market, opportunities: payload["market.opportunities"] as import("@/engine/types").Opportunity[] },
     };
   }
 
@@ -163,7 +164,7 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
 
 export function handleScandalAdded(state: GameState, impact: StateImpact): GameState {
   const { scandal } = impact.payload as {
-    scandal: import("@/engine/types/industry.types").Scandal;
+    scandal: import("@/engine/types/talent.types").Scandal;
   };
   let newPrestige = state.studio.prestige;
 
@@ -171,15 +172,13 @@ export function handleScandalAdded(state: GameState, impact: StateImpact): GameS
   newPrestige = Math.max(0, newPrestige - prestigeHit);
 
   const projectIds = new Set<string>();
-  const contractsRaw = state.entities.contracts || {};
-  const scandalTalentId = scandal.talentId;
-  for (const key in contractsRaw) {
-    if (Object.prototype.hasOwnProperty.call(contractsRaw, key)) {
-      const c = contractsRaw[key];
-      if (c.talentId === scandalTalentId) {
-        projectIds.add(c.projectId);
-      }
-    }
+  const scandalTalentContracts = getContractsByTalentId(
+    state.entities.contractsByTalentId,
+    state.entities.contracts || {},
+    scandal.talentId
+  );
+  for (const c of scandalTalentContracts) {
+    projectIds.add(c.projectId);
   }
 
   let projects = state.entities.projects;
@@ -256,7 +255,7 @@ export function handleRivalUpdated(state: GameState, impact: StateImpact): GameS
 
 export function handleMergerOffered(state: GameState, impact: StateImpact): GameState {
   const merger = (
-    impact.payload as { merger?: import("@/engine/types/industry.types").MergerOffer }
+    impact.payload as { merger?: import("@/engine/types/studio.types").MergerOffer }
   ).merger;
   if (!merger) return state;
   return {

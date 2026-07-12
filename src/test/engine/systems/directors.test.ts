@@ -8,8 +8,11 @@ describe("hasCreativeControl", () => {
     contracts: Contract[]
   ): GameState => {
     const contractsRecord: Record<string, Contract> = {};
+    const contractsByProjectId: Record<string, string[]> = {};
     contracts.forEach((c) => {
       contractsRecord[c.id] = c;
+      if (!contractsByProjectId[c.projectId]) contractsByProjectId[c.projectId] = [];
+      contractsByProjectId[c.projectId].push(c.id);
     });
     return {
       week: 1,
@@ -24,6 +27,7 @@ describe("hasCreativeControl", () => {
         projects: {},
         talents: talentPool,
         contracts: contractsRecord,
+        contractsByProjectId,
         rivals: {},
       },
       studio: {

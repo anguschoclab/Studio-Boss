@@ -20,7 +20,7 @@ describe('ProjectDetailModal', () => {
   const mockSelectProject = vi.fn();
   const mockSignContract = vi.fn();
   const mockGreenlightProject = vi.fn();
-  const mockLockMarketingCampaign = vi.fn();
+  const mockLaunchMarketingCampaign = vi.fn();
   const mockRenewProject = vi.fn();
   const mockExploitFranchise = vi.fn();
 
@@ -41,6 +41,14 @@ describe('ProjectDetailModal', () => {
               contracts: [],
             }
           },
+          entities: {
+            projects: {},
+            releasedProjectIds: [],
+            talents: {},
+            contracts: {},
+            rivals: {},
+            contractsByProjectId: {},
+          },
           industry: {
             talentPool: {},
           },
@@ -48,9 +56,7 @@ describe('ProjectDetailModal', () => {
         },
         signContract: mockSignContract,
         greenlightProject: mockGreenlightProject,
-        lockMarketingCampaign: mockLockMarketingCampaign,
-        renewProject: mockRenewProject,
-        exploitFranchise: mockExploitFranchise,
+        launchMarketingCampaign: mockLaunchMarketingCampaign,
       };
       return selector(state);
     });
@@ -105,6 +111,14 @@ describe('ProjectDetailModal', () => {
               contracts: [],
             }
           },
+          entities: {
+            projects: {},
+            releasedProjectIds: [],
+            talents: {},
+            contracts: {},
+            rivals: {},
+            contractsByProjectId: {},
+          },
           industry: {
             talentPool: {},
           },
@@ -137,6 +151,14 @@ describe('ProjectDetailModal', () => {
               projects: { [mockProject.id]: mockProject },
               contracts: [],
             }
+          },
+          entities: {
+            projects: {},
+            releasedProjectIds: [],
+            talents: {},
+            contracts: {},
+            rivals: {},
+            contractsByProjectId: {},
           },
           industry: {
             talentPool: {},
@@ -175,23 +197,35 @@ describe('ProjectDetailModal', () => {
               contracts: [],
             }
           },
+          entities: {
+            projects: {},
+            releasedProjectIds: [],
+            talents: {},
+            contracts: {},
+            rivals: {},
+            contractsByProjectId: {},
+          },
           industry: {
             talentPool: {},
           },
           finance: { cash: 100_000_000 },
         },
-        lockMarketingCampaign: mockLockMarketingCampaign,
+        launchMarketingCampaign: mockLaunchMarketingCampaign,
       };
       return selector(state);
     });
 
     render(<ProjectDetailModal />);
 
+    // Select 'basic' tier (Targeted Digital) before clicking authorize
+    const targetedDigitalBtn = screen.getByText('Targeted Digital');
+    fireEvent.click(targetedDigitalBtn);
+
     const lockBtn = screen.getByText('Authorize Global Release & Dedicate Reserves');
     expect(lockBtn).toBeInTheDocument();
 
     fireEvent.click(lockBtn);
-    expect(mockLockMarketingCampaign).toHaveBeenCalledWith('P1', 'none');
+    expect(mockLaunchMarketingCampaign).toHaveBeenCalledWith('P1', 'Standard', 'SELL_THE_STORY', 'four_quadrant');
     expect(mockSelectProject).toHaveBeenCalledWith(null);
   });
 
@@ -223,6 +257,14 @@ describe('ProjectDetailModal', () => {
               projects: { [mockProject.id]: mockProject },
               contracts: [],
             }
+          },
+          entities: {
+            projects: {},
+            releasedProjectIds: [],
+            talents: {},
+            contracts: {},
+            rivals: {},
+            contractsByProjectId: {},
           },
           industry: {
             talentPool: {},

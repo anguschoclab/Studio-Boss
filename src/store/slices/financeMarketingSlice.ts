@@ -5,6 +5,7 @@ import { executeMarketing } from '@/engine/systems/projectHandlers';
 import { Contract, Project, Talent, NewsId } from '@/engine/types';
 import { type ProjectId, type TalentId } from '@/engine/types/shared.types';
 import { RandomGenerator } from '@/engine/utils/rng';
+import { getContractsByProjectId } from '@/engine/utils';
 
 export interface FinanceMarketingSlice {
   launchReleaseMarketing: (projectId: ProjectId, budget: number, domesticPct: number, angle: string) => void;
@@ -28,12 +29,9 @@ export const createFinanceMarketingSlice: StateCreator<GameStore, [], [], Financ
         primaryAngle: angle as any,
       });
 
-      const projectContracts: Contract[] = [];
-      for (const cId in state.entities.contracts) {
-        if (state.entities.contracts[cId].projectId === p.id) {
-          projectContracts.push(state.entities.contracts[cId]);
-        }
-      }
+      const projectContracts = getContractsByProjectId(
+        state.entities.contractsByProjectId, state.entities.contracts, p.id
+      );
 
       const talentPool = state.entities.talents;
       const talentMap: Record<string, Talent> = {};

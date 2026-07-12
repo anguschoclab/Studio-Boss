@@ -28,6 +28,7 @@ describe('tickProductionEnhancementSystem', () => {
         releasedProjectIds: [],
         talents: { 'TAL-1': talent1, 'TAL-2': talent2 },
         contracts: { 'CON-1': contract1, 'CON-2': contract2 },
+        contractsByProjectId: { 'PRJ-1': ['CON-1', 'CON-2'] },
         rivals: {},
       },
     });
@@ -79,6 +80,7 @@ describe('tickProductionEnhancementSystem', () => {
         releasedProjectIds: [],
         talents: { 'TAL-1': talent },
         contracts: { 'CON-1': contract },
+        contractsByProjectId: { 'PRJ-1': ['CON-1'] },
         rivals: {},
       },
     });
@@ -100,6 +102,7 @@ describe('tickProductionEnhancementSystem', () => {
         releasedProjectIds: ['PRJ-1'],
         talents: { 'TAL-1': talent },
         contracts: { 'CON-1': contract },
+        contractsByProjectId: { 'PRJ-1': ['CON-1'] },
         rivals: {},
       },
     });
@@ -241,6 +244,7 @@ describe('tickProductionEnhancementSystem', () => {
         releasedProjectIds: [],
         talents: { 'TAL-A': talentA, 'TAL-B': talentB },
         contracts: { 'CON-A': contractA, 'CON-B': contractB },
+        contractsByProjectId: { 'PRJ-A': ['CON-A'], 'PRJ-B': ['CON-B'] },
         rivals: {},
       },
     });

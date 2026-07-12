@@ -83,13 +83,13 @@ export function calculateWillingness(
 
   // 6. Directorial Influence (Check if a director is already attached)
   const isDirectorAttached = gameState.studio.internal.contracts.some(
-    c => c.projectId === project.id && gameState.industry.talentPool[c.talentId]?.roles.includes('director')
+    c => c.projectId === project.id && gameState.entities.talents[c.talentId]?.roles.includes('director')
   );
   if (isDirectorAttached) {
     const directorId = gameState.studio.internal.contracts.find(
-      c => c.projectId === project.id && gameState.industry.talentPool[c.talentId]?.roles.includes('director')
+      c => c.projectId === project.id && gameState.entities.talents[c.talentId]?.roles.includes('director')
     )!.talentId;
-    const director = gameState.industry.talentPool[directorId];
+    const director = gameState.entities.talents[directorId];
     if (director && director.prestige > 80) {
       score += 20;
       reasons.push(`The chance to work with ${director.name} is a significant motivator.`);

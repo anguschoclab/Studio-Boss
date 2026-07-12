@@ -61,6 +61,8 @@ describe('generateScandals', () => {
         releasedProjectIds: [],
         talents: { 'TAL-1': talent },
         contracts: { 'CON-1': contract },
+        contractsByProjectId: { 'PRJ-1': ['CON-1'] },
+        contractsByTalentId: { 'TAL-1': ['CON-1'] },
         rivals: {},
       },
     });

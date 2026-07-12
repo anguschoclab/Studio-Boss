@@ -2,7 +2,7 @@ import { GameState, Talent, Project, Contract, Award, Opportunity } from '@/engi
 type TalentProfile = Talent;
 import { StateImpact } from '../types/state.types';
 import { generateOpportunity } from '../generators/opportunities';
-import { clamp, secureRandom } from '../utils';
+import { clamp, secureRandom, getContractsByTalentId } from '../utils';
 import { isPlayerOwner } from '../utils/ownership';
 import { applyAwardBoostsToTalent } from './talentStats';
 import { calculateTalentTier } from '../utils/prestigeCalculator';
@@ -48,10 +48,19 @@ export class TalentSystem {
     if (secureRandom() < 0.25) {
       const activeTalentIds = new Set<string>();
       const contractsMap = state.entities.contracts || {};
-      for (const cId in contractsMap) {
-        const contract = contractsMap[cId];
-        const project = state.entities.projects[contract.projectId];
-        if (project && isPlayerOwner(state, project.ownerId)) activeTalentIds.add(contract.talentId);
+      const talentIdx = state.entities.contractsByTalentId || {};
+      const projects = state.entities.projects || {};
+      for (const talentId in talentIdx) {
+        if (Object.prototype.hasOwnProperty.call(talentIdx, talentId)) {
+          const talentContracts = getContractsByTalentId(talentIdx, contractsMap, talentId);
+          for (const c of talentContracts) {
+            const project = projects[c.projectId];
+            if (project && isPlayerOwner(state, project.ownerId)) {
+              activeTalentIds.add(talentId);
+              break;
+            }
+          }
+        }
       }
       const availableTalentIds: string[] = [];
       const talentsMap = state.entities.talents || {};

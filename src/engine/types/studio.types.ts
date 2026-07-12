@@ -5,6 +5,14 @@ import { Contract, FirstLookDeal, Family, Agency, Agent, Talent, Scandal, Motiva
 import { NewsEvent, Rumor, MarketEvent } from './engine.types';
 import { FinanceState, NewsState, IPState } from './state.types';
 
+export interface MergerOffer {
+  id: string;
+  acquirerId: string;
+  targetId: string;
+  status: 'pending' | 'accepted' | 'rejected';
+  terms?: unknown;
+}
+
 export interface GameEvent {
   id: string;
   week: number;
@@ -76,6 +84,8 @@ export interface GameState {
     contracts: Record<string, Contract>;
     rivals: Record<string, RivalStudio>;
     shingles?: Record<string, import('./talent.types').ProducerShingle>;
+    contractsByProjectId: Record<string, string[]>;
+    contractsByTalentId: Record<string, string[]>;
   };
   studio: {
     id: string;
@@ -117,6 +127,7 @@ export interface GameState {
     scandals?: Scandal[];
     newsHistory: NewsEvent[];
     distressedOffers?: import('./distress.types').DistressedAssetOffer[];
+    activeMergers?: MergerOffer[];
   };
   // UI Data Vis Extensions (Epic 4)
   culture: {

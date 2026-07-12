@@ -1,8 +1,15 @@
 import { GameState } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
+import { getContractsByProjectId } from '../../utils';
 import { generateWeeklyFinancialReport } from './ReportsModule';
 
 export function generateCashflowForecast(state: GameState, weeks: number = 12): { week: number; projected: number }[] {
+  // Use index to collect only contracts for released projects
+  const releasedProjects = Object.values(state.entities.projects || {}).filter(p => p.state === 'released');
+  const relevantContracts = releasedProjects.flatMap(p =>
+    getContractsByProjectId(state.entities?.contractsByProjectId, state.entities?.contracts || {}, p.id)
+  );
+
   const { report } = generateWeeklyFinancialReport(
       state, 
       state.studio.id,
@@ -10,7 +17,7 @@ export function generateCashflowForecast(state: GameState, weeks: number = 12): 
       state.finance.cash, 
       state.studio.archetype, 
       state.studio.prestige, 
-      Object.values(state.entities.contracts || {}), 
+      relevantContracts,
       state.deals?.activeDeals || [],
       new RandomGenerator(state.gameSeed + state.week),
       []

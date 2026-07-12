@@ -49,6 +49,7 @@ describe('SchedulingEngine Hardening Tests', () => {
     entities: {
       projects: { 'p-current': mockProject },
       contracts: { 'c1': mockContracts[0] },
+      contractsByProjectId: { 'p-current': ['c1'] },
       talents: { 't1': mockTalent },
       rivals: {}
     }

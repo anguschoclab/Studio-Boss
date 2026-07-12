@@ -1,6 +1,7 @@
 import { GameState, Opportunity } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 import { generateOpportunity } from '../../generators/opportunities';
+import { getContractsByTalentId } from '../../utils';
 
 export function advanceOpportunityLifecycle(state: GameState, rng: RandomGenerator): { updatedOpportunities: Opportunity[]; uiNotifications: string[] } {
   const uiNotifications: string[] = [];
@@ -29,9 +30,15 @@ export function advanceOpportunityLifecycle(state: GameState, rng: RandomGenerat
   };
 
   const activeTalentIds = new Set<string>();
-  const contractsList = Object.values(state.entities.contracts || {});
-  for (const contract of contractsList) {
-      activeTalentIds.add(contract.talentId);
+  const contractsMap = state.entities.contracts || {};
+  const talentIdx = state.entities.contractsByTalentId || {};
+  for (const talentId in talentIdx) {
+    if (Object.prototype.hasOwnProperty.call(talentIdx, talentId)) {
+      const talentContracts = getContractsByTalentId(talentIdx, contractsMap, talentId);
+      if (talentContracts.length > 0) {
+        activeTalentIds.add(talentId);
+      }
+    }
   }
   const availableTalentIds: string[] = [];
   for (const id in state.entities.talents) {

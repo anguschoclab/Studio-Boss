@@ -18,3 +18,7 @@ export {
 export {
   processRazzies
 } from './RazzieProcessor';
+
+export {
+  launchAwardsCampaign
+} from './AwardsCampaign';

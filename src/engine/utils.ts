@@ -148,3 +148,183 @@ export function fillTemplate(template: string, vars: Record<string, string | num
     return vars[key] !== undefined ? String(vars[key]) : match;
   });
 }
+
+/** Add a contract ID to the contractsByProjectId index. Returns a new index object. */
+export function addContractToIndex(
+  index: Record<string, string[]>,
+  projectId: string,
+  contractId: string
+): Record<string, string[]> {
+  const existing = index[projectId];
+  if (existing && existing.includes(contractId)) return index;
+  return {
+    ...index,
+    [projectId]: existing ? [...existing, contractId] : [contractId]
+  };
+}
+
+/** Add multiple contract IDs to the index. Returns a new index object. */
+export function addContractsToIndex(
+  index: Record<string, string[]>,
+  contracts: Contract[]
+): Record<string, string[]> {
+  const updates: Record<string, string[]> = {};
+  for (const c of contracts) {
+    if (!updates[c.projectId]) updates[c.projectId] = [];
+    updates[c.projectId].push(c.id);
+  }
+  const result = { ...index };
+  for (const pid in updates) {
+    result[pid] = [...(result[pid] || []), ...updates[pid]];
+  }
+  return result;
+}
+
+/** Remove a contract ID from the index. Returns a new index object. */
+export function removeContractFromIndex(
+  index: Record<string, string[]>,
+  projectId: string,
+  contractId: string
+): Record<string, string[]> {
+  const existing = index[projectId];
+  if (!existing) return index;
+  const filtered = existing.filter(id => id !== contractId);
+  if (filtered.length === 0) {
+    const { [projectId]: _, ...rest } = index;
+    return rest;
+  }
+  return { ...index, [projectId]: filtered };
+}
+
+/** Remove all contracts for a given (projectId, talentId) pair. Returns new index + removed contract IDs. */
+export function removeContractsByTalentFromIndex(
+  index: Record<string, string[]>,
+  contracts: Record<string, Contract>,
+  projectId: string,
+  talentId: string
+): { index: Record<string, string[]>; removedIds: string[] } {
+  const existing = index[projectId] || [];
+  const removedIds: string[] = [];
+  const remaining: string[] = [];
+  for (const cId of existing) {
+    const c = contracts[cId];
+    if (c && c.talentId === talentId) {
+      removedIds.push(cId);
+    } else {
+      remaining.push(cId);
+    }
+  }
+  if (removedIds.length === 0) return { index, removedIds };
+  if (remaining.length === 0) {
+    const { [projectId]: _, ...rest } = index;
+    return { index: rest, removedIds };
+  }
+  return { index: { ...index, [projectId]: remaining }, removedIds };
+}
+
+/** Look up contracts for a project using the contractsByProjectId index. */
+export function getContractsByProjectId(
+  index: Record<string, string[]> | undefined,
+  contracts: Record<string, Contract>,
+  projectId: string
+): Contract[] {
+  const ids = index?.[projectId];
+  if (!ids || ids.length === 0) return [];
+  const result: Contract[] = [];
+  for (const id of ids) {
+    const c = contracts[id];
+    if (c) result.push(c);
+  }
+  return result;
+}
+
+// ─── contractsByTalentId index utilities ───
+
+/** Add a single contract ID to the talent index. Returns a new index object. */
+export function addContractToTalentIndex(
+  index: Record<string, string[]>,
+  talentId: string,
+  contractId: string
+): Record<string, string[]> {
+  const existing = index[talentId];
+  if (existing && existing.includes(contractId)) return index;
+  return {
+    ...index,
+    [talentId]: existing ? [...existing, contractId] : [contractId]
+  };
+}
+
+/** Add multiple contract IDs to the talent index. Returns a new index object. */
+export function addContractsToTalentIndex(
+  index: Record<string, string[]>,
+  contracts: Contract[]
+): Record<string, string[]> {
+  const updates: Record<string, string[]> = {};
+  for (const c of contracts) {
+    if (!updates[c.talentId]) updates[c.talentId] = [];
+    updates[c.talentId].push(c.id);
+  }
+  const result = { ...index };
+  for (const tid in updates) {
+    result[tid] = [...(result[tid] || []), ...updates[tid]];
+  }
+  return result;
+}
+
+/** Remove a contract ID from the talent index. Returns a new index object. */
+export function removeContractFromTalentIndex(
+  index: Record<string, string[]>,
+  talentId: string,
+  contractId: string
+): Record<string, string[]> {
+  const existing = index[talentId];
+  if (!existing) return index;
+  const filtered = existing.filter(id => id !== contractId);
+  if (filtered.length === 0) {
+    const { [talentId]: _, ...rest } = index;
+    return rest;
+  }
+  return { ...index, [talentId]: filtered };
+}
+
+/** Remove all contracts for a given (projectId, talentId) pair from the talent index. Returns new index + removed contract IDs. */
+export function removeContractsByProjectFromTalentIndex(
+  index: Record<string, string[]>,
+  contracts: Record<string, Contract>,
+  projectId: string,
+  talentId: string
+): { index: Record<string, string[]>; removedIds: string[] } {
+  const existing = index[talentId] || [];
+  const removedIds: string[] = [];
+  const remaining: string[] = [];
+  for (const cId of existing) {
+    const c = contracts[cId];
+    if (c && c.projectId === projectId) {
+      removedIds.push(cId);
+    } else {
+      remaining.push(cId);
+    }
+  }
+  if (removedIds.length === 0) return { index, removedIds };
+  if (remaining.length === 0) {
+    const { [talentId]: _, ...rest } = index;
+    return { index: rest, removedIds };
+  }
+  return { index: { ...index, [talentId]: remaining }, removedIds };
+}
+
+/** Look up contracts for a talent using the contractsByTalentId index. */
+export function getContractsByTalentId(
+  index: Record<string, string[]> | undefined,
+  contracts: Record<string, Contract>,
+  talentId: string
+): Contract[] {
+  const ids = index?.[talentId];
+  if (!ids || ids.length === 0) return [];
+  const result: Contract[] = [];
+  for (const id of ids) {
+    const c = contracts[id];
+    if (c) result.push(c);
+  }
+  return result;
+}

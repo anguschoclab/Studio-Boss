@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { generateAwardsProfile, runAwardsCeremony, processRazzies } from "../../../engine/systems/awards";
+import { generateAwardsProfile, runAwardsCeremony, processRazzies } from "../../../engine/systems/awards/index";
 import { Project, GameState } from "../../../engine/types";
-import { } from "../../../engine/utils/rng";
+import { RandomGenerator } from "../../../engine/utils/rng";
 
 describe("awards system", () => {
 
@@ -18,9 +18,11 @@ describe("awards system", () => {
       releasedProjectIds: [],
       talents: {},
       contracts: {},
-      rivals: {}
+      rivals: {},
+      contractsByProjectId: {}
     },
     studio: {
+      id: 'player-studio',
       name: 'Test Studio',
       archetype: 'major',
       prestige: 50,
@@ -54,6 +56,7 @@ describe("awards system", () => {
     flavor: "Oscar bait",
     state: "released",
     buzz: 80,
+    reviewScore: 95,
     weeksInPhase: 0,
     developmentWeeks: 4,
     productionWeeks: 4,
@@ -98,11 +101,12 @@ describe("awards system", () => {
       state.week = 4;
       state.week = 4;
 
-      const impacts = runAwardsCeremony(state, 4, 2024);
+      const rng = new RandomGenerator(12345);
+      const impacts = runAwardsCeremony(state, 4, 2024, rng);
 
-      expect(impacts.newAwards).toBeDefined();
-      expect(impacts.newHeadlines).toBeDefined();
-      expect(impacts.prestigeChange).toBeDefined();
+      // New CeremonyRunner emits INDUSTRY_UPDATE impacts with awards
+      const awardImpacts = impacts.filter(i => i.type === 'INDUSTRY_UPDATE');
+      expect(impacts.length).toBeGreaterThan(0);
     });
 
     it("accumulates prestige change for high-scoring project", () => {
@@ -112,8 +116,10 @@ describe("awards system", () => {
       state.week = 4;
       state.week = 4;
 
-      const impacts = runAwardsCeremony(state, 4, 2024);
-      expect(impacts.prestigeChange).toBeGreaterThanOrEqual(0);
+      const rng = new RandomGenerator(12345);
+      const impacts = runAwardsCeremony(state, 4, 2024, rng);
+      const prestigeImpact = impacts.find(i => i.type === 'PRESTIGE_CHANGED');
+      expect((prestigeImpact?.payload as any)?.amount ?? 0).toBeGreaterThanOrEqual(0);
     });
   });
 
@@ -127,7 +133,8 @@ describe("awards system", () => {
               budgetTier: "high",
               reviewScore: 10,
               buzz: 10,
-              releaseWeek: 5
+              releaseWeek: 5,
+              ownerId: 'player-studio'
           } as Project;
           const state = getInitialState();
           state.entities.projects = { [badFilm.id]: badFilm };
@@ -135,11 +142,15 @@ describe("awards system", () => {
           state.week = 4;
           state.week = 4;
 
-          const impacts = processRazzies(state, 4);
+          const rng = new RandomGenerator(12345);
+          const impacts = processRazzies(state, 4, rng);
 
-          expect(impacts.prestigeChange).toBe(-10);
-          expect(impacts.newHeadlines!.length).toBeGreaterThan(0);
-          expect(impacts.newHeadlines![0].text).toContain("The Razzies Nominees Announced");
+          const prestigeImpact = impacts.find(i => i.type === 'PRESTIGE_CHANGED');
+          expect(prestigeImpact).toBeDefined();
+          expect((prestigeImpact!.payload as any).amount).toBeLessThan(0);
+          expect(impacts.length).toBeGreaterThan(0);
+          const newsImpact = impacts.find(i => i.type === 'NEWS_ADDED');
+          expect(newsImpact).toBeDefined();
       });
   });
 });

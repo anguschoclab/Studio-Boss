@@ -38,30 +38,35 @@ function contractsFor(projectId: string, ...talentIds: string[]): Record<string,
   return out;
 }
 
+function setContracts(s: any, projectId: string, ...talentIds: string[]) {
+  s.entities.contracts = contractsFor(projectId, ...talentIds);
+  s.entities.contractsByProjectId = { [projectId]: talentIds.map((_, i) => 'C' + (i + 1)) };
+}
+
 const PROJ = { id: 'PRJ-1', title: 'Test', state: 'production' } as any;
 
 describe('checkRelationshipCrises', () => {
   it('returns null when project has < 2 cast members', () => {
     const s: any = createMockGameState();
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1');
+    setContracts(s, 'PRJ-1', 'TAL-1');
     expect(checkRelationshipCrises(PROJ, s, makeRng())).toBeNull();
   });
 
   it('returns null when no relationships exist between cast', () => {
     const s: any = createMockGameState();
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1', 'TAL-2');
+    setContracts(s, 'PRJ-1', 'TAL-1', 'TAL-2');
     expect(checkRelationshipCrises(PROJ, s, makeRng())).toBeNull();
   });
 
   it('returns null when only friendly relationships exist', () => {
     const s = setupState([makeRel({ type: 'friend', strength: 80 })], { 'TAL-1': createMockTalent({ id: 'TAL-1', name: 'A' }), 'TAL-2': createMockTalent({ id: 'TAL-2', name: 'B' }) });
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1', 'TAL-2');
+    setContracts(s, 'PRJ-1', 'TAL-1', 'TAL-2');
     expect(checkRelationshipCrises(PROJ, s, makeRng())).toBeNull();
   });
 
   it('returns MODAL_TRIGGERED crisis when feud exists and rng triggers', () => {
     const s = setupState([makeRel({ type: 'rival', strength: -50 })], { 'TAL-1': createMockTalent({ id: 'TAL-1', name: 'A' }), 'TAL-2': createMockTalent({ id: 'TAL-2', name: 'B' }) });
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1', 'TAL-2');
+    setContracts(s, 'PRJ-1', 'TAL-1', 'TAL-2');
     const r = tryTrigger(rng => checkRelationshipCrises(PROJ, s, rng));
     expect(r).not.toBeNull();
     expect(r.type).toBe('MODAL_TRIGGERED');
@@ -70,7 +75,7 @@ describe('checkRelationshipCrises', () => {
 
   it('returns null when feud exists but rng does not trigger', () => {
     const s = setupState([makeRel({ type: 'rival', strength: -50 })], { 'TAL-1': createMockTalent({ id: 'TAL-1', name: 'A' }), 'TAL-2': createMockTalent({ id: 'TAL-2', name: 'B' }) });
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1', 'TAL-2');
+    setContracts(s, 'PRJ-1', 'TAL-1', 'TAL-2');
     let gotNull = false;
     for (let i = 0; i < 200; i++) { if (checkRelationshipCrises(PROJ, s, makeRng(1 + i)) === null) { gotNull = true; break; } }
     expect(gotNull).toBe(true);
@@ -78,7 +83,7 @@ describe('checkRelationshipCrises', () => {
 
   it('sets severity high when |feud.strength| > 70', () => {
     const s = setupState([makeRel({ type: 'enemy', strength: -85 })], { 'TAL-1': createMockTalent({ id: 'TAL-1', name: 'A' }), 'TAL-2': createMockTalent({ id: 'TAL-2', name: 'B' }) });
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1', 'TAL-2');
+    setContracts(s, 'PRJ-1', 'TAL-1', 'TAL-2');
     const r = tryTrigger(rng => checkRelationshipCrises(PROJ, s, rng));
     expect(r).not.toBeNull();
     const crisis = (r.payload as any).payload.crisis;
@@ -89,7 +94,7 @@ describe('checkRelationshipCrises', () => {
 
   it('sets severity medium when |feud.strength| <= 70', () => {
     const s = setupState([makeRel({ type: 'rival', strength: -40 })], { 'TAL-1': createMockTalent({ id: 'TAL-1', name: 'A' }), 'TAL-2': createMockTalent({ id: 'TAL-2', name: 'B' }) });
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1', 'TAL-2');
+    setContracts(s, 'PRJ-1', 'TAL-1', 'TAL-2');
     const r = tryTrigger(rng => checkRelationshipCrises(PROJ, s, rng));
     expect(r).not.toBeNull();
     const crisis = (r.payload as any).payload.crisis;
@@ -100,13 +105,13 @@ describe('checkRelationshipCrises', () => {
 
   it('only considers relationships where BOTH talents are in cast', () => {
     const s = setupState([makeRel({ talentAId: 'TAL-1', talentBId: 'TAL-3', type: 'rival', strength: -50 })], { 'TAL-1': createMockTalent({ id: 'TAL-1' }), 'TAL-2': createMockTalent({ id: 'TAL-2' }), 'TAL-3': createMockTalent({ id: 'TAL-3' }) });
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1', 'TAL-2');
+    setContracts(s, 'PRJ-1', 'TAL-1', 'TAL-2');
     expect(checkRelationshipCrises(PROJ, s, makeRng())).toBeNull();
   });
 
   it('returns null when referenced talents do not exist in state', () => {
     const s = setupState([makeRel({ type: 'rival', strength: -50 })], {});
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1', 'TAL-2');
+    setContracts(s, 'PRJ-1', 'TAL-1', 'TAL-2');
     for (let i = 0; i < 200; i++) { expect(checkRelationshipCrises(PROJ, s, makeRng(1 + i))).toBeNull(); }
   });
 });
@@ -114,20 +119,20 @@ describe('checkRelationshipCrises', () => {
 describe('checkCliqueCrises', () => {
   it('returns null when project has < 3 cast members', () => {
     const s: any = createMockGameState();
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1', 'TAL-2');
+    setContracts(s, 'PRJ-1', 'TAL-1', 'TAL-2');
     expect(checkCliqueCrises(PROJ, s, makeRng())).toBeNull();
   });
 
   it('returns null when no cliques have 2+ members on project', () => {
     const s: any = createMockGameState();
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1', 'TAL-2', 'TAL-3');
+    setContracts(s, 'PRJ-1', 'TAL-1', 'TAL-2', 'TAL-3');
     s.relationships = { cliques: { cliques: { 'CLQ-1': makeClique() }, memberCliqueMap: { 'TAL-1': ['CLQ-1'] } } };
     expect(checkCliqueCrises(PROJ, s, makeRng())).toBeNull();
   });
 
   it('returns NEWS_ADDED when toxic clique has 2+ members and rng triggers', () => {
     const s: any = createMockGameState();
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1', 'TAL-2', 'TAL-3');
+    setContracts(s, 'PRJ-1', 'TAL-1', 'TAL-2', 'TAL-3');
     s.relationships = { cliques: { cliques: { 'CLQ-1': makeClique({ name: 'Bad Blood', reputation: 'toxic' }) }, memberCliqueMap: { 'TAL-1': ['CLQ-1'], 'TAL-2': ['CLQ-1'], 'TAL-3': ['CLQ-1'] } } };
     const r = tryTrigger(rng => checkCliqueCrises(PROJ, s, rng));
     expect(r).not.toBeNull();
@@ -138,7 +143,7 @@ describe('checkCliqueCrises', () => {
 
   it('returns null when toxic clique has 2+ members but rng does not trigger', () => {
     const s: any = createMockGameState();
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1', 'TAL-2', 'TAL-3');
+    setContracts(s, 'PRJ-1', 'TAL-1', 'TAL-2', 'TAL-3');
     s.relationships = { cliques: { cliques: { 'CLQ-1': makeClique({ reputation: 'toxic' }) }, memberCliqueMap: { 'TAL-1': ['CLQ-1'], 'TAL-2': ['CLQ-1'], 'TAL-3': ['CLQ-1'] } } };
     let gotNull = false;
     for (let i = 0; i < 200; i++) { if (checkCliqueCrises(PROJ, s, makeRng(1 + i)) === null) { gotNull = true; break; } }
@@ -147,14 +152,14 @@ describe('checkCliqueCrises', () => {
 
   it('returns null when clique is non-toxic', () => {
     const s: any = createMockGameState();
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1', 'TAL-2', 'TAL-3');
+    setContracts(s, 'PRJ-1', 'TAL-1', 'TAL-2', 'TAL-3');
     s.relationships = { cliques: { cliques: { 'CLQ-1': makeClique({ reputation: 'cool' }) }, memberCliqueMap: { 'TAL-1': ['CLQ-1'], 'TAL-2': ['CLQ-1'], 'TAL-3': ['CLQ-1'] } } };
     for (let i = 0; i < 200; i++) { expect(checkCliqueCrises(PROJ, s, makeRng(1 + i))).toBeNull(); }
   });
 
   it('uses clique name in description when clique exists', () => {
     const s: any = createMockGameState();
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1', 'TAL-2', 'TAL-3');
+    setContracts(s, 'PRJ-1', 'TAL-1', 'TAL-2', 'TAL-3');
     s.relationships = { cliques: { cliques: { 'CLQ-1': makeClique({ name: 'The Drama Club', reputation: 'toxic' }) }, memberCliqueMap: { 'TAL-1': ['CLQ-1'], 'TAL-2': ['CLQ-1'], 'TAL-3': ['CLQ-1'] } } };
     const r = tryTrigger(rng => checkCliqueCrises(PROJ, s, rng));
     expect(r).not.toBeNull();
@@ -163,7 +168,7 @@ describe('checkCliqueCrises', () => {
 
   it('does NOT trigger drama when clique does not exist in cliques map', () => {
     const s: any = createMockGameState();
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1', 'TAL-2', 'TAL-3');
+    setContracts(s, 'PRJ-1', 'TAL-1', 'TAL-2', 'TAL-3');
     s.relationships = { cliques: { cliques: {}, memberCliqueMap: { 'TAL-1': ['CLQ-999'], 'TAL-2': ['CLQ-999'], 'TAL-3': ['CLQ-999'] } } };
     for (let i = 0; i < 200; i++) { expect(checkCliqueCrises(PROJ, s, makeRng(1 + i))).toBeNull(); }
   });
@@ -242,25 +247,25 @@ describe('generateRelationshipScandals', () => {
 describe('calculateSocialCrisisModifier', () => {
   it('returns 1.0 when project has < 2 cast members', () => {
     const s: any = createMockGameState();
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1');
+    setContracts(s, 'PRJ-1', 'TAL-1');
     expect(calculateSocialCrisisModifier('PRJ-1', s)).toBe(1.0);
   });
 
   it('returns 1.0 when no feuds and no toxic cliques', () => {
     const s = setupState([makeRel({ type: 'friend', strength: 80 })], { 'TAL-1': createMockTalent({ id: 'TAL-1' }), 'TAL-2': createMockTalent({ id: 'TAL-2' }) });
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1', 'TAL-2');
+    setContracts(s, 'PRJ-1', 'TAL-1', 'TAL-2');
     expect(calculateSocialCrisisModifier('PRJ-1', s)).toBe(1.0);
   });
 
   it('adds 0.15 per feud relationship', () => {
     const s = setupState([makeRel({ type: 'rival', strength: -50 }), makeRel({ id: 'R2', talentAId: 'TAL-1', talentBId: 'TAL-3', type: 'enemy', strength: -60 })], { 'TAL-1': createMockTalent({ id: 'TAL-1' }), 'TAL-2': createMockTalent({ id: 'TAL-2' }), 'TAL-3': createMockTalent({ id: 'TAL-3' }) });
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1', 'TAL-2', 'TAL-3');
+    setContracts(s, 'PRJ-1', 'TAL-1', 'TAL-2', 'TAL-3');
     expect(calculateSocialCrisisModifier('PRJ-1', s)).toBeCloseTo(1.3);
   });
 
   it('adds 0.10 per toxic clique member', () => {
     const s: any = createMockGameState();
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1', 'TAL-2', 'TAL-3');
+    setContracts(s, 'PRJ-1', 'TAL-1', 'TAL-2', 'TAL-3');
     s.relationships = { relationships: {}, cliques: { cliques: { 'CLQ-1': makeClique({ reputation: 'toxic' }) }, memberCliqueMap: { 'TAL-1': ['CLQ-1'], 'TAL-2': ['CLQ-1'] } } };
     expect(calculateSocialCrisisModifier('PRJ-1', s)).toBeCloseTo(1.2);
   });
@@ -274,12 +279,13 @@ describe('calculateSocialCrisisModifier', () => {
     const ct: Record<string, any> = {};
     for (let i = 0; i < 11; i++) { ct['C' + (i + 1)] = createMockContract({ id: 'C' + (i + 1), projectId: 'PRJ-1', talentId: i === 0 ? 'TAL-1' : 'T' + (i + 1) }); }
     s.entities.contracts = ct;
+    s.entities.contractsByProjectId = { 'PRJ-1': Object.keys(ct) };
     expect(calculateSocialCrisisModifier('PRJ-1', s)).toBe(2.0);
   });
 
   it('only counts feuds between cast members', () => {
     const s = setupState([makeRel({ talentAId: 'TAL-1', talentBId: 'TAL-9', type: 'rival', strength: -50 })], { 'TAL-1': createMockTalent({ id: 'TAL-1' }), 'TAL-2': createMockTalent({ id: 'TAL-2' }), 'TAL-9': createMockTalent({ id: 'TAL-9' }) });
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1', 'TAL-2');
+    setContracts(s, 'PRJ-1', 'TAL-1', 'TAL-2');
     expect(calculateSocialCrisisModifier('PRJ-1', s)).toBe(1.0);
   });
 });
@@ -293,7 +299,7 @@ describe('tickOrganicEvents', () => {
   it('skips projects not in production-like states', () => {
     const s: any = createMockGameState();
     s.entities.projects = { 'PRJ-1': { id: 'PRJ-1', title: 'Dev', state: 'development' } };
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1', 'TAL-2');
+    setContracts(s, 'PRJ-1', 'TAL-1', 'TAL-2');
     s.relationships = { relationships: { 'R1': makeRel({ type: 'rival', strength: -50 }) } };
     expect(tickOrganicEvents(s, makeRng())).toEqual([]);
   });
@@ -302,7 +308,7 @@ describe('tickOrganicEvents', () => {
     const talents = { 'TAL-1': createMockTalent({ id: 'TAL-1', name: 'A' }), 'TAL-2': createMockTalent({ id: 'TAL-2', name: 'B' }) };
     const s = setupState([makeRel({ type: 'romantic', isPublic: true, strength: 50, history: [{ week: 9, type: 'breakup', impact: -20, description: 'Split' }] })], talents, { week: 10 });
     s.entities.projects = { 'PRJ-1': { id: 'PRJ-1', title: 'Test', state: 'production' } };
-    s.entities.contracts = contractsFor('PRJ-1', 'TAL-1', 'TAL-2');
+    setContracts(s, 'PRJ-1', 'TAL-1', 'TAL-2');
     const impacts = tickOrganicEvents(s, makeRng());
     expect(impacts.length).toBeGreaterThan(0);
     expect(impacts.some(x => x.type === 'NEWS_ADDED')).toBe(true);

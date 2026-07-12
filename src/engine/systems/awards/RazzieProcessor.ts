@@ -1,4 +1,4 @@
-import { GameState, StateImpact, Project } from '@/engine/types';
+import { GameState, StateImpact, Project, Talent } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 import { BardResolver } from '../bardResolver';
 
@@ -85,6 +85,40 @@ export function processRazzies(state: GameState, week: number, rng: RandomGenera
           headline: `"${project.title}" gains ironic cult following`,
           description: `Despite its Razzie nomination, the film has developed a cult following among midnight movie audiences.`,
           category: 'general'
+        }
+      });
+    }
+
+    // Contract-level logic: find worst lead talent via contractsByProjectId index
+    const contractIds = state.entities.contractsByProjectId?.[project.id] || [];
+    let worstLeadTalent: Talent | null = null;
+    let worstLeadDraw = 0;
+    for (const cId of contractIds) {
+      const c = state.entities.contracts[cId];
+      if (!c) continue;
+      const talent = state.entities.talents[c.talentId];
+      if (!talent) continue;
+      if (talent.draw > 70 && talent.draw > worstLeadDraw) {
+        worstLeadDraw = talent.draw;
+        worstLeadTalent = talent;
+      }
+    }
+
+    if (worstLeadTalent) {
+      impacts.push({
+        type: 'TALENT_UPDATED',
+        payload: {
+          talentId: worstLeadTalent.id,
+          update: { razzieWinner: true } as Partial<Talent>
+        }
+      });
+
+      impacts.push({
+        type: 'NEWS_ADDED',
+        payload: {
+          headline: `RAZZIES: ${worstLeadTalent.name} "wins" Worst Lead for "${project.title}"`,
+          description: `${worstLeadTalent.name} has been "honored" with a Razzie for their performance in the critically panned "${project.title}".`,
+          category: 'awards'
         }
       });
     }

@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { runAwardsCeremony } from '../../../engine/systems/awards';
+import { runAwardsCeremony } from '../../../engine/systems/awards/index';
 import { GameState, Project } from '../../../engine/types';
 import { createMockGameState } from '../../utils/mockFactories';
+import { RandomGenerator } from '../../../engine/utils/rng';
 
 describe('TV Awards Filtering & Taxonomy', () => {
 
@@ -52,13 +53,16 @@ describe('TV Awards Filtering & Taxonomy', () => {
     const dramaShow = createTvProject('drama_1', 'prestige_drama', 95, 'Drama');
     const sitcomShow = createTvProject('sitcom_1', 'sitcom', 80, 'Comedy');
 
+    const rng = new RandomGenerator(12345);
     const impacts = runAwardsCeremony(
       baseState({ drama_1: dramaShow, sitcom_1: sitcomShow }),
-      37, 2026
+      37, 2026, rng
     );
 
-    expect(impacts.newAwards).toBeDefined();
-    const bestSeries = impacts.newAwards?.find((a: any) => a.category === 'Best Series');
+    // New CeremonyRunner emits INDUSTRY_UPDATE impacts with award data in update
+    const awardImpacts = impacts.filter(i => i.type === 'INDUSTRY_UPDATE');
+    const allAwards = awardImpacts.map(i => Object.values((i.payload as any).update || {})).flat();
+    const bestSeries = allAwards.find((a: any) => a.category === 'Best Series');
 
     expect(bestSeries).toBeDefined();
     expect(bestSeries?.projectId).toBeTruthy();
@@ -67,12 +71,15 @@ describe('TV Awards Filtering & Taxonomy', () => {
   it('should award Best Series to the highest-scoring TV project at Emmys', () => {
     const sitcomShow = createTvProject('sitcom_1', 'sitcom', 95);
 
+    const rng = new RandomGenerator(12345);
     const impacts = runAwardsCeremony(
       baseState({ sitcom_1: sitcomShow }),
-      37, 2026
+      37, 2026, rng
     );
 
-    const bestSeries = impacts.newAwards?.find((a: any) => a.category === 'Best Series');
+    const awardImpacts = impacts.filter(i => i.type === 'INDUSTRY_UPDATE');
+    const allAwards = awardImpacts.map(i => Object.values((i.payload as any).update || {})).flat();
+    const bestSeries = allAwards.find((a: any) => a.category === 'Best Series');
 
     expect(bestSeries).toBeDefined();
     expect(bestSeries?.projectId).toBe('sitcom_1');

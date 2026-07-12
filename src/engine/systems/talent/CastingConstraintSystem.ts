@@ -1,5 +1,6 @@
 import { GameState, StateImpact, Talent, Project } from '../../types';
 import { RandomGenerator } from '../../utils/rng';
+import { getContractsByProjectId } from '../../utils';
 import {
   TalentComfortLevel,
   ComfortPremiumRates,
@@ -263,14 +264,6 @@ export function tickCastingConstraintSystem(
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
 
-  // ⚡ Bolt Optimization: Pre-group contracts by projectId to avoid O(N) filters inside the loop
-  const contractsByProject: Record<string, import('../../types').Contract[]> = {};
-  for (const id in state.entities.contracts || {}) {
-    const c = state.entities.contracts![id];
-    if (!contractsByProject[c.projectId]) contractsByProject[c.projectId] = [];
-    contractsByProject[c.projectId].push(c);
-  }
-
   // ⚡ Bolt Optimization: Replaced Object.values() array allocation with direct for...in loop
   for (const projectId in state.entities.projects || {}) {
     const project = state.entities.projects![projectId];
@@ -282,7 +275,7 @@ export function tickCastingConstraintSystem(
     }
 
     const requirements = generateRequirementsFromNotes(project, state, rng);
-    const contracts = contractsByProject[project.id] || [];
+    const contracts = getContractsByProjectId(state.entities.contractsByProjectId, state.entities.contracts, project.id);
     const talentIds = contracts.map(c => c.talentId);
 
     for (const requirement of requirements) {

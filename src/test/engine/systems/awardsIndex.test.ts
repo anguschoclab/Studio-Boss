@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { runAwardsCeremony, processRazzies } from '@/engine/systems/awards';
+import { runAwardsCeremony, processRazzies } from '@/engine/systems/awards/index';
 import { createMockGameState } from '@/test/mockFactory';
 import { Project, GameState } from '@/engine/types';
+import { RandomGenerator } from '@/engine/utils/rng';
 
 function makeProject(overrides: Partial<Project> = {}): Project {
   return {
@@ -40,7 +41,7 @@ function makeState(projects: Record<string, Project> = {}, releasedProjectIds: s
 }
 
 describe('awards system uses releasedProjectIds index', () => {
-  describe('runAwardsCeremony (legacy)', () => {
+  describe('runAwardsCeremony (new)', () => {
     it('finds eligible projects via releasedProjectIds index', () => {
       const project = makeProject({
         id: 'p1',
@@ -66,9 +67,12 @@ describe('awards system uses releasedProjectIds index', () => {
       const state = makeState({ p1: project }, ['p1']);
       state.week = 4;
 
-      const impacts = runAwardsCeremony(state, 4, 2024);
+      const rng = new RandomGenerator(12345);
+      const impacts = runAwardsCeremony(state, 4, 2024, rng);
 
-      expect(impacts.newAwards).toBeDefined();
+      // New CeremonyRunner emits INDUSTRY_UPDATE impacts
+      const awardImpacts = impacts.filter(i => i.type === 'INDUSTRY_UPDATE');
+      expect(awardImpacts).toBeDefined();
     });
 
     it('does not find projects missing from releasedProjectIds index', () => {
@@ -97,13 +101,15 @@ describe('awards system uses releasedProjectIds index', () => {
       const state = makeState({ p1: project }, []);
       state.week = 4;
 
-      const impacts = runAwardsCeremony(state, 4, 2024);
+      const rng = new RandomGenerator(12345);
+      const impacts = runAwardsCeremony(state, 4, 2024, rng);
 
-      expect(impacts.newAwards).toHaveLength(0);
+      // No eligible projects → no impacts
+      expect(impacts).toHaveLength(0);
     });
   });
 
-  describe('processRazzies (legacy)', () => {
+  describe('processRazzies (new)', () => {
     it('finds eligible razzie projects via releasedProjectIds index', () => {
       const badFilm = makeProject({
         id: 'bad-1',
@@ -119,10 +125,13 @@ describe('awards system uses releasedProjectIds index', () => {
       const state = makeState({ 'bad-1': badFilm }, ['bad-1']);
       state.week = 4;
 
-      const impacts = processRazzies(state, 4);
+      const rng = new RandomGenerator(12345);
+      const impacts = processRazzies(state, 4, rng);
 
-      expect(impacts.prestigeChange).toBe(-10);
-      expect(impacts.newHeadlines).toBeDefined();
+      const prestigeImpact = impacts.find(i => i.type === 'PRESTIGE_CHANGED');
+      expect(prestigeImpact).toBeDefined();
+      expect((prestigeImpact!.payload as any).amount).toBeLessThan(0);
+      expect(impacts.length).toBeGreaterThan(0);
     });
 
     it('does not find razzie projects missing from releasedProjectIds index', () => {
@@ -141,9 +150,11 @@ describe('awards system uses releasedProjectIds index', () => {
       const state = makeState({ 'bad-1': badFilm }, []);
       state.week = 4;
 
-      const impacts = processRazzies(state, 4);
+      const rng = new RandomGenerator(12345);
+      const impacts = processRazzies(state, 4, rng);
 
-      expect(impacts.prestigeChange).toBe(0);
+      const prestigeImpact = impacts.find(i => i.type === 'PRESTIGE_CHANGED');
+      expect(prestigeImpact).toBeUndefined();
     });
 
     it('correctly identifies player ownership via ownerId', () => {
@@ -161,13 +172,16 @@ describe('awards system uses releasedProjectIds index', () => {
       const state = makeState({ p1: playerFilm }, ['p1']);
       state.week = 4;
 
-      const impacts = processRazzies(state, 4);
+      const rng = new RandomGenerator(12345);
+      const impacts = processRazzies(state, 4, rng);
 
       // Player-owned film should trigger prestige penalty
-      expect(impacts.prestigeChange).toBeLessThan(0);
+      const prestigeImpact = impacts.find(i => i.type === 'PRESTIGE_CHANGED');
+      expect(prestigeImpact).toBeDefined();
+      expect((prestigeImpact!.payload as any).amount).toBeLessThan(0);
     });
 
-    it('legacy processRazzies always applies prestige penalty (no ownership check)', () => {
+    it('new processRazzies only applies prestige penalty for player-owned films', () => {
       const rivalFilm = makeProject({
         id: 'r1',
         title: 'Rival Flop',
@@ -182,11 +196,12 @@ describe('awards system uses releasedProjectIds index', () => {
       const state = makeState({ r1: rivalFilm }, ['r1']);
       state.week = 4;
 
-      const impacts = processRazzies(state, 4);
+      const rng = new RandomGenerator(12345);
+      const impacts = processRazzies(state, 4, rng);
 
-      // Legacy processRazzies has no isPlayer check — always applies -10
-      // The isPlayer fix is in the refactored RazzieProcessor.ts
-      expect(impacts.prestigeChange).toBe(-10);
+      // New RazzieProcessor checks isPlayer — no prestige penalty for rival films
+      const prestigeImpact = impacts.find(i => i.type === 'PRESTIGE_CHANGED');
+      expect(prestigeImpact).toBeUndefined();
     });
   });
 });

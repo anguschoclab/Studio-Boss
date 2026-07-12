@@ -2,6 +2,7 @@ import { GameState, StateImpact, Talent, Project } from '../../types';
 import { RandomGenerator } from '../../utils/rng';
 import { TalentRelationship } from '../../types/relationship.types';
 import { Clique } from '../../types/clique.types';
+import { getContractsByProjectId } from '../../utils';
 
 /**
  * Organic Event Enhancer
@@ -12,12 +13,8 @@ import { Clique } from '../../types/clique.types';
 const PRODUCTION_STATES = ['IN_PRODUCTION', 'production', 'filming'];
 
 function getProjectTalentIds(state: GameState, projectId: string): string[] {
-  const contractsMap = state.entities.contracts || {};
-  const ids: string[] = [];
-  for (const cId in contractsMap) {
-    if (contractsMap[cId].projectId === projectId) ids.push(contractsMap[cId].talentId);
-  }
-  return ids;
+  const contracts = getContractsByProjectId(state.entities.contractsByProjectId, state.entities.contracts, projectId);
+  return contracts.map(c => c.talentId);
 }
 
 function getRelationships(state: GameState): TalentRelationship[] {

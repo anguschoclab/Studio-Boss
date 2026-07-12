@@ -6,6 +6,7 @@ import {
   AWARD_CONFIGS
 } from '../../data/awards.data';
 import { calculateNominationWeight } from './NominationCalculator';
+import { getContractsByProjectId } from '@/engine/utils';
 
 export function runAwardsCeremony(state: GameState, currentWeek: number, year: number, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
@@ -18,15 +19,6 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
 
   const eligibleFilm: Project[] = [];
   const eligibleTv: Project[] = [];
-  const projectToContractsMap = new Map<string, Contract[]>();
-
-  const contracts = state.entities.contracts || {};
-  for (const id in contracts) {
-    const c = contracts[id];
-    const list = projectToContractsMap.get(c.projectId) || [];
-    list.push(c);
-    projectToContractsMap.set(c.projectId, list);
-  }
 
   // ⚡ Bolt: Populate all eligible projects from releasedProjectIds index, avoiding full scan
   const releasedIds = state.entities.releasedProjectIds;
@@ -60,7 +52,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       
       if (config.evaluator && !config.evaluator(p)) continue;
       
-      const projectContracts = projectToContractsMap.get(p.id) || [];
+      const projectContracts = getContractsByProjectId(state.entities.contractsByProjectId, state.entities.contracts, p.id);
       const attachedTalent = projectContracts
         .map(c => state.entities.talents[c.talentId])
         .filter(Boolean);

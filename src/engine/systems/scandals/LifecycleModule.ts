@@ -1,4 +1,5 @@
 import { GameState, StateImpact } from '@/engine/types';
+import { getContractsByTalentId } from '../../utils';
 
 export function advanceScandals(state: GameState): StateImpact[] {
   const impacts: StateImpact[] = [];
@@ -17,13 +18,12 @@ export function advanceScandals(state: GameState): StateImpact[] {
   }
   
   const contractsDict = state.entities.contracts || {};
+  const talentIdx = state.entities.contractsByTalentId || {};
   const penalizedProjectIds = new Set<string>();
-  for (const id in contractsDict) {
-    if (Object.prototype.hasOwnProperty.call(contractsDict, id)) {
-      const c = contractsDict[id];
-      if (activeScandalTalent.has(c.talentId)) {
-        penalizedProjectIds.add(c.projectId);
-      }
+  for (const talentId of activeScandalTalent) {
+    const talentContracts = getContractsByTalentId(talentIdx, contractsDict, talentId);
+    for (const c of talentContracts) {
+      penalizedProjectIds.add(c.projectId);
     }
   }
   
