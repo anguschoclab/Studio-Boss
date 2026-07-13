@@ -43,7 +43,6 @@ bun_output.txt
 *_results.json
 *-results.json
 !package.json
-!package-lock.json
 !tsconfig*.json
 
 # Maintenance scripts and root-level benchmarks
