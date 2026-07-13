@@ -15,6 +15,20 @@ describe("Lockfile hygiene", () => {
     expect(parsed.lockfileVersion).toBeDefined();
   });
 
+  it("bun.lock does not contain private registry URLs", () => {
+    const content = readFileSync(join(ROOT, "bun.lock"), "utf-8");
+    expect(content).not.toContain("artifactory.ubisoft.org");
+  });
+
+  it("bun.lock only uses the public npm registry", () => {
+    const content = readFileSync(join(ROOT, "bun.lock"), "utf-8");
+    const matches = content.matchAll(/"(https?:\/\/[^"]+)"/g);
+    for (const [, url] of matches) {
+      if (url.startsWith("file://")) continue;
+      expect(url).toMatch(/^https:\/\/registry\.npmjs\.org\//);
+    }
+  });
+
   it("bun.lockb does NOT exist", () => {
     expect(existsSync(join(ROOT, "bun.lockb"))).toBe(false);
   });
@@ -25,6 +39,13 @@ describe("Lockfile hygiene", () => {
 
   it("pnpm-lock.yaml does NOT exist", () => {
     expect(existsSync(join(ROOT, "pnpm-lock.yaml"))).toBe(false);
+  });
+
+  it("bunfig.toml exists and pins the public registry", () => {
+    const bunfigPath = join(ROOT, "bunfig.toml");
+    expect(existsSync(bunfigPath)).toBe(true);
+    const bunfig = readFileSync(bunfigPath, "utf-8");
+    expect(bunfig).toMatch(/registry\s*=\s*"https:\/\/registry\.npmjs\.org\/"/);
   });
 });
 

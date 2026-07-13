@@ -25,16 +25,13 @@ This project is built using a modern frontend stack:
 - **TypeScript** - Type safety
 - **React + Vite** - UI Library and Build tool
 - **TanStack Router** - Navigation
-- **Zustand + Immer** - State Management
+- **Zustand** - State Management
 - **Zod** - Schema validation
-- **Web Workers + Comlink** - Multithreading
-- **Dexie** - IndexedDB wrapper
+- **Web Workers** - Multithreading
 - **Tailwind CSS + Radix** - Styling and Headless UI
 - **Framer Motion** - Animations
-- **Ink.js** - Interactive narrative
 - **Lucide** - Icons
-- **howler.js** - Audio
-- **Recharts** - Charts (with visx for advanced dashboards)
+- **Recharts** - Charts
 - **Vitest + React Testing Library** - Unit and Integration Testing
 - **Playwright** - End-to-End Testing
 
