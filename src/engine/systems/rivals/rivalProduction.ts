@@ -11,12 +11,9 @@ import { BUDGET_TIERS } from "@/engine/data/budgetTiers";
 
 const ARCHETYPE_SPAWN_CHANCE: Record<string, number> = {
   major: 0.5,
+  "mid-tier": 0.3,
   indie: 0.2,
-  streamer: 0.35,
-  prestige: 0.3,
 };
-
-const TIER_KEYS: BudgetTierKey[] = ["low", "mid", "high", "blockbuster"];
 
 const GENRES = ["Action", "Drama", "Comedy", "Horror", "Sci-Fi", "Romance", "Thriller"];
 const FORMATS: ProjectType[] = ["FILM", "SERIES"];
@@ -29,7 +26,7 @@ const FORMATS: ProjectType[] = ["FILM", "SERIES"];
  * 2. Advances existing rival-owned projects through their phase lifecycle
  *    (development -> production -> released) so they eventually feed box office.
  *
- * Emits PROJECT_ADDED / PROJECT_UPDATED impacts only — never mutates state.
+ * Emits PROJECT_CREATED / PROJECT_UPDATED impacts only — never mutates state.
  */
 export function tickRivalProduction(state: GameState, rng: RandomGenerator): StateImpact[] {
   const rivalsObj = state.entities?.rivals || {};
@@ -47,7 +44,7 @@ export function tickRivalProduction(state: GameState, rng: RandomGenerator): Sta
     for (const pid in existing) {
       const project = existing[pid];
       if (project.ownerId !== rival.id) continue;
-      const advanced = advanceRivalProject(project, rng);
+      const advanced = advanceRivalProject(project);
       if (advanced) {
         impacts.push({
           type: "PROJECT_UPDATED",
@@ -106,7 +103,7 @@ function buildRivalProject(
   const type = FORMATS[Math.floor(rng.next() * FORMATS.length)];
   const id = `rival-${rival.id}-w${week}-${Math.floor(rng.next() * 1_000_000)}`;
 
-  return {
+  const base: Project = {
     id,
     title: `${rival.name} ${genre} ${tier}`,
     type,
@@ -127,10 +124,30 @@ function buildRivalProject(
     releaseWeek: null,
     ownerId: rival.id,
     reviewScore: 50,
+    activeCrisis: null,
+    momentum: 50,
+    progress: 0,
+    accumulatedCost: 0,
+    activeRoles: [],
+    scriptEvents: [],
+    scriptHeat: 50,
   } as unknown as Project;
+
+  if (type === "SERIES") {
+    (base as any).tvDetails = {
+      currentSeason: 1,
+      episodesOrdered: 10,
+      episodesCompleted: 0,
+      episodesAired: 0,
+      averageRating: 0,
+      status: "IN_DEVELOPMENT",
+    };
+  }
+
+  return base;
 }
 
-function advanceRivalProject(project: Project, rng: RandomGenerator): Project | null {
+function advanceRivalProject(project: Project): Project | null {
   if (project.state === "released") return null;
 
   const weeksInPhase = (project.weeksInPhase ?? 0) + 1;
