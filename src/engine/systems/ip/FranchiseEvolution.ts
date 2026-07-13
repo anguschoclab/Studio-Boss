@@ -10,9 +10,16 @@ export function calculateFranchiseEvolutionImpacts(
   rng: RandomGenerator
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const projects = Object.values(state.entities.projects);
+  const projects = state.entities.projects || {};
 
-  projects.forEach((project) => {
+  // ⚡ Bolt Optimization: Replace Object.values().forEach() with a direct for...in loop.
+  // By avoiding the allocation of an intermediate O(N) array of all project entities
+  // on every simulation week tick, this reduces garbage collection pressure significantly
+  // as the project pool grows to thousands of entities in the mid-to-late game.
+  for (const projectId in projects) {
+    if (!Object.prototype.hasOwnProperty.call(projects, projectId)) continue;
+
+    const project = projects[projectId];
     if (project.state === "released" && !project.franchiseId) {
       let franchiseId = project.franchiseId;
       const isBreakout = project.revenue > project.budget * 1.0;
@@ -98,7 +105,7 @@ export function calculateFranchiseEvolutionImpacts(
         }
       }
     }
-  });
+  }
 
   return impacts;
 }
