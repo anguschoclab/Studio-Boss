@@ -5,7 +5,7 @@
  * disk I/O using Origin Private File System (OPFS).
  */
 
-import { parseAndValidate } from './saveSchema';
+import { parseAndValidate } from "./saveSchema";
 
 self.onmessage = async (e: MessageEvent) => {
   const { type, slotId, state, requestId } = e.data;

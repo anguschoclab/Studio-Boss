@@ -11,11 +11,47 @@ const allDeps = new Set([
 ]);
 
 const NODE_BUILTINS = new Set([
-  "assert", "async_hooks", "buffer", "child_process", "cluster", "console", "constants",
-  "crypto", "dgram", "diagnostics_channel", "dns", "domain", "events", "fs", "http",
-  "http2", "https", "inspector", "module", "net", "os", "path", "perf_hooks", "process",
-  "punycode", "querystring", "readline", "repl", "stream", "string_decoder", "sys",
-  "timers", "tls", "trace_events", "tty", "url", "util", "v8", "vm", "wasi", "worker_threads",
+  "assert",
+  "async_hooks",
+  "buffer",
+  "child_process",
+  "cluster",
+  "console",
+  "constants",
+  "crypto",
+  "dgram",
+  "diagnostics_channel",
+  "dns",
+  "domain",
+  "events",
+  "fs",
+  "http",
+  "http2",
+  "https",
+  "inspector",
+  "module",
+  "net",
+  "os",
+  "path",
+  "perf_hooks",
+  "process",
+  "punycode",
+  "querystring",
+  "readline",
+  "repl",
+  "stream",
+  "string_decoder",
+  "sys",
+  "timers",
+  "tls",
+  "trace_events",
+  "tty",
+  "url",
+  "util",
+  "v8",
+  "vm",
+  "wasi",
+  "worker_threads",
   "zlib",
 ]);
 const BUN_BUILTINS = new Set(["bun", "bun:test"]);
@@ -24,11 +60,7 @@ function isBuiltin(name: string): boolean {
   return NODE_BUILTINS.has(name) || BUN_BUILTINS.has(name);
 }
 
-function walk(
-  dir: string,
-  predicate: (entry: string) => boolean,
-  cb: (file: string) => void
-) {
+function walk(dir: string, predicate: (entry: string) => boolean, cb: (file: string) => void) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     const full = join(dir, entry.name);
     if (entry.isDirectory()) {
@@ -43,8 +75,7 @@ function walk(
 function extractImports(content: string): string[] {
   const imports: string[] = [];
   // ESM imports and exports
-  const importRegex =
-    /(?:import|export)\s+(?:[^'"]*?\s+from\s+)?['"]([^'"./][^'"]*)['"]/g;
+  const importRegex = /(?:import|export)\s+(?:[^'"]*?\s+from\s+)?['"]([^'"./][^'"]*)['"]/g;
   // require() / dynamic import()
   const requireRegex = /(?:import|require)\s*\(\s*['"]([^'"./][^'"]*)['"]\s*\)/g;
   for (const m of content.matchAll(importRegex)) imports.push(m[1]);

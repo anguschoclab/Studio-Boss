@@ -177,9 +177,7 @@ describe("tickRivalProduction", () => {
       };
     }
 
-    const owned = Object.values(current.entities.projects).filter(
-      (p) => p.ownerId === "mid1"
-    );
+    const owned = Object.values(current.entities.projects).filter((p) => p.ownerId === "mid1");
     expect(owned.length).toBeGreaterThan(0);
   });
 
@@ -245,7 +243,13 @@ describe("tickRivalProduction", () => {
     let updated = (updates[0].payload as any).update as Project;
     expect(updated.state).toBe("development");
     expect(updated.weeksInPhase).toBe(1);
-    state = { ...state, entities: { ...state.entities, projects: { ...state.entities.projects, [updated.id]: updated } } };
+    state = {
+      ...state,
+      entities: {
+        ...state.entities,
+        projects: { ...state.entities.projects, [updated.id]: updated },
+      },
+    };
 
     // Week 2: development complete → production
     impacts = tickRivalProduction(state, rng);
@@ -253,7 +257,13 @@ describe("tickRivalProduction", () => {
     updated = (updates[0].payload as any).update as Project;
     expect(updated.state).toBe("production");
     expect(updated.weeksInPhase).toBe(0);
-    state = { ...state, entities: { ...state.entities, projects: { ...state.entities.projects, [updated.id]: updated } } };
+    state = {
+      ...state,
+      entities: {
+        ...state.entities,
+        projects: { ...state.entities.projects, [updated.id]: updated },
+      },
+    };
 
     // Week 3: production week 1
     impacts = tickRivalProduction(state, rng);
@@ -261,7 +271,13 @@ describe("tickRivalProduction", () => {
     updated = (updates[0].payload as any).update as Project;
     expect(updated.state).toBe("production");
     expect(updated.weeksInPhase).toBe(1);
-    state = { ...state, entities: { ...state.entities, projects: { ...state.entities.projects, [updated.id]: updated } } };
+    state = {
+      ...state,
+      entities: {
+        ...state.entities,
+        projects: { ...state.entities.projects, [updated.id]: updated },
+      },
+    };
 
     // Week 4: production complete → released
     impacts = tickRivalProduction(state, rng);
@@ -308,9 +324,7 @@ describe("tickRivalProduction", () => {
 
     const impacts = tickRivalProduction(state, rng);
     const updates = impacts.filter(
-      (im: any) =>
-        im.type === "PROJECT_UPDATED" &&
-        (im.payload as any).projectId === "rival-r1-rel"
+      (im: any) => im.type === "PROJECT_UPDATED" && (im.payload as any).projectId === "rival-r1-rel"
     );
     expect(updates.length).toBe(0);
   });

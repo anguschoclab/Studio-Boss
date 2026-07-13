@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { initializeGame } from '../../engine/core/gameInit';
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { initializeGame } from "../../engine/core/gameInit";
 
 // Mock the OPFS APIs that saveWorker uses
 function createMockAccessHandle(fileContent: string) {
@@ -28,59 +28,59 @@ function createMockRoot(fileContent: string) {
   };
 }
 
-describe('saveWorker handleLoad with validation', () => {
+describe("saveWorker handleLoad with validation", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.resetModules();
   });
 
-  it('returns parsed + validated state for valid save data', async () => {
-    const validState = initializeGame('Worker Test Studio', 'indie');
+  it("returns parsed + validated state for valid save data", async () => {
+    const validState = initializeGame("Worker Test Studio", "indie");
     const fileContent = JSON.stringify(validState);
 
     const mockRoot = createMockRoot(fileContent);
     (navigator as any).storage = { getDirectory: vi.fn().mockResolvedValue(mockRoot) };
 
     try {
-      const { handleLoad } = await import('../../persistence/saveWorker');
+      const { handleLoad } = await import("../../persistence/saveWorker");
       const result = await handleLoad(0);
       expect(result).toBeTruthy();
-      expect((result as any).studio.name).toBe('Worker Test Studio');
+      expect((result as any).studio.name).toBe("Worker Test Studio");
     } finally {
       delete (navigator as any).storage;
     }
   });
 
-  it('throws error for corrupt JSON in OPFS', async () => {
-    const fileContent = '{corrupt json!!!';
+  it("throws error for corrupt JSON in OPFS", async () => {
+    const fileContent = "{corrupt json!!!";
 
     const mockRoot = createMockRoot(fileContent);
     (navigator as any).storage = { getDirectory: vi.fn().mockResolvedValue(mockRoot) };
 
     try {
-      const { handleLoad } = await import('../../persistence/saveWorker');
+      const { handleLoad } = await import("../../persistence/saveWorker");
       await expect(handleLoad(0)).rejects.toThrow();
     } finally {
       delete (navigator as any).storage;
     }
   });
 
-  it('throws error for valid JSON but invalid save shape', async () => {
-    const fileContent = JSON.stringify({ hello: 'world', not: 'a save file' });
+  it("throws error for valid JSON but invalid save shape", async () => {
+    const fileContent = JSON.stringify({ hello: "world", not: "a save file" });
 
     const mockRoot = createMockRoot(fileContent);
     (navigator as any).storage = { getDirectory: vi.fn().mockResolvedValue(mockRoot) };
 
     try {
-      const { handleLoad } = await import('../../persistence/saveWorker');
+      const { handleLoad } = await import("../../persistence/saveWorker");
       await expect(handleLoad(0)).rejects.toThrow();
     } finally {
       delete (navigator as any).storage;
     }
   });
 
-  it('strips prototype pollution payload from OPFS file', async () => {
-    const validState = initializeGame('Proto Test', 'mid-tier');
+  it("strips prototype pollution payload from OPFS file", async () => {
+    const validState = initializeGame("Proto Test", "mid-tier");
     // Inject __proto__ pollution into the JSON string directly
     const fileContent = JSON.stringify(validState).replace(
       '"week":1,',
@@ -91,11 +91,11 @@ describe('saveWorker handleLoad with validation', () => {
     (navigator as any).storage = { getDirectory: vi.fn().mockResolvedValue(mockRoot) };
 
     try {
-      const { handleLoad } = await import('../../persistence/saveWorker');
+      const { handleLoad } = await import("../../persistence/saveWorker");
       const result = await handleLoad(0);
       expect(result).toBeTruthy();
-      expect(Object.keys(result as any)).not.toContain('__proto__');
-      expect((result as any).hasOwnProperty('__proto__')).toBe(false);
+      expect(Object.keys(result as any)).not.toContain("__proto__");
+      expect((result as any).hasOwnProperty("__proto__")).toBe(false);
       expect((Object.prototype as any).polluted).toBeUndefined();
     } finally {
       delete (navigator as any).storage;
