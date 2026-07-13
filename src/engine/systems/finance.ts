@@ -250,7 +250,7 @@ export function calculateWeeklyCosts(projects: Project[]): number {
   return production + marketing + overhead;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 export function calculateWeeklyRevenue(
   projects: Project[],
   buyers: Buyer[] = [],

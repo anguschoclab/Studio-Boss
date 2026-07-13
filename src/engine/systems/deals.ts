@@ -21,7 +21,7 @@ export function evaluateFirstLookDeal(talent: Talent, state: GameState): boolean
   return rand() * 100 <= acceptanceChance;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 export function offerFirstLookDeal(
   state: GameState,
   talentId: string,
@@ -76,7 +76,7 @@ export function advanceDeals(deals: FirstLookDeal[]): StateImpact[] {
   return [];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 export function packageProject(
   project: Project,
   _talentIds?: string[],
