@@ -38,10 +38,10 @@ export const TalentModal = () => {
   );
 
   const agencies = useMemo(
-    () => gameState?.industry.agencies || [],
+    () => Object.values(gameState?.industry.agencies || {}),
     [gameState?.industry.agencies]
   );
-  const agents = useMemo(() => gameState?.industry.agents || [], [gameState?.industry.agents]);
+  const agents = useMemo(() => Object.values(gameState?.industry.agents || {}), [gameState?.industry.agents]);
   const agency = useMemo(() => agencies.find((a) => a.id === talent?.agencyId), [agencies, talent]);
   const agent = useMemo(() => agents.find((a) => a.id === talent?.agentId), [agents, talent]);
 

@@ -87,6 +87,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             value={searchValue || ""}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={searchPlaceholder}
+            aria-label={searchPlaceholder || "Search"}
             className={cn(
               "w-full pl-12 pr-12 py-3",
               "bg-white/5 border border-white/10 rounded-none",
@@ -98,6 +99,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           {searchValue && (
             <button
               onClick={() => onSearchChange("")}
+              aria-label="Clear search"
               className={cn(
                 "absolute right-3 top-1/2 -translate-y-1/2",
                 "p-2 rounded-none",
@@ -119,6 +121,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               key={filter.key}
               value={filter.value}
               onChange={(e) => filter.onChange(e.target.value)}
+              aria-label={`Filter by ${filter.label}`}
               className={cn(
                 "px-4 py-3",
                 "bg-white/5 border border-white/10 rounded-none",
@@ -145,6 +148,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
         <select
           value={sortValue}
           onChange={(e) => onSortChange(e.target.value)}
+          aria-label="Sort by"
           className={cn(
             "px-4 py-3",
             "bg-white/5 border border-white/10 rounded-none",

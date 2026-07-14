@@ -12,8 +12,8 @@ describe("TalentPanel", () => {
       const state = {
         gameState: {
           week: 1,
-          industry: {
-            talentPool: {
+          entities: {
+            talents: {
               t1: {
                 id: "t1",
                 name: "Tom Hanks",
@@ -57,6 +57,13 @@ describe("TalentPanel", () => {
               { id: "a1", name: "CAA" },
               { id: "a2", name: "WME" },
             ],
+          },
+          industry: {
+            agencies: {
+              a1: { id: "a1", name: "CAA" },
+              a2: { id: "a2", name: "WME" },
+            },
+            agents: {},
           },
         },
         isBookmarked: vi.fn(() => false),
