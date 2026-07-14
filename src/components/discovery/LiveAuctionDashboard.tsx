@@ -35,8 +35,8 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({
   const isPlayerWinning =
     opp.highestBidderId === playerStudioId || opp.highestBidderId === "PLAYER";
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const playerBid = opp.bids[playerStudioId || "PLAYER"]?.amount || 0;
-  const highestBidder = isPlayerWinning ? { name: "YOU" } : rivalsMap[opp.highestBidderId];
+  const playerBid = opp.bids[(playerStudioId || "PLAYER") as string]?.amount || 0;
+  const highestBidder = isPlayerWinning ? { name: "YOU" } : rivalsMap[opp.highestBidderId as string];
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [bidAmount, setBidAmount] = useState(currentHighest + 1_000_000);

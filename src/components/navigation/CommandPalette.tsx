@@ -27,7 +27,7 @@ interface CommandItem {
   id: string;
   title: string;
   subtitle?: string;
-  icon: React.ComponentType<{ className?: string; size?: number | string }>;
+  icon: React.ComponentType<{ className?: string; size?: number | string; strokeWidth?: number | string }>;
   shortcut?: string;
   action: () => void;
   section: string;

@@ -71,7 +71,7 @@ export const CompetitorComparison: React.FC<CompetitorComparisonProps> = ({ clas
     const maxProjects =
       Math.max(
         Object.keys(gameState.entities.projects).length,
-        ...rivals.map((r) => r.projectIds?.length || 0)
+        ...rivals.map((r) => Object.keys(r.projects || {}).length)
       ) || 1;
 
     return [
@@ -90,7 +90,7 @@ export const CompetitorComparison: React.FC<CompetitorComparisonProps> = ({ clas
         metric: "Projects",
         player: (Object.keys(gameState.entities.projects).length / maxProjects) * 100,
         avgRival:
-          (rivals.reduce((sum, r) => sum + (r.projectIds?.length || 0), 0) /
+          (rivals.reduce((sum, r) => sum + Object.keys(r.projects || {}).length, 0) /
             (rivals.length || 1) /
             maxProjects) *
           100,

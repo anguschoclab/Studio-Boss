@@ -21,7 +21,6 @@ const TIMELINE_STEPS = [
 export const PostProductionModal: React.FC = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
   const updateProject = useGameStore((s) => s.updateProject);
-  // @ts-expect-error - addFunds might not be typed
   const addFunds = useGameStore((s) => s.addFunds);
   const gameState = useGameStore((s) => s.gameState);
 

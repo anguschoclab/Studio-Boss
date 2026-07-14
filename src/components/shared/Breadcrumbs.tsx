@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 interface BreadcrumbItem {
   label: string;
   href?: string;
-  icon?: React.ComponentType<{ className?: string; size?: number }>;
+  icon?: React.ComponentType<{ className?: string; size?: number; strokeWidth?: number | string }>;
   onClick?: () => void;
 }
 

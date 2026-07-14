@@ -10,8 +10,6 @@ import { Project, GameState, AwardBody, MarketingCampaign } from "@/engine/types
 import { type ProjectId, type StudioId, type TalentId } from "@/engine/types/shared.types";
 
 export interface ProjectEventsSlice {
-  resolveProjectCrisis: (projectId: ProjectId, optionIndex: number) => void;
-  submitToFestival: (projectId: ProjectId, festivalBody: AwardBody) => void;
   lockMarketingCampaign: (projectId: ProjectId, level: "none" | "basic" | "blockbuster") => void;
   releaseDirectorsCutAction: (projectId: ProjectId) => void;
   resolveMerger: (
@@ -26,32 +24,6 @@ export const createProjectEventsSlice: StateCreator<GameStore, [], [], ProjectEv
   set,
   get
 ) => ({
-  resolveProjectCrisis: (projectId, optionIndex) => {
-    const state = get().gameState;
-    if (!state) return;
-
-    const project = state.entities.projects[projectId as ProjectId];
-    if (!project) return;
-
-    const rng = new RandomGenerator(state.rngState ?? 0);
-    const impact = resolveCrisis(state, project.id, optionIndex);
-    const newState = applyStateImpact(state, impact);
-    newState.rngState = rng.getState();
-    set({ gameState: newState });
-  },
-
-  submitToFestival: (projectId, festivalBody) => {
-    set((s) => {
-      if (!s.gameState) return s;
-      const rng = new RandomGenerator(s.gameState.rngState ?? 0);
-      const impact = festivalsEngine.submitToFestival(s.gameState, projectId, festivalBody);
-      if (!impact) return s;
-      const newState = applyStateImpact(s.gameState, impact);
-      newState.rngState = rng.getState();
-      return { gameState: newState };
-    });
-  },
-
   releaseDirectorsCutAction: (projectId) => {
     set((s) => {
       const state = s.gameState;

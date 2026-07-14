@@ -11,7 +11,24 @@ import { Badge } from "@/components/ui/badge";
 import { useGameStore } from "@/store/gameStore";
 import { useUIStore } from "@/store/uiStore";
 import { Film, Zap, DollarSign, TrendingUp, X } from "lucide-react";
-import { RebootProposal } from "@/engine/systems/ip/ipRebootEngine";
+
+interface RebootProposal {
+  proposal: {
+    title: string;
+    format: string;
+    genre: string;
+    budgetTier: string;
+    budget: number;
+    flavor?: string;
+    parentProjectId?: string;
+  };
+  assetTitle: string;
+  assetTier: string;
+  estimatedBuzz: number;
+  developmentCostMultiplier: number;
+  angle: "reimagining" | "legacy_sequel" | "prequel" | "reboot";
+  logline: string;
+}
 
 const ANGLE_LABELS: Record<RebootProposal["angle"], string> = {
   reimagining: "Creative Reimagining",
@@ -55,7 +72,7 @@ export const RebootOpportunityModal: React.FC = () => {
       title: proposal.title,
       format: (proposal.format ?? "film") as "film",
       genre: proposal.genre ?? "Drama",
-      budgetTier: proposal.budgetTier ?? "high",
+      budgetTier: (proposal.budgetTier ?? "high") as any,
       targetAudience: "General",
       flavor: proposal.flavor ?? logline,
       parentProjectId: proposal.parentProjectId,

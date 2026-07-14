@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { useGameStore } from "@/store/gameStore";
 import { MarketingAngle, MarketingCampaign } from "@/engine/types";
 import { Button } from "@/components/ui/button";
+import { Zap } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import {
   Select,
@@ -40,7 +41,7 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
     project?.marketingCampaign?.foreignBudget || 0
   );
   const [angle, setAngle] = useState<MarketingAngle>(
-    project?.marketingCampaign?.primaryAngle || "SELL THE STORY"
+    project?.marketingCampaign?.primaryAngle || "SELL_THE_STORY"
   );
   const [secondaryAngle, setSecondaryAngle] = useState<MarketingAngle | undefined>(
     project?.marketingCampaign?.secondaryAngle

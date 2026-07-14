@@ -30,9 +30,10 @@ const statusColors: Record<ProjectStatus, { bg: string; border: string; text: st
   marketing: { bg: "bg-purple-500/10", border: "border-purple-500/30", text: "text-purple-400" },
   released: { bg: "bg-emerald-500/10", border: "border-emerald-500/30", text: "text-emerald-400" },
   post_release: { bg: "bg-slate-500/10", border: "border-slate-500/30", text: "text-slate-400" },
+  post_production: { bg: "bg-indigo-500/10", border: "border-indigo-500/30", text: "text-indigo-400" },
+  completed: { bg: "bg-teal-500/10", border: "border-teal-500/30", text: "text-teal-400" },
   archived: { bg: "bg-muted/10", border: "border-muted/20", text: "text-muted-foreground" },
   turnaround: { bg: "bg-red-500/10", border: "border-red-500/30", text: "text-red-400" },
-  pilot: { bg: "bg-cyan-500/10", border: "border-cyan-500/30", text: "text-cyan-400" },
   shopping: { bg: "bg-pink-500/10", border: "border-pink-500/30", text: "text-pink-400" },
 };
 

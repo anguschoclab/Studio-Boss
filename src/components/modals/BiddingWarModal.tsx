@@ -2,6 +2,7 @@ import React from "react";
 import { useUIStore } from "@/store/uiStore";
 import { useGameStore } from "@/store/gameStore";
 import { formatMoney } from "@/engine/utils";
+import { StudioId } from "@/engine/types/shared.types";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Swords, Building2, DollarSign, AlertTriangle, Shield } from "lucide-react";
@@ -29,12 +30,12 @@ export const BiddingWarModal: React.FC = () => {
   };
 
   const handleAccept = () => {
-    resolveMerger(true, attackerId, targetId, offerAmount);
+    resolveMerger(true, attackerId as StudioId, targetId as StudioId, offerAmount);
     resolveCurrentModal();
   };
 
   const handleFight = () => {
-    resolveMerger(false, attackerId, targetId, offerAmount);
+    resolveMerger(false, attackerId as StudioId, targetId as StudioId, offerAmount);
     resolveCurrentModal();
   };
 

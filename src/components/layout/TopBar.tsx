@@ -18,7 +18,7 @@ export const TopBar = () => {
   if (!gameState) return null;
 
   const cash = gameState.finance.cash;
-  const history = gameState.finance.history || [];
+  const history = gameState.finance.weeklyHistory || [];
   const lastWeekCash = history.length > 0 ? history[history.length - 1].cash : cash;
   const cashDelta = cash - lastWeekCash;
 

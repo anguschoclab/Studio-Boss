@@ -31,7 +31,7 @@ export function useAgencyMap(): Map<string, Agency> {
 
   return useMemo(() => {
     const agencies = gameState?.industry?.agencies || [];
-    const agenciesArray = Array.isArray(agencies) ? agencies : Object.values(agencies);
-    return new Map(agenciesArray.map((a: Agency) => [a.id, a]));
+    const agenciesArray: Agency[] = Array.isArray(agencies) ? agencies : Object.values(agencies as Record<string, Agency>);
+    return new Map(agenciesArray.map((a: Agency) => [a.id, a] as [string, Agency]));
   }, [gameState?.industry?.agencies]);
 }

@@ -67,7 +67,6 @@ const STRATEGY_CARDS: StrategyCardData[] = [
 
 export const ReleaseStrategyModal: React.FC = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
-  // @ts-expect-error - setReleaseStrategy might not be strongly typed
   const setReleaseStrategy = useGameStore((s) => s.setReleaseStrategy);
   const gameState = useGameStore((s) => s.gameState);
 
@@ -202,7 +201,7 @@ export const ReleaseStrategyModal: React.FC = () => {
         {/* Description of selected */}
         {selected && (
           <div className="p-3 rounded-none bg-card/60 border border-border/40 text-xs text-muted-foreground">
-            {getReleaseStrategyEffect(selected, project ?? {}).description}
+            {getReleaseStrategyEffect(selected, project as any).description}
           </div>
         )}
 

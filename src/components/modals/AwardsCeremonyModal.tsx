@@ -101,7 +101,7 @@ export const AwardsCeremonyModal = () => {
                         {award.category}
                       </span>
                       <span className="text-lg font-bold text-white leading-tight">
-                        {getProjectTitle(award.projectId)}
+                        {getProjectTitle(award.id)}
                       </span>
                     </motion.div>
                   )

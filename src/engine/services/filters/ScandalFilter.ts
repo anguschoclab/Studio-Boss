@@ -12,7 +12,7 @@ export const ScandalFilter: WeekFilter = {
   name: "ScandalFilter",
 
   execute(state: GameState, context: TickContext): void {
-    context.impacts.push(...generateScandals(state, context.rng));
+    context.impacts.push(...generateScandals(state));
     context.impacts.push(...advanceScandals(state));
   },
 };
