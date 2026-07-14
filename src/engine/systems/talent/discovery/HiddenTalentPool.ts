@@ -78,7 +78,7 @@ export function discoverHiddenTalent(
     name: hiddenTalent.name,
     role: "actor",
     roles: ["actor"],
-    tier: 4, // Start as unknown
+    tier: "C_LIST", // Start as unknown
     demographics: {
       age: hiddenTalent.age,
       gender: rng.next() < 0.5 ? "MALE" : "FEMALE",

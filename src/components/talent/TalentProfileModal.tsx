@@ -28,13 +28,13 @@ export const TalentModal = () => {
   const currentWeek = gameState?.week ?? 1;
 
   const talent = useMemo(
-    () => (selectedTalentId ? gameState?.industry.talentPool?.[selectedTalentId] : null),
-    [gameState?.industry.talentPool, selectedTalentId]
+    () => (selectedTalentId ? gameState?.entities?.talents?.[selectedTalentId] ?? null : null),
+    [gameState?.entities?.talents, selectedTalentId]
   );
 
   const talentPool = useMemo(
-    () => Object.values(gameState?.industry.talentPool || {}),
-    [gameState?.industry.talentPool]
+    () => Object.values(gameState?.entities?.talents || {}),
+    [gameState?.entities?.talents]
   );
 
   const agencies = useMemo(

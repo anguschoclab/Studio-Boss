@@ -8,7 +8,7 @@ export function tickPilots(state: GameState, rng: RandomGenerator): StateImpact[
   const impacts: StateImpact[] = [];
   for (const key in state.entities.projects) {
     const project = state.entities.projects[key];
-    if (project.type !== "SERIES" || project.stage !== "pilot") continue;
+    if (project.type !== "SERIES" || (project as any).stage !== "pilot") continue;
 
     const weeksInPilot = (project.weeksInPhase || 0) + 1;
 
@@ -41,7 +41,7 @@ export function tickPilots(state: GameState, rng: RandomGenerator): StateImpact[
             category: "development",
             week: state.week,
           },
-        });
+        } as unknown as StateImpact);
       } else {
         impacts.push({
           type: "PROJECT_UPDATED",
@@ -59,7 +59,7 @@ export function tickPilots(state: GameState, rng: RandomGenerator): StateImpact[
             category: "cancellation",
             week: state.week,
           },
-        });
+        } as unknown as StateImpact);
       }
     }
   }

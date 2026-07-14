@@ -15,6 +15,7 @@ export interface WeeklyFinancialReport {
     production: number;
     marketing: number;
     overhead: number;
+    pacts?: number;
   };
   endingCash: number;
   netProfit: number;
@@ -73,6 +74,9 @@ export interface FinanceState {
   weeklyHistory: FinancialSnapshot[];
   marketState: MarketState;
 }
+
+export type Loan = LoanRecord;
+export type FinancialMarketState = MarketState;
 
 export interface NewsState {
   headlines: Headline[];
@@ -225,7 +229,7 @@ export interface FundsImpact extends BaseImpact {
 }
 export interface FundsDeductedImpact extends BaseImpact {
   type: "FUNDS_DEDUCTED";
-  payload: { amount: number };
+  payload?: { amount: number };
 }
 export interface ProjectCreatedImpact extends BaseImpact {
   type: "PROJECT_CREATED";
@@ -242,9 +246,11 @@ export type ProjectRemovedImpact = BaseImpact & {
 export type NewsImpact = BaseImpact & {
   type: "NEWS_ADDED";
   payload: {
+    id?: string;
     headline: string;
-    description: string;
+    description?: string;
     category?: import("./engine.types").HeadlineCategory;
+    publication?: string;
   };
 };
 export type TalentUpdateImpact = BaseImpact & { type: "TALENT_UPDATED"; payload: TalentUpdate };
@@ -290,7 +296,7 @@ export interface LedgerImpact extends BaseImpact {
 }
 export interface FinanceTransactionImpact extends BaseImpact {
   type: "FINANCE_TRANSACTION";
-  payload: { amount: number; description: string };
+  payload: { amount: number; description: string; targetId?: string };
 }
 export interface FinanceSnapshotImpact extends BaseImpact {
   type: "FINANCE_SNAPSHOT_ADDED";
@@ -302,11 +308,11 @@ export interface SyncMAFundsImpact extends BaseImpact {
 }
 export interface SystemTickImpact extends BaseImpact {
   type: "SYSTEM_TICK";
-  payload: { week?: number; tickCount?: number };
+  payload: { week?: number; tickCount?: number; __studioUpdate?: Record<string, unknown>; studioIdentity?: Record<string, unknown>; newAchievementId?: string };
 }
 export interface ModalTriggeredImpact extends BaseImpact {
   type: "MODAL_TRIGGERED";
-  payload: { modalType: string; priority: number; payload: any };
+  payload: { modalType: string; priority?: number; payload?: any; violationId?: string; projectId?: string; talentId?: string; options?: unknown[] };
 }
 export interface PilotGraduatedImpact extends BaseImpact {
   type: "PILOT_GRADUATED";
@@ -344,7 +350,7 @@ export interface TVRecommendationStateUpdatedImpact extends BaseImpact {
 export interface IndustryUpdateImpact extends BaseImpact {
   type: "INDUSTRY_UPDATE";
   payload: {
-    update: Record<string, unknown>;
+    update?: Record<string, unknown>;
     rival?: RivalUpdate;
     mergedRivalId?: string;
     acquirerId?: string;
@@ -355,99 +361,131 @@ export interface IndustryUpdateImpact extends BaseImpact {
 // Generic impact interfaces for typed impacts whose payloads are handled by their respective handler modules
 export interface AwardWonImpact extends BaseImpact {
   type: "AWARD_WON";
+  payload: { projectId: string; award: import("./project.types").Award };
 }
 export interface TalentAddedImpact extends BaseImpact {
   type: "TALENT_ADDED";
+  payload: { talent: import("./talent.types").Talent };
 }
 export interface TalentRemovedImpact extends BaseImpact {
   type: "TALENT_REMOVED";
+  payload: { talentId: string; causeOfRemoval?: string; deathType?: string; deathWeek?: number };
 }
 export interface CastingConstraintCheckedImpact extends BaseImpact {
   type: "CASTING_CONSTRAINT_CHECKED";
+  payload: { check: unknown; comfortLevel?: import("./casting.types").TalentComfortLevel; premiumRates?: import("./casting.types").ComfortPremiumRates };
 }
 export interface MedicalLeaveTriggeredImpact extends BaseImpact {
   type: "MEDICAL_LEAVE_TRIGGERED";
+  payload: { talentId: string; weeks: number };
 }
 export interface RelationshipFormedImpact extends BaseImpact {
   type: "RELATIONSHIP_FORMED";
+  payload: { key: string; relationship: import("./relationship.types").TalentRelationship };
 }
 export interface RelationshipUpdatedImpact extends BaseImpact {
   type: "RELATIONSHIP_UPDATED";
+  payload: { key?: string; relationship?: import("./relationship.types").TalentRelationship; relationshipId?: string };
 }
 export interface CliqueFormedImpact extends BaseImpact {
   type: "CLIQUE_FORMED";
+  payload: { cliqueId: string; clique: import("./clique.types").Clique };
 }
 export interface CliqueUpdatedImpact extends BaseImpact {
   type: "CLIQUE_UPDATED";
+  payload: { cliqueId: string; clique: import("./clique.types").Clique };
 }
 export interface ScreenplayNoteCreatedImpact extends BaseImpact {
   type: "SCREENPLAY_NOTE_CREATED";
+  payload: { note: import("./production.types").ScreenplayNote };
 }
 export interface ScreenplayNoteImplementedImpact extends BaseImpact {
   type: "SCREENPLAY_NOTE_IMPLEMENTED";
+  payload: { noteId: string; note: import("./production.types").ScreenplayNote };
 }
 export interface ProductionAdditionCreatedImpact extends BaseImpact {
   type: "PRODUCTION_ADDITION_CREATED";
+  payload: { addition: import("./production.types").ProductionAddition };
 }
 export interface CreditSceneCreatedImpact extends BaseImpact {
   type: "CREDIT_SCENE_CREATED";
+  payload: { scene: import("./production.types").CreditScene };
 }
 export interface CreditSceneUpdatedImpact extends BaseImpact {
   type: "CREDIT_SCENE_UPDATED";
+  payload: { scene: import("./production.types").CreditScene };
 }
 export interface TalkShowAppearanceCreatedImpact extends BaseImpact {
   type: "TALK_SHOW_APPEARANCE_CREATED";
+  payload: { appearance: import("./marketing.types").TalkShowAppearance };
 }
 export interface PhotoshootCreatedImpact extends BaseImpact {
   type: "PHOTOSHOOT_CREATED";
+  payload: { talentId?: string; photoshoot: import("./marketing.types").MagazinePhotoshoot };
 }
 export interface PressTourCreatedImpact extends BaseImpact {
   type: "PRESS_TOUR_CREATED";
+  payload: { tour: import("./marketing.types").PressTour; projectId?: string; notification?: string };
 }
 export interface BreakoutStarCreatedImpact extends BaseImpact {
   type: "BREAKOUT_STAR_CREATED";
+  payload: { breakoutId?: string; breakout: import("./discovery.types").BreakoutStar; notification?: string };
 }
 export interface BreakoutStarUpdatedImpact extends BaseImpact {
   type: "BREAKOUT_STAR_UPDATED";
+  payload: { breakoutId?: string; breakout: import("./discovery.types").BreakoutStar };
 }
 export interface GuestStarOpportunityImpact extends BaseImpact {
   type: "GUEST_STAR_OPPORTUNITY";
+  payload: { bookingId?: string; booking: import("./discovery.types").GuestStarBooking };
 }
 export interface GuestStarBookedImpact extends BaseImpact {
   type: "GUEST_STAR_BOOKED";
+  payload: { bookingId?: string; booking: import("./discovery.types").GuestStarBooking };
 }
 export interface DiscoveryStateUpdatedImpact extends BaseImpact {
   type: "DISCOVERY_STATE_UPDATED";
+  payload: { discovery: Partial<import("./discovery.types").DiscoveryState> };
 }
 export interface MergerOfferedImpact extends BaseImpact {
   type: "MERGER_OFFERED";
+  payload: { offer: import("./studio.types").MergerOffer };
 }
 export interface MergerResolvedImpact extends BaseImpact {
   type: "MERGER_RESOLVED";
+  payload: { offerId: string; accepted: boolean };
 }
 export interface FranchiseUpdatedImpact extends BaseImpact {
   type: "FRANCHISE_UPDATED";
+  payload: { franchiseId: string; update: Partial<import("./franchise.types").Franchise> };
 }
 export interface VaultAssetUpdatedImpact extends BaseImpact {
   type: "VAULT_ASSET_UPDATED";
+  payload: { assetId: string; update: Partial<import("./state.types").IPAsset> };
 }
 export interface FormatLicensedImpact extends BaseImpact {
   type: "FORMAT_LICENSED";
+  payload: { asset: import("./state.types").IPAsset };
 }
 export interface DealUpdatedImpact extends BaseImpact {
   type: "DEAL_UPDATED";
+  payload: { dealId?: string; action: "add" | "expire" | "terminate"; deal: import("./talent.types").TalentPact };
 }
 export interface CastingConstraintViolationImpact extends BaseImpact {
   type: "CASTING_CONSTRAINT_VIOLATION";
+  payload: { violation: unknown; notification: string };
 }
 export interface CastingPremiumDemandImpact extends BaseImpact {
   type: "CASTING_PREMIUM_DEMAND";
+  payload: { talentId: string; projectId: string; requirement: unknown; requestedPremium: number; notification: string };
 }
 export interface CastingAlternativeSuggestedImpact extends BaseImpact {
   type: "CASTING_ALTERNATIVE_SUGGESTED";
+  payload: { projectId: string; originalTalentId: string; alternativeTalentIds: string[]; requirement: unknown };
 }
 export interface ContractAddedImpact extends BaseImpact {
   type: "CONTRACT_ADDED";
+  payload: { contract: import("./talent.types").Contract };
 }
 
 export type StateImpact =

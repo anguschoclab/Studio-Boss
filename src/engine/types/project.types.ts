@@ -43,6 +43,7 @@ export interface StreamingViewershipHistory {
   startWeek: number;
   totalHoursWatched: number;
   peakViewers: number;
+  peakWeek?: number;
   completionRate: number;
   entries: StreamingViewershipEntry[];
 }
@@ -57,6 +58,7 @@ export interface ScriptMetrics {
   commercialViability: number;
   trend: "improving" | "stable" | "declining";
   lastCalculatedWeek: number;
+  overallScore?: number;
 }
 
 export type MarketingAngle =
@@ -103,14 +105,17 @@ export type ProjectStatus =
   | "development"
   | "needs_greenlight"
   | "pitching"
+  | "shopping"
+  | "turnaround"
   | "production"
   | "post_production"
   | "marketing"
   | "released"
   | "post_release"
+  | "completed"
   | "archived";
 export type ProjectFormat = "film" | "tv" | "unscripted";
-export type BudgetTierKey = "low" | "mid" | "high" | "blockbuster";
+export type BudgetTierKey = "indie" | "low" | "mid" | "high" | "blockbuster";
 
 export type TvFormatKey =
   | "sitcom"
@@ -367,8 +372,60 @@ export type ProjectContractType = "upfront" | "deficit" | "standard";
 export type MandateType =
   "sci-fi" | "comedy" | "drama" | "budget_freeze" | "broad_appeal" | "prestige";
 
-export type ProjectRating = "G" | "PG" | "PG-13" | "R" | "NC-17" | "Unrated";
-export type ContentFlag = "violence" | "profanity" | "nudity" | "gore" | "political";
+export type ProjectRating = "G" | "PG" | "PG-13" | "R" | "NC-17" | "Unrated" | "TV-Y" | "TV-G" | "TV-PG" | "TV-14" | "TV-MA";
+export type FilmRating = "G" | "PG" | "PG-13" | "R" | "NC-17" | "Unrated";
+export type TvRating = "TV-Y" | "TV-G" | "TV-PG" | "TV-14" | "TV-MA";
+export type ContentFlag =
+  | "violence"
+  | "profanity"
+  | "nudity"
+  | "gore"
+  | "political"
+  | "sexual_content"
+  | "drug_use"
+  | "lgbtq_themes"
+  | "supernatural"
+  | "religious"
+  | "gambling";
+export type RatingMarket = "us" | "uk" | "europe" | "china" | "india" | "latam" | "middleeast" | "apac";
+
+export interface RegionalRating {
+  market: RatingMarket;
+  rating: ProjectRating;
+  isBanned: boolean;
+  restrictionLevel: "none" | "major" | "banned";
+}
+
+export interface RatingEconomics {
+  theaterAccessPct: number;
+  audienceReachMultiplier: number;
+  merchMultiplier: number;
+  awardsPrestigeBonus: number;
+  streamingPremium: number;
+}
+
+export interface RatingCut {
+  type: string;
+  rating: ProjectRating;
+  contentFlags: ContentFlag[];
+  buzzCost: number;
+  revenueMultiplier: number;
+}
+
+export type CriticConsensus =
+  | "universal acclaim"
+  | "generally favorable"
+  | "mixed"
+  | "generally unfavorable"
+  | "overwhelming dislike";
+
+export interface Review {
+  criticName: string;
+  score: number;
+  consensus: CriticConsensus;
+  publication: string;
+  quote: string;
+}
 
 export type DemographicGroup = "gen-z" | "millennial" | "gen-x" | "boomer";
 export type AudienceQuadrant =
@@ -537,6 +594,33 @@ export interface ProjectBase {
   loanId?: string;
   // Post-production director's cut notification flag
   directorsCutNotified?: boolean;
+
+  // Reception & quality
+  reception?: { metaScore: number; criticScore?: number; audienceScore?: number; consensus?: string; isCultPotential?: boolean; status?: string };
+  quality?: number;
+
+  // Regional ratings
+  regionalRatings?: RegionalRating[];
+
+  // Streaming viewership
+  streamingViewership?: StreamingViewershipHistory[];
+
+  // Shopping / distribution
+  shoppingExpiresWeek?: number;
+  estimatedWindow?: { start: number; end: number };
+  awareness?: number;
+
+  // Director's cut system
+  availableCuts?: RatingCut[];
+  activeCut?: string;
+
+  // Attached talent (used on Project union)
+  attachedTalentIds?: string[];
+
+  // Scripted fields accessed on Project union
+  scriptHeat?: number;
+  scriptEvents?: ScriptEvent[];
+  activeRoles?: CharacterArchetype[];
 }
 
 export interface ScriptedProject extends ProjectBase {
@@ -603,6 +687,7 @@ export interface GenreTrend {
   heat: number; // 0-100
   direction: TrendDirection;
   weeksRemaining: number;
+  week?: number;
 }
 
 export type FestivalSubmissionStatus =

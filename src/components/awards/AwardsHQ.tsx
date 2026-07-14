@@ -111,7 +111,7 @@ export const AwardsHQ: React.FC = () => {
             </div>
           ) : (
             eligibleProjects.map((project) => {
-              const campaign = gameState.studio.activeCampaigns?.[project.id];
+              const campaign = gameState.studio.activeCampaigns?.[project.id] as { buzzBonus?: number } | undefined;
               return (
                 <div
                   key={project.id}

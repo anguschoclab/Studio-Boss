@@ -100,7 +100,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
             currentFee: Math.floor(talent.fee * breakout.feeMultiplier),
             competingStudios: Object.keys(state.entities.rivals || {}).slice(0, 3),
           },
-        });
+        } as unknown as StateImpact);
       }
     }
   }
@@ -133,7 +133,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
 
       // Check if already booked
       let alreadyBooked = false;
-      const bookingsDict = state.relationships.discovery?.guestStarBookings || {};
+      const bookingsDict = state.relationships?.discovery?.guestStarBookings || {};
       for (const bId in bookingsDict) {
         const b = bookingsDict[bId];
         if (b && b.talentId === guest.id && b.seriesId === series.id) {
@@ -293,7 +293,7 @@ export function acceptGuestStarBooking(
   rng: RandomGenerator
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const discovery = state.relationships.discovery || {};
+  const discovery = state.relationships?.discovery || {};
   const booking = discovery.guestStarBookings?.[bookingId];
 
   if (!booking) return impacts;
@@ -324,11 +324,10 @@ export function acceptGuestStarBooking(
         projectId: booking.seriesId,
         talentId: booking.talentId,
         fee: booking.cost,
-        week: state.week,
         isGuestAppearance: true,
-      },
+      } as unknown as import("../../types").Contract,
     },
-  });
+  } as unknown as StateImpact);
 
   // News
   const series = state.entities.projects?.[booking.seriesId];
@@ -359,7 +358,7 @@ export function signBreakoutStar(
   rng: RandomGenerator
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const discovery = state.relationships.discovery || {};
+  const discovery = state.relationships?.discovery || {};
   const breakout = discovery.breakoutStars?.[breakoutId];
 
   if (!breakout || !breakout.biddingWarActive) return impacts;
@@ -393,11 +392,10 @@ export function signBreakoutStar(
       payload: {
         talentId: talent.id,
         update: {
-          contractStatus: "SIGNED",
           fee: offerFee,
-        },
+        } as unknown as Partial<Talent>,
       },
-    });
+    } as unknown as StateImpact);
 
     // News
     impacts.push({

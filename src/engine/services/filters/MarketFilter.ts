@@ -22,14 +22,14 @@ export const MarketFilter: WeekFilter = {
 
   execute(state: GameState, context: TickContext): void {
     context.impacts.push(...tickPlatforms(state, context.rng));
-    context.impacts.push(InterestRateSimulator.advance(state, context.rng));
+    context.impacts.push(InterestRateSimulator.advance(state));
     context.impacts.push(...tickWorldEvents(state, context.rng));
-    context.impacts.push(...advanceTrends(state.market.trends || [], context.rng));
-    context.impacts.push(...advanceMarketEvents(state, context.rng));
-    context.impacts.push(advanceBuyers(state, context.rng));
+    context.impacts.push(...advanceTrends(state.market.trends || []));
+    context.impacts.push(...advanceMarketEvents(state));
+    context.impacts.push(advanceBuyers(state));
     context.impacts.push(...tickVerticalIntegration(state, context.rng));
-    context.impacts.push(...tickIndustryUpstarts(state, context.rng));
-    context.impacts.push(...tickConsolidation(state, context.rng));
+    context.impacts.push(...tickIndustryUpstarts(state));
+    context.impacts.push(...tickConsolidation(state));
     context.impacts.push(...OpportunitySystem.tick(state, context.rng));
   },
 };

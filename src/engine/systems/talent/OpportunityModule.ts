@@ -49,26 +49,26 @@ export function advanceOpportunityLifecycle(
   }
 
   if (rng.next() < 0.25 && availableTalentIds.length > 0) {
-    const newOpp = generateOpportunity(rng, state.week, availableTalentIds);
+    const newOpp = generateOpportunity();
     tryAddOpp(newOpp, `A new package "${newOpp.title}" hit the market.`);
   }
 
   if (rng.next() < 0.2) {
     tryAddOpp(
-      generateOpportunity(rng, state.week, availableTalentIds),
+      generateOpportunity(),
       `A new script is doing the rounds in town.`
     );
   }
 
   if (rng.next() < 0.15) {
     tryAddOpp(
-      generateOpportunity(rng, state.week, availableTalentIds),
+      generateOpportunity(),
       `New opportunities have hit the market!`
     );
   }
 
   if (updatedOpportunities.length < 4 && rng.next() < 0.3) {
-    tryAddOpp(generateOpportunity(rng, state.week, availableTalentIds));
+    tryAddOpp(generateOpportunity());
   }
 
   return { updatedOpportunities, uiNotifications };

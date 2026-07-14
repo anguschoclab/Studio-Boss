@@ -229,7 +229,7 @@ function generateNepoBaby(parent: Talent, state: GameState, rng: RandomGenerator
 
   // Inherit traits from parent
   // Skills: Blend parent skills with child's random skills, weighted toward parent
-  if (parent.skills) {
+  if (parent.skills && childTalent.skills) {
     const inheritFactor = 0.4; // 40% inheritance
     childTalent.skills = {
       acting: Math.round(

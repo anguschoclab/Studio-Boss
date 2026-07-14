@@ -1,8 +1,8 @@
 // Types related to the Simulation Engine, News, and Events
 
-export type HeadlineCategory = "rival" | "market" | "talent" | "awards" | "general" | "rumor";
+export type HeadlineCategory = "rival" | "market" | "talent" | "awards" | "general" | "rumor" | "scandal" | "box_office" | "business" | "industry" | "cancellation" | "festival" | "development";
 
-export type NewsEventType = "CRISIS" | "AWARD" | "RELEASE" | "STUDIO_EVENT" | "RIVAL";
+export type NewsEventType = "CRISIS" | "AWARD" | "RELEASE" | "STUDIO_EVENT" | "RIVAL" | "SCANDAL" | "MILESTONE";
 
 export interface NewsEvent {
   id: string;
@@ -11,6 +11,7 @@ export interface NewsEvent {
   headline: string;
   description: string;
   impact?: string;
+  publication?: string;
 }
 
 export interface CrisisOption {
@@ -38,6 +39,7 @@ export interface Headline {
   text: string;
   week: number;
   category: HeadlineCategory;
+  publication?: string;
 }
 
 export interface NarrativeEvent {
@@ -50,6 +52,7 @@ export interface NarrativeEvent {
 }
 
 export interface WeekSummary {
+  id?: string;
   fromWeek: number;
   toWeek: number;
   cashBefore: number;
@@ -62,6 +65,8 @@ export interface WeekSummary {
   newsEvents?: NewsEvent[];
   narrativeEvents?: NarrativeEvent[];
   isQuietWeek?: boolean;
+  retiredCount?: number;
+  totalBailouts?: number;
 }
 
 export interface FinanceRecord {

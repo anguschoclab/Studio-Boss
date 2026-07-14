@@ -51,9 +51,9 @@ export const createProjectWorkflowSlice: StateCreator<GameStore, [], [], Project
 
     if (!project || !buyer) return false;
 
-    const rng = new RandomGenerator(state.rngState);
-    const allProjects = state.entities.projects;
-    const success = negotiateContract(project, buyer, contractType, state.week, allProjects, rng);
+    const rng = new RandomGenerator(state.rngState ?? 0);
+    const allProjects = Object.values(state.entities.projects);
+    const success = negotiateContract(project, buyer, contractType, state.week, allProjects);
 
     if (success) {
       const { project: updatedProject, update } = projectsEngine.executePitching(
@@ -96,7 +96,7 @@ export const createProjectWorkflowSlice: StateCreator<GameStore, [], [], Project
     const newCulture = state.studio.culture
       ? updateCultureFromProject(state.studio.culture, project)
       : undefined;
-    const rng = new RandomGenerator(state.rngState);
+    const rng = new RandomGenerator(state.rngState ?? 0);
 
     const impacts: StateImpact[] = [
       {

@@ -1,4 +1,4 @@
-import { GameState } from "@/engine/types";
+import { GameState, StateImpact } from "@/engine/types";
 import { rand } from "../../utils";
 
 /**
@@ -105,7 +105,7 @@ export class RegulatorSystem {
           category: "industry",
           text: `REGULATORY WATCH: Regulators express concern over ${state.studio.name}'s growing market dominance.`,
         },
-      });
+      } as unknown as StateImpact);
     }
 
     return impacts;

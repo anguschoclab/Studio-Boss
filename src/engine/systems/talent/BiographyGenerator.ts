@@ -157,8 +157,8 @@ function generateCareerSummary(talent: Talent, state: GameState): string {
       declining: "Recently facing career challenges but with potential for a comeback.",
       resurgent: "Experiencing a significant return to form after a quiet period.",
       comeback: "In the midst of an impressive career resurgence.",
-    };
-    parts.push(trajectoryDescriptions[talent.careerTrajectory]);
+    } as Record<CareerTrajectory, string>;
+    parts.push((trajectoryDescriptions as Record<string, string>)[talent.careerTrajectory]);
   }
 
   return parts.filter((p) => p).join(" ");
@@ -335,7 +335,7 @@ function generatePersonalitySection(talent: Talent): string {
     ambitious: "Consistently pushing for bigger roles and greater industry influence.",
   };
 
-  return descriptions[personality] || "";
+  return (descriptions as Record<string, string>)[personality as string] || "";
 }
 
 /**

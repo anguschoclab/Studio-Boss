@@ -129,7 +129,7 @@ export class WeekCoordinator {
     context.impacts.push({
       type: "MODAL_TRIGGERED",
       payload: { modalType: "SUMMARY" },
-    });
+    } as unknown as StateImpact);
 
     // 2.6 Achievements Check
     context.impacts.push(...checkAchievements(state));
@@ -206,7 +206,7 @@ export class WeekCoordinator {
     context.impacts.push(...tickStudioIdentity(state));
 
     // Rumors
-    context.impacts.push(advanceRumors(state, context.week, context.rng));
+    context.impacts.push(advanceRumors(state));
   }
 
   private static runProductionFilter(state: GameState, context: TickContext) {
@@ -247,15 +247,15 @@ export class WeekCoordinator {
       const project = state.entities.projects[id];
       if (project.state === "development") {
         const result = tickScriptDevelopment(project, context.rng);
-        if (result.project !== project) {
+        if (result.length > 0) {
           context.impacts.push({
             type: "PROJECT_UPDATED",
             payload: {
               projectId: project.id,
-              update: result.project,
+              update: project,
             },
-          });
-          if (result.impact) context.impacts.push(result.impact);
+          } as unknown as StateImpact);
+          context.impacts.push(...result);
         }
       }
     }
@@ -266,7 +266,7 @@ export class WeekCoordinator {
     context.impacts.push(...tickPilots(state, context.rng));
 
     // 4. TV Recommendations
-    context.impacts.push(...tickTVRecommendationSystem(state, context.rng));
+    context.impacts.push(...tickTVRecommendationSystem(state, undefined, context.rng));
 
     // 5. Upfronts — once per year (every 52 weeks)
     if (context.week % 52 === 0) {
@@ -319,12 +319,12 @@ export class WeekCoordinator {
     // First-look deal expiry
     const deals = (state.studio as unknown as { firstLookDeals?: unknown[] }).firstLookDeals || [];
     if (deals.length > 0) {
-      context.impacts.push(...advanceDeals(deals));
+      context.impacts.push(...advanceDeals(deals as import("../types").FirstLookDeal[]));
     }
   }
 
   private static runScandalFilter(state: GameState, context: TickContext) {
-    context.impacts.push(...generateScandals(state, context.rng));
+    context.impacts.push(...generateScandals(state));
     context.impacts.push(...advanceScandals(state));
   }
 
@@ -365,7 +365,7 @@ export class WeekCoordinator {
       const overhead = 80_000 * archetypeMult * inflation;
       const net = revenue.total - overhead;
       if (net !== 0) {
-        const history = rival.revenueHistory ? [...rival.revenueHistory] : [];
+        let history = rival.revenueHistory ? [...rival.revenueHistory] : [];
         history.push({ week: context.week, revenue: revenue.total, boxOffice: revenue.boxOffice });
         if (history.length > 52) history = history.slice(-52);
         context.impacts.push({

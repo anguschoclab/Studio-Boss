@@ -96,9 +96,9 @@ export const TalentLifecycleSystem = {
             update: { onMedicalLeave: false, medicalLeaveEndsWeek: undefined },
           },
         });
-        return; // skip rest of processing while recovering
+        continue; // skip rest of processing while recovering
       }
-      if (talent.onMedicalLeave) return; // still on leave
+      if (talent.onMedicalLeave) continue; // still on leave
 
       // 0b. Fatigue accumulation from active commitments
       const activeCommitments = (talent.commitments || []).filter(
@@ -128,7 +128,7 @@ export const TalentLifecycleSystem = {
               publication: "The Hollywood Reporter",
             },
           });
-          return;
+          continue;
         }
       } else {
         // Natural fatigue recovery when not committed
@@ -226,7 +226,7 @@ export const TalentLifecycleSystem = {
       impacts.push({
         type: "TALENT_ADDED",
         newTalents,
-      } as StateImpact);
+      } as unknown as StateImpact);
     }
 
     // Pass metadata to industry tick for metrics

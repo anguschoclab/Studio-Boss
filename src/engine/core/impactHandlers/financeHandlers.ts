@@ -1,11 +1,20 @@
-import { GameState, StateImpact } from "@/engine/types";
+import { GameState } from "@/engine/types";
+import type {
+  FundsImpact,
+  FundsDeductedImpact,
+  LedgerImpact,
+  FinanceSnapshotImpact,
+  SyncMAFundsImpact,
+  FinanceTransactionImpact,
+  MarketEventUpdateImpact,
+} from "@/engine/types/state.types";
 
 /**
  * Finance-related impact handlers
  * Pure functions that apply finance-related state impacts
  */
 
-export function handleFundsChanged(state: GameState, impact: StateImpact): GameState {
+export function handleFundsChanged(state: GameState, impact: FundsImpact): GameState {
   const { amount } = impact.payload;
   return {
     ...state,
@@ -16,7 +25,7 @@ export function handleFundsChanged(state: GameState, impact: StateImpact): GameS
   };
 }
 
-export function handleLedgerUpdated(state: GameState, impact: StateImpact): GameState {
+export function handleLedgerUpdated(state: GameState, impact: LedgerImpact): GameState {
   const { report } = impact.payload;
   return {
     ...state,
@@ -27,7 +36,7 @@ export function handleLedgerUpdated(state: GameState, impact: StateImpact): Game
   };
 }
 
-export function handleFinanceSnapshotAdded(state: GameState, impact: StateImpact): GameState {
+export function handleFinanceSnapshotAdded(state: GameState, impact: FinanceSnapshotImpact): GameState {
   const { snapshot } = impact.payload;
   return {
     ...state,
@@ -38,7 +47,7 @@ export function handleFinanceSnapshotAdded(state: GameState, impact: StateImpact
   };
 }
 
-export function handleSyncMAFunds(state: GameState, impact: StateImpact): GameState {
+export function handleSyncMAFunds(state: GameState, impact: SyncMAFundsImpact): GameState {
   const { amount } = impact.payload;
   return {
     ...state,
@@ -49,8 +58,8 @@ export function handleSyncMAFunds(state: GameState, impact: StateImpact): GameSt
   };
 }
 
-export function handleFundsDeducted(state: GameState, impact: StateImpact): GameState {
-  const { amount } = impact.payload;
+export function handleFundsDeducted(state: GameState, impact: FundsDeductedImpact): GameState {
+  const amount = impact.payload?.amount ?? impact.cashChange ?? 0;
   return {
     ...state,
     finance: {
@@ -60,7 +69,7 @@ export function handleFundsDeducted(state: GameState, impact: StateImpact): Game
   };
 }
 
-export function handleFinanceTransaction(state: GameState, impact: StateImpact): GameState {
+export function handleFinanceTransaction(state: GameState, impact: FinanceTransactionImpact): GameState {
   const { amount, targetId } = impact.payload;
   if (targetId && targetId !== "player") {
     const rivals = { ...state.entities.rivals };
@@ -78,7 +87,7 @@ export function handleFinanceTransaction(state: GameState, impact: StateImpact):
   return handleFundsChanged(state, { type: "FUNDS_CHANGED", payload: { amount } });
 }
 
-export function handleMarketEventUpdated(state: GameState, impact: StateImpact): GameState {
+export function handleMarketEventUpdated(state: GameState, impact: MarketEventUpdateImpact): GameState {
   const { events, marketState } = impact.payload;
   return {
     ...state,

@@ -1,6 +1,6 @@
 import { StudioCulture, ArchetypeKey, Project } from "@/engine/types";
 
-const CULTURE_TEMPLATES: Record<ArchetypeKey, StudioCulture> = {
+const CULTURE_TEMPLATES: Record<string, StudioCulture> = {
   indie: {
     prestigeVsCommercial: 80,
     talentFriendlyVsControlling: 70,

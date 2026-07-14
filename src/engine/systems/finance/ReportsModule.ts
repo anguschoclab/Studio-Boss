@@ -27,7 +27,7 @@ export function generateWeeklyFinancialReport(
   const projects = Object.values(projectsMap || {});
   const market = state.finance.marketState || InterestRateSimulator.initialize();
 
-  const passive = RevenueProcessor.calculateVaultDividends(state.ip.vault, studioId);
+  const passive = RevenueProcessor.calculateVaultDividends(state.ip.vault);
 
   const { boxOffice, distribution, merch, totalRoyalties, projectRecoupment } =
     RevenueProcessor.calculateActiveRevenue(projects, state, contracts, state.ip.vault, studioId);
@@ -47,8 +47,8 @@ export function generateWeeklyFinancialReport(
 
   for (let i = 0; i < pendingImpacts.length; i++) {
     const impact = pendingImpacts[i];
-    const isTarget = impact.payload && (impact.payload as any).targetId === studioId;
-    const isGenericPlayer = studioId === "player" && !impact.payload?.targetId;
+    const isTarget = impact.payload && (impact.payload as Record<string, unknown>).targetId === studioId;
+    const isGenericPlayer = studioId === "player" && !(impact.payload as Record<string, unknown>)?.targetId;
 
     if (isTarget || isGenericPlayer) {
       if (impact.type === "FINANCE_TRANSACTION" && impact.payload) {
@@ -72,12 +72,11 @@ export function generateWeeklyFinancialReport(
     (expenses.production +
       expenses.marketing +
       expenses.overhead +
-      expenses.pacts +
+      (expenses.pacts ?? 0) +
       totalRoyalties +
       (expenses.interest > 0 ? expenses.interest : 0));
 
   const report: WeeklyFinancialReport = {
-    id: rng.uuid("SNP"),
     week: state.week,
     year: Math.floor((state.week - 1) / 52) + 1,
     startingCash: studioCash,
@@ -97,7 +96,6 @@ export function generateWeeklyFinancialReport(
   };
 
   const snapshot: FinancialSnapshot = {
-    id: rng.uuid("SNP"),
     week: state.week,
     revenue: {
       theatrical: boxOffice,
@@ -111,11 +109,9 @@ export function generateWeeklyFinancialReport(
       marketing: expenses.marketing,
       royalties: totalRoyalties,
       interest: expenses.interest,
-      pacts: expenses.pacts,
     },
     net: netProfit,
     cash: studioCash + netProfit,
-    projectRecoupment,
   };
 
   return { report, snapshot };

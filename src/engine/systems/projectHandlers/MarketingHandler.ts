@@ -89,7 +89,7 @@ export function handleMarketingPhase(
             payload: {
               scandal: {
                 id: rng.uuid("SND"),
-                type: "director_speaks_out" as any,
+                type: "director_speaks_out",
                 talentId: director.id,
                 severity: 70,
                 description: `Renowned director ${director.name} has publically disowned the studio's "sanitized" cut of "${p.title}", claiming their creative vision was compromised for commercial gain.`,
@@ -97,7 +97,7 @@ export function handleMarketingPhase(
                 weekDiscovered: 0,
               },
             },
-          });
+          } as unknown as StateImpact);
           newBuzz = Math.max(0, p.buzz - 15);
         }
       }

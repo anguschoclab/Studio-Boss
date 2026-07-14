@@ -96,7 +96,7 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
       let leveragedFee = AgencyLeverageEngine.getRequiredFee(lockFee, leverage);
 
       if (target.agentId) {
-        const relationship = state.talentAgentRelationships[`${target.id}-${target.agentId}`];
+        const relationship = state.talentAgentRelationships?.[`${target.id}-${target.agentId}`];
         if (relationship) {
           const relationshipBonus = TalentAgentInteractionEngine.getLoyaltyBonus(relationship);
           leveragedFee = leveragedFee * (1 - relationshipBonus / 100);
@@ -123,7 +123,7 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
             category: "talent",
             week: state.week,
           },
-        });
+        } as unknown as StateImpact);
       }
     }
   });

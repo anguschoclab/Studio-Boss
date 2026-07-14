@@ -1,11 +1,16 @@
-import { GameState, StateImpact, Buyer } from "@/engine/types";
+import { GameState, Buyer } from "@/engine/types";
+import type {
+  BuyerUpdateImpact,
+  OpportunityUpdateImpact,
+  TrendsUpdateImpact,
+} from "@/engine/types/state.types";
 
 /**
  * Market-related impact handlers
  * Pure functions that apply market-related state impacts
  */
 
-export function handleBuyerUpdated(state: GameState, impact: StateImpact): GameState {
+export function handleBuyerUpdated(state: GameState, impact: BuyerUpdateImpact): GameState {
   const { buyerId, update } = impact.payload;
   const buyers = state.market.buyers.map((b) =>
     b.id === buyerId ? ({ ...b, ...update } as Buyer) : b
@@ -19,7 +24,7 @@ export function handleBuyerUpdated(state: GameState, impact: StateImpact): GameS
   };
 }
 
-export function handleOpportunityUpdated(state: GameState, impact: StateImpact): GameState {
+export function handleOpportunityUpdated(state: GameState, impact: OpportunityUpdateImpact): GameState {
   const { opportunityId, rivalId, bid } = impact.payload;
   const opportunities = state.market.opportunities.map((o) => {
     if (o.id === opportunityId) {
@@ -42,7 +47,7 @@ export function handleOpportunityUpdated(state: GameState, impact: StateImpact):
   };
 }
 
-export function handleTrendsUpdated(state: GameState, impact: StateImpact): GameState {
+export function handleTrendsUpdated(state: GameState, impact: TrendsUpdateImpact): GameState {
   const { trends } = impact.payload;
   return {
     ...state,

@@ -33,7 +33,7 @@ export const OpportunitySystem = {
         impacts.push({
           type: "OPPORTUNITY_UPDATED", // We'll use this to signal removal in the future or just handle it below
           payload: { opportunityId: opp.id, action: "EXPIRE" },
-        });
+        } as unknown as StateImpact);
         return;
       }
 
@@ -57,7 +57,7 @@ export const OpportunitySystem = {
         attachedTalentIds: opp.attachedTalentIds,
       };
 
-      const { project, newContracts } = buildProjectAndContracts(state, params, rng);
+      const { project, newContracts } = buildProjectAndContracts(state, params);
 
       // Update project with auction specific data
       const winnerProject = {
@@ -125,13 +125,13 @@ export const OpportunitySystem = {
       const toGenerate = Math.max(0, 8 - remainingOpportunities.length);
       const talentPoolIds = Object.keys(state.entities.talents);
       const newOpps = Array.from({ length: toGenerate }, () =>
-        generateOpportunity(rng, state.week, talentPoolIds)
+        generateOpportunity()
       );
 
       impacts.push({
         type: "INDUSTRY_UPDATE",
         payload: { "market.opportunities": [...remainingOpportunities, ...newOpps] },
-      });
+      } as unknown as StateImpact);
     }
 
     return impacts;

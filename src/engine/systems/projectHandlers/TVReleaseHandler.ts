@@ -62,7 +62,7 @@ export function handleTVReleasedPhase(
       const talentUpdates = TalentSystem.applyProjectResults(
         p,
         projectContracts,
-        talentPool,
+        Object.values(talentPool),
         projectAwards
       );
       talentUpdates.forEach((t) => {
@@ -92,7 +92,7 @@ export function handleTVReleasedPhase(
       const talentUpdates = TalentSystem.applyProjectResults(
         p,
         projectContracts,
-        talentPool,
+        Object.values(talentPool),
         projectAwards
       );
       talentUpdates.forEach((t) => {
@@ -120,7 +120,7 @@ export function handleTVReleasedPhase(
         const talentUpdates = TalentSystem.applyProjectResults(
           p,
           projectContracts,
-          talentPool,
+          Object.values(talentPool),
           projectAwards
         );
         talentUpdates.forEach((t) => {

@@ -306,7 +306,7 @@ export const selectProjectTimelineData = (
     return {
       week,
       development: projects.filter(
-        (p) => p.state === "development" && (p.estimatedWindow?.startWeek || 0) <= week
+        (p) => p.state === "development" && (p.estimatedWindow?.start || 0) <= week
       ).length,
       preProduction: projects.filter(
         (p) => p.state === "needs_greenlight" || p.state === "pitching"
@@ -370,7 +370,7 @@ export const selectProductionSlippage = (state: GameState | null): ProductionSli
   return projects
     .filter((p) => p.state === "production")
     .map((p) => {
-      const expectedEnd = p.estimatedWindow?.endWeek || (state?.week || 0) + 4;
+      const expectedEnd = p.estimatedWindow?.end || (state?.week || 0) + 4;
       const originalEnd = expectedEnd - 2; // Simulated
       const slippage = Math.max(0, expectedEnd - originalEnd);
       return {
@@ -507,13 +507,13 @@ export const selectStreamingViewership = (
   if (projects.some((p) => p.streamingViewership && p.streamingViewership.length > 0)) {
     return projects
       .flatMap((p) => {
-        const history = p.streamingViewership?.find((v) => v.platform === platformName);
+        const history = p.streamingViewership?.find((v) => v.platformId === platformName);
         if (!history) return [];
         return history.entries.map((entry) => ({
           week: entry.week,
           hoursWatched: entry.hoursWatched,
-          uniqueViewers: entry.uniqueViewers,
-          completionRate: entry.completionRate,
+          uniqueViewers: entry.viewers,
+          completionRate: entry.completionRate ?? 0,
         }));
       })
       .sort((a, b) => a.week - b.week);
@@ -534,9 +534,11 @@ export const selectStreamingViewership = (
  * Talent satisfaction data for TalentSatisfactionGauge visualization
  */
 export const selectTalentSatisfaction = (state: GameState | null): TalentSatisfactionData => {
-  const talents = selectTalentPool(state);
+  const talentPool = selectTalentPool(state);
+  const talents = Object.values(talentPool);
   if (talents.length === 0) return { overallScore: 0, byCategory: [] };
-  const scores = talents.map((t) => ({ id: t.id, score: t.psychology?.mood || 70, tier: t.tier }));
+  const tierMap: Record<string, number> = { A_LIST: 1, B_LIST: 2, C_LIST: 3, RISING_STAR: 4, NEWCOMER: 4 };
+  const scores = talents.map((t) => ({ id: t.id, score: t.psychology?.mood || 70, tier: tierMap[t.tier] || 4 }));
   const overallScore = scores.reduce((sum, s) => sum + s.score, 0) / scores.length;
   const byCategory = [1, 2, 3, 4].map((tier) => ({
     category: tier === 1 ? "A-list" : tier === 2 ? "B-list" : tier === 3 ? "C-list" : "Emerging",
@@ -555,7 +557,9 @@ export const selectTalentSatisfaction = (state: GameState | null): TalentSatisfa
 export const selectTalentTierDistribution = (
   state: GameState | null
 ): { data: TalentTierData[]; totalTalent: number } => {
-  const talents = selectTalentPool(state);
+  const talentPool = selectTalentPool(state);
+  const talents = Object.values(talentPool);
+  const tierMap: Record<string, number> = { A_LIST: 1, B_LIST: 2, C_LIST: 3, RISING_STAR: 4, NEWCOMER: 4 };
   const tierNames: Record<number, string> = {
     1: "A-list",
     2: "B-list",
@@ -563,7 +567,7 @@ export const selectTalentTierDistribution = (
     4: "Emerging",
   };
   const byTier = [1, 2, 3, 4].map((tier) => {
-    const tierTalents = talents.filter((t) => t.tier === tier);
+    const tierTalents = talents.filter((t) => (tierMap[t.tier] || 4) === tier);
     const avgSalary =
       tierTalents.length > 0
         ? tierTalents.reduce((sum, t) => sum + (t.fee || 0), 0) / tierTalents.length
@@ -602,7 +606,8 @@ export const selectDealStats = (state: GameState | null): DealStats => {
 export const selectStudioHealthMetrics = (state: GameState | null): StudioHealthMetric[] => {
   const finance = selectFinance(state);
   const projects = selectProjects(state);
-  const talents = selectTalentPool(state);
+  const talentPool = selectTalentPool(state);
+  const talents = Object.values(talentPool);
   const studio = selectStudio(state);
   const marketMetrics = selectMarketMetrics(state);
   const cash = finance.cash || 0;
@@ -650,7 +655,8 @@ export const selectActiveCrisisCount = (state: GameState | null) => {
  */
 export const selectCrisisRiskLevel = (state: GameState | null): CrisisRiskData => {
   const projects = selectProjects(state);
-  const talents = selectTalentPool(state);
+  const talentPool = selectTalentPool(state);
+  const talents = Object.values(talentPool);
   const crisisCount = projects.filter((p) => p.activeCrisis && !p.activeCrisis.resolved).length;
   const overBudget = projects.filter(
     (p) => (p.accumulatedCost || 0) > (p.budget || 0) * 1.1

@@ -1,4 +1,10 @@
-import { GameState, StateImpact } from "@/engine/types";
+import { GameState } from "@/engine/types";
+import type {
+  ProjectUpdateImpact,
+  ProjectRemovedImpact,
+  AwardWonImpact,
+  PilotGraduatedImpact,
+} from "@/engine/types/state.types";
 
 /**
  * Project-related impact handlers
@@ -7,13 +13,13 @@ import { GameState, StateImpact } from "@/engine/types";
 
 const RELEASED_STATES = new Set<string>(["released", "post_release", "archived"]);
 
-export function handleProjectUpdated(state: GameState, impact: StateImpact): GameState {
+export function handleProjectUpdated(state: GameState, impact: ProjectUpdateImpact): GameState {
   const { projectId, update } = impact.payload;
   if (!state.entities?.projects) return state;
   const projects = { ...state.entities.projects };
   const project = projects[projectId];
   if (project) {
-    projects[projectId] = { ...project, ...update };
+    projects[projectId] = { ...project, ...update } as typeof project;
   }
 
   let releasedProjectIds = state.entities.releasedProjectIds;
@@ -39,7 +45,7 @@ export function handleProjectUpdated(state: GameState, impact: StateImpact): Gam
   };
 }
 
-export function handleProjectRemoved(state: GameState, impact: StateImpact): GameState {
+export function handleProjectRemoved(state: GameState, impact: ProjectRemovedImpact): GameState {
   const { projectId } = impact.payload;
   if (!state.entities?.projects) return state;
   const projects = { ...state.entities.projects };
@@ -55,7 +61,7 @@ export function handleProjectRemoved(state: GameState, impact: StateImpact): Gam
   };
 }
 
-export function handleAwardWon(state: GameState, impact: StateImpact): GameState {
+export function handleAwardWon(state: GameState, impact: AwardWonImpact): GameState {
   const { projectId, award } = impact.payload;
   if (!state.entities?.projects) return state;
   const projects = { ...state.entities.projects };
@@ -75,11 +81,8 @@ export function handleAwardWon(state: GameState, impact: StateImpact): GameState
   };
 }
 
-export function handlePilotGraduated(state: GameState, impact: StateImpact): GameState {
-  const { projectId, nextState } = impact.payload as {
-    projectId: string;
-    nextState?: import("@/engine/types/project.types").ProjectStatus;
-  };
+export function handlePilotGraduated(state: GameState, impact: PilotGraduatedImpact): GameState {
+  const { projectId, nextState } = impact.payload;
   const projects = { ...state.entities.projects };
   const project = projects[projectId];
   if (project) {

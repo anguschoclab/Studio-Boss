@@ -296,7 +296,7 @@ function processProjectImpacts(
         },
       },
     },
-  });
+  } as unknown as StateImpact);
 
   // Add news about production halt
   impacts.push({
@@ -375,8 +375,8 @@ function getTalentOwner(talent: Talent, state: GameState): string | null {
       return "player";
     }
     // Check if ownerId is a rival
-    if (state.entities.rivals?.[contract.ownerId]) {
-      return contract.ownerId;
+    if (state.entities.rivals?.[contract.ownerId!]) {
+      return contract.ownerId!;
     }
   }
 
@@ -444,7 +444,7 @@ export function tickDeathSystem(state: GameState, rng: RandomGenerator): StateIm
             deathType: deathEvent.type,
             deathWeek: state.week,
           },
-        });
+        } as unknown as StateImpact);
 
         // Check if talent was owned by AI studio
         const owner = getTalentOwner(talent, state);

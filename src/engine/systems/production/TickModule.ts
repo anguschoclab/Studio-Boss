@@ -186,7 +186,7 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
         allProjects[imp.payload.projectId] = {
           ...allProjects[imp.payload.projectId],
           ...imp.payload.update,
-        };
+        } as Project;
         projectsChanged = true;
       } else {
         allImpacts.push(imp);

@@ -33,8 +33,8 @@ export const createProjectEventsSlice: StateCreator<GameStore, [], [], ProjectEv
     const project = state.entities.projects[projectId as ProjectId];
     if (!project) return;
 
-    const rng = new RandomGenerator(state.rngState);
-    const impact = resolveCrisis(state, project.id, optionIndex, rng);
+    const rng = new RandomGenerator(state.rngState ?? 0);
+    const impact = resolveCrisis(state, project.id, optionIndex);
     const newState = applyStateImpact(state, impact);
     newState.rngState = rng.getState();
     set({ gameState: newState });
@@ -43,8 +43,8 @@ export const createProjectEventsSlice: StateCreator<GameStore, [], [], ProjectEv
   submitToFestival: (projectId, festivalBody) => {
     set((s) => {
       if (!s.gameState) return s;
-      const rng = new RandomGenerator(s.gameState.rngState);
-      const impact = festivalsEngine.submitToFestival(s.gameState, projectId, festivalBody, rng);
+      const rng = new RandomGenerator(s.gameState.rngState ?? 0);
+      const impact = festivalsEngine.submitToFestival(s.gameState, projectId, festivalBody);
       if (!impact) return s;
       const newState = applyStateImpact(s.gameState, impact);
       newState.rngState = rng.getState();
@@ -58,7 +58,7 @@ export const createProjectEventsSlice: StateCreator<GameStore, [], [], ProjectEv
       if (!state) return s;
       const project = state.entities.projects[projectId as ProjectId];
       if (!project) return s;
-      const rng = new RandomGenerator(state.rngState);
+      const rng = new RandomGenerator(state.rngState ?? 0);
       const projectContracts = getContractsByProjectId(
         state.entities.contractsByProjectId,
         state.entities.contracts,

@@ -38,7 +38,7 @@ export class HeadlessController {
         // Extract the newly pitched project for immediate processing
         if (
           pitchResult.type === "INDUSTRY_UPDATE" &&
-          pitchResult.payload.update["entities.projects"]
+          pitchResult.payload.update?.["entities.projects"]
         ) {
           const newProjects = pitchResult.payload.update["entities.projects"] as Record<
             string,
@@ -221,7 +221,7 @@ export class HeadlessController {
             payload: {
               projectId: project.id,
               update: {
-                state: "released",
+                state: "released" as const,
                 releaseWeek: state.week,
                 revenue,
                 marketingBudget,
@@ -234,14 +234,14 @@ export class HeadlessController {
                 isHit,
               },
             },
-          });
+          } as StateImpact);
           const netCash = revenue - (project.budget || 0) - marketingBudget;
           impacts.push({ type: "FUNDS_CHANGED", payload: { amount: netCash } });
           console.log(
             `[HeadlessController] Released TV: ${project.title} S${currentSeason}, rating=${ratingScore}, revenue=$${(revenue / 1e6).toFixed(1)}M, net=$${(netCash / 1e6).toFixed(1)}M, ${renewed ? "RENEWED" : "CANCELLED"}`
           );
           impacts.push(
-            ...HeadlessController.attributeTalent(state, project, revenue, rng, isHit, ratingScore)
+            ...HeadlessController.attributeTalent(state, project as unknown as Record<string, unknown>, revenue, rng, isHit, ratingScore)
           );
 
           // Renewal spawns a follow-on season project (sequel-equivalent).
@@ -264,8 +264,8 @@ export class HeadlessController {
               progress: 0,
               accumulatedCost: 0,
               weeksInDevelopment: 0,
-              parentProjectId: (project as unknown).parentProjectId || project.id,
-              franchiseId: (project as unknown).franchiseId,
+              parentProjectId: (project as unknown as Record<string, unknown>).parentProjectId || project.id,
+              franchiseId: (project as unknown as Record<string, unknown>).franchiseId,
               tvDetails: {
                 status: "IN_DEVELOPMENT",
                 episodesOrdered: episodes,
@@ -281,7 +281,7 @@ export class HeadlessController {
             } as unknown as StateImpact);
 
             // On its 3rd season, promote the line to a franchise (if not already).
-            if (currentSeason + 1 >= 3 && !(project as unknown).franchiseId) {
+            if (currentSeason + 1 >= 3 && !(project as unknown as Record<string, unknown>).franchiseId) {
               const fid = rng.uuid("FR");
               impacts.push({
                 type: "INDUSTRY_UPDATE",
@@ -291,7 +291,7 @@ export class HeadlessController {
                       id: fid,
                       name: project.title,
                       medium: "TV",
-                      rootProjectId: (project as unknown).parentProjectId || project.id,
+                      rootProjectId: (project as unknown as Record<string, unknown>).parentProjectId || project.id,
                       creationWeek: state.week,
                       entries: [project.id, nextId],
                       heat: 70,
@@ -302,8 +302,8 @@ export class HeadlessController {
               } as unknown as StateImpact);
               impacts.push({
                 type: "PROJECT_UPDATED",
-                payload: { projectId: project.id, update: { franchiseId: fid } as unknown },
-              });
+                payload: { projectId: project.id, update: { franchiseId: fid } },
+              } as StateImpact);
             }
           }
         } else {
@@ -314,7 +314,7 @@ export class HeadlessController {
             foreignBudget: project.budget * 0.15,
             weeksInMarketing: 1,
           };
-          const result = executeMarketing(project, campaign as unknown);
+          const result = executeMarketing(project, campaign as unknown as Parameters<typeof executeMarketing>[1]);
           const marketingBudget = campaign.domesticBudget + campaign.foreignBudget;
           const projectWithMarketing = { ...result.project, marketingBudget };
           const { project: releasedProject } = calculateOpeningWeekend(
@@ -348,7 +348,7 @@ export class HeadlessController {
           const filmRev = releasedProject.revenue || 0;
           const filmHit = filmRev > (project.budget || 0) * 2;
           impacts.push(
-            ...HeadlessController.attributeTalent(state, project, filmRev, rng, filmHit, 0)
+            ...HeadlessController.attributeTalent(state, project as unknown as Record<string, unknown>, filmRev, rng, filmHit, 0)
           );
         }
       }
@@ -363,7 +363,7 @@ export class HeadlessController {
         impacts.push({
           type: "PROJECT_UPDATED",
           payload: { projectId: project.id, update: { state: "archived" } },
-        });
+        } as StateImpact);
       }
     });
 
@@ -385,7 +385,7 @@ export class HeadlessController {
         !isAlreadyBid && (state.finance.cash > opportunity.costToAcquire * 2 || isSimulation);
 
       // Persona Overrides
-      const persona = (state as unknown).persona || "balanced";
+      const persona = (state as unknown as Record<string, unknown>).persona || "balanced";
 
       // Genre Saturation Guard for Player (Limit to 2 same-genre projects)
       const isSaturated = (playerGenreCounts[opportunity.genre] || 0) >= 2;
@@ -456,7 +456,7 @@ export class HeadlessController {
             description: `${r.name} has posted negative cash for over a year and is now seeking a buyer or restructuring.`,
             category: "business",
           },
-        });
+        } as unknown as StateImpact);
         cashStreaks.set(r.id, 0);
       }
     });
@@ -484,12 +484,12 @@ export class HeadlessController {
     const impacts: StateImpact[] = [];
     const pool = Object.values(state.entities.talents || {});
     if (pool.length === 0) return impacts;
-    const totalCost = (project.budget || 0) + (project.marketingBudget || 0);
+    const totalCost = ((project.budget as number) || 0) + ((project.marketingBudget as number) || 0);
     const ROI = totalCost > 0 ? revenue / totalCost : 0;
     const isTv = project.format === "tv" || project.type === "SERIES";
 
     // Budget factor — bigger project = bigger cultural footprint for its talent.
-    const budgetFactor = Math.log10(Math.max(10_000_000, project.budget || 10_000_000)) / 7.2;
+    const budgetFactor = Math.log10(Math.max(10_000_000, (project.budget as number) || 10_000_000)) / 7.2;
 
     let basePrestige = 0;
     if (isTv) {
@@ -516,7 +516,7 @@ export class HeadlessController {
     // Heavier prestige concentration (winner-take-most): high-prestige talents get
     // repeat picks, driving breakout careers into the 80-99 band. For big-budget
     // projects, the top ~10 talents get weighted even harder (A-list attachment).
-    const isBlockbuster = (project.budget || 0) > 80_000_000;
+    const isBlockbuster = ((project.budget as number) || 0) > 80_000_000;
     const weights = pool.map((t) => {
       const p = t.prestige || 0;
       const base = 1 + Math.pow(p / 10, 2.2);
@@ -564,7 +564,7 @@ export class HeadlessController {
       );
       // Sticky legacy: each hit locks in a fraction of the current peak as a non-decayable
       // floor. Mirrors real Oscar/Emmy/franchise-creator credit — once earned, never lost.
-      const priorLegacy = (t as unknown).legacyPrestige || 0;
+      const priorLegacy = (t as unknown as Record<string, unknown>).legacyPrestige as number || 0;
       let legacyGain = 0;
       if (isHit) {
         if (ROI > 3.0 && newPrestige >= 60) legacyGain = 3;
@@ -581,9 +581,9 @@ export class HeadlessController {
             momentum: newMomentum,
             lastReleaseWeek: state.week,
             legacyPrestige: newLegacy,
-          } as unknown,
+          } as Record<string, unknown>,
         },
-      });
+      } as StateImpact);
     }
     return impacts;
   }
@@ -610,6 +610,7 @@ export class HeadlessController {
       mid: 40_000_000,
       high: 80_000_000,
       blockbuster: 150_000_000,
+      indie: 5_000_000,
     };
     let budget = Math.floor(budgetMap[budgetTier] * getBudgetInflation(state.week));
     // TV total budget = episodeCount × perEpisodeBudget (2M indie, 8M cable, 15M+ streamer, 25M+ Sheridan-tier)
@@ -623,6 +624,7 @@ export class HeadlessController {
         mid: 8_000_000, // cable
         high: 15_000_000, // premium streamer
         blockbuster: year >= 2015 ? 25_000_000 : 18_000_000, // Sheridan-tier
+        indie: 1_500_000,
       };
       tvPerEpBudget = Math.floor(perEpByTier[budgetTier] * getBudgetInflation(state.week));
       budget = tvEpisodes * tvPerEpBudget;

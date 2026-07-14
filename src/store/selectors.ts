@@ -3,7 +3,7 @@ import { GameState, Project, RivalStudio, Talent, GameEvent } from "../engine/ty
 import type { DistressedAssetOffer } from "@/engine/types/distress.types";
 
 const EMPTY_PROJECTS = {};
-const EMPTY_FINANCE = { cash: 0, ledger: [] };
+const EMPTY_FINANCE = { cash: 0, ledger: [], weeklyHistory: [], marketState: { baseRate: 0, savingsYield: 0, debtRate: 0, loanRate: 0, rateHistory: [] } };
 const EMPTY_MARKET = { buyers: [], opportunities: [], trends: [], activeMarketEvents: [] };
 const EMPTY_TALENT_POOL = {};
 const EMPTY_RIVALS: Record<string, RivalStudio> = {}; // Records in Phase 7
@@ -258,11 +258,11 @@ export const selectProjectTimelineData = (state: GameState | null, weeksPast: nu
       week: targetWeek,
       development: projects.filter((p) => p.state === "development").length,
       preProduction: projects.filter(
-        (p) => p.state === "pre_production" || p.state === "pre-production"
+        (p) => p.state === "needs_greenlight" || p.state === "pitching"
       ).length,
       production: projects.filter((p) => p.state === "production").length,
       postProduction: projects.filter(
-        (p) => p.state === "post_production" || p.state === "post-production"
+        (p) => p.state === "marketing"
       ).length,
       released: projects.filter((p) => p.releaseWeek === targetWeek).length,
     });
@@ -360,4 +360,8 @@ export const selectGenrePerformanceMatrix = createSelector(
       };
     });
   }
+);
+
+export const selectAwardsEligibleProjects = createSelector([selectProjects], (projects) =>
+  projects.filter((p) => p.state === "released" && p.releaseWeek && p.awardsProfile)
 );

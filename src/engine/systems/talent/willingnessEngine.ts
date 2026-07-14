@@ -49,7 +49,7 @@ export function calculateWillingness(
 
   // 🎭 The Method Actor Tuning: Auteurs (high-prestige directors) heavily prioritize the script heat and artistic merit over upfront cash.
   const isAuteur = talent.roles.includes("director") && talent.prestige > 80;
-  const scriptHeat = "scriptHeat" in project ? project.scriptHeat : 50;
+  const scriptHeat = "scriptHeat" in project ? (project.scriptHeat ?? 50) : 50;
 
   // 3. Financial Incentive (Fee vs Star Meter)
   if (talent.fee > project.budget * 0.4) {

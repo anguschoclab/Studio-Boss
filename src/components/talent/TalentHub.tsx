@@ -20,8 +20,8 @@ import { EmptyState } from "@/components/shared/EmptyState";
 export const TalentHub = () => {
   const state = useGameStore((s) => s.gameState);
   const talentPool = useMemo(
-    () => Object.values(state?.industry.talentPool || {}),
-    [state?.industry.talentPool]
+    () => Object.values(state?.entities?.talents || {}),
+    [state?.entities?.talents]
   );
 
   // Roster filters
@@ -277,7 +277,7 @@ export const TalentHub = () => {
           <ScrollArea className="flex-1 pr-6 custom-scrollbar">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 pb-20">
               {filteredSBDB.map((talent) => (
-                <TalentCard key={talent.id} talent={talent} showStarMeter={true} />
+                <TalentCard key={talent.id} talent={talent} />
               ))}
             </div>
             {filteredSBDB.length === 0 && (

@@ -335,7 +335,7 @@ export function tickMarketingPromotionSystem(
                 careerImpact: -5,
               },
             },
-          });
+          } as unknown as StateImpact);
         }
       }
     }
@@ -354,7 +354,7 @@ export function tickMarketingPromotionSystem(
             talentId: talent.id,
             photoshoot,
           },
-        });
+        } as unknown as StateImpact);
 
         // Apply boosts when published
         if (photoshoot.publicationWeek === state.week) {
@@ -461,7 +461,7 @@ export function tickMarketingPromotionSystem(
             impacts.push({
               type: "FUNDS_DEDUCTED",
               cashChange: -tour.totalCost,
-            });
+            } as unknown as StateImpact);
 
             // News about tour
             impacts.push({
@@ -487,8 +487,8 @@ export function tickMarketingPromotionSystem(
  * Get active press tours for a project
  */
 export function getActivePressTours(projectId: string, state: GameState): PressTour[] {
-  const marketing = state.relationships?.marketingPromotions || {};
-  const activeTours = marketing.activePressTours || {};
+  const marketing = state.relationships?.marketingPromotions;
+  const activeTours = marketing?.activePressTours || {};
   const result: PressTour[] = [];
 
   for (const id in activeTours) {
@@ -508,8 +508,8 @@ export function calculateMarketingBuzz(
   projectId: string,
   state: GameState
 ): { buzzScore: number; viralMoments: number } {
-  const marketing = state.relationships?.marketingPromotions || {};
-  const appearances = marketing.talkShowAppearances || {};
+  const marketing = state.relationships?.marketingPromotions;
+  const appearances = marketing?.talkShowAppearances || {};
 
   let buzzScore = 0;
   let viralMoments = 0;

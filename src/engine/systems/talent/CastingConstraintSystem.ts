@@ -215,11 +215,11 @@ export function generateRequirementsFromNotes(
   rng: RandomGenerator
 ): ScriptRequirement[] {
   const requirements: ScriptRequirement[] = [];
-  const notes = state.relationships.productionEnhancements?.screenplayNotes || {};
+  const notes = state.relationships?.productionEnhancements?.screenplayNotes || {};
 
   // ⚡ Bolt Optimization: Replaced Object.values() array allocation with direct for...in loop
   for (const id in notes) {
-    const n = notes[id] as import("../../types/state.types").ScreenplayNote;
+    const n = notes[id] as unknown as { projectId: string; status: string; type: string; intensity: string; suggestedTalentIds?: string[]; id?: string; description?: string };
     if (n.projectId !== project.id || n.status !== "implemented") continue;
 
     if (n.type === "emotional_beat" && n.intensity === "high") {

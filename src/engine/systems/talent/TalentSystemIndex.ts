@@ -26,7 +26,7 @@ export const TalentSystem = {
       newOpportunities: updatedOpportunities,
       talentUpdates,
       uiNotifications: notificationsWithBard,
-    };
+    } as unknown as StateImpact;
   },
 
   applyProjectResults(

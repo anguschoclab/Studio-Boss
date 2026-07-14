@@ -194,7 +194,7 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({
               <div
                 className={cn(
                   "h-full bg-primary transition-all duration-1000",
-                  project.reception.audienceScore >= 75
+                  (project.reception.audienceScore ?? 0) >= 75
                     ? "shadow-[0_0_15px_rgba(var(--primary),0.5)]"
                     : ""
                 )}

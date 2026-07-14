@@ -23,7 +23,7 @@ export const SBDBView = () => {
   const [tierFilter, setTierFilter] = useState<string>("all");
 
   const talentPool = useMemo(
-    () => Object.values(gameState?.industry.talentPool || {}),
+    () => Object.values(gameState?.entities?.talents || {}),
     [gameState]
   );
 
@@ -134,7 +134,7 @@ export const SBDBView = () => {
       <ScrollArea className="flex-1">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-8">
           {filteredTalent.map((talent) => (
-            <TalentCard key={talent.id} talent={talent} showStarMeter={true} />
+            <TalentCard key={talent.id} talent={talent} />
           ))}
         </div>
 

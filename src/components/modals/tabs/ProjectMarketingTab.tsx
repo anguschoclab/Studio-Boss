@@ -19,14 +19,7 @@ import {
 
 // Extended type that includes the 6 new angles planned in game design
 // (project.types.ts is not modified — these are cast as string where the base type is used)
-type ExtendedMarketingAngle =
-  | MarketingAngle
-  | "SELL THE SCARES"
-  | "SELL THE ROMANCE"
-  | "SELL THE WORLD MYTHOLOGY"
-  | "SELL THE TRUE STORY HOOK"
-  | "SELL THE MUSIC"
-  | "BROAD FOUR QUADRANT MARKETING";
+type ExtendedMarketingAngle = MarketingAngle;
 
 interface AngleOption {
   id: ExtendedMarketingAngle;
@@ -36,32 +29,32 @@ interface AngleOption {
 
 const ALL_ANGLES: AngleOption[] = [
   {
-    id: "SELL THE SPECTACLE",
+    id: "SELL_THE_SPECTACLE",
     label: "The Spectacle",
     desc: "Big visual set-pieces and VFX drive anticipation.",
   },
   {
-    id: "SELL THE STORY",
+    id: "SELL_THE_STORY",
     label: "The Story",
     desc: "Emotionally led trailers focused on narrative.",
   },
   {
-    id: "SELL THE STARS",
+    id: "SELL_THE_STARS",
     label: "Star Power",
     desc: "Leverage A-list talent for press and promo.",
   },
   {
-    id: "FAMILY ADVENTURE",
+    id: "FAMILY_ADVENTURE",
     label: "Family Adventure",
     desc: "Broad family positioning for all-quadrant reach.",
   },
   {
-    id: "AWARDS PUSH",
+    id: "AWARDS_PUSH",
     label: "Awards Push",
     desc: "Prestige campaign targeting guilds and critics.",
   },
   { id: "GRASSROOTS", label: "Grassroots", desc: "Word-of-mouth and community fan activation." },
-  { id: "GLOBAL BLITZ", label: "Global Blitz", desc: "Simultaneous worldwide saturation launch." },
+  { id: "GLOBAL_BLITZ", label: "Global Blitz", desc: "Simultaneous worldwide saturation launch." },
   {
     id: "CONTROVERSY",
     label: "Controversy",
@@ -69,32 +62,32 @@ const ALL_ANGLES: AngleOption[] = [
   },
   // New angles
   {
-    id: "SELL THE SCARES",
+    id: "SELL_THE_SCARES",
     label: "Fear Factor",
     desc: "Horror-first marketing. Boosts opening weekend for horror/thriller projects.",
   },
   {
-    id: "SELL THE ROMANCE",
+    id: "SELL_THE_ROMANCE",
     label: "Heart & Soul",
     desc: "Romance-focused push. Strengthens female demographic engagement.",
   },
   {
-    id: "SELL THE WORLD MYTHOLOGY",
+    id: "SELL_THE_WORLD_MYTHOLOGY",
     label: "World Building",
     desc: "Franchise/lore deep-dive. Boosts superfan retention for IP projects.",
   },
   {
-    id: "SELL THE TRUE STORY HOOK",
+    id: "SELL_THE_TRUE_STORY_HOOK",
     label: "True Story",
     desc: "Based-on-true-events hook. Broadens mainstream and prestige crossover.",
   },
   {
-    id: "SELL THE MUSIC",
+    id: "SELL_THE_MUSIC",
     label: "Soundtrack-Led",
     desc: "Soundtrack-first marketing. Boosts streaming revenue and youth audiences.",
   },
   {
-    id: "BROAD FOUR QUADRANT MARKETING",
+    id: "BROAD_FOUR_QUADRANT_MARKETING",
     label: "Four Quadrant",
     desc: "Widest possible appeal. Reduces upside but guarantees a solid floor.",
   },

@@ -15,7 +15,7 @@ export class StudioAutomation {
    */
   private static getRivalArchetype(rival: RivalStudio): StudioArchetype {
     const archetypeId =
-      rival.archetypeId || ("behaviorId" in rival ? (rival as unknown).behaviorId : undefined);
+      rival.archetypeId || ("behaviorId" in rival ? (rival as unknown as Record<string, unknown>).behaviorId as string : undefined);
     if (archetypeId) {
       const archetype = AI_ARCHETYPES.find((a) => a.id === archetypeId);
       if (archetype) return archetype;
@@ -42,7 +42,8 @@ export class StudioAutomation {
         rival.cash > 500000000 &&
         (!rival.ownedPlatforms || rival.ownedPlatforms.length === 0)
       ) {
-        if (rng.next() < 0.05 * archetype.ma_willingness) {
+        const archetype = this.getRivalArchetype(rival);
+      if (rng.next() < 0.05 * archetype.ma_willingness) {
           this.triggerPlatformLaunch(rival, state, rng, impacts);
         }
       }
@@ -169,9 +170,9 @@ export class StudioAutomation {
       // Status Transition (TV Special Case)
       let nextStatus = "released";
       let tvUpdate = {};
-      if ((p.format === "tv" || p.type === "SERIES") && (p as unknown).tvDetails) {
+      if ((p.format === "tv" || p.type === "SERIES") && (p as unknown as Record<string, unknown>).tvDetails) {
         nextStatus = "ON_AIR";
-        tvUpdate = { tvDetails: { ...(p as unknown).tvDetails, status: "ON_AIR" } };
+        tvUpdate = { tvDetails: { ...(p as unknown as Record<string, unknown>).tvDetails as object, status: "ON_AIR" } };
       }
 
       // Initialize streaming viewership for streaming distribution
@@ -205,7 +206,7 @@ export class StudioAutomation {
             activeCrisis: null,
           },
         },
-      });
+      } as unknown as StateImpact);
 
       // Attribute prestige to the crew on rival releases too — without this the
       // talent pool only gains prestige from ~1/week player releases and the whole
@@ -217,7 +218,7 @@ export class StudioAutomation {
       const rivIsHit = isTv ? roi > 1.1 : roi > 2.0;
       const rivRating = isTv ? Math.round(50 + (roi - 1) * 25) : 0;
       impacts.push(
-        ...HeadlessController.attributeTalent(state, p, rivRev, rng, rivIsHit, rivRating)
+        ...HeadlessController.attributeTalent(state, p as unknown as Record<string, unknown>, rivRev, rng, rivIsHit, rivRating)
       );
     }
   }
@@ -245,7 +246,7 @@ export class StudioAutomation {
         category: "business",
         week: state.week,
       },
-    });
+    } as unknown as StateImpact);
 
     impacts.push({
       type: "RIVAL_UPDATED",
@@ -266,7 +267,7 @@ export class StudioAutomation {
           ownerStudioId: "player",
         },
       },
-    });
+    } as unknown as StateImpact);
   }
 
   private static triggerPlatformLaunch(
@@ -283,9 +284,8 @@ export class StudioAutomation {
         headline: `BUSINESS: ${rival.name} launches streaming service!`,
         description: `Aiming for vertical integration, ${rival.name} has invested $200M in a new SVOD platform.`,
         category: "business",
-        week: state.week,
       },
-    });
+    } as unknown as StateImpact);
     impacts.push({
       type: "RIVAL_UPDATED",
       payload: { rivalId: rival.id, update: { cash: (Number(rival.cash) || 0) - cost } },
@@ -315,7 +315,7 @@ export class StudioAutomation {
     const weights = budgetTiers.map((tier) => archetype.budget_tier_weights[tier]);
     const budgetTier = this.weightedRandom(budgetTiers, weights, rng);
 
-    const project: unknown = {
+    const project: Record<string, unknown> = {
       id,
       title: `${genre} ${rng.rangeInt(1, 100)}`,
       genre,
@@ -347,7 +347,7 @@ export class StudioAutomation {
     impacts.push({
       type: "PROJECT_CREATED",
       payload: { project },
-    });
+    } as unknown as StateImpact);
   }
 
   /**

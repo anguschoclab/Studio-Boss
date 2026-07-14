@@ -1,11 +1,16 @@
-import { GameState, StateImpact, Franchise } from "@/engine/types";
+import { GameState, Franchise } from "@/engine/types";
+import type {
+  FranchiseUpdatedImpact,
+  VaultAssetUpdatedImpact,
+  FormatLicensedImpact,
+} from "@/engine/types/state.types";
 
 /**
  * IP-related impact handlers
  * Pure functions that apply IP-related state impacts
  */
 
-export function handleFranchiseUpdated(state: GameState, impact: StateImpact): GameState {
+export function handleFranchiseUpdated(state: GameState, impact: FranchiseUpdatedImpact): GameState {
   const { franchiseId, update } = impact.payload;
   const franchises = { ...state.ip.franchises };
   const franchise = franchises[franchiseId];
@@ -23,7 +28,7 @@ export function handleFranchiseUpdated(state: GameState, impact: StateImpact): G
   };
 }
 
-export function handleVaultAssetUpdated(state: GameState, impact: StateImpact): GameState {
+export function handleVaultAssetUpdated(state: GameState, impact: VaultAssetUpdatedImpact): GameState {
   const { assetId, update } = impact.payload;
   const vault = state.ip.vault.map((asset) =>
     asset.id === assetId ? { ...asset, ...update } : asset
@@ -37,8 +42,8 @@ export function handleVaultAssetUpdated(state: GameState, impact: StateImpact): 
   };
 }
 
-export function handleFormatLicensed(state: GameState, impact: StateImpact): GameState {
-  const { asset } = impact.payload as { asset: import("@/engine/types/state.types").IPAsset };
+export function handleFormatLicensed(state: GameState, impact: FormatLicensedImpact): GameState {
+  const { asset } = impact.payload;
   const existingIds = new Set(state.ip.vault.map((a) => a.id));
   if (existingIds.has(asset.id)) return state;
   return {

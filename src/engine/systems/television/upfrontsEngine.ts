@@ -27,7 +27,7 @@ export function runUpfronts(state: GameState, rng: RandomGenerator): StateImpact
     if (
       project.type === "SERIES" &&
       (project.state === "development" || project.state === "needs_greenlight") &&
-      project.stage !== "pilot"
+      (project as any).stage !== "pilot"
     ) {
       const seriesProject = project as SeriesProject;
       const buzz = seriesProject.buzz ?? 50;
@@ -106,7 +106,7 @@ export function runUpfronts(state: GameState, rng: RandomGenerator): StateImpact
         category: "development",
         publication: "Deadline",
       },
-    });
+    } as unknown as StateImpact);
   }
 
   return impacts;

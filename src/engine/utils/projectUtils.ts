@@ -83,9 +83,9 @@ export function calculateTalentFitScore(
 
   // --- ANIMATION EXEMPTION ---
   // Animation projects are more flexible with talent fits but focus on different synergies
-  if (project.format === "animation" || project.genre === "Animation") {
+  if ((project as any).format === "animation" || project.genre === "Animation") {
     score += 15; // Baseline boost for "The Animation Loop"
-    if (talent.roles.includes("personality")) score += 10; // Personalities are great for animation
+    if (talent.roles.includes("personality" as never)) score += 10; // Personalities are great for animation
   }
 
   // Specific Role Buffs

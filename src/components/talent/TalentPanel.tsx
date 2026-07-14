@@ -8,13 +8,13 @@ import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 export const TalentPanel = () => {
   const state = useGameStore((s) => s.gameState);
   const talentPool = useMemo(
-    () => Object.values(state?.industry.talentPool || {}),
-    [state?.industry.talentPool]
+    () => Object.values(state?.entities.talents || {}),
+    [state?.entities.talents]
   );
   const [filter, setFilter] = useState<TalentRole | "all">("all");
 
   const filteredTalent = useMemo(() => {
-    return talentPool.filter((t) => filter === "all" || t.roles.includes(filter as TalentRole));
+    return talentPool.filter((t: Talent) => filter === "all" || t.roles.includes(filter as TalentRole));
   }, [talentPool, filter]);
 
   return (
@@ -49,7 +49,7 @@ export const TalentPanel = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 overflow-y-auto pb-6 custom-scrollbar pr-2">
-        {filteredTalent.map((talent: Talent) => (
+        {filteredTalent.map((talent) => (
           <TalentCard key={talent.id} talent={talent} />
         ))}
         {filteredTalent.length === 0 && (

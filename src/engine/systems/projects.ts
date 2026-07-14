@@ -27,6 +27,7 @@ import { processDirectorDisputes } from "./directors";
 import { getTrendMultiplier } from "./trends";
 import { RandomGenerator } from "../utils/rng";
 import { computeCampaignMultiplier } from "./projectHandlers/MarketingHandler";
+import { handlePostReleasePhase } from "./projectHandlers/PostReleaseHandler";
 
 function getAttachedTalent(contracts: Contract[], talentPoolMap: Map<string, Talent>): Talent[] {
   const acc: Talent[] = [];
@@ -227,41 +228,6 @@ function handleReleasedPhase(
   return { update, talentUpdates };
 }
 
-function handlePostReleasePhase(p: Project): { update: string | null; talentUpdates: Talent[] } {
-  let update: string | null = null;
-  let weeklyAncillary = 0;
-
-  const isFamilyOrAnim = p.genre === "Family" || p.genre === "Animation";
-  const isPrestige = p.genre === "Drama" || p.targetAudience === "Prestige / Critics";
-
-  if (p.weeksInPhase === 1) {
-    if (isPrestige && (p.reviewScore || 0) > 80) {
-      weeklyAncillary = p.budget * randRange(0.5, 1.5);
-      update = `A fierce bidding war erupts for the streaming rights to "${p.title}"!`;
-    } else if (p.format === "film") {
-      weeklyAncillary = p.revenue * randRange(0.1, 0.3);
-      update = `"${p.title}" drops on VOD and physical media.`;
-    }
-  } else {
-    if (isFamilyOrAnim) {
-      weeklyAncillary = p.revenue * 0.005;
-    } else {
-      weeklyAncillary = p.revenue * 0.001;
-    }
-    weeklyAncillary *= Math.max(0.1, 1 - p.weeksInPhase / 52);
-  }
-
-  p.ancillaryRevenue = (p.ancillaryRevenue || 0) + weeklyAncillary;
-  p.revenue += weeklyAncillary;
-  p.weeklyRevenue = 0;
-
-  if (p.weeksInPhase >= 26) {
-    p.state = "archived";
-  }
-
-  return { update, talentUpdates: [] };
-}
-
 function handlePostProductionPhase(p: Project): { update: string | null; talentUpdates: Talent[] } {
   p.state = "post_production" as any;
   p.weeksInPhase = 0;
@@ -372,7 +338,7 @@ export function advanceProject(
     update = result.update;
     if (result.talentUpdates) talentUpdates = result.talentUpdates;
   } else if (p.state === "post_release") {
-    const result = handlePostReleasePhase(p);
+    const result = handlePostReleasePhase(p, rng);
     update = result.update;
   }
 

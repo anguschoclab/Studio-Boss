@@ -35,7 +35,7 @@ export class SimulationHarness {
       const rng = new RandomGenerator(state.gameSeed + w + state.tickCount);
 
       try {
-        const { newState } = advanceWeek(state, rng);
+        const { newState } = advanceWeek(state);
         state = newState;
 
         let totalRivalCash = 0;
@@ -45,7 +45,7 @@ export class SimulationHarness {
         for (const rid in state.entities.rivals || {}) {
           const r = state.entities.rivals[rid];
           totalRivalCash += r.cash || 0;
-          rivalProjectsCount += (r.projectIds || []).length;
+          rivalProjectsCount += Object.keys(r.projects || {}).length;
           const ms = r.marketShare || 0;
           hhi += (ms * 100) ** 2;
           rivalsCount++;
@@ -61,7 +61,7 @@ export class SimulationHarness {
         for (const tid in state.entities.talents || {}) {
           const t = state.entities.talents[tid];
           talentPoolCount++;
-          if (t.fatigue > 80) burntOutCount++;
+          if ((t.fatigue ?? 0) > 80) burntOutCount++;
         }
         const burnoutRate = talentPoolCount > 0 ? burntOutCount / talentPoolCount : 0;
 

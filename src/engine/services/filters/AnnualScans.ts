@@ -1,4 +1,4 @@
-import { GameState } from "../../types";
+import { GameState, StateImpact } from "../../types";
 import { TickContext } from "./types";
 
 // System Imports
@@ -78,8 +78,10 @@ export const AnnualScans = {
     // ⚡ The Framerate Fanatic: Refactored array .find() inside map to a Map lookup, improving performance from O(n^2) to O(n).
     const projectHistoryMap = new Map();
     const history = state.studio.internal.projectHistory || [];
+    const allProjects = state.studio.internal.projects || {};
     for (let i = 0; i < history.length; i++) {
-      projectHistoryMap.set(history[i].id, history[i]);
+      const pid = history[i];
+      if (allProjects[pid]) projectHistoryMap.set(pid, allProjects[pid]);
     }
 
     vault.forEach((asset) => {
@@ -88,7 +90,7 @@ export const AnnualScans = {
         context.impacts.push({
           type: "VAULT_ASSET_UPDATED",
           payload: { assetId: asset.id, update: { tier: "CULT_CLASSIC" } },
-        });
+        } as unknown as StateImpact);
         context.impacts.push({
           type: "NEWS_ADDED",
           payload: {

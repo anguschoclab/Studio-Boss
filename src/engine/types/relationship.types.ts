@@ -34,7 +34,7 @@ export interface TalentRelationship {
 
 // For storage in state
 export interface RelationshipsState {
-  relationships: Record<string, TalentRelationship>; // key: "talentA-talentB" (sorted alphabetically)
+  relationships?: Record<string, TalentRelationship>; // key: "talentA-talentB" (sorted alphabetically)
   cliques?: {
     cliques: Record<string, import("./clique.types").Clique>;
     memberCliqueMap: Record<string, string[]>; // talentId -> cliqueIds
@@ -49,12 +49,12 @@ export interface RelationshipsState {
     photoshoots: Record<string, import("./marketing.types").MagazinePhotoshoot>;
     activePressTours: Record<string, import("./marketing.types").PressTour>;
   };
-  discovery?: {
+  discovery?: Partial<{
     breakoutStars: Record<string, import("./discovery.types").BreakoutStar>;
     guestStarBookings: Record<string, import("./discovery.types").GuestStarBooking>;
     hiddenTalentPool: Record<string, import("./discovery.types").HiddenTalent>;
     discoveryLog: string[];
-  };
+  }>;
 }
 
 // Helper type for relationship formation

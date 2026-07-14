@@ -35,7 +35,7 @@ export const TalentFilter: WeekFilter = {
 
   execute(state: GameState, context: TickContext): void {
     // Core talent systems
-    context.impacts.push(TalentSystem.advance(state, context.rng));
+    context.impacts.push(TalentSystem.advance(state));
     context.impacts.push(...TalentLifecycleSystem.tick(state, context.rng));
     context.impacts.push(...tickDeathSystem(state, context.rng));
     context.impacts.push(...tickDynastySystem(state, context.rng));
@@ -111,17 +111,17 @@ export const TalentFilter: WeekFilter = {
           context.impacts.push({
             type: "NEWS_ADDED",
             payload: createAgentHiringEvent(talent, newAgent, context.week),
-          });
+          } as unknown as import("../../types").StateImpact);
         }
       }
 
       if (talent.agentId) {
-        const relationship = state.talentAgentRelationships[`${talentId}-${talent.agentId}`];
+        const relationship = state.talentAgentRelationships?.[`${talentId}-${talent.agentId}`];
         if (relationship && shouldTalentFireAgent(talent, relationship)) {
           context.impacts.push({
             type: "NEWS_ADDED",
             payload: createAgentFiringEvent(talent, talent.agentId, context.week),
-          });
+          } as unknown as import("../../types").StateImpact);
 
           context.impacts.push({
             type: "TALENT_UPDATED",
@@ -138,7 +138,7 @@ export const TalentFilter: WeekFilter = {
       // Phase 6: Weekly Relationship Evolution
       if (talent.agentId) {
         const relationshipId = `${talentId}-${talent.agentId}`;
-        const relationship = state.talentAgentRelationships[relationshipId];
+        const relationship = state.talentAgentRelationships?.[relationshipId];
         if (relationship) {
           // Evolve relationship over time and persist the result
           const evolved = TalentAgentInteractionEngine.evolveRelationship(
@@ -150,7 +150,7 @@ export const TalentFilter: WeekFilter = {
             context.impacts.push({
               type: "RELATIONSHIP_UPDATED",
               payload: { relationshipId, relationship: evolved },
-            });
+            } as unknown as import("../../types").StateImpact);
           }
         }
       }

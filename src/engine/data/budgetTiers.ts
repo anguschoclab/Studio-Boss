@@ -12,6 +12,16 @@ interface BudgetTierData {
 }
 
 export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
+  indie: {
+    key: "indie",
+    name: "Indie Budget",
+    label: "$1M",
+    budget: 1_000_000,
+    weeklyCost: 250_000,
+    developmentWeeks: 4,
+    productionWeeks: 6,
+    revenueRange: [1_000, 50_000_000],
+  },
   low: {
     key: "low",
     name: "Low Budget",

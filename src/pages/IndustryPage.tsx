@@ -98,29 +98,29 @@ export const IndustryPage: React.FC = () => {
         <KPIStatCard
           label="Market Sentiment"
           value={`${state.finance.marketState?.sentiment || 50}%`}
-          subValue={state.finance.marketState?.cycle || "STABLE"}
-          icon={Activity}
-          trend={(state.finance.marketState?.sentiment || 50) > 50 ? "up" : "down"}
+          subLabel={state.finance.marketState?.cycle || "STABLE"}
+          icon={<Activity className="w-4 h-4" />}
+          trend={{ value: (state.finance.marketState?.sentiment || 50) > 50 ? "↑" : "↓", isPositive: (state.finance.marketState?.sentiment || 50) > 50 }}
           variant="secondary"
         />
         <KPIStatCard
           label="Active Rivals"
           value={rivalsList.length}
-          subValue="Competing Entities"
-          icon={Building2}
+          subLabel="Competing Entities"
+          icon={<Building2 className="w-4 h-4" />}
           variant="destructive"
         />
         <KPIStatCard
           label="Genre Diversity"
           value={Object.keys(genrePopularity).length}
-          subValue="Tracked Sectors"
-          icon={BarChart3}
+          subLabel="Tracked Sectors"
+          icon={<BarChart3 className="w-4 h-4" />}
         />
         <KPIStatCard
           label="Agency Influence"
           value={agencies.length}
-          subValue="Strategic Partners"
-          icon={Users}
+          subLabel="Strategic Partners"
+          icon={<Users className="w-4 h-4" />}
           variant="secondary"
         />
       </div>

@@ -19,7 +19,7 @@ export interface LeverageResult {
   explanation: string[];
 }
 
-const TALENT_TIER_EFFECTS: Record<number, { effect: number; explanation: string }> = {
+const TALENT_TIER_EFFECTS: Record<string, { effect: number; explanation: string }> = {
   1: { effect: 0.4, explanation: "A-List status provides maximum leverage." },
   2: { effect: 0.2, explanation: "B-List status provides solid bargaining ground." },
   3: { effect: 0.15, explanation: "Rising star momentum increases leverage." },
@@ -100,7 +100,7 @@ export const AgencyLeverageEngine = {
     }
 
     // 2. Market Cycle Effect
-    const cycleImpact = MARKET_CYCLE_EFFECTS[market.cycle];
+    const cycleImpact = MARKET_CYCLE_EFFECTS[market.cycle as string];
     let marketEffect = 0;
     if (cycleImpact) {
       marketEffect = cycleImpact.effect;
@@ -136,9 +136,9 @@ export const AgencyLeverageEngine = {
         ? AGENCY_ARCHETYPES[agency.culture as keyof typeof AGENCY_ARCHETYPES]
         : undefined;
       const tacticMatchesArchetype = archetype?.negotiation_tactic_preferences.includes(
-        agent.negotiationTactic.toUpperCase()
+        agent.negotiationTactic?.toUpperCase() ?? ""
       );
-      const tacticImpact = TACTIC_BASE_EFFECTS[agent.negotiationTactic.toUpperCase()];
+      const tacticImpact = TACTIC_BASE_EFFECTS[agent.negotiationTactic?.toUpperCase() ?? ""];
 
       if (tacticImpact) {
         tacticEffect = tacticImpact.effect;

@@ -33,7 +33,7 @@ export const SummaryBuilder = {
       }
 
       if (impact.type === "NEWS_ADDED") {
-        const payload = impact.payload as import("../../types/state.types").NewsImpact;
+        const payload = impact.payload;
         allHeadlines.push({
           id: context.rng.uuid("NWS"),
           text: payload.headline || "Breaking News",
@@ -71,13 +71,13 @@ export const SummaryBuilder = {
     let totalCosts = 0;
 
     if (ledgerImpact && ledgerImpact.type === "LEDGER_UPDATED") {
-      const report = ledgerImpact.payload.report;
+      const report = (ledgerImpact as { payload: { report: import("../../types/state.types").WeeklyFinancialReport } }).payload.report;
       totalRevenue = report.revenue.boxOffice + report.revenue.distribution + report.revenue.other;
       totalCosts =
         report.expenses.production +
         report.expenses.marketing +
         report.expenses.overhead +
-        report.expenses.pacts;
+        (report.expenses.pacts ?? 0);
     }
 
     const eventTitles: string[] = [];

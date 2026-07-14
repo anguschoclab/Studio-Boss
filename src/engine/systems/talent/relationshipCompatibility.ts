@@ -59,9 +59,13 @@ export function calculateCompatibility(talentA: Talent, talentB: Talent): number
     }
   }
 
-  if (talentA.tier === talentB.tier) {
+  const tierOrder: Record<string, number> = { NEWCOMER: 0, RISING_STAR: 1, C_LIST: 2, B_LIST: 3, A_LIST: 4 };
+  const tierA = tierOrder[talentA.tier] ?? 0;
+  const tierB = tierOrder[talentB.tier] ?? 0;
+
+  if (tierA === tierB) {
     compatibility += 10;
-  } else if (Math.abs(talentA.tier - talentB.tier) === 1) {
+  } else if (Math.abs(tierA - tierB) === 1) {
     compatibility += 5;
   } else {
     compatibility -= 15;

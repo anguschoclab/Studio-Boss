@@ -6,7 +6,7 @@ import { tickScriptDevelopment } from "../../systems/production/ScriptDraftingSy
 import { checkAndTriggerCrisis } from "../../systems/crises";
 import { checkDirectorsCutEligibility } from "../../systems/ratings/index";
 import { evaluateRatingForProject, evaluateRegionalRatings } from "../../systems/ratings/index";
-import { generateMarketBanScandal } from "../../systems/scandals";
+import { generateMarketBanScandal } from "../../systems/scandals/index";
 import { resolveCrisisWithHandlers } from "../../systems/production/crisisEvaluator";
 import { calculateAudienceIndex } from "../../systems/demographics";
 
@@ -26,7 +26,7 @@ export const ProductionProjectProcessor = {
       const impacts = tickScriptDevelopment(project, context.rng);
       context.impacts.push(...impacts);
     } else if (!project.activeCrisis && ACTIVE_STAGES.has(project.state)) {
-      const impact = checkAndTriggerCrisis(project, state, context.rng);
+      const impact = checkAndTriggerCrisis(project);
       if (impact) context.impacts.push(impact);
 
       // Wiring: Resolve Crisis with Handlers (Strategy Pattern)

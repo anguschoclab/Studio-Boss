@@ -4,6 +4,14 @@ import { RandomGenerator } from "../utils/rng";
 import { clamp } from "../utils";
 import { BardResolver } from "./bardResolver";
 
+export interface ReceptionResult {
+  metaScore: number;
+  audienceScore: number;
+  reviews: Review[];
+  status: string;
+  isCultPotential: boolean;
+}
+
 export const ReviewSystem = {
   /**
    * Generates scores at the exact moment a project shifts to the Released state.
@@ -12,7 +20,7 @@ export const ReviewSystem = {
     project: Project,
     attachedTalent: Talent[],
     rng: RandomGenerator
-  ): CriticConsensus {
+  ): ReceptionResult {
     const metaScore = this.calculateMetaScore(project, attachedTalent, rng);
     const audienceScore = this.calculateAudienceScore(project, metaScore, rng);
 
@@ -90,7 +98,9 @@ export const ReviewSystem = {
       reviews.push({
         criticName: name,
         score: s,
-        text: BardResolver.resolve({
+        consensus: "mixed" as CriticConsensus,
+        publication: name,
+        quote: BardResolver.resolve({
           domain: "Review",
           subDomain: "Critic",
           intensity: s,

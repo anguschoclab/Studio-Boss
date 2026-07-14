@@ -39,7 +39,7 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
     const risk = talent.psychology?.scandalRisk || 5;
     if (rng.next() * 1000 < risk * sizeModifier) {
       const types: ScandalType[] = ["financial", "personal", "onset_behavior", "legal", "feud"];
-      const type = pick(types, rng);
+      const type = pick(types);
 
       const s: Scandal = {
         id: rng.uuid("SND"),

@@ -99,7 +99,7 @@ export const TalentDriftEngine = {
     // 2. Personality Trait Drift
     if (rng.next() < config.personalityDriftProbability && talent.personality) {
       const personalityChange = this.driftPersonality(
-        talent.personality,
+        talent.personality as TalentPersonality,
         config.driftIntensity,
         rng
       );
@@ -286,7 +286,7 @@ export const TalentDriftEngine = {
       return null;
     }
 
-    const newTrajectory = rng.pick(transitions);
+    const newTrajectory = rng.pick(transitions) as string;
     return { old: currentTrajectory, new: newTrajectory };
   },
 

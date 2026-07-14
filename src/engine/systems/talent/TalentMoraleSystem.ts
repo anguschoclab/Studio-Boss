@@ -59,11 +59,11 @@ export const TalentMoraleSystem = {
     for (const key in contractsDict) {
       if (!Object.prototype.hasOwnProperty.call(contractsDict, key)) continue;
       const c = contractsDict[key as ContractId];
-      const arr = contractsByTalent.get(c.talentId);
+      const arr = contractsByTalent.get(c.talentId as TalentId);
       if (arr) {
         arr.push(c);
       } else {
-        contractsByTalent.set(c.talentId, [c]);
+        contractsByTalent.set(c.talentId as TalentId, [c]);
       }
     }
 
@@ -79,9 +79,9 @@ export const TalentMoraleSystem = {
       else if (t.psychology.mood < 45) moodChange += 1;
 
       // 2. Project performance
-      const activeContracts = contractsByTalent.get(t.id) || [];
+      const activeContracts = contractsByTalent.get(t.id as unknown as TalentId) || [];
       for (const c of activeContracts) {
-        const p = projectsDict[c.projectId];
+        const p = projectsDict[c.projectId as ProjectId];
         if (p) {
           // Momentum impact
           if (p.momentum < 30) moodChange -= 2;

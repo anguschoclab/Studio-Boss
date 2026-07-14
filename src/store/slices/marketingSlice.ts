@@ -55,7 +55,7 @@ export const createMarketingSlice: StateCreator<GameStore, [], [], MarketingSlic
       return;
     }
 
-    const rng = new RandomGenerator(state.rngState);
+    const rng = new RandomGenerator(state.rngState ?? 0);
     const project = state.entities.projects[projectId];
     const metaScore = project?.reception?.metaScore || project?.reviewScore || 60;
 
@@ -123,7 +123,7 @@ export const createMarketingSlice: StateCreator<GameStore, [], [], MarketingSlic
 
     set((s) => {
       if (!s.gameState) return s;
-      const rng = new RandomGenerator(s.gameState.rngState);
+      const rng = new RandomGenerator(s.gameState.rngState ?? 0);
 
       const impact = {
         type: "PROJECT_UPDATED",

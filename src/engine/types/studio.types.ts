@@ -81,6 +81,8 @@ export interface RivalStudio {
   // Recent weekly revenue snapshots (box office + streaming + merch), used by
   // the UI to show a rival's release track record.
   revenueHistory?: { week: number; revenue: number; boxOffice: number }[];
+  annualRevenue?: number;
+  boxOfficeTotal?: number;
 }
 
 export interface StudioCulture {
@@ -89,6 +91,7 @@ export interface StudioCulture {
   nicheVsBroad: number; // 0 to 100
   filmFirstVsTvFirst: number; // 0 to 100
   franchiseOriginal: number; // 0 (original) to 100 (franchise)
+  genrePopularity?: Record<string, number>;
 }
 
 export interface GameState {
@@ -134,6 +137,7 @@ export interface GameState {
     bookmarks?: Bookmark[];
     snapshotHistory?: unknown[];
     activeCampaigns?: Record<string, unknown>;
+    identity?: Record<string, unknown>;
   };
   market: {
     opportunities: Opportunity[];
@@ -160,11 +164,11 @@ export interface GameState {
   };
   history: StudioSnapshot[];
   eventHistory: GameEvent[];
-  deals?: { activeDeals: unknown[]; pendingOffers: unknown[]; expiredDeals: unknown[] };
-  talentAgentRelationships?: Record<string, unknown>;
-  relationships?: { relationships: Record<string, unknown> };
+  deals?: { activeDeals: import("./talent.types").TalentPact[]; pendingOffers?: unknown[]; expiredDeals: import("./talent.types").TalentPact[] };
+  talentAgentRelationships?: Record<string, import("../systems/talent/talentAgentInteractions").TalentAgentRelationship>;
+  relationships?: import("./relationship.types").RelationshipsState;
   tvRecommendations?: {
-    recommendations: Record<string, import("./tv-recommendations.types").TVShowRecommendation>;
+    recommendations?: Record<string, import("./tv-recommendations.types").TVShowRecommendation>;
   };
 }
 

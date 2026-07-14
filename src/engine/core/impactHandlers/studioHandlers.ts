@@ -1,11 +1,16 @@
-import { GameState, StateImpact, NewsEvent } from "@/engine/types";
+import { GameState, NewsEvent } from "@/engine/types";
+import type {
+  PrestigeChangedImpact,
+  NewsImpact,
+  SystemTickImpact,
+} from "@/engine/types/state.types";
 
 /**
  * Studio-related impact handlers
  * Pure functions that apply studio-related state impacts
  */
 
-export function handlePrestigeChanged(state: GameState, impact: StateImpact): GameState {
+export function handlePrestigeChanged(state: GameState, impact: PrestigeChangedImpact): GameState {
   const { amount } = impact.payload;
   return {
     ...state,
@@ -16,14 +21,14 @@ export function handlePrestigeChanged(state: GameState, impact: StateImpact): Ga
   };
 }
 
-export function handleNewsAdded(state: GameState, impact: StateImpact): GameState {
+export function handleNewsAdded(state: GameState, impact: NewsImpact): GameState {
   const { id, headline, description, publication } = impact.payload;
   const newsEvent: NewsEvent = {
-    id: id,
+    id: id || `news-${state.week}-${Date.now()}`,
     week: state.week,
     type: "STUDIO_EVENT",
     headline: headline,
-    description: description,
+    description: description || "",
     publication: publication,
   };
   return {
@@ -35,7 +40,7 @@ export function handleNewsAdded(state: GameState, impact: StateImpact): GameStat
   };
 }
 
-export function handleSystemTick(state: GameState, impact: StateImpact): GameState {
+export function handleSystemTick(state: GameState, impact: SystemTickImpact): GameState {
   const payload = impact.payload || {};
   const typedPayload = payload as Record<string, unknown>;
   const { week, tickCount, __studioUpdate, studioIdentity, newAchievementId } = typedPayload;

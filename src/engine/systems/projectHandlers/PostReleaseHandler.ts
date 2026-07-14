@@ -1,54 +1,53 @@
-import { Project, StateImpact } from "@/engine/types";
+import { Project } from "@/engine/types";
 import { RandomGenerator } from "../../utils/rng";
-import { isSeriesProject } from "../../utils/projectUtils";
+import { randRange } from "../../utils";
 
-export function handlePostReleasePhase(p: Project, rng: RandomGenerator): StateImpact[] {
-  const impacts: StateImpact[] = [];
+export interface PostReleaseResult {
+  update: string | null;
+}
+
+export function handlePostReleasePhase(
+  p: Project,
+  rng?: RandomGenerator
+): PostReleaseResult {
+  let update: string | null = null;
   let weeklyAncillary = 0;
 
   const isFamilyOrAnim = p.genre === "Family" || p.genre === "Animation";
-  const isPrestige =
-    (p as any).genre === "Drama" || (p as any).targetAudience === "Prestige / Critics";
-  const projectAny = p as any;
+  const isPrestige = p.genre === "Drama" || p.targetAudience === "Prestige / Critics";
+  const range = (min: number, max: number) =>
+    rng ? rng.range(min, max) : randRange(min, max);
 
   if (p.weeksInPhase === 1) {
     if (isPrestige && (p.reviewScore || 0) > 80) {
-      weeklyAncillary = projectAny.budget * rng.range(0.5, 1.5);
+      weeklyAncillary = p.budget * range(0.5, 1.5);
+      update = `A fierce bidding war erupts for the streaming rights to "${p.title}"!`;
     } else if (p.format === "film") {
-      weeklyAncillary = projectAny.revenue * rng.range(0.1, 0.3);
+      weeklyAncillary = p.revenue * range(0.1, 0.3);
+      update = `"${p.title}" drops on VOD and physical media.`;
     } else if (p.format === "tv") {
-      weeklyAncillary = projectAny.revenue * rng.range(0.05, 0.15);
+      weeklyAncillary = p.revenue * range(0.05, 0.15);
+      update = `"${p.title}" lands on streaming platforms.`;
     } else if (p.format === "unscripted") {
-      weeklyAncillary = projectAny.revenue * rng.range(0.02, 0.08);
+      weeklyAncillary = p.revenue * range(0.02, 0.08);
+      update = `"${p.title}" finds its secondary platform audience.`;
     }
   } else {
     if (isFamilyOrAnim) {
-      weeklyAncillary = projectAny.revenue * 0.005;
+      weeklyAncillary = p.revenue * 0.005;
     } else {
-      weeklyAncillary = projectAny.revenue * 0.001;
+      weeklyAncillary = p.revenue * 0.001;
     }
-    weeklyAncillary *= Math.max(0.1, 1 - (p as any).weeksInPhase / 52);
+    weeklyAncillary *= Math.max(0.1, 1 - p.weeksInPhase / 52);
   }
 
-  const newAncillaryRevenue = (p.ancillaryRevenue || 0) + weeklyAncillary;
-  const newRevenue = projectAny.revenue + weeklyAncillary;
-  const currentWeeksInPhase = (p as any).weeksInPhase || 0;
-  const newState = currentWeeksInPhase >= 26 ? "archived" : p.state;
-  const newWeeksInPhase = currentWeeksInPhase >= 26 ? 0 : currentWeeksInPhase + 1;
+  p.ancillaryRevenue = (p.ancillaryRevenue || 0) + weeklyAncillary;
+  p.revenue += weeklyAncillary;
+  p.weeklyRevenue = 0;
 
-  impacts.push({
-    type: "PROJECT_UPDATED",
-    payload: {
-      projectId: p.id,
-      update: {
-        ancillaryRevenue: newAncillaryRevenue,
-        revenue: newRevenue,
-        weeklyRevenue: 0,
-        state: newState as any,
-        weeksInPhase: newWeeksInPhase,
-      },
-    },
-  });
+  if (p.weeksInPhase >= 26) {
+    p.state = "archived";
+  }
 
-  return impacts;
+  return { update };
 }

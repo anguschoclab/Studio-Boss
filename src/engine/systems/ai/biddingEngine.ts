@@ -11,7 +11,7 @@ import { RandomGenerator } from "../../utils/rng";
 /**
  * AI Decision Multipliers.
  */
-const ArchetypeMultipliers: Record<ArchetypeKey, (genre: string) => number> = {
+const ArchetypeMultipliers: Record<string, (genre: string) => number> = {
   indie: (genre) => (genre === "Drama" || genre === "Horror" ? 1.4 : 0.8),
   major: (genre) => (genre === "Sci-Fi" || genre === "Action" ? 1.6 : 0.6),
   "mid-tier": () => 1.15,

@@ -1,4 +1,4 @@
-import { GameState } from "../types";
+import { GameState, ArchetypeKey } from "../types";
 import { initializeGame } from "../core/gameInit";
 import { WeekCoordinator } from "../services/WeekCoordinator";
 import { TalentLifecycleSystem } from "../systems/talent/TalentLifecycleSystem";
@@ -39,7 +39,7 @@ export class SimulationRunner {
       expenses: 0,
       net: 0,
       headlines: [],
-    });
+    } as any);
 
     let cashLast = state.finance.cash || 0;
     const CASH_DEBUG = process.env.CASH_DEBUG === "1";
@@ -47,7 +47,7 @@ export class SimulationRunner {
       const rng = new RandomGenerator(state.gameSeed + state.week + (state.tickCount || 0));
 
       // 1. Core Engine Tick
-      const { newState: steppedState, summary } = WeekCoordinator.execute(state, rng);
+      const { newState: steppedState, summary } = WeekCoordinator.execute(state);
       state = steppedState;
 
       // 3. Studio Automation (Greenlights, Pitches, Releases)

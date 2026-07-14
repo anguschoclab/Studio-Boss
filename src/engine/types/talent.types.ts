@@ -20,9 +20,43 @@ export type RivalStrategy =
   | "balanced";
 
 export type DirectorArchetype = "auteur" | "journeyman" | "visionary" | "commercial_hack";
+export type ActorArchetype =
+  | "movie_star"
+  | "tv_star"
+  | "character_actor"
+  | "action_hero"
+  | "comedy_star"
+  | "prestige_actor"
+  | "indie_darling"
+  | "viral_sensation"
+  | "kid_actor"
+  | "young_adult"
+  | "veteran";
+export type WriterArchetype =
+  | "showrunner"
+  | "screenwriter"
+  | "script_doctor"
+  | "novelist"
+  | "comedy_writer"
+  | "genre_specialist"
+  | "prestige_writer";
+export type ProducerArchetype =
+  | "blockbuster_producer"
+  | "indie_producer"
+  | "studio_exec"
+  | "packager"
+  | "line_producer"
+  | "creative_producer";
+export type PersonalityArchetype =
+  | "influencer"
+  | "reality_star"
+  | "talk_show_host"
+  | "news_anchor"
+  | "viral_creator"
+  | "legacy_personality";
 export type TalentTier = "A_LIST" | "B_LIST" | "C_LIST" | "RISING_STAR" | "NEWCOMER";
 
-export type ScandalType = "financial" | "personal" | "onset_behavior" | "legal" | "feud";
+export type ScandalType = "financial" | "personal" | "onset_behavior" | "legal" | "feud" | "director_speaks_out";
 
 export interface Scandal {
   id: string;
@@ -59,7 +93,7 @@ export type TalentPersonality =
   | "loyal"
   | "ambitious";
 
-export type CareerTrajectory = "rising" | "peak" | "declining" | "resurgent";
+export type CareerTrajectory = "rising" | "peak" | "declining" | "resurgent" | "plateau";
 export type AccessLevel = "outsider" | "soft-access" | "legacy" | "dynasty" | "comeback";
 export type ProjectRole = "actor" | "director" | "writer" | "producer" | "showrunner";
 export type TalentRole = "actor" | "director" | "writer" | "producer";
@@ -194,6 +228,37 @@ export interface Talent {
   motivationProfile?: MotivationProfile;
   currentMotivation?: TalentMotivation;
   motivationImpulse?: "CASH_OUT" | "AWARDS_RUN" | "REHAB" | "VANITY" | "NONE";
+
+  // Archetype assignments
+  actorArchetype?: ActorArchetype;
+  writerArchetype?: WriterArchetype;
+  producerArchetype?: ProducerArchetype;
+  personalityArchetype?: PersonalityArchetype;
+  directorArchetype?: DirectorArchetype;
+
+  // Lifecycle & wellness
+  fatigue?: number;
+  medicalLeaveEndsWeek?: number;
+  lastReleaseWeek?: number;
+
+  // Family / dynasty
+  spouseId?: string;
+  childIds?: string[];
+  parentIds?: string[];
+  isNepoBaby?: boolean;
+
+  // Breakout tracking
+  isBreakout?: boolean;
+
+  // Casting comfort system
+  comfortLevel?: import("./casting.types").TalentComfortLevel;
+  comfortPremiumRates?: import("./casting.types").ComfortPremiumRates;
+
+  // Contract reference
+  contractId?: string;
+
+  // Awards on talent
+  awards?: import("./project.types").Award[];
 }
 
 export interface Contract {
@@ -208,6 +273,8 @@ export interface Contract {
   backendEscalator?: number; // % bump if revenue exceeds threshold
   ownerId?: string;
   role?: TalentRole;
+  signedWeek?: number;
+  weeksRemaining?: number;
 }
 
 export interface TalentPact {
@@ -218,6 +285,8 @@ export interface TalentPact {
   startDate: number;
   endDate: number;
   weeklyOverhead: number;
+  weeklyFee?: number;
+  weeksRemaining?: number;
   exclusivity: boolean;
   status: "active" | "expiring" | "expired" | "terminated";
 }
