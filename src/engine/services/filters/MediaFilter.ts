@@ -13,7 +13,7 @@ export const MediaFilter: WeekFilter = {
   name: "MediaFilter",
 
   execute(state: GameState, context: TickContext): void {
-    context.impacts.push(advanceRumors(state, context.week, context.rng));
+    context.impacts.push(advanceRumors(state));
 
     // Process all active first-look deals
     const firstLookDeals = state.studio.internal?.firstLookDeals;

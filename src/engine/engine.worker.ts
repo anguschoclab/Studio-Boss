@@ -22,7 +22,7 @@ self.onmessage = (e: MessageEvent) => {
     case "ADVANCE_WEEK": {
       const { state } = payload;
       const rng = new RandomGenerator(state.rngState ?? state.gameSeed);
-      const { newState, summary, impacts } = advanceWeek(state as GameState, rng);
+      const { newState, summary, impacts } = advanceWeek(state as GameState);
       newState.rngState = rng.getState();
       self.postMessage({ type: "ADVANCE_RESULT", payload: { newState, summary, impacts } });
       break;

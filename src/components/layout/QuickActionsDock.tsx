@@ -19,7 +19,7 @@ import { transitions } from "@/lib/animations";
 
 interface QuickAction {
   id: string;
-  icon: React.ComponentType<{ className?: string; size?: number | string }>;
+  icon: React.ComponentType<{ className?: string; size?: number | string; strokeWidth?: string | number }>;
   label: string;
   shortcut?: string;
   action: () => void;
@@ -70,7 +70,7 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({ className })
           icon: Settings,
           label: "MARKETING INTEL",
           action: () => {
-            setActiveHub("hq", "marketing");
+            setActiveHub("hq");
           },
         },
       ],
@@ -80,7 +80,7 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({ className })
           icon: Film,
           label: "PRODUCTION SLATE",
           action: () => {
-            setActiveHub("production", "slate");
+            setActiveHub("production");
           },
         },
       ],
@@ -90,7 +90,7 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({ className })
           icon: Users,
           label: "TALENT ACQUISITION",
           action: () => {
-            setActiveHub("talent", "marketplace");
+            setActiveHub("talent");
           },
         },
       ],
@@ -100,7 +100,7 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({ className })
           icon: TrendingUp,
           label: "MARKET ANALYSIS",
           action: () => {
-            setActiveHub("intelligence", "market");
+            setActiveHub("intelligence");
           },
         },
       ],

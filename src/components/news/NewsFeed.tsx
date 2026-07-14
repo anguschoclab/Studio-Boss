@@ -29,6 +29,8 @@ const eventTypeConfig: Record<
     label: "Studio",
   },
   RIVAL: { icon: History, color: "text-red-400 bg-red-400/10 border-red-400/20", label: "Rival" },
+  SCANDAL: { icon: AlertTriangle, color: "text-fuchsia-400 bg-fuchsia-400/10 border-fuchsia-400/20", label: "Scandal" },
+  MILESTONE: { icon: Trophy, color: "text-cyan-400 bg-cyan-400/10 border-cyan-400/20", label: "Milestone" },
 };
 
 export const NewsFeed = () => {

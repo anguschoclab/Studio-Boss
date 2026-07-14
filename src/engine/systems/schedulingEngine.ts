@@ -87,8 +87,8 @@ export const SchedulingEngine = {
 
   processPacts(pacts: TalentPact[]): TalentPact[] {
     return (pacts || [])
-      .map((p) => ({ ...p, weeksRemaining: p.weeksRemaining - 1 }))
-      .filter((p) => p.weeksRemaining > 0);
+      .map((p) => ({ ...p, weeksRemaining: (p.weeksRemaining ?? 0) - 1 }))
+      .filter((p) => (p.weeksRemaining ?? 0) > 0);
   },
 
   updateTalentFatigue(talent: Talent, isWorking: boolean): number {

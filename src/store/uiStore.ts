@@ -41,6 +41,8 @@ export type TabId =
 
 interface UIStore {
   activeTab: TabId;
+  activeHub: string;
+  showQuickActions: boolean;
   showCreateProject: boolean;
   showPitchProject: boolean;
   pitchingProjectId: string | null;
@@ -64,6 +66,9 @@ interface UIStore {
   selectedProjectId: string | null;
   selectedTalentId: string | null;
   setActiveTab: (tab: TabId) => void;
+  setActiveHub: (hub: string) => void;
+  setActiveSubTab: (tab: string) => void;
+  toggleQuickActions: () => void;
   openCreateProject: () => void;
   closeCreateProject: () => void;
   openPitchProject: (projectId: string) => void;
@@ -78,6 +83,8 @@ interface UIStore {
 
 export const useUIStore = create<UIStore>((set) => ({
   activeTab: "command",
+  activeHub: "studio",
+  showQuickActions: false,
   showCreateProject: false,
   showPitchProject: false,
   pitchingProjectId: null,
@@ -121,6 +128,9 @@ export const useUIStore = create<UIStore>((set) => ({
   selectedProjectId: null,
   selectedTalentId: null,
   setActiveTab: (tab) => set({ activeTab: tab }),
+  setActiveHub: (hub) => set({ activeHub: hub }),
+  setActiveSubTab: () => {},
+  toggleQuickActions: () => set((s) => ({ showQuickActions: !s.showQuickActions })),
   openCreateProject: () => set({ showCreateProject: true }),
   closeCreateProject: () => set({ showCreateProject: false }),
   openPitchProject: (projectId) => set({ showPitchProject: true, pitchingProjectId: projectId }),
