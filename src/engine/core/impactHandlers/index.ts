@@ -24,6 +24,7 @@ import * as noopHandlers from "./noopHandlers";
  */
 const handlerRegistry: Record<
   Exclude<ImpactType, undefined>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (state: GameState, impact: any) => GameState
 > = {
   // Finance handlers
