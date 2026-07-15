@@ -36,31 +36,6 @@ vi.mock("zustand/react/shallow", () => ({
   useShallow: (selector: any) => selector,
 }));
 
-function makeFranchiseState(): any {
-  return {
-    gameState: {
-      ip: {
-        vault: [],
-        franchises: {
-          "fr-1": {
-            id: "fr-1",
-            name: "Test Universe",
-            relevanceScore: 80,
-            fatigueLevel: 0.2,
-            audienceLoyalty: 70,
-            totalEquity: 500_000_000,
-            synergyMultiplier: 1.5,
-            assetIds: ["asset-1", "asset-2"],
-            activeProjectIds: [],
-            lastReleaseWeeks: [10],
-            creationWeek: 1,
-          },
-        },
-      },
-    },
-  };
-}
-
 function makeAssetState(): any {
   return {
     gameState: {

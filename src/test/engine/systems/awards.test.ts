@@ -109,8 +109,7 @@ describe("awards system", () => {
       const impacts = runAwardsCeremony(state, 4, 2024, rng);
 
       // New CeremonyRunner emits INDUSTRY_UPDATE impacts with awards
-      const awardImpacts = impacts.filter((i) => i.type === "INDUSTRY_UPDATE");
-      expect(impacts.length).toBeGreaterThan(0);
+      expect(impacts.filter((i) => i.type === "INDUSTRY_UPDATE").length).toBeGreaterThan(0);
     });
 
     it("accumulates prestige change for high-scoring project", () => {
