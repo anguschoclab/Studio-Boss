@@ -158,7 +158,7 @@ export const ProjectDetailModal = () => {
       groups.set(r, { attached, available });
     }
     return groups;
-  }, [project, scriptedProject, contracts, talentByRole]);
+  }, [project, scriptedProject, talentByRole, gameState]);
 
   const greenlightReport = useMemo(() => {
     if (!project || project.state !== "needs_greenlight" || !gameState) return null;
