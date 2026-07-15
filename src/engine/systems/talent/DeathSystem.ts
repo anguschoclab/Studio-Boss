@@ -1,6 +1,6 @@
 import { GameState, StateImpact, Talent, Project, Contract } from "../../types";
 import { RandomGenerator } from "../../utils/rng";
-import { getContractsByProjectId } from "../../utils";
+import { getContractsByProjectId, getContractsByTalentId } from "../../utils";
 
 /**
  * Death System
@@ -365,9 +365,11 @@ function processGriefImpacts(
  * Determine if talent is owned by player or a rival studio
  */
 function getTalentOwner(talent: Talent, state: GameState): string | null {
-  // Check contracts
-  const contracts = Object.values(state.entities.contracts || {}).filter(
-    (c) => c.talentId === talent.id
+  // ⚡ Bolt: O(1) indexed lookup instead of O(N) Object.values().filter(), preventing intermediate array allocation and GC overhead
+  const contracts = getContractsByTalentId(
+    state.entities.contractsByTalentId,
+    state.entities.contracts || {},
+    talent.id
   );
 
   for (const contract of contracts) {
