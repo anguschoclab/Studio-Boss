@@ -115,6 +115,7 @@ export const TalentHub = () => {
                   onClick={() => setRosterFilter(type)}
                   className={cn(
                     "px-8 h-12 text-[10px] uppercase font-black tracking-[0.3em] border transition-all duration-700 rounded-none italic flex items-center justify-center min-w-[140px]",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-black",
                     rosterFilter === type
                       ? "bg-secondary text-black border-secondary shadow-[0_0_30px_rgba(var(--secondary),0.2)]"
                       : "bg-white/[0.02] text-muted-foreground/30 border-white/5 hover:bg-white/[0.05] hover:text-foreground hover:border-white/20"
@@ -131,6 +132,7 @@ export const TalentHub = () => {
               onClick={() => setShowBookmarksOnly((v) => !v)}
               className={cn(
                 "h-12 w-12 flex items-center justify-center border transition-all duration-700 rounded-none",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-black",
                 showBookmarksOnly
                   ? "bg-secondary/10 border-secondary/40 text-secondary shadow-[0_0_15px_rgba(var(--secondary),0.2)]"
                   : "bg-white/[0.02] text-muted-foreground/30 border-white/5 hover:bg-white/[0.05] hover:text-foreground hover:border-white/20"
@@ -264,6 +266,7 @@ export const TalentHub = () => {
                 onClick={() => setShowBookmarksOnly((v) => !v)}
                 className={cn(
                   "h-14 w-14 flex items-center justify-center border transition-all duration-700 rounded-none",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black",
                   showBookmarksOnly
                     ? "bg-primary/10 border-primary/40 text-primary shadow-[0_0_15px_rgba(var(--primary),0.2)]"
                     : "bg-black/60 border-white/10 text-muted-foreground/40 hover:text-primary hover:border-primary/40"
