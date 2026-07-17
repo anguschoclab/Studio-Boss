@@ -84,6 +84,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/20 group-focus-within:text-primary transition-colors pointer-events-none" />
           <input
             type="text"
+            aria-label={searchPlaceholder || "Search database"}
             value={searchValue || ""}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={searchPlaceholder}
