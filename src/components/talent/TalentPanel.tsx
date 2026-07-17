@@ -8,8 +8,8 @@ import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 export const TalentPanel = () => {
   const state = useGameStore((s) => s.gameState);
   const talentPool = useMemo(
-    () => Object.values(state?.entities.talents || {}),
-    [state?.entities.talents]
+    () => Object.values(state?.entities?.talents || {}),
+    [state?.entities?.talents]
   );
   const [filter, setFilter] = useState<TalentRole | "all">("all");
 

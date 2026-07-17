@@ -369,9 +369,14 @@ export function tickTVRecommendationSystem(
     return impacts;
   }
 
-  const talents = Object.values(state.entities.talents || {});
+  const talentsDict = state.entities.talents || {};
 
-  for (const talent of talents) {
+  // ⚡ Bolt: Replaced Object.values() with a direct for...in loop to prevent array allocations
+  for (const talentId in talentsDict) {
+    if (!Object.prototype.hasOwnProperty.call(talentsDict, talentId)) continue;
+
+    const talent = talentsDict[talentId];
+
     // Only generate for active talents (not retired, not on medical leave)
     if (talent.retired || talent.onMedicalLeave) {
       continue;

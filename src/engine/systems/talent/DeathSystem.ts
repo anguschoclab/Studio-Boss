@@ -402,9 +402,14 @@ export function tickDeathSystem(state: GameState, rng: RandomGenerator): StateIm
   const impacts: StateImpact[] = [];
   const deathEvents: DeathEvent[] = [];
 
-  const talents = Object.values(state.entities.talents || {});
+  const talentsDict = state.entities.talents || {};
 
-  for (const talent of talents) {
+  // ⚡ Bolt: Replaced Object.values() with a direct for...in loop to prevent array allocations
+  for (const talentId in talentsDict) {
+    if (!Object.prototype.hasOwnProperty.call(talentsDict, talentId)) continue;
+
+    const talent = talentsDict[talentId];
+
     // Skip if already on medical leave (hospitalized, protected)
     if (talent.onMedicalLeave) continue;
 
