@@ -3,10 +3,8 @@ import {
   tickAntitrust,
   isAcquirerBlockedByAntitrust,
   resetAntitrustState,
-  antitrustEventLog,
   antitrustBlockList,
 } from "@/engine/systems/industry/Antitrust";
-import { GameState } from "@/engine/types";
 import { createMockGameState, createMockRival } from "../../generators/mockFactory";
 
 import * as utils from "@/engine/utils";

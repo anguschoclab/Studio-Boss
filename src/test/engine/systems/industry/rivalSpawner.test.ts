@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { tickRivalSpawner, tickHardBankruptcy } from "@/engine/systems/industry/RivalSpawner";
-import { GameState } from "@/engine/types";
 import { createMockGameState, createMockRival } from "../../generators/mockFactory";
 
 import * as utils from "@/engine/utils";

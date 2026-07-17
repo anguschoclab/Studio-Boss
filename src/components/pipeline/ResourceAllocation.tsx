@@ -157,6 +157,7 @@ export const ResourceAllocation: React.FC<ResourceAllocationProps> = ({ classNam
                     fill: "rgba(255,255,255,0.4)",
                     textTransform: "uppercase",
                     letterSpacing: "0.1em",
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   } as any}
                   axisLine={false}
                   tickLine={false}

@@ -38,6 +38,7 @@ export const StatsTab = ({ talent, statData }: StatsTabProps) => {
                     fontSize: 10,
                     fontWeight: 900,
                     textTransform: "uppercase",
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   } as any}
                   width={90}
                 />

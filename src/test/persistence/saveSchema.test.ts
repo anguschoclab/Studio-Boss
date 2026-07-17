@@ -16,7 +16,7 @@ describe("saveSchema", () => {
       const result = safeJsonParse('{"__proto__":{"polluted":true},"a":1}') as any;
       expect(result.a).toBe(1);
       expect(Object.keys(result)).not.toContain("__proto__");
-      expect(result.hasOwnProperty("__proto__")).toBe(false);
+      expect(Object.prototype.hasOwnProperty.call(result, "__proto__")).toBe(false);
       expect((Object.prototype as any).polluted).toBeUndefined();
     });
 
@@ -24,7 +24,7 @@ describe("saveSchema", () => {
       const result = safeJsonParse('{"outer":{"__proto__":{"polluted":true},"x":2}}') as any;
       expect(result.outer.x).toBe(2);
       expect(Object.keys(result.outer)).not.toContain("__proto__");
-      expect(result.outer.hasOwnProperty("__proto__")).toBe(false);
+      expect(Object.prototype.hasOwnProperty.call(result.outer, "__proto__")).toBe(false);
       expect((Object.prototype as any).polluted).toBeUndefined();
     });
 
@@ -33,9 +33,9 @@ describe("saveSchema", () => {
         '{"constructor":{"prototype":{"polluted":true}},"nested":{"constructor":{"harm":1}}}'
       ) as any;
       expect(Object.keys(result)).not.toContain("constructor");
-      expect(result.hasOwnProperty("constructor")).toBe(false);
+      expect(Object.prototype.hasOwnProperty.call(result, "constructor")).toBe(false);
       expect(Object.keys(result.nested)).not.toContain("constructor");
-      expect(result.nested.hasOwnProperty("constructor")).toBe(false);
+      expect(Object.prototype.hasOwnProperty.call(result.nested, "constructor")).toBe(false);
       expect(result.nested).toBeDefined();
       expect((Object.prototype as any).polluted).toBeUndefined();
     });
@@ -45,9 +45,9 @@ describe("saveSchema", () => {
         '{"prototype":{"evil":true},"nested":{"prototype":{"evil":2}}}'
       ) as any;
       expect(Object.keys(result)).not.toContain("prototype");
-      expect(result.hasOwnProperty("prototype")).toBe(false);
+      expect(Object.prototype.hasOwnProperty.call(result, "prototype")).toBe(false);
       expect(Object.keys(result.nested)).not.toContain("prototype");
-      expect(result.nested.hasOwnProperty("prototype")).toBe(false);
+      expect(Object.prototype.hasOwnProperty.call(result.nested, "prototype")).toBe(false);
     });
 
     it("throws on invalid JSON syntax", () => {
@@ -72,7 +72,7 @@ describe("saveSchema", () => {
       expect(result[0]).toBe(1);
       expect(result[1]).toBe("two");
       expect(Object.keys(result[2])).not.toContain("__proto__");
-      expect(result[2].hasOwnProperty("__proto__")).toBe(false);
+      expect(Object.prototype.hasOwnProperty.call(result[2], "__proto__")).toBe(false);
       expect(result[2].ok).toBe(true);
       expect((Object.prototype as any).x).toBeUndefined();
     });
@@ -121,6 +121,7 @@ describe("saveSchema", () => {
     });
 
     it("rejects missing week field", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { week, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
@@ -137,12 +138,14 @@ describe("saveSchema", () => {
     });
 
     it("rejects missing gameSeed", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { gameSeed, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
     });
 
     it("rejects missing tickCount", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { tickCount, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
@@ -210,18 +213,21 @@ describe("saveSchema", () => {
     });
 
     it("rejects missing entities field", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { entities, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
     });
 
     it("rejects missing market field", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { market, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
     });
 
     it("rejects missing industry field", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { industry, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
@@ -238,6 +244,7 @@ describe("saveSchema", () => {
     });
 
     it("rejects missing history field", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { history, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
@@ -249,6 +256,7 @@ describe("saveSchema", () => {
     });
 
     it("rejects missing eventHistory field", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { eventHistory, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
@@ -293,6 +301,7 @@ describe("saveSchema", () => {
     });
 
     it("accepts when optional fields are absent", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { news, ip, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(true);
