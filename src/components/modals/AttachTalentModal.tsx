@@ -49,11 +49,6 @@ export const TalentAttachmentPanel: React.FC<{ project: Project }> = ({ project 
     () => Object.values(gameState?.entities?.talents || {}),
     [gameState?.entities?.talents]
   );
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const contracts = useMemo(
-    () => gameState?.studio.internal.contracts || [],
-    [gameState?.studio.internal.contracts]
-  );
 
   const attachedTalentIds = useMemo(() => {
     if (!gameState) return new Set<string>();

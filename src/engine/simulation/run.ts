@@ -9,6 +9,7 @@ import * as path from "path";
  */
 
  
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare const Bun: unknown;
 
 const args = (process.argv || []).slice(2);

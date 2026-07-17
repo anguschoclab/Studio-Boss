@@ -29,6 +29,7 @@ export const IndustryFilter: WeekFilter = {
 
     const allNewAwards = awardsImpacts
       .filter((i) => i.type === "INDUSTRY_UPDATE" && i.payload?.update)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .flatMap((i) => Object.values((i.payload as any).update));
 
     if (allNewAwards.length > 0) {
@@ -41,6 +42,7 @@ export const IndustryFilter: WeekFilter = {
             week: context.week,
             year,
             awards: allNewAwards,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             body: (allNewAwards[0] as any)?.body || "Annual Industry Awards",
           },
         },
