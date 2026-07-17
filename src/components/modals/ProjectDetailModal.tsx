@@ -158,6 +158,7 @@ export const ProjectDetailModal = () => {
       groups.set(r, { attached, available });
     }
     return groups;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project, scriptedProject, contracts, talentByRole]);
 
   const greenlightReport = useMemo(() => {
