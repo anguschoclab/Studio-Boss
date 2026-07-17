@@ -69,8 +69,8 @@ describe("AwardsCeremonyModal", () => {
         type: "AWARDS",
         payload: {
           awards: [
-            { category: "Best Picture", projectId: "proj-1", id: "award-1" },
-            { category: "Best Director", projectId: "proj-2", id: "award-2" },
+            { category: "Best Picture", projectId: "proj-1", id: "proj-1" },
+            { category: "Best Director", projectId: "proj-2", id: "proj-2" },
           ],
           body: "Annual Industry Awards",
           year: 2026,

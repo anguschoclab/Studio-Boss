@@ -110,6 +110,7 @@ describe("awards system", () => {
 
       // New CeremonyRunner emits INDUSTRY_UPDATE impacts with awards
       const awardImpacts = impacts.filter((i) => i.type === "INDUSTRY_UPDATE");
+      expect(awardImpacts.length).toBeGreaterThan(0);
       expect(impacts.length).toBeGreaterThan(0);
     });
 
