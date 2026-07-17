@@ -1,6 +1,6 @@
-import { GameState, StateImpact, Talent, Project, Contract } from "../../types";
+import { GameState, StateImpact, Talent } from "../../types";
 import { RandomGenerator } from "../../utils/rng";
-import { getContractsByProjectId } from "../../utils";
+import { getContractsByProjectId, getContractsByTalentId } from "../../utils";
 
 /**
  * Death System
@@ -181,11 +181,13 @@ function calculateGriefImpact(
   const coStarIds: string[] = [];
 
   // Check current projects
-  const activeProjects = Object.values(state.entities.projects || {}).filter(
-    (p) => p.state === "production" || p.state === "marketing"
-  );
+  // ⚡ Bolt: Replaced Object.values().filter() with a single-pass for...in loop to avoid intermediate array allocations
+  const projects = state.entities.projects || {};
+  for (const id in projects) {
+    if (!Object.prototype.hasOwnProperty.call(projects, id)) continue;
+    const project = projects[id];
+    if (project.state !== "production" && project.state !== "marketing") continue;
 
-  for (const project of activeProjects) {
     const contracts = getContractsByProjectId(
       state.entities.contractsByProjectId,
       state.entities.contracts,
@@ -322,10 +324,9 @@ function processGriefImpacts(
   rng: RandomGenerator
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const { coStarIds, griefLevel } = calculateGriefImpact(
-    state.entities.talents?.[deathEvent.talentId]!,
-    state
-  );
+  const deadTalent = state.entities.talents?.[deathEvent.talentId];
+  if (!deadTalent) return impacts;
+  const { coStarIds, griefLevel } = calculateGriefImpact(deadTalent, state);
 
   for (const coStarId of coStarIds) {
     const coStar = state.entities.talents?.[coStarId];
@@ -366,8 +367,11 @@ function processGriefImpacts(
  */
 function getTalentOwner(talent: Talent, state: GameState): string | null {
   // Check contracts
-  const contracts = Object.values(state.entities.contracts || {}).filter(
-    (c) => c.talentId === talent.id
+  // ⚡ Bolt: Replace Object.values().filter() with fast O(1) indexed lookup
+  const contracts = getContractsByTalentId(
+    state.entities.contractsByTalentId,
+    state.entities.contracts || {},
+    talent.id
   );
 
   for (const contract of contracts) {
@@ -402,9 +406,11 @@ export function tickDeathSystem(state: GameState, rng: RandomGenerator): StateIm
   const impacts: StateImpact[] = [];
   const deathEvents: DeathEvent[] = [];
 
-  const talents = Object.values(state.entities.talents || {});
-
-  for (const talent of talents) {
+  // ⚡ Bolt: Replaced Object.values() with direct for...in loop to avoid intermediate array allocation
+  const talentsObj = state.entities.talents || {};
+  for (const id in talentsObj) {
+    if (!Object.prototype.hasOwnProperty.call(talentsObj, id)) continue;
+    const talent = talentsObj[id];
     // Skip if already on medical leave (hospitalized, protected)
     if (talent.onMedicalLeave) continue;
 
@@ -482,7 +488,7 @@ export function tickDeathSystem(state: GameState, rng: RandomGenerator): StateIm
         deathEvents,
         deathCount: deathEvents.length,
       },
-    } as any);
+    } as unknown as StateImpact);
   }
 
   return impacts;
@@ -492,8 +498,9 @@ export function tickDeathSystem(state: GameState, rng: RandomGenerator): StateIm
  * Get death statistics for a given time period
  */
 export function getDeathStatistics(
-  state: GameState,
-  weeks: number = 52
+  _state: GameState,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _weeks: number = 52
 ): {
   totalDeaths: number;
   byType: Record<DeathType, number>;
