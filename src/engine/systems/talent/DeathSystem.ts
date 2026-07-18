@@ -322,8 +322,11 @@ function processGriefImpacts(
   rng: RandomGenerator
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
+  const deadTalent = state.entities.talents?.[deathEvent.talentId];
+  if (!deadTalent) return impacts;
+
   const { coStarIds, griefLevel } = calculateGriefImpact(
-    state.entities.talents?.[deathEvent.talentId]!,
+    deadTalent,
     state
   );
 
@@ -485,7 +488,7 @@ export function tickDeathSystem(state: GameState, rng: RandomGenerator): StateIm
         deathEvents,
         deathCount: deathEvents.length,
       },
-    } as any);
+    } as unknown as StateImpact);
   }
 
   return impacts;
@@ -495,8 +498,9 @@ export function tickDeathSystem(state: GameState, rng: RandomGenerator): StateIm
  * Get death statistics for a given time period
  */
 export function getDeathStatistics(
-  state: GameState,
-  weeks: number = 52
+  _state: GameState,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _weeks: number = 52
 ): {
   totalDeaths: number;
   byType: Record<DeathType, number>;
