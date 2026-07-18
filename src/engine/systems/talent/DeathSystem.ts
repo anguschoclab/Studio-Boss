@@ -1,6 +1,6 @@
-import { GameState, StateImpact, Talent, Project, Contract } from "../../types";
+import { GameState, StateImpact, Talent } from "../../types";
 import { RandomGenerator } from "../../utils/rng";
-import { getContractsByProjectId } from "../../utils";
+import { getContractsByProjectId, getContractsByTalentId } from "../../utils";
 
 /**
  * Death System
@@ -366,8 +366,11 @@ function processGriefImpacts(
  */
 function getTalentOwner(talent: Talent, state: GameState): string | null {
   // Check contracts
-  const contracts = Object.values(state.entities.contracts || {}).filter(
-    (c) => c.talentId === talent.id
+  // ⚡ Bolt: Replaced O(N) array allocation with O(1) index lookup
+  const contracts = getContractsByTalentId(
+    state.entities.contractsByTalentId,
+    state.entities.contracts || {},
+    talent.id
   );
 
   for (const contract of contracts) {
