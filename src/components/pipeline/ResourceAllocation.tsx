@@ -157,7 +157,7 @@ export const ResourceAllocation: React.FC<ResourceAllocationProps> = ({ classNam
                     fill: "rgba(255,255,255,0.4)",
                     textTransform: "uppercase",
                     letterSpacing: "0.1em",
-                  } as any}
+                  } as unknown}
                   axisLine={false}
                   tickLine={false}
                 />

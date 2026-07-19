@@ -24,7 +24,7 @@ import * as noopHandlers from "./noopHandlers";
  */
 const handlerRegistry: Record<
   Exclude<ImpactType, undefined>,
-  (state: GameState, impact: any) => GameState
+  (state: GameState, impact: unknown) => GameState
 > = {
   // Finance handlers
   FUNDS_CHANGED: financeHandlers.handleFundsChanged,

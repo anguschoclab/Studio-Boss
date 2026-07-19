@@ -72,7 +72,7 @@ export const RebootOpportunityModal: React.FC = () => {
       title: proposal.title,
       format: (proposal.format ?? "film") as "film",
       genre: proposal.genre ?? "Drama",
-      budgetTier: (proposal.budgetTier ?? "high") as any,
+      budgetTier: (proposal.budgetTier ?? "high") as unknown,
       targetAudience: "General",
       flavor: proposal.flavor ?? logline,
       parentProjectId: proposal.parentProjectId,

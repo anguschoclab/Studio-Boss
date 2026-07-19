@@ -38,7 +38,7 @@ export const StatsTab = ({ talent, statData }: StatsTabProps) => {
                     fontSize: 10,
                     fontWeight: 900,
                     textTransform: "uppercase",
-                  } as any}
+                  } as React.CSSProperties}
                   width={90}
                 />
                 <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={24} animationDuration={1500}>

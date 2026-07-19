@@ -61,7 +61,7 @@ const TabsContentInner = React.forwardRef<
             className
           )}
           data-state={state}
-          {...(props as any)}
+          {...(props as unknown)}
         >
           {children}
         </motion.div>

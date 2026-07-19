@@ -94,7 +94,7 @@ export function DataList<T>({
         {header}
         {customEmptyState || (
           <EmptyState
-            icon={(emptyState?.icon || AlertCircle) as any}
+            icon={(emptyState?.icon || AlertCircle) as unknown}
             title={emptyState?.title || "No items found"}
             message={emptyState?.description || ""}
             action={emptyState?.action}

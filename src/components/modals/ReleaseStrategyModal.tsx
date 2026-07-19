@@ -201,7 +201,7 @@ export const ReleaseStrategyModal: React.FC = () => {
         {/* Description of selected */}
         {selected && (
           <div className="p-3 rounded-none bg-card/60 border border-border/40 text-xs text-muted-foreground">
-            {getReleaseStrategyEffect(selected, project as any).description}
+            {getReleaseStrategyEffect(selected, project as unknown).description}
           </div>
         )}
 
