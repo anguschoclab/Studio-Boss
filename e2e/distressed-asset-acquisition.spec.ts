@@ -21,8 +21,8 @@ test("distressed asset acquisition: modal appears, acquire works, decline works"
   // If neither works, fall back to a basic smoke test (no crash = pass).
   const storeAccess = await page.evaluate(async () => {
     // Try window globals first (dev builds sometimes expose these)
-    const gameStore = (window as any).__GAME_STORE__ || (window as any).useGameStore;
-    const uiStore = (window as any).__UI_STORE__ || (window as any).useUIStore;
+    const gameStore = (window as unknown as Record<string, unknown>).__GAME_STORE__ || (window as unknown as Record<string, unknown>).useGameStore;
+    const uiStore = (window as unknown as Record<string, unknown>).__UI_STORE__ || (window as unknown as Record<string, unknown>).useUIStore;
     if (gameStore && uiStore) {
       return { method: "globals" as const };
     }
@@ -30,8 +30,8 @@ test("distressed asset acquisition: modal appears, acquire works, decline works"
     // Fallback: try dynamic import through Vite's module graph.
     // This only works in dev builds where modules are served individually.
     try {
-      const gameMod = await (window as any).import("/src/store/gameStore.ts");
-      const uiMod = await (window as any).import("/src/store/uiStore.ts");
+      const gameMod = await (window as unknown as Record<string, unknown>).import("/src/store/gameStore.ts");
+      const uiMod = await (window as unknown as Record<string, unknown>).import("/src/store/uiStore.ts");
       if (gameMod?.useGameStore && uiMod?.useUIStore) {
         return { method: "import" as const };
       }
@@ -57,7 +57,7 @@ test("distressed asset acquisition: modal appears, acquire works, decline works"
   // ── Stores are accessible — inject a test offer and exercise the modal ──
 
   await page.evaluate(() => {
-    const store = (window as any).__GAME_STORE__ || (window as any).useGameStore?.getState?.();
+    const store = (window as unknown as Record<string, unknown>).__GAME_STORE__ || (window as unknown as Record<string, unknown>).useGameStore?.getState?.();
     if (store && store.gameState) {
       const offer = {
         id: "test-offer-1",
@@ -79,7 +79,7 @@ test("distressed asset acquisition: modal appears, acquire works, decline works"
   });
 
   await page.evaluate(() => {
-    const uiStore = (window as any).__UI_STORE__ || (window as any).useUIStore?.getState?.();
+    const uiStore = (window as unknown as Record<string, unknown>).__UI_STORE__ || (window as unknown as Record<string, unknown>).useUIStore?.getState?.();
     if (uiStore) {
       uiStore.enqueueModal("DISTRESSED_ASSET_OFFER", { offerId: "test-offer-1" });
     }
@@ -97,14 +97,14 @@ test("distressed asset acquisition: modal appears, acquire works, decline works"
 
   await page.waitForTimeout(500);
   const offersAfterDecline = await page.evaluate(() => {
-    const store = (window as any).__GAME_STORE__ || (window as any).useGameStore?.getState?.();
+    const store = (window as unknown as Record<string, unknown>).__GAME_STORE__ || (window as unknown as Record<string, unknown>).useGameStore?.getState?.();
     return store?.gameState?.industry?.distressedOffers?.length ?? 0;
   });
   expect(offersAfterDecline).toBe(0);
 
   // Re-inject offer for acquire test
   await page.evaluate(() => {
-    const store = (window as any).__GAME_STORE__ || (window as any).useGameStore?.getState?.();
+    const store = (window as unknown as Record<string, unknown>).__GAME_STORE__ || (window as unknown as Record<string, unknown>).useGameStore?.getState?.();
     if (store && store.gameState) {
       const offer = {
         id: "test-offer-2",
@@ -125,7 +125,7 @@ test("distressed asset acquisition: modal appears, acquire works, decline works"
   });
 
   await page.evaluate(() => {
-    const uiStore = (window as any).__UI_STORE__ || (window as any).useUIStore?.getState?.();
+    const uiStore = (window as unknown as Record<string, unknown>).__UI_STORE__ || (window as unknown as Record<string, unknown>).useUIStore?.getState?.();
     if (uiStore) {
       uiStore.enqueueModal("DISTRESSED_ASSET_OFFER", { offerId: "test-offer-2" });
     }
@@ -141,10 +141,10 @@ test("distressed asset acquisition: modal appears, acquire works, decline works"
 
   await page.waitForTimeout(500);
   const playerFranchises = await page.evaluate(() => {
-    const store = (window as any).__GAME_STORE__ || (window as any).useGameStore?.getState?.();
+    const store = (window as unknown as Record<string, unknown>).__GAME_STORE__ || (window as unknown as Record<string, unknown>).useGameStore?.getState?.();
     const playerId = store?.gameState?.studio?.id;
     const franchises = store?.gameState?.ip?.franchises || {};
-    return Object.values(franchises).filter((f: any) => f.ownerId === playerId).length;
+    return Object.values(franchises).filter((f: unknown) => f.ownerId === playerId).length;
   });
   expect(playerFranchises).toBeGreaterThan(0);
 
