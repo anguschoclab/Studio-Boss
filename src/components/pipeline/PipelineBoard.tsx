@@ -2,6 +2,7 @@ import { useGameStore } from "@/store/gameStore";
 import { useUIStore } from "@/store/uiStore";
 import { ProjectCard } from "./ProjectCard";
 import { Button } from "@/components/ui/button";
+import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { useState } from "react";
 import { Plus, ListFilter, Search, Clapperboard, Layers, Bookmark } from "lucide-react";
 import { ProjectStatus } from "@/engine/types";
@@ -92,21 +93,23 @@ export const PipelineBoard = () => {
           >
             <ListFilter className="h-5 w-5" aria-hidden="true" />
           </Button>
-          <button
-            type="button"
-            aria-pressed={showBookmarksOnly}
-            aria-label="Show bookmarks only"
-            onClick={() => setShowBookmarksOnly((v) => !v)}
-            className={cn(
-              "h-12 w-12 flex items-center justify-center border transition-all duration-700 rounded-none",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black",
-              showBookmarksOnly
-                ? "bg-primary/10 border-primary/40 text-primary shadow-[0_0_15px_rgba(var(--primary),0.2)]"
-                : "bg-white/5 border-white/5 text-muted-foreground/40 hover:text-primary hover:border-primary/40"
-            )}
-          >
-            <Bookmark className="h-5 w-5" strokeWidth={2} aria-hidden="true" />
-          </button>
+          <TooltipWrapper tooltip="Filter by bookmarks" side="bottom">
+            <button
+              type="button"
+              aria-pressed={showBookmarksOnly}
+              aria-label="Show bookmarks only"
+              onClick={() => setShowBookmarksOnly((v) => !v)}
+              className={cn(
+                "h-12 w-12 flex items-center justify-center border transition-all duration-700 rounded-none",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black",
+                showBookmarksOnly
+                  ? "bg-primary/10 border-primary/40 text-primary shadow-[0_0_15px_rgba(var(--primary),0.2)]"
+                  : "bg-white/5 border-white/5 text-muted-foreground/40 hover:text-primary hover:border-primary/40"
+              )}
+            >
+              <Bookmark className="h-5 w-5" strokeWidth={2} aria-hidden="true" />
+            </button>
+          </TooltipWrapper>
           <Button
             onClick={openCreateProject}
             className="h-12 px-10 font-display font-black uppercase tracking-[0.3em] text-[10px] gap-4 bg-primary text-black hover:bg-white transition-all duration-700 rounded-none shadow-[0_0_30px_rgba(var(--primary),0.2)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)]"
