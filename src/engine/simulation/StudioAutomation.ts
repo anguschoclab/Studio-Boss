@@ -28,7 +28,8 @@ export class StudioAutomation {
    * Main simulation tick for rival studios.
    * Handles project pitching, production, and high-level strategic adaptation.
    */
-  static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
+  static tick(
+    _state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
     const rivalsList = Object.values(state.entities.rivals || {});
 
@@ -99,7 +100,8 @@ export class StudioAutomation {
   private static processProject(
     p: Project,
     studioId: string,
-    state: GameState,
+
+    _state: GameState,
     rng: RandomGenerator,
     impacts: StateImpact[]
   ): void {
@@ -225,7 +227,8 @@ export class StudioAutomation {
 
   private static triggerLiquidation(
     rival: RivalStudio,
-    state: GameState,
+
+    _state: GameState,
     rng: RandomGenerator,
     impacts: StateImpact[]
   ): void {
@@ -272,7 +275,8 @@ export class StudioAutomation {
 
   private static triggerPlatformLaunch(
     rival: RivalStudio,
-    state: GameState,
+
+    _state: GameState,
     rng: RandomGenerator,
     impacts: StateImpact[]
   ): void {
@@ -294,7 +298,8 @@ export class StudioAutomation {
 
   private static pitchNewProject(
     rival: RivalStudio,
-    state: GameState,
+
+    _state: GameState,
     rng: RandomGenerator,
     impacts: StateImpact[],
     archetype: StudioArchetype
@@ -366,7 +371,8 @@ export class StudioAutomation {
   private static initializeProduction(
     p: Project,
     studioId: string,
-    state: GameState,
+
+    _state: GameState,
     rng: RandomGenerator
   ): { update: Partial<Project>; subImpacts: StateImpact[] } {
     const subImpacts: StateImpact[] = [];
@@ -395,7 +401,8 @@ export class StudioAutomation {
     studioId: string,
     projectId: string,
     update: Partial<Project>,
-    state: GameState
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _state: GameState
   ): StateImpact {
     return { type: "PROJECT_UPDATED", payload: { projectId, update } };
   }
