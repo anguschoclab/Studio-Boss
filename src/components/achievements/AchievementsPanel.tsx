@@ -27,6 +27,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 export const AchievementsPanel: React.FC = () => {
    
   const unlockedIds: string[] = useGameStore(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (s) => (s.gameState?.studio as any)?.achievements ?? EMPTY_IDS
   );
   const [activeCategory, setActiveCategory] = useState<Category>("all");

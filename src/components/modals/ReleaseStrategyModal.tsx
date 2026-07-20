@@ -201,6 +201,7 @@ export const ReleaseStrategyModal: React.FC = () => {
         {/* Description of selected */}
         {selected && (
           <div className="p-3 rounded-none bg-card/60 border border-border/40 text-xs text-muted-foreground">
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
             {getReleaseStrategyEffect(selected, project as any).description}
           </div>
         )}
