@@ -9,7 +9,6 @@ import {
   Agency,
   Opportunity,
   MarketState,
-  TVSeasonDetails,
   AwardsProfile,
   FilmProject,
   SeriesProject,
@@ -18,7 +17,6 @@ import {
   NetworkPlatform,
   ProjectType,
   ProjectFormat,
-  ScriptMetrics,
 } from "@/engine/types";
 
 export const createMockTalent = (overrides: Partial<Talent> = {}): Talent =>
@@ -49,14 +47,6 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
   const id = overrides.id || "mock-project";
   const type = overrides.type || "FILM";
   const title = overrides.title || "Mock Project";
-
-  const commonReception = {
-    metaScore: 0,
-    audienceScore: 0,
-    reviews: [],
-    status: "Mixed",
-    isCultPotential: false,
-  };
 
   const commonAwardsProfile: AwardsProfile = {
     criticScore: 0,
@@ -305,6 +295,7 @@ export const createMockBuyer = (overrides: Partial<Buyer> = {}): Buyer => {
     return premium;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const networkOverrides = overrides as Partial<NetworkPlatform>;
   const network: NetworkPlatform = {
     ...baseDefaults,

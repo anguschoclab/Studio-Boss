@@ -227,7 +227,7 @@ describe("saveSchema", () => {
     });
 
     it("rejects missing industry field", () => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { industry, ...rest } = validState;
       const result = validateSaveData(rest);

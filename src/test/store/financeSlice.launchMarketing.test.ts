@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { useGameStore } from "@/store/gameStore";
-import { Project } from "@/engine/types";
 
 vi.mock("@/engine/systems/projects", () => ({
   executeMarketing: vi.fn((project: any) => ({

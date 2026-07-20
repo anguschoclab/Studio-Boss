@@ -395,6 +395,7 @@ export class StudioAutomation {
     studioId: string,
     projectId: string,
     update: Partial<Project>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     state: GameState
   ): StateImpact {
     return { type: "PROJECT_UPDATED", payload: { projectId, update } };

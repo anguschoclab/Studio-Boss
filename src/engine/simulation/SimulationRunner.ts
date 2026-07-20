@@ -39,6 +39,7 @@ export class SimulationRunner {
       expenses: 0,
       net: 0,
       headlines: [],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
 
     let cashLast = state.finance.cash || 0;
