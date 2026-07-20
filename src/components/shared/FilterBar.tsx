@@ -81,9 +81,10 @@ export const FilterBar: React.FC<FilterBarProps> = ({
       {/* Search */}
       {onSearchChange && (
         <div className="relative flex-1 min-w-[200px] group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/20 group-focus-within:text-primary transition-colors pointer-events-none" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/20 group-focus-within:text-primary transition-colors pointer-events-none" aria-hidden="true" />
           <input
             type="text"
+            aria-label={searchPlaceholder || "Search filters"}
             value={searchValue || ""}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={searchPlaceholder}
@@ -98,6 +99,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           {searchValue && (
             <button
               onClick={() => onSearchChange("")}
+              aria-label="Clear search"
               className={cn(
                 "absolute right-3 top-1/2 -translate-y-1/2",
                 "p-2 rounded-none",
@@ -105,7 +107,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                 "transition-all duration-300"
               )}
             >
-              <X className="w-4 h-4" />
+              <X className="w-4 h-4" aria-hidden="true" />
             </button>
           )}
         </div>
