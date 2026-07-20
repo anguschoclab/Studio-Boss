@@ -173,18 +173,6 @@ async function createWindow() {
     return { action: "deny" };
   });
 
-  // Prevent navigation to external sites within the app
-  mainWindow.webContents.on("will-navigate", (event, url) => {
-    const parsedUrl = new URL(url);
-    // Only allow navigation to localhost in dev, or internal app:// urls
-    if (parsedUrl.origin !== "http://localhost:8081" && parsedUrl.protocol !== "app:") {
-      event.preventDefault();
-      if (url.startsWith("http://") || url.startsWith("https://")) {
-        shell.openExternal(url);
-      }
-    }
-  });
-
   if (IS_DEV) {
     // In dev mode load the Vite dev server
     mainWindow.loadURL("http://localhost:8081");

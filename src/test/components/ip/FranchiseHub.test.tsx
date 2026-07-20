@@ -36,6 +36,7 @@ vi.mock("zustand/react/shallow", () => ({
   useShallow: (selector: any) => selector,
 }));
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function makeFranchiseState(): any {
   return {
     gameState: {
