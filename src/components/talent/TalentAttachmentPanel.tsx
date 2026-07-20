@@ -43,6 +43,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
   const [hoveredTalentId, setHoveredTalentId] = useState<string | null>(null);
 
   const talentPool = useMemo(() => Object.values(selectTalentPool(gameState)), [gameState]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const contracts = useMemo(
     () => Object.values(gameState?.entities.contracts || {}),
     [gameState?.entities.contracts]

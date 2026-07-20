@@ -94,6 +94,7 @@ export function DataList<T>({
         {header}
         {customEmptyState || (
           <EmptyState
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             icon={(emptyState?.icon || AlertCircle) as any}
             title={emptyState?.title || "No items found"}
             message={emptyState?.description || ""}

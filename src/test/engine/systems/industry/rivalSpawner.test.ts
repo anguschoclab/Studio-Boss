@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { tickRivalSpawner, tickHardBankruptcy } from "@/engine/systems/industry/RivalSpawner";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { GameState } from "@/engine/types";
 import { createMockGameState, createMockRival } from "../../generators/mockFactory";
 

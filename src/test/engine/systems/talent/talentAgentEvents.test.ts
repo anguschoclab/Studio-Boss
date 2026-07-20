@@ -9,6 +9,7 @@ import {
 import { RandomGenerator } from "@/engine/utils/rng";
 import { createMockGameState, createMockTalent } from "../../generators/mockFactory";
 import type { GameState } from "@/engine/types/studio.types";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { Talent, Agent, Agency } from "@/engine/types/talent.types";
 import type { TalentAgentRelationship } from "@/engine/systems/talent/talentAgentInteractions";
 

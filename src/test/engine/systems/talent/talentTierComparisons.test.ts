@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { TalentDriftEngine, DEFAULT_DRIFT_CONFIG } from "@/engine/systems/talent/driftEngine";
+import { TalentDriftEngine } from "@/engine/systems/talent/driftEngine";
 import { checkForBreakout } from "@/engine/systems/talent/discovery/BreakoutStarEngine";
 import { generateGuestStarBooking } from "@/engine/systems/talent/discovery/GuestStarEngine";
 import { generateBiography } from "@/engine/systems/talent/BiographyGenerator";
@@ -302,6 +302,7 @@ describe("TalentTier string comparisons (cross-system)", () => {
       const impacts = tickMarketingPromotionSystem(state, rng);
       // With A_LIST, photoshootChance = PHOTOSHOOT_CHANCE * 2
       // Look for a PHOTOSHOOT_CREATED impact
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const photoshoot = impacts.find((i: any) => i.type === "PHOTOSHOOT_CREATED");
       // May or may not trigger depending on PHOTOSHOOT_CHANCE base value
       // But the test verifies the code runs without crashing on tier comparison
