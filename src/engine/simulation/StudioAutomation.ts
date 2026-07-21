@@ -30,10 +30,12 @@ export class StudioAutomation {
    */
   static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
-    const rivalsList = Object.values(state.entities.rivals || {});
 
     // 1. Studio-Level Logic (Liquidation, Platform Launch, Strategy)
-    rivalsList.forEach((rival) => {
+    // ⚡ Bolt Optimization: Replaced Object.values().forEach() with a direct for...in loop to avoid array allocations and GC overhead
+    for (const rivalId in state.entities.rivals || {}) {
+      if (!Object.prototype.hasOwnProperty.call(state.entities.rivals, rivalId)) continue;
+      const rival = state.entities.rivals[rivalId];
       const isDistressed = (Number(rival.cash) || 0) < -50000000;
 
       if (isDistressed && state.week % 4 === 0 && rng.next() < 0.1) {
@@ -54,17 +56,19 @@ export class StudioAutomation {
           payload: { rivalId: rival.id, update: { isAcquirable: isDistressed } },
         });
       }
-    });
+    }
 
     // 2. Project-Level Logic (Centralized iteration)
-    const allProjects = Object.values(state.entities.projects || {});
+    // ⚡ Bolt Optimization: Replaced Object.values().forEach() with a direct for...in loop to avoid array allocations and GC overhead
     const rivalProjectCounts: Record<string, number> = {};
 
-    allProjects.forEach((p) => {
-      if (isPlayerOwner(state, p.ownerId) || !p.ownerId) return;
+    for (const projectId in state.entities.projects || {}) {
+      if (!Object.prototype.hasOwnProperty.call(state.entities.projects, projectId)) continue;
+      const p = state.entities.projects[projectId];
+      if (isPlayerOwner(state, p.ownerId) || !p.ownerId) continue;
 
       const rival = state.entities.rivals[p.ownerId];
-      if (!rival) return;
+      if (!rival) continue;
 
       this.processProject(p, rival.id, state, rng, impacts);
 
@@ -79,10 +83,13 @@ export class StudioAutomation {
           payload: { projectId: p.id, update: { state: "archived" } },
         });
       }
-    });
+    }
 
     // 3. Pitch New Projects (If slots available)
-    rivalsList.forEach((rival) => {
+    // ⚡ Bolt Optimization: Replaced Object.values().forEach() with a direct for...in loop to avoid array allocations and GC overhead
+    for (const rivalId in state.entities.rivals || {}) {
+      if (!Object.prototype.hasOwnProperty.call(state.entities.rivals, rivalId)) continue;
+      const rival = state.entities.rivals[rivalId];
       const activeCount = rivalProjectCounts[rival.id] || 0;
       // Increased slot cap for headless simulation (15 vs 3-6)
       const slotCap = 15;
@@ -91,7 +98,7 @@ export class StudioAutomation {
       if (activeCount < slotCap && rng.next() < basePitchRate) {
         this.pitchNewProject(rival, state, rng, impacts, this.getRivalArchetype(rival));
       }
-    });
+    }
 
     return impacts;
   }
@@ -395,7 +402,8 @@ export class StudioAutomation {
     studioId: string,
     projectId: string,
     update: Partial<Project>,
-    state: GameState
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _state: GameState
   ): StateImpact {
     return { type: "PROJECT_UPDATED", payload: { projectId, update } };
   }
