@@ -9,6 +9,7 @@ import {
   Agency,
   Opportunity,
   MarketState,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   TVSeasonDetails,
   AwardsProfile,
   FilmProject,
@@ -18,6 +19,7 @@ import {
   NetworkPlatform,
   ProjectType,
   ProjectFormat,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ScriptMetrics,
 } from "@/engine/types";
 
@@ -50,6 +52,7 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
   const type = overrides.type || "FILM";
   const title = overrides.title || "Mock Project";
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const commonReception = {
     metaScore: 0,
     audienceScore: 0,
@@ -305,6 +308,7 @@ export const createMockBuyer = (overrides: Partial<Buyer> = {}): Buyer => {
     return premium;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const networkOverrides = overrides as Partial<NetworkPlatform>;
   const network: NetworkPlatform = {
     ...baseDefaults,

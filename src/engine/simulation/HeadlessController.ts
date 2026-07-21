@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { GameState, StateImpact, Contract, Project } from "@/engine/types";
 import { RandomGenerator } from "../utils/rng";
 import { isPlayerOwner, getPlayerId } from "../utils/ownership";

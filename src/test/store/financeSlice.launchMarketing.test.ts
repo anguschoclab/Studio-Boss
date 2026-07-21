@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { useGameStore } from "@/store/gameStore";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Project } from "@/engine/types";
 
 vi.mock("@/engine/systems/projects", () => ({

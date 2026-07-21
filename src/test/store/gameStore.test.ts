@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { useGameStore } from "../../store/gameStore";
 import * as saveLoad from "../../persistence/saveLoad";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Talent, Project, GameState } from "../../engine/types";
 
 // Mock saveLoad

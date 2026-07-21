@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { GameState, StateImpact } from "@/engine/types";
 import type {
   RelationshipFormedImpact,
