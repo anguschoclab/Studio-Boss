@@ -173,6 +173,17 @@ async function createWindow() {
     return { action: "deny" };
   });
 
+  // Restrict main frame navigation to prevent navigating to arbitrary URLs
+  mainWindow.webContents.on("will-navigate", (event, url) => {
+    const isLocalhost = IS_DEV && url.startsWith("http://localhost:");
+    const isAppScheme = url.startsWith("app://");
+
+    if (!isLocalhost && !isAppScheme) {
+      console.warn(`Prevented unauthorized navigation to: ${url}`);
+      event.preventDefault();
+    }
+  });
+
   if (IS_DEV) {
     // In dev mode load the Vite dev server
     mainWindow.loadURL("http://localhost:8081");
