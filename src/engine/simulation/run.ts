@@ -9,8 +9,6 @@ import * as path from "path";
  */
 
  
-declare const Bun: unknown;
-
 const args = (process.argv || []).slice(2);
 const weeks = parseInt(args.find((_: string, i: number) => args[i - 1] === "--weeks") || "104");
 const runs = parseInt(args.find((_: string, i: number) => args[i - 1] === "--runs") || "1");

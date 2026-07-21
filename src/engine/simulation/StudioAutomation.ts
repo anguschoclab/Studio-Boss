@@ -392,10 +392,11 @@ export class StudioAutomation {
 
    
   private static createUpdateImpact(
-    studioId: string,
+    _studioId: string,
     projectId: string,
     update: Partial<Project>,
-    state: GameState
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _state: GameState
   ): StateImpact {
     return { type: "PROJECT_UPDATED", payload: { projectId, update } };
   }

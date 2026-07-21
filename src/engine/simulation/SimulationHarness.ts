@@ -32,6 +32,7 @@ export class SimulationHarness {
     const metrics: SimulationResult["metrics"] = [];
 
     for (let w = 1; w <= weeks; w++) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const rng = new RandomGenerator(state.gameSeed + w + state.tickCount);
 
       try {
