@@ -61,6 +61,7 @@ const TabsContentInner = React.forwardRef<
             className
           )}
           data-state={state}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           {...(props as any)}
         >
           {children}

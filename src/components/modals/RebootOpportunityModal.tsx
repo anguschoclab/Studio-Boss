@@ -72,6 +72,7 @@ export const RebootOpportunityModal: React.FC = () => {
       title: proposal.title,
       format: (proposal.format ?? "film") as "film",
       genre: proposal.genre ?? "Drama",
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       budgetTier: (proposal.budgetTier ?? "high") as any,
       targetAudience: "General",
       flavor: proposal.flavor ?? logline,
