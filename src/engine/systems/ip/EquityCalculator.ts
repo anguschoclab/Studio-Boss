@@ -1,14 +1,5 @@
 import { Project, Franchise, IPAsset } from "../../types";
-import { CROSSOVER_AFFINITY } from "../../data/genres";
-
-// Pre-compute lowercased keys for O(1) lookups
-const CROSSOVER_AFFINITY_LOWER_KEYS = Object.keys(CROSSOVER_AFFINITY).reduce(
-  (acc, key) => {
-    acc[key.toLowerCase()] = key;
-    return acc;
-  },
-  {} as Record<string, string>
-);
+import { CROSSOVER_AFFINITY, CROSSOVER_AFFINITY_LOWER_KEYS } from "../../data/genres";
 
 /**
  * Calculates total equity for a franchise including the "Shared Universe Premium".

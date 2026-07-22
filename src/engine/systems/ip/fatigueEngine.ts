@@ -1,6 +1,6 @@
 import { Franchise } from "../../types";
 import { clamp } from "../../utils";
-import { FRANCHISE_FATIGUE_RISK } from "../../data/genres";
+import { FRANCHISE_FATIGUE_RISK, FRANCHISE_FATIGUE_RISK_LOWER_KEYS } from "../../data/genres";
 
 /**
  * Fatigue Logic Engine.
@@ -22,11 +22,7 @@ export function calculateFranchiseFatigue(
 ): number {
   const activeCount = (franchise.activeProjectIds || []).length;
 
-  // Normalize genre string to match FRANCHISE_FATIGUE_RISK keys (e.g. "Action", "Sci-Fi", "Superhero")
-  // Handle ALL CAPS or all lowercase variations
-  const normalizedGenre =
-    Object.keys(FRANCHISE_FATIGUE_RISK).find((k) => k.toLowerCase() === genre.toLowerCase()) ||
-    genre;
+  const normalizedGenre = FRANCHISE_FATIGUE_RISK_LOWER_KEYS[genre.toLowerCase()] || genre;
 
   // 1. Base Fatigue Rate (Genre-specific)
   const baseRate =

@@ -92,9 +92,10 @@ export function initializeGame(
     {} as Record<string, import("@/engine/types").Talent>
   );
   const initialTrends = initializeTrends();
+  const trendMap = new Map(initialTrends.map((t) => [t.genre, t]));
   const genrePopularity: Record<string, number> = {};
   ALL_GENRES.forEach((g) => {
-    const trend = initialTrends.find((t) => t.genre === g);
+    const trend = trendMap.get(g);
     genrePopularity[g.toLowerCase()] = trend ? trend.heat / 100 : 0.2 + rand() * 0.3;
   });
 

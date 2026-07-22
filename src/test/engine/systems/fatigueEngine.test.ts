@@ -69,4 +69,43 @@ describe("Fatigue Engine", () => {
     // 0.7 + 0.146666 - 0.15 = 0.696666
     expect(fatigue).toBeCloseTo(0.697, 3);
   });
+
+  describe("genre normalization", () => {
+    it("normalizes lowercase 'superhero' to 'Superhero' (fatigue rate 0.8)", () => {
+      const fatigue = calculateFranchiseFatigue(mockFranchise, 2, "superhero");
+      // Same as the existing Superhero test: rate 0.8
+      // activeCount (1) * 0.8 = 0.8
+      // rivalPenalty (2/12 * 0.1) = 0.01666
+      // loyaltyShield (50/100 * 0.3) = 0.15
+      // 0.8 + 0.01666 - 0.15 = 0.66666
+      expect(fatigue).toBeCloseTo(0.666, 2);
+    });
+
+    it("normalizes uppercase 'ACTION' to 'Action' (fatigue rate 0.5)", () => {
+      const lowFatigue = calculateFranchiseFatigue(mockFranchise, 0, "ACTION");
+      // activeCount (1) * 0.5 = 0.5
+      // rivalPenalty 0
+      // loyaltyShield (50/100 * 0.3) = 0.15
+      // 0.5 - 0.15 = 0.35
+      expect(lowFatigue).toBeCloseTo(0.35, 2);
+    });
+
+    it("falls back to default 0.15 rate for unknown genre", () => {
+      const fatigue = calculateFranchiseFatigue(mockFranchise, 0, "Unknown Genre");
+      // activeCount (1) * 0.15 (default) = 0.15
+      // rivalPenalty 0
+      // loyaltyShield (50/100 * 0.3) = 0.15
+      // 0.15 - 0.15 = 0
+      expect(fatigue).toBe(0);
+    });
+
+    it("normalizes mixed case 'Sci-Fi' correctly", () => {
+      const fatigue = calculateFranchiseFatigue(mockFranchise, 0, "SCI-FI");
+      // activeCount (1) * 0.45 = 0.45
+      // rivalPenalty 0
+      // loyaltyShield (50/100 * 0.3) = 0.15
+      // 0.45 - 0.15 = 0.30
+      expect(fatigue).toBeCloseTo(0.30, 2);
+    });
+  });
 });

@@ -75,8 +75,10 @@ export const Heatmap: React.FC<HeatmapProps> = ({
     return scale[0];
   };
 
+  const cellMap = new Map(data.map((d) => [`${d.row}|${d.col}`, d]));
+
   const getCell = (row: string, col: string) => {
-    return data.find((d) => d.row === row && d.col === col);
+    return cellMap.get(`${row}|${col}`);
   };
 
   const cellSizeClasses = {

@@ -110,11 +110,13 @@ export function tickIPVault(
     }
   }
 
+  const vaultMap = new Map(state.ip.vault.map((a) => [a.id, a]));
+
   // ⚡ The Framerate Fanatic: Replace Object.values with direct for...in loop
   for (const id in state.ip.franchises) {
     const franchise = state.ip.franchises[id];
     const firstAssetId = (franchise.assetIds || [])[0];
-    const firstAsset = state.ip.vault.find((a) => a.id === firstAssetId);
+    const firstAsset = vaultMap.get(firstAssetId);
     const sourceProject = firstAsset?.originalProjectId
       ? state.entities.projects[firstAsset.originalProjectId]
       : undefined;

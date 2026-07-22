@@ -161,4 +161,117 @@ describe("MarketTrendsHeatmap", () => {
     expect(values[1]).toBe(values[2]);
     expect(values[2]).toBe(values[3]);
   });
+
+  it("trend heat value is correctly looked up by genre (case-insensitive match)", () => {
+    useGameStore.setState({
+      gameState: {
+        week: 10,
+        finance: { cash: 100_000_000, marketState: { sentiment: 50 } },
+        studio: { culture: { genrePopularity: {} } },
+        market: {
+          trends: [{ genre: "ACTION", heat: 90, direction: "hot", weeksRemaining: 10 }],
+        },
+        entities: { projects: {}, rivals: {}, talents: {}, contracts: {} },
+      } as any,
+    } as any);
+
+    render(<MarketTrendsHeatmap />);
+    const actionCells = screen
+      .getAllByTestId("heatmap-cell")
+      .filter((c) => c.getAttribute("data-row") === "Action");
+    // heat=90, popularity=50 (default), sentiment=50, saturation=0
+    // opportunity = 50*0.3 + 90*0.4 - 0 + 50*0.1 = 15 + 36 + 5 = 56
+    const value = Number(actionCells[0].getAttribute("data-value"));
+    expect(value).toBe(56);
+  });
+
+  it("genre with no matching trend defaults to heat=50", () => {
+    useGameStore.setState({
+      gameState: {
+        week: 10,
+        finance: { cash: 100_000_000, marketState: { sentiment: 50 } },
+        studio: { culture: { genrePopularity: {} } },
+        market: { trends: [] },
+        entities: { projects: {}, rivals: {}, talents: {}, contracts: {} },
+      } as any,
+    } as any);
+
+    render(<MarketTrendsHeatmap />);
+    const actionCells = screen
+      .getAllByTestId("heatmap-cell")
+      .filter((c) => c.getAttribute("data-row") === "Action");
+    // heat=50 (default), popularity=50 (default), sentiment=50, saturation=0
+    // opportunity = 50*0.3 + 50*0.4 + 50*0.1 = 15 + 20 + 5 = 40
+    const value = Number(actionCells[0].getAttribute("data-value"));
+    expect(value).toBe(40);
+  });
+
+  it("hotGenres and coolingGenres produce correct sorted results", () => {
+    useGameStore.setState({
+      gameState: {
+        week: 10,
+        finance: { cash: 100_000_000, marketState: { sentiment: 50 } },
+        studio: {
+          culture: {
+            genrePopularity: {
+              Action: 90,
+              Comedy: 10,
+              Drama: 50,
+              Horror: 50,
+              Romance: 50,
+              "Sci-Fi": 50,
+              Thriller: 50,
+            },
+          },
+        },
+        market: { trends: [] },
+        entities: { projects: {}, rivals: {}, talents: {}, contracts: {} },
+      } as any,
+    } as any);
+
+    render(<MarketTrendsHeatmap />);
+    // With no trends, heat defaults to 50 for all
+    // Action: pop=90 → opp = 90*0.3 + 50*0.4 + 50*0.1 = 27+20+5 = 52
+    // Comedy: pop=10 → opp = 10*0.3 + 50*0.4 + 50*0.1 = 3+20+5 = 28
+    // Others: pop=50 → opp = 50*0.3 + 50*0.4 + 50*0.1 = 15+20+5 = 40
+    // Hot genres (top 3 by value): Action(52), then three at 40 — top 3 are Action + any two at 40
+    // Cooling genres (bottom 3): Comedy(28) + two at 40
+    const allCells = screen.getAllByTestId("heatmap-cell");
+    expect(allCells).toHaveLength(28);
+    // Verify Action has highest value
+    const actionValue = Number(
+      allCells.find((c) => c.getAttribute("data-row") === "Action")?.getAttribute("data-value")
+    );
+    const comedyValue = Number(
+      allCells.find((c) => c.getAttribute("data-row") === "Comedy")?.getAttribute("data-value")
+    );
+    expect(actionValue).toBeGreaterThan(comedyValue);
+  });
+
+  it("duplicate trend genres do not cause errors", () => {
+    useGameStore.setState({
+      gameState: {
+        week: 10,
+        finance: { cash: 100_000_000, marketState: { sentiment: 50 } },
+        studio: { culture: { genrePopularity: {} } },
+        market: {
+          trends: [
+            { genre: "Action", heat: 30, direction: "cooling", weeksRemaining: 5 },
+            { genre: "Action", heat: 80, direction: "hot", weeksRemaining: 10 },
+          ],
+        },
+        entities: { projects: {}, rivals: {}, talents: {}, contracts: {} },
+      } as any,
+    } as any);
+
+    render(<MarketTrendsHeatmap />);
+    const cells = screen.getAllByTestId("heatmap-cell");
+    expect(cells).toHaveLength(28);
+    // With Map semantics, last duplicate wins (heat=80)
+    // opportunity = 50*0.3 + 80*0.4 + 50*0.1 = 15+32+5 = 52
+    const actionValue = Number(
+      cells.find((c) => c.getAttribute("data-row") === "Action")?.getAttribute("data-value")
+    );
+    expect(actionValue).toBe(52);
+  });
 });

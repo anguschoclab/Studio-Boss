@@ -444,13 +444,20 @@ export const selectGenrePerformanceMatrix = (state: GameState | null): GenrePerf
   const trends = selectMarketTrends(state);
   const projects = selectReleasedProjects(state);
   const genres = [...new Set(trends.map((t) => t.genre))];
+  const trendMap = new Map(trends.map((t) => [t.genre, t]));
+  const projectsByGenre = new Map<string, typeof projects>();
+  for (const p of projects) {
+    const arr = projectsByGenre.get(p.genre);
+    if (arr) arr.push(p);
+    else projectsByGenre.set(p.genre, [p]);
+  }
   return genres.map((genre) => {
-    const genreProjects = projects.filter((p) => p.genre === genre);
+    const genreProjects = projectsByGenre.get(genre) || [];
     const avgRevenue =
       genreProjects.length > 0
         ? genreProjects.reduce((sum, p) => sum + (p.revenue || 0), 0) / genreProjects.length
         : 0;
-    const trend = trends.find((t) => t.genre === genre);
+    const trend = trendMap.get(genre);
     return {
       genre,
       avgRevenue: Math.round(avgRevenue),

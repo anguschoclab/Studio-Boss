@@ -51,10 +51,14 @@ export const MarketTrendsHeatmap: React.FC<MarketTrendsHeatmapProps> = ({ classN
       }
     }
 
+    const trendMap = new Map(
+      trends.map((t) => [t.genre.toLowerCase(), t])
+    );
+
     GENRES.forEach((genre) => {
       const genreLower = genre.toLowerCase();
       // Move static genre calculations outside the quarter loop
-      const trendData = trends.find((t) => t.genre.toLowerCase() === genreLower);
+      const trendData = trendMap.get(genreLower);
       const popularity = genrePopularity[genre as keyof typeof genrePopularity] || 50;
       const heat = trendData?.heat || 50;
 
@@ -87,31 +91,34 @@ export const MarketTrendsHeatmap: React.FC<MarketTrendsHeatmapProps> = ({ classN
     return data;
   }, [gameState]);
 
+  // Compute avgByGenre once — shared between hotGenres and coolingGenres
+  const avgByGenre = useMemo(() => {
+    const sums: Record<string, number> = {};
+    const counts: Record<string, number> = {};
+    for (const d of heatmapData) {
+      sums[d.row] = (sums[d.row] || 0) + d.value;
+      counts[d.row] = (counts[d.row] || 0) + 1;
+    }
+    const avg: Record<string, number> = {};
+    for (const genre of GENRES) {
+      avg[genre] = sums[genre] / (counts[genre] || 1);
+    }
+    return avg;
+  }, [heatmapData]);
+
   // Find hot genres
   const hotGenres = useMemo(() => {
-    const avgByGenre: Record<string, number> = {};
-    GENRES.forEach((genre) => {
-      const genreData = heatmapData.filter((d) => d.row === genre);
-      avgByGenre[genre] = genreData.reduce((sum, d) => sum + d.value, 0) / (genreData.length || 1);
-    });
-
     return Object.entries(avgByGenre)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 3);
-  }, [heatmapData]);
+  }, [avgByGenre]);
 
   // Find cooling genres
   const coolingGenres = useMemo(() => {
-    const avgByGenre: Record<string, number> = {};
-    GENRES.forEach((genre) => {
-      const genreData = heatmapData.filter((d) => d.row === genre);
-      avgByGenre[genre] = genreData.reduce((sum, d) => sum + d.value, 0) / (genreData.length || 1);
-    });
-
     return Object.entries(avgByGenre)
       .sort((a, b) => a[1] - b[1])
       .slice(0, 3);
-  }, [heatmapData]);
+  }, [avgByGenre]);
 
   if (!gameState) return null;
 

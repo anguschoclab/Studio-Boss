@@ -403,8 +403,29 @@ export class WeekCoordinator {
     after: GameState,
     context: TickContext
   ): WeekSummary {
-    const newsImpacts = context.impacts.filter((i) => i.type === "NEWS_ADDED");
-    const ledgerImpact = context.impacts.find((i) => i.type === "LEDGER_UPDATED");
+    const newsImpacts: import("../types/state.types").StateImpact[] = [];
+    const projectUpdates: string[] = [];
+    let ledgerImpact: import("../types/state.types").StateImpact | undefined;
+    const narrativeEvents: import("../types/engine.types").NarrativeEvent[] = [];
+
+    for (const impact of context.impacts) {
+      if (impact.type === "NEWS_ADDED") newsImpacts.push(impact);
+      if (impact.type === "LEDGER_UPDATED" && !ledgerImpact) ledgerImpact = impact;
+      if (impact.type === "PROJECT_UPDATED") {
+        const payload = impact.payload as import("../types/state.types").ProjectUpdate;
+        projectUpdates.push(payload.projectId);
+      }
+      if (impact.uiNotifications) {
+        for (const notification of impact.uiNotifications) {
+          narrativeEvents.push({
+            type: notification.startsWith("CRISIS") ? "crisis" : "general",
+            title: notification,
+            description: notification,
+            severity: notification.startsWith("CRISIS") ? "high" : "low",
+          });
+        }
+      }
+    }
 
     let totalRevenue = 0;
     let totalCosts = 0;
@@ -417,27 +438,6 @@ export class WeekCoordinator {
       totalCosts =
         report.expenses.production + report.expenses.marketing + report.expenses.overhead;
     }
-
-    const projectUpdates = context.impacts
-      .filter(
-        (i): i is import("../types/state.types").ProjectUpdateImpact => i.type === "PROJECT_UPDATED"
-      )
-      .map((i) => i.payload.projectId);
-
-    // Capture uiNotifications from impacts for narrative events
-    const narrativeEvents: import("../types/engine.types").NarrativeEvent[] = [];
-    context.impacts.forEach((impact) => {
-      if (impact.uiNotifications) {
-        impact.uiNotifications.forEach((notification) => {
-          narrativeEvents.push({
-            type: notification.startsWith("CRISIS") ? "crisis" : "general",
-            title: notification,
-            description: notification,
-            severity: notification.startsWith("CRISIS") ? "high" : "low",
-          });
-        });
-      }
-    });
 
     // Quiet week detection
     const isQuietWeek =
@@ -454,18 +454,15 @@ export class WeekCoordinator {
       totalRevenue,
       totalCosts,
       projectUpdates: Array.from(new Set(projectUpdates)),
-      newHeadlines: newsImpacts
-        .map((i) => {
-          if (i.type !== "NEWS_ADDED") return null;
-          const payload = i.payload as import("../types/state.types").NewsImpact["payload"];
-          return {
-            id: context.rng.uuid("news"),
-            text: payload.headline || "Unknown Event",
-            week: context.week,
-            category: "general" as import("../types/engine.types").HeadlineCategory,
-          };
-        })
-        .filter((h): h is import("../types/engine.types").Headline => h !== null),
+      newHeadlines: newsImpacts.map((i) => {
+        const payload = i.payload as import("../types/state.types").NewsImpact["payload"];
+        return {
+          id: context.rng.uuid("news"),
+          text: payload.headline || "Unknown Event",
+          week: context.week,
+          category: "general" as import("../types/engine.types").HeadlineCategory,
+        };
+      }),
       events: context.events.map((e) => e.title),
       narrativeEvents,
       isQuietWeek,

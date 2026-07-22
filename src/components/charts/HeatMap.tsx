@@ -49,8 +49,10 @@ export const HeatMap: React.FC<HeatMapProps> = ({
     return colorScale[index];
   };
 
+  const cellMap = new Map(data.map((d) => [`${d.x}|${d.y}`, d]));
+
   const getCellValue = (x: string, y: string) => {
-    const cell = data.find((d) => d.x === x && d.y === y);
+    const cell = cellMap.get(`${x}|${y}`);
     return cell?.value ?? 0;
   };
 
@@ -81,7 +83,7 @@ export const HeatMap: React.FC<HeatMapProps> = ({
             {/* Cells */}
             {xLabels.map((xLabel) => {
               const value = getCellValue(xLabel, yLabel);
-              const cell = data.find((d) => d.x === xLabel && d.y === yLabel);
+              const cell = cellMap.get(`${xLabel}|${yLabel}`);
 
               return (
                 <div

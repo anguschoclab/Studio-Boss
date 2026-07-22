@@ -1,78 +1,11 @@
-import { GameState, Project, Franchise, IPAsset } from "../../types";
+import { GameState, Project, Franchise } from "../../types";
 import { generateId, clamp } from "../../utils";
-import { CROSSOVER_AFFINITY } from "../../data/genres";
+import { calculateFranchiseEquity } from "./EquityCalculator";
 
 /**
  * Franchise Coordinator.
  * Orchestrates the Shared Universe Hub and calculates "Enterprise Value" for multi-format brands.
  */
-
-/**
- * Calculates total equity for a franchise including the "Shared Universe Premium".
- * Real-world: A 'brand' is worth more than the sum of its individual box office takes.
- */
-export function calculateFranchiseEquity(
-  franchise: Franchise,
-  assets: IPAsset[],
-  sourceProjects?: Record<string, Project> // Pass projects to resolve genres
-): number {
-  const baseEquity = assets.reduce((sum, a) => sum + a.baseValue * a.decayRate, 0);
-
-  // 1. Shared Universe Premium
-  let crossoverBonus = assets.length >= 3 ? 1.2 : 1.05;
-
-  // 1b. Genre Crossover Events Hook
-  if (sourceProjects && assets.length > 1) {
-    const uniqueGenres = new Set<string>();
-    assets.forEach((a) => {
-      const p = sourceProjects[a.originalProjectId];
-      if (p && p.genre) {
-        // Normalize to Title Case to match CROSSOVER_AFFINITY keys (e.g. 'Action', 'Sci-Fi')
-        const normalizedGenre =
-          Object.keys(CROSSOVER_AFFINITY).find((k) => k.toLowerCase() === p.genre!.toLowerCase()) ||
-          p.genre;
-        uniqueGenres.add(normalizedGenre);
-      }
-    });
-
-    const genres = Array.from(uniqueGenres);
-    let synergyHits = 0;
-    for (let i = 0; i < genres.length; i++) {
-      for (let j = i + 1; j < genres.length; j++) {
-        const g1 = genres[i];
-        const g2 = genres[j];
-        if (CROSSOVER_AFFINITY[g1]?.includes(g2) || CROSSOVER_AFFINITY[g2]?.includes(g1)) {
-          synergyHits++;
-        }
-      }
-    }
-    // Boost bonus significantly if diverse compatible genres cross over
-    crossoverBonus += Math.min(0.5, synergyHits * 0.15);
-
-    // 🌌 The Universe Builder: Added a 15% synergy bonus when combining two Level 3 franchises in a crossover event.
-    if (assets.length >= 5) {
-      crossoverBonus += 0.15;
-    }
-
-    // 🌌 The Universe Builder: Added 20% crossover bonus for Cinematic Universe/Multiverse events.
-    if (uniqueGenres.has("Cinematic Universe") || uniqueGenres.has("Multiverse")) {
-      crossoverBonus += 0.2;
-    }
-
-    // 🌌 The Universe Builder: Added a 15% synergy bonus when combining Video Game Adaptation with Sci-Fi or Fantasy.
-    if (
-      uniqueGenres.has("Video Game Adaptation") &&
-      (uniqueGenres.has("Sci-Fi") || uniqueGenres.has("Fantasy"))
-    ) {
-      crossoverBonus += 0.15;
-    }
-  }
-
-  // 2. Format Diversity Multiplier
-  const multiplier = franchise.synergyMultiplier;
-
-  return Math.floor(baseEquity * crossoverBonus * multiplier);
-}
 
 /**
  * Evaluates a finished project and updates or creates its Franchise Hub.
