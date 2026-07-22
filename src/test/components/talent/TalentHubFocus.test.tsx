@@ -82,17 +82,13 @@ describe("TalentHub Focus-Visible Styles", () => {
     expect(svg).toBeDefined();
   });
 
-  it("search input has aria-label", () => {
-    const { container } = render(
+  it("roster bookmark button has aria-label", () => {
+    render(
       <TooltipProvider>
         <TalentHub />
       </TooltipProvider>
     );
-    // Check for any element with aria-label containing "search" (case-insensitive)
-    const labeledElements = container.querySelectorAll("[aria-label]");
-    const searchElements = Array.from(labeledElements).filter((el) =>
-      el.getAttribute("aria-label")?.toLowerCase().includes("search")
-    );
-    expect(searchElements.length).toBeGreaterThanOrEqual(1);
+    const bookmarkBtn = screen.getByRole("button", { name: /Show bookmarks only/i });
+    expect(bookmarkBtn).toHaveAttribute("aria-label", "Show bookmarks only");
   });
 });
