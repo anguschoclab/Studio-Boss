@@ -63,7 +63,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         finalFee = talent.fee * 0.5;
       }
 
-      let relationshipBonus = 0;
+      let relationshipBonus: number;
       if (talent.agentId) {
         const relationship = state.talentAgentRelationships?.[`${talentId}-${talent.agentId}`];
         if (relationship) {

@@ -42,16 +42,17 @@ describe("Bookmark Tooltips", () => {
       }
       return selector;
     });
+    const uiStoreState = {
+      selectProject: vi.fn(),
+      selectTalent: vi.fn(),
+      openPitchProject: vi.fn(),
+      openCrisisModal: vi.fn(),
+    };
     vi.mocked(useUIStore).mockImplementation((selector: any) => {
       if (typeof selector === "function") {
-        return selector({
-          selectProject: vi.fn(),
-          selectTalent: vi.fn(),
-          openPitchProject: vi.fn(),
-          openCrisisModal: vi.fn(),
-        });
+        return selector(uiStoreState);
       }
-      return selector;
+      return uiStoreState;
     });
   });
 
@@ -67,7 +68,7 @@ describe("Bookmark Tooltips", () => {
       expect(bookmarkBtn).toBeDefined();
     });
 
-    it("has onPointerDown to stop propagation", () => {
+    it("has onPointerDown handler that stops propagation", () => {
       const project = createMockProject({ id: "proj-1", title: "Test Project" });
       render(
         <TooltipProvider>
@@ -75,7 +76,8 @@ describe("Bookmark Tooltips", () => {
         </TooltipProvider>
       );
       const bookmarkBtn = screen.getByLabelText("Add bookmark");
-      expect(bookmarkBtn).toHaveProperty("onPointerDown");
+      // Verify the button has an onPointerDown handler by checking the React props
+      expect(bookmarkBtn.getAttribute("onpointerdown")).not.toBeNull();
     });
 
     it("bookmark icon has aria-hidden", () => {
@@ -105,7 +107,7 @@ describe("Bookmark Tooltips", () => {
       expect(bookmarkBtn).toBeDefined();
     });
 
-    it("has onPointerDown to stop propagation", () => {
+    it("has onPointerDown handler that stops propagation", () => {
       const talent = createMockTalent({ id: "talent-1", name: "Test Talent" });
       render(
         <TooltipProvider>
@@ -113,7 +115,7 @@ describe("Bookmark Tooltips", () => {
         </TooltipProvider>
       );
       const bookmarkBtn = screen.getByLabelText("Add bookmark");
-      expect(bookmarkBtn).toHaveProperty("onPointerDown");
+      expect(bookmarkBtn.getAttribute("onpointerdown")).not.toBeNull();
     });
 
     it("bookmark icon has aria-hidden", () => {

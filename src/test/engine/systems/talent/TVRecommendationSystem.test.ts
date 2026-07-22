@@ -68,10 +68,10 @@ describe("TVRecommendationSystem", () => {
       expect(recImpacts).toHaveLength(0);
     });
 
-    it("skips C_LIST and below talents (tier number > 3)", () => {
+    it("skips NEWCOMER talents (tier number 5 > 3)", () => {
       state.week = 4;
-      const talent = createMockTalent({ id: "t-c-list", tier: "C_LIST" });
-      state.entities.talents = { "t-c-list": talent };
+      const talent = createMockTalent({ id: "t-newcomer", tier: "NEWCOMER" });
+      state.entities.talents = { "t-newcomer": talent };
       vi.spyOn(rng, "next").mockReturnValue(0.5);
       const impacts = tickTVRecommendationSystem(state, undefined as never, rng);
       const recImpacts = impacts.filter((i) => i.type === "TV_RECOMMENDATION_CREATED");

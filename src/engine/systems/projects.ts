@@ -74,7 +74,7 @@ export function handleReleasePhaseEntry(
   }
 
   // 2. Simulate Opening (Film vs TV)
-  let update: string | null = null;
+  let update: string | null;
 
   if (p.format === "film") {
     const result = calculateOpeningWeekend(
