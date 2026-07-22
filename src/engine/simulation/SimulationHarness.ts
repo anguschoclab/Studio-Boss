@@ -32,7 +32,7 @@ export class SimulationHarness {
     const metrics: SimulationResult["metrics"] = [];
 
     for (let w = 1; w <= weeks; w++) {
-      const rng = new RandomGenerator(state.gameSeed + w + state.tickCount);
+      const _rng = new RandomGenerator(state.gameSeed + w + state.tickCount);
 
       try {
         const { newState } = advanceWeek(state);

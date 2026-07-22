@@ -1,5 +1,4 @@
-import { GameState, Scandal, ScandalType, Project } from "@/engine/types";
-import { secureRandom, generateId } from "../utils";
+import { GameState, Scandal, ScandalType } from "@/engine/types";import { secureRandom, generateId } from "../utils";
 import { StateImpact } from "../types/state.types";
 
 /**

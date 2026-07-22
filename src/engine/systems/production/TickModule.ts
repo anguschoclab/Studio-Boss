@@ -2,7 +2,6 @@
 // src/engine/systems/productionEngine.ts and src/engine/services/filters/ProductionFilter.ts.
 import { GameState, Project, StateImpact, Contract, Talent } from "../../types";
 import { RandomGenerator } from "../../utils/rng";
-import { getContractsByProjectId } from "../../utils";
 import { TalentMoraleSystem } from "../talent/TalentMoraleSystem";
 import { processDirectorDisputes } from "../directors";
 import { SchedulingEngine } from "../schedulingEngine";

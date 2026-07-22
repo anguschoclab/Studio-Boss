@@ -29,7 +29,7 @@ export function generateWeeklyFinancialReport(
 
   const passive = RevenueProcessor.calculateVaultDividends(state.ip.vault);
 
-  const { boxOffice, distribution, merch, totalRoyalties, projectRecoupment } =
+  const { boxOffice, distribution, merch, totalRoyalties, _projectRecoupment } =
     RevenueProcessor.calculateActiveRevenue(projects, state, contracts, state.ip.vault, studioId);
 
   const expenses = ExpenseProcessor.calculateConsolidatedExpenses(
@@ -58,7 +58,7 @@ export function generateWeeklyFinancialReport(
       } else if (impact.cashChange) {
         const change = impact.cashChange as number;
         if (change > 0) otherRevenue += change;
-        else otherExpenses += Math.abs(change);
+        else _otherExpenses += Math.abs(change);
       }
     }
   }

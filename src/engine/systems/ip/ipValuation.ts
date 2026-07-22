@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Project, IPAsset } from "../../types";
-import { randRange, clamp } from "../../utils";
-import { determineSyndicationTier, getSyndicationImpact } from "./syndicationEngine";
+import { clamp } from "../../utils";import { determineSyndicationTier, getSyndicationImpact } from "./syndicationEngine";
 
 /**
  * Logic for initial IP value and weekly cultural decay.

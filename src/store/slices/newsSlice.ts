@@ -8,7 +8,7 @@ export interface NewsSlice {
   addHeadline: (headline: Partial<Headline>) => void;
 }
 
-export const createNewsSlice: StateCreator<GameStore, [], [], NewsSlice> = (set, get) => ({
+export const createNewsSlice: StateCreator<GameStore, [], [], NewsSlice> = (set, _get) => ({
   news: {
     headlines: [],
   },

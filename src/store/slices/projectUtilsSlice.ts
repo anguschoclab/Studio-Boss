@@ -1,8 +1,7 @@
 import { StateCreator } from "zustand";
 import { GameStore } from "../gameStore";
 import { applyStateImpact } from "../storeUtils";
-import { Project, GameState } from "@/engine/types";
-import { type ProjectId } from "@/engine/types/shared.types";
+import { Project } from "@/engine/types";import { type ProjectId } from "@/engine/types/shared.types";
 
 export interface ProjectUtilsSlice {
   addProject: (project: Project) => void;

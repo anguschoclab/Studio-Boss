@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GameState, StateImpact, Talent, TalentTier, Family } from "../../types";
-import { RandomGenerator } from "../../utils/rng";
+import { GameState, StateImpact, Talent, Family } from "../../types";import { RandomGenerator } from "../../utils/rng";
 import { generateTalent } from "../../generators/talent/index";
 import type { DeathEvent } from "./DeathSystem";
 
@@ -38,7 +37,7 @@ export interface Dynasty {
 
 // Pregnancy probability from romantic relationships
 const PREGNANCY_BASE_CHANCE = 0.01; // 1% per week for public stable couples
-const NEPO_BABY_AGE_ENTRY = 18; // Age when children enter talent pool
+const _NEPO_BABY_AGE_ENTRY = 18; // Age when children enter talent pool
 
 /**
  * Check for pregnancies from romantic couples
@@ -116,7 +115,7 @@ export function checkPregnancies(state: GameState, rng: RandomGenerator): StateI
 /**
  * Process births from pregnancies reaching term
  */
-export function processBirths(state: GameState, rng: RandomGenerator): StateImpact[] {
+export function processBirths(_state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
 
   // Get active pregnancies from state
@@ -253,7 +252,7 @@ function generateNepoBaby(parent: Talent, state: GameState, rng: RandomGenerator
   }
 
   // Nepo baby bonuses
-  const parentPrestige = parent.prestige || 50;
+  const _parentPrestige = parent.prestige || 50;
   const nepoBonus = parent.tier === "A_LIST" ? 25 : parent.tier === "B_LIST" ? 15 : 10;
 
   childTalent.prestige = Math.min(100, childTalent.prestige + nepoBonus);
@@ -316,7 +315,7 @@ export function calculateDynastyReputation(familyId: string, state: GameState): 
 export function processDeathInFamily(
   deathEvent: DeathEvent,
   state: GameState,
-  rng: RandomGenerator
+  _rng: RandomGenerator
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
   const deceased = state.entities.talents?.[deathEvent.talentId];
@@ -324,7 +323,7 @@ export function processDeathInFamily(
   if (!deceased || !deceased.familyId) return impacts;
 
   // Update family reputation (may decrease if scandalous death)
-  const familyReputation = calculateDynastyReputation(deceased.familyId, state);
+  const _familyReputation = calculateDynastyReputation(deceased.familyId, state);
 
   // Affect children - may gain sympathy prestige
   if (deceased.childIds) {

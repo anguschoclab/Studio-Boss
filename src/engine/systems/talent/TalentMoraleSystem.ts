@@ -1,5 +1,4 @@
-import { Talent, Project, Contract, StateImpact } from "@/engine/types";
-import { TalentUpdate } from "@/engine/types/state.types";
+import { Talent, Project, Contract } from "@/engine/types";import { TalentUpdate } from "@/engine/types/state.types";
 import { type TalentId, type ProjectId, type ContractId } from "@/engine/types/shared.types";
 
 /**

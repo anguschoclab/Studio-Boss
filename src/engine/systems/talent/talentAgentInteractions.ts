@@ -7,7 +7,6 @@ import {
   AgentPersonality,
 } from "../../types/talent.types";
 import { AGENCY_ARCHETYPES } from "../../data/archetypes";
-import { PERSONALITY_TRAITS } from "../../data/talentArchetypes";
 import { RandomGenerator } from "../../utils/rng";
 
 export type { AgentPersonality } from "../../types/talent.types";

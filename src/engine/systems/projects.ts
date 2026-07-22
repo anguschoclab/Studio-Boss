@@ -8,7 +8,6 @@ import {
   SeriesProject,
   UnscriptedProject,
 } from "@/engine/types";
-import { BUDGET_TIERS } from "../data/budgetTiers";
 import { TV_FORMATS } from "../data/tvFormats";
 import { UNSCRIPTED_FORMATS } from "../data/unscriptedFormats";
 import { clamp, randRange } from "../utils";
@@ -18,14 +17,6 @@ import {
   calculateOpeningWeekend,
   simulateWeeklyBoxOffice,
 } from "./releaseSimulation";
-import { calculateRegionalPenalties } from "./ratings";
-import { calculateAudienceIndex } from "./demographics";
-import { GameState, WeekSummary, Headline } from "@/engine/types";
-import { checkAndTriggerCrisis } from "./crises";
-import { calculateBoxOfficeRanks, BoxOfficeEntry } from "./releaseSimulation";
-import { generateAwardsProfile } from "./awards";
-import { processDirectorDisputes } from "./directors";
-import { getTrendMultiplier } from "./trends";
 import { RandomGenerator } from "../utils/rng";
 import { computeCampaignMultiplier } from "./projectHandlers/MarketingHandler";
 import { handlePostReleasePhase } from "./projectHandlers/PostReleaseHandler";
@@ -283,7 +274,7 @@ export function advanceProject(
   projectAwards: Award[] = [],
   trendMultiplier: number = 1.0,
   franchiseSynergy: number = 1.0,
-  franchiseFatigue: number = 0,
+  _franchiseFatigue: number = 0,
   rng?: RandomGenerator
 ): { project: Project; update: string | null; talentUpdates: Talent[] } {
   if (project.state === "archived") return { project, update: null, talentUpdates: [] };

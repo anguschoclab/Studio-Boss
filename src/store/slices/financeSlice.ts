@@ -1,6 +1,5 @@
 import { StateCreator } from "zustand";
 import { GameStore } from "../gameStore";
-import { handleReleasePhaseEntry, executeMarketing } from "@/engine/systems/projects";
 import {
   WeeklyFinancialReport,
   FinanceState,
@@ -9,8 +8,7 @@ import {
   Buyer,
   RivalStudio,
 } from "@/engine/types";
-import { FinancialSnapshot, MarketState } from "@/engine/types/state.types";
-import { InterestRateSimulator } from "@/engine/systems/market/InterestRateSimulator";
+import { FinancialSnapshot } from "@/engine/types/state.types";import { InterestRateSimulator } from "@/engine/systems/market/InterestRateSimulator";
 
 export interface FinanceSlice {
   finance: FinanceState;
@@ -23,7 +21,7 @@ export interface FinanceSlice {
   addFunds: (amount: number) => void;
 }
 
-export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> = (set, get) => ({
+export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> = (set, _get) => ({
   finance: {
     cash: 0,
     ledger: [],
@@ -72,7 +70,7 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
       };
     }),
 
-  executeMarketingEvent: (eventName, cost, projectId) => {
+  executeMarketingEvent: (_eventName, cost, projectId) => {
     // Marketing event executed
   },
 

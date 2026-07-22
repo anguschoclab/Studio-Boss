@@ -9,7 +9,7 @@ export interface RivalSlice {
   attemptTakeover: (targetId: string) => void;
 }
 
-export const createRivalSlice: StateCreator<GameStore, [], [], RivalSlice> = (set, get) => ({
+export const createRivalSlice: StateCreator<GameStore, [], [], RivalSlice> = (set, _get) => ({
   acquireRival: (targetId) => {
     set((s) => {
       if (!s.gameState) return s;

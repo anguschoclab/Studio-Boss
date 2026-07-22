@@ -1,5 +1,4 @@
-import { Project, ScriptEvent, CharacterArchetype, StateImpact } from "@/engine/types/index";
-import { RandomGenerator } from "../../utils/rng";
+import { Project, CharacterArchetype, StateImpact } from "@/engine/types/index";import { RandomGenerator } from "../../utils/rng";
 import { ScriptMetricsCalculator } from "./ScriptMetricsCalculator";
 
 /**

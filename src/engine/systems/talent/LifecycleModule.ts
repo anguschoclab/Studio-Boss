@@ -1,10 +1,9 @@
 import { GameState, Talent } from "@/engine/types";
 import { TalentUpdate } from "../../types/state.types";
 import { SchedulingEngine } from "../schedulingEngine";
-import { BardResolver } from "../bardResolver";
 import { RandomGenerator } from "../../utils/rng";
 
-export function advanceTalentLifecycle(state: GameState, rng: RandomGenerator): TalentUpdate[] {
+export function advanceTalentLifecycle(state: GameState, _rng: RandomGenerator): TalentUpdate[] {
   const talentUpdates: TalentUpdate[] = [];
 
   for (const id in state.entities.talents) {

@@ -1,14 +1,11 @@
 import { StateCreator } from "zustand";
 import { GameStore } from "../gameStore";
 import { applyStateImpact } from "../storeUtils";
-import { resolveCrisis } from "@/engine/systems/crises";
 import * as festivalsEngine from "@/engine/systems/festivals";
 import { releaseDirectorsCut } from "@/engine/systems/ratings/directorsCuts";
 import { RandomGenerator } from "@/engine/utils/rng";
 import { getContractsByProjectId } from "@/engine/utils";
-import { Project, GameState, AwardBody, MarketingCampaign } from "@/engine/types";
-import { type ProjectId, type StudioId, type TalentId } from "@/engine/types/shared.types";
-
+import { MarketingCampaign } from "@/engine/types";import { type ProjectId, type StudioId, type TalentId } from "@/engine/types/shared.types";
 export interface ProjectEventsSlice {
   lockMarketingCampaign: (projectId: ProjectId, level: "none" | "basic" | "blockbuster") => void;
   releaseDirectorsCutAction: (projectId: ProjectId) => void;
@@ -22,7 +19,7 @@ export interface ProjectEventsSlice {
 
 export const createProjectEventsSlice: StateCreator<GameStore, [], [], ProjectEventsSlice> = (
   set,
-  get
+  _get
 ) => ({
   releaseDirectorsCutAction: (projectId) => {
     set((s) => {

@@ -1,5 +1,4 @@
-import { RivalStudio, Opportunity, StateImpact, ArchetypeKey } from "@/engine/types";
-import { RandomGenerator } from "../../../utils/rng";
+import { RivalStudio, Opportunity, StateImpact } from "@/engine/types";import { RandomGenerator } from "../../../utils/rng";
 
 const ArchetypeMultipliers: Record<string, (genre: string) => number> = {
   indie: (genre) => (genre === "Drama" || genre === "Horror" ? 1.4 : 0.8),

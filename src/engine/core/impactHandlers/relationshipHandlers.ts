@@ -1,5 +1,4 @@
-import { GameState, StateImpact } from "@/engine/types";
-import type {
+import { GameState } from "@/engine/types";import type {
   RelationshipFormedImpact,
   RelationshipUpdatedImpact,
   CliqueFormedImpact,

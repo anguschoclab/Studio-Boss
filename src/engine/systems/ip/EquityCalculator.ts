@@ -1,5 +1,4 @@
 import { Project, Franchise, IPAsset } from "../../types";
-import { clamp } from "../../utils";
 import { CROSSOVER_AFFINITY } from "../../data/genres";
 
 // Pre-compute lowercased keys for O(1) lookups

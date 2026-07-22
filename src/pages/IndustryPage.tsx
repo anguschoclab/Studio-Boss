@@ -3,8 +3,6 @@ import React, { useMemo } from "react";
 import { useGameStore } from "@/store/gameStore";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { KPIStatCard } from "@/components/shared/KPIStatCard";
 import { formatMoney } from "@/engine/utils";
 import {
@@ -23,9 +21,7 @@ import {
   AlertTriangle,
   Monitor,
 } from "lucide-react";
-import { m, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { CompetitorComparison } from "@/components/industry/CompetitorComparison";
+import { m } from "framer-motion";import { cn } from "@/lib/utils";
 import { MarketTrendsHeatmap } from "@/components/industry/MarketTrendsHeatmap";
 
 export const IndustryPage: React.FC = () => {

@@ -10,7 +10,7 @@ export function handleTVReleaseEntry(
   franchiseFatigue: number = 0
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const currentSeason = p.tvDetails?.currentSeason || 1;
+  const _currentSeason = p.tvDetails?.currentSeason || 1;
   const weeklyRevenue = p.budget * 0.1 * (p.buzz / 50) * franchiseSynergy * (1 - franchiseFatigue);
 
   const projectUpdate: Partial<SeriesProject> = {
@@ -44,7 +44,7 @@ export function handleTVReleasedPhase(
   const formatData =
     TV_FORMATS[p.tvFormat as keyof typeof TV_FORMATS] || TV_FORMATS["prestige_drama"];
   const eps = p.tvDetails.episodesOrdered || formatData.defaultEpisodes;
-  const currentSeason = p.tvDetails.currentSeason || 1;
+  const _currentSeason = p.tvDetails.currentSeason || 1;
   const currentRevenue = p.revenue + p.weeklyRevenue;
   let newWeeklyRevenue = p.weeklyRevenue;
   let newState = p.state;

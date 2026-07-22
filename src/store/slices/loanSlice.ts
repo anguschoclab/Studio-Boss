@@ -16,7 +16,7 @@ export interface LoanSlice {
 // Factory
 // ---------------------------------------------------------------------------
 
-export const createLoanSlice: StateCreator<GameStore, [], [], LoanSlice> = (set, get) => ({
+export const createLoanSlice: StateCreator<GameStore, [], [], LoanSlice> = (set, _get) => ({
   // -------------------------------------------------------------------------
   // addLoan: generate a Loan, add it to studio.loans, credit cash
   // -------------------------------------------------------------------------

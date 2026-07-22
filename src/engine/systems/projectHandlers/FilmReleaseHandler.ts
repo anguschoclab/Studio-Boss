@@ -2,7 +2,6 @@ import { Project, Contract, Talent, StateImpact } from "@/engine/types";
 import { calculateOpeningWeekend, simulateWeeklyBoxOffice } from "../releaseSimulation";
 import { TalentSystem } from "../TalentSystem";
 import { RandomGenerator } from "../../utils/rng";
-import { isFilmProject } from "../../utils/projectUtils";
 
 export function handleFilmReleaseEntry(
   p: Project,
@@ -59,7 +58,7 @@ export function handleFilmReleasedPhase(
   rng: RandomGenerator,
   trendMultiplier: number = 1.0,
   franchiseSynergy: number = 1.0,
-  franchiseFatigue: number = 0
+  _franchiseFatigue: number = 0
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
   const currentRevenue = p.revenue + p.weeklyRevenue;

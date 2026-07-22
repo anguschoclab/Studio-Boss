@@ -5,8 +5,7 @@
  * and CSS transitions. Use these instead of ad-hoc animation values.
  */
 
-import { Variants, Transition } from "framer-motion";
-
+import { Variants } from "framer-motion";
 /**
  * Duration tokens (in seconds)
  */

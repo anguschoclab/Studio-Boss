@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GameState, Talent, Project, Contract } from "../../../types";
-import { RandomGenerator } from "../../../utils/rng";
+import { GameState, Talent, Project } from "../../../types";import { RandomGenerator } from "../../../utils/rng";
 import { GuestStarBooking } from "../../../types/discovery.types";
 import { getContractsByProjectId } from "../../../utils";
 
 // Guest star thresholds
-const MIN_STARMETER_FOR_GUEST = 60; // Must be somewhat famous
-const GUEST_STAR_CHANCE = 0.1; // 10% per series per week
+const _MIN_STARMETER_FOR_GUEST = 60; // Must be somewhat famous
+const _GUEST_STAR_CHANCE = 0.1; // 10% per series per week
 
 export function generateGuestStarBooking(
   series: Project,

@@ -21,7 +21,7 @@ import { CreateProjectParams } from "../../../store/storeUtils";
  * Handles the resolution of expired project auctions.
  */
 export const OpportunitySystem = {
-  tick(state: GameState, rng: RandomGenerator): StateImpact[] {
+  tick(state: GameState, _rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
     const expired = state.market.opportunities.filter((o) => o.expirationWeek <= state.week);
 
@@ -123,7 +123,7 @@ export const OpportunitySystem = {
 
     if (expired.length > 0 || remainingOpportunities.length < 8) {
       const toGenerate = Math.max(0, 8 - remainingOpportunities.length);
-      const talentPoolIds = Object.keys(state.entities.talents);
+      const _talentPoolIds = Object.keys(state.entities.talents);
       const newOpps = Array.from({ length: toGenerate }, () =>
         generateOpportunity()
       );

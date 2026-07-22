@@ -103,8 +103,8 @@ export class RevenueProcessor {
     projects: Project[],
     state: import("../../types").GameState,
     contracts: import("../../types").Contract[],
-    vault: import("../../types/state.types").IPAsset[],
-    studioId: string
+    _vault: import("../../types/state.types").IPAsset[],
+    _studioId: string
   ) {
     let boxOffice = 0;
     let distribution = 0;

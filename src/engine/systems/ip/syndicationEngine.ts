@@ -3,7 +3,6 @@ import {
   GENRE_SYNDICATION_MODIFIERS,
   SyndicationTier,
 } from "../../data/syndicationConfig";
-import { IPAsset } from "../../types/state.types";
 
 /**
  * Pure logic for determining the syndication package tier.

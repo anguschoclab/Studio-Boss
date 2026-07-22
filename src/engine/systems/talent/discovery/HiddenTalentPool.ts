@@ -3,8 +3,8 @@ import { RandomGenerator } from "../../../utils/rng";
 import { HiddenTalent, DiscoveryEvent } from "../../../types/discovery.types";
 
 // Hidden talent generation
-const HIDDEN_TALENT_POOL_SIZE = 20;
-const DISCOVERY_CHANCE = 0.05; // 5% per week per studio
+const _HIDDEN_TALENT_POOL_SIZE = 20;
+const _DISCOVERY_CHANCE = 0.05; // 5% per week per studio
 
 export function generateHiddenTalent(rng: RandomGenerator): HiddenTalent {
   const potential = rng.rangeInt(60, 100);

@@ -1,5 +1,4 @@
-import { GameState, StateImpact, Talent, Project, Contract } from "../../types";
-import { RandomGenerator } from "../../utils/rng";
+import { GameState, StateImpact, Talent, Project } from "../../types";import { RandomGenerator } from "../../utils/rng";
 import { getContractsByProjectId } from "../../utils";
 import {
   TalkShowAppearance,

@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { GameState, StateImpact, Talent } from "../../types";
 import { RandomGenerator } from "../../utils/rng";
-import { TalentRelationship, RelationshipEvent, RomanceData } from "../../types/relationship.types";
-import { getRelationshipKey } from "./relationshipCompatibility";
+import { TalentRelationship, RelationshipEvent } from "../../types/relationship.types";import { getRelationshipKey } from "./relationshipCompatibility";
 import {
   getRelationship,
   haveWorkedTogether,

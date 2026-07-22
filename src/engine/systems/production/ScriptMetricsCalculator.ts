@@ -122,7 +122,7 @@ export const ScriptMetricsCalculator = {
     project: ScriptedProject,
     structure: number,
     originality: number,
-    emotionalImpact: number
+    _emotionalImpact: number
   ): number {
     let score = 50; // Base score (aligned with tests)
 

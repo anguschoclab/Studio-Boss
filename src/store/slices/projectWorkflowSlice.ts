@@ -7,7 +7,6 @@ import { negotiateContract } from "@/engine/systems/buyers";
 import { RandomGenerator } from "@/engine/utils/rng";
 import { Project, GameState, ProjectContractType, StateImpact, NewsId } from "@/engine/types";
 import { type ProjectId, type BuyerId, type StudioId } from "@/engine/types/shared.types";
-
 export interface ProjectWorkflowSlice {
   greenlightProject: (projectId: ProjectId) => Promise<void>;
   pitchProject: (

@@ -49,7 +49,7 @@ export const TalentAttachmentPanel: React.FC<{ project: Project }> = ({ project 
     () => Object.values(gameState?.entities?.talents || {}),
     [gameState?.entities?.talents]
   );
-  const contracts = useMemo(
+  const _contracts = useMemo(
     () => gameState?.studio.internal.contracts || [],
     [gameState?.studio.internal.contracts]
   );

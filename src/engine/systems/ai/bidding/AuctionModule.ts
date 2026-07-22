@@ -1,5 +1,4 @@
-import { GameState, StateImpact, ArchetypeKey } from "@/engine/types";
-import { RandomGenerator } from "../../../utils/rng";
+import { GameState, StateImpact } from "@/engine/types";import { RandomGenerator } from "../../../utils/rng";
 import { AgencyLeverageEngine } from "../AgencyLeverage";
 
 const ArchetypeMultipliers: Record<string, (genre: string) => number> = {

@@ -93,7 +93,7 @@ export function releaseDirectorsCut(
   });
 
   if (directorId) {
-    const director = {} as any; // we only need the update, not the full talent
+    const _director = {} as any; // we only need the update, not the full talent
     impacts.push({
       type: "TALENT_UPDATED",
       payload: {
