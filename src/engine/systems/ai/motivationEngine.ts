@@ -92,7 +92,7 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
     let newMotivation: StudioMotivation = calculateRivalMotivation(rival, state, rng);
 
     // Fix 3: Prestige decay — rivals that haven't won an award in 2+ years drift toward AWARD_CHASE
-    const lastAwardWin = (rival as unknown as Record<string, unknown>).lastAwardWin as number | undefined;
+    const lastAwardWin = rival.lastAwardWin;
     const weeksSinceLastAward = lastAwardWin ? state.week - lastAwardWin : 999;
 
     // 🎭 The Method Actor Tuning: Prestige studios panic and pivot to chasing awards much faster (1 year vs 2 years) if they are starved.

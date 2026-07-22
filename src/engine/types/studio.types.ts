@@ -82,6 +82,7 @@ export interface RivalStudio {
   revenueHistory?: { week: number; revenue: number; boxOffice: number }[];
   annualRevenue?: number;
   boxOfficeTotal?: number;
+  lastAwardWin?: number;
 }
 
 export interface StudioCulture {

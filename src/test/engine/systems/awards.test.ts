@@ -125,6 +125,112 @@ describe("awards system", () => {
       const prestigeImpact = impacts.find((i) => i.type === "PRESTIGE_CHANGED");
       expect((prestigeImpact?.payload as any)?.amount ?? 0).toBeGreaterThanOrEqual(0);
     });
+
+    it("sets lastAwardWin on RIVAL_UPDATED when a rival wins an award", () => {
+      const rival = {
+        id: "rival-1",
+        name: "Rival Studio",
+        motto: "We make art",
+        archetype: "mid-tier" as const,
+        strength: 50,
+        cash: 50_000_000,
+        prestige: 50,
+        foundedWeek: 1,
+        recentActivity: "None",
+        projectCount: 0,
+        motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
+        currentMotivation: "STABILITY" as const,
+        projects: {},
+        contracts: [],
+      };
+      const rivalProject = {
+        ...eligibleProject,
+        id: "rival-proj-1",
+        ownerId: "rival-1",
+      } as Project;
+
+      const state = getInitialState();
+      state.entities.projects = { [rivalProject.id]: rivalProject };
+      state.entities.releasedProjectIds = [rivalProject.id];
+      state.entities.rivals = { "rival-1": rival as any };
+      state.week = 4;
+
+      const rng = new RandomGenerator(12345);
+      const impacts = runAwardsCeremony(state, 4, 2024, rng);
+
+      const rivalUpdate = impacts.find(
+        (i) =>
+          i.type === "RIVAL_UPDATED" &&
+          (i.payload as any).rivalId === "rival-1"
+      ) as any;
+
+      expect(rivalUpdate).toBeDefined();
+      expect(rivalUpdate.payload.update.lastAwardWin).toBe(4);
+    });
+
+    it("does NOT set lastAwardWin on RIVAL_UPDATED for a nomination (non-win)", () => {
+      // Create a project with a marginal score that will result in a nomination (score <= 50)
+      // but still produce a RIVAL_UPDATED impact with prestige gain.
+      const rival = {
+        id: "rival-1",
+        name: "Rival Studio",
+        motto: "We make art",
+        archetype: "mid-tier" as const,
+        strength: 50,
+        cash: 50_000_000,
+        prestige: 50,
+        foundedWeek: 1,
+        recentActivity: "None",
+        projectCount: 0,
+        motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
+        currentMotivation: "STABILITY" as const,
+        projects: {},
+        contracts: [],
+      };
+      // Low-quality project that will get a nomination score (bestScore > 0 but <= 50)
+      const marginalProject = {
+        ...eligibleProject,
+        id: "rival-proj-marginal",
+        ownerId: "rival-1",
+        reviewScore: 66, // Just above the 65 minimum for nomination weight
+        buzz: 5,
+        awardsProfile: {
+          criticScore: 66,
+          audienceScore: 50,
+          prestigeScore: 60,
+          craftScore: 60,
+          culturalHeat: 10,
+          campaignStrength: 5,
+          controversyRisk: 5,
+          festivalBuzz: 60,
+          academyAppeal: 55,
+          guildAppeal: 55,
+          populistAppeal: 30,
+          indieCredibility: 30,
+          industryNarrativeScore: 40,
+        },
+      } as Project;
+
+      const state = getInitialState();
+      state.entities.projects = { [marginalProject.id]: marginalProject };
+      state.entities.releasedProjectIds = [marginalProject.id];
+      state.entities.rivals = { "rival-1": rival as any };
+      state.week = 4;
+
+      const rng = new RandomGenerator(12345);
+      const impacts = runAwardsCeremony(state, 4, 2024, rng);
+
+      const rivalUpdate = impacts.find(
+        (i) =>
+          i.type === "RIVAL_UPDATED" &&
+          (i.payload as any).rivalId === "rival-1"
+      ) as any;
+
+      // If there is a RIVAL_UPDATED for this rival, it should NOT include lastAwardWin
+      if (rivalUpdate) {
+        expect(rivalUpdate.payload.update.lastAwardWin).toBeUndefined();
+      }
+    });
   });
 
   describe("processRazzies", () => {

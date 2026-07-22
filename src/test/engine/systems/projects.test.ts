@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { advanceProject, handleReleasePhaseEntry } from "../../../engine/systems/projects";
 import { Project, Talent, Contract } from "../../../engine/types";
 import * as utils from "../../../engine/utils";
@@ -33,6 +33,14 @@ const mockProject: Project = {
 } as import("../../../engine/types").Project;
 
 describe("advanceProject", () => {
+  beforeEach(() => {
+    vi.spyOn(utils, "randRange").mockReturnValue(0);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it("does nothing for archived projects", () => {
     const project = { ...mockProject, state: "archived" as const };
     const { project: p, update } = advanceProject(project, 1, 50, [], new Map(), 50);
@@ -122,12 +130,102 @@ describe("advanceProject", () => {
       { id: "c1", projectId: "proj-1", talentId: "t1", fee: 100000, backendPercent: 0 },
     ];
 
-    vi.spyOn(utils, "randRange").mockReturnValue(0); // Fix randomness
     const { project: p } = advanceProject(project, 1, 50, contracts, pool, 50);
 
     // draw = 100 => bonus = 2. randRange = 0. base buzz = 50. Total change: +2. Expected: 52.
     expect(p.buzz).toBe(52);
-    vi.restoreAllMocks();
+  });
+
+  it("drifts buzz with no talent (roll only)", () => {
+    const project = { ...mockProject, buzz: 50 };
+    const { project: p } = advanceProject(project, 1, 50, [], new Map(), 50);
+    // No talent => bonus = 0. randRange = 0 (mocked). buzz = 50 + 0 + 0 = 50.
+    expect(p.buzz).toBe(50);
+  });
+
+  it("clamps buzz to 0 on large negative drift", () => {
+    const project = { ...mockProject, buzz: 1 };
+    vi.spyOn(utils, "randRange").mockReturnValue(-10);
+    const { project: p } = advanceProject(project, 1, 50, [], new Map(), 50);
+    // buzz = 1 + (-10) + 0 = -9, clamped to 0.
+    expect(p.buzz).toBe(0);
+  });
+
+  it("clamps buzz to 100 on large positive drift", () => {
+    const project = { ...mockProject, buzz: 99 };
+    const mockTalent: Talent = {
+      id: "t1",
+      name: "Star",
+      roles: ["actor"],
+      prestige: 100,
+      fee: 1000000,
+      draw: 100,
+      personality: "Pro",
+      accessLevel: "legacy",
+    } as any;
+    const pool = new Map([["t1", mockTalent]]);
+    const contracts: Contract[] = [
+      { id: "c1", projectId: "proj-1", talentId: "t1", fee: 100000, backendPercent: 0 },
+    ];
+    vi.spyOn(utils, "randRange").mockReturnValue(6);
+    const { project: p } = advanceProject(project, 1, 50, contracts, pool, 50);
+    // buzz = 99 + 6 + 2 (draw 100 / 50) = 107, clamped to 100.
+    expect(p.buzz).toBe(100);
+  });
+
+  it("stacks buzz bonus from multiple talent", () => {
+    const project = { ...mockProject, buzz: 50 };
+    const mockTalent1: Talent = {
+      id: "t1",
+      name: "Star1",
+      roles: ["actor"],
+      prestige: 50,
+      fee: 500000,
+      draw: 50,
+      personality: "Pro",
+      accessLevel: "legacy",
+    } as any;
+    const mockTalent2: Talent = {
+      id: "t2",
+      name: "Star2",
+      roles: ["actor"],
+      prestige: 50,
+      fee: 500000,
+      draw: 50,
+      personality: "Pro",
+      accessLevel: "legacy",
+    } as any;
+    const pool = new Map([
+      ["t1", mockTalent1],
+      ["t2", mockTalent2],
+    ]);
+    const contracts: Contract[] = [
+      { id: "c1", projectId: "proj-1", talentId: "t1", fee: 100000, backendPercent: 0 },
+      { id: "c2", projectId: "proj-1", talentId: "t2", fee: 100000, backendPercent: 0 },
+    ];
+    // randRange = 0 (from beforeEach). bonus = 50/50 + 50/50 = 2. buzz = 50 + 0 + 2 = 52.
+    const { project: p } = advanceProject(project, 1, 50, contracts, pool, 50);
+    expect(p.buzz).toBe(52);
+  });
+
+  it("uses rng.rangeInt when rng is provided", () => {
+    const project = { ...mockProject, buzz: 50 };
+    const rng = new RandomGenerator(42);
+    const { project: p } = advanceProject(
+      project,
+      1,
+      50,
+      [],
+      new Map(),
+      50,
+      [],
+      1.0,
+      1.0,
+      0,
+      rng
+    );
+    // rng.rangeInt(-4, 6) produces a non-zero integer, so buzz should change.
+    expect(p.buzz).not.toBe(50);
   });
 
   describe("Handle Release Phase Entry", () => {
@@ -139,5 +237,13 @@ describe("advanceProject", () => {
       expect(proj.reviewScore).toBeDefined();
       expect(update).toBeTruthy();
     });
+  });
+});
+
+describe("randRange mock hygiene", () => {
+  it("mock is restored after advanceProject describe block (no leakage)", () => {
+    // Verify that randRange is not mocked here — afterEach restored it.
+    const result = utils.randRange(0, 1);
+    expect(result).not.toBe(0);
   });
 });
