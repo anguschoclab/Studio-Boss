@@ -3,7 +3,7 @@ import { StateCreator } from "zustand";
 import { GameStore } from "../gameStore";
 import { handleReleasePhaseEntry } from "@/engine/systems/projects";
 import { executeMarketing } from "@/engine/systems/projectHandlers/MarketingHandler";
-import { Talent, NewsId } from "@/engine/types";import { type ProjectId, type TalentId } from "@/engine/types/shared.types";import { RandomGenerator } from "@/engine/utils/rng";
+import { Talent, NewsId } from "@/engine/types";import { type ProjectId } from "@/engine/types/shared.types";import { RandomGenerator } from "@/engine/utils/rng";
 import { getContractsByProjectId } from "@/engine/utils";
 
 export interface FinanceMarketingSlice {
@@ -98,7 +98,7 @@ export const createFinanceMarketingSlice: StateCreator<GameStore, [], [], Financ
     });
   },
 
-  executeMarketingEvent: (_eventName, cost, projectId) => {
+  executeMarketingEvent: (_eventName, _cost, _projectId) => {
     // Marketing event execution - logic to be implemented
   },
 });

@@ -115,7 +115,7 @@ export function checkPregnancies(state: GameState, rng: RandomGenerator): StateI
 /**
  * Process births from pregnancies reaching term
  */
-export function processBirths(_state: GameState, rng: RandomGenerator): StateImpact[] {
+export function processBirths(_state: GameState, _rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
 
   // Get active pregnancies from state

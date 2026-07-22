@@ -10,17 +10,12 @@
 import {
   GameState,
   Project,
-  RivalStudio,
-  Talent,
-  GameEvent,
   FilmProject,
   SeriesProject,
-  ScriptMetrics,
 } from "../engine/types";
 import {
   selectFinance,
   selectLatestSnapshot,
-  selectRecoupmentMap,
   selectProjects,
   selectProjectsRaw,
   selectActiveProjects,

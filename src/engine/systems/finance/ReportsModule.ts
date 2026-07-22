@@ -2,7 +2,6 @@ import {
   Project,
   GameState,
   WeeklyFinancialReport,
-  Buyer,
   Contract,
   TalentPact,
 } from "@/engine/types";
@@ -29,7 +28,7 @@ export function generateWeeklyFinancialReport(
 
   const passive = RevenueProcessor.calculateVaultDividends(state.ip.vault);
 
-  const { boxOffice, distribution, merch, totalRoyalties, _projectRecoupment } =
+  const { boxOffice, distribution, merch, totalRoyalties, projectRecoupment: _projectRecoupment } =
     RevenueProcessor.calculateActiveRevenue(projects, state, contracts, state.ip.vault, studioId);
 
   const expenses = ExpenseProcessor.calculateConsolidatedExpenses(
@@ -43,7 +42,7 @@ export function generateWeeklyFinancialReport(
   );
 
   let otherRevenue = 0;
-  let otherExpenses = 0;
+  let _otherExpenses = 0;
 
   for (let i = 0; i < pendingImpacts.length; i++) {
     const impact = pendingImpacts[i];
@@ -54,7 +53,7 @@ export function generateWeeklyFinancialReport(
       if (impact.type === "FINANCE_TRANSACTION" && impact.payload) {
         const amount = (impact.payload as { amount: number }).amount || 0;
         if (amount > 0) otherRevenue += amount;
-        else otherExpenses += Math.abs(amount);
+        else _otherExpenses += Math.abs(amount);
       } else if (impact.cashChange) {
         const change = impact.cashChange as number;
         if (change > 0) otherRevenue += change;

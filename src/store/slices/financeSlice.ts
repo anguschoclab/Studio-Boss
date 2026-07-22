@@ -3,10 +3,6 @@ import { GameStore } from "../gameStore";
 import {
   WeeklyFinancialReport,
   FinanceState,
-  Contract,
-  Project,
-  Buyer,
-  RivalStudio,
 } from "@/engine/types";
 import { FinancialSnapshot } from "@/engine/types/state.types";import { InterestRateSimulator } from "@/engine/systems/market/InterestRateSimulator";
 
@@ -70,7 +66,7 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
       };
     }),
 
-  executeMarketingEvent: (_eventName, cost, projectId) => {
+  executeMarketingEvent: (_eventName, _cost, _projectId) => {
     // Marketing event executed
   },
 

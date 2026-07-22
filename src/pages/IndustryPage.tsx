@@ -15,10 +15,7 @@ import {
   Brain,
   BarChart3,
   Globe2,
-  TrendingUp,
-  DollarSign,
   Activity,
-  AlertTriangle,
   Monitor,
 } from "lucide-react";
 import { m } from "framer-motion";import { cn } from "@/lib/utils";

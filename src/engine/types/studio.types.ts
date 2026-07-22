@@ -6,7 +6,6 @@ import {
   GenreTrend,
   FestivalSubmission,
   Award,
-  ReleaseStrategy,
 } from "./project.types";
 import {
   Contract,

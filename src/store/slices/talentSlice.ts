@@ -3,8 +3,6 @@ import { StateCreator } from "zustand";
 import { GameStore } from "../gameStore";
 import {
   Contract,
-  Opportunity,
-  StateImpact,
   Talent,
   TalentPact,
   TalentCommitment,
@@ -15,7 +13,6 @@ import {
   SeriesProject,
 } from "@/engine/types";
 import {
-  type TalentId,
   type ProjectId,
   type ContractId,
   type StudioId,

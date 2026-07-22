@@ -1,10 +1,6 @@
 import {
   GameState,
   StateImpact,
-  Opportunity,
-  Project,
-  Contract,
-  RivalStudio,
 } from "@/engine/types";
 import { RandomGenerator } from "../../utils/rng";
 import { buildProjectAndContracts } from "../../../store/storeUtils";
