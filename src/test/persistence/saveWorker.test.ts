@@ -95,7 +95,7 @@ describe("saveWorker handleLoad with validation", () => {
       const result = await handleLoad(0);
       expect(result).toBeTruthy();
       expect(Object.keys(result as any)).not.toContain("__proto__");
-      expect((result as any).hasOwnProperty("__proto__")).toBe(false);
+      expect(Object.prototype.hasOwnProperty.call(result, "__proto__")).toBe(false);
       expect((Object.prototype as any).polluted).toBeUndefined();
     } finally {
       delete (navigator as any).storage;

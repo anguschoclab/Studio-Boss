@@ -92,7 +92,7 @@ describe("talentMarketplaceSlice", () => {
   describe("acquireOpportunity", () => {
     it("returns unchanged state when opportunity not found", () => {
       const store = useGameStore.getState() as any;
-      const before = useGameStore.getState().gameState?.finance.cash!;
+      const before = useGameStore.getState().gameState?.finance.cash ?? 0;
       store.acquireOpportunity("nonexistent");
       expect(useGameStore.getState().gameState?.finance.cash).toBe(before);
     });
@@ -116,9 +116,9 @@ describe("talentMarketplaceSlice", () => {
       } as any);
 
       const store = useGameStore.getState() as any;
-      const before = useGameStore.getState().gameState?.finance.cash!;
+      const before = useGameStore.getState().gameState?.finance.cash ?? 0;
       store.acquireOpportunity("opp-1");
-      const after = useGameStore.getState().gameState?.finance.cash!;
+      const after = useGameStore.getState().gameState?.finance.cash ?? 0;
       expect(after).toBeLessThan(before);
       expect(before - after).toBeGreaterThanOrEqual(12_000_000);
     });
@@ -140,7 +140,7 @@ describe("talentMarketplaceSlice", () => {
       } as any);
 
       const store = useGameStore.getState() as any;
-      const before = useGameStore.getState().gameState?.finance.cash!;
+      const before = useGameStore.getState().gameState?.finance.cash ?? 0;
       store.acquireOpportunity("opp-1");
       expect(useGameStore.getState().gameState?.finance.cash).toBe(before);
     });
@@ -159,7 +159,7 @@ describe("talentMarketplaceSlice", () => {
       const store = useGameStore.getState() as any;
       store.placeBid("opp-1", 5_000_000);
 
-      const opps = useGameStore.getState().gameState?.market.opportunities!;
+      const opps = useGameStore.getState().gameState?.market.opportunities ?? [];
       expect(opps[0].bids["PLR-1"]).toEqual({ amount: 5_000_000, terms: "standard" });
       expect(opps[0].highestBidderId).toBe("PLR-1");
     });
@@ -177,7 +177,7 @@ describe("talentMarketplaceSlice", () => {
       const store = useGameStore.getState() as any;
       store.placeBid("opp-1", 50_000_000);
 
-      const opps = useGameStore.getState().gameState?.market.opportunities!;
+      const opps = useGameStore.getState().gameState?.market.opportunities ?? [];
       expect(opps[0].bids["PLR-1"]).toBeUndefined();
     });
   });

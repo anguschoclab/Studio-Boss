@@ -32,7 +32,7 @@ export function advanceTalentLifecycle(state: GameState, rng: RandomGenerator): 
       }
     }
 
-    let nextCommitments = talent.commitments;
+    let nextCommitments: typeof talent.commitments;
     if (talent.commitments && talent.commitments.length > 0) {
       let hasExpired = false;
       for (let i = 0; i < talent.commitments.length; i++) {

@@ -91,7 +91,7 @@ describe("talentSlice — acquireOpportunity currentHighest", () => {
 
   it("returns unchanged state when opportunity not found", () => {
     const store = useGameStore.getState() as any;
-    const before = useGameStore.getState().gameState?.finance.cash!;
+    const before = useGameStore.getState().gameState?.finance.cash ?? 0;
     store.acquireOpportunity("nonexistent");
     expect(useGameStore.getState().gameState?.finance.cash).toBe(before);
   });
@@ -116,9 +116,9 @@ describe("talentSlice — acquireOpportunity currentHighest", () => {
     } as any);
 
     const store = useGameStore.getState() as any;
-    const before = useGameStore.getState().gameState?.finance.cash!;
+    const before = useGameStore.getState().gameState?.finance.cash ?? 0;
     store.acquireOpportunity("opp-1");
-    const after = useGameStore.getState().gameState?.finance.cash!;
+    const after = useGameStore.getState().gameState?.finance.cash ?? 0;
     expect(after).toBeLessThan(before);
     expect(before - after).toBeGreaterThanOrEqual(15_000_000);
   });
@@ -140,7 +140,7 @@ describe("talentSlice — acquireOpportunity currentHighest", () => {
     } as any);
 
     const store = useGameStore.getState() as any;
-    const before = useGameStore.getState().gameState?.finance.cash!;
+    const before = useGameStore.getState().gameState?.finance.cash ?? 0;
     store.acquireOpportunity("opp-1");
     expect(useGameStore.getState().gameState?.finance.cash).toBe(before);
   });
@@ -162,7 +162,7 @@ describe("talentSlice — acquireOpportunity currentHighest", () => {
 
     const store = useGameStore.getState() as any;
     store.acquireOpportunity("opp-1");
-    const opps = useGameStore.getState().gameState?.market.opportunities!;
+    const opps = useGameStore.getState().gameState?.market.opportunities ?? [];
     expect(opps).toHaveLength(0);
   });
 });

@@ -5,7 +5,7 @@ export function evaluateMarketingEfficiency(
   campaign: MarketingCampaign
 ): { multiplier: number; feedbackText: string } {
   let multiplier = 1.0;
-  let feedbackText = "The marketing campaign has been launched.";
+  let feedbackText: string;
 
   const { primaryAngle, domesticBudget, foreignBudget, weeksInMarketing = 0 } = campaign;
   const totalBudget = domesticBudget + foreignBudget;

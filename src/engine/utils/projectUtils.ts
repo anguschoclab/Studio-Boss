@@ -166,7 +166,7 @@ export function getRecommendedTalentForProject(
  * Estimates the duration (in weeks) required for a project production phase.
  */
 export function getProjectEstimatedWindow(project: Project): number {
-  let baseWeeks = 12;
+  let baseWeeks: number;
 
   if (project.format === "film") {
     switch (project.budgetTier) {
