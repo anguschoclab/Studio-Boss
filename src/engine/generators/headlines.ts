@@ -16,6 +16,7 @@ export function generateHeadlines(
   const count = 1 + Math.floor(secureRandom() * 3);
   const headlines: Headline[] = [];
   const genrePool = ["sci-fi", "drama", "action", "thriller", "comedy", "horror", "fantasy"];
+  const talentById = new Map<string, TalentProfile>(talentPool.map((t) => [t.id, t]));
 
   // Helper: get contracts for a project using the contractsByProjectId index
   const getProjectContracts = (projectId: string): Contract[] => {
@@ -29,7 +30,7 @@ export function generateHeadlines(
   const projectsWithDirectors = projects.filter((p) => {
     const projectContracts = getProjectContracts(p.id);
     return projectContracts.some((c) => {
-      const talent = talentPool.find((t) => t.id === c.talentId);
+      const talent = talentById.get(c.talentId);
       return talent?.roles.includes("director");
     });
   });
@@ -39,10 +40,10 @@ export function generateHeadlines(
     ? (() => {
         const pContracts = getProjectContracts(selectedProject.id);
         const dContract = pContracts.find((c) => {
-          const talent = talentPool.find((t) => t.id === c.talentId);
+          const talent = talentById.get(c.talentId);
           return talent?.roles.includes("director");
         });
-        return talentPool.find((t) => t.id === dContract?.talentId);
+        return dContract ? talentById.get(dContract.talentId) : undefined;
       })()
     : null;
 
