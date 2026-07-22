@@ -84,7 +84,6 @@ describe("Bard Engine Integration", () => {
       const resolved = BardResolver.resolve({
         // @ts-expect-error - Testing invalid domain
         domain: "NonExistent",
-        // @ts-expect-error - Testing invalid subdomain
         subDomain: "Standard",
         intensity: 50,
         context: {},

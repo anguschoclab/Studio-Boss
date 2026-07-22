@@ -29,6 +29,9 @@ describe("SummaryBuilder", () => {
         rivals: {},
         talents: {},
         contracts: {},
+        releasedProjectIds: [],
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       } as any,
       market: {
         trends: [],
@@ -60,7 +63,7 @@ describe("SummaryBuilder", () => {
       ip: { vault: [], franchises: {} } as any,
       relationships: {} as any,
       history: [] as any,
-    } as GameState;
+    } as unknown as GameState;
 
     mockAfterState = {
       ...mockBeforeState,
@@ -70,7 +73,7 @@ describe("SummaryBuilder", () => {
         ...mockBeforeState.finance,
         cash: 10500000,
       },
-    } as GameState;
+    } as unknown as GameState;
 
     mockContext = {
       week: 2,
@@ -122,11 +125,16 @@ describe("SummaryBuilder", () => {
       type: "LEDGER_UPDATED",
       payload: {
         report: {
+          week: 1,
+          year: 1,
+          startingCash: 10000000,
           revenue: { boxOffice: 1000000, distribution: 500000, other: 200000 },
           expenses: { production: 800000, marketing: 300000, overhead: 100000, pacts: 50000 },
+          endingCash: 10750000,
+          netProfit: 750000,
         },
       },
-    });
+    } as any);
 
     const summary = SummaryBuilder.build(mockBeforeState, mockAfterState, mockContext);
     expect(summary.totalRevenue).toBe(1700000);

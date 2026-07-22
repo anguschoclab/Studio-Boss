@@ -18,7 +18,7 @@ describe("ProductionFilter", () => {
     const project1 = createMockProject({
       id: "PRJ-1",
       title: "Active Production",
-      status: "Production",
+      state: "production",
     });
     mockState.entities.projects = {
       [project1.id]: project1,

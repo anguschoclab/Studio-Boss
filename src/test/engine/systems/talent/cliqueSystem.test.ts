@@ -53,6 +53,8 @@ describe("CliqueSystem", () => {
           },
           contracts: {},
           rivals: {},
+          contractsByProjectId: {},
+          contractsByTalentId: {},
         },
         relationships: {
           cliques: { cliques: { "CLQ-1": clique } },

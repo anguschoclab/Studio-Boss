@@ -47,6 +47,8 @@ describe("generateScandals", () => {
         talents: { "TAL-1": talent },
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
     const rng = makeMockRng(0.001);

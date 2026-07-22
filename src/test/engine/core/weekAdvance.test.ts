@@ -37,6 +37,8 @@ describe("Week Advance Pipeline (Target A4)", () => {
         talents: {},
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
 

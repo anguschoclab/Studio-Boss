@@ -113,10 +113,12 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
             <button
               type="button"
               aria-label={isBookmarked(project.id, "project") ? "Remove bookmark" : "Add bookmark"}
+              onPointerDown={(e) => e.stopPropagation()}
               onClick={(e) => {
                 e.stopPropagation();
                 toggleBookmark(project.id, "project");
               }}
+              title={isBookmarked(project.id, "project") ? "Remove bookmark" : "Add bookmark"}
               className={cn(
                 "h-8 w-8 flex items-center justify-center border transition-all duration-700 rounded-none",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black",

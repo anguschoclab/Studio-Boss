@@ -82,7 +82,7 @@ describe("Agent Brain (Target C2)", () => {
           name: "Player Studio",
           archetype: "major",
           prestige: 50,
-          internal: { projectHistory: [], firstLookDeals: [] },
+          internal: { projectHistory: [], firstLookDeals: [], projects: {}, contracts: [] },
         },
         entities: {
           projects: {
@@ -102,6 +102,9 @@ describe("Agent Brain (Target C2)", () => {
             "bundle-1": bundledTalent,
           },
           rivals: {},
+          releasedProjectIds: [],
+          contractsByProjectId: {},
+          contractsByTalentId: {},
         },
       });
       state.industry.agencies = [packagerAgency];

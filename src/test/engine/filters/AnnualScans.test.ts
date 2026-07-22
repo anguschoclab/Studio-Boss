@@ -48,6 +48,9 @@ describe("AnnualScans", () => {
         },
         talents: {},
         contracts: {},
+        releasedProjectIds: [],
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       } as any,
       market: {
         trends: [],
@@ -82,7 +85,7 @@ describe("AnnualScans", () => {
       eventHistory: [] as any,
       relationships: {} as any,
       history: [] as any,
-    } as GameState;
+    } as unknown as GameState;
 
     mockContext = {
       week: 2,

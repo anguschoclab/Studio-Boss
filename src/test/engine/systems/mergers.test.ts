@@ -29,13 +29,16 @@ describe("Mergers and Sabotage System", () => {
         name: "Player Studio",
         archetype: "major",
         prestige: 50,
-        internal: { projectHistory: [] },
+        internal: { projectHistory: [], projects: {}, contracts: [] },
       },
       entities: {
         projects: {},
         talents: {},
         contracts: {},
         rivals: { [mockTarget.id]: mockTarget },
+        releasedProjectIds: [],
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
   });

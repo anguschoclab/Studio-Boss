@@ -39,6 +39,9 @@ describe("RelationshipSystem - Award Nominee Tracking", () => {
         contracts: {},
         talents: {},
         rivals: {},
+        releasedProjectIds: [],
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
       industry: {
         awards: [
@@ -87,6 +90,9 @@ describe("RelationshipSystem - Award Nominee Tracking", () => {
         contracts: {},
         talents: {},
         rivals: {},
+        releasedProjectIds: [],
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
       industry: {
         awards: [
@@ -126,6 +132,9 @@ describe("RelationshipSystem - Award Nominee Tracking", () => {
         contracts: {},
         talents: {},
         rivals: {},
+        releasedProjectIds: [],
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
       industry: {
         awards: [
@@ -508,6 +517,9 @@ describe("RelationshipSystem - tickRelationshipSystem", () => {
           }),
         },
         rivals: {},
+        releasedProjectIds: [],
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
 
@@ -525,6 +537,9 @@ describe("RelationshipSystem - tickRelationshipSystem", () => {
         projects: {},
         contracts: {},
         rivals: {},
+        releasedProjectIds: [],
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
 
@@ -556,6 +571,9 @@ describe("RelationshipSystem - tickRelationshipSystem", () => {
         projects: {},
         contracts: {},
         rivals: {},
+        releasedProjectIds: [],
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
       relationships: {
         relationships: {

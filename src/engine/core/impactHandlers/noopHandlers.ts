@@ -13,7 +13,6 @@ export function handleCastingConstraintViolation(
   return state;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function handleCastingPremiumDemand(state: GameState, _impact: StateImpact): GameState {
   return state;
 }

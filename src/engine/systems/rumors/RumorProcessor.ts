@@ -51,32 +51,47 @@ export class RumorProcessor {
 
       let text = "Unnamed studio in talks for a massive merger.";
 
-      const talents = Object.values(state.entities.talents || {});
-      const rivals = Object.values(state.entities.rivals || {});
-      const projects = Object.values(state.entities.projects || {});
+      const talents = state.entities.talents;
+      const rivals = state.entities.rivals;
+      const projects = state.entities.projects;
 
-      if (category === "talent" && talents.length > 0) {
-        const talent = talents[Math.floor(rng.next() * talents.length)];
-        const rumorTexts = [
-          `${talent.name} reportedly demanding unprecedented back-end points on next project.`,
-          `Sources say ${talent.name} is extremely difficult to work with on set.`,
-          `${talent.name} is secretly looking to direct their next feature.`,
-        ];
-        text = rumorTexts[Math.floor(rng.next() * rumorTexts.length)];
-      } else if (category === "rival" && rivals.length > 0) {
-        const rival = rivals[Math.floor(rng.next() * rivals.length)];
-        const rumorTexts = [
-          `${rival.name} is allegedly facing severe cash flow issues.`,
-          `Word around town is ${rival.name} is preparing a monumental buyout offer.`,
-          `Exec shakeups expected soon at ${rival.name}.`,
-        ];
-        text = rumorTexts[Math.floor(rng.next() * rumorTexts.length)];
-      } else if (category === "project" && projects.length > 0) {
-        const project = projects[Math.floor(rng.next() * projects.length)];
-        if (project.state === "production") {
-          text = `Production on "${project.title}" is rumored to be wildly over budget.`;
-        } else {
-          text = `Early test screenings for "${project.title}" are supposedly disastrous.`;
+      if (category === "talent" && talents) {
+        const talentKeys = Object.keys(talents);
+        if (talentKeys.length > 0) {
+          const talent = talents[talentKeys[Math.floor(rng.next() * talentKeys.length)]];
+          if (talent) {
+            const rumorTexts = [
+              `${talent.name} reportedly demanding unprecedented back-end points on next project.`,
+              `Sources say ${talent.name} is extremely difficult to work with on set.`,
+              `${talent.name} is secretly looking to direct their next feature.`,
+            ];
+            text = rumorTexts[Math.floor(rng.next() * rumorTexts.length)];
+          }
+        }
+      } else if (category === "rival" && rivals) {
+        const rivalKeys = Object.keys(rivals);
+        if (rivalKeys.length > 0) {
+          const rival = rivals[rivalKeys[Math.floor(rng.next() * rivalKeys.length)]];
+          if (rival) {
+            const rumorTexts = [
+              `${rival.name} is allegedly facing severe cash flow issues.`,
+              `Word around town is ${rival.name} is preparing a monumental buyout offer.`,
+              `Exec shakeups expected soon at ${rival.name}.`,
+            ];
+            text = rumorTexts[Math.floor(rng.next() * rumorTexts.length)];
+          }
+        }
+      } else if (category === "project" && projects) {
+        const projectKeys = Object.keys(projects);
+        if (projectKeys.length > 0) {
+          const project = projects[projectKeys[Math.floor(rng.next() * projectKeys.length)]];
+          if (project) {
+            if (project.state === "production") {
+              text = `Production on "${project.title}" is rumored to be wildly over budget.`;
+            } else {
+              text = `Early test screenings for "${project.title}" are supposedly disastrous.`;
+            }
+          }
         }
       }
 
@@ -107,6 +122,6 @@ export class RumorProcessor {
         rumors: updatedRumors,
         headlines: newHeadlines,
       },
-    } as any; // Using any for brevity in returning modular impact
+    } as unknown as StateImpact; // Using cast for modular impact
   }
 }

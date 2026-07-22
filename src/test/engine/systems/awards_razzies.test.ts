@@ -61,6 +61,7 @@ describe("Razzies Award System", () => {
         contracts: {},
         rivals: {},
         contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
     state.studio.id = "player-studio";
@@ -95,6 +96,7 @@ describe("Razzies Award System", () => {
         contracts: {},
         rivals: {},
         contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
     state.studio.id = "player-studio";
@@ -143,6 +145,7 @@ describe("Razzies Award System", () => {
         contracts: { "con-star": starContract },
         contractsByProjectId: { big: ["con-star"] },
         rivals: {},
+        contractsByTalentId: {},
       },
     });
     state.studio.id = "player-studio";
@@ -187,6 +190,7 @@ describe("Razzies Award System", () => {
         contracts: { "con-star": starContract },
         contractsByProjectId: { big: ["con-star"] },
         rivals: {},
+        contractsByTalentId: {},
       },
     });
     state.studio.id = "player-studio";
@@ -214,6 +218,7 @@ describe("Razzies Award System", () => {
         contracts: {},
         contractsByProjectId: {},
         rivals: {},
+        contractsByTalentId: {},
       },
     });
     state.studio.id = "player-studio";
@@ -239,6 +244,7 @@ describe("Razzies Award System", () => {
         contracts: {},
         contractsByProjectId: {},
         rivals: {},
+        contractsByTalentId: {},
       },
     });
     // Deliberately set contractsByProjectId to undefined to test null-safety
@@ -262,6 +268,7 @@ describe("Razzies Award System", () => {
         contracts: {},
         contractsByProjectId: {},
         rivals: {},
+        contractsByTalentId: {},
       },
     });
     state.studio.id = "player-studio";
@@ -295,6 +302,7 @@ describe("Razzies Award System", () => {
         contracts: {},
         contractsByProjectId: {},
         rivals: {},
+        contractsByTalentId: {},
       },
     });
     state.studio.id = "player-studio";

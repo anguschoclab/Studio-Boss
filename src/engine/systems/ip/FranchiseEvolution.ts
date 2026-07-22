@@ -1,4 +1,4 @@
-import { GameState, Project, Franchise, StateImpact } from "../../types";
+import { GameState, Franchise, StateImpact } from "../../types";
 import { RandomGenerator } from "../../utils/rng";
 import { clamp } from "../../utils";
 
@@ -10,15 +10,18 @@ export function calculateFranchiseEvolutionImpacts(
   rng: RandomGenerator
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const projects = Object.values(state.entities.projects);
+  const projects = state.entities.projects;
+  if (!projects) return impacts;
 
-  projects.forEach((project) => {
+  for (const pid in projects) {
+    const project = projects[pid];
+    if (!project) continue;
     if (project.state === "released" && !project.franchiseId) {
       let franchiseId = project.franchiseId;
       const isBreakout = project.revenue > project.budget * 1.0;
       const isPrestigeHit = (project.awardsProfile?.prestigeScore || 0) > 50;
-      const isQualityHit = ((project as any).quality || 50) > 70;
-      const isGenreBonus = ["SCI-FI", "FANTASY", "SUPERHERO"].includes(
+      const _isQualityHit = ((project as unknown as { quality?: number }).quality || 50) > 70;
+      const _isGenreBonus = ["SCI-FI", "FANTASY", "SUPERHERO"].includes(
         (project.genre || "").toUpperCase()
       );
       const isHighQuality = (project.quality || 0) > 70;
@@ -98,7 +101,7 @@ export function calculateFranchiseEvolutionImpacts(
         }
       }
     }
-  });
+  }
 
   return impacts;
 }

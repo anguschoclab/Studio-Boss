@@ -369,9 +369,12 @@ export function tickTVRecommendationSystem(
     return impacts;
   }
 
-  const talents = Object.values(state.entities.talents || {});
+  const talents = state.entities.talents;
+  if (!talents) return impacts;
 
-  for (const talent of talents) {
+  for (const tid in talents) {
+    const talent = talents[tid];
+    if (!talent) continue;
     // Only generate for active talents (not retired, not on medical leave)
     if (talent.retired || talent.onMedicalLeave) {
       continue;
@@ -420,7 +423,7 @@ export function getTVRecommendationsForTalent(
 export function acceptTVRecommendation(
   recommendationId: string,
   state: GameState,
-  rng: RandomGenerator
+  _rng: RandomGenerator
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
 

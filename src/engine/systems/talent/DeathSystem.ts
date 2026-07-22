@@ -1,6 +1,6 @@
-import { GameState, StateImpact, Talent, Project, Contract } from "../../types";
+import { GameState, StateImpact, Talent } from "../../types";
 import { RandomGenerator } from "../../utils/rng";
-import { getContractsByProjectId } from "../../utils";
+import { getContractsByProjectId, getContractsByTalentId } from "../../utils";
 
 /**
  * Death System
@@ -180,26 +180,29 @@ function calculateGriefImpact(
   // Find all talents who worked with the deceased
   const coStarIds: string[] = [];
 
-  // Check current projects
-  const activeProjects = Object.values(state.entities.projects || {}).filter(
-    (p) => p.state === "production" || p.state === "marketing"
-  );
+  // Check current projects using for...in for performance
+  const projects = state.entities.projects;
+  if (projects) {
+    for (const pid in projects) {
+      const project = projects[pid];
+      if (!project) continue;
+      if (project.state !== "production" && project.state !== "marketing") continue;
 
-  for (const project of activeProjects) {
-    const contracts = getContractsByProjectId(
-      state.entities.contractsByProjectId,
-      state.entities.contracts,
-      project.id
-    );
+      const contracts = getContractsByProjectId(
+        state.entities.contractsByProjectId,
+        state.entities.contracts,
+        project.id
+      );
 
-    const isDeadTalentInProject = contracts.some((c) => c.talentId === deadTalent.id);
-    if (isDeadTalentInProject) {
-      // Add all other talents in this project as co-stars
-      contracts.forEach((c) => {
-        if (c.talentId !== deadTalent.id && !coStarIds.includes(c.talentId)) {
-          coStarIds.push(c.talentId);
+      const isDeadTalentInProject = contracts.some((c) => c.talentId === deadTalent.id);
+      if (isDeadTalentInProject) {
+        // Add all other talents in this project as co-stars
+        for (const c of contracts) {
+          if (c.talentId !== deadTalent.id && !coStarIds.includes(c.talentId)) {
+            coStarIds.push(c.talentId);
+          }
         }
-      });
+      }
     }
   }
 
@@ -322,8 +325,11 @@ function processGriefImpacts(
   rng: RandomGenerator
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
+  const deadTalent = state.entities.talents?.[deathEvent.talentId];
+  if (!deadTalent) return impacts;
+
   const { coStarIds, griefLevel } = calculateGriefImpact(
-    state.entities.talents?.[deathEvent.talentId]!,
+    deadTalent,
     state
   );
 
@@ -365,9 +371,11 @@ function processGriefImpacts(
  * Determine if talent is owned by player or a rival studio
  */
 function getTalentOwner(talent: Talent, state: GameState): string | null {
-  // Check contracts
-  const contracts = Object.values(state.entities.contracts || {}).filter(
-    (c) => c.talentId === talent.id
+  // Check contracts using O(1) indexed lookup
+  const contracts = getContractsByTalentId(
+    state.entities.contractsByTalentId,
+    state.entities.contracts,
+    talent.id
   );
 
   for (const contract of contracts) {
@@ -375,8 +383,8 @@ function getTalentOwner(talent: Talent, state: GameState): string | null {
       return "player";
     }
     // Check if ownerId is a rival
-    if (state.entities.rivals?.[contract.ownerId!]) {
-      return contract.ownerId!;
+    if (contract.ownerId && state.entities.rivals?.[contract.ownerId]) {
+      return contract.ownerId;
     }
   }
 
@@ -402,9 +410,12 @@ export function tickDeathSystem(state: GameState, rng: RandomGenerator): StateIm
   const impacts: StateImpact[] = [];
   const deathEvents: DeathEvent[] = [];
 
-  const talents = Object.values(state.entities.talents || {});
+  const talents = state.entities.talents;
+  if (!talents) return impacts;
 
-  for (const talent of talents) {
+  for (const tid in talents) {
+    const talent = talents[tid];
+    if (!talent) continue;
     // Skip if already on medical leave (hospitalized, protected)
     if (talent.onMedicalLeave) continue;
 
@@ -482,7 +493,7 @@ export function tickDeathSystem(state: GameState, rng: RandomGenerator): StateIm
         deathEvents,
         deathCount: deathEvents.length,
       },
-    } as any);
+    });
   }
 
   return impacts;
@@ -493,7 +504,7 @@ export function tickDeathSystem(state: GameState, rng: RandomGenerator): StateIm
  */
 export function getDeathStatistics(
   state: GameState,
-  weeks: number = 52
+  _weeks: number = 52
 ): {
   totalDeaths: number;
   byType: Record<DeathType, number>;

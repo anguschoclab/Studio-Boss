@@ -57,8 +57,8 @@ describe("ScriptDraftingSystem - Edge Cases", () => {
     });
     const impacts = tickScriptDevelopment(p, rng);
     const update = impacts.find((i) => i.type === "PROJECT_UPDATED")?.payload.update;
-    expect(update?.activeRoles.length).toBe(3); // 4 -> 3
-    expect(update?.scriptEvents[0].type).toBe("ROLE_MERGE");
+    expect(update?.activeRoles?.length).toBe(3); // 4 -> 3
+    expect(update?.scriptEvents?.[0]?.type).toBe("ROLE_MERGE");
     expect(update?.buzz).toBe(5); // 10 - 5
   });
 
@@ -82,8 +82,8 @@ describe("ScriptDraftingSystem - Edge Cases", () => {
     });
     const impacts = tickScriptDevelopment(p, rng);
     const update = impacts.find((i) => i.type === "PROJECT_UPDATED")?.payload.update;
-    expect(update?.activeRoles.length).toBe(4);
-    expect(update?.scriptEvents[0].type).toBe("ROLE_SPLIT");
+    expect(update?.activeRoles?.length).toBe(4);
+    expect(update?.scriptEvents?.[0]?.type).toBe("ROLE_SPLIT");
     expect(update?.buzz).toBe(20); // 10 + 10
   });
 });
@@ -102,7 +102,7 @@ describe("ScriptDraftingSystem - General Evolution", () => {
     const p1 = createMockProject({ state: "development", scriptHeat: 50, buzz: 10 });
     const impacts1 = tickScriptDevelopment(p1, rng);
     const update1 = impacts1.find((i) => i.type === "PROJECT_UPDATED")?.payload.update;
-    expect(update1?.scriptEvents[0].type).toBe("PLOT_TWIST_ADDED");
+    expect(update1?.scriptEvents?.[0]?.type).toBe("PLOT_TWIST_ADDED");
     expect(update1?.buzz).toBe(22); // 10 + 12
 
     callCount = 0;
@@ -113,7 +113,7 @@ describe("ScriptDraftingSystem - General Evolution", () => {
     const p2 = createMockProject({ state: "development", scriptHeat: 50, buzz: 10 });
     const impacts2 = tickScriptDevelopment(p2, rng);
     const update2 = impacts2.find((i) => i.type === "PROJECT_UPDATED")?.payload.update;
-    expect(update2?.scriptEvents[0].type).toBe("DIALOGUE_POLISH");
+    expect(update2?.scriptEvents?.[0]?.type).toBe("DIALOGUE_POLISH");
     expect(update2?.buzz).toBe(15); // 10 + 5
   });
 });

@@ -308,11 +308,11 @@ export interface SyncMAFundsImpact extends BaseImpact {
 }
 export interface SystemTickImpact extends BaseImpact {
   type: "SYSTEM_TICK";
-  payload: { week?: number; tickCount?: number; __studioUpdate?: Record<string, unknown>; studioIdentity?: Record<string, unknown>; newAchievementId?: string };
+  payload: { week?: number; tickCount?: number; __studioUpdate?: Record<string, unknown>; studioIdentity?: Record<string, unknown>; newAchievementId?: string; deathEvents?: unknown[]; deathCount?: number };
 }
 export interface ModalTriggeredImpact extends BaseImpact {
   type: "MODAL_TRIGGERED";
-  payload: { modalType: string; priority?: number; payload?: any; violationId?: string; projectId?: string; talentId?: string; options?: unknown[] };
+  payload: { modalType: string; priority?: number; payload?: unknown; violationId?: string; projectId?: string; talentId?: string; options?: unknown[] };
 }
 export interface PilotGraduatedImpact extends BaseImpact {
   type: "PILOT_GRADUATED";

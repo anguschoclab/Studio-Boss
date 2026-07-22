@@ -18,6 +18,8 @@ function createMockState(overrides: Partial<GameState> = {}): GameState {
       talents: {},
       contracts: {},
       rivals: {},
+      contractsByProjectId: {},
+      contractsByTalentId: {},
     },
     studio: {
       name: "Test Studio",
@@ -81,6 +83,8 @@ describe("tickBiographyGenerator", () => {
         talents: { t1: talent },
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
     const impacts = tickBiographyGenerator(state, rng());
@@ -100,6 +104,8 @@ describe("tickBiographyGenerator", () => {
         talents: { t1: talent },
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
     const impacts = tickBiographyGenerator(state, rng());
@@ -118,6 +124,8 @@ describe("tickBiographyGenerator", () => {
         talents: { t1: talent },
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
     const impacts = tickBiographyGenerator(state, rng());
@@ -139,6 +147,8 @@ describe("tickBiographyGenerator", () => {
         talents: { t1: talentA, t2: talentB },
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
       relationships: {
         relationships: {
@@ -175,6 +185,8 @@ describe("tickBiographyGenerator", () => {
         talents: { t1: talent },
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
       relationships: {
         relationships: {
@@ -207,6 +219,8 @@ describe("tickBiographyGenerator", () => {
         talents: { t1: talent },
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
       relationships: {
         relationships: {},
@@ -248,6 +262,8 @@ describe("tickBiographyGenerator", () => {
         talents: { t1: talent },
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
       relationships: {
         relationships: {},
@@ -286,6 +302,8 @@ describe("tickBiographyGenerator", () => {
         talents: { t1: talent },
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
       industry: {
         families: [],
@@ -319,6 +337,8 @@ describe("tickBiographyGenerator", () => {
         talents: { t1: talent },
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
       industry: {
         families: [],
@@ -351,6 +371,8 @@ describe("tickBiographyGenerator", () => {
         talents: { t1: talent },
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
     const impacts = tickBiographyGenerator(state, rng());
@@ -373,6 +395,8 @@ describe("tickBiographyGenerator", () => {
         talents: { t1: talent },
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
     const impacts = tickBiographyGenerator(state, rng());
@@ -390,6 +414,8 @@ describe("tickBiographyGenerator", () => {
         talents: { t1: talent },
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
       relationships: {
         relationships: {},
@@ -410,6 +436,8 @@ describe("tickBiographyGenerator", () => {
         talents: { t1: talent },
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
       industry: {
         families: [],
@@ -439,6 +467,8 @@ describe("tickBiographyGenerator", () => {
         talents: { t1: talent1, t2: talent2, t3: talent3 },
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
       relationships: {
         relationships: {

@@ -77,7 +77,7 @@ describe("advanceWeek Performance", () => {
   bench(
     `advanceWeek with ${PROJECT_COUNT} projects and ${PROJECT_COUNT * CONTRACTS_PER_PROJECT} total contracts`,
     () => {
-      advanceWeek(state, rng);
+      advanceWeek(state);
     }
   );
 });

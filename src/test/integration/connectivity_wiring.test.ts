@@ -14,8 +14,9 @@ describe("System Connectivity - Phase 3 Integration", () => {
 
   test("WeekCoordinator annual tick triggers IP scan", () => {
     const projId = "proj-seed" as ProjectId;
-    (state.studio.internal.projectHistory as unknown as any[]) = [
-      {
+    state.studio.internal.projectHistory = [projId];
+    state.entities.projects = {
+      [projId]: {
         id: projId,
         title: "Cult Movie",
         releaseWeek: -300,
@@ -26,8 +27,11 @@ describe("System Connectivity - Phase 3 Integration", () => {
         state: "archived",
         isCultClassic: false,
         ownerId: state.studio.id,
-      },
-    ];
+      } as any,
+    };
+    (state.studio.internal as any).projects = {
+      [projId]: state.entities.projects[projId],
+    };
 
     state.ip.vault = [
       {
@@ -77,7 +81,7 @@ describe("System Connectivity - Phase 3 Integration", () => {
       budgetTier: "mid",
       releaseWeek: 0,
       quality: 70,
-    } as Project;
+    } as unknown as Project;
 
     state.entities.projects = { ["p1" as ProjectId]: project };
     (state.studio.internal as any).projects = { ["p1"]: project };

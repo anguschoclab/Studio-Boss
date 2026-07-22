@@ -125,10 +125,12 @@ export const TalentCard: React.FC<TalentCardProps> = ({ talent, className, onCli
                   aria-label={
                     isBookmarked(talent.id, "talent") ? "Remove bookmark" : "Add bookmark"
                   }
+                  onPointerDown={(e) => e.stopPropagation()}
                   onClick={(e) => {
                     e.stopPropagation();
                     toggleBookmark(talent.id, "talent");
                   }}
+                  title={isBookmarked(talent.id, "talent") ? "Remove bookmark" : "Add bookmark"}
                   className={cn(
                     "shrink-0 h-7 w-7 flex items-center justify-center border transition-all duration-700 rounded-none",
                     isBookmarked(talent.id, "talent")
@@ -137,9 +139,9 @@ export const TalentCard: React.FC<TalentCardProps> = ({ talent, className, onCli
                   )}
                 >
                   {isBookmarked(talent.id, "talent") ? (
-                    <BookmarkCheck className="h-3.5 w-3.5" strokeWidth={3} />
+                    <BookmarkCheck className="h-3.5 w-3.5" strokeWidth={3} aria-hidden="true" />
                   ) : (
-                    <Bookmark className="h-3.5 w-3.5" strokeWidth={2} />
+                    <Bookmark className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
                   )}
                 </button>
               </div>

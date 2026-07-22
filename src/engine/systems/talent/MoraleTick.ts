@@ -1,4 +1,4 @@
-import { GameState, StateImpact } from "@/engine/types";
+import { GameState, StateImpact, Talent } from "@/engine/types";
 import { RandomGenerator } from "@/engine/utils/rng";
 
 /**
@@ -27,7 +27,7 @@ export function tickMorale(state: GameState, rng: RandomGenerator): StateImpact[
     if (!talent || !project) continue;
 
     // Read morale with fallback default
-    const currentMorale: number = (talent as any).morale ?? 50;
+    const currentMorale: number = (talent as unknown as { morale?: number }).morale ?? 50;
     let delta = 0;
 
     // --- Rule 1: Active crisis on project — -5
@@ -66,7 +66,7 @@ export function tickMorale(state: GameState, rng: RandomGenerator): StateImpact[
       type: "TALENT_UPDATED",
       payload: {
         talentId: talent.id,
-        update: { morale: newMorale } as any,
+        update: { morale: newMorale } as unknown as Partial<Talent>,
       },
     } as StateImpact);
 
@@ -75,6 +75,7 @@ export function tickMorale(state: GameState, rng: RandomGenerator): StateImpact[
       impacts.push({
         type: "NEWS_ADDED",
         payload: {
+          id: `morale-${talent.id}-${state.week}`,
           headline: `${talent.name} shows signs of unhappiness on set`,
           description: `Sources close to the production of "${project.title}" report that ${talent.name} has been visibly unhappy on set. Continued unrest could affect production quality and team morale.`,
           category: "talent",

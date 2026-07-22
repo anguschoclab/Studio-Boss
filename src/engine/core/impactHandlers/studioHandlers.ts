@@ -24,7 +24,7 @@ export function handlePrestigeChanged(state: GameState, impact: PrestigeChangedI
 export function handleNewsAdded(state: GameState, impact: NewsImpact): GameState {
   const { id, headline, description, publication } = impact.payload;
   const newsEvent: NewsEvent = {
-    id: id || `news-${state.week}-${Date.now()}`,
+    id: id || `news-${state.week}-${state.tickCount}-${headline.slice(0, 20)}`,
     week: state.week,
     type: "STUDIO_EVENT",
     headline: headline,

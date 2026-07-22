@@ -35,6 +35,7 @@ describe("tickProductionEnhancementSystem", () => {
         contracts: { "CON-1": contract1, "CON-2": contract2 },
         contractsByProjectId: { "PRJ-1": ["CON-1", "CON-2"] },
         rivals: {},
+        contractsByTalentId: {},
       },
     });
 
@@ -65,6 +66,8 @@ describe("tickProductionEnhancementSystem", () => {
         talents: {},
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
 
@@ -87,6 +90,7 @@ describe("tickProductionEnhancementSystem", () => {
         contracts: { "CON-1": contract },
         contractsByProjectId: { "PRJ-1": ["CON-1"] },
         rivals: {},
+        contractsByTalentId: {},
       },
     });
 
@@ -109,6 +113,7 @@ describe("tickProductionEnhancementSystem", () => {
         contracts: { "CON-1": contract },
         contractsByProjectId: { "PRJ-1": ["CON-1"] },
         rivals: {},
+        contractsByTalentId: {},
       },
     });
 
@@ -130,6 +135,8 @@ describe("tickProductionEnhancementSystem", () => {
         talents: {},
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
 
@@ -157,6 +164,8 @@ describe("tickProductionEnhancementSystem", () => {
         talents: {},
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
 
@@ -183,6 +192,8 @@ describe("tickProductionEnhancementSystem", () => {
         talents: {},
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
 
@@ -215,6 +226,8 @@ describe("tickProductionEnhancementSystem", () => {
         talents: {},
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
 
@@ -239,6 +252,8 @@ describe("tickProductionEnhancementSystem", () => {
         talents: {},
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
 
@@ -266,6 +281,7 @@ describe("tickProductionEnhancementSystem", () => {
         contracts: { "CON-A": contractA, "CON-B": contractB },
         contractsByProjectId: { "PRJ-A": ["CON-A"], "PRJ-B": ["CON-B"] },
         rivals: {},
+        contractsByTalentId: {},
       },
     });
 
@@ -302,6 +318,8 @@ describe("tickProductionEnhancementSystem", () => {
         talents: {},
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
 
@@ -319,6 +337,8 @@ describe("tickProductionEnhancementSystem", () => {
         talents: { "TAL-1": createMockTalent({ id: "TAL-1" }) },
         contracts: {},
         rivals: {},
+        contractsByProjectId: {},
+        contractsByTalentId: {},
       },
     });
 

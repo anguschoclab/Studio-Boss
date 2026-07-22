@@ -30,10 +30,13 @@ export class StudioAutomation {
    */
   static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
-    const rivalsList = Object.values(state.entities.rivals || {});
+    const rivals = state.entities.rivals;
+    if (!rivals) return impacts;
 
     // 1. Studio-Level Logic (Liquidation, Platform Launch, Strategy)
-    rivalsList.forEach((rival) => {
+    for (const rid in rivals) {
+      const rival = rivals[rid];
+      if (!rival) continue;
       const isDistressed = (Number(rival.cash) || 0) < -50000000;
 
       if (isDistressed && state.week % 4 === 0 && rng.next() < 0.1) {
@@ -54,35 +57,41 @@ export class StudioAutomation {
           payload: { rivalId: rival.id, update: { isAcquirable: isDistressed } },
         });
       }
-    });
+    }
 
     // 2. Project-Level Logic (Centralized iteration)
-    const allProjects = Object.values(state.entities.projects || {});
+    const allProjects = state.entities.projects;
     const rivalProjectCounts: Record<string, number> = {};
 
-    allProjects.forEach((p) => {
-      if (isPlayerOwner(state, p.ownerId) || !p.ownerId) return;
+    if (allProjects) {
+      for (const pid in allProjects) {
+        const p = allProjects[pid];
+        if (!p) continue;
+        if (isPlayerOwner(state, p.ownerId) || !p.ownerId) continue;
 
-      const rival = state.entities.rivals[p.ownerId];
-      if (!rival) return;
+        const rival = state.entities.rivals[p.ownerId];
+        if (!rival) continue;
 
-      this.processProject(p, rival.id, state, rng, impacts);
+        this.processProject(p, rival.id, state, rng, impacts);
 
-      if (p.state !== "archived") {
-        rivalProjectCounts[rival.id] = (rivalProjectCounts[rival.id] || 0) + 1;
+        if (p.state !== "archived") {
+          rivalProjectCounts[rival.id] = (rivalProjectCounts[rival.id] || 0) + 1;
+        }
+
+        // Project Recycling (Keep memory usage low)
+        if (p.state === "released" && state.week - (p.releaseWeek || 0) > 1) {
+          impacts.push({
+            type: "PROJECT_UPDATED",
+            payload: { projectId: p.id, update: { state: "archived" } },
+          });
+        }
       }
-
-      // Project Recycling (Keep memory usage low)
-      if (p.state === "released" && state.week - (p.releaseWeek || 0) > 1) {
-        impacts.push({
-          type: "PROJECT_UPDATED",
-          payload: { projectId: p.id, update: { state: "archived" } },
-        });
-      }
-    });
+    }
 
     // 3. Pitch New Projects (If slots available)
-    rivalsList.forEach((rival) => {
+    for (const rid in rivals) {
+      const rival = rivals[rid];
+      if (!rival) continue;
       const activeCount = rivalProjectCounts[rival.id] || 0;
       // Increased slot cap for headless simulation (15 vs 3-6)
       const slotCap = 15;
@@ -91,7 +100,7 @@ export class StudioAutomation {
       if (activeCount < slotCap && rng.next() < basePitchRate) {
         this.pitchNewProject(rival, state, rng, impacts, this.getRivalArchetype(rival));
       }
-    });
+    }
 
     return impacts;
   }
@@ -392,10 +401,10 @@ export class StudioAutomation {
 
    
   private static createUpdateImpact(
-    studioId: string,
+    _studioId: string,
     projectId: string,
     update: Partial<Project>,
-    state: GameState
+    _state: GameState
   ): StateImpact {
     return { type: "PROJECT_UPDATED", payload: { projectId, update } };
   }

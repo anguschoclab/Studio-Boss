@@ -49,7 +49,6 @@ describe("Phase 1: Financial Selectors", () => {
                 production: 800000,
                 burn: 200000,
                 marketing: 300000,
-                pacts: 50000,
                 royalties: 20000,
                 interest: 10000,
               },
@@ -63,7 +62,6 @@ describe("Phase 1: Financial Selectors", () => {
                 production: 900000,
                 burn: 250000,
                 marketing: 350000,
-                pacts: 60000,
                 royalties: 25000,
                 interest: 12000,
               },
@@ -87,7 +85,7 @@ describe("Phase 1: Financial Selectors", () => {
       expect(result).toHaveLength(2);
       expect(result[0].week).toBe(1);
       expect(result[0].revenue).toBe(1650000); // 1000000 + 500000 + 100000 + 50000
-      expect(result[0].expenses).toBe(1380000); // 800000 + 200000 + 300000 + 50000 + 20000 + 10000
+      expect(result[0].expenses).toBe(1330000); // 800000 + 200000 + 300000 + 20000 + 10000
       expect(result[0].net).toBe(275000);
     });
 
@@ -103,7 +101,6 @@ describe("Phase 1: Financial Selectors", () => {
               production: 800000,
               burn: 200000,
               marketing: 300000,
-              pacts: 50000,
               royalties: 20000,
               interest: 10000,
             },
@@ -151,7 +148,6 @@ describe("Phase 1: Financial Selectors", () => {
                 production: 800000,
                 burn: 200000,
                 marketing: 300000,
-                pacts: 50000,
                 royalties: 20000,
                 interest: 10000,
               },
@@ -192,7 +188,6 @@ describe("Phase 1: Financial Selectors", () => {
                 production: 800000,
                 burn: 200000,
                 marketing: 300000,
-                pacts: 50000,
                 royalties: 20000,
                 interest: 10000,
               },
@@ -236,7 +231,6 @@ describe("Phase 1: Financial Selectors", () => {
                 production: 800000,
                 burn: 200000,
                 marketing: 300000,
-                pacts: 50000,
                 royalties: 20000,
                 interest: 10000,
               },
@@ -250,7 +244,6 @@ describe("Phase 1: Financial Selectors", () => {
                 production: 900000,
                 burn: 250000,
                 marketing: 350000,
-                pacts: 60000,
                 royalties: 25000,
                 interest: 12000,
               },
@@ -270,7 +263,7 @@ describe("Phase 1: Financial Selectors", () => {
         },
       });
 
-      const result = selectWeeklyRevenueHistory(state, 12);
+      const result = selectWeeklyRevenueHistory(state);
       expect(result).toEqual([275000, 283000]);
     });
   });
@@ -312,6 +305,9 @@ describe("Phase 1: Financial Selectors", () => {
           contracts: {},
           talents: {},
           rivals: {},
+          releasedProjectIds: [],
+          contractsByProjectId: {},
+          contractsByTalentId: {},
         },
       });
 
@@ -354,6 +350,9 @@ describe("Phase 1: Financial Selectors", () => {
           contracts: {},
           talents: {},
           rivals: {},
+          releasedProjectIds: [],
+          contractsByProjectId: {},
+          contractsByTalentId: {},
         },
       });
 
@@ -400,6 +399,9 @@ describe("Phase 1: Financial Selectors", () => {
           contracts: {},
           talents: {},
           rivals: {},
+          releasedProjectIds: [],
+          contractsByProjectId: {},
+          contractsByTalentId: {},
         },
         finance: {
           cash: 5000000,
@@ -412,13 +414,11 @@ describe("Phase 1: Financial Selectors", () => {
                 production: 1000000,
                 burn: 100000,
                 marketing: 0,
-                pacts: 0,
                 royalties: 0,
                 interest: 0,
               },
               net: -1100000,
               cash: 5000000,
-              projectRecoupment: { "proj-1": 0 },
             },
             {
               week: 2,
@@ -427,13 +427,11 @@ describe("Phase 1: Financial Selectors", () => {
                 production: 1000000,
                 burn: 100000,
                 marketing: 0,
-                pacts: 0,
                 royalties: 0,
                 interest: 0,
               },
               net: -1100000,
               cash: 3900000,
-              projectRecoupment: { "proj-1": 0 },
             },
           ],
           marketState: {
@@ -542,6 +540,9 @@ describe("Phase 2: Project Status Selectors", () => {
           contracts: {},
           talents: {},
           rivals: {},
+          releasedProjectIds: [],
+          contractsByProjectId: {},
+          contractsByTalentId: {},
         },
       });
 
@@ -597,6 +598,9 @@ describe("Phase 2: Project Status Selectors", () => {
           contracts: {},
           talents: {},
           rivals: {},
+          releasedProjectIds: [],
+          contractsByProjectId: {},
+          contractsByTalentId: {},
         },
       });
 
@@ -646,6 +650,9 @@ describe("Phase 2: Project Status Selectors", () => {
           contracts: {},
           talents: {},
           rivals: {},
+          releasedProjectIds: [],
+          contractsByProjectId: {},
+          contractsByTalentId: {},
         },
       });
 
@@ -705,6 +712,9 @@ describe("Phase 3: Market Intelligence Selectors", () => {
           contracts: {},
           talents: {},
           rivals: {},
+          releasedProjectIds: [],
+          contractsByProjectId: {},
+          contractsByTalentId: {},
         },
       });
 
@@ -725,6 +735,9 @@ describe("Phase 4: Talent Selectors", () => {
           contracts: {},
           talents: {},
           rivals: {},
+          releasedProjectIds: [],
+          contractsByProjectId: {},
+          contractsByTalentId: {},
         },
       });
 
@@ -789,6 +802,9 @@ describe("Phase 4: Talent Selectors", () => {
             } as Talent,
           },
           rivals: {},
+          releasedProjectIds: [],
+          contractsByProjectId: {},
+          contractsByTalentId: {},
         },
       });
 
@@ -855,6 +871,9 @@ describe("Phase 4: Talent Selectors", () => {
             } as Talent,
           },
           rivals: {},
+          releasedProjectIds: [],
+          contractsByProjectId: {},
+          contractsByTalentId: {},
         },
       });
 
@@ -946,7 +965,6 @@ describe("Phase 5: Studio Health & Crisis Selectors", () => {
                 production: 0,
                 burn: 500000,
                 marketing: 0,
-                pacts: 0,
                 royalties: 0,
                 interest: 0,
               },
@@ -960,7 +978,6 @@ describe("Phase 5: Studio Health & Crisis Selectors", () => {
                 production: 0,
                 burn: 500000,
                 marketing: 0,
-                pacts: 0,
                 royalties: 0,
                 interest: 0,
               },
@@ -974,7 +991,6 @@ describe("Phase 5: Studio Health & Crisis Selectors", () => {
                 production: 0,
                 burn: 500000,
                 marketing: 0,
-                pacts: 0,
                 royalties: 0,
                 interest: 0,
               },
@@ -988,7 +1004,6 @@ describe("Phase 5: Studio Health & Crisis Selectors", () => {
                 production: 0,
                 burn: 500000,
                 marketing: 0,
-                pacts: 0,
                 royalties: 0,
                 interest: 0,
               },
@@ -1066,6 +1081,9 @@ describe("Phase 5: Studio Health & Crisis Selectors", () => {
           contracts: {},
           talents: {},
           rivals: {},
+          releasedProjectIds: [],
+          contractsByProjectId: {},
+          contractsByTalentId: {},
         },
       });
 
@@ -1130,6 +1148,9 @@ describe("Phase 6: Awards Selector", () => {
           contracts: {},
           talents: {},
           rivals: {},
+          releasedProjectIds: [],
+          contractsByProjectId: {},
+          contractsByTalentId: {},
         },
       });
 

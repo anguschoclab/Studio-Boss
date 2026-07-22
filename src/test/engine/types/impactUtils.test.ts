@@ -25,7 +25,7 @@ describe("Impact Reducer (Target A1)", () => {
         name: "Alpha Studios",
         archetype: "major",
         prestige: 50,
-        internal: { projectHistory: [] },
+        internal: { projectHistory: [], projects: {}, contracts: [] },
       },
     });
     // Manually add a project for testing PROJECT_UPDATED

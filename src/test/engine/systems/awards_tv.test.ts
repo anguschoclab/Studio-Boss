@@ -71,7 +71,7 @@ describe("TV Awards Filtering & Taxonomy", () => {
     const allAwards = awardImpacts
       .map((i) => Object.values((i.payload as any).update || {}))
       .flat();
-    const bestSeries = allAwards.find((a: any) => a.category === "Best Series");
+    const bestSeries = allAwards.find((a: any) => a?.category === "Best Series") as any;
 
     expect(bestSeries).toBeDefined();
     expect(bestSeries?.projectId).toBeTruthy();
@@ -87,7 +87,7 @@ describe("TV Awards Filtering & Taxonomy", () => {
     const allAwards = awardImpacts
       .map((i) => Object.values((i.payload as any).update || {}))
       .flat();
-    const bestSeries = allAwards.find((a: any) => a.category === "Best Series");
+    const bestSeries = allAwards.find((a: any) => a?.category === "Best Series") as any;
 
     expect(bestSeries).toBeDefined();
     expect(bestSeries?.projectId).toBe("sitcom_1");

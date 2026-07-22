@@ -22,8 +22,7 @@ export class SimulationRunner {
     weeks: number,
     seed: number = 42,
     archetype: ArchetypeKey = "major",
-    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-    persona: string = "balanced",
+    _persona: string = "balanced",
     autoPilot: boolean = true
   ): SimulationResult {
     const metrics = new MetricsCollector();
