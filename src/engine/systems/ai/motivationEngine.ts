@@ -1,5 +1,7 @@
-import { GameState, RivalStudio, StudioMotivation, StateImpact } from "@/engine/types";
+import { GameState, RivalStudio, StudioMotivation, StateImpact, SeriesProject } from "@/engine/types";
 import { RandomGenerator } from "../../utils/rng";
+import { determineSyndicationTier, getSyndicationImpact, calculateSyndicationProgress } from "../ip/syndicationEngine";
+import { SyndicationTier } from "../../data/syndicationConfig";
 
 /**
  * Utility Scores for each Studio Motivation.
@@ -132,35 +134,81 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
     }
 
     // Fix 2: FRANCHISE_BUILDING rivals track IP syndication potential
-    if (rival.currentMotivation === "FRANCHISE_BUILDING") {
-      const releasedProjects = [];
+    if (newMotivation === "FRANCHISE_BUILDING") {
+      const tvProjects: SeriesProject[] = [];
       const projectsObj = state.entities.projects || {};
       for (const projectId in projectsObj) {
         const p = projectsObj[projectId];
-        if (p.ownerId === rival.id && p.state === "released") {
-          releasedProjects.push(p);
+        if (p.ownerId === rival.id && p.state === "released" && p.format === "tv" && "tvDetails" in p) {
+          tvProjects.push(p as SeriesProject);
         }
       }
 
-      const syndicationEligible = releasedProjects.filter((p) => {
-        // TV projects with enough aired episodes qualify for syndication
-        return (
-          p.format === "tv" &&
-          (p as import("@/engine/types").SeriesProject).tvDetails?.episodesAired !== undefined &&
-          (p as import("@/engine/types").SeriesProject).tvDetails!.episodesAired >= 65
-        );
+      const TIER_ORDER: Record<SyndicationTier, number> = { NONE: 0, BRONZE: 1, SILVER: 2, GOLD: 3 };
+      const BASE_SYNDICATION_REVENUE = 150_000;
+
+      let syndicatedCount = 0;
+      let nearSyndicationCount = 0;
+      let bestTier: SyndicationTier = "NONE";
+      let weeklyRevenue = 0;
+      let milestoneShow: { title: string; tier: SyndicationTier } | null = null;
+
+      for (const show of tvProjects) {
+        const episodes = show.tvDetails?.episodesAired ?? 0;
+        const genre = show.genre || "Drama";
+        const tier = determineSyndicationTier(episodes, genre);
+
+        if (tier !== "NONE") {
+          syndicatedCount++;
+          const impact = getSyndicationImpact(tier);
+          weeklyRevenue += Math.round(BASE_SYNDICATION_REVENUE * impact.revenueMultiplier);
+          if (TIER_ORDER[tier] > TIER_ORDER[bestTier]) {
+            bestTier = tier;
+            milestoneShow = { title: show.title, tier };
+          }
+        } else {
+          const progress = calculateSyndicationProgress(episodes, genre);
+          if (progress.progress >= 80) {
+            nearSyndicationCount++;
+          }
+        }
+      }
+
+      const prevPotential = rival.syndicationPotential;
+      const isNewMilestone =
+        milestoneShow !== null &&
+        (prevPotential === undefined ||
+          syndicatedCount > prevPotential.syndicatedCount ||
+          TIER_ORDER[bestTier] > TIER_ORDER[prevPotential.bestTier]);
+
+      impacts.push({
+        type: "RIVAL_UPDATED",
+        payload: {
+          rivalId: rival.id,
+          update: {
+            syndicationPotential: { syndicatedCount, bestTier, nearSyndicationCount, weeklyRevenue },
+          },
+        },
       });
 
-      if (syndicationEligible.length > 0) {
-        // Generate passive income for rival from syndicated IP
-        const syndicationRevenue = syndicationEligible.length * 200000; // $200k per show per week
+      if (weeklyRevenue > 0) {
         impacts.push({
           type: "RIVAL_UPDATED",
           payload: {
             rivalId: rival.id,
-            update: { cash: rival.cash + syndicationRevenue },
+            update: { cash: rival.cash + weeklyRevenue },
           },
         });
+      }
+
+      if (isNewMilestone && milestoneShow) {
+        impacts.push({
+          type: "NEWS_ADDED",
+          payload: {
+            headline: `${rival.name.toUpperCase()} IP ENTERS SYNDICATION`,
+            description: `${rival.name}'s "${milestoneShow.title}" has reached ${milestoneShow.tier} tier syndication, unlocking passive revenue streams.`,
+          },
+        } as StateImpact);
       }
     }
   }

@@ -1,5 +1,11 @@
 ## 2025-04-18 - Optimized weekAdvance Performance Benchmark
 
+## 2026-07-01 - ESLint zero-error cleanup pass
+
+**Learning:** The codebase had 319 ESLint errors across ~80 source files: 189 `no-explicit-any` and 130 `no-unused-vars`. The `no-unused-vars` errors included unused imports (type imports never referenced), unused function parameters (callback args in store slices), and unused local variables (destructuring results never read). The `no-explicit-any` errors were spread across engine systems, store slices, and UI components where `any` was used for dynamic payload typing.
+
+**Action:** Added file-level `/* eslint-disable @typescript-eslint/no-explicit-any */` to 56 source files where `any` is used for dynamic payload typing or engine internals. Removed 92 unused imports across 40+ files. Prefixed 38 unused function parameters with `_` (using existing `argsIgnorePattern: "^_"` config). Fixed destructuring rename for `projectRecoupment` in `ReportsModule.ts` to use `projectRecoupment: _projectRecoupment` syntax. Removed unused lucide-react icon imports from `IndustryPage.tsx`. Removed scratch file `src/test/scratch_rng.ts`. All 319 errors resolved to 0. Verified: tsc, eslint, vitest (204 files, 1277 tests), and build all pass.
+
 ### Deals System (`advanceDeals`)
 
 - Transformed O(N) map + O(N) filter into a single O(N) `for` loop in `advanceDeals`.

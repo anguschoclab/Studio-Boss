@@ -20,6 +20,7 @@ import {
 } from "./talent.types";
 import { NewsEvent, Rumor, MarketEvent } from "./engine.types";
 import { FinanceState, NewsState, IPState } from "./state.types";
+import { SyndicationTier } from "../data/syndicationConfig";
 
 export interface MergerOffer {
   id: string;
@@ -83,6 +84,12 @@ export interface RivalStudio {
   annualRevenue?: number;
   boxOfficeTotal?: number;
   lastAwardWin?: number;
+  syndicationPotential?: {
+    syndicatedCount: number;
+    bestTier: SyndicationTier;
+    nearSyndicationCount: number;
+    weeklyRevenue: number;
+  };
 }
 
 export interface StudioCulture {
