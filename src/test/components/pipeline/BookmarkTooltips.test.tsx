@@ -76,8 +76,10 @@ describe("Bookmark Tooltips", () => {
         </TooltipProvider>
       );
       const bookmarkBtn = screen.getByLabelText("Add bookmark");
-      // Verify the button has an onPointerDown handler by checking the React props
-      expect(bookmarkBtn.getAttribute("onpointerdown")).not.toBeNull();
+      // Access React fiber props to verify onPointerDown handler is attached
+      const reactProps = Object.keys(bookmarkBtn).find((k) => k.startsWith("__reactProps"));
+      const props = reactProps ? (bookmarkBtn as any)[reactProps] : {};
+      expect(typeof props.onPointerDown).toBe("function");
     });
 
     it("bookmark icon has aria-hidden", () => {
@@ -115,7 +117,9 @@ describe("Bookmark Tooltips", () => {
         </TooltipProvider>
       );
       const bookmarkBtn = screen.getByLabelText("Add bookmark");
-      expect(bookmarkBtn.getAttribute("onpointerdown")).not.toBeNull();
+      const reactProps = Object.keys(bookmarkBtn).find((k) => k.startsWith("__reactProps"));
+      const props = reactProps ? (bookmarkBtn as any)[reactProps] : {};
+      expect(typeof props.onPointerDown).toBe("function");
     });
 
     it("bookmark icon has aria-hidden", () => {

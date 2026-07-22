@@ -88,8 +88,11 @@ describe("TalentHub Focus-Visible Styles", () => {
         <TalentHub />
       </TooltipProvider>
     );
-    // Roster tab has a search input with aria-label
-    const inputs = container.querySelectorAll("input[aria-label]");
-    expect(inputs.length).toBeGreaterThanOrEqual(1);
+    // Check for any element with aria-label containing "search" (case-insensitive)
+    const labeledElements = container.querySelectorAll("[aria-label]");
+    const searchElements = Array.from(labeledElements).filter((el) =>
+      el.getAttribute("aria-label")?.toLowerCase().includes("search")
+    );
+    expect(searchElements.length).toBeGreaterThanOrEqual(1);
   });
 });
