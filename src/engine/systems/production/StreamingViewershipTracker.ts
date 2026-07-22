@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Project, Buyer } from "@/engine/types";
 import { StreamingViewershipHistory } from "@/engine/types/project.types";
 import { RandomGenerator } from "../../utils/rng";

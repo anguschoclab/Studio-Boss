@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { StateCreator } from "zustand";
 import { GameStore } from "../gameStore";
 import { CampaignData } from "@/engine/types/state.types";

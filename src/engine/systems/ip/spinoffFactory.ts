@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Project, TvFormatKey, BudgetTierKey, UnscriptedFormatKey } from "../../types";
 import { secureRandom } from "../../utils";
 

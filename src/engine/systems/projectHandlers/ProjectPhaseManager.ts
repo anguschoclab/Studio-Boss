@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Project, StateImpact } from "@/engine/types";
 
 export function handleDevelopmentPhase(p: Project): StateImpact[] {

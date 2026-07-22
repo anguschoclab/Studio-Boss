@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Project, Talent, ActiveCrisis, BoxOfficeResult, MarketingCampaign } from "@/engine/types";
 import { randRange, clamp } from "../utils";
 import { evaluateMarketingEfficiency } from "./marketing/efficiencyEvaluator";

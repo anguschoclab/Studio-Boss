@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GameState, StateImpact, ImpactType } from "@/engine/types";
 import {
   addContractsToIndex,

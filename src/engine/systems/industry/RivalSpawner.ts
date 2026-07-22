@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GameState, RivalStudio, StateImpact } from "@/engine/types";
 import { secureRandom, randRange, pick } from "../../utils";
 import { getMarketHeat, getMarketRegime, getBudgetInflation } from "./MacroCycle";

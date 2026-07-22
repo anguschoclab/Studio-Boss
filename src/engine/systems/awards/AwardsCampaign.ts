@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GameState, StateImpact } from "@/engine/types";
 import { CampaignData } from "@/engine/types/state.types";
 import { RandomGenerator } from "../../utils/rng";

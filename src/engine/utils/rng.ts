@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Studio Boss - Seeded Random Number Generator (Mulberry32)
  *

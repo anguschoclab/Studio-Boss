@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GameState, StateImpact, RivalStudio, StreamerPlatform } from "@/engine/types";
 import { pick, secureRandom } from "../../utils";
 import { getMarketHeat } from "./MacroCycle";

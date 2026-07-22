@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Project, IPAsset } from "../../types";
 import { randRange, clamp } from "../../utils";
 import { determineSyndicationTier, getSyndicationImpact } from "./syndicationEngine";

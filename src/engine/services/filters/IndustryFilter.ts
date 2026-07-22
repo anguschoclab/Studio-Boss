@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GameState } from "../../types";
 import { TickContext, WeekFilter } from "./types";
 

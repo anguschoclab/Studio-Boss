@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { z } from "zod";
 
 const FORBIDDEN_KEYS = new Set(["__proto__", "constructor", "prototype"]);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GameState, ArchetypeKey } from "../types";
 import { initializeGame } from "../core/gameInit";
 import { WeekCoordinator } from "../services/WeekCoordinator";

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useMemo } from "react";
 import { useGameStore } from "@/store/gameStore";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

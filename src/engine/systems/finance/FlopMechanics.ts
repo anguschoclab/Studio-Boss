@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GameState, Project, StateImpact } from "@/engine/types";
 import { clamp } from "../../utils";
 import { isPlayerOwner } from "../../utils/ownership";

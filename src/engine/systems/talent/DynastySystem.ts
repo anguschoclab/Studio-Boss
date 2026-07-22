@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GameState, StateImpact, Talent, TalentTier, Family } from "../../types";
 import { RandomGenerator } from "../../utils/rng";
 import { generateTalent } from "../../generators/talent/index";

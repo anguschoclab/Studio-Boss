@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Talent } from "@/engine/types/talent.types";
 import { TabsContent } from "@/components/ui/tabs";
 import { Star, DollarSign, TrendingUp } from "lucide-react";

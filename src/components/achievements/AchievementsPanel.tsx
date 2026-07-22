@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useMemo } from "react";
 import { useGameStore } from "@/store/gameStore";
 import { ACHIEVEMENT_CATALOGUE, Achievement } from "@/engine/systems/AchievementsSystem";

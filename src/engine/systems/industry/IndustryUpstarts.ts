@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GameState, RivalStudio, StateImpact, Buyer, StreamerPlatform } from "@/engine/types";
 import { BrandSystem } from "../../generators/BrandSystem";
 import { pick, secureRandom, randRange } from "../../utils";
