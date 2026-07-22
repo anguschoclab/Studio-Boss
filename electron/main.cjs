@@ -177,8 +177,13 @@ async function createWindow() {
   mainWindow.webContents.on("will-navigate", (event, url) => {
     try {
       const parsed = new URL(url);
-      const isLocalhost = parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1";
-      if (!isLocalhost || !IS_DEV) {
+      // Sentinel: allow app: protocol for internal navigation, otherwise strict localhost in dev
+      if (parsed.protocol === "app:") {
+        return; // Allow internal app scheme
+      }
+
+      const isLocalhost = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1") && (parsed.protocol === "http:" || parsed.protocol === "https:");
+      if (!IS_DEV || !isLocalhost) {
         event.preventDefault();
       }
     } catch (_e) {
