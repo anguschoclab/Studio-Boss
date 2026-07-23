@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { test, expect } from "@playwright/test";
 
 test("distressed asset acquisition: modal appears, acquire works, decline works", async ({
