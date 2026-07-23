@@ -56,6 +56,7 @@ export const AwardsProbabilityChart: React.FC<AwardsProbabilityChartProps> = ({
             width={120}
           />
           <Tooltip
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             content={({ active, payload }: any) => {
               if (!active || !payload || !payload.length) return null;
               const entry = payload[0].payload as AwardProbability;
