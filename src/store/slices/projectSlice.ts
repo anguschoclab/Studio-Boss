@@ -7,6 +7,8 @@ import { updateCultureFromProject } from "@/engine/systems/culture";
 import { negotiateContract } from "@/engine/systems/buyers";
 import { generateSpinoffProposal } from "@/engine/systems/ip/spinoffFactory";
 import { calculateFranchiseFatigue } from "@/engine/systems/ip/fatigueEngine";
+import { buildRebootParams } from "@/engine/systems/ip/ipRebootEngine";
+import { selectFatigueForAsset } from "@/store/selectors";
 import { resolveCrisis } from "@/engine/systems/crises";
 import * as festivalsEngine from "@/engine/systems/festivals";
 import {
@@ -40,6 +42,7 @@ export interface ProjectSlice {
   resolveProjectCrisis: (projectId: string, optionIndex: number) => void;
   exploitFranchise: (projectId: string) => void;
   acquireAndRebootIP: (ipAssetId: string) => void;
+  developFromOwnedIP: (ipAssetId: string) => void;
   submitToFestival: (projectId: string, festivalBody: AwardBody) => void;
   addProject: (project: any) => void;
   advanceProjectPhase: (projectId: string, newState: string) => void;
@@ -346,6 +349,76 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
               a.id === ipAssetId ? { ...a, rightsOwner: "STUDIO" as const } : a
             ),
           },
+          studio: {
+            ...intermediateState.studio,
+            internal: {
+              ...intermediateState.studio.internal,
+              projects: { ...intermediateState.studio.internal.projects, [project.id]: project },
+              contracts: [...intermediateState.studio.internal.contracts, ...newContracts],
+            },
+          },
+          entities: {
+            ...intermediateState.entities,
+            projects: { ...intermediateState.entities.projects, [project.id]: project },
+            contracts,
+            contractsByProjectId: newIndex,
+            contractsByTalentId: newTalentIndex,
+          },
+          rngState: rng.getState(),
+        } as any,
+      };
+    });
+  },
+
+  developFromOwnedIP: (ipAssetId) => {
+    set((s) => {
+      const state = s.gameState;
+      if (!state) return s;
+
+      const asset = state.ip.vault.find((a) => a.id === ipAssetId);
+      if (!asset || asset.rightsOwner !== "STUDIO") return s;
+
+      const fatigue = selectFatigueForAsset(state, ipAssetId);
+      const rebootParams = buildRebootParams(asset, fatigue);
+
+      const rng = new RandomGenerator(state.rngState ?? state.gameSeed);
+      const { project, newContracts } = buildProjectAndContracts(state, rebootParams);
+
+      const impacts: StateImpact[] = [
+        {
+          type: "NEWS_ADDED" as const,
+          payload:
+            fatigue > 60
+              ? {
+                  headline: `STUDIO REVIVES "${asset.title}" — RISKY RETURN`,
+                  description: `With franchise fatigue at ${fatigue}%, this revival is a gamble. Execs greenlight the modern reimagining despite the risk.`,
+                }
+              : {
+                  headline: `STUDIO REVIVES "${asset.title}"`,
+                  description: `A new take on the classic property enters production. Fans eagerly await the modern reimagining.`,
+                },
+        },
+      ];
+
+      const intermediateState = applyStateImpact(state, impacts);
+
+      const contracts = { ...intermediateState.entities.contracts };
+      newContracts.forEach((c) => {
+        contracts[c.id] = c;
+      });
+
+      const newIndex = addContractsToIndex(
+        intermediateState.entities.contractsByProjectId,
+        newContracts
+      );
+      const newTalentIndex = addContractsToTalentIndex(
+        intermediateState.entities.contractsByTalentId,
+        newContracts
+      );
+
+      return {
+        gameState: {
+          ...intermediateState,
           studio: {
             ...intermediateState.studio,
             internal: {

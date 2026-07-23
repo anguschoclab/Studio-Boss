@@ -1,6 +1,7 @@
 import { createSelector } from "reselect";
 import { GameState, Project, RivalStudio, Talent, GameEvent } from "../engine/types";
 import type { DistressedAssetOffer } from "@/engine/types/distress.types";
+import { calculateFranchiseFatigue } from "@/engine/systems/ip/fatigueEngine";
 
 const EMPTY_PROJECTS = {};
 const EMPTY_FINANCE = { cash: 0, ledger: [], weeklyHistory: [], marketState: { baseRate: 0, savingsYield: 0, debtRate: 0, loanRate: 0, rateHistory: [] } };
@@ -374,3 +375,26 @@ export const selectAwardsEligibleProjects = createSelector(
     );
   }
 );
+
+export function selectFatigueForAsset(state: GameState | null, assetId: string): number {
+  if (!state) return 0;
+  const asset = state.ip.vault.find((a) => a.id === assetId);
+  if (!asset) return 0;
+  if (!asset.franchiseId) return 0;
+  const franchise = state.ip.franchises[asset.franchiseId];
+  if (!franchise) return 0;
+
+  const originalProject =
+    state.entities.projects[asset.originalProjectId] ||
+    state.studio.internal.projects[asset.originalProjectId];
+  const genre = originalProject?.genre || "Action";
+
+  let genreSaturation = 0;
+  const allProjects = Object.values(state.entities.projects);
+  for (let i = 0; i < allProjects.length; i++) {
+    if (allProjects[i].genre === genre) genreSaturation++;
+  }
+
+  const rawFatigue = calculateFranchiseFatigue(franchise, genreSaturation, genre);
+  return Math.round(rawFatigue * 100);
+}

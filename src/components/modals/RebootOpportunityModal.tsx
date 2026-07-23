@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import {
   Dialog,
@@ -8,78 +7,28 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useGameStore } from "@/store/gameStore";
 import { useUIStore } from "@/store/uiStore";
-import { Film, Zap, DollarSign, TrendingUp, X } from "lucide-react";
-
-interface RebootProposal {
-  proposal: {
-    title: string;
-    format: string;
-    genre: string;
-    budgetTier: string;
-    budget: number;
-    flavor?: string;
-    parentProjectId?: string;
-  };
-  assetTitle: string;
-  assetTier: string;
-  estimatedBuzz: number;
-  developmentCostMultiplier: number;
-  angle: "reimagining" | "legacy_sequel" | "prequel" | "reboot";
-  logline: string;
-}
-
-const ANGLE_LABELS: Record<RebootProposal["angle"], string> = {
-  reimagining: "Creative Reimagining",
-  legacy_sequel: "Legacy Sequel",
-  prequel: "Origin Prequel",
-  reboot: "Full Reboot",
-};
-
-const TIER_COLORS: Record<string, string> = {
-  BLOCKBUSTER: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30",
-  LEGACY: "bg-purple-500/20 text-purple-300 border-purple-500/30",
-  CULT_CLASSIC: "bg-pink-500/20 text-pink-300 border-pink-500/30",
-  ORIGINAL: "bg-blue-500/20 text-blue-300 border-blue-500/30",
-};
+import { Film, Zap, DollarSign, X } from "lucide-react";
+import { formatMoney } from "@/engine/utils";
+import type { RebootProposal } from "@/engine/systems/ip/ipRebootEngine";
 
 export const RebootOpportunityModal: React.FC = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
-  const createProject = useGameStore((s) => s.createProject);
+  const developFromOwnedIP = useGameStore((s) => s.developFromOwnedIP);
 
   if (!activeModal || activeModal.type !== "REBOOT_OPPORTUNITY") return null;
 
-  const reboot = activeModal.payload as unknown as RebootProposal | undefined;
-  if (!reboot) {
+  const proposal = activeModal.payload as RebootProposal | undefined;
+  if (!proposal) {
     resolveCurrentModal();
     return null;
   }
 
-  const {
-    proposal,
-    assetTitle,
-    assetTier,
-    estimatedBuzz,
-    developmentCostMultiplier,
-    angle,
-    logline,
-  } = reboot;
+  const { ipId, ipTitle, suggestedBudget, estimatedNostalgiaBonus, description } = proposal;
 
   const handleGreenlight = () => {
-    if (!proposal.title || !proposal.format || !proposal.genre || !proposal.budgetTier) return;
-    createProject({
-      title: proposal.title,
-      format: (proposal.format ?? "film") as "film",
-      genre: proposal.genre ?? "Drama",
-      budgetTier: (proposal.budgetTier ?? "high") as any,
-      targetAudience: "General",
-      flavor: proposal.flavor ?? logline,
-      parentProjectId: proposal.parentProjectId,
-      isSpinoff: true,
-      initialBuzzBonus: estimatedBuzz,
-    });
+    developFromOwnedIP(ipId);
     resolveCurrentModal();
   };
 
@@ -98,55 +47,33 @@ export const RebootOpportunityModal: React.FC = () => {
             </span>
           </div>
           <DialogTitle className="font-display font-black text-xl tracking-tight uppercase">
-            {proposal.title}
+            {ipTitle}
           </DialogTitle>
           <DialogDescription className="text-muted-foreground text-sm leading-relaxed">
-            {logline}
+            {description}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 mt-2">
-          {/* Source IP info */}
           <div className="rounded-none border border-border bg-muted/30 p-4 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Source IP</span>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">{assetTitle}</span>
-                <span
-                  className={`text-xs px-2 py-0.5 rounded-none border font-semibold ${TIER_COLORS[assetTier] ?? "bg-muted text-muted-foreground"}`}
-                >
-                  {assetTier.replace("_", " ")}
-                </span>
-              </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Angle</span>
-              <Badge variant="outline" className="text-xs">
-                {ANGLE_LABELS[angle]}
-              </Badge>
+              <span className="text-sm font-medium">{ipTitle}</span>
             </div>
           </div>
 
-          {/* Metrics */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 gap-3">
             <div className="rounded-none border border-border bg-muted/20 p-3 text-center">
               <Zap className="h-4 w-4 text-yellow-400 mx-auto mb-1" />
-              <div className="text-lg font-bold text-foreground">{estimatedBuzz}</div>
-              <div className="text-xs text-muted-foreground">Est. Buzz</div>
+              <div className="text-lg font-bold text-foreground">{estimatedNostalgiaBonus}</div>
+              <div className="text-xs text-muted-foreground">Nostalgia Bonus</div>
             </div>
             <div className="rounded-none border border-border bg-muted/20 p-3 text-center">
               <DollarSign className="h-4 w-4 text-green-400 mx-auto mb-1" />
               <div className="text-lg font-bold text-foreground">
-                {developmentCostMultiplier.toFixed(1)}×
+                {formatMoney(suggestedBudget)}
               </div>
-              <div className="text-xs text-muted-foreground">Dev Cost</div>
-            </div>
-            <div className="rounded-none border border-border bg-muted/20 p-3 text-center">
-              <TrendingUp className="h-4 w-4 text-blue-400 mx-auto mb-1" />
-              <div className="text-lg font-bold text-foreground capitalize">
-                {proposal.budgetTier}
-              </div>
-              <div className="text-xs text-muted-foreground">Budget Tier</div>
+              <div className="text-xs text-muted-foreground">Suggested Budget</div>
             </div>
           </div>
 

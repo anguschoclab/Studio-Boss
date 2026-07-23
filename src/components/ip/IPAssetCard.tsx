@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { useGameStore } from "@/store/gameStore";
+import { selectFatigueForAsset } from "@/store/selectors";
 import { TrendingUp, DollarSign, History, Globe, Lock } from "lucide-react";
 import { formatMoney } from "@/engine/utils";
 import { IPAsset } from "@/engine/types";
@@ -153,13 +154,31 @@ interface IPAssetFooterProps {
   asset: IPAsset;
   isMarket: boolean;
   acquireAndRebootIP: (id: string) => void;
+  developFromOwnedIP?: (id: string) => void;
+  fatigue?: number;
 }
 
-const IPAssetFooter = ({ asset, isMarket, acquireAndRebootIP }: IPAssetFooterProps) => {
+const IPAssetFooter = ({ asset, isMarket, acquireAndRebootIP, developFromOwnedIP, fatigue }: IPAssetFooterProps) => {
+  const fatigueColorClass =
+    (fatigue ?? 0) > 60
+      ? "text-rose-400 border-rose-500/30 bg-rose-500/5"
+      : (fatigue ?? 0) > 30
+        ? "text-amber-400 border-amber-500/30 bg-amber-500/5"
+        : "text-emerald-400 border-emerald-500/30 bg-emerald-500/5";
+
   return (
     <div className="pt-6 mt-auto border-t border-white/5 flex justify-between items-center">
-      <div className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/20 leading-none italic">
-        EXPIRES WEEK {asset.rightsExpirationWeek}
+      <div className="flex items-center gap-3">
+        <div className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/20 leading-none italic">
+          EXPIRES WEEK {asset.rightsExpirationWeek}
+        </div>
+        {!isMarket && asset.rightsOwner === "STUDIO" && fatigue !== undefined && (
+          <div
+            className={`text-[8px] font-black uppercase tracking-[0.25em] px-2 h-5 border rounded-none italic flex items-center justify-center ${fatigueColorClass}`}
+          >
+            FATIGUE {fatigue}%
+          </div>
+        )}
       </div>
       {isMarket && (
         <Button
@@ -174,6 +193,19 @@ const IPAssetFooter = ({ asset, isMarket, acquireAndRebootIP }: IPAssetFooterPro
           ACQUIRE & REBOOT
         </Button>
       )}
+      {!isMarket && asset.rightsOwner === "STUDIO" && developFromOwnedIP && (
+        <Button
+          size="sm"
+          variant="outline"
+          className="h-10 text-[9px] font-black bg-primary/5 hover:bg-primary text-primary hover:text-black border border-primary/20 px-6 rounded-none uppercase tracking-[0.3em] italic transition-all duration-700 shadow-lg hover:shadow-primary/20"
+          onClick={(e) => {
+            e.stopPropagation();
+            developFromOwnedIP(asset.id);
+          }}
+        >
+          DEVELOP SEQUEL
+        </Button>
+      )}
     </div>
   );
 };
@@ -185,6 +217,8 @@ interface IPAssetCardProps {
 
 export const IPAssetCard = ({ asset, isMarket = false }: IPAssetCardProps) => {
   const acquireAndRebootIP = useGameStore((s) => s.acquireAndRebootIP);
+  const developFromOwnedIP = useGameStore((s) => s.developFromOwnedIP);
+  const fatigue = useGameStore((s) => selectFatigueForAsset(s.gameState, asset.id));
   const relevancePercent = asset.decayRate * 100;
   const tier = SYNDICATION_TIERS[asset.syndicationTier || "NONE"];
 
@@ -205,6 +239,8 @@ export const IPAssetCard = ({ asset, isMarket = false }: IPAssetCardProps) => {
             asset={asset}
             isMarket={isMarket}
             acquireAndRebootIP={acquireAndRebootIP}
+            developFromOwnedIP={developFromOwnedIP}
+            fatigue={fatigue}
           />
         </CardContent>
       </Card>

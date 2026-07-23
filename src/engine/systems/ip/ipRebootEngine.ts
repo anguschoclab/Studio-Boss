@@ -1,5 +1,30 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { IPAsset, Project } from "../../types";
+import type { CreateProjectParams } from "@/store/storeUtils";
+
+export interface RebootProposal {
+  ipId: string;
+  ipTitle: string;
+  suggestedBudget: number;
+  estimatedNostalgiaBonus: number;
+  description: string;
+}
+
+export function buildRebootParams(asset: IPAsset, fatigue: number): CreateProjectParams {
+  const baseBuzz = Math.floor(asset.decayRate * 50) + 20;
+  return {
+    title: `${asset.title} (Revival)`,
+    format: "film",
+    genre: "DRAMA",
+    budgetTier: asset.baseValue > 100_000_000 ? "blockbuster" : "high",
+    targetAudience: "GENERAL",
+    flavor: "reboot",
+    franchiseId: asset.franchiseId,
+    isSpinoff: true,
+    parentProjectId: asset.originalProjectId,
+    initialBuzzBonus: Math.max(0, Math.round(baseBuzz * (1 - fatigue / 100))),
+  };
+}
 
 /**
  * Logic for "Rebooting" historical IP.
@@ -23,7 +48,7 @@ export function applyRebootNostalgia(project: Project, sourceAsset: IPAsset): Pr
 /**
  * Generates a reboot proposal from a list of internal IP assets.
  */
-export function generateRebootProposal(vault: IPAsset[], rng: any): any {
+export function generateRebootProposal(vault: IPAsset[], rng: any): RebootProposal | null {
   if (!vault || vault.length === 0) return null;
 
   const candidates = vault.filter((v) => v.rightsOwner === "STUDIO");

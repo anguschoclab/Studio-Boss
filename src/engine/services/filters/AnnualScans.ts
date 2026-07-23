@@ -112,7 +112,7 @@ export const AnnualScans = {
           payload: {
             modalType: "REBOOT_OPPORTUNITY",
             priority: 30,
-            payload: proposal,
+            ...proposal,
           },
         });
       }
