@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import {
   BarChart,
@@ -56,7 +57,7 @@ export const AwardsProbabilityChart: React.FC<AwardsProbabilityChartProps> = ({
             width={120}
           />
           <Tooltip
-            content={({ active, payload }: any) => {
+            content={({ active, payload }: import("recharts").TooltipProps<any, any>) => {
               if (!active || !payload || !payload.length) return null;
               const entry = payload[0].payload as AwardProbability;
               return (
