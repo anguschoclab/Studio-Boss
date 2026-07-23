@@ -143,7 +143,7 @@ export interface GameState {
     resolvedCrisesCount?: number;
     bookmarks?: Bookmark[];
     snapshotHistory?: unknown[];
-    activeCampaigns?: Record<string, unknown>;
+    activeCampaigns?: Record<string, import("./state.types").CampaignData>;
     identity?: Record<string, unknown>;
   };
   market: {

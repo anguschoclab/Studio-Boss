@@ -89,8 +89,8 @@ export function checkCampaignBacklash(
   campaignTier: "Grassroots" | "Trade" | "Blitz",
   rng: RandomGenerator
 ): boolean {
-  if (campaignTier === "Blitz" && metaScore < 70) {
-    return rng.next() < 0.2;
-  }
+  if (campaignTier === "Grassroots") return false;
+  if (campaignTier === "Trade" && metaScore < 70) return rng.next() < 0.1;
+  if (campaignTier === "Blitz" && metaScore < 70) return rng.next() < 0.2;
   return false;
 }

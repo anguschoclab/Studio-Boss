@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { ProjectDetailModal } from "@/components/modals/ProjectDetailModal";
 import { useGameStore } from "@/store/gameStore";
 import { useUIStore } from "@/store/uiStore";
-import { Project } from "@/engine/types";
+import { Project, AwardsProfile } from "@/engine/types";
 
 // Mock ResizeObserver for Radix UI Slider component
 class MockResizeObserver {
@@ -12,6 +12,22 @@ class MockResizeObserver {
   disconnect() {}
 }
 window.ResizeObserver = MockResizeObserver;
+
+// Mock recharts
+vi.mock("recharts", () => ({
+  ResponsiveContainer: ({ children }: any) => (
+    <div data-testid="mock-responsive-container">{children}</div>
+  ),
+  BarChart: ({ children }: any) => <div data-testid="mock-bar-chart">{children}</div>,
+  Bar: ({ children }: any) => <div data-testid="mock-bar">{children}</div>,
+  XAxis: ({ dataKey }: any) => <div data-testid="mock-x-axis" data-datakey={dataKey} />,
+  YAxis: ({ dataKey }: any) => <div data-testid="mock-y-axis" data-datakey={dataKey} />,
+  Tooltip: () => <div data-testid="mock-tooltip" />,
+  Cell: ({ fill }: any) => <div data-testid="mock-cell" data-fill={fill} />,
+  CartesianGrid: () => <div data-testid="mock-cartesian-grid" />,
+  AreaChart: ({ children }: any) => <div data-testid="mock-area-chart">{children}</div>,
+  Area: () => <div data-testid="mock-area" />,
+}));
 
 vi.mock("@/store/gameStore");
 vi.mock("@/store/uiStore");
@@ -23,6 +39,24 @@ describe("ProjectDetailModal", () => {
   const mockLaunchMarketingCampaign = vi.fn();
   const mockRenewProject = vi.fn();
   const mockExploitFranchise = vi.fn();
+  const mockLaunchAwardsCampaign = vi.fn();
+  const mockSubmitToFestival = vi.fn();
+
+  const mockAwardsProfile: AwardsProfile = {
+    criticScore: 85,
+    audienceScore: 80,
+    prestigeScore: 75,
+    craftScore: 90,
+    culturalHeat: 70,
+    campaignStrength: 65,
+    controversyRisk: 20,
+    festivalBuzz: 75,
+    academyAppeal: 85,
+    guildAppeal: 80,
+    populistAppeal: 70,
+    indieCredibility: 40,
+    industryNarrativeScore: 75,
+  };
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -290,5 +324,141 @@ describe("ProjectDetailModal", () => {
     fireEvent.click(renewBtn);
     expect(mockRenewProject).toHaveBeenCalledWith("P1");
     expect(mockSelectProject).toHaveBeenCalledWith(null);
+  });
+
+  describe("Campaigns tab (released projects)", () => {
+    const setupReleasedProject = (
+      projectOverrides: Partial<Project> = {},
+      stateOverrides: Record<string, any> = {}
+    ) => {
+      const mockProject = generateMockProject("P1", {
+        state: "released",
+        releaseWeek: 5,
+        format: "film",
+        genre: "Drama",
+        awardsProfile: mockAwardsProfile,
+        ...projectOverrides,
+      });
+
+      vi.mocked(useUIStore).mockReturnValue({
+        selectedProjectId: "P1",
+        selectProject: mockSelectProject,
+      } as any);
+
+      vi.mocked(useGameStore).mockImplementation((selector: any) => {
+        const state = {
+          gameState: {
+            studio: {
+              id: "studio-1",
+              name: "Test Studio",
+              archetype: "mid-tier",
+              prestige: 75,
+              internal: {
+                projects: { [mockProject.id]: mockProject },
+                contracts: [],
+              },
+              activeCampaigns: stateOverrides.activeCampaigns || {},
+            },
+            entities: {
+              projects: { [mockProject.id]: mockProject },
+              releasedProjectIds: [mockProject.id],
+              talents: {},
+              contracts: {},
+              rivals: {},
+              contractsByProjectId: {},
+            },
+            industry: {
+              talentPool: {},
+              awards: [],
+            },
+            finance: { cash: stateOverrides.cash ?? 100_000_000 },
+          },
+          signContract: mockSignContract,
+          greenlightProject: mockGreenlightProject,
+          launchMarketingCampaign: mockLaunchMarketingCampaign,
+          launchAwardsCampaign: mockLaunchAwardsCampaign,
+          submitToFestival: mockSubmitToFestival,
+        };
+        return selector(state);
+      });
+
+      return mockProject;
+    };
+
+    it("renders 3 campaign tier buttons (Grassroots, Trade, Blitz) when no active campaign", () => {
+      setupReleasedProject();
+      render(<ProjectDetailModal />);
+      const campaignsTab = screen.getByRole("tab", { name: /buzz/i });
+      fireEvent.mouseDown(campaignsTab);
+      expect(screen.getByText("Grassroots")).toBeInTheDocument();
+      expect(screen.getByText("Trade")).toBeInTheDocument();
+      expect(screen.getByText("Blitz")).toBeInTheDocument();
+    });
+
+    it("disables Trade button when finance.cash < 1_000_000", () => {
+      setupReleasedProject({}, { cash: 500_000 });
+      render(<ProjectDetailModal />);
+      const campaignsTab = screen.getByRole("tab", { name: /buzz/i });
+      fireEvent.mouseDown(campaignsTab);
+      const tradeButton = screen.getByText("Trade").closest("button");
+      expect(tradeButton).toBeDisabled();
+    });
+
+    it("disables Blitz button when finance.cash < 5_000_000", () => {
+      setupReleasedProject({}, { cash: 2_000_000 });
+      render(<ProjectDetailModal />);
+      const campaignsTab = screen.getByRole("tab", { name: /buzz/i });
+      fireEvent.mouseDown(campaignsTab);
+      const blitzButton = screen.getByText("Blitz").closest("button");
+      expect(blitzButton).toBeDisabled();
+    });
+
+    it("renders Active Campaign card with buzz bonus when campaign exists", () => {
+      setupReleasedProject({}, {
+        activeCampaigns: {
+          P1: {
+            id: "camp-1",
+            projectId: "P1",
+            budget: 1_000_000,
+            targetCategories: ["Best Picture"],
+            buzzBonus: 15,
+            scandalRisk: 2,
+          },
+        },
+      });
+      render(<ProjectDetailModal />);
+      const campaignsTab = screen.getByRole("tab", { name: /buzz/i });
+      fireEvent.mouseDown(campaignsTab);
+      expect(screen.getByText(/\+15 BUZZ/i)).toBeInTheDocument();
+    });
+
+    it("calls launchAwardsCampaign with project id, tier, and selected categories on button click", () => {
+      setupReleasedProject();
+      render(<ProjectDetailModal />);
+      const campaignsTab = screen.getByRole("tab", { name: /buzz/i });
+      fireEvent.mouseDown(campaignsTab);
+      fireEvent.click(screen.getByText("Grassroots").closest("button")!);
+      expect(mockLaunchAwardsCampaign).toHaveBeenCalledWith(
+        "P1",
+        "Grassroots",
+        expect.arrayContaining([expect.any(String)])
+      );
+    });
+
+    it("renders per-project probability chart when project has awardsProfile", () => {
+      setupReleasedProject();
+      render(<ProjectDetailModal />);
+      const campaignsTab = screen.getByRole("tab", { name: /buzz/i });
+      fireEvent.mouseDown(campaignsTab);
+      expect(screen.getByText(/Category Win Probability/i)).toBeInTheDocument();
+    });
+
+    it("does NOT render per-project probability chart when project has no awardsProfile", () => {
+      setupReleasedProject({ awardsProfile: undefined });
+      render(<ProjectDetailModal />);
+      const campaignsTab = screen.getByRole("tab", { name: /buzz/i });
+      fireEvent.mouseDown(campaignsTab);
+      expect(screen.queryByText(/Category Win Probability/i)).not.toBeInTheDocument();
+    });
   });
 });

@@ -16,7 +16,8 @@ export function launchAwardsCampaign(
   state: GameState,
   projectId: string,
   tierKey: "Grassroots" | "Trade" | "Blitz",
-  rng: RandomGenerator
+  rng: RandomGenerator,
+  targetCategories: string[] = ["Best Picture"]
 ): AwardsCampaignResult | null {
   const project = state.entities.projects[projectId];
   if (!project) return null;
@@ -47,7 +48,7 @@ export function launchAwardsCampaign(
     id: rng.uuid("OPP"),
     projectId,
     budget: cost,
-    targetCategories: ["Best Picture"],
+    targetCategories,
     buzzBonus: tierBuzz[tierKey],
     scandalRisk: tierRisk[tierKey],
   };

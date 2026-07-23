@@ -130,7 +130,7 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
   const film: FilmProject = {
     ...baseProperties,
     type: "FILM",
-    format: "film",
+    format: filmOverrides.format || "film",
     activeRoles: filmOverrides.activeRoles || [],
     scriptEvents: filmOverrides.scriptEvents || [],
     scriptHeat: filmOverrides.scriptHeat || 50,

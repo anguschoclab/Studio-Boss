@@ -19,7 +19,6 @@ import {
   selectDealStats,
   selectStudioHealthMetrics,
   selectCrisisRiskLevel,
-  selectAwardsProbability,
 } from "@/store/selectors";
 import type { Project, Talent } from "@/engine/types";
 
@@ -1090,74 +1089,6 @@ describe("Phase 5: Studio Health & Crisis Selectors", () => {
       const result = selectCrisisRiskLevel(state);
       expect(result.riskLevel).toBeGreaterThan(0);
       expect(result.activeThreats.length).toBeGreaterThan(0);
-    });
-  });
-});
-
-describe("Phase 6: Awards Selector", () => {
-  describe("selectAwardsProbability", () => {
-    it("returns empty array for no projects with awards profile", () => {
-      const state = createMockGameState();
-      expect(selectAwardsProbability(state)).toEqual([]);
-    });
-
-    it("calculates probability from awards profile", () => {
-      const state = createMockGameState({
-        entities: {
-          projects: {
-            "proj-1": {
-              id: "proj-1",
-              title: "Awards Contender",
-              type: "FILM",
-              format: "film",
-              genre: "Drama",
-              budgetTier: "high",
-              budget: 50000000,
-              weeklyCost: 500000,
-              targetAudience: "General",
-              flavor: "Drama",
-              state: "released",
-              buzz: 85,
-              weeksInPhase: 15,
-              developmentWeeks: 10,
-              productionWeeks: 15,
-              revenue: 80000000,
-              weeklyRevenue: 0,
-              releaseWeek: 5,
-              activeCrisis: null,
-              momentum: 85,
-              progress: 100,
-              accumulatedCost: 50000000,
-              awardsProfile: {
-                criticScore: 85,
-                audienceScore: 80,
-                prestigeScore: 75,
-                craftScore: 90,
-                culturalHeat: 70,
-                campaignStrength: 65,
-                controversyRisk: 20,
-                festivalBuzz: 75,
-                academyAppeal: 85,
-                guildAppeal: 80,
-                populistAppeal: 70,
-                indieCredibility: 40,
-                industryNarrativeScore: 75,
-              },
-            } as Project,
-          },
-          contracts: {},
-          talents: {},
-          rivals: {},
-          releasedProjectIds: [],
-          contractsByProjectId: {},
-          contractsByTalentId: {},
-        },
-      });
-
-      const result = selectAwardsProbability(state);
-      expect(result).toHaveLength(1);
-      expect(result[0].projectTitle).toBe("Awards Contender");
-      expect(result[0].probability).toBe(90);
     });
   });
 });

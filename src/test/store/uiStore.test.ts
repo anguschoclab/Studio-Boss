@@ -18,6 +18,11 @@ describe("uiStore", () => {
     expect(useUIStore.getState().activeTab).toBe("finance");
   });
 
+  it("sets awards tab", () => {
+    useUIStore.getState().setActiveTab("awards");
+    expect(useUIStore.getState().activeTab).toBe("awards");
+  });
+
   it("opens and closes create project modal", () => {
     useUIStore.getState().openCreateProject();
     expect(useUIStore.getState().showCreateProject).toBe(true);

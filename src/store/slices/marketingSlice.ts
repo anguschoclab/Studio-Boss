@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { StateCreator } from "zustand";
 import { GameStore } from "../gameStore";
-import { CampaignData } from "@/engine/types/state.types";
 import { RandomGenerator } from "@/engine/utils/rng";
 import { AudienceQuadrant, MarketingAngle } from "@/engine/types";
 import { calculateAudienceIndex } from "@/engine/systems/demographics";
 import { applyImpacts } from "@/engine/core/impactReducer";
+import { launchAwardsCampaign as launchAwardsCampaignEngine } from "@/engine/systems/awards/AwardsCampaign";
 
 export interface CampaignTier {
   cost: number;
@@ -26,15 +26,8 @@ export const CAMPAIGN_TIERS: Record<string, CampaignTier> = {
   Saturation: { cost: 50_000_000, buzz: 60, risk: 8, type: "marketing" },
 };
 
-function checkCampaignBacklash(score: number, tier: string, rng: RandomGenerator): boolean {
-  if (tier === "Grassroots") return false;
-  if (tier === "Trade" && score < 70 && rng.next() < 0.1) return true;
-  if (tier === "Blitz" && score < 80 && rng.next() < 0.2) return true;
-  return false;
-}
-
 export interface MarketingSlice {
-  launchAwardsCampaign: (projectId: string, tierKey: "Grassroots" | "Trade" | "Blitz") => void;
+  launchAwardsCampaign: (projectId: string, tierKey: "Grassroots" | "Trade" | "Blitz", targetCategories?: string[]) => void;
   launchMarketingCampaign: (
     projectId: string,
     tierKey: "Standard" | "Tentpole" | "Saturation",
@@ -47,60 +40,41 @@ export const createMarketingSlice: StateCreator<GameStore, [], [], MarketingSlic
   set,
   get
 ) => ({
-  launchAwardsCampaign: (projectId, tierKey) => {
-    const tier = CAMPAIGN_TIERS[tierKey];
+  launchAwardsCampaign: (projectId, tierKey, targetCategories) => {
     const state = get().gameState;
     if (!state) return;
 
-    if (state.finance.cash < tier.cost) {
-      return;
-    }
-
     const rng = new RandomGenerator(state.rngState ?? 0);
-    const project = state.entities.projects[projectId];
-    const metaScore = project?.reception?.metaScore || project?.reviewScore || 60;
-
-    const hasBacklash = checkCampaignBacklash(metaScore, tierKey, rng);
+    const result = launchAwardsCampaignEngine(state, projectId, tierKey, rng, targetCategories);
+    if (!result) return;
 
     set((s) => {
       if (!s.gameState) return s;
-
-      const newCampaign: CampaignData = {
-        id: rng.uuid("OPP"),
-        projectId,
-        budget: tier.cost,
-        targetCategories: ["Best Picture"], // Default
-        buzzBonus: tier.buzz,
-        scandalRisk: tier.risk,
-      };
 
       const newState = {
         ...s.gameState,
         finance: {
           ...s.gameState.finance,
-          cash: s.gameState.finance.cash - tier.cost,
+          cash: s.gameState.finance.cash - result.cost,
         },
         studio: {
           ...s.gameState.studio,
           activeCampaigns: {
             ...s.gameState.studio.activeCampaigns,
-            [projectId]: newCampaign,
+            [projectId]: result.campaign,
           },
         },
-        rngState: rng.getState(),
+        rngState: result.rngState,
       };
 
-      if (hasBacklash) {
-        const scandalHeadline = {
-          id: rng.uuid("NWS"),
-          text: `BACKLASH: Aggressive awards campaigning for "${project?.title}" sparks industry outcry!`,
-          week: s.gameState.week,
-          category: "scandal" as const,
-        };
-        newState.news.headlines.unshift(scandalHeadline);
+      for (const impact of result.impacts) {
+        if (impact.newHeadlines) {
+          newState.news = {
+            ...newState.news,
+            headlines: [...impact.newHeadlines, ...newState.news.headlines],
+          };
+        }
       }
-
-      newState.rngState = rng.getState();
 
       return {
         gameState: newState,

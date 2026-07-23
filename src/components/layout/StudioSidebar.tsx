@@ -18,6 +18,7 @@ import {
   Star,
   Zap,
   Bookmark,
+  Trophy,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -67,6 +68,12 @@ const NAV_ITEMS: NavItem[] = [
     label: "INDUSTRY INTELLIGENCE",
     icon: TrendingUp,
     tooltip: "RIVAL STUDIOS M&A MARKET INTELLIGENCE",
+  },
+  {
+    id: "awards",
+    label: "AWARDS SEASON",
+    icon: Trophy,
+    tooltip: "ELIGIBLE SLATE FYC CAMPAIGNS AND WIN ODDS",
   },
   {
     id: "finance",

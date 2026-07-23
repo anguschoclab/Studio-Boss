@@ -27,6 +27,7 @@ import {
   selectOpportunities,
   selectStudio,
 } from "./selectors";
+import { AWARD_CONFIGS } from "../engine/data/awards.data";
 
 export interface RecoupmentStatusData {
   title: string;
@@ -683,17 +684,21 @@ export const selectCrisisRiskLevel = (state: GameState | null): CrisisRiskData =
  * Awards probability data for AwardsProbabilityChart visualization
  */
 export const selectAwardsProbability = (state: GameState | null): AwardProbability[] => {
-  const projects = selectProjects(state).filter(
-    (p) => p.awardsProfile || (p.awards && p.awards.length > 0)
-  );
+  const projects = selectProjects(state).filter((p) => p.awardsProfile);
   return projects.flatMap((project) => {
-    const profiles = project.awardsProfile ? [project.awardsProfile] : [];
-    return profiles.map((profile) => ({
-      projectTitle: project.title,
-      awardBody: "Academy Awards",
-      category: profile.craftScore > 80 ? "Best Picture" : "Supporting",
-      probability: profile.craftScore || 50,
-      trend: "stable",
-    }));
+    const format = project.format;
+    return AWARD_CONFIGS
+      .filter((c) => c.format === format || c.format === "both")
+      .map((config) => {
+        const rawScore = config.evaluator(project);
+        const probability = Math.min(100, Math.round(rawScore / 2));
+        return {
+          projectTitle: project.title,
+          awardBody: config.body,
+          category: config.category,
+          probability,
+          trend: "stable",
+        };
+      });
   });
 };

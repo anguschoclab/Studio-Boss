@@ -1,26 +1,40 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useGameStore } from "@/store/gameStore";
 import { useUIStore } from "@/store/uiStore";
 import { formatMoney } from "@/engine/utils";
-import { selectAwardsEligibleProjects } from "@/store/selectors";
+import { selectAwardsEligibleProjects, selectAwardsOddsById } from "@/store/selectors";
+import { selectAwardsProbability } from "@/store/chartSelectors";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, TrendingUp, Sparkles, Filter, Info, Target } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Trophy, Sparkles, Filter, Info, Target } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CAMPAIGN_TIERS } from "@/store/slices/marketingSlice";
+import { getCategoriesForFormat } from "@/engine/data/awards.data";
+import { AwardsProbabilityChart } from "@/components/charts/AwardsProbabilityChart";
 
 export const AwardsHQ: React.FC = () => {
   const gameState = useGameStore((s) => s.gameState);
   const { selectProject } = useUIStore();
   const launchAwardsCampaign = useGameStore((s) => s.launchAwardsCampaign);
 
+  const [formatFilter, setFormatFilter] = useState<"all" | "film" | "tv">("all");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(["Best Picture"]);
+
+  const oddsById = useMemo(() => selectAwardsOddsById(gameState), [gameState]);
+  const awardsProbability = useMemo(() => selectAwardsProbability(gameState), [gameState]);
+
   const eligibleProjects = useMemo(() => {
-    return selectAwardsEligibleProjects(gameState).sort(
-      (a, b) => (b.reception?.metaScore || 0) - (a.reception?.metaScore || 0)
-    );
-  }, [gameState]);
+    return selectAwardsEligibleProjects(gameState)
+      .filter((p) => formatFilter === "all" || p.format === formatFilter)
+      .sort(
+        (a, b) => (b.reception?.metaScore || 0) - (a.reception?.metaScore || 0)
+      );
+  }, [gameState, formatFilter]);
 
   if (!gameState) return null;
+
+  const currentSeason = Math.floor(gameState.week / 52) + 1;
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -41,17 +55,21 @@ export const AwardsHQ: React.FC = () => {
         </div>
 
         <div className="flex gap-2">
+          <Select value={formatFilter} onValueChange={(v) => setFormatFilter(v as "all" | "film" | "tv")}>
+            <SelectTrigger className="h-10 w-40 border-white/5 bg-black/40 text-slate-400 font-black uppercase text-[10px] tracking-widest flex items-center gap-2">
+              <Filter className="w-3 h-3" /> <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Formats</SelectItem>
+              <SelectItem value="film">Film</SelectItem>
+              <SelectItem value="tv">TV</SelectItem>
+            </SelectContent>
+          </Select>
           <Badge
             variant="outline"
             className="h-10 px-4 border-white/5 bg-black/40 text-slate-400 font-black uppercase text-[10px] tracking-widest flex items-center gap-2"
           >
-            <Filter className="w-3 h-3" /> All Formats
-          </Badge>
-          <Badge
-            variant="outline"
-            className="h-10 px-4 border-white/5 bg-black/40 text-slate-400 font-black uppercase text-[10px] tracking-widest flex items-center gap-2"
-          >
-            <TrendingUp className="w-3 h-3" /> Season Rank: #14
+            <Trophy className="w-3 h-3" /> {gameState.industry.awards?.filter((a) => a.status === "won" && a.year === currentSeason).length || 0} WINS
           </Badge>
         </div>
       </div>
@@ -66,8 +84,8 @@ export const AwardsHQ: React.FC = () => {
             color: "text-primary",
           },
           {
-            label: "Total Accolades",
-            val: gameState.industry.awards?.filter((a) => a.status === "won").length || 0,
+            label: "Season Wins",
+            val: gameState.industry.awards?.filter((a) => a.status === "won" && a.year === currentSeason).length || 0,
             icon: Sparkles,
             color: "text-amber-400",
           },
@@ -96,6 +114,18 @@ export const AwardsHQ: React.FC = () => {
         ))}
       </div>
 
+      {/* Awards Probability Outlook */}
+      {awardsProbability.length > 0 && (
+        <div className="space-y-4">
+          <h2 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">
+            Awards Probability Outlook
+          </h2>
+          <div className="glass-card p-6 rounded-none">
+            <AwardsProbabilityChart data={awardsProbability} />
+          </div>
+        </div>
+      )}
+
       {/* Projects Grid */}
       <div className="space-y-4">
         <h2 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">
@@ -111,7 +141,7 @@ export const AwardsHQ: React.FC = () => {
             </div>
           ) : (
             eligibleProjects.map((project) => {
-              const campaign = gameState.studio.activeCampaigns?.[project.id] as { buzzBonus?: number } | undefined;
+              const campaign = gameState.studio.activeCampaigns?.[project.id];
               return (
                 <div
                   key={project.id}
@@ -140,22 +170,30 @@ export const AwardsHQ: React.FC = () => {
                         {project.genre} • {project.format} • Released W{project.releaseWeek}
                       </p>
                     </div>
-                    <div className="text-right">
-                      <div
-                        className={cn(
-                          "text-3xl font-black italic tracking-tighter",
-                          (project.reception?.metaScore || 0) >= 75
-                            ? "text-emerald-500"
-                            : (project.reception?.metaScore || 0) >= 40
-                              ? "text-amber-500"
-                              : "text-rose-500"
-                        )}
-                      >
-                        {project.reception?.metaScore || "??"}
+                    <div className="flex items-start gap-4">
+                      <div className="text-right">
+                        <div
+                          className={cn(
+                            "text-3xl font-black italic tracking-tighter",
+                            (project.reception?.metaScore || 0) >= 75
+                              ? "text-emerald-500"
+                              : (project.reception?.metaScore || 0) >= 40
+                                ? "text-amber-500"
+                                : "text-rose-500"
+                          )}
+                        >
+                          {project.reception?.metaScore || "??"}
+                        </div>
+                        <p className="text-[9px] font-black uppercase text-slate-600 tracking-widest">
+                          MetaScore
+                        </p>
                       </div>
-                      <p className="text-[9px] font-black uppercase text-slate-600 tracking-widest">
-                        MetaScore
-                      </p>
+                      <div className="text-right border-l border-white/5 pl-4">
+                        <div className="text-[9px] font-black uppercase text-slate-600 tracking-widest">Win Odds</div>
+                        <div className="text-2xl font-black italic tracking-tighter text-amber-500 tabular-nums">
+                          {oddsById[project.id] ?? 0}%
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -169,12 +207,12 @@ export const AwardsHQ: React.FC = () => {
                               Active Campaign
                             </p>
                             <p className="text-xs font-bold text-white uppercase italic">
-                              FYC Outreach Intensified
+                              {campaign.targetCategories?.join(", ") || "FYC Outreach"}
                             </p>
                           </div>
                         </div>
                         <Badge className="bg-amber-500 text-black font-black tracking-tighter">
-                          +{campaign.buzzBonus} BUZZ
+                          +{campaign.buzzBonus} BUZZ · {formatMoney(campaign.budget)}
                         </Badge>
                       </div>
                     ) : (
@@ -182,6 +220,21 @@ export const AwardsHQ: React.FC = () => {
                         <p className="text-[9px] font-black uppercase text-slate-500 tracking-widest">
                           Launch FYC Campaign
                         </p>
+                        <Select
+                          value={selectedCategories[0]}
+                          onValueChange={(v) => setSelectedCategories([v])}
+                        >
+                          <SelectTrigger className="h-9 border-white/5 bg-black/40 text-slate-400 font-black uppercase text-[10px] tracking-widest">
+                            <SelectValue placeholder="Select Category" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {getCategoriesForFormat(project.format).map((cat) => (
+                              <SelectItem key={cat} value={cat}>
+                                {cat}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <div className="grid grid-cols-3 gap-2">
                           {Object.entries(CAMPAIGN_TIERS)
                             .filter(([, t]) => t.type === "awards")
@@ -193,7 +246,8 @@ export const AwardsHQ: React.FC = () => {
                                 onClick={() =>
                                   launchAwardsCampaign(
                                     project.id,
-                                    key as "Grassroots" | "Trade" | "Blitz"
+                                    key as "Grassroots" | "Trade" | "Blitz",
+                                    selectedCategories
                                   )
                                 }
                                 disabled={

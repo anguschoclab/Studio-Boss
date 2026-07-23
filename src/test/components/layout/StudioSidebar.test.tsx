@@ -59,6 +59,7 @@ vi.mock("lucide-react", () => {
     Zap: () => <div data-testid="icon" />,
     Archive: () => <div data-testid="icon" />,
     Bookmark: () => <div data-testid="icon" />,
+    Trophy: () => <div data-testid="icon" />,
   };
 });
 

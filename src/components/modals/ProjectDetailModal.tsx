@@ -45,12 +45,17 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { cn } from "@/lib/utils";
+import { CAMPAIGN_TIERS } from "@/store/slices/marketingSlice";
+import { getCategoriesForFormat } from "@/engine/data/awards.data";
+import { selectAwardsProbability } from "@/store/chartSelectors";
+import { SimpleBarChart } from "@/components/charts/SimpleBarChart";
 import { DevelopmentLog } from "./DevelopmentLog";
 import { CastingFeedback } from "../talent/CastingFeedback";
 
 export const ProjectDetailModal = () => {
   const [selectedTier, setSelectedTier] = useState<"none" | "basic" | "blockbuster">("none");
   const [hoveredTalentId, setHoveredTalentId] = useState<string | null>(null);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(["Best Picture"]);
 
   const { selectedProjectId, selectProject } = useUIStore();
   const gameState = useGameStore((s) => s.gameState);
@@ -70,6 +75,14 @@ export const ProjectDetailModal = () => {
     () => projects.find((p) => p.id === selectedProjectId),
     [projects, selectedProjectId]
   );
+  const activeCampaign = useMemo(
+    () => project ? gameState?.studio.activeCampaigns?.[project.id] : undefined,
+    [gameState?.studio.activeCampaigns, project]
+  );
+  const projectProbabilityData = useMemo(() => {
+    if (!gameState || !project) return [];
+    return selectAwardsProbability(gameState).filter((p) => p.projectTitle === project.title);
+  }, [gameState, project]);
   const talentPool = useMemo(
     () => Object.values(gameState?.entities?.talents || {}),
     [gameState?.entities?.talents]
@@ -883,16 +896,91 @@ export const ProjectDetailModal = () => {
                           </SelectContent>
                         </Select>
 
-                        <Button
-                          variant="outline"
-                          className="w-full h-12 border-amber-600/30 text-amber-500 hover:bg-amber-600/10 font-black uppercase text-[10px] tracking-widest"
-                          onClick={() => {
-                            launchAwardsCampaign(project.id, "Grassroots");
-                            selectProject(null);
-                          }}
-                        >
-                          Expand "For Your Consideration" Outreach ($500k)
-                        </Button>
+                        <p className="text-[9px] font-black uppercase text-slate-500 tracking-widest">
+                          Active FYC Campaign
+                        </p>
+                        {activeCampaign ? (
+                          <div className="p-4 rounded-none bg-amber-500/10 border border-amber-500/30">
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-xs font-black text-amber-500 uppercase italic">
+                                Active Outreach
+                              </span>
+                              <Badge className="bg-amber-500 text-black font-black">
+                                +{activeCampaign.buzzBonus} BUZZ
+                              </Badge>
+                            </div>
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-[10px] font-black uppercase text-slate-500 tracking-widest">
+                                Budget
+                              </span>
+                              <span className="text-[10px] font-mono text-white">
+                                {formatMoney(activeCampaign.budget)}
+                              </span>
+                            </div>
+                            {activeCampaign.targetCategories.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mb-2">
+                                {activeCampaign.targetCategories.map((cat) => (
+                                  <Badge
+                                    key={cat}
+                                    variant="outline"
+                                    className="text-[8px] font-black uppercase border-amber-500/30 bg-amber-500/5 text-amber-400"
+                                  >
+                                    {cat}
+                                  </Badge>
+                                ))}
+                              </div>
+                            )}
+                            <p className="text-[10px] text-slate-300 font-medium leading-relaxed italic border-l border-amber-500/30 pl-3">
+                              "Direct studio outreach with Academy voters is amplifying {project.title}'s prestige
+                              profile."
+                            </p>
+                          </div>
+                        ) : (
+                          <>
+                            <Select
+                              value={selectedCategories[0]}
+                              onValueChange={(v) => setSelectedCategories([v])}
+                            >
+                              <SelectTrigger
+                                aria-label="Select Award Category"
+                                className="h-10 bg-black border-white/5 text-xs font-black uppercase tracking-widest"
+                              >
+                                <SelectValue placeholder="Target Category..." />
+                              </SelectTrigger>
+                              <SelectContent className="bg-black border-white/5 text-slate-200">
+                                {getCategoriesForFormat(project.format).map((cat) => (
+                                  <SelectItem key={cat} value={cat} className="font-bold">
+                                    {cat}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <div className="grid grid-cols-3 gap-2">
+                              {(["Grassroots", "Trade", "Blitz"] as const).map((tierKey) => {
+                                const tier = CAMPAIGN_TIERS[tierKey];
+                                return (
+                                  <Button
+                                    key={tierKey}
+                                    variant="outline"
+                                    className="h-14 flex flex-col items-center justify-center border-white/5 hover:border-amber-500/50 bg-black/40 group"
+                                    onClick={() => {
+                                      launchAwardsCampaign(project.id, tierKey, selectedCategories);
+                                      selectProject(null);
+                                    }}
+                                    disabled={(gameState?.finance.cash || 0) < tier.cost}
+                                  >
+                                    <span className="text-[8px] font-black text-slate-500 uppercase group-hover:text-amber-500">
+                                      {tierKey}
+                                    </span>
+                                    <span className="text-[10px] font-mono font-black text-white">
+                                      {formatMoney(tier.cost)}
+                                    </span>
+                                  </Button>
+                                );
+                              })}
+                            </div>
+                          </>
+                        )}
                       </div>
 
                       {project.awardsProfile && (
@@ -924,6 +1012,25 @@ export const ProjectDetailModal = () => {
                                 style={{ width: `${project.awardsProfile.campaignStrength}%` }}
                               />
                             </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {projectProbabilityData.length > 0 && (
+                        <div className="grid grid-cols-1 gap-4 pt-4 border-t border-white/5">
+                          <div className="space-y-2">
+                            <span className="text-[10px] font-black tracking-widest uppercase text-slate-500">
+                              Category Win Probability
+                            </span>
+                            <SimpleBarChart
+                              data={projectProbabilityData.map((p) => ({
+                                label: p.category,
+                                value: p.probability,
+                                color: "#f59e0b",
+                              }))}
+                              height={200}
+                              valueFormatter={(v) => `${v}%`}
+                            />
                           </div>
                         </div>
                       )}

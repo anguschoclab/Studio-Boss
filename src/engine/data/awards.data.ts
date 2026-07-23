@@ -1,4 +1,4 @@
-import { AwardBody, AwardCategory, Project } from "../types";
+import { AwardBody, AwardCategory, Project, ProjectFormat } from "../types";
 
 export const CANNES_EQUIVALENTS: AwardBody[] = [
   "Cannes Film Festival",
@@ -672,3 +672,11 @@ export const AWARD_CONFIGS: AwardConfig[] = [
       (p.awardsProfile?.indieCredibility || 0) * 1.2 + (p.awardsProfile?.craftScore || 0) * 0.4,
   },
 ];
+
+export function getCategoriesForFormat(format: ProjectFormat): AwardCategory[] {
+  return [...new Set(
+    AWARD_CONFIGS
+      .filter((c) => c.format === format || c.format === "both")
+      .map((c) => c.category)
+  )];
+}

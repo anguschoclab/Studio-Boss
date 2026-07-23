@@ -13,6 +13,7 @@ import { RivalsPanel } from "@/components/rivals/RivalsPanel";
 import { IPVault } from "@/components/ip/IPVault";
 import { DistributionHub } from "@/components/distribution/DistributionHub";
 import { BookmarksBoard } from "@/components/bookmarks/BookmarksBoard";
+import { AwardsHQ } from "@/components/awards/AwardsHQ";
 import { AnimatePresence, motion } from "framer-motion";
 
 // Modals
@@ -37,6 +38,7 @@ const TAB_CONTENT: Record<TabId, React.ReactNode> = {
   talent: <TalentHub key="talent" />,
   finance: <FinancePanel key="finance" />,
   trades: <DiscoveryBoard key="trades" />,
+  awards: <AwardsHQ key="awards" />,
   bookmarks: <BookmarksBoard key="bookmarks" />,
 };
 

@@ -38,6 +38,7 @@ export type TabId =
   | "finance"
   | "trades"
   | "industry"
+  | "awards"
   | "bookmarks";
 
 interface UIStore {

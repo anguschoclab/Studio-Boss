@@ -332,17 +332,15 @@ export const selectCrisisRiskLevel = createSelector([selectProjects], (projects)
   };
 });
 
-export const selectAwardsProbability = createSelector([selectProjects], (projects) =>
-  projects
-    .filter((p) => !!p.awardsProfile)
-    .map((p) => {
-      const ap = p.awardsProfile!;
-      return {
-        projectTitle: p.title,
-        probability: Math.min(100, Math.round((ap.criticScore + ap.academyAppeal) / 2 + 5)),
-      };
-    })
-);
+export const selectAwardsOddsById = createSelector([selectProjects], (projects) => {
+  const odds: Record<string, number> = {};
+  for (const p of projects) {
+    const ap = p.awardsProfile;
+    if (!ap) continue;
+    odds[p.id] = Math.min(100, Math.round((ap.criticScore + ap.academyAppeal) / 2 + 5));
+  }
+  return odds;
+});
 
 export const selectGenrePerformanceMatrix = createSelector(
   [selectMarketTrends, selectProjects],
@@ -362,6 +360,17 @@ export const selectGenrePerformanceMatrix = createSelector(
   }
 );
 
-export const selectAwardsEligibleProjects = createSelector([selectProjects], (projects) =>
-  projects.filter((p) => p.state === "released" && p.releaseWeek && p.awardsProfile)
+export const selectAwardsEligibleProjects = createSelector(
+  [selectProjects, selectGameState],
+  (projects, state) => {
+    if (!state) return [];
+    const currentWeek = state.week;
+    return projects.filter(
+      (p) =>
+        (p.state === "released" || p.state === "post_release") &&
+        p.releaseWeek &&
+        p.releaseWeek > currentWeek - 52 &&
+        p.awardsProfile
+    );
+  }
 );
