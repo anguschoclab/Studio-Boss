@@ -46,6 +46,9 @@ const PackageDealOfferedModal = React.lazy(() =>
 const DistressedAssetOfferModal = React.lazy(() =>
   import("./DistressedAssetOfferModal").then((m) => ({ default: m.DistressedAssetOfferModal }))
 );
+const AcquisitionConfirmModal = React.lazy(() =>
+  import("./AcquisitionConfirmModal").then((m) => ({ default: m.AcquisitionConfirmModal }))
+);
 
 /**
  * Unified Modal Manager.
@@ -90,6 +93,8 @@ export const ModalManager: React.FC = () => {
             return <PackageDealOfferedModal key={activeModal.id} />;
           case "DISTRESSED_ASSET_OFFER":
             return <DistressedAssetOfferModal key={activeModal.id} />;
+          case "ACQUISITION_CONFIRM":
+            return <AcquisitionConfirmModal key={activeModal.id} />;
           default:
             return null;
         }

@@ -16,7 +16,7 @@ export const RivalsPanel = () => {
   );
   const playerCash = gameState?.finance?.cash || 0;
 
-  const { corporateSabotage, poachExec, attemptTakeover } = useGameStore();
+  const { corporateSabotage, poachExec } = useGameStore();
 
   return (
     <div className="h-full flex flex-col overflow-hidden space-y-8">
@@ -70,7 +70,6 @@ export const RivalsPanel = () => {
                   playerCash={playerCash}
                   corporateSabotage={corporateSabotage}
                   poachExec={poachExec}
-                  attemptTakeover={attemptTakeover}
                 />
               ))}
             </div>

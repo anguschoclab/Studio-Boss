@@ -24,6 +24,7 @@ import { PitchProjectModal } from "@/components/modals/PitchProjectModal";
 import { CrisisModal } from "@/components/modals/CrisisModal";
 import { AwardsCeremonyModal } from "@/components/modals/AwardsCeremonyModal";
 import { GreenlightDecisionModal } from "@/components/modals/GreenlightDecisionModal";
+import { AcquisitionConfirmModal } from "@/components/modals/AcquisitionConfirmModal";
 import { SettingsModal } from "@/components/modals/SettingsModal";
 
 import { TabId } from "@/store/uiStore";
@@ -98,6 +99,7 @@ const Dashboard: React.FC = () => {
       <CrisisModal />
       <AwardsCeremonyModal />
       <GreenlightDecisionModal />
+      <AcquisitionConfirmModal />
       <SettingsModal open={showSettings} onClose={() => setShowSettings(false)} />
     </div>
   );

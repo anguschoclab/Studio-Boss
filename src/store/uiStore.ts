@@ -19,7 +19,8 @@ export type ModalType =
   | "REBOOT_OPPORTUNITY"
   | "DISTRESSED_ASSET_OFFER"
   | "GREENLIGHT_DECISION"
-  | "STRATEGY_CHOICE";
+  | "STRATEGY_CHOICE"
+  | "ACQUISITION_CONFIRM";
 
 let modalIdCounter = 0;
 

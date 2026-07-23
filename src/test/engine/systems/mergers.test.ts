@@ -7,6 +7,7 @@ import {
 } from "../../../engine/systems/mergers";
 import { GameState, RivalStudio } from "../../../engine/types";
 import { createMockGameState, createMockRival } from "../generators/mockFactory";
+import { RegulatorSystem } from "../../../engine/systems/industry/RegulatorSystem";
 
 describe("Mergers and Sabotage System", () => {
   let mockState: GameState;
@@ -40,6 +41,11 @@ describe("Mergers and Sabotage System", () => {
         contractsByProjectId: {},
         contractsByTalentId: {},
       },
+    });
+
+    vi.spyOn(RegulatorSystem, "isBlocked").mockReturnValue({
+      blocked: false,
+      sharePreview: 10,
     });
   });
 

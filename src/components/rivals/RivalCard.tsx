@@ -14,6 +14,7 @@ import { formatMoney } from "@/engine/utils";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { cn } from "@/lib/utils";
 import { RivalStudio } from "@/engine/types/studio.types";
+import { useUIStore } from "@/store/uiStore";
 
 const strengthColor = (s: number) => {
   if (s >= 70) return "bg-destructive shadow-[0_0_15px_hsl(var(--destructive)/0.4)]";
@@ -26,7 +27,6 @@ interface RivalCardProps {
   playerCash: number;
   corporateSabotage: (rivalId: string) => void;
   poachExec: (rivalId: string) => void;
-  attemptTakeover: (rivalId: string) => void;
 }
 
 export const RivalCard: React.FC<RivalCardProps> = ({
@@ -34,8 +34,8 @@ export const RivalCard: React.FC<RivalCardProps> = ({
   playerCash,
   corporateSabotage,
   poachExec,
-  attemptTakeover,
 }) => {
+  const enqueueModal = useUIStore((s) => s.enqueueModal);
   return (
     <div className="p-8 rounded-none glass-card border-white/5 bg-white/[0.01] space-y-8 hover:bg-white/[0.03] hover:border-destructive/30 transition-all duration-700 group relative overflow-hidden">
       <div className="absolute top-0 right-0 w-32 h-32 bg-destructive/5 rounded-none blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
@@ -106,13 +106,13 @@ export const RivalCard: React.FC<RivalCardProps> = ({
             <DropdownMenuSeparator className="bg-white/5" />
 
             <DropdownMenuItem
-              onClick={() => attemptTakeover(rival.id)}
+              onClick={() => enqueueModal("ACQUISITION_CONFIRM", { targetId: rival.id })}
               className="p-4 gap-4 cursor-pointer bg-destructive/10 focus:bg-destructive"
             >
               <ShieldAlert className="h-4 w-4 text-destructive focus:text-white" />
               <div className="flex flex-col">
                 <span className="text-[11px] font-black uppercase tracking-widest text-destructive focus:text-white">
-                  HOSTILE TAKEOVER
+                  ACQUIRE STUDIO
                 </span>
                 <span className="text-[9px] font-black text-destructive/40 focus:text-white/40 uppercase tracking-widest mt-1">
                   TARGET ACQUISITION

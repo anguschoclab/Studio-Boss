@@ -26,6 +26,10 @@ vi.mock("@/components/modals/FestivalMarketModal", () => ({
   FestivalMarketModal: () => <div data-testid="festival-market-modal">FestivalMarketModal</div>,
 }));
 
+vi.mock("@/components/modals/AcquisitionConfirmModal", () => ({
+  AcquisitionConfirmModal: () => <div data-testid="acquisition-confirm-modal">AcquisitionConfirmModal</div>,
+}));
+
 describe("ModalManager", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -74,6 +78,15 @@ describe("ModalManager", () => {
 
     render(<ModalManager />);
     expect(await screen.findByTestId("festival-market-modal")).toBeInTheDocument();
+  });
+
+  it("renders AcquisitionConfirmModal when activeModal type is ACQUISITION_CONFIRM", async () => {
+    (useUIStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
+      activeModal: { id: "test-6", type: "ACQUISITION_CONFIRM", payload: { targetId: "r1" } },
+    });
+
+    render(<ModalManager />);
+    expect(await screen.findByTestId("acquisition-confirm-modal")).toBeInTheDocument();
   });
 
   it("renders nothing for an unknown modal type", () => {
