@@ -2,6 +2,8 @@
 import { GameState, Project, StateImpact } from "@/engine/types";
 import { clamp } from "../../utils";
 import { isPlayerOwner } from "../../utils/ownership";
+import type { StudioFlopHistory } from "@/engine/types/state.types";
+export type { StudioFlopHistory };
 
 /**
  * Flop Mechanics System
@@ -92,13 +94,6 @@ export function calculateFlopPenalties(project: Project, severity: FlopSeverity)
     ipDevaluation: config.ipDevaluation,
     shouldRestructure: config.shouldRestructure,
   };
-}
-
-export interface StudioFlopHistory {
-  rivalId: string;
-  majorFlops: number;
-  catastrophicFlops: number;
-  flopWeeks: number[];
 }
 
 const flopHistory: Map<string, StudioFlopHistory> = new Map();

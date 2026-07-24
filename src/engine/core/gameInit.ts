@@ -1,5 +1,6 @@
 import { ArchetypeKey, RivalStudio, GameState } from "../types/studio.types";
 import { MarketState } from "../types/state.types";
+import { CURRENT_SAVE_VERSION, defaultSimMemory } from "./simMemory";
 import { ALL_GENRES, initializeTrends } from "../systems/trends";
 import { ARCHETYPES } from "../data/archetypes";
 import { BrandSystem } from "../generators/BrandSystem";
@@ -261,5 +262,7 @@ export function initializeGame(
     },
     history: [],
     eventHistory: [],
+    saveVersion: CURRENT_SAVE_VERSION,
+    simMemory: defaultSimMemory(),
   };
 }

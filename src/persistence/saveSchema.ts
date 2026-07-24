@@ -19,6 +19,7 @@ export const SAVE_SCHEMA = z
     week: z.number().int().positive(),
     gameSeed: z.number(),
     tickCount: z.number(),
+    saveVersion: z.number().int().positive().optional(),
     game: z.object({ currentWeek: z.number() }).passthrough(),
     finance: z.object({ cash: z.number() }).passthrough(),
     studio: z

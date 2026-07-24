@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { GameState, StateImpact, RivalStudio } from "@/engine/types";
 import { secureRandom, pick } from "../../utils";
+import { getSimMemory } from "../../core/simMemory";
 
 /**
  * Antitrust — concentration monitor + occasional interventions.
@@ -34,14 +35,17 @@ export interface AntitrustEvent {
 }
 
 // Exposed module-level log; run-simulation reads it after the sim completes.
+// FOLLOW-UP (see docs/superpowers/plans/2026-06-16-sim-memory-save-versioning.md):
+// antitrustEventLog and antitrustBlockList are also module-scope state; blockList
+// is functional (ConsolidationEngine and DistressCascade.stage3 read it via
+// isAcquirerBlockedByAntitrust) and evaporates on save/reload. Moving them
+// requires refactoring those consumers — tracked separately.
 export const antitrustEventLog: AntitrustEvent[] = [];
 export const antitrustBlockList: { acquirerId: string; untilWeek: number }[] = [];
-let lastActionWeek = -9999;
 
 export function resetAntitrustState() {
   antitrustEventLog.length = 0;
   antitrustBlockList.length = 0;
-  lastActionWeek = -9999;
 }
 
 function computeConcentration(state: GameState) {
@@ -100,11 +104,15 @@ export function tickAntitrust(state: GameState): StateImpact[] {
   const dominant = top1 > TOP1_THRESHOLD || top3 > TOP3_THRESHOLD;
   if (!dominant) return impacts;
   if (positiveCount < MIN_POSITIVE_COUNT) return impacts;
-  if (week - lastActionWeek < ACTION_COOLDOWN_WEEKS) return impacts;
+  const mem = getSimMemory(state);
+  if (week - mem.antitrust.lastActionWeek < ACTION_COOLDOWN_WEEKS) return impacts;
   // Low per-week probability so events are spread ~5-10 years apart even when triggers are chronic.
   if (secureRandom() > 0.005) return impacts;
 
-  lastActionWeek = week;
+  impacts.push({
+    type: "INDUSTRY_UPDATE",
+    payload: { update: { "simMemory.antitrust": { lastActionWeek: week } } },
+  } as unknown as StateImpact);
 
   // Block dominant player from M&A for 2 years.
   antitrustBlockList.push({ acquirerId: leader.id, untilWeek: week + 104 });

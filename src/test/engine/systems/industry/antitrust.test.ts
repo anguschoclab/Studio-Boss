@@ -8,6 +8,7 @@ import {
 } from "@/engine/systems/industry/Antitrust";
 import { GameState } from "@/engine/types";
 import { createMockGameState, createMockRival } from "../../generators/mockFactory";
+import { defaultSimMemory } from "@/engine/core/simMemory";
 
 import * as utils from "@/engine/utils";
 
@@ -69,8 +70,12 @@ describe("Antitrust System", () => {
 
       // First call triggers an action (secureRandom returns 0.001 ≤ 0.005)
       tickAntitrust(state);
-      // Second call should be blocked by cooldown (260 weeks)
-      const impacts2 = tickAntitrust({ ...state, week: 301 });
+      // Second call should be blocked by cooldown (260 weeks) — simMemory carries lastActionWeek
+      const impacts2 = tickAntitrust({
+        ...state,
+        week: 301,
+        simMemory: { ...defaultSimMemory(), antitrust: { lastActionWeek: 300 } },
+      });
       expect(impacts2).toHaveLength(0);
     });
 

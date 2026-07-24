@@ -68,6 +68,24 @@ export interface LoanRecord {
   lenderName: string;
 }
 
+export interface StudioFlopHistory {
+  rivalId: string;
+  majorFlops: number;
+  catastrophicFlops: number;
+  flopWeeks: number[];
+}
+
+export interface SimMemory {
+  antitrust: { lastActionWeek: number };
+  distress: {
+    negativeStreak: Record<string, number>;
+    lastActionWeek: Record<string, number>;
+    stageActionCount: Record<string, { s1: number; s2: number; s3: number }>;
+  };
+  flops: Record<string, StudioFlopHistory>;
+  headlessCashStreaks: Record<string, number>;
+}
+
 export interface FinanceState {
   cash: number;
   ledger: WeeklyFinancialReport[];

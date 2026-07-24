@@ -177,6 +177,8 @@ export interface GameState {
   tvRecommendations?: {
     recommendations?: Record<string, import("./tv-recommendations.types").TVShowRecommendation>;
   };
+  saveVersion?: number;
+  simMemory?: import("./state.types").SimMemory;
 }
 
 export interface SaveSlotMeta {

@@ -11,12 +11,7 @@ test("distressed asset acquisition: modal appears, acquire works, decline works"
     timeout: 15000,
   });
 
-  // Start a new game to ensure clean state
-  await page.getByRole("button", { name: "New Game" }).click();
-  await page.getByRole("textbox", { name: "Studio Name" }).fill("Test Studio");
-  await page.getByRole("button", { name: "Start Game" }).click();
-  await page.waitForTimeout(2000);
-
+  // autoStart=true already provides a clean game state via devAutoInit().
   // Try to access Zustand stores via window globals or Vite module imports.
   // If neither works, fall back to a basic smoke test (no crash = pass).
   const storeAccess = await page.evaluate(async () => {

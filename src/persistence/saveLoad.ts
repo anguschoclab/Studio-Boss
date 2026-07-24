@@ -1,5 +1,6 @@
 import { GameState, SaveSlotMeta } from "@/engine/types";
 import { persistenceService } from "./PersistenceService";
+import { migrateSave } from "@/engine/migrations";
 
 /**
  * High-level orchestration for Game State Persistence.
@@ -23,7 +24,7 @@ export async function loadGame(slot: number): Promise<GameState | null> {
     const state = await persistenceService.load(slot);
     if (!state) return null;
 
-    return state as GameState;
+    return migrateSave(state as GameState);
   } catch (e) {
     console.error("[SaveLoad] Failed to load game state", e);
     return null;
