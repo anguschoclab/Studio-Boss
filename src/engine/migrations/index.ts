@@ -1,5 +1,5 @@
 import type { GameState } from "../types";
-import { CURRENT_SAVE_VERSION, defaultSimMemory } from "../core/simMemory";
+import { defaultSimMemory } from "../core/simMemory";
 
 interface Migration {
   toVersion: number;

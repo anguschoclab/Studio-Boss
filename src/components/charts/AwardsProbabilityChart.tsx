@@ -56,7 +56,7 @@ export const AwardsProbabilityChart: React.FC<AwardsProbabilityChartProps> = ({
             width={120}
           />
           <Tooltip
-            content={({ active, payload }: any) => {
+            content={({ active, payload }: import("recharts").TooltipProps<number, string>) => {
               if (!active || !payload || !payload.length) return null;
               const entry = payload[0].payload as AwardProbability;
               return (
