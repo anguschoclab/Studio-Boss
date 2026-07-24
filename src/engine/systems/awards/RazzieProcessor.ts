@@ -1,4 +1,4 @@
-import { GameState, StateImpact, Project, Talent } from "@/engine/types";
+import { GameState, StateImpact, Talent } from "@/engine/types";
 import { RandomGenerator } from "../../utils/rng";
 import { BardResolver } from "../bardResolver";
 import { impacts as I } from "../../core/impacts";

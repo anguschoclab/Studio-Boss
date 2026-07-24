@@ -166,7 +166,7 @@ describe('typed impact constructors', () => {
       projectId: 'p1',
       name: 'Best Picture',
       category: 'Best Picture',
-      body: 'Academy Awards',
+      body: 'Academy Awards' as const,
       status: 'won' as const,
       year: 2026,
     };

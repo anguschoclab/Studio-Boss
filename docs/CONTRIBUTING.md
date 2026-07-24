@@ -83,6 +83,21 @@ Required environment variables:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+## Engine Impact Typing
+
+All `StateImpact` objects in the engine must be created via the typed constructors in `src/engine/core/impacts.ts`. Do not use `as any` or `as unknown as StateImpact` casts to create impacts.
+
+```ts
+// Good
+import { impacts as I } from "@/engine/core/impacts";
+impacts.push(I.newsAdded({ headline: "...", category: "market" }));
+
+// Bad
+impacts.push({ type: "NEWS_ADDED", payload: { headline: "..." } } as unknown as StateImpact);
+```
+
+The ESLint ratchet (`@typescript-eslint/no-explicit-any: warn` in `src/engine/**/*.ts`) will flag any new `any` usage. The `impacts.ts` module itself is exempt since it contains the typed factory functions.
+
 ## License
 
 This project is private and proprietary.

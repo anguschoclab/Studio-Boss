@@ -131,9 +131,9 @@ describe("launchAwardsCampaign (engine)", () => {
     const mockRng = { next: vi.fn(() => 0.15), uuid: vi.fn(() => "mock-id"), getState: vi.fn(() => 999) } as unknown as RandomGenerator;
     const result = launchAwardsCampaign(state, "proj-1", "Blitz", mockRng);
     expect(result!.impacts.length).toBeGreaterThan(0);
-    const headlineImpact = result!.impacts.find((i) => i.newHeadlines && i.newHeadlines.length > 0);
-    expect(headlineImpact).toBeDefined();
-    expect(headlineImpact!.newHeadlines![0].text).toContain("BACKLASH");
+    const newsImpact = result!.impacts.find((i) => i.type === "NEWS_ADDED");
+    expect(newsImpact).toBeDefined();
+    expect((newsImpact!.payload as { headline: string }).headline).toContain("BACKLASH");
   });
 
   it("rngState is updated in result", () => {

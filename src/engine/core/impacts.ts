@@ -1,5 +1,4 @@
 import type {
-  StateImpact,
   HeadlineCategory,
   Project,
   Talent,

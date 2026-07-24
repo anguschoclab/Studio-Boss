@@ -145,22 +145,6 @@ export const selectLatestSnapshot = (state: GameState | null) => {
 };
 
 /**
- * Map of released-project id -> recoup percentage (revenue / cost * 100).
- * The pre-refactor snapshot.projectRecoupment field no longer exists, so this
- * is derived directly from current project state.
- */
-export const selectRecoupmentMap = (state: GameState | null): Record<string, number> => {
-  const projects = Object.values(state?.entities?.projects ?? {});
-  const map: Record<string, number> = {};
-  for (const p of projects) {
-    if (p.state === "released" && (p.accumulatedCost ?? 0) > 0) {
-      map[p.id] = ((p.revenue ?? 0) / p.accumulatedCost) * 100;
-    }
-  }
-  return map;
-};
-
-/**
  * Macro market metrics for studio-health scoring. MarketState no longer carries
  * a sentiment/cycle signal, so sentiment defaults to 0 (neutral) until a real
  * sentiment source is wired; debtRate/savingsRate are the live values.

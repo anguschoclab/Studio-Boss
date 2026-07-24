@@ -355,6 +355,9 @@ export interface IndustryUpdateImpact extends BaseImpact {
     mergedRivalId?: string;
     acquirerId?: string;
     bankruptRivalId?: string;
+    projects?: { projectId: string; update: Partial<import("./project.types").Project> }[];
+    rivals?: { rivalId: string; update: Partial<import("./studio.types").RivalStudio> }[];
+    talents?: { talentId: string; update: Partial<import("./talent.types").Talent> }[];
   };
 }
 

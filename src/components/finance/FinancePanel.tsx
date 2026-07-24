@@ -54,6 +54,7 @@ export const FinancePanel = () => {
   const gameState = useGameStore((s) => s.gameState);
 
   const cash = useGameStore((s) => s.gameState?.finance?.cash ?? 0);
+  const snapshots = useGameStore((s) => s.snapshots || []);
   const financeHistory = useGameStore(useShallow((s) => s.gameState?.finance?.weeklyHistory ?? []));
   const projectsObj = useGameStore(useShallow((s) => s.gameState?.entities?.projects || {}));
   const projectsMemo = useMemo(() => {
@@ -184,7 +185,7 @@ export const FinancePanel = () => {
               </SheetDescription>
             </SheetHeader>
             <div className="mt-16 space-y-10 overflow-y-auto max-h-[calc(100vh-350px)] pr-8 custom-scrollbar">
-              {(useGameStore().snapshots || [])
+              {(snapshots || [])
                 .slice()
                 .reverse()
                 .map((s, i) => (
@@ -226,7 +227,7 @@ export const FinancePanel = () => {
                     </div>
                   </div>
                 ))}
-              {(useGameStore().snapshots || []).length === 0 && (
+              {snapshots.length === 0 && (
                 <div className="py-32 flex flex-col items-center text-center space-y-8 opacity-20">
                   <History className="w-16 h-16 text-muted-foreground" strokeWidth={1} />
                   <div className="space-y-3">

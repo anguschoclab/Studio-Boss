@@ -325,7 +325,7 @@ export function stage1IPFireSale(state: GameState, seller: RivalStudio): StateIm
   return impacts;
 }
 
-function stage2AssetLiquidation(state: GameState, seller: RivalStudio): StateImpact[] {
+export function stage2AssetLiquidation(state: GameState, seller: RivalStudio): StateImpact[] {
   const impacts: StateImpact[] = [];
 
   // Menu: shelve in-production project, library-catalog sale, backend-participation sale,
@@ -519,7 +519,11 @@ function stage2AssetLiquidation(state: GameState, seller: RivalStudio): StateImp
       for (let i = 0; i < vaultArr.length; i++) {
         const a = vaultArr[i];
         if (bundleIds.has(a.id)) {
-          newVault.push({ ...a, ownerStudioId: buyerIdForVault });
+          newVault.push({
+            ...a,
+            ownerStudioId: buyerIdForVault,
+            rightsOwner: buyer ? "RIVAL" : "MARKET",
+          });
         } else {
           newVault.push(a);
         }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { selectLatestSnapshot, selectRecoupmentMap, selectMarketMetrics } from "@/store/selectors";
+import { selectLatestSnapshot, selectMarketMetrics } from "@/store/selectors";
 import type { GameState } from "@/engine/types";
 
 // Minimal GameState shape exercised by these three selectors.
@@ -45,15 +45,5 @@ describe("restored selectors", () => {
     expect(typeof m.sentiment).toBe("number");
     expect(m.debtRate).toBe(0.06);
     expect(m.savingsRate).toBe(0.03);
-  });
-
-  it("selectRecoupmentMap returns a record keyed by released project id", () => {
-    const s = makeState({
-      entities: {
-        projects: { p1: { id: "p1", state: "released", revenue: 200, accumulatedCost: 100 } },
-      },
-    });
-    const map = selectRecoupmentMap(s);
-    expect(map.p1).toBeCloseTo(200, 0);
   });
 });

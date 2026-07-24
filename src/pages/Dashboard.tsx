@@ -14,6 +14,7 @@ import { IPVault } from "@/components/ip/IPVault";
 import { DistributionHub } from "@/components/distribution/DistributionHub";
 import { BookmarksBoard } from "@/components/bookmarks/BookmarksBoard";
 import { AwardsHQ } from "@/components/awards/AwardsHQ";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AnimatePresence, motion } from "framer-motion";
 
 // Modals
@@ -85,7 +86,9 @@ const Dashboard: React.FC = () => {
                 transition={{ duration: reduceMotion ? 0 : 0.25, ease: "easeInOut" }}
                 className="h-full flex flex-col"
               >
-                {renderContent()}
+                <ErrorBoundary key={activeTab}>
+                  {renderContent()}
+                </ErrorBoundary>
               </motion.div>
             </AnimatePresence>
           </div>

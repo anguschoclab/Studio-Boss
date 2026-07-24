@@ -47,7 +47,7 @@ test("distressed asset acquisition: modal appears, acquire works, decline works"
     // Smoke-test the rest of the app so the test is never a false failure.
     for (const tab of ["FINANCE COMMAND", "IP VAULT", "INDUSTRY INTELLIGENCE"]) {
       await page.getByRole("button", { name: tab }).click();
-      await expect(page.getByText("Something went wrong!")).toHaveCount(0);
+      await expect(page.getByText("Something went wrong")).toHaveCount(0);
       await page.waitForTimeout(200);
     }
     expect(errors, `Uncaught page errors:\n${errors.join("\n")}`).toEqual([]);

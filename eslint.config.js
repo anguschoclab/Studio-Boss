@@ -47,6 +47,14 @@ export default tseslint.config(
     },
   },
   {
+    /* LINT RATCHET: Engine impacts — prevent new `as any` / `as unknown as` casts */
+    files: ["src/engine/**/*.ts"],
+    ignores: ["src/engine/core/impacts.ts"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "warn",
+    },
+  },
+  {
     /* RELAXED STANDARDS FOR TESTS */
     files: ["src/test/**/*.{ts,tsx}"],
     rules: {

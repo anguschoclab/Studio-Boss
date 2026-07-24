@@ -265,12 +265,12 @@ export function handleMergerOffered(state: GameState, impact: StateImpact): Game
 }
 
 export function handleMergerResolved(state: GameState, impact: StateImpact): GameState {
-  const { mergerId } = impact.payload as { mergerId: string };
+  const { offerId } = impact.payload as { offerId: string };
   return {
     ...state,
     industry: {
       ...state.industry,
-      activeMergers: (state.industry.activeMergers || []).filter((m) => m.id !== mergerId),
+      activeMergers: (state.industry.activeMergers || []).filter((m) => m.id !== offerId),
     },
   };
 }

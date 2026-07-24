@@ -9,6 +9,7 @@ const TABS = [
   "IP VAULT",
   "INDUSTRY INTELLIGENCE",
   "FINANCE COMMAND",
+  "AWARDS SEASON",
   "WATCHLIST",
 ];
 
@@ -25,10 +26,10 @@ test("every dashboard tab renders without the error boundary", async ({ page }) 
   for (const tab of TABS) {
     await page.getByRole("button", { name: tab }).click();
     // The CatchBoundary renders this exact text when a tab throws.
-    await expect(page.getByText("Something went wrong!")).toHaveCount(0);
+    await expect(page.getByText("Something went wrong")).toHaveCount(0);
     // Give lazy chunks a beat to mount and potentially throw.
     await page.waitForTimeout(400);
-    await expect(page.getByText("Something went wrong!")).toHaveCount(0);
+    await expect(page.getByText("Something went wrong")).toHaveCount(0);
   }
 
   expect(errors, `Uncaught page errors:\n${errors.join("\n")}`).toEqual([]);
