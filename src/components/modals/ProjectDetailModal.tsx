@@ -171,7 +171,7 @@ export const ProjectDetailModal = () => {
       groups.set(r, { attached, available });
     }
     return groups;
-  }, [project, scriptedProject, contracts, talentByRole]);
+  }, [project, scriptedProject, talentByRole, gameState]);
 
   const greenlightReport = useMemo(() => {
     if (!project || project.state !== "needs_greenlight" || !gameState) return null;
@@ -194,7 +194,7 @@ export const ProjectDetailModal = () => {
       contracts,
       Object.fromEntries(talentMap)
     );
-  }, [project, gameState, contracts, talentMap]);
+  }, [project, contracts, talentMap, gameState]);
 
   const projectionData = useMemo(() => {
     if (!project) return [];
