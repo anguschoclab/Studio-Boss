@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useUIStore } from "@/store/uiStore";
 import { useGameStore } from "@/store/gameStore";
 import { selectDistressedOffer } from "@/store/selectors";
 import { formatMoney } from "@/engine/utils";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, DollarSign, Clock, Building2 } from "lucide-react";
 
@@ -18,25 +18,29 @@ export const DistressedAssetOfferModal: React.FC = () => {
   const { offerId = "" } = (activeModal.payload || {}) as { offerId: string };
   const offer = gameState ? selectDistressedOffer(gameState, offerId) : null;
 
-  if (!offer) {
-    resolveCurrentModal();
-    return null;
-  }
+  // Bug 3 fix: resolve in useEffect, not during render.
+  useEffect(() => {
+    if (!offer) {
+      resolveCurrentModal();
+    }
+  }, [offer, resolveCurrentModal]);
+
+  if (!offer) return null;
 
   const weeksRemaining = offer.expiresWeek - (gameState?.week ?? 0);
+  const canAfford = (gameState?.finance?.cash ?? 0) >= offer.price;
 
+  // Bug 1 fix: slice actions resolve the modal internally — no double-resolve here.
   const handleAcquire = () => {
     acquireDistressedAsset(offerId);
-    resolveCurrentModal();
   };
 
   const handleDecline = () => {
     declineDistressedAsset(offerId);
-    resolveCurrentModal();
   };
 
   return (
-    <Dialog open onOpenChange={() => resolveCurrentModal()}>
+    <Dialog open onOpenChange={() => declineDistressedAsset(offerId)}>
       <DialogContent className="max-w-md bg-card/90 backdrop-blur-2xl border border-white/10">
         <DialogHeader>
           <div className="flex items-center gap-3 mb-2">
@@ -52,6 +56,9 @@ export const DistressedAssetOfferModal: React.FC = () => {
               </p>
             </div>
           </div>
+          <DialogDescription>
+            {offer.sellerName} is selling {offer.assetLabel} at a fire-sale price. Acquire it now or let {offer.aiBuyerName} take it.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -84,7 +91,7 @@ export const DistressedAssetOfferModal: React.FC = () => {
             <Button onClick={handleDecline} variant="outline" className="flex-1">
               Decline
             </Button>
-            <Button onClick={handleAcquire} className="flex-1">
+            <Button onClick={handleAcquire} className="flex-1" disabled={!canAfford}>
               <DollarSign className="h-4 w-4 mr-2" />
               Acquire
             </Button>

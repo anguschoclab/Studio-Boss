@@ -554,6 +554,7 @@ export interface ProjectBase {
   isSpinoff?: boolean;
   isGlobalIcon?: boolean;
   razzieWinner?: boolean;
+  razzieCategory?: string;
   franchiseId?: string;
   // Release simulation fields
   reviewScore?: number;

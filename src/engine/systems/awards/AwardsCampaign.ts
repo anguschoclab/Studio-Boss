@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GameState, StateImpact } from "@/engine/types";
 import { CampaignData } from "@/engine/types/state.types";
 import { RandomGenerator } from "../../utils/rng";
 import { checkCampaignBacklash } from "../awards/NominationCalculator";
+import { impacts as I } from "../../core/impacts";
 
 export interface AwardsCampaignResult {
   campaign: CampaignData;
@@ -41,7 +41,7 @@ export function launchAwardsCampaign(
   const cost = tierCosts[tierKey];
   if (state.finance.cash < cost) return null;
 
-  const metaScore = (project as any)?.reception?.metaScore || project.reviewScore || 60;
+  const metaScore = project.reception?.metaScore || project.reviewScore || 60;
   const hasBacklash = checkCampaignBacklash(metaScore, tierKey, rng);
 
   const campaign: CampaignData = {
@@ -56,16 +56,13 @@ export function launchAwardsCampaign(
   const impacts: StateImpact[] = [];
 
   if (hasBacklash) {
-    impacts.push({
-      newHeadlines: [
-        {
-          id: rng.uuid("NWS"),
-          text: `BACKLASH: Aggressive awards campaigning for "${project.title}" sparks industry outcry!`,
-          week: state.week,
-          category: "scandal",
-        },
-      ],
-    } as unknown as StateImpact);
+    impacts.push(
+      I.newsAdded({
+        headline: `BACKLASH: Aggressive awards campaigning for "${project.title}" sparks industry outcry!`,
+        description: ``,
+        category: "scandal",
+      }),
+    );
   }
 
   return {

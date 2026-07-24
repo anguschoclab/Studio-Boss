@@ -2,6 +2,7 @@ import { GameState, StateImpact, WeekSummary, GameEvent } from "../types";
 import { RandomGenerator } from "../utils/rng";
 import { applyImpacts } from "../core/impactReducer";
 import { setDeterministicSeed } from "../utils";
+import { impacts as I } from "../core/impacts";
 
 // System Imports
 import { tickProduction } from "../systems/productionEngine";
@@ -126,10 +127,7 @@ export class WeekCoordinator {
     this.runFinanceFilter(state, context);
 
     // 2.5 Weekly Summary Trigger
-    context.impacts.push({
-      type: "MODAL_TRIGGERED",
-      payload: { modalType: "SUMMARY" },
-    } as unknown as StateImpact);
+    context.impacts.push(I.modalTriggered("SUMMARY"));
 
     // 2.6 Achievements Check
     context.impacts.push(...checkAchievements(state));
@@ -162,10 +160,9 @@ export class WeekCoordinator {
     for (const id in nextState.entities.projects) {
       const p = nextState.entities.projects[id];
       if (p.state === "needs_greenlight") {
-        context.impacts.push({
-          type: "MODAL_TRIGGERED",
-          payload: { modalType: "GREENLIGHT_DECISION", projectId: p.id },
-        } as unknown as import("../types/state.types").StateImpact);
+        context.impacts.push(
+          I.modalTriggered("GREENLIGHT_DECISION", { projectId: p.id }),
+        );
       }
     }
 
@@ -248,13 +245,7 @@ export class WeekCoordinator {
       if (project.state === "development") {
         const result = tickScriptDevelopment(project, context.rng);
         if (result.length > 0) {
-          context.impacts.push({
-            type: "PROJECT_UPDATED",
-            payload: {
-              projectId: project.id,
-              update: project,
-            },
-          } as unknown as StateImpact);
+          context.impacts.push(I.projectUpdated(project.id, project));
           context.impacts.push(...result);
         }
       }
@@ -341,10 +332,7 @@ export class WeekCoordinator {
       const updatedLoans = currentLoans
         .map((l) => ({ ...l, weeksRemaining: l.weeksRemaining - 1 }))
         .filter((l) => l.weeksRemaining > 0);
-      context.impacts.push({
-        type: "SYSTEM_TICK",
-        payload: { __studioUpdate: { loans: updatedLoans } },
-      } as unknown as import("@/engine/types").StateImpact);
+      context.impacts.push(I.industryUpdate({ "studio.loans": updatedLoans }));
     }
 
     // Rival weekly revenue + overhead drain. Opening-weekend gross already bakes

@@ -44,4 +44,53 @@ describe("stage1IPFireSale player offer", () => {
     expect(impacts.some((i) => i.type === "MODAL_TRIGGERED")).toBe(false);
     expect(impacts.some((i) => i.type === "FRANCHISE_UPDATED")).toBe(true);
   });
+
+  it("vault asset offer to player: creates offer with assetKind vault, modal triggered, no transfer yet", () => {
+    const state = makeState(2_000_000_000);
+    // Remove franchises so it falls through to vault assets
+    (state.ip as any).franchises = {};
+    (state.ip as any).vault = [{ id: "v1", title: "The Reckoning", ownerStudioId: "r1", rightsOwner: "RIVAL" }];
+    const seller = state.entities.rivals.r1;
+    const impacts = stage1IPFireSale(state, seller as any);
+    const upd = impacts.find(
+      (i) => i.type === "INDUSTRY_UPDATE" && (i as any).payload.update["industry.distressedOffers"]
+    ) as any;
+    expect(upd).toBeDefined();
+    const offer = upd.payload.update["industry.distressedOffers"][0];
+    expect(offer.assetKind).toBe("vault");
+    expect(offer.assetId).toBe("v1");
+    expect(impacts.some((i) => i.type === "MODAL_TRIGGERED")).toBe(true);
+    // No vault transfer yet
+    expect(
+      impacts.some((i) => i.type === "INDUSTRY_UPDATE" && (i as any).payload.update["ip.vault"])
+    ).toBe(false);
+  });
+
+  it("no buyers available (all rivals < $500M): returns empty impacts, no offer created", () => {
+    const state = makeState(2_000_000_000);
+    (state.entities.rivals as any).r2.cash = 100_000_000; // Below $500M threshold
+    const seller = state.entities.rivals.r1;
+    const impacts = stage1IPFireSale(state, seller as any);
+    expect(impacts).toEqual([]);
+  });
+
+  it("no owned IP (no franchises, no vault assets): returns empty impacts", () => {
+    const state = makeState(2_000_000_000);
+    (state.ip as any).franchises = {};
+    (state.ip as any).vault = [];
+    const seller = state.entities.rivals.r1;
+    const impacts = stage1IPFireSale(state, seller as any);
+    expect(impacts).toEqual([]);
+  });
+
+  it("offer ID format: distress-{sellerId}-{week}", () => {
+    const state = makeState(2_000_000_000);
+    const seller = state.entities.rivals.r1;
+    const impacts = stage1IPFireSale(state, seller as any);
+    const upd = impacts.find(
+      (i) => i.type === "INDUSTRY_UPDATE" && (i as any).payload.update["industry.distressedOffers"]
+    ) as any;
+    const offer = upd.payload.update["industry.distressedOffers"][0];
+    expect(offer.id).toBe("distress-r1-10");
+  });
 });
