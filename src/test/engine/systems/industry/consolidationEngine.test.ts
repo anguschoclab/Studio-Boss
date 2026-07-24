@@ -1,18 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
   tickConsolidation,
-  resetConsolidationState,
 } from "@/engine/systems/industry/ConsolidationEngine";
-import { antitrustBlockList, resetAntitrustState } from "@/engine/systems/industry/Antitrust";
 import { GameState } from "@/engine/types";
 import { createMockGameState, createMockRival } from "../../generators/mockFactory";
+import { defaultSimMemory } from "@/engine/core/simMemory";
 
 import * as utils from "@/engine/utils";
 
 describe("Consolidation Engine", () => {
   beforeEach(() => {
-    resetConsolidationState();
-    resetAntitrustState();
     vi.spyOn(utils, "secureRandom").mockReturnValue(0.5);
   });
 
@@ -91,7 +88,11 @@ describe("Consolidation Engine", () => {
     const state = makeStateWithMajors([richMajor]);
     vi.spyOn(utils, "secureRandom").mockReturnValue(0.5);
 
-    antitrustBlockList.push({ acquirerId: "major-1", untilWeek: 300 });
+    // Set antitrust block via simMemory
+    state.simMemory = {
+      ...defaultSimMemory(),
+      antitrustBlockList: [{ acquirerId: "major-1", untilWeek: 300 }],
+    };
 
     const impacts = tickConsolidation(state);
     const hasFreezeNews = impacts.some(

@@ -7,6 +7,8 @@ import type { DistressedAssetOffer } from "@/engine/types/distress.types";
 import { getPlayerId } from "@/engine/utils/ownership";
 import { impacts as I } from "../../core/impacts";
 import { applyImpacts } from "../../core/impactReducer";
+import { getSimMemory } from "../../core/simMemory";
+import type { SimMemory } from "@/engine/types/state.types";
 
 /**
  * DistressCascade — stepwise collapse ladder for insolvent rivals.
@@ -40,18 +42,9 @@ export interface DistressEvent {
   note: string;
 }
 
-export const distressEventLog: DistressEvent[] = [];
-
 const OFFER_WINDOW_WEEKS = 2; // weeks the player has to decide before the AI buyer takes it
 
-// Track consecutive-weeks-negative per rival (module-level — rival objects are replaced each tick).
-const negativeStreak: Record<string, number> = {};
-// Cooldown between stage actions on the same rival; prevents one studio burning through
-// all four stages in four ticks when we want a slow-motion unraveling.
-const lastActionWeek: Record<string, number> = {};
-// Per-rival, per-stage action counts. Once a studio has done N actions at a stage, the next
-// tick escalates them instead of looping forever on backlot sales.
-const stageActionCount: Record<string, { s1: number; s2: number; s3: number }> = {};
+type DistressMem = SimMemory["distress"];
 
 const STREAK_STAGE1 = 26; // ~6 months negative before IP sale
 const STAGE_COOLDOWN = 26; // ~6 months between stage actions on same rival — news-cycle pacing
@@ -63,45 +56,33 @@ const STAGE2_CASH = -75_000_000;
 const STAGE3_CASH = -200_000_000;
 const STAGE4_CASH = -400_000_000;
 
-export function resetDistressState() {
-  distressEventLog.length = 0;
-  for (const k of Object.keys(negativeStreak)) delete negativeStreak[k];
-  for (const k of Object.keys(lastActionWeek)) delete lastActionWeek[k];
-  for (const k of Object.keys(stageActionCount)) delete stageActionCount[k];
+function counts(distress: DistressMem, id: string) {
+  if (!distress.stageActionCount[id]) distress.stageActionCount[id] = { s1: 0, s2: 0, s3: 0 };
+  return distress.stageActionCount[id];
 }
 
-function counts(id: string) {
-  if (!stageActionCount[id]) stageActionCount[id] = { s1: 0, s2: 0, s3: 0 };
-  return stageActionCount[id];
-}
-
-function updateStreaks(state: GameState) {
-  // ⚡ Bolt: Replaced Object.values + map with Object.keys for faster Set instantiation
+function updateStreaks(state: GameState, distress: DistressMem) {
   const rivalsObj = state.entities.rivals || {};
   const live = new Set<string>();
   for (const id in rivalsObj) {
     live.add(id);
   }
-  // Prune dead rivals from the trackers so a reused id doesn't inherit stale state.
-  for (const k of Object.keys(negativeStreak)) if (!live.has(k)) delete negativeStreak[k];
-  for (const k of Object.keys(lastActionWeek)) if (!live.has(k)) delete lastActionWeek[k];
-  for (const k of Object.keys(stageActionCount)) if (!live.has(k)) delete stageActionCount[k];
+  for (const k of Object.keys(distress.negativeStreak)) if (!live.has(k)) delete distress.negativeStreak[k];
+  for (const k of Object.keys(distress.lastActionWeek)) if (!live.has(k)) delete distress.lastActionWeek[k];
+  for (const k of Object.keys(distress.stageActionCount)) if (!live.has(k)) delete distress.stageActionCount[k];
 
-  // ⚡ Bolt: Replaced Object.values iteration with direct for...in loop
   for (const id in rivalsObj) {
     const r = rivalsObj[id];
-    if ((r.cash || 0) < 0) negativeStreak[id] = (negativeStreak[id] || 0) + 1;
-    else negativeStreak[id] = 0;
+    if ((r.cash || 0) < 0) distress.negativeStreak[id] = (distress.negativeStreak[id] || 0) + 1;
+    else distress.negativeStreak[id] = 0;
   }
 }
 
-function classifyStage(r: RivalStudio): 0 | 1 | 2 | 3 | 4 {
+function classifyStage(r: RivalStudio, distress: DistressMem): 0 | 1 | 2 | 3 | 4 {
   const cash = r.cash || 0;
-  const streak = negativeStreak[r.id] || 0;
-  const c = counts(r.id);
+  const streak = distress.negativeStreak[r.id] || 0;
+  const c = counts(distress, r.id);
 
-  // Hard escalation: once you've exhausted a stage's action budget, you can't loop — move up.
-  // This is what prevents the "100 backlot sales in a row" pathology.
   const s2Done = c.s2 >= MAX_STAGE2;
   const s3Done = c.s3 >= MAX_STAGE3;
 
@@ -112,8 +93,10 @@ function classifyStage(r: RivalStudio): 0 | 1 | 2 | 3 | 4 {
   return 0;
 }
 
-function logEvent(e: DistressEvent) {
-  distressEventLog.push(e);
+function withLogImpact(state: GameState, impacts: StateImpact[], newEvents: DistressEvent[]): StateImpact[] {
+  if (newEvents.length === 0) return impacts;
+  const existingLog = getSimMemory(state).eventLogs.distress;
+  return [...impacts, I.industryUpdate({ "simMemory.eventLogs.distress": [...existingLog, ...newEvents] })];
 }
 
 /**
@@ -205,8 +188,10 @@ export function tickDistressedOffers(state: GameState): StateImpact[] {
   return impacts;
 }
 
-export function stage1IPFireSale(state: GameState, seller: RivalStudio): StateImpact[] {
+export function stage1IPFireSale(state: GameState, seller: RivalStudio, distress?: DistressMem): StateImpact[] {
+  const d = distress ?? { negativeStreak: {}, lastActionWeek: {}, stageActionCount: {} };
   const impacts: StateImpact[] = [];
+  const newEvents: DistressEvent[] = [];
 
   // Need either a named franchise or vault asset to sell. Otherwise skip Stage 1 —
   // distressed rivals with no concrete IP fall through to Stage 2 liquidation.
@@ -285,7 +270,7 @@ export function stage1IPFireSale(state: GameState, seller: RivalStudio): StateIm
     expiresWeek: state.week + OFFER_WINDOW_WEEKS,
   };
 
-  counts(seller.id).s1++;
+  counts(d, seller.id).s1++;
 
   // Player gets first right of refusal only if solvent enough to buy.
   const playerCanAfford = (state.finance?.cash ?? 0) >= price;
@@ -293,7 +278,7 @@ export function stage1IPFireSale(state: GameState, seller: RivalStudio): StateIm
     const existing = state.industry?.distressedOffers ?? [];
     impacts.push(I.industryUpdate({ "industry.distressedOffers": [...existing, offer] }));
     impacts.push(I.modalTriggered("DISTRESSED_ASSET_OFFER", { offerId: offer.id }));
-    logEvent({
+    newEvents.push({
       week: state.week,
       year: Math.floor(state.week / 52) + 1975,
       stage: 1,
@@ -305,12 +290,12 @@ export function stage1IPFireSale(state: GameState, seller: RivalStudio): StateIm
       amount: price,
       note: `Offered ${assetLabel} to player`,
     });
-    return impacts;
+    return withLogImpact(state, impacts, newEvents);
   }
 
   // Player can't afford it — AI buyer completes immediately (original behavior).
   impacts.push(...completeFireSale(state, offer, buyer.id));
-  logEvent({
+  newEvents.push({
     week: state.week,
     year: Math.floor(state.week / 52) + 1975,
     stage: 1,
@@ -322,11 +307,13 @@ export function stage1IPFireSale(state: GameState, seller: RivalStudio): StateIm
     amount: price,
     note: `Sold ${assetLabel}`,
   });
-  return impacts;
+  return withLogImpact(state, impacts, newEvents);
 }
 
-export function stage2AssetLiquidation(state: GameState, seller: RivalStudio): StateImpact[] {
+export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, distress?: DistressMem): StateImpact[] {
+  const d = distress ?? { negativeStreak: {}, lastActionWeek: {}, stageActionCount: {} };
   const impacts: StateImpact[] = [];
+  const newEvents: DistressEvent[] = [];
 
   // Menu: shelve in-production project, library-catalog sale, backend-participation sale,
   // layoffs, backlot sale, or platform divestiture. Talent are free-agents on per-project
@@ -340,7 +327,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio): S
     const cancelImpacts = cancelHighestOverheadDeal(state, seller.id);
     if (cancelImpacts) {
       impacts.push(...cancelImpacts);
-      logEvent({
+      newEvents.push({
         week: state.week,
         year: Math.floor(state.week / 52) + 1975,
         stage: 2,
@@ -349,8 +336,8 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio): S
         studioName: seller.name,
         note: "Shingle deal cancelled",
       });
-      counts(seller.id).s2++;
-      return impacts;
+      counts(d, seller.id).s2++;
+      return withLogImpact(state, impacts, newEvents);
     }
     // No shingle to cancel — fall through to other stage-2 actions.
   }
@@ -382,7 +369,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio): S
         category: "market",
       }),
     );
-    logEvent({
+    newEvents.push({
       week: state.week,
       year: Math.floor(state.week / 52) + 1975,
       stage: 2,
@@ -392,8 +379,8 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio): S
       amount: proceeds,
       note: `Sold ${platform?.name || "platform stake"}`,
     });
-    counts(seller.id).s2++;
-    return impacts;
+    counts(d, seller.id).s2++;
+    return withLogImpact(state, impacts, newEvents);
   }
 
   if (roll < 0.36) {
@@ -412,7 +399,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio): S
         category: "market",
       }),
     );
-    logEvent({
+    newEvents.push({
       week: state.week,
       year: Math.floor(state.week / 52) + 1975,
       stage: 2,
@@ -422,8 +409,8 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio): S
       amount: proceeds,
       note: "Backlot liquidation",
     });
-    counts(seller.id).s2++;
-    return impacts;
+    counts(d, seller.id).s2++;
+    return withLogImpact(state, impacts, newEvents);
   }
 
   if (roll < 0.58) {
@@ -469,7 +456,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio): S
           category: "market",
         }),
       );
-      logEvent({
+      newEvents.push({
         week: state.week,
         year: Math.floor(state.week / 52) + 1975,
         stage: 2,
@@ -479,8 +466,8 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio): S
         amount: proceeds,
         note: `Shelved ${target.title}`,
       });
-      counts(seller.id).s2++;
-      return impacts;
+      counts(d, seller.id).s2++;
+      return withLogImpact(state, impacts, newEvents);
     }
     // Fall through to library sale if no active projects.
   }
@@ -545,7 +532,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio): S
           category: "market",
         }),
       );
-      logEvent({
+      newEvents.push({
         week: state.week,
         year: Math.floor(state.week / 52) + 1975,
         stage: 2,
@@ -557,8 +544,8 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio): S
         amount: proceeds,
         note: `${bundleSize} titles`,
       });
-      counts(seller.id).s2++;
-      return impacts;
+      counts(d, seller.id).s2++;
+      return withLogImpact(state, impacts, newEvents);
     }
     // Not enough catalog depth — fall through to backend sale.
   }
@@ -580,7 +567,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio): S
         category: "market",
       }),
     );
-    logEvent({
+    newEvents.push({
       week: state.week,
       year: Math.floor(state.week / 52) + 1975,
       stage: 2,
@@ -590,8 +577,8 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio): S
       amount: proceeds,
       note: "Slate-backend financing",
     });
-    counts(seller.id).s2++;
-    return impacts;
+    counts(d, seller.id).s2++;
+    return withLogImpact(state, impacts, newEvents);
   }
 
   // Layoffs / overhead cuts — trim non-talent staff (execs, dev, marketing, post).
@@ -610,7 +597,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio): S
       category: "market",
     }),
   );
-  logEvent({
+  newEvents.push({
     week: state.week,
     year: Math.floor(state.week / 52) + 1975,
     stage: 2,
@@ -620,12 +607,14 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio): S
     amount: proceeds,
     note: "Overhead layoffs",
   });
-  counts(seller.id).s2++;
-  return impacts;
+  counts(d, seller.id).s2++;
+  return withLogImpact(state, impacts, newEvents);
 }
 
-function stage3DistressedMA(state: GameState, target: RivalStudio): StateImpact[] {
+function stage3DistressedMA(state: GameState, target: RivalStudio, distress?: DistressMem): StateImpact[] {
+  const d = distress ?? { negativeStreak: {}, lastActionWeek: {}, stageActionCount: {} };
   const impacts: StateImpact[] = [];
+  const newEvents: DistressEvent[] = [];
 
   // ⚡ Bolt: Replaced Object.values().filter().sort() with single-pass maximum find
   // Richest acquirer with >$750M cash, not antitrust-frozen, not the target itself.
@@ -637,7 +626,7 @@ function stage3DistressedMA(state: GameState, target: RivalStudio): StateImpact[
     const r = allRivals[id];
     const cash = r.cash || 0;
     if (r.id !== target.id && cash > 750_000_000 && cash > maxCash) {
-      if (!isAcquirerBlockedByAntitrust(r.id, state.week)) {
+      if (!isAcquirerBlockedByAntitrust(state, r.id, state.week)) {
         acquirer = r;
         maxCash = cash;
       }
@@ -646,7 +635,7 @@ function stage3DistressedMA(state: GameState, target: RivalStudio): StateImpact[
 
   if (!acquirer) {
     // No buyer found — still counts as a failed stage-3 attempt so we escalate to bankruptcy.
-    counts(target.id).s3++;
+    counts(d, target.id).s3++;
     impacts.push({
       type: "NEWS_ADDED",
       payload: {
@@ -680,7 +669,7 @@ function stage3DistressedMA(state: GameState, target: RivalStudio): StateImpact[
       category: "market",
     }),
   );
-  logEvent({
+  newEvents.push({
     week: state.week,
     year: Math.floor(state.week / 52) + 1975,
     stage: 3,
@@ -692,12 +681,13 @@ function stage3DistressedMA(state: GameState, target: RivalStudio): StateImpact[
     amount: price,
     note: "Rescue acquisition",
   });
-  counts(target.id).s3++;
-  return impacts;
+  counts(d, target.id).s3++;
+  return withLogImpact(state, impacts, newEvents);
 }
 
 function stage4Bankruptcy(state: GameState, target: RivalStudio): StateImpact[] {
   const impacts: StateImpact[] = [];
+  const newEvents: DistressEvent[] = [];
 
   // Remaining IP reverts to open market so indies can pick it up later.
   const orphanedVault = (state.ip.vault || []).map((a) =>
@@ -715,7 +705,7 @@ function stage4Bankruptcy(state: GameState, target: RivalStudio): StateImpact[] 
       category: "market",
     }),
   );
-  logEvent({
+  newEvents.push({
     week: state.week,
     year: Math.floor(state.week / 52) + 1975,
     stage: 4,
@@ -724,23 +714,30 @@ function stage4Bankruptcy(state: GameState, target: RivalStudio): StateImpact[] 
     studioName: target.name,
     note: "Liquidated, IP to public market",
   });
-  return impacts;
+  return withLogImpact(state, impacts, newEvents);
 }
 
 export function tickDistressCascade(state: GameState): StateImpact[] {
-  updateStreaks(state);
+  const mem = getSimMemory(state);
+  const distress: DistressMem = {
+    negativeStreak: { ...mem.distress.negativeStreak },
+    lastActionWeek: { ...mem.distress.lastActionWeek },
+    stageActionCount: Object.fromEntries(
+      Object.entries(mem.distress.stageActionCount).map(([k, v]) => [k, { ...v }])
+    ),
+  };
+
+  updateStreaks(state, distress);
   const impacts: StateImpact[] = [];
   const allRivals = state.entities.rivals || {};
   const MIN_FLOOR = 7; // don't let cascade alone collapse the field below the spawner floor
 
-  // ⚡ Bolt: Replaced Object.values().map().filter() with a direct for...in loop
-  // Pick distressed rivals, highest-stage first so the worst-off progress before the just-slipping.
   const queue: { r: RivalStudio; stage: 0 | 1 | 2 | 3 | 4 }[] = [];
   let rivalsCount = 0;
   for (const id in allRivals) {
     rivalsCount++;
     const r = allRivals[id];
-    const stage = classifyStage(r);
+    const stage = classifyStage(r, distress);
     if (stage > 0) {
       queue.push({ r, stage });
     }
@@ -748,13 +745,13 @@ export function tickDistressCascade(state: GameState): StateImpact[] {
   queue.sort((a, b) => b.stage - a.stage);
 
   for (const { r, stage } of queue) {
-    const last = lastActionWeek[r.id] ?? -9999;
+    const last = distress.lastActionWeek[r.id] ?? -9999;
     if (state.week - last < STAGE_COOLDOWN) continue;
 
     let emitted: StateImpact[] = [];
-    if (stage === 1) emitted = stage1IPFireSale(state, r);
-    else if (stage === 2) emitted = stage2AssetLiquidation(state, r);
-    else if (stage === 3) emitted = stage3DistressedMA(state, r);
+    if (stage === 1) emitted = stage1IPFireSale(state, r, distress);
+    else if (stage === 2) emitted = stage2AssetLiquidation(state, r, distress);
+    else if (stage === 3) emitted = stage3DistressedMA(state, r, distress);
     else if (stage === 4) {
       if (rivalsCount <= MIN_FLOOR) continue;
       emitted = stage4Bankruptcy(state, r);
@@ -762,11 +759,12 @@ export function tickDistressCascade(state: GameState): StateImpact[] {
 
     if (emitted.length > 0) {
       impacts.push(...emitted);
-      lastActionWeek[r.id] = state.week;
+      distress.lastActionWeek[r.id] = state.week;
       // One cascade action per tick keeps the news cycle legible.
       break;
     }
   }
 
+  impacts.push(I.industryUpdate({ "simMemory.distress": distress }));
   return impacts;
 }

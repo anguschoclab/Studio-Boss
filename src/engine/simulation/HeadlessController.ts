@@ -4,6 +4,7 @@ import { executeGreenlight, executeMarketing } from "../systems/projects";
 import { BudgetTierKey } from "../types/project.types";
 import { processFlops } from "../systems/finance/FlopMechanics";
 import { calculateOpeningWeekend } from "../systems/releaseSimulation";
+import { getSimMemory } from "../core/simMemory";
 import {
   getMarketHeat,
   getBudgetInflation,
@@ -437,12 +438,13 @@ export class HeadlessController {
 
     // Bankruptcy check: cash below floor for 52+ consecutive weeks → failure.
     // A failed rival is marked acquirable so ConsolidationEngine sweeps it next downturn.
-    const cashStreaks = HeadlessController._cashStreaks;
+    const mem = getSimMemory(state);
+    const cashStreaks: Record<string, number> = { ...mem.headlessCashStreaks };
     Object.values(state.entities.rivals || {}).forEach((r) => {
       const cash = Number(r.cash) || 0;
-      const prev = cashStreaks.get(r.id) || 0;
+      const prev = cashStreaks[r.id] || 0;
       const next = cash < BANKRUPTCY_CASH_FLOOR ? prev + 1 : 0;
-      cashStreaks.set(r.id, next);
+      cashStreaks[r.id] = next;
       if (next >= BANKRUPTCY_WEEKS_REQUIRED && !r.isAcquirable) {
         impacts.push({
           type: "RIVAL_UPDATED",
@@ -456,14 +458,18 @@ export class HeadlessController {
             category: "business",
           },
         } as unknown as StateImpact);
-        cashStreaks.set(r.id, 0);
+        cashStreaks[r.id] = 0;
       }
     });
+    impacts.push({
+      type: "INDUSTRY_UPDATE",
+      payload: { update: { "simMemory.headlessCashStreaks": cashStreaks } },
+    } as unknown as StateImpact);
 
     return impacts;
   }
 
-  private static _cashStreaks: Map<string, number> = new Map();
+  // _cashStreaks moved to simMemory.headlessCashStreaks — state-carried for save/reload determinism.
 
   /**
    * Headless has no contract pipeline, so releases would never move talent prestige

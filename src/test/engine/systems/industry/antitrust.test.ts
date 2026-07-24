@@ -2,9 +2,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
   tickAntitrust,
   isAcquirerBlockedByAntitrust,
-  resetAntitrustState,
-  antitrustEventLog,
-  antitrustBlockList,
 } from "@/engine/systems/industry/Antitrust";
 import { GameState } from "@/engine/types";
 import { createMockGameState, createMockRival } from "../../generators/mockFactory";
@@ -27,7 +24,6 @@ function makeRivalDict(count: number, cash: number): Record<string, any> {
 
 describe("Antitrust System", () => {
   beforeEach(() => {
-    resetAntitrustState();
     vi.spyOn(utils, "secureRandom").mockReturnValue(0.001);
   });
 
@@ -150,21 +146,33 @@ describe("Antitrust System", () => {
 
   describe("isAcquirerBlockedByAntitrust", () => {
     it("returns true when acquirer is on block list and week < untilWeek", () => {
-      resetAntitrustState();
-      antitrustBlockList.push({ acquirerId: "rival-1", untilWeek: 200 });
-      expect(isAcquirerBlockedByAntitrust("rival-1", 100)).toBe(true);
+      const state = createMockGameState({
+        simMemory: {
+          ...defaultSimMemory(),
+          antitrustBlockList: [{ acquirerId: "rival-1", untilWeek: 200 }],
+        },
+      });
+      expect(isAcquirerBlockedByAntitrust(state, "rival-1", 100)).toBe(true);
     });
 
     it("returns false when block has expired", () => {
-      resetAntitrustState();
-      antitrustBlockList.push({ acquirerId: "rival-1", untilWeek: 200 });
-      expect(isAcquirerBlockedByAntitrust("rival-1", 250)).toBe(false);
+      const state = createMockGameState({
+        simMemory: {
+          ...defaultSimMemory(),
+          antitrustBlockList: [{ acquirerId: "rival-1", untilWeek: 200 }],
+        },
+      });
+      expect(isAcquirerBlockedByAntitrust(state, "rival-1", 250)).toBe(false);
     });
 
     it("returns false when acquirer not on list", () => {
-      resetAntitrustState();
-      antitrustBlockList.push({ acquirerId: "rival-1", untilWeek: 200 });
-      expect(isAcquirerBlockedByAntitrust("rival-2", 100)).toBe(false);
+      const state = createMockGameState({
+        simMemory: {
+          ...defaultSimMemory(),
+          antitrustBlockList: [{ acquirerId: "rival-1", untilWeek: 200 }],
+        },
+      });
+      expect(isAcquirerBlockedByAntitrust(state, "rival-2", 100)).toBe(false);
     });
   });
 });

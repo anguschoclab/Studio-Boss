@@ -193,6 +193,17 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
     culture: { genrePopularity: {} },
     history: [],
     eventHistory: [],
+    saveVersion: 2,
+    simMemory: {
+      antitrust: { lastActionWeek: -9999 },
+      distress: { negativeStreak: {}, lastActionWeek: {}, stageActionCount: {} },
+      flops: {},
+      headlessCashStreaks: {},
+      eventLogs: { antitrust: [], distress: [], consolidation: [], shingle: [], pitch: [] },
+      antitrustBlockList: [],
+      headlineCounter: 0,
+      lastProcessedTickCount: -1,
+    },
     ...overrides,
   }) as unknown as GameState;
 

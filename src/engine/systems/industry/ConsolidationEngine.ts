@@ -2,6 +2,8 @@ import { GameState, StateImpact, StreamerPlatform, RivalStudio } from "@/engine/
 import { RegulatorSystem } from "./RegulatorSystem";
 import { pick, secureRandom } from "../../utils";
 import { isAcquirerBlockedByAntitrust } from "./Antitrust";
+import { getSimMemory } from "../../core/simMemory";
+import { impacts as I } from "../../core/impacts";
 
 export interface ConsolidationEvent {
   week: number;
@@ -12,11 +14,6 @@ export interface ConsolidationEvent {
   targetId: string;
   targetName: string;
   cost: number;
-}
-
-export const consolidationEventLog: ConsolidationEvent[] = [];
-export function resetConsolidationState() {
-  consolidationEventLog.length = 0;
 }
 
 /**
@@ -45,11 +42,11 @@ export function tickConsolidation(state: GameState): StateImpact[] {
 
   // Prefer non-antitrust-frozen acquirers so a single dominant frozen player doesn't
   // starve the whole engine for years.
-  const freeAcquirers = majors.filter((r) => !isAcquirerBlockedByAntitrust(r.id, state.week));
+  const freeAcquirers = majors.filter((r) => !isAcquirerBlockedByAntitrust(state, r.id, state.week));
   const acquirer = pick(freeAcquirers.length > 0 ? freeAcquirers : majors);
 
   // Antitrust block: dominant players face M&A freeze.
-  if (isAcquirerBlockedByAntitrust(acquirer.id, state.week)) {
+  if (isAcquirerBlockedByAntitrust(state, acquirer.id, state.week)) {
     impacts.push({
       type: "NEWS_ADDED",
       payload: {
@@ -131,7 +128,7 @@ export function tickConsolidation(state: GameState): StateImpact[] {
         category: "general",
       },
     });
-    consolidationEventLog.push({
+    const newEvent: ConsolidationEvent = {
       week: state.week,
       year: Math.floor(state.week / 52) + 1975,
       motive,
@@ -140,7 +137,9 @@ export function tickConsolidation(state: GameState): StateImpact[] {
       targetId: target.id,
       targetName: target.name,
       cost,
-    });
+    };
+    const existingLog = getSimMemory(state).eventLogs.consolidation;
+    impacts.push(I.industryUpdate({ "simMemory.eventLogs.consolidation": [...existingLog, newEvent] }));
   } else if (platforms.length > 0) {
     // Platform Acquisition (Vertical Integration)
     const platform = pick(platforms);
@@ -190,7 +189,7 @@ export function tickConsolidation(state: GameState): StateImpact[] {
         category: "market",
       },
     });
-    consolidationEventLog.push({
+    const newEvent: ConsolidationEvent = {
       week: state.week,
       year: Math.floor(state.week / 52) + 1975,
       motive: "platform",
@@ -199,7 +198,9 @@ export function tickConsolidation(state: GameState): StateImpact[] {
       targetId: platform.id,
       targetName: platform.name,
       cost,
-    });
+    };
+    const existingLog = getSimMemory(state).eventLogs.consolidation;
+    impacts.push(I.industryUpdate({ "simMemory.eventLogs.consolidation": [...existingLog, newEvent] }));
   }
 
   return impacts;

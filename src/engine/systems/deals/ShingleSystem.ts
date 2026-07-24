@@ -3,6 +3,8 @@ import { ProducerShingle, ShingleDealType, ShingleMedium } from "@/engine/types/
 import { RandomGenerator } from "@/engine/utils/rng";
 import { isPlayerOwner, getPlayerId } from "@/engine/utils/ownership";
 import { getContractsByTalentId } from "@/engine/utils";
+import { getSimMemory } from "../../core/simMemory";
+import { impacts as I } from "../../core/impacts";
 
 /**
  * ShingleSystem — models vanity-shingle / production-company deals (Bad Robot,
@@ -36,10 +38,9 @@ export interface ShingleLogEntry {
   note?: string;
 }
 
-export const shingleEventLog: ShingleLogEntry[] = [];
-
-export function resetShingleState() {
-  shingleEventLog.length = 0;
+function pushLogImpact(state: GameState, impacts: StateImpact[], entry: ShingleLogEntry): void {
+  const existingLog = getSimMemory(state).eventLogs.shingle;
+  impacts.push(I.industryUpdate({ "simMemory.eventLogs.shingle": [...existingLog, entry] }));
 }
 
 const OVERHEAD_RANGES: Record<ShingleDealType, [number, number]> = {
@@ -415,7 +416,7 @@ function createShingle(
       category: "market",
     },
   });
-  shingleEventLog.push({
+  pushLogImpact(state, impacts, {
     week: state.week,
     year: yearFromWeek(state.week),
     kind: "formed",
@@ -481,7 +482,7 @@ function handleExpiry(
   const owner = state.entities.talents[s.ownerTalentId];
   if (!owner) {
     impacts.push({ type: "SHINGLE_DISSOLVED", payload: { shingleId: s.id } });
-    shingleEventLog.push({
+    pushLogImpact(state, impacts, {
       week: state.week,
       year: yearFromWeek(state.week),
       kind: "dissolved",
@@ -557,7 +558,7 @@ function handleExpiry(
         },
       },
     });
-    shingleEventLog.push({
+    pushLogImpact(state, impacts, {
       week: state.week,
       year: yearFromWeek(state.week),
       kind: "expired",
@@ -605,7 +606,7 @@ function handleExpiry(
       category: "market",
     },
   });
-  shingleEventLog.push({
+  pushLogImpact(state, impacts, {
     week: state.week,
     year: yearFromWeek(state.week),
     kind: churned ? "churned" : "renewed",
@@ -759,7 +760,7 @@ function createPodShingle(
       category: "market",
     },
   });
-  shingleEventLog.push({
+  pushLogImpact(state, impacts, {
     week: state.week,
     year: yearFromWeek(state.week),
     kind: "formed",
@@ -833,7 +834,7 @@ function createHousekeepingShingle(
       category: "market",
     },
   });
-  shingleEventLog.push({
+  pushLogImpact(state, impacts, {
     week: state.week,
     year: yearFromWeek(state.week),
     kind: "formed",
@@ -920,7 +921,7 @@ export function cancelHighestOverheadDeal(
       category: "market",
     },
   });
-  shingleEventLog.push({
+  pushLogImpact(state, impacts, {
     week: state.week,
     year: yearFromWeek(state.week),
     kind: "cancelled",

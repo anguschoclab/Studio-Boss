@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { stage1IPFireSale, resetDistressState } from "@/engine/systems/industry/DistressCascade";
+import { stage1IPFireSale } from "@/engine/systems/industry/DistressCascade";
 import type { GameState } from "@/engine/types";
 
 function makeState(playerCash: number): GameState {
@@ -31,7 +31,6 @@ function makeState(playerCash: number): GameState {
 
 describe("DistressCascade performance refactor", () => {
   beforeEach(() => {
-    resetDistressState();
   });
 
   describe("stage1IPFireSale — for...in franchise filtering", () => {

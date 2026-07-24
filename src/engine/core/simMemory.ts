@@ -9,6 +9,16 @@ export function defaultSimMemory(): SimMemory {
     distress: { negativeStreak: {}, lastActionWeek: {}, stageActionCount: {} },
     flops: {},
     headlessCashStreaks: {},
+    eventLogs: {
+      antitrust: [],
+      distress: [],
+      consolidation: [],
+      shingle: [],
+      pitch: [],
+    },
+    antitrustBlockList: [],
+    headlineCounter: 0,
+    lastProcessedTickCount: -1,
   };
 }
 

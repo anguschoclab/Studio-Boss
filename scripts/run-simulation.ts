@@ -5,29 +5,7 @@ import {
   getActiveShock,
   getBudgetInflation,
 } from "../src/engine/systems/industry/MacroCycle.ts";
-import {
-  antitrustEventLog,
-  resetAntitrustState,
-} from "../src/engine/systems/industry/Antitrust.ts";
-import {
-  distressEventLog,
-  resetDistressState,
-} from "../src/engine/systems/industry/DistressCascade.ts";
-import { shingleEventLog, resetShingleState } from "../src/engine/systems/deals/ShingleSystem.ts";
-import {
-  pitchOutcomeLog,
-  resetPitchState,
-} from "../src/engine/systems/deals/ShinglePitchRouter.ts";
-import {
-  consolidationEventLog,
-  resetConsolidationState,
-} from "../src/engine/systems/industry/ConsolidationEngine.ts";
-
-resetAntitrustState();
-resetDistressState();
-resetShingleState();
-resetPitchState();
-resetConsolidationState();
+import { getSimMemory } from "../src/engine/core/simMemory.ts";
 
 // Run a 50-year simulation (2600 weeks)
 const weeks = 2600;
@@ -246,6 +224,13 @@ const hardBankrupt = newsHistory.filter((n) => /INSOLVENCY:/.test(n.headline)).l
 console.log(`\n--- M&A + HARD-BANKRUPTCY COUNTS (from retained news, capped) ---`);
 console.log(`M&A events (in retained news window): ${maCount}`);
 console.log(`Hard bankruptcies (in retained news window): ${hardBankrupt}`);
+
+const finalSimMemory = getSimMemory(finalState);
+const consolidationEventLog = finalSimMemory.eventLogs.consolidation;
+const antitrustEventLog = finalSimMemory.eventLogs.antitrust;
+const distressEventLog = finalSimMemory.eventLogs.distress;
+const shingleEventLog = finalSimMemory.eventLogs.shingle;
+const pitchOutcomeLog = finalSimMemory.eventLogs.pitch;
 
 console.log("\n--- CONSOLIDATION ENGINE EVENT LOG ---");
 const regularMA = consolidationEventLog.filter((e) => e.motive === "strategic").length;

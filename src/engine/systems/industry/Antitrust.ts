@@ -34,19 +34,6 @@ export interface AntitrustEvent {
   note: string;
 }
 
-// Exposed module-level log; run-simulation reads it after the sim completes.
-// FOLLOW-UP (see docs/superpowers/plans/2026-06-16-sim-memory-save-versioning.md):
-// antitrustEventLog and antitrustBlockList are also module-scope state; blockList
-// is functional (ConsolidationEngine and DistressCascade.stage3 read it via
-// isAcquirerBlockedByAntitrust) and evaporates on save/reload. Moving them
-// requires refactoring those consumers — tracked separately.
-export const antitrustEventLog: AntitrustEvent[] = [];
-export const antitrustBlockList: { acquirerId: string; untilWeek: number }[] = [];
-
-export function resetAntitrustState() {
-  antitrustEventLog.length = 0;
-  antitrustBlockList.length = 0;
-}
 
 function computeConcentration(state: GameState) {
   // Replaced Object.values + array methods with single-pass for...in loop
@@ -86,8 +73,9 @@ function computeConcentration(state: GameState) {
   return { top1, top3, leader: entries[0], sorted: entries, total, positiveCount };
 }
 
-export function isAcquirerBlockedByAntitrust(acquirerId: string, week: number): boolean {
-  return antitrustBlockList.some((b) => b.acquirerId === acquirerId && b.untilWeek > week);
+export function isAcquirerBlockedByAntitrust(state: GameState, acquirerId: string, week: number): boolean {
+  const blockList = getSimMemory(state).antitrustBlockList;
+  return blockList.some((b) => b.acquirerId === acquirerId && b.untilWeek > week);
 }
 
 export function tickAntitrust(state: GameState): StateImpact[] {
@@ -96,15 +84,14 @@ export function tickAntitrust(state: GameState): StateImpact[] {
   const week = state.week;
   const year = Math.floor(week / 52) + 1975;
 
-  // Expire stale blocks
-  for (let i = antitrustBlockList.length - 1; i >= 0; i--) {
-    if (antitrustBlockList[i].untilWeek <= week) antitrustBlockList.splice(i, 1);
-  }
+  const mem = getSimMemory(state);
+
+  // Expire stale blocks from simMemory
+  const blockList = mem.antitrustBlockList.filter((b) => b.untilWeek > week);
 
   const dominant = top1 > TOP1_THRESHOLD || top3 > TOP3_THRESHOLD;
   if (!dominant) return impacts;
   if (positiveCount < MIN_POSITIVE_COUNT) return impacts;
-  const mem = getSimMemory(state);
   if (week - mem.antitrust.lastActionWeek < ACTION_COOLDOWN_WEEKS) return impacts;
   // Low per-week probability so events are spread ~5-10 years apart even when triggers are chronic.
   if (secureRandom() > 0.005) return impacts;
@@ -115,7 +102,11 @@ export function tickAntitrust(state: GameState): StateImpact[] {
   } as unknown as StateImpact);
 
   // Block dominant player from M&A for 2 years.
-  antitrustBlockList.push({ acquirerId: leader.id, untilWeek: week + 104 });
+  blockList.push({ acquirerId: leader.id, untilWeek: week + 104 });
+  impacts.push({
+    type: "INDUSTRY_UPDATE",
+    payload: { update: { "simMemory.antitrustBlockList": blockList } },
+  } as unknown as StateImpact);
 
   // Pick intervention: divestiture if top1 > 35%, else block-warning + fine.
   const kind: AntitrustEvent["kind"] = top1 > TOP1_THRESHOLD ? "divestiture" : "block-warning";
@@ -184,16 +175,27 @@ export function tickAntitrust(state: GameState): StateImpact[] {
     });
   }
 
-  antitrustEventLog.push({
-    week,
-    year,
-    kind,
-    dominantId: leader.id,
-    dominantName: leader.name,
-    topShare: top1,
-    top3Share: top3,
-    note: kind === "divestiture" ? "Forced spinoff" : "M&A freeze + fine",
-  });
+  const existingLog = mem.eventLogs.antitrust;
+  impacts.push({
+    type: "INDUSTRY_UPDATE",
+    payload: {
+      update: {
+        "simMemory.eventLogs.antitrust": [
+          ...existingLog,
+          {
+            week,
+            year,
+            kind,
+            dominantId: leader.id,
+            dominantName: leader.name,
+            topShare: top1,
+            top3Share: top3,
+            note: kind === "divestiture" ? "Forced spinoff" : "M&A freeze + fine",
+          },
+        ],
+      },
+    },
+  } as unknown as StateImpact);
 
   return impacts;
 }

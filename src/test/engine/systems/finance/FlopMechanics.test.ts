@@ -164,7 +164,7 @@ describe("FlopMechanics", () => {
 
   describe("shouldRestructureStudio", () => {
     it("returns false for unknown studio", () => {
-      expect(shouldRestructureStudio("unknown-rival", 10)).toBe(false);
+      expect(shouldRestructureStudio(undefined, 10)).toBe(false);
     });
 
     it("returns true if studio has 1 catastrophic flop via applyFlopPenalties", () => {
@@ -172,11 +172,15 @@ describe("FlopMechanics", () => {
       const rivalId = "rival-cat";
       state.entities.rivals[rivalId] = createMockRival({ id: rivalId });
 
-      // First trigger a catastrophic flop to populate history
-      applyFlopPenalties(state, createMockProject({ revenue: 0, budget: 1000 }), rivalId);
+      // First trigger a catastrophic flop to populate history — impacts carry the updated flop history
+      const impacts = applyFlopPenalties(state, createMockProject({ revenue: 0, budget: 1000 }), rivalId);
+      const memWrite = impacts.find(
+        (i: any) => i.type === "INDUSTRY_UPDATE" && i.payload?.update?.[`simMemory.flops.${rivalId}`]
+      ) as any;
+      const history = memWrite?.payload?.update?.[`simMemory.flops.${rivalId}`];
 
       // Then check restructuring directly
-      expect(shouldRestructureStudio(rivalId, 10)).toBe(true);
+      expect(shouldRestructureStudio(history, 10)).toBe(true);
     });
 
     it("returns true if studio has 3 major flops in 1 year", () => {
@@ -184,12 +188,21 @@ describe("FlopMechanics", () => {
       const rivalId = "rival-major-3";
       state.entities.rivals[rivalId] = createMockRival({ id: rivalId });
 
-      // Add 3 major flops in the same week
-      applyFlopPenalties(state, createMockProject({ revenue: 250, budget: 1000 }), rivalId);
-      applyFlopPenalties(state, createMockProject({ revenue: 250, budget: 1000 }), rivalId);
-      applyFlopPenalties(state, createMockProject({ revenue: 250, budget: 1000 }), rivalId);
+      // Add 3 major flops — each call returns impacts with accumulated history
+      let lastHistory: any;
+      for (let i = 0; i < 3; i++) {
+        const impacts = applyFlopPenalties(state, createMockProject({ revenue: 250, budget: 1000 }), rivalId);
+        const memWrite = impacts.find(
+          (i2: any) => i2.type === "INDUSTRY_UPDATE" && i2.payload?.update?.[`simMemory.flops.${rivalId}`]
+        ) as any;
+        lastHistory = memWrite?.payload?.update?.[`simMemory.flops.${rivalId}`];
+        // Update state.simMemory so the next call sees accumulated history
+        if (state.simMemory && lastHistory) {
+          state.simMemory.flops[rivalId] = lastHistory;
+        }
+      }
 
-      expect(shouldRestructureStudio(rivalId, 10)).toBe(true);
+      expect(shouldRestructureStudio(lastHistory, 10)).toBe(true);
     });
   });
 

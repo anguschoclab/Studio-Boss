@@ -3,16 +3,16 @@ type TalentProfile = Talent;
 import { fillTemplate, pick, secureRandom, getContractsByProjectId } from "../utils";
 import { MARKET_HEADLINES, TALENT_HEADLINES, RIVAL_TEMPLATES } from "../data/headlines.data";
 
-let counter = 0;
-
 export function generateHeadlines(
   week: number,
   rivals: RivalStudio[],
   projects: Project[] = [],
   talentPool: TalentProfile[] = [],
   contractsByProjectId?: Record<string, string[]>,
-  contractsRecord?: Record<string, Contract>
+  contractsRecord?: Record<string, Contract>,
+  startCounter: number = 0
 ): Headline[] {
+  let counter = startCounter;
   const count = 1 + Math.floor(secureRandom() * 3);
   const headlines: Headline[] = [];
   const genrePool = ["sci-fi", "drama", "action", "thriller", "comedy", "horror", "fantasy"];

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { stage2AssetLiquidation, resetDistressState } from "@/engine/systems/industry/DistressCascade";
+import { stage2AssetLiquidation } from "@/engine/systems/industry/DistressCascade";
 import { applyImpacts } from "@/engine/core/impactReducer";
 import type { GameState } from "@/engine/types";
 import * as utils from "@/engine/utils";
@@ -43,7 +43,6 @@ function makeStage2State(): GameState {
 
 describe("stage2AssetLiquidation — library sale rightsOwner", () => {
   beforeEach(() => {
-    resetDistressState();
     vi.restoreAllMocks();
     vi.spyOn(utils, "secureRandom").mockReturnValue(0.60);
   });

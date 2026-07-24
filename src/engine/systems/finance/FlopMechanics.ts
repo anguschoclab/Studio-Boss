@@ -3,6 +3,7 @@ import { GameState, Project, StateImpact } from "@/engine/types";
 import { clamp } from "../../utils";
 import { isPlayerOwner } from "../../utils/ownership";
 import type { StudioFlopHistory } from "@/engine/types/state.types";
+import { getSimMemory } from "../../core/simMemory";
 export type { StudioFlopHistory };
 
 /**
@@ -96,10 +97,7 @@ export function calculateFlopPenalties(project: Project, severity: FlopSeverity)
   };
 }
 
-const flopHistory: Map<string, StudioFlopHistory> = new Map();
-
-export function shouldRestructureStudio(rivalId: string, currentWeek: number): boolean {
-  const history = flopHistory.get(rivalId);
+export function shouldRestructureStudio(history: StudioFlopHistory | undefined, currentWeek: number): boolean {
   if (!history) return false;
 
   const oneYearAgo = currentWeek - 52;
@@ -130,11 +128,11 @@ export function applyFlopPenalties(
   const isRival = state.entities.rivals[ownerId];
 
   if (isRival) {
-    let history = flopHistory.get(ownerId);
-    if (!history) {
-      history = { rivalId: ownerId, majorFlops: 0, catastrophicFlops: 0, flopWeeks: [] };
-      flopHistory.set(ownerId, history);
-    }
+    const mem = getSimMemory(state);
+    const existing = mem.flops[ownerId];
+    const history: StudioFlopHistory = existing
+      ? { ...existing, flopWeeks: [...existing.flopWeeks] }
+      : { rivalId: ownerId, majorFlops: 0, catastrophicFlops: 0, flopWeeks: [] };
 
     if (severity === FlopSeverity.MAJOR) {
       history.majorFlops++;
@@ -144,7 +142,12 @@ export function applyFlopPenalties(
       history.flopWeeks.push(state.week);
     }
 
-    if (shouldRestructureStudio(ownerId, state.week)) {
+    impacts.push({
+      type: "INDUSTRY_UPDATE",
+      payload: { update: { [`simMemory.flops.${ownerId}`]: history } },
+    } as unknown as StateImpact);
+
+    if (shouldRestructureStudio(history, state.week)) {
       impacts.push({
         type: "RIVAL_UPDATED",
         payload: {

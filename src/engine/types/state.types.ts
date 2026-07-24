@@ -84,6 +84,16 @@ export interface SimMemory {
   };
   flops: Record<string, StudioFlopHistory>;
   headlessCashStreaks: Record<string, number>;
+  eventLogs: {
+    antitrust: import("../systems/industry/Antitrust").AntitrustEvent[];
+    distress: import("../systems/industry/DistressCascade").DistressEvent[];
+    consolidation: import("../systems/industry/ConsolidationEngine").ConsolidationEvent[];
+    shingle: import("../systems/deals/ShingleSystem").ShingleLogEntry[];
+    pitch: import("../systems/deals/ShinglePitchRouter").ShinglePitchOutcome[];
+  };
+  antitrustBlockList: { acquirerId: string; untilWeek: number }[];
+  headlineCounter: number;
+  lastProcessedTickCount: number;
 }
 
 export interface FinanceState {

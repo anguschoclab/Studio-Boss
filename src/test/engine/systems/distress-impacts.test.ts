@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import {
   completeFireSale,
-  resetDistressState,
   tickDistressCascade,
 } from "../../../engine/systems/industry/DistressCascade";
 import { createMockGameState, createMockIPAsset } from "../../utils/mockFactories";
@@ -57,7 +56,6 @@ function findImpact(impacts: StateImpact[], type: string): StateImpact | undefin
 
 describe("DistressCascade impact types", () => {
   beforeEach(() => {
-    resetDistressState();
   });
 
   describe("completeFireSale", () => {

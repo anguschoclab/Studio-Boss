@@ -3,6 +3,7 @@ import { RandomGenerator } from "../utils/rng";
 import { applyImpacts } from "../core/impactReducer";
 import { setDeterministicSeed } from "../utils";
 import { impacts as I } from "../core/impacts";
+import { defaultSimMemory } from "../core/simMemory";
 
 // System Imports
 import { tickProduction } from "../systems/productionEngine";
@@ -171,6 +172,10 @@ export class WeekCoordinator {
       week: context.week,
       tickCount: context.tickCount,
       eventHistory: [...(state.eventHistory || []), ...context.events].slice(-500),
+      simMemory: {
+        ...(nextState.simMemory ?? defaultSimMemory()),
+        lastProcessedTickCount: context.tickCount,
+      },
     };
 
     return {
