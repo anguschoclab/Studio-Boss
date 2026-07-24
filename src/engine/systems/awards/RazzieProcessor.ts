@@ -1,6 +1,7 @@
 import { GameState, StateImpact, Project, Talent } from "@/engine/types";
 import { RandomGenerator } from "../../utils/rng";
 import { BardResolver } from "../bardResolver";
+import { impacts as I } from "../../core/impacts";
 
 export function processRazzies(
   state: GameState,
@@ -43,34 +44,23 @@ export function processRazzies(
     const razzieCategory =
       score <= 10 ? "Worst Picture" : score <= 20 ? "Worst Director" : "Worst Screenplay";
 
-    impacts.push({
-      type: "PROJECT_UPDATED",
-      payload: {
-        projectId: project.id,
-        update: {
-          razzieWinner: true,
-          razzieCategory,
-        } as unknown as Partial<Project>,
-      },
-    });
+    impacts.push(
+      I.projectUpdated(project.id, {
+        razzieWinner: true,
+        razzieCategory,
+      }),
+    );
 
     if (isPlayer) {
-      impacts.push({ type: "PRESTIGE_CHANGED", payload: { amount: prestigePenalty } });
+      impacts.push(I.prestigeChanged(prestigePenalty));
     }
 
     if (isAbsurd) {
-      impacts.push({
-        type: "PROJECT_UPDATED",
-        payload: {
-          projectId: project.id,
-          update: { isCultClassic: true },
-        },
-      });
+      impacts.push(I.projectUpdated(project.id, { isCultClassic: true }));
     }
 
-    impacts.push({
-      type: "NEWS_ADDED",
-      payload: {
+    impacts.push(
+      I.newsAdded({
         headline: `RAZZIES: "${project.title}" nominated for ${razzieCategory}`,
         description: BardResolver.resolve({
           domain: "Industry",
@@ -81,18 +71,17 @@ export function processRazzies(
           rng,
         }),
         category: "awards",
-      },
-    });
+      }),
+    );
 
     if (isAbsurd) {
-      impacts.push({
-        type: "NEWS_ADDED",
-        payload: {
+      impacts.push(
+        I.newsAdded({
           headline: `"${project.title}" gains ironic cult following`,
           description: `Despite its Razzie nomination, the film has developed a cult following among midnight movie audiences.`,
           category: "general",
-        },
-      });
+        }),
+      );
     }
 
     // Contract-level logic: find worst lead talent via contractsByProjectId index
@@ -111,22 +100,17 @@ export function processRazzies(
     }
 
     if (worstLeadTalent) {
-      impacts.push({
-        type: "TALENT_UPDATED",
-        payload: {
-          talentId: worstLeadTalent.id,
-          update: { razzieWinner: true } as Partial<Talent>,
-        },
-      });
+      impacts.push(
+        I.talentUpdated(worstLeadTalent.id, { razzieWinner: true }),
+      );
 
-      impacts.push({
-        type: "NEWS_ADDED",
-        payload: {
+      impacts.push(
+        I.newsAdded({
           headline: `RAZZIES: ${worstLeadTalent.name} "wins" Worst Lead for "${project.title}"`,
           description: `${worstLeadTalent.name} has been "honored" with a Razzie for their performance in the critically panned "${project.title}".`,
           category: "awards",
-        },
-      });
+        }),
+      );
     }
   }
 
