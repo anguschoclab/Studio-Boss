@@ -154,6 +154,7 @@ export function applyFlopPenalties(
           rivalId: ownerId,
           update: {
             strategy: "prestige_chaser",
+            currentMotivation: "AWARD_CHASE",
             recentActivity: "Executive shakeup after series of flops",
           },
         },

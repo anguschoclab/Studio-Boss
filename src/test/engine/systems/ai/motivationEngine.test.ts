@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { calculateRivalMotivation, tickAIMinds } from "@/engine/systems/ai/motivationEngine";
+import { calculateRivalMotivation, calculateMotivationScores, tickAIMinds } from "@/engine/systems/ai/motivationEngine";
 import { RandomGenerator } from "@/engine/utils/rng";
 import { createMockGameState, createMockRival } from "../../generators/mockFactory";
 import type { StateImpact, SeriesProject, Project } from "@/engine/types";
@@ -530,5 +530,224 @@ describe("tickAIMinds — FRANCHISE_BUILDING syndication tracking", () => {
     const sp = getSyndicationPotential(impacts, rival.id);
     expect(sp).toBeDefined();
     expect(sp!.syndicatedCount).toBe(1);
+  });
+});
+
+// ─── Flop-History-Aware Motivation Tests (Gap 3) ─────────────────────────────
+
+import type { StudioFlopHistory } from "@/engine/types/state.types";
+
+function createFlopHistory(
+  rivalId: string,
+  majorFlops: number,
+  catastrophicFlops: number,
+  flopWeeks: number[]
+): StudioFlopHistory {
+  return { rivalId, majorFlops, catastrophicFlops, flopWeeks };
+}
+
+function getStateWithFlops(
+  rival: ReturnType<typeof createMockRival>,
+  flops: StudioFlopHistory | null,
+  week: number = 60
+) {
+  const state = createMockGameState({ week });
+  state.entities.rivals = { [rival.id]: rival };
+  if (flops) {
+    state.simMemory = {
+      ...state.simMemory!,
+      flops: { [rival.id]: flops },
+    };
+  }
+  return state;
+}
+
+function getMotivationScores(
+  rival: ReturnType<typeof createMockRival>,
+  state: ReturnType<typeof createMockGameState>,
+  seeds: number = 50
+): Record<string, number> {
+  const counts: Record<string, number> = {};
+  for (let seed = 1; seed <= seeds; seed++) {
+    const r = new RandomGenerator(seed);
+    const m = calculateRivalMotivation(rival, state, r);
+    counts[m] = (counts[m] || 0) + 1;
+  }
+  return counts;
+}
+
+function getAverageScores(
+  rival: ReturnType<typeof createMockRival>,
+  state: ReturnType<typeof createMockGameState>,
+  seeds: number = 100
+): Record<string, number> {
+  const totals: Record<string, number> = {};
+  for (let seed = 1; seed <= seeds; seed++) {
+    const r = new RandomGenerator(seed);
+    const scores = calculateMotivationScores(rival, state, r);
+    for (const key of Object.keys(scores)) {
+      totals[key] = (totals[key] || 0) + scores[key as keyof typeof scores];
+    }
+  }
+  for (const key of Object.keys(totals)) {
+    totals[key] /= seeds;
+  }
+  return totals;
+}
+
+describe("calculateRivalMotivation — flop history influence", () => {
+  it("boosts CASH_CRUNCH score when rival has 1+ recent major flops", () => {
+    const rival = createMockRival({
+      id: "flop-r1",
+      cash: 50_000_000,
+      prestige: 50,
+      motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
+    });
+    const baselineState = getStateWithFlops(rival, null);
+    const flopState = getStateWithFlops(
+      rival,
+      createFlopHistory(rival.id, 1, 0, [50])
+    );
+
+    const baselineScores = getAverageScores(rival, baselineState);
+    const flopScores = getAverageScores(rival, flopState);
+
+    expect(flopScores["CASH_CRUNCH"]).toBeGreaterThan(baselineScores["CASH_CRUNCH"]);
+  });
+
+  it("boosts STABILITY score when rival has 2+ recent major flops", () => {
+    const rival = createMockRival({
+      id: "flop-r2",
+      cash: 50_000_000,
+      prestige: 50,
+      motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
+    });
+    const baselineState = getStateWithFlops(rival, null);
+    const flopState = getStateWithFlops(
+      rival,
+      createFlopHistory(rival.id, 2, 0, [50, 55])
+    );
+
+    const baselineScores = getAverageScores(rival, baselineState);
+    const flopScores = getAverageScores(rival, flopState);
+
+    expect(flopScores["STABILITY"]).toBeGreaterThan(baselineScores["STABILITY"]);
+  });
+
+  it("penalizes FRANCHISE_BUILDING when rival has recent major flops", () => {
+    const rival = createMockRival({
+      id: "flop-r3",
+      cash: 50_000_000,
+      prestige: 50,
+      projects: { p1: {} as Project, p2: {} as Project, p3: {} as Project, p4: {} as Project },
+      motivationProfile: { financial: 0, prestige: 0, legacy: 100, aggression: 0 },
+    });
+    const baselineState = getStateWithFlops(rival, null);
+    const flopState = getStateWithFlops(
+      rival,
+      createFlopHistory(rival.id, 2, 0, [50, 55])
+    );
+
+    const baselineScores = getAverageScores(rival, baselineState);
+    const flopScores = getAverageScores(rival, flopState);
+
+    expect(flopScores["FRANCHISE_BUILDING"]).toBeLessThan(baselineScores["FRANCHISE_BUILDING"]);
+  });
+
+  it("penalizes MARKET_DISRUPTION when rival has recent major flops", () => {
+    const rival = createMockRival({
+      id: "flop-r4",
+      cash: 50_000_000,
+      prestige: 50,
+      motivationProfile: { financial: 0, prestige: 0, legacy: 0, aggression: 100 },
+    });
+    const baselineState = getStateWithFlops(rival, null);
+    const flopState = getStateWithFlops(
+      rival,
+      createFlopHistory(rival.id, 2, 0, [50, 55])
+    );
+
+    const baselineScores = getAverageScores(rival, baselineState);
+    const flopScores = getAverageScores(rival, flopState);
+
+    expect(flopScores["MARKET_DISRUPTION"]).toBeLessThan(baselineScores["MARKET_DISRUPTION"]);
+  });
+
+  it("applies larger penalty for catastrophic flops", () => {
+    const rival = createMockRival({
+      id: "flop-r5",
+      cash: 50_000_000,
+      prestige: 50,
+      motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
+    });
+    const majorFlopState = getStateWithFlops(
+      rival,
+      createFlopHistory(rival.id, 1, 0, [50])
+    );
+    const catastrophicFlopState = getStateWithFlops(
+      rival,
+      createFlopHistory(rival.id, 0, 1, [50])
+    );
+
+    const majorScores = getAverageScores(rival, majorFlopState);
+    const catastrophicScores = getAverageScores(rival, catastrophicFlopState);
+
+    // Catastrophic flop should boost CASH_CRUNCH more than a single major flop
+    expect(catastrophicScores["CASH_CRUNCH"]).toBeGreaterThan(majorScores["CASH_CRUNCH"]);
+  });
+
+  it("does not apply flop penalty for flops older than 52 weeks", () => {
+    const rival = createMockRival({
+      id: "flop-r6",
+      cash: 50_000_000,
+      prestige: 50,
+      motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
+    });
+    const baselineState = getStateWithFlops(rival, null, 70);
+    const oldFlopState = getStateWithFlops(
+      rival,
+      createFlopHistory(rival.id, 2, 0, [8, 9]),
+      70
+    );
+
+    const baselineScores = getAverageScores(rival, baselineState);
+    const oldFlopScores = getAverageScores(rival, oldFlopState);
+
+    // Scores should be the same (no flop influence from old flops)
+    expect(oldFlopScores).toEqual(baselineScores);
+  });
+
+  it("does not override motivation when no flop history exists", () => {
+    const rival = createMockRival({
+      id: "flop-r7",
+      cash: 50_000_000,
+      prestige: 50,
+      motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
+    });
+    const state = getStateWithFlops(rival, null);
+
+    const scores = getMotivationScores(rival, state);
+
+    // Should have results (no crash, no flop adjustment)
+    expect(Object.keys(scores).length).toBeGreaterThan(0);
+  });
+
+  it("graduated adjustments do not force a motivation override", () => {
+    // High-prestige rival with 2 recent major flops — AWARD_CHASE should still win naturally
+    const rival = createMockRival({
+      id: "flop-r8",
+      cash: 20_000_000,
+      prestige: 90,
+      motivationProfile: { financial: 0, prestige: 100, legacy: 0, aggression: 0 },
+    });
+    const flopState = getStateWithFlops(
+      rival,
+      createFlopHistory(rival.id, 2, 0, [50, 55])
+    );
+
+    const scores = getMotivationScores(rival, flopState);
+
+    // AWARD_CHASE should still be the dominant motivation despite flop adjustments
+    expect((scores["AWARD_CHASE"] || 0)).toBeGreaterThan((scores["CASH_CRUNCH"] || 0));
   });
 });

@@ -2,6 +2,7 @@ import { GameState, RivalStudio, StudioMotivation, StateImpact, SeriesProject } 
 import { RandomGenerator } from "../../utils/rng";
 import { determineSyndicationTier, getSyndicationImpact, calculateSyndicationProgress } from "../ip/syndicationEngine";
 import { SyndicationTier } from "../../data/syndicationConfig";
+import { getSimMemory } from "../../core/simMemory";
 
 /**
  * Utility Scores for each Studio Motivation.
@@ -46,14 +47,11 @@ const MotivationScores: Record<StudioMotivation, (rival: RivalStudio, state: Gam
  * AI Decision Brain (Target C1).
  * Pure function that evaluates the best focus for a Rival Studio.
  */
-export function calculateRivalMotivation(
+export function calculateMotivationScores(
   rival: RivalStudio,
   state: GameState,
   rng: RandomGenerator
-): StudioMotivation {
-  let bestScore = -1;
-  let bestMotivation: StudioMotivation = "STABILITY";
-
+): Record<StudioMotivation, number> {
   const profileMap: Record<StudioMotivation, keyof import("@/engine/types").MotivationProfile> = {
     CASH_CRUNCH: "financial",
     AWARD_CHASE: "prestige",
@@ -62,20 +60,71 @@ export function calculateRivalMotivation(
     STABILITY: "financial",
   };
 
+  // Flop-history-aware adjustments (Gap 3)
+  const flopHistory = getSimMemory(state).flops?.[rival.id];
+  const recentFlopWeeks = flopHistory
+    ? flopHistory.flopWeeks.filter((w) => state.week - w <= 52)
+    : [];
+  const recentMajorFlops = recentFlopWeeks.length;
+  const hasCatastrophicFlop = flopHistory
+    ? flopHistory.catastrophicFlops > 0 &&
+      flopHistory.flopWeeks.some((w) => state.week - w <= 52)
+    : false;
+
+  const flopAdjustments: Partial<Record<StudioMotivation, number>> = {};
+  if (recentMajorFlops >= 1) {
+    flopAdjustments["CASH_CRUNCH"] = (flopAdjustments["CASH_CRUNCH"] || 0) + 15;
+    flopAdjustments["STABILITY"] = (flopAdjustments["STABILITY"] || 0) + 10;
+    flopAdjustments["FRANCHISE_BUILDING"] = (flopAdjustments["FRANCHISE_BUILDING"] || 0) - 10;
+    flopAdjustments["MARKET_DISRUPTION"] = (flopAdjustments["MARKET_DISRUPTION"] || 0) - 10;
+  }
+  if (recentMajorFlops >= 2) {
+    flopAdjustments["CASH_CRUNCH"] = (flopAdjustments["CASH_CRUNCH"] || 0) + 10;
+    flopAdjustments["STABILITY"] = (flopAdjustments["STABILITY"] || 0) + 10;
+    flopAdjustments["FRANCHISE_BUILDING"] = (flopAdjustments["FRANCHISE_BUILDING"] || 0) - 10;
+    flopAdjustments["MARKET_DISRUPTION"] = (flopAdjustments["MARKET_DISRUPTION"] || 0) - 10;
+  }
+  if (hasCatastrophicFlop) {
+    flopAdjustments["CASH_CRUNCH"] = (flopAdjustments["CASH_CRUNCH"] || 0) + 30;
+    flopAdjustments["STABILITY"] = (flopAdjustments["STABILITY"] || 0) + 15;
+    flopAdjustments["MARKET_DISRUPTION"] = (flopAdjustments["MARKET_DISRUPTION"] || 0) - 25;
+  }
+
+  const scores: Record<StudioMotivation, number> = {
+    CASH_CRUNCH: 0,
+    AWARD_CHASE: 0,
+    FRANCHISE_BUILDING: 0,
+    MARKET_DISRUPTION: 0,
+    STABILITY: 0,
+  };
+
   Object.entries(MotivationScores).forEach(([motivation, scorer]) => {
-    // Add profile bias
     const baseScore = scorer(rival, state);
     const profileKey = profileMap[motivation as StudioMotivation];
     const bias =
       Number(rival.motivationProfile[profileKey as keyof typeof rival.motivationProfile]) || 0;
-
-    // Add small stochastic variance for strategy shifts
+    const flopAdj = flopAdjustments[motivation as StudioMotivation] || 0;
     const variance = rng.range(-5, 5);
-    const finalScore = baseScore + bias + variance;
+    scores[motivation as StudioMotivation] = baseScore + bias + flopAdj + variance;
+  });
 
-    if (finalScore > bestScore) {
-      bestScore = finalScore;
-      bestMotivation = motivation as StudioMotivation;
+  return scores;
+}
+
+export function calculateRivalMotivation(
+  rival: RivalStudio,
+  state: GameState,
+  rng: RandomGenerator
+): StudioMotivation {
+  const scores = calculateMotivationScores(rival, state, rng);
+
+  let bestScore = -1;
+  let bestMotivation: StudioMotivation = "STABILITY";
+
+  (Object.keys(scores) as StudioMotivation[]).forEach((motivation) => {
+    if (scores[motivation] > bestScore) {
+      bestScore = scores[motivation];
+      bestMotivation = motivation;
     }
   });
 

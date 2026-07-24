@@ -9,6 +9,7 @@ import {
 } from "@/engine/types";
 import { RandomGenerator } from "@/engine/utils/rng";
 import { BUDGET_TIERS } from "@/engine/data/budgetTiers";
+import { getStudioArchetype } from "@/engine/data/aiArchetypes";
 
 const ARCHETYPE_SPAWN_CHANCE: Record<string, number> = {
   major: 0.5,
@@ -61,7 +62,7 @@ export function tickRivalProduction(state: GameState, rng: RandomGenerator): Sta
     const tier = pickAffordableTier(rng, rival);
     if (!tier) continue;
 
-    const project = buildRivalProject(rival, tier, rng, state.week);
+    const project = buildRivalProject(rival, tier, rng, state.week, state);
     impacts.push({
       type: "PROJECT_CREATED",
       payload: { project },
@@ -97,10 +98,12 @@ function buildRivalProject(
   rival: RivalStudio,
   tier: BudgetTierKey,
   rng: RandomGenerator,
-  week: number
+  week: number,
+  state: GameState
 ): Project {
   const data = BUDGET_TIERS[tier];
-  const genre = GENRES[Math.floor(rng.next() * GENRES.length)];
+  const genreWeights = buildFatigueAwareGenreWeights(state, rival);
+  const genre = pickWeightedGenre(rng, genreWeights);
   const type = FORMATS[Math.floor(rng.next() * FORMATS.length)];
   const id = `rival-${rival.id}-w${week}-${Math.floor(rng.next() * 1_000_000)}`;
 
@@ -181,4 +184,89 @@ function advanceRivalProject(project: Project): Project | null {
   }
 
   return null;
+}
+
+/**
+ * Build a genre weight map that accounts for:
+ * 1. Archetype preferredGenres boost
+ * 2. Genre saturation from active projects (count > 5 → weight *= 0.5)
+ * 3. Franchise fatigue for rival-owned franchises (fatigue > 0.4 → weight *= (1 - fatigue))
+ */
+export function buildFatigueAwareGenreWeights(
+  state: GameState,
+  rival: RivalStudio
+): Record<string, number> {
+  const weights: Record<string, number> = {};
+  for (const g of GENRES) {
+    weights[g] = 1;
+  }
+
+  // 1. Boost archetype preferredGenres
+  const archetype = getStudioArchetype(rival.archetypeId || rival.behaviorId || "major");
+  if (!archetype.preferredGenres.includes("Any")) {
+    for (const g of archetype.preferredGenres) {
+      if (weights[g] !== undefined) {
+        weights[g] *= 2;
+      }
+    }
+  }
+
+  // 2. Reduce weights for saturated genres
+  const genreSaturation: Record<string, number> = {};
+  const projects = state.entities?.projects || {};
+  for (const pid in projects) {
+    const p = projects[pid];
+    if (p.genre) {
+      const g = p.genre.toUpperCase();
+      genreSaturation[g] = (genreSaturation[g] || 0) + 1;
+    }
+  }
+  for (const g of GENRES) {
+    const sat = genreSaturation[g.toUpperCase()] || 0;
+    if (sat > 5) {
+      weights[g] *= 0.5;
+    }
+  }
+
+  // 3. Reduce weights for fatigued franchise genres
+  const franchises = state.ip?.franchises || {};
+  const vault = state.ip?.vault || [];
+  const vaultMap = new Map(vault.map((a) => [a.id, a]));
+
+  for (const fid in franchises) {
+    const franchise = franchises[fid];
+    if (franchise.ownerId !== rival.id) continue;
+
+    const fatigue = franchise.fatigueLevel || 0;
+    if (fatigue <= 0.4) continue;
+
+    const firstAssetId = (franchise.assetIds || [])[0];
+    if (!firstAssetId) continue;
+    const asset = vaultMap.get(firstAssetId);
+    if (!asset?.originalProjectId) {
+      // Genre lookup fails — apply fatigue to fallback "Action"
+      weights["Action"] *= (1 - fatigue);
+      continue;
+    }
+
+    const sourceProject = state.entities.projects[asset.originalProjectId];
+    const genre = sourceProject?.genre || "Action";
+
+    if (weights[genre] !== undefined) {
+      weights[genre] *= (1 - fatigue);
+    }
+  }
+
+  return weights;
+}
+
+function pickWeightedGenre(rng: RandomGenerator, weights: Record<string, number>): string {
+  const entries = Object.entries(weights);
+  const total = entries.reduce((sum, [, w]) => sum + w, 0);
+  let roll = rng.next() * total;
+  for (const [genre, w] of entries) {
+    roll -= w;
+    if (roll <= 0) return genre;
+  }
+  return entries[entries.length - 1][0];
 }

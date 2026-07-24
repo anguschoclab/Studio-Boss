@@ -10,6 +10,7 @@ import { tickProduction } from "../systems/productionEngine";
 import { tickScriptDevelopment } from "../systems/production/ScriptDraftingSystem";
 import { tickPlatforms } from "../systems/television/platformEngine";
 import { tickAIMinds } from "../systems/ai/motivationEngine";
+import { tickRivalAwardsCampaigns } from "../systems/ai/RivalAwardsCampaigner";
 import { tickAgencies } from "../systems/ai/AgentBrain";
 import { tickAuctions } from "../systems/ai/biddingEngine";
 import { tickWorldEvents } from "../systems/ai/WorldSimulator";
@@ -71,9 +72,29 @@ import { tickIPVault } from "../systems/ip/IPVaultManager";
 import { advanceIPRights } from "../systems/ipRetention";
 import { updateFranchiseHubs } from "../systems/ip/franchiseCoordinator";
 import { AnnualScans } from "./filters/AnnualScans";
+import { RegulatorSystem } from "../systems/industry/RegulatorSystem";
 
 // Market Systems
 import { advanceRumors } from "../systems/rumors";
+import { OpportunitySystem } from "../systems/market/OpportunitySystem";
+
+// Scheduling & Festivals
+import { SchedulingEngine } from "../systems/schedulingEngine";
+import { resolveFestivals } from "../systems/festivals";
+
+// Talent Systems (ported from dead TalentFilter)
+import { TalentLifecycleSystem } from "../systems/talent/TalentLifecycleSystem";
+import { tickCastingConstraintSystem } from "../systems/talent/CastingConstraintSystem";
+import { TalentMoraleSystem } from "../systems/talent/TalentMoraleSystem";
+import {
+  shouldTalentHireAgent,
+  selectAgentForTalent,
+  shouldTalentFireAgent,
+  createAgentHiringEvent,
+  createAgentFiringEvent,
+} from "../systems/talent/talentAgentEvents";
+import { TalentAgentInteractionEngine } from "../systems/talent/talentAgentInteractions";
+import { Agency } from "../types/talent.types";
 
 // Rival Systems
 import { RivalRevenueCalculator } from "../systems/rivals/RivalRevenueCalculator";
@@ -207,6 +228,9 @@ export class WeekCoordinator {
     context.impacts.push(...tickReleaseStrategy(state));
     context.impacts.push(...tickStudioIdentity(state));
 
+    // Opportunity resolution (expired auctions + replenishment)
+    context.impacts.push(...OpportunitySystem.tick(state, context.rng));
+
     // Rumors
     context.impacts.push(advanceRumors(state));
   }
@@ -225,13 +249,9 @@ export class WeekCoordinator {
     // 0. Production Enhancement (on-set chemistry bonuses) — runs before core production
     context.impacts.push(...tickProductionEnhancementSystem(state, context.rng));
 
-    // 0.5 Post-Production Tick
-    context.impacts.push(...tickPostProduction(state, context.rng));
-
     // 1. Core Production Tick
     context.impacts.push(...tickProduction(state, context.rng));
     context.impacts.push(...tickPostProduction(state, context.rng));
-    context.impacts.push(...tickReleaseStrategy(state));
 
     // 1a. Crisis auto-trigger for active production projects
     // ⚡ The Framerate Fanatic: Replaced Object.values() with a direct for...in loop
@@ -271,12 +291,39 @@ export class WeekCoordinator {
 
     // 6. Awards ceremonies — run every week (CeremonyRunner checks internal calendar)
     const awardsYear = Math.floor(context.week / 52) + 1;
-    context.impacts.push(...runAwardsCeremony(state, context.week, awardsYear, context.rng));
+    const awardsImpacts = runAwardsCeremony(state, context.week, awardsYear, context.rng);
+    context.impacts.push(...awardsImpacts);
+
+    // 6a. Awards modal trigger (ported from dead IndustryFilter)
+    const allNewAwards = awardsImpacts
+      .filter((i) => i.type === "INDUSTRY_UPDATE" && i.payload?.update)
+      .flatMap((i) => Object.values((i.payload as Record<string, unknown>).update as Record<string, unknown>));
+    if (allNewAwards.length > 0) {
+      context.impacts.push({
+        type: "MODAL_TRIGGERED",
+        payload: {
+          modalType: "AWARDS",
+          priority: 50,
+          payload: {
+            week: context.week,
+            year: awardsYear,
+            awards: allNewAwards,
+            body: (allNewAwards[0] as Record<string, unknown>)?.body || "Annual Industry Awards",
+          },
+        },
+      });
+    }
 
     // 7. Razzies — once per year
     if (context.week % 52 === 2) {
       context.impacts.push(...processRazzies(state, context.week, context.rng));
     }
+
+    // 8. Scheduling conflicts (ported from dead ProductionFilter)
+    context.impacts.push(...SchedulingEngine.tick(state, context.rng));
+
+    // 9. Festival resolution (ported from dead IndustryFilter)
+    context.impacts.push(resolveFestivals(state) as unknown as StateImpact);
   }
 
   private static runTalentFilter(state: GameState, context: TickContext) {
@@ -290,6 +337,126 @@ export class WeekCoordinator {
     context.impacts.push(...tickMarketingPromotionSystem(state, context.rng));
     context.impacts.push(...tickBiographyGenerator(state, context.rng));
     context.impacts.push(...tickMorale(state, context.rng));
+
+    // Ported from dead TalentFilter.ts:
+    // Talent lifecycle (aging/retirement)
+    context.impacts.push(...TalentLifecycleSystem.tick(state, context.rng));
+
+    // Casting constraints
+    context.impacts.push(...tickCastingConstraintSystem(state, context.rng));
+
+    // Weekly morale updates via TalentMoraleSystem
+    const talentDict = state.entities.talents;
+    const projectsDict = state.entities.projects;
+    const contractsDict = state.entities.contracts;
+    const moraleUpdates = TalentMoraleSystem.processWeeklyMorale(
+      talentDict,
+      projectsDict,
+      contractsDict
+    );
+    for (const update of moraleUpdates) {
+      context.impacts.push({
+        type: "TALENT_UPDATED",
+        payload: { talentId: update.talentId, update: update.update },
+      });
+    }
+
+    // Talent-Agent hiring/firing + relationship evolution
+    const agencyMap = new Map<string, Agency>(
+      (state.industry.agencies || []).map((a) => [a.id, a])
+    );
+    for (const talentId in talentDict) {
+      const talent = talentDict[talentId];
+      if (!Object.prototype.hasOwnProperty.call(talentDict, talentId)) continue;
+
+      const hiringCheck = shouldTalentHireAgent(talent);
+      if (hiringCheck.shouldHire) {
+        const newAgent = selectAgentForTalent(talent, state, context.rng);
+        if (newAgent) {
+          if (talent.agentId) {
+            context.impacts.push({
+              type: "TALENT_UPDATED",
+              payload: { talentId, update: { agentId: undefined, agencyId: undefined } },
+            });
+          }
+
+          const agentPersonality = newAgent.personality || this.derivePersonalityFromAgent(newAgent, agencyMap);
+          const agency = newAgent.agencyId ? agencyMap.get(newAgent.agencyId) : undefined;
+          TalentAgentInteractionEngine.createRelationship(
+            talentId,
+            newAgent.id,
+            (talent.personality as import("../types/talent.types").TalentPersonality) || "pragmatic",
+            agentPersonality,
+            agency?.tier
+          );
+
+          context.impacts.push({
+            type: "TALENT_UPDATED",
+            payload: { talentId, update: { agentId: newAgent.id, agencyId: newAgent.agencyId } },
+          });
+
+          context.impacts.push({
+            type: "NEWS_ADDED",
+            payload: createAgentHiringEvent(talent, newAgent, context.week),
+          } as unknown as StateImpact);
+        }
+      }
+
+      if (talent.agentId) {
+        const relationship = state.talentAgentRelationships?.[`${talentId}-${talent.agentId}`];
+        if (relationship && shouldTalentFireAgent(talent, relationship)) {
+          context.impacts.push({
+            type: "NEWS_ADDED",
+            payload: createAgentFiringEvent(talent, talent.agentId, context.week),
+          } as unknown as StateImpact);
+
+          context.impacts.push({
+            type: "TALENT_UPDATED",
+            payload: { talentId, update: { agentId: undefined, agencyId: undefined } },
+          });
+        }
+      }
+
+      // Weekly relationship evolution
+      if (talent.agentId) {
+        const relationshipId = `${talentId}-${talent.agentId}`;
+        const relationship = state.talentAgentRelationships?.[relationshipId];
+        if (relationship) {
+          const evolved = TalentAgentInteractionEngine.evolveRelationship(relationship, 0, context.rng);
+          if (evolved !== relationship) {
+            context.impacts.push({
+              type: "RELATIONSHIP_UPDATED",
+              payload: { relationshipId, relationship: evolved },
+            } as unknown as StateImpact);
+          }
+        }
+      }
+    }
+  }
+
+  private static derivePersonalityFromAgent(
+    agent: { negotiationTactic?: string; agencyId?: string },
+    agencyMap: Map<string, Agency>
+  ): import("../systems/talent/talentAgentInteractions").AgentPersonality {
+    if (agent.negotiationTactic) {
+      const tacticMap: Record<
+        string,
+        import("../systems/talent/talentAgentInteractions").AgentPersonality
+      > = {
+        SHARK: "shark",
+        DIPLOMAT: "diplomat",
+        VOLUME: "volume",
+        PRESTIGE: "prestige",
+      };
+      return tacticMap[agent.negotiationTactic] || "diplomat";
+    }
+    if (agent.agencyId) {
+      const agency = agencyMap.get(agent.agencyId);
+      if (agency) {
+        return TalentAgentInteractionEngine.mapArchetypeToPersonality(agency.archetype);
+      }
+    }
+    return "diplomat";
   }
 
   private static runIPFilter(state: GameState, context: TickContext) {
@@ -300,6 +467,7 @@ export class WeekCoordinator {
 
   private static runAIFilter(state: GameState, context: TickContext) {
     context.impacts.push(...tickAIMinds(state, context.rng));
+    context.impacts.push(...tickRivalAwardsCampaigns(state, context.rng));
     context.impacts.push(...tickAgencies(state, context.rng));
     context.impacts.push(...tickAuctions(state, context.rng));
 
@@ -317,6 +485,9 @@ export class WeekCoordinator {
     if (deals.length > 0) {
       context.impacts.push(...advanceDeals(deals as import("../types").FirstLookDeal[]));
     }
+
+    // Regulator warnings (ported from dead IndustryFilter)
+    context.impacts.push(...RegulatorSystem.tick(state, context.rng));
   }
 
   private static runScandalFilter(state: GameState, context: TickContext) {
@@ -325,9 +496,7 @@ export class WeekCoordinator {
   }
 
   private static runFinanceFilter(state: GameState, context: TickContext) {
-    context.impacts.push(...tickFinance(state, context.rng));
-    context.impacts.push(...tickStudioIdentity(state));
-    context.impacts.push(...checkAchievements(state));
+    context.impacts.push(...tickFinance(state, context.rng, context.impacts));
 
     // Loan payments + bankruptcy check
     context.impacts.push(...tickLoans(state, context.rng));

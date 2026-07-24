@@ -11,6 +11,8 @@ import {
   BANKRUPTCY_CASH_FLOOR,
   BANKRUPTCY_WEEKS_REQUIRED,
 } from "../systems/industry/MacroCycle";
+import { buildFatigueAwareGenreWeights } from "../systems/rivals/rivalProduction";
+import { checkCampaignBacklash } from "../systems/awards/NominationCalculator";
 
 /**
  * Headless Controller (AI for the Player Studio)
@@ -436,6 +438,9 @@ export class HeadlessController {
     const flopImpacts = processFlops(state);
     impacts.push(...flopImpacts);
 
+    // Awards campaigns for player projects (headless mode)
+    impacts.push(...HeadlessController.tickPlayerAwardsCampaigns(state, rng));
+
     // Bankruptcy check: cash below floor for 52+ consecutive weeks → failure.
     // A failed rival is marked acquirable so ConsolidationEngine sweeps it next downturn.
     const mem = getSimMemory(state);
@@ -596,7 +601,16 @@ export class HeadlessController {
   private static pitchNewProject(state: GameState, rng: RandomGenerator): StateImpact | null {
     const id = rng.uuid("PRJ");
     const genres = ["Action", "Drama", "Comedy", "Sci-Fi", "Horror", "Family"];
-    const genre = genres[Math.floor(rng.next() * genres.length)];
+    // Fatigue-aware genre selection for player studio
+    const playerRival: Record<string, unknown> = { id: getPlayerId(state), archetypeId: "BALANCED_GIANT" };
+    const genreWeights = buildFatigueAwareGenreWeights(state, playerRival as any);
+    const weightSum = genres.reduce((s, g) => s + (genreWeights[g] ?? 1), 0);
+    let roll = rng.next() * weightSum;
+    let genre = genres[0];
+    for (const g of genres) {
+      roll -= (genreWeights[g] ?? 1);
+      if (roll <= 0) { genre = g; break; }
+    }
     const formats = ["film", "tv"];
     const format = formats[Math.floor(rng.next() * formats.length)] as "film" | "tv";
     // Player tier bias: majority low/mid, occasional high, rare blockbuster.
@@ -672,5 +686,76 @@ export class HeadlessController {
       type: "PROJECT_CREATED",
       payload: { project },
     } as unknown as StateImpact;
+  }
+
+  private static tickPlayerAwardsCampaigns(state: GameState, rng: RandomGenerator): StateImpact[] {
+    const impacts: StateImpact[] = [];
+    const playerId = getPlayerId(state);
+    const cash = state.finance?.cash ?? 0;
+    const projectsObj = state.entities?.projects || {};
+    const activeCampaigns = state.studio?.activeCampaigns || {};
+    const activeCampaignProjectIds = new Set(
+      Object.values(activeCampaigns).map((c: any) => c.projectId)
+    );
+
+    const TIER_COSTS = { Grassroots: 250_000, Trade: 1_000_000, Blitz: 5_000_000 };
+    const TIER_BUZZ = { Grassroots: 5, Trade: 15, Blitz: 40 };
+
+    for (const pid in projectsObj) {
+      const project = projectsObj[pid];
+      if (
+        !isPlayerOwner(state, project.ownerId) ||
+        project.state !== "released" ||
+        project.releaseWeek === null ||
+        state.week - (project.releaseWeek as number) > 52 ||
+        (project.reviewScore ?? 0) < 70
+      ) {
+        continue;
+      }
+
+      // Skip if already has an active campaign
+      if (activeCampaignProjectIds.has(pid)) continue;
+
+      const reviewScore = project.reviewScore ?? 0;
+      let tier: "Grassroots" | "Trade" | "Blitz" | null = null;
+      if (cash > 50_000_000 && reviewScore >= 85) tier = "Blitz";
+      else if (cash > 10_000_000 && reviewScore >= 75) tier = "Trade";
+      else if (cash > 2_000_000) tier = "Grassroots";
+
+      if (!tier) continue;
+
+      const cost = TIER_COSTS[tier];
+      const buzzBonus = TIER_BUZZ[tier];
+
+      // Check for backlash
+      const metaScore = project.reception?.metaScore || project.reviewScore || 60;
+      const hasBacklash = checkCampaignBacklash(metaScore, tier, rng);
+
+      // Deduct cash
+      impacts.push({
+        type: "FUNDS_CHANGED",
+        payload: { amount: -cost },
+      } as unknown as StateImpact);
+
+      // Boost project buzz (capped at 100)
+      const newBuzz = Math.min(100, (project.buzz ?? 50) + buzzBonus);
+      impacts.push({
+        type: "PROJECT_UPDATED",
+        payload: { projectId: pid, update: { buzz: newBuzz } },
+      });
+
+      if (hasBacklash) {
+        impacts.push({
+          type: "NEWS_ADDED",
+          payload: {
+            headline: `BACKLASH: Aggressive awards campaigning for "${project.title}" sparks industry outcry!`,
+            description: `Critics question the sincerity of the campaign given the project's reception.`,
+            category: "scandal",
+          },
+        } as unknown as StateImpact);
+      }
+    }
+
+    return impacts;
   }
 }

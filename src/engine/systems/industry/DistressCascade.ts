@@ -9,6 +9,7 @@ import { impacts as I } from "../../core/impacts";
 import { applyImpacts } from "../../core/impactReducer";
 import { getSimMemory } from "../../core/simMemory";
 import type { SimMemory } from "@/engine/types/state.types";
+import { getStudioArchetype } from "../../data/aiArchetypes";
 
 /**
  * DistressCascade — stepwise collapse ladder for insolvent rivals.
@@ -43,6 +44,73 @@ export interface DistressEvent {
 }
 
 const OFFER_WINDOW_WEEKS = 2; // weeks the player has to decide before the AI buyer takes it
+
+/**
+ * Select the best strategic buyer for a distressed asset based on motivation,
+ * archetype M&A willingness, genre fit, and antitrust status.
+ * Returns the highest-scoring buyer, or undefined if all are disqualified.
+ */
+export function selectStrategicBuyer(
+  state: GameState,
+  buyers: RivalStudio[],
+  assetKind: "franchise" | "vault",
+  assetId: string
+): RivalStudio | undefined {
+  // Infer asset genre for genre-fit scoring
+  let assetGenre = "Action";
+  if (assetKind === "franchise") {
+    const franchise = state.ip?.franchises?.[assetId];
+    if (franchise && (franchise.assetIds || []).length > 0) {
+      const vault = state.ip?.vault || [];
+      const asset = vault.find((a) => a.id === franchise.assetIds[0]);
+      if (asset?.originalProjectId) {
+        const project = state.entities.projects?.[asset.originalProjectId];
+        if (project?.genre) assetGenre = project.genre;
+      }
+    }
+  } else {
+    const vault = state.ip?.vault || [];
+    const asset = vault.find((a) => a.id === assetId);
+    if (asset?.originalProjectId) {
+      const project = state.entities.projects?.[asset.originalProjectId];
+      if (project?.genre) assetGenre = project.genre;
+    }
+  }
+
+  let bestBuyer: RivalStudio | undefined;
+  let bestScore = -Infinity;
+
+  for (const buyer of buyers) {
+    let score = (buyer.cash || 0) / 1_000_000_000;
+
+    // Motivation match
+    if (buyer.currentMotivation === "FRANCHISE_BUILDING" && assetKind === "franchise") score += 0.3;
+    if (buyer.currentMotivation === "MARKET_DISRUPTION") score += 0.2;
+    if (buyer.currentMotivation === "CASH_CRUNCH") score -= 1.0;
+    if (buyer.currentMotivation === "AWARD_CHASE" && assetKind === "vault") score += 0.1;
+
+    // Archetype factors
+    const archetype = getStudioArchetype(buyer.archetypeId || buyer.behaviorId || "major");
+    score += archetype.ma_willingness * 0.3;
+    score += (archetype.biddingAggression / 100) * 0.2;
+
+    // Genre fit
+    if (!archetype.preferredGenres.includes("Any")) {
+      if (archetype.preferredGenres.includes(assetGenre)) score += 0.2;
+    }
+
+    // Antitrust disqualification
+    if (isAcquirerBlockedByAntitrust(state, buyer.id, state.week)) score -= 1.0;
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestBuyer = buyer;
+    }
+  }
+
+  if (bestScore <= 0) return undefined;
+  return bestBuyer;
+}
 
 type DistressMem = SimMemory["distress"];
 
@@ -226,7 +294,6 @@ export function stage1IPFireSale(state: GameState, seller: RivalStudio, distress
   }
   if (buyers.length === 0) return impacts;
 
-  const buyer = pick(buyers);
   const heat = getMarketHeat(state.week);
   const franchiseProxy = Math.max(
     100_000_000,
@@ -255,6 +322,10 @@ export function stage1IPFireSale(state: GameState, seller: RivalStudio, distress
     assetId = asset.id;
     assetLabel = `'${asset.title}'`;
   }
+
+  // Strategic buyer selection (replaces random pick)
+  const buyer = selectStrategicBuyer(state, buyers, assetKind, assetId);
+  if (!buyer) return impacts;
 
   const offer: import("@/engine/types/distress.types").DistressedAssetOffer = {
     id: `distress-${seller.id}-${state.week}`,
@@ -491,7 +562,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
           if (r.id !== seller.id && (r.cash || 0) > 300_000_000) buyers.push(r);
         }
       }
-      const buyer = buyers.length > 0 ? pick(buyers) : undefined;
+      const buyer = buyers.length > 0 ? selectStrategicBuyer(state, buyers, "vault", ownedAssets[0]?.id || "") : undefined;
       const bundleSize = Math.min(ownedAssets.length, 3 + Math.floor(secureRandom() * 4));
       const bundle = ownedAssets.slice(0, bundleSize);
       const rawValue = bundle.reduce((s, a) => s + (a.baseValue || 50_000_000), 0);
@@ -616,22 +687,17 @@ function stage3DistressedMA(state: GameState, target: RivalStudio, distress?: Di
   const impacts: StateImpact[] = [];
   const newEvents: DistressEvent[] = [];
 
-  // ⚡ Bolt: Replaced Object.values().filter().sort() with single-pass maximum find
-  // Richest acquirer with >$750M cash, not antitrust-frozen, not the target itself.
+  // Strategic acquirer selection (replaces pure cash-based selection)
   const allRivals = state.entities.rivals || {};
-  let acquirer: RivalStudio | undefined = undefined;
-  let maxCash = 0;
-
+  const eligibleBuyers: RivalStudio[] = [];
   for (const id in allRivals) {
     const r = allRivals[id];
     const cash = r.cash || 0;
-    if (r.id !== target.id && cash > 750_000_000 && cash > maxCash) {
-      if (!isAcquirerBlockedByAntitrust(state, r.id, state.week)) {
-        acquirer = r;
-        maxCash = cash;
-      }
+    if (r.id !== target.id && cash > 750_000_000) {
+      eligibleBuyers.push(r);
     }
   }
+  const acquirer = selectStrategicBuyer(state, eligibleBuyers, "vault", target.id);
 
   if (!acquirer) {
     // No buyer found — still counts as a failed stage-3 attempt so we escalate to bankruptcy.

@@ -7,6 +7,7 @@ import { StudioArchetype, AI_ARCHETYPES } from "../data/aiArchetypes";
 import { getBudgetInflation } from "../systems/industry/MacroCycle";
 import { isPlayerOwner } from "../utils/ownership";
 import { HeadlessController } from "./HeadlessController";
+import { buildFatigueAwareGenreWeights } from "../systems/rivals/rivalProduction";
 
 export class StudioAutomation {
   /**
@@ -314,11 +315,18 @@ export class StudioAutomation {
     const format = formatBias.length > 0 ? rng.pick(formatBias) : rng.next() < 0.3 ? "tv" : "film";
 
     const genreFocus = archetype.genreFocus;
-    const genres =
+    const baseGenres =
       genreFocus.length > 0 && genreFocus[0] !== "Any"
         ? genreFocus
         : ["Action", "Drama", "Comedy", "Sci-Fi", "Horror", "Family"];
-    const genre = rng.pick(genres);
+    // Fatigue-aware genre selection: use weighted genres from rivalProduction helper
+    const genreWeights = buildFatigueAwareGenreWeights(state, rival);
+    // Only consider genres in baseGenres if archetype has specific focus
+    const relevantWeights: Record<string, number> = {};
+    for (const g of baseGenres) {
+      relevantWeights[g] = genreWeights[g] ?? 1;
+    }
+    const genre = this.weightedRandom(baseGenres, baseGenres.map((g) => relevantWeights[g]), rng);
 
     const budgetTiers: BudgetTierKey[] = ["indie", "low", "mid", "high", "blockbuster"];
     const weights = budgetTiers.map((tier) => archetype.budget_tier_weights[tier]);
