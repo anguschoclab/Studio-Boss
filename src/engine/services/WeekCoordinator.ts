@@ -174,7 +174,7 @@ export class WeekCoordinator {
       eventHistory: [...(state.eventHistory || []), ...context.events].slice(-500),
       simMemory: {
         ...(nextState.simMemory ?? defaultSimMemory()),
-        lastProcessedTickCount: context.tickCount,
+        lastProcessedTickCount: state.tickCount || 0,
       },
     };
 
