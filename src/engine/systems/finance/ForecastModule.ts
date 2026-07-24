@@ -8,9 +8,17 @@ export function generateCashflowForecast(
   weeks: number = 12
 ): { week: number; projected: number }[] {
   // Use index to collect only contracts for released projects
-  const releasedProjects = Object.values(state.entities.projects || {}).filter(
-    (p) => p.state === "released"
-  );
+  const releasedProjects: import("../../types").Project[] = [];
+  const projects = state.entities.projects || {};
+  for (const id in projects) {
+    if (Object.prototype.hasOwnProperty.call(projects, id)) {
+      const p = projects[id];
+      if (p.state === "released") {
+        releasedProjects.push(p);
+      }
+    }
+  }
+
   const relevantContracts = releasedProjects.flatMap((p) =>
     getContractsByProjectId(
       state.entities?.contractsByProjectId,
