@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Mock electron module
-const mockEvent = { preventDefault: vi.fn() };
+const _mockEvent = { preventDefault: vi.fn() };
 
 const mockWebContents = {
   setWindowOpenHandler: vi.fn(),

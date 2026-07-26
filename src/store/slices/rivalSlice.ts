@@ -26,7 +26,7 @@ export const createRivalSlice: StateCreator<GameStore, [], [], RivalSlice> = (se
     set((s) => {
       if (!s.gameState) return s;
       const next = executeAcquisition(s.gameState, targetId);
-      return { gameState: next, finance: next.finance as any };
+      return { gameState: next, finance: next.finance as unknown as import("@/engine/types").FinanceRecord };
     });
   },
 

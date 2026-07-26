@@ -90,7 +90,7 @@ vi.mock("@/engine/utils", () => ({
 
 import { DistressedAssetOfferModal } from "@/components/modals/DistressedAssetOfferModal";
 import { useUIStore } from "@/store/uiStore";
-import { useGameStore } from "@/store/gameStore";
+
 
 function setModal(payload: any) {
   (useUIStore as any).mockImplementation(() => ({
@@ -117,7 +117,7 @@ function setCash(cash: number) {
   mockGameState.finance.cash = cash;
 }
 
-const defaultOffer = mockGameState.industry.distressedOffers[0];
+const _defaultOffer = mockGameState.industry.distressedOffers[0];
 
 describe("DistressedAssetOfferModal", () => {
   beforeEach(() => {

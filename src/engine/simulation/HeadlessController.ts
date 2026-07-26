@@ -603,7 +603,7 @@ export class HeadlessController {
     const genres = ["Action", "Drama", "Comedy", "Sci-Fi", "Horror", "Family"];
     // Fatigue-aware genre selection for player studio
     const playerRival: Record<string, unknown> = { id: getPlayerId(state), archetypeId: "BALANCED_GIANT" };
-    const genreWeights = buildFatigueAwareGenreWeights(state, playerRival as any);
+    const genreWeights = buildFatigueAwareGenreWeights(state, playerRival as unknown as import("../types").RivalStudio);
     const weightSum = genres.reduce((s, g) => s + (genreWeights[g] ?? 1), 0);
     let roll = rng.next() * weightSum;
     let genre = genres[0];
@@ -690,12 +690,12 @@ export class HeadlessController {
 
   private static tickPlayerAwardsCampaigns(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
-    const playerId = getPlayerId(state);
+    const _playerId = getPlayerId(state);
     const cash = state.finance?.cash ?? 0;
     const projectsObj = state.entities?.projects || {};
     const activeCampaigns = state.studio?.activeCampaigns || {};
     const activeCampaignProjectIds = new Set(
-      Object.values(activeCampaigns).map((c: any) => c.projectId)
+      Object.values(activeCampaigns).map((c: unknown) => (c as { projectId: string }).projectId)
     );
 
     const TIER_COSTS = { Grassroots: 250_000, Trade: 1_000_000, Blitz: 5_000_000 };
