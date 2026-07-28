@@ -603,6 +603,7 @@ export class HeadlessController {
     const genres = ["Action", "Drama", "Comedy", "Sci-Fi", "Horror", "Family"];
     // Fatigue-aware genre selection for player studio
     const playerRival: Record<string, unknown> = { id: getPlayerId(state), archetypeId: "BALANCED_GIANT" };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const genreWeights = buildFatigueAwareGenreWeights(state, playerRival as any);
     const weightSum = genres.reduce((s, g) => s + (genreWeights[g] ?? 1), 0);
     let roll = rng.next() * weightSum;
@@ -690,11 +691,11 @@ export class HeadlessController {
 
   private static tickPlayerAwardsCampaigns(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
-    const playerId = getPlayerId(state);
     const cash = state.finance?.cash ?? 0;
     const projectsObj = state.entities?.projects || {};
     const activeCampaigns = state.studio?.activeCampaigns || {};
     const activeCampaignProjectIds = new Set(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       Object.values(activeCampaigns).map((c: any) => c.projectId)
     );
 

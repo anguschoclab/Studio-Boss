@@ -13,19 +13,18 @@ export const DistressedAssetOfferModal: React.FC = () => {
   const declineDistressedAsset = useGameStore((s) => s.declineDistressedAsset);
   const gameState = useGameStore((s) => s.gameState);
 
-  if (!activeModal || activeModal.type !== "DISTRESSED_ASSET_OFFER") return null;
-
-  const { offerId = "" } = (activeModal.payload || {}) as { offerId: string };
-  const offer = gameState ? selectDistressedOffer(gameState, offerId) : null;
+  const isActive = activeModal?.type === "DISTRESSED_ASSET_OFFER";
+  const { offerId = "" } = (activeModal?.payload || {}) as { offerId: string };
+  const offer = gameState && isActive ? selectDistressedOffer(gameState, offerId) : null;
 
   // Bug 3 fix: resolve in useEffect, not during render.
   useEffect(() => {
-    if (!offer) {
+    if (isActive && !offer) {
       resolveCurrentModal();
     }
-  }, [offer, resolveCurrentModal]);
+  }, [isActive, offer, resolveCurrentModal]);
 
-  if (!offer) return null;
+  if (!isActive || !offer) return null;
 
   const weeksRemaining = offer.expiresWeek - (gameState?.week ?? 0);
   const canAfford = (gameState?.finance?.cash ?? 0) >= offer.price;

@@ -26,6 +26,7 @@ export const createRivalSlice: StateCreator<GameStore, [], [], RivalSlice> = (se
     set((s) => {
       if (!s.gameState) return s;
       const next = executeAcquisition(s.gameState, targetId);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return { gameState: next, finance: next.finance as any };
     });
   },
