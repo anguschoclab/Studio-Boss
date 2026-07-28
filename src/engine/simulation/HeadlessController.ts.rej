@@ -1,0 +1,11 @@
+--- HeadlessController.ts
++++ HeadlessController.ts
+@@ -737,7 +737,7 @@
+         type: "AWARDS_CAMPAIGN_STARTED",
+         payload: {
+           projectId: pid,
+-          studioId: "PLAYER",
++          studioId: playerId,
+           tier: tier as "Grassroots" | "Trade" | "Blitz",
+           cost: TIER_COSTS[tier],
+         },

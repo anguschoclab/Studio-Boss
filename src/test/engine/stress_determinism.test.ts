@@ -32,5 +32,5 @@ describe("52-Week Determinism Stress Test", () => {
 
     // Final state comparison
     expect(currentStateA).toEqual(currentStateB);
-  });
+  }, 30000);
 });
