@@ -178,9 +178,16 @@ async function createWindow() {
     try {
       const parsed = new URL(url);
       const isLocalhost = parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1";
-      if (!isLocalhost || !IS_DEV) {
-        event.preventDefault();
+
+      if (parsed.protocol === "app:") {
+        return; // Allow internal app protocol
       }
+
+      if (IS_DEV && isLocalhost) {
+        return; // Allow local dev server
+      }
+
+      event.preventDefault();
     } catch (_e) {
       event.preventDefault();
     }
