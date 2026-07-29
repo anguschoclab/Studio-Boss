@@ -177,8 +177,9 @@ async function createWindow() {
   mainWindow.webContents.on("will-navigate", (event, url) => {
     try {
       const parsed = new URL(url);
-      const isLocalhost = parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1";
-      if (!isLocalhost || !IS_DEV) {
+      const isAppLocal = parsed.protocol === "app:";
+      const isDevLocalhost = IS_DEV && (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1");
+      if (!isAppLocal && !isDevLocalhost) {
         event.preventDefault();
       }
     } catch (_e) {
