@@ -269,9 +269,17 @@ export function areRomantic(talentAId: string, talentBId: string, state: GameSta
  * Get all relationships for a talent
  */
 export function getTalentRelationships(talentId: string, state: GameState): TalentRelationship[] {
-  return Object.values(state.relationships?.relationships || {}).filter(
-    (r) => r.talentAId === talentId || r.talentBId === talentId
-  );
+  const result: TalentRelationship[] = [];
+  const rels = state.relationships?.relationships || {};
+  for (const key in rels) {
+    if (Object.prototype.hasOwnProperty.call(rels, key)) {
+      const r = rels[key];
+      if (r.talentAId === talentId || r.talentBId === talentId) {
+        result.push(r);
+      }
+    }
+  }
+  return result;
 }
 
 /**

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Mock electron module
-const mockEvent = { preventDefault: vi.fn() };
+const _mockEvent = { preventDefault: vi.fn() };
 
 const mockWebContents = {
   setWindowOpenHandler: vi.fn(),
@@ -60,22 +60,20 @@ describe("Electron Security - will-navigate handler", () => {
   });
 
   it("registers a will-navigate handler on webContents", () => {
-    // The main.cjs file registers a will-navigate handler via webContents.on
-    // We verify the handler is registered by checking that .on is called with 'will-navigate'
-    // Since main.cjs is a CJS file that runs on import, we can verify the pattern
     expect(mockWebContents.on).toBeDefined();
   });
 
   it("preventDefault is called for non-localhost URLs", () => {
-    // Simulate the will-navigate handler logic
     const IS_DEV = false;
     const url = "https://evil.com";
     const event = { preventDefault: vi.fn() };
 
     try {
       const parsed = new URL(url);
-      const isLocalhost = parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1";
-      if (!isLocalhost || !IS_DEV) {
+      if (parsed.protocol === "app:") return;
+      const isLocalhost = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
+        && (parsed.protocol === "http:" || parsed.protocol === "https:");
+      if (!IS_DEV || !isLocalhost) {
         event.preventDefault();
       }
     } catch (_e) {
@@ -91,7 +89,9 @@ describe("Electron Security - will-navigate handler", () => {
 
     try {
       const parsed = new URL(url);
-      const isLocalhost = parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1";
+      if (parsed.protocol === "app:") return;
+      const isLocalhost = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
+        && (parsed.protocol === "http:" || parsed.protocol === "https:");
       if (!isLocalhost) {
         event.preventDefault();
       }
@@ -109,8 +109,10 @@ describe("Electron Security - will-navigate handler", () => {
 
     try {
       const parsed = new URL(url);
-      const isLocalhost = parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1";
-      if (!isLocalhost || !IS_DEV) {
+      if (parsed.protocol === "app:") return;
+      const isLocalhost = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
+        && (parsed.protocol === "http:" || parsed.protocol === "https:");
+      if (!IS_DEV || !isLocalhost) {
         event.preventDefault();
       }
     } catch (_e) {
@@ -127,8 +129,10 @@ describe("Electron Security - will-navigate handler", () => {
 
     try {
       const parsed = new URL(url);
-      const isLocalhost = parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1";
-      if (!isLocalhost || !IS_DEV) {
+      if (parsed.protocol === "app:") return;
+      const isLocalhost = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
+        && (parsed.protocol === "http:" || parsed.protocol === "https:");
+      if (!IS_DEV || !isLocalhost) {
         event.preventDefault();
       }
     } catch (_e) {
@@ -145,8 +149,10 @@ describe("Electron Security - will-navigate handler", () => {
 
     try {
       const parsed = new URL(url);
-      const isLocalhost = parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1";
-      if (!isLocalhost || !IS_DEV) {
+      if (parsed.protocol === "app:") return;
+      const isLocalhost = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
+        && (parsed.protocol === "http:" || parsed.protocol === "https:");
+      if (!IS_DEV || !isLocalhost) {
         event.preventDefault();
       }
     } catch (_e) {
@@ -154,5 +160,85 @@ describe("Electron Security - will-navigate handler", () => {
     }
 
     expect(event.preventDefault).not.toHaveBeenCalled();
+  });
+
+  it("allows app: protocol navigation in production", () => {
+    const IS_DEV = false;
+    const url = "app://localhost/dashboard";
+    const event = { preventDefault: vi.fn() };
+
+    try {
+      const parsed = new URL(url);
+      if (parsed.protocol === "app:") return;
+      const isLocalhost = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
+        && (parsed.protocol === "http:" || parsed.protocol === "https:");
+      if (!IS_DEV || !isLocalhost) {
+        event.preventDefault();
+      }
+    } catch (_e) {
+      event.preventDefault();
+    }
+
+    expect(event.preventDefault).not.toHaveBeenCalled();
+  });
+
+  it("allows app: protocol navigation in dev mode", () => {
+    const IS_DEV = true;
+    const url = "app://localhost/settings";
+    const event = { preventDefault: vi.fn() };
+
+    try {
+      const parsed = new URL(url);
+      if (parsed.protocol === "app:") return;
+      const isLocalhost = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
+        && (parsed.protocol === "http:" || parsed.protocol === "https:");
+      if (!IS_DEV || !isLocalhost) {
+        event.preventDefault();
+      }
+    } catch (_e) {
+      event.preventDefault();
+    }
+
+    expect(event.preventDefault).not.toHaveBeenCalled();
+  });
+
+  it("blocks file: protocol in production", () => {
+    const IS_DEV = false;
+    const url = "file:///etc/passwd";
+    const event = { preventDefault: vi.fn() };
+
+    try {
+      const parsed = new URL(url);
+      if (parsed.protocol === "app:") return;
+      const isLocalhost = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
+        && (parsed.protocol === "http:" || parsed.protocol === "https:");
+      if (!IS_DEV || !isLocalhost) {
+        event.preventDefault();
+      }
+    } catch (_e) {
+      event.preventDefault();
+    }
+
+    expect(event.preventDefault).toHaveBeenCalled();
+  });
+
+  it("blocks javascript: protocol", () => {
+    const IS_DEV = true;
+    const url = "javascript:alert(1)";
+    const event = { preventDefault: vi.fn() };
+
+    try {
+      const parsed = new URL(url);
+      if (parsed.protocol === "app:") return;
+      const isLocalhost = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
+        && (parsed.protocol === "http:" || parsed.protocol === "https:");
+      if (!IS_DEV || !isLocalhost) {
+        event.preventDefault();
+      }
+    } catch (_e) {
+      event.preventDefault();
+    }
+
+    expect(event.preventDefault).toHaveBeenCalled();
   });
 });

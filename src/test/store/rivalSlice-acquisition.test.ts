@@ -5,7 +5,7 @@ import { createMockGameState, createMockRival } from "../engine/generators/mockF
 
 function seed() {
   return createMockGameState({
-    finance: { cash: 5_000_000_000, ledger: [], weeklyHistory: [] } as any,
+    finance: { cash: 5_000_000_000, ledger: [], weeklyHistory: [], marketState: { week: 1, primeRate: 0.05, sentiment: 50 } } as any,
     studio: {
       id: "PLR-1",
       name: "Player Studio",
@@ -85,5 +85,14 @@ describe("rivalSlice acquisition", () => {
     const before = useGameStore.getState();
     useGameStore.getState().acquireRival("r1");
     expect(useGameStore.getState()).toBe(before);
+  });
+
+  it("finance state after acquisition has FinanceState fields, not FinanceRecord fields", () => {
+    useGameStore.getState().acquireRival("r1");
+    const finance = useGameStore.getState().finance;
+    expect(finance).toHaveProperty("cash");
+    expect(finance).toHaveProperty("ledger");
+    expect(finance).toHaveProperty("weeklyHistory");
+    expect(finance).toHaveProperty("marketState");
   });
 });

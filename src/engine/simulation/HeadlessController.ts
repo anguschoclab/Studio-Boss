@@ -1,4 +1,5 @@
-import { GameState, StateImpact, Project } from "@/engine/types";import { RandomGenerator } from "../utils/rng";
+import { GameState, StateImpact, Project, RivalStudio, CampaignData } from "@/engine/types";
+import { RandomGenerator } from "../utils/rng";
 import { isPlayerOwner, getPlayerId } from "../utils/ownership";
 import { executeGreenlight, executeMarketing } from "../systems/projects";
 import { BudgetTierKey } from "../types/project.types";
@@ -602,8 +603,8 @@ export class HeadlessController {
     const id = rng.uuid("PRJ");
     const genres = ["Action", "Drama", "Comedy", "Sci-Fi", "Horror", "Family"];
     // Fatigue-aware genre selection for player studio
-    const playerRival: Record<string, unknown> = { id: getPlayerId(state), archetypeId: "BALANCED_GIANT" };
-    const genreWeights = buildFatigueAwareGenreWeights(state, playerRival as any);
+    const playerRival: RivalStudio = { id: getPlayerId(state), archetypeId: "BALANCED_GIANT" } as unknown as RivalStudio;
+    const genreWeights = buildFatigueAwareGenreWeights(state, playerRival);
     const weightSum = genres.reduce((s, g) => s + (genreWeights[g] ?? 1), 0);
     let roll = rng.next() * weightSum;
     let genre = genres[0];
@@ -690,13 +691,15 @@ export class HeadlessController {
 
   private static tickPlayerAwardsCampaigns(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
-    const playerId = getPlayerId(state);
     const cash = state.finance?.cash ?? 0;
     const projectsObj = state.entities?.projects || {};
     const activeCampaigns = state.studio?.activeCampaigns || {};
-    const activeCampaignProjectIds = new Set(
-      Object.values(activeCampaigns).map((c: any) => c.projectId)
-    );
+    const activeCampaignProjectIds = new Set<string>();
+    for (const key in activeCampaigns) {
+      if (Object.prototype.hasOwnProperty.call(activeCampaigns, key)) {
+        activeCampaignProjectIds.add((activeCampaigns[key] as CampaignData).projectId);
+      }
+    }
 
     const TIER_COSTS = { Grassroots: 250_000, Trade: 1_000_000, Blitz: 5_000_000 };
     const TIER_BUZZ = { Grassroots: 5, Trade: 15, Blitz: 40 };

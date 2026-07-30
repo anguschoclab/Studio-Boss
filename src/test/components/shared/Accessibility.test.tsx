@@ -63,4 +63,38 @@ describe("Accessibility - Search Inputs", () => {
     const ariaHiddenSvgs = Array.from(svgs).filter((s) => s.getAttribute("aria-hidden") === "true");
     expect(ariaHiddenSvgs.length).toBeGreaterThanOrEqual(2);
   });
+
+  it("FilterBar filter select has aria-label", () => {
+    render(
+      <FilterBar
+        searchValue=""
+        onSearchChange={() => {}}
+        filters={[
+          {
+            key: "genre",
+            label: "Genre",
+            options: [{ value: "all", label: "All" }],
+            value: "all",
+            onChange: () => {},
+          },
+        ]}
+      />
+    );
+    const select = screen.getByRole("combobox", { name: "Filter by Genre" });
+    expect(select).toBeDefined();
+  });
+
+  it("FilterBar sort select has aria-label", () => {
+    render(
+      <FilterBar
+        searchValue=""
+        onSearchChange={() => {}}
+        sortOptions={[{ value: "name", label: "Name" }]}
+        sortValue="name"
+        onSortChange={() => {}}
+      />
+    );
+    const select = screen.getByRole("combobox", { name: "Sort options" });
+    expect(select).toBeDefined();
+  });
 });

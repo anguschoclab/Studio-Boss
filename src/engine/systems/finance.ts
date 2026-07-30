@@ -283,7 +283,13 @@ export function generateCashflowForecast(
   state: GameState,
   weeks: number = 12
 ): { week: number; projected: number }[] {
-  const projects = Object.values(state.studio.internal.projects);
+  const projectsMap = state.studio.internal.projects || {};
+  const projects: Project[] = [];
+  for (const key in projectsMap) {
+    if (Object.prototype.hasOwnProperty.call(projectsMap, key)) {
+      projects.push(projectsMap[key]);
+    }
+  }
   const weeklyCosts = calculateWeeklyCosts(projects);
   const weeklyRevenue = calculateWeeklyRevenue(projects, state.market.buyers);
   const netPerWeek = weeklyRevenue - weeklyCosts;

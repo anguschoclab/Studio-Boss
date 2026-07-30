@@ -7,17 +7,19 @@ export function generateCashflowForecast(
   state: GameState,
   weeks: number = 12
 ): { week: number; projected: number }[] {
-  // Use index to collect only contracts for released projects
-  const releasedProjects = Object.values(state.entities.projects || {}).filter(
-    (p) => p.state === "released"
-  );
-  const relevantContracts = releasedProjects.flatMap((p) =>
-    getContractsByProjectId(
-      state.entities?.contractsByProjectId,
-      state.entities?.contracts || {},
-      p.id
-    )
-  );
+  const relevantContracts: import("@/engine/types").Contract[] = [];
+  const projects = state.entities.projects || {};
+  for (const id in projects) {
+    if (projects[id].state === "released") {
+      relevantContracts.push(
+        ...getContractsByProjectId(
+          state.entities?.contractsByProjectId,
+          state.entities?.contracts || {},
+          id
+        )
+      );
+    }
+  }
 
   const { report } = generateWeeklyFinancialReport(
     state,

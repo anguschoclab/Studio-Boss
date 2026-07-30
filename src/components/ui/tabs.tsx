@@ -44,7 +44,6 @@ const TabsContentInner = React.forwardRef<
     forceMount?: boolean;
     hidden?: boolean;
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 >(({ className, children, "data-state": state, forceMount, hidden: _hidden, ...props }, ref) => {
   const isActive = state === "active";
 

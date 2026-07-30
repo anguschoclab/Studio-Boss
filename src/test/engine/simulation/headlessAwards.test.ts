@@ -139,4 +139,29 @@ describe("HeadlessController awards campaigns", () => {
     const projectUpdate = findProjectBuzzUpdate(impacts, "p1");
     expect(projectUpdate).toBeUndefined();
   });
+
+  it("does not crash when activeCampaigns is undefined", () => {
+    const playerId = "player";
+    const project = createProject("p1", playerId, 88, 90, 50);
+    const state = setupState(playerId, [project], 100_000_000);
+    (state.studio as any).activeCampaigns = undefined;
+    const rng = new RandomGenerator(42);
+
+    expect(() => HeadlessController.tick(state, rng)).not.toThrow();
+  });
+
+  it("skips projects that already have active campaigns", () => {
+    const playerId = "player";
+    const project = createProject("p1", playerId, 88, 90, 50);
+    const state = setupState(playerId, [project], 100_000_000);
+    (state.studio as any).activeCampaigns = {
+      "camp-1": { id: "camp-1", projectId: "p1", budget: 5_000_000 },
+    };
+    const rng = new RandomGenerator(42);
+
+    const impacts = HeadlessController.tick(state, rng);
+
+    const projectUpdate = findProjectBuzzUpdate(impacts, "p1");
+    expect(projectUpdate).toBeUndefined();
+  });
 });
