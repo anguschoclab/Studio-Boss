@@ -220,6 +220,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
                       <span
                         className="font-bold text-sm text-white truncate cursor-pointer hover:text-primary transition-colors"
                         role="button"
+                        aria-label={`View ${t.name} profile`}
                         tabIndex={0}
                         onKeyDown={(e) => {
                           if (e.key === "Enter" || e.key === " ") {
