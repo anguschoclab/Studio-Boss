@@ -217,8 +217,10 @@ export function tickRelationshipSystem(state: GameState, rng: RandomGenerator): 
   }
 
   // 2. Evolve existing relationships
-  const existingRelationships = Object.values(state.relationships?.relationships || {});
-  for (const relationship of existingRelationships) {
+  // ⚡ Bolt: Replaced Object.values() with a direct for...in loop to eliminate intermediate array allocations
+  const existingRelationships = state.relationships?.relationships || {};
+  for (const key in existingRelationships) {
+    const relationship = existingRelationships[key];
     // 30% chance to evolve each existing relationship per week
     if (rng.next() < 0.3) {
       const { updated, impacts: evolutionImpacts } = evolveRelationship(relationship, state, rng);
