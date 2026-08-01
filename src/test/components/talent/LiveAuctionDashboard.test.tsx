@@ -6,7 +6,7 @@ import { useGameStore } from "@/store/gameStore";
 import { Opportunity } from "@/engine/types";
 
 vi.mock("@/components/ui/button", () => ({
-  Button: ({ children, onClick, disabled, ...rest }: any) => (
+  Button: ({ children, onClick, disabled }: any) => (
     <button onClick={onClick} disabled={disabled} data-testid="button">
       {children}
     </button>

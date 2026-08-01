@@ -19,7 +19,7 @@ function makeMockRng(nextValue: number = 0.5) {
 describe("talentArchetypes", () => {
   describe("tierBias arrays contain valid TalentTier strings", () => {
     it("all ACTOR_ARCHETYPES tierBias values are valid TalentTier strings", () => {
-      for (const [key, archetype] of Object.entries(ACTOR_ARCHETYPES)) {
+      for (const [, archetype] of Object.entries(ACTOR_ARCHETYPES)) {
         for (const tier of archetype.tierBias) {
           expect(VALID_TIERS).toContain(tier);
         }
@@ -27,7 +27,7 @@ describe("talentArchetypes", () => {
     });
 
     it("all WRITER_ARCHETYPES tierBias values are valid TalentTier strings", () => {
-      for (const [key, archetype] of Object.entries(WRITER_ARCHETYPES)) {
+      for (const [, archetype] of Object.entries(WRITER_ARCHETYPES)) {
         for (const tier of archetype.tierBias) {
           expect(VALID_TIERS).toContain(tier);
         }
@@ -35,7 +35,7 @@ describe("talentArchetypes", () => {
     });
 
     it("all PRODUCER_ARCHETYPES tierBias values are valid TalentTier strings", () => {
-      for (const [key, archetype] of Object.entries(PRODUCER_ARCHETYPES)) {
+      for (const [, archetype] of Object.entries(PRODUCER_ARCHETYPES)) {
         for (const tier of archetype.tierBias) {
           expect(VALID_TIERS).toContain(tier);
         }
@@ -43,7 +43,7 @@ describe("talentArchetypes", () => {
     });
 
     it("all PERSONALITY_ARCHETYPES tierBias values are valid TalentTier strings", () => {
-      for (const [key, archetype] of Object.entries(PERSONALITY_ARCHETYPES)) {
+      for (const [, archetype] of Object.entries(PERSONALITY_ARCHETYPES)) {
         for (const tier of archetype.tierBias) {
           expect(VALID_TIERS).toContain(tier);
         }
