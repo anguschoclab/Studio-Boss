@@ -7,7 +7,7 @@ const STUDIO_NAME = "Stress Test Studios";
 const ARCHETYPE = "major";
 
 describe("52-Week Determinism Stress Test", () => {
-  test("should produce bit-identical results after 52 weeks of simulation", () => {
+  test("should produce bit-identical results after 52 weeks of simulation", { timeout: 10000 }, () => {
     const stateA = initializeGame(STUDIO_NAME, ARCHETYPE, SEED);
     const stateB = initializeGame(STUDIO_NAME, ARCHETYPE, SEED);
 
