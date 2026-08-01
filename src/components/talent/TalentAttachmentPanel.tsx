@@ -147,6 +147,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
               <Input
                 aria-label="Search industry database"
                 placeholder="Search industry database..."
+                maxLength={100}
                 className="pl-10 bg-black/40 border-slate-700 text-xs"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}

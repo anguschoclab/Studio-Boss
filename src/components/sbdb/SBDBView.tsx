@@ -73,7 +73,7 @@ export const SBDBView = () => {
             <Input
               aria-label="Search SBDB"
               placeholder="Search SBDB..."
-
+              maxLength={100}
               className="pl-10 bg-white/5 border-white/10"
               value={search}
               onChange={(e) => setSearch(e.target.value)}

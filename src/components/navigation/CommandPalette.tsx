@@ -322,6 +322,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
                 <input
                   type="text"
                   aria-label="Search commands and intelligence"
+                  maxLength={100}
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="SEARCH COMMANDS & TAC INTEL..."
