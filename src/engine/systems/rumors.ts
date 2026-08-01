@@ -48,24 +48,34 @@ export function advanceRumors(state: GameState): StateImpact {
 
     let text = "Unnamed studio in talks for a massive merger.";
 
-    if (category === "talent" && Object.keys(state.entities.talents || {}).length > 0) {
-      const talent = pick(Object.values(state.entities.talents));
+    const talentKeys = Object.keys(state.entities.talents || {});
+    const rivalKeys = Object.keys(state.entities.rivals || {});
+    const projectKeys = Object.keys(state.entities.projects || {});
+
+    if (category === "talent" && talentKeys.length > 0) {
+      // ⚡ Bolt Optimization: Reused keys array to pick random talent, eliminating Object.values() O(N) intermediate object array allocation.
+      const talentId = pick(talentKeys);
+      const talent = state.entities.talents[talentId];
       const rumors = [
         `${talent.name} reportedly demanding unprecedented back-end points on next project.`,
         `Sources say ${talent.name} is extremely difficult to work with on set.`,
         `${talent.name} is secretly looking to direct their next feature.`,
       ];
       text = pick(rumors);
-    } else if (category === "rival" && Object.keys(state.entities.rivals || {}).length > 0) {
-      const rival = pick(Object.values(state.entities.rivals));
+    } else if (category === "rival" && rivalKeys.length > 0) {
+      // ⚡ Bolt Optimization: Reused keys array to pick random rival, eliminating Object.values() O(N) intermediate object array allocation.
+      const rivalId = pick(rivalKeys);
+      const rival = state.entities.rivals[rivalId];
       const rumors = [
         `${rival.name} is allegedly facing severe cash flow issues.`,
         `Word around town is ${rival.name} is preparing a monumental buyout offer.`,
         `Exec shakeups expected soon at ${rival.name}.`,
       ];
       text = pick(rumors);
-    } else if (category === "project" && Object.keys(state.entities.projects || {}).length > 0) {
-      const project = pick(Object.values(state.entities.projects));
+    } else if (category === "project" && projectKeys.length > 0) {
+      // ⚡ Bolt Optimization: Reused keys array to pick random project, eliminating Object.values() O(N) intermediate object array allocation.
+      const projectId = pick(projectKeys);
+      const project = state.entities.projects[projectId];
       if (project.state === "production") {
         text = `Production on "${project.title}" is rumored to be wildly over budget.`;
       } else {
