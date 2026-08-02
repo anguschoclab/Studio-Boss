@@ -4,7 +4,7 @@ import {
   isAcquirerBlockedByAntitrust,
 } from "@/engine/systems/industry/Antitrust";
 import type { AntitrustEvent } from "@/engine/systems/industry/Antitrust";
-import type { GameState, StateImpact } from "@/engine/types";
+import type { StateImpact } from "@/engine/types";
 import { defaultSimMemory } from "@/engine/core/simMemory";
 import { createMockGameState, createMockRival } from "./generators/mockFactory";
 import * as utils from "@/engine/utils";
