@@ -171,6 +171,7 @@ export const TalentHub = () => {
               <Input
                 aria-label="Search global database"
                 placeholder="SEARCH GLOBAL DATABASE..."
+                maxLength={100}
                 className="pl-14 h-14 bg-black/60 border-white/10 focus-visible:border-primary/40 focus-visible:ring-0 text-[10px] font-black uppercase tracking-[0.3em] rounded-none italic"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
