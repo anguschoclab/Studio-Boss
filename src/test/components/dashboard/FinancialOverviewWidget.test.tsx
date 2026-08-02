@@ -15,11 +15,9 @@ vi.mock("recharts", () => ({
   Area: () => <div data-testid="area" />,
   XAxis: () => <div data-testid="xaxis" />,
   YAxis: () => <div data-testid="yaxis" />,
-  defs: ({ children }: { children: React.ReactNode }) => <defs>{children}</defs>,
-  stop: () => <stop />,
-  linearGradient: ({ children }: { children: React.ReactNode }) => (
-    <linearGradient>{children}</linearGradient>
-  ),
+  defs: ({ children }: { children: React.ReactNode }) => <div data-testid="defs">{children}</div>,
+  stop: () => <div data-testid="stop" />,
+  linearGradient: ({ children }: { children: React.ReactNode }) => <div data-testid="lineargradient">{children}</div>,
   filter: ({ children }: { children: React.ReactNode }) => <filter>{children}</filter>,
   feGaussianBlur: () => <feGaussianBlur />,
   feComposite: () => <feComposite />,

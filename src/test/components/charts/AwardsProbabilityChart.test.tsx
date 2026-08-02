@@ -21,7 +21,7 @@ vi.mock("recharts", () => ({
   YAxis: ({ dataKey, width }: any) => (
     <div data-testid="mock-y-axis" data-datakey={dataKey} data-width={width} />
   ),
-  Tooltip: ({ content }: any) => <div data-testid="mock-tooltip">{content}</div>,
+  Tooltip: ({ content }: any) => <div data-testid="mock-tooltip"></div>,
   Cell: ({ fill }: any) => <div data-testid="mock-cell" data-fill={fill} />,
   LabelList: ({ dataKey }: any) => <div data-testid="mock-label-list" data-datakey={dataKey} />,
 }));
