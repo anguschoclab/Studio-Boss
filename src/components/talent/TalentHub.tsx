@@ -174,6 +174,7 @@ export const TalentHub = () => {
                 className="pl-14 h-14 bg-black/60 border-white/10 focus-visible:border-primary/40 focus-visible:ring-0 text-[10px] font-black uppercase tracking-[0.3em] rounded-none italic"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                maxLength={100}
               />
             </div>
             <div className="flex items-center gap-6 w-full md:w-auto">

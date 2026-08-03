@@ -44,6 +44,7 @@ const DiscoveryHeader = ({ openCreateProject }: { openCreateProject: () => void 
             aria-label="SEARCH LISTINGS"
             className="h-12 pl-12 text-[10px] bg-black/40 border-white/5 uppercase font-black tracking-[0.2em] rounded-none focus:ring-secondary/20 italic placeholder:text-muted-foreground/10"
             placeholder="SEARCH LISTINGS (COMING SOON)..."
+            maxLength={100}
           />
         </TooltipWrapper>
       </div>

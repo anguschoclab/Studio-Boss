@@ -150,6 +150,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
                 className="pl-10 bg-black/40 border-slate-700 text-xs"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                maxLength={100}
               />
             </div>
 
