@@ -36,7 +36,7 @@ vi.mock("zustand/react/shallow", () => ({
   useShallow: (selector: any) => selector,
 }));
 
-function makeFranchiseState(): any {
+function _makeFranchiseState(): any {
   return {
     gameState: {
       ip: {
