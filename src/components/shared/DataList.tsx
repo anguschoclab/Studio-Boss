@@ -201,12 +201,13 @@ export function FilterableDataList<T>({
     <div className="space-y-8">
       {showSearch && onSearchChange && (
         <div className="relative group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/20 group-focus-within:text-primary transition-colors" />
+          <Search aria-hidden="true" className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/20 group-focus-within:text-primary transition-colors" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={searchPlaceholder}
+            aria-label={searchPlaceholder || "Search"}
             className={cn(
               "w-full pl-12 pr-6 py-4",
               "bg-white/[0.02] border border-white/5 rounded-none",
