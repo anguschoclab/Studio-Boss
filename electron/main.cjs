@@ -636,6 +636,16 @@ app.whenReady().then(async () => {
   }
 });
 
+app.on("web-contents-created", (event, contents) => {
+  contents.on("will-attach-webview", (event, webPreferences, params) => {
+    // Delete preload scripts if any
+    delete webPreferences.preload;
+    // Disable node integration
+    webPreferences.nodeIntegration = false;
+    event.preventDefault(); // Default to preventing webview creation completely
+  });
+});
+
 // Quit when all windows are closed (except on macOS)
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
