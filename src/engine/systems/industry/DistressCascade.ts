@@ -5,7 +5,7 @@ import {isAcquirerBlockedByAntitrust} from "./Antitrust";
 import {cancelHighestOverheadDeal} from "../deals/ShingleSystem";
 import type {DistressedAssetOffer} from "@/engine/types/distress.types";
 import {getPlayerId} from "@/engine/utils/ownership";
-import {impacts, as, I} from "../../core/impacts";
+import {impacts as I} from "../../core/impacts";
 import {applyImpacts} from "../../core/impactReducer";
 import {getSimMemory} from "../../core/simMemory";
 import type {SimMemory} from "@/engine/types/state.types";

@@ -2,7 +2,7 @@ import {useSettingsStore, Difficulty, AutosaveFrequency, PolicyKey} from "@/stor
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
 import {cn} from "@/lib/utils";
-import {Settings, as, SettingsIcon} from "lucide-react";
+import {Settings as SettingsIcon} from "lucide-react";
 
 interface SettingsModalProps {
   open: boolean;

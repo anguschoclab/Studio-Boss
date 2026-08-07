@@ -2,7 +2,7 @@ import {GameState, StateImpact} from "@/engine/types";
 import {CampaignData} from "@/engine/types/state.types";
 import {RandomGenerator} from "../../utils/rng";
 import {checkCampaignBacklash} from "../awards/NominationCalculator";
-import {impacts, as, I} from "../../core/impacts";
+import {impacts as I} from "../../core/impacts";
 
 export interface AwardsCampaignResult {
   campaign: CampaignData;

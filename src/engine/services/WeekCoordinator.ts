@@ -2,7 +2,7 @@ import {GameState, StateImpact, WeekSummary, GameEvent} from "../types";
 import {RandomGenerator} from "../utils/rng";
 import {applyImpacts} from "../core/impactReducer";
 import {setDeterministicSeed} from "../utils";
-import {impacts, as, I} from "../core/impacts";
+import {impacts as I} from "../core/impacts";
 import {defaultSimMemory} from "../core/simMemory";
 
 // System Imports

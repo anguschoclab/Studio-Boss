@@ -4,7 +4,7 @@ import {RandomGenerator} from "@/engine/utils/rng";
 import {isPlayerOwner, getPlayerId} from "@/engine/utils/ownership";
 import {getContractsByTalentId} from "@/engine/utils";
 import {getSimMemory} from "../../core/simMemory";
-import {impacts, as, I} from "../../core/impacts";
+import {impacts as I} from "../../core/impacts";
 
 /**
  * ShingleSystem — models vanity-shingle / production-company deals (Bad Robot,
