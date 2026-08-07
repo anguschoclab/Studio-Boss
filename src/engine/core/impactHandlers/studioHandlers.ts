@@ -22,20 +22,26 @@ export function handlePrestigeChanged(state: GameState, impact: PrestigeChangedI
 }
 
 export function handleNewsAdded(state: GameState, impact: NewsImpact): GameState {
-  const { id, headline, description, publication } = impact.payload;
+  const { id, headline, description, publication, type, category, impact: impactField, talentId, projectId, rivalId, buyerId } = impact.payload;
   const newsEvent: NewsEvent = {
     id: id || `news-${state.week}-${state.tickCount}-${headline.slice(0, 20)}`,
     week: state.week,
-    type: "STUDIO_EVENT",
+    type: type || "STUDIO_EVENT",
     headline: headline,
     description: description || "",
     publication: publication,
+    ...(category && { category }),
+    ...(impactField && { impact: impactField }),
+    ...(talentId && { talentId }),
+    ...(projectId && { projectId }),
+    ...(rivalId && { rivalId }),
+    ...(buyerId && { buyerId }),
   };
   return {
     ...state,
     industry: {
       ...state.industry,
-      newsHistory: [newsEvent, ...state.industry.newsHistory].slice(0, 100),
+      newsHistory: [newsEvent, ...(state.industry.newsHistory || [])].slice(0, 100),
     },
   };
 }

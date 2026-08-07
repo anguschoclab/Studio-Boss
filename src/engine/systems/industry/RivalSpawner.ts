@@ -165,6 +165,7 @@ export function tickRivalSpawner(state: GameState): StateImpact[] {
         : `DISRUPTOR: ${newRival.name} enters industry with $${(newRival.cash / 1e6).toFixed(0)}M war chest`,
       description: newRival.recentActivity,
       category: "market",
+      rivalId: newRival.id,
     },
   });
 
@@ -198,6 +199,7 @@ export function tickHardBankruptcy(state: GameState): StateImpact[] {
         headline: `INSOLVENCY: ${r.name} liquidates, assets to be auctioned`,
         description: `After prolonged cash depletion, ${r.name} has entered Chapter 7 and will cease operations.`,
         category: "market",
+        rivalId: r.id,
       },
     });
     // One bankruptcy per tick keeps churn realistic.

@@ -9,7 +9,7 @@ export type RatingEventType = "rating_controversy" | "foreign_market_cut" | "ban
 
 export function generateStudioRatingEvent(
   type: RatingEventType,
-  context: { projectTitle: string; marketName?: string; week: number },
+  context: { projectTitle: string; projectId?: string; marketName?: string; week: number },
   rng: RandomGenerator
 ): StateImpact {
   const prestigeLoss = type === "banned_in_market" ? -10 : type === "rating_controversy" ? -5 : -3;
@@ -45,15 +45,19 @@ export function generateStudioRatingEvent(
         headline,
         description,
         publication,
+        ...(context.projectId && { projectId: context.projectId }),
       },
     ],
     newHeadlines: [
       {
         id: rng.uuid("NWS"),
-        text: headline,
+        headline: headline,
+        description: "",
         week: context.week,
+        type: "SCANDAL",
         category: "scandal",
         publication,
+        ...(context.projectId && { projectId: context.projectId }),
       },
     ],
   };
@@ -68,7 +72,8 @@ export function generateMarketBanScandal(
 ): StateImpact | null {
   if (bannedMarkets.length === 0) return null;
 
-  const alreadyReported = state.industry.newsHistory.some(
+  const allNewsEvents = (state.weekSummaries || []).flatMap((s) => s.newsEvents || []);
+  const alreadyReported = allNewsEvents.some(
     (e) => e.headline.includes(project.title) && e.headline.includes("BANNED")
   );
   if (alreadyReported) return null;
@@ -100,15 +105,19 @@ export function generateMarketBanScandal(
           rng,
         }),
         publication: "The Hollywood Reporter",
+        projectId: project.id,
       },
     ],
     newHeadlines: [
       {
         id: rng.uuid("NWS"),
-        text: headline,
+        headline: headline,
+        description: "",
         week,
+        type: "SCANDAL",
         category: "scandal",
         publication: "The Hollywood Reporter",
+        projectId: project.id,
       },
     ],
   };

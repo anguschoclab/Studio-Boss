@@ -16,7 +16,7 @@ interface NewsStoryModalProps {
  */
 function generateArticleContent(headline: Headline): string[] {
   const paragraphs: string[] = [];
-  const text = headline.text.toUpperCase();
+  const text = headline.headline.toUpperCase();
 
   // Generate contextual paragraphs based on category
   if (headline.category === "market") {
@@ -73,7 +73,7 @@ const CATEGORY_STYLES: Record<string, { color: string; label: string }> = {
 export const NewsStoryModal: React.FC<NewsStoryModalProps> = ({ headline, open, onClose }) => {
   if (!headline) return null;
 
-  const style = CATEGORY_STYLES[headline.category] || CATEGORY_STYLES.general;
+  const style = CATEGORY_STYLES[headline.category || "general"] || CATEGORY_STYLES.general;
   const paragraphs = generateArticleContent(headline);
 
   return (
@@ -102,7 +102,7 @@ export const NewsStoryModal: React.FC<NewsStoryModalProps> = ({ headline, open, 
           </div>
 
           <h2 className="font-display font-black text-3xl leading-[1.1] tracking-tighter text-foreground uppercase italic drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-            {headline.text.toUpperCase()}
+            {headline.headline.toUpperCase()}
           </h2>
 
           <div className="flex items-center gap-3">

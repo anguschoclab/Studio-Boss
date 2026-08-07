@@ -53,6 +53,7 @@ export function tickConsolidation(state: GameState): StateImpact[] {
         headline: `ANTITRUST FREEZE: ${acquirer.name} blocked from pursuing acquisitions`,
         description: `Federal regulators have suspended M&A activity for ${acquirer.name} pending review of its market position.`,
         category: "market",
+        rivalId: acquirer.id,
       },
     });
     return impacts;
@@ -95,6 +96,8 @@ export function tickConsolidation(state: GameState): StateImpact[] {
           headline: `REGULATOR BLOCK: ${acquirer.name}'s bid for ${target.name} rejected on ${reg.reason}`,
           description: `The proposed acquisition of ${target.name} by ${acquirer.name} has been blocked by federal regulators citing ${reg.reason}.`,
           category: "market",
+          rivalId: target.id,
+          buyerId: acquirer.id,
         },
       });
       return impacts;
@@ -125,7 +128,9 @@ export function tickConsolidation(state: GameState): StateImpact[] {
       payload: {
         headline: `${motiveLabel}: ${acquirer.name} acquires ${target.name} for $${(cost / 1_000_000).toFixed(1)}M`,
         description: `In a major industry move, ${acquirer.name} today finalized the acquisition of ${target.name}, further consolidating the ${acquirer.archetype} tier.`,
-        category: "general",
+        category: "market",
+        rivalId: target.id,
+        buyerId: acquirer.id,
       },
     });
     const newEvent: ConsolidationEvent = {
@@ -156,6 +161,7 @@ export function tickConsolidation(state: GameState): StateImpact[] {
           headline: `FEDERAL CRACKDOWN: ${platform.name} sale to ${acquirer.name} blocked`,
           description: `Regulators have intervened in the vertical integration of ${platform.name} into the ${acquirer.name} portfolio, citing market dominance concerns.`,
           category: "market",
+          rivalId: acquirer.id,
         },
       });
       return impacts;
@@ -187,6 +193,7 @@ export function tickConsolidation(state: GameState): StateImpact[] {
         headline: `VERTICAL INTEGRATION: ${acquirer.name} buys ${platform.name}`,
         description: `In a strategic shift toward vertical integration, ${acquirer.name} has acquired the ${platform.name} streaming platform to secure direct audience access.`,
         category: "market",
+        rivalId: acquirer.id,
       },
     });
     const newEvent: ConsolidationEvent = {

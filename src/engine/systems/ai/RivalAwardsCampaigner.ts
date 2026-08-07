@@ -100,6 +100,8 @@ export function tickRivalAwardsCampaigns(state: GameState, rng: RandomGenerator)
           headline: `BACKLASH: ${rival.name}'s aggressive awards campaigning for "${project.title}" sparks industry outcry!`,
           description: `Critics question the sincerity of the campaign given the project's reception.`,
           category: "scandal",
+          rivalId: rival.id,
+          projectId: project.id,
         })
       );
     }

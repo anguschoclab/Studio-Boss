@@ -61,20 +61,98 @@ describe("WeekCoordinator.buildSummary", () => {
     expect(summary).toHaveProperty("totalCosts", 0);
   });
 
-  it("collects NEWS_ADDED impacts into newHeadlines", () => {
+  it("collects NEWS_ADDED impacts into newsEvents", () => {
     context.impacts.push({
       type: "NEWS_ADDED",
-      payload: { headline: "Breaking News", category: "general" },
+      payload: { headline: "Breaking News", category: "general", type: "CRISIS" },
     } as unknown as StateImpact);
 
     const summary = (WeekCoordinator as unknown as {
       buildSummary: (b: GameState, a: GameState, c: TickContext) => {
-        newHeadlines: { text: string }[];
+        newsEvents: { headline: string; type: string }[];
+        newHeadlines: { headline: string }[];
       };
     }).buildSummary(beforeState, afterState, context);
 
+    expect(summary.newsEvents.length).toBeGreaterThan(0);
+    expect(summary.newsEvents[0].headline).toBe("Breaking News");
+    expect(summary.newsEvents[0].type).toBe("CRISIS");
+    // newHeadlines should also be populated for backward compat
     expect(summary.newHeadlines.length).toBeGreaterThan(0);
-    expect(summary.newHeadlines[0].text).toBe("Breaking News");
+    expect(summary.newHeadlines[0].headline).toBe("Breaking News");
+  });
+
+  it("newsEvents preserves entity refs from NEWS_ADDED impacts", () => {
+    context.impacts.push({
+      type: "NEWS_ADDED",
+      payload: {
+        headline: "Rival news",
+        description: "Desc",
+        type: "RIVAL",
+        category: "rival",
+        rivalId: "rival-1",
+        talentId: "talent-1",
+        projectId: "proj-1",
+      },
+    } as unknown as StateImpact);
+
+    const summary = (WeekCoordinator as unknown as {
+      buildSummary: (b: GameState, a: GameState, c: TickContext) => {
+        newsEvents: { rivalId?: string; talentId?: string; projectId?: string }[];
+      };
+    }).buildSummary(beforeState, afterState, context);
+
+    expect(summary.newsEvents[0].rivalId).toBe("rival-1");
+    expect(summary.newsEvents[0].talentId).toBe("talent-1");
+    expect(summary.newsEvents[0].projectId).toBe("proj-1");
+  });
+
+  it("collects compound newsEvents from bag impacts into newsEvents", () => {
+    context.impacts.push({
+      newsEvents: [
+        {
+          id: "ne-1",
+          week: 2,
+          type: "RIVAL",
+          headline: "Compound news",
+          description: "Desc",
+          rivalId: "rival-2",
+        },
+      ],
+    } as unknown as StateImpact);
+
+    const summary = (WeekCoordinator as unknown as {
+      buildSummary: (b: GameState, a: GameState, c: TickContext) => {
+        newsEvents: { headline: string; rivalId?: string }[];
+      };
+    }).buildSummary(beforeState, afterState, context);
+
+    expect(summary.newsEvents.some((e: any) => e.headline === "Compound news")).toBe(true);
+    expect(summary.newsEvents.find((e: any) => e.headline === "Compound news")?.rivalId).toBe("rival-2");
+  });
+
+  it("collects compound newHeadlines from bag impacts into newsEvents", () => {
+    context.impacts.push({
+      newHeadlines: [
+        {
+          id: "h-1",
+          week: 2,
+          type: "STUDIO_EVENT",
+          headline: "Bag headline news",
+          description: "",
+          category: "market",
+        },
+      ],
+    } as unknown as StateImpact);
+
+    const summary = (WeekCoordinator as unknown as {
+      buildSummary: (b: GameState, a: GameState, c: TickContext) => {
+        newsEvents: { headline: string; category?: string }[];
+      };
+    }).buildSummary(beforeState, afterState, context);
+
+    expect(summary.newsEvents.some((e: any) => e.headline === "Bag headline news")).toBe(true);
+    expect(summary.newsEvents.find((e: any) => e.headline === "Bag headline news")?.category).toBe("market");
   });
 
   it("collects PROJECT_UPDATED impacts into projectUpdates", () => {

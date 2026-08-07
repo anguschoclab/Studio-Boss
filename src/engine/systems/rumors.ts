@@ -22,14 +22,18 @@ export function advanceRumors(state: GameState): StateImpact {
           id: `confirm-${r.id}-${state.week}`,
           week: state.week,
           category: "rumor",
-          text: `CONFIRMED: ${r.text}`,
+          headline: `CONFIRMED: ${r.text}`,
+          description: "",
+          type: "STUDIO_EVENT",
         });
       } else {
         newHeadlines.push({
           id: `debunk-${r.id}-${state.week}`,
           week: state.week,
           category: "rumor",
-          text: `DEBUNKED: Previous rumors regarding ${r.text.toLowerCase()} turn out to be false.`,
+          headline: `DEBUNKED: Previous rumors regarding ${r.text.toLowerCase()} turn out to be false.`,
+          description: "",
+          type: "STUDIO_EVENT",
         });
       }
       return { ...r, resolved: true };
@@ -99,7 +103,9 @@ export function advanceRumors(state: GameState): StateImpact {
       id: `rumor-headline-${rumor.id}`,
       week: state.week,
       category: "rumor",
-      text: `RUMOR: ${text}`,
+      headline: `RUMOR: ${text}`,
+      description: "",
+      type: "STUDIO_EVENT",
     });
   }
 

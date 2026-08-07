@@ -257,7 +257,19 @@ export function applySingleImpact(state: GameState, impact: StateImpact): GameSt
       impact.newHeadlines.forEach((h) => {
         newState = applySingleImpact(newState, {
           type: "NEWS_ADDED",
-          payload: { headline: h.text, description: "" },
+          payload: {
+            id: h.id,
+            headline: h.headline,
+            description: h.description || "",
+            type: h.type,
+            category: h.category,
+            impact: h.impact,
+            publication: h.publication,
+            talentId: h.talentId,
+            projectId: h.projectId,
+            rivalId: h.rivalId,
+            buyerId: h.buyerId,
+          },
         });
       });
     }
@@ -265,7 +277,19 @@ export function applySingleImpact(state: GameState, impact: StateImpact): GameSt
       impact.newsEvents.forEach((e) => {
         newState = applySingleImpact(newState, {
           type: "NEWS_ADDED",
-          payload: { headline: e.headline, description: e.description },
+          payload: {
+            id: e.id,
+            headline: e.headline,
+            description: e.description,
+            type: e.type,
+            category: e.category,
+            impact: e.impact,
+            publication: e.publication,
+            talentId: e.talentId,
+            projectId: e.projectId,
+            rivalId: e.rivalId,
+            buyerId: e.buyerId,
+          },
         });
       });
     }

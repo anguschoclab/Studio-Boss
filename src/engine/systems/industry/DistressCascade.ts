@@ -226,6 +226,7 @@ export function completeFireSale(
       headline: `FIRE SALE: ${offer.sellerName} sells ${offer.assetLabel} to ${buyerName} for $${(offer.price / 1e6).toFixed(0)}M`,
       description: `Facing sustained losses, ${offer.sellerName} has offloaded ${offer.assetLabel} in a distressed IP sale.`,
       category: "market",
+      buyerId,
     }),
   );
 
@@ -438,6 +439,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
         headline: `LIQUIDATION: ${seller.name} divests ${platform?.name || "streaming platform"} for $${(proceeds / 1e6).toFixed(0)}M`,
         description: `${seller.name} has unwound its platform bet to stanch the bleeding.`,
         category: "market",
+        rivalId: seller.id,
       }),
     );
     newEvents.push({
@@ -468,6 +470,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
         headline: `BACKLOT SALE: ${seller.name} sells production facilities for $${(proceeds / 1e6).toFixed(0)}M`,
         description: `${seller.name} has sold studio real estate and equipment in a distressed asset sale.`,
         category: "market",
+        rivalId: seller.id,
       }),
     );
     newEvents.push({
@@ -525,6 +528,8 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
           headline: `SHELVED: ${seller.name} scraps ${target.title} mid-production, claims $${(proceeds / 1e6).toFixed(0)}M write-off`,
           description: `${seller.name} has abandoned ${target.title} and will book the sunk cost as a tax write-down.`,
           category: "market",
+          rivalId: seller.id,
+          projectId: target.id,
         }),
       );
       newEvents.push({
@@ -601,6 +606,8 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
           headline: `LIBRARY SALE: ${seller.name} offloads ${bundleSize} back-catalog titles${buyer ? ` to ${buyer.name}` : ""} for $${(proceeds / 1e6).toFixed(0)}M`,
           description: `${seller.name} has sold ongoing streaming and ancillary rights on ${bundleSize} released titles to raise cash.`,
           category: "market",
+          rivalId: seller.id,
+          buyerId: buyer?.id,
         }),
       );
       newEvents.push({
@@ -636,6 +643,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
         headline: `SLATE FINANCING: ${seller.name} sells backend stake on franchise slate for $${(proceeds / 1e6).toFixed(0)}M`,
         description: `${seller.name} has sold a share of future franchise revenue to outside financiers. The studio keeps ownership; backers collect the upside.`,
         category: "market",
+        rivalId: seller.id,
       }),
     );
     newEvents.push({
@@ -666,6 +674,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
       headline: `LAYOFFS: ${seller.name} cuts overhead staff, saves $${(proceeds / 1e6).toFixed(0)}M annualized`,
       description: `${seller.name} has laid off executives, development, and marketing staff in a company-wide restructuring.`,
       category: "market",
+      rivalId: seller.id,
     }),
   );
   newEvents.push({
@@ -733,6 +742,8 @@ function stage3DistressedMA(state: GameState, target: RivalStudio, distress?: Di
       headline: `DISTRESSED M&A: ${acquirer.name} absorbs ${target.name} at fire-sale $${(price / 1e6).toFixed(0)}M`,
       description: `With ${target.name} running a cash deficit, ${acquirer.name} has struck a rescue acquisition on punitive terms.`,
       category: "market",
+      rivalId: target.id,
+      buyerId: acquirer.id,
     }),
   );
   newEvents.push({
@@ -769,6 +780,7 @@ function stage4Bankruptcy(state: GameState, target: RivalStudio): StateImpact[] 
       headline: `BANKRUPTCY: ${target.name} liquidates; catalog reverts to open market`,
       description: `After exhausting asset sales and finding no buyer, ${target.name} has filed Chapter 7.`,
       category: "market",
+      rivalId: target.id,
     }),
   );
   newEvents.push({

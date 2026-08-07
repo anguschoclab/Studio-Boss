@@ -71,6 +71,7 @@ export function tickIndustryUpstarts(state: GameState): StateImpact[] {
         headline: `NEW PLAYER: ${name} launches as artisanal studio`,
         description: `With a focus on quality over volume, ${name} has officially entered the market as a boutique ${archetype} studio.`,
         category: "general",
+        rivalId: newStudio.id,
       },
     });
   }
@@ -109,6 +110,7 @@ export function tickIndustryUpstarts(state: GameState): StateImpact[] {
         headline: `DISRUPTOR: ${name} enters the streaming wars`,
         description: `A new streaming platform, ${name}, has launched today with an aggressive subscriber acquisition strategy.`,
         category: "market",
+        buyerId: newStreamer.id,
       },
     });
   }

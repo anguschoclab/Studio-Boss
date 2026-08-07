@@ -65,9 +65,11 @@ export function advanceBuyers(state: GameState): StateImpact {
           id: generateId("HL"),
           week: currWeek,
           category: "market",
-          text: pick(performance > 0 ? STREAMER_GROWTH_EVENTS : STREAMER_DECLINE_EVENTS)(
+          headline: pick(performance > 0 ? STREAMER_GROWTH_EVENTS : STREAMER_DECLINE_EVENTS)(
             buyer.name
           ),
+          description: "",
+          type: "STUDIO_EVENT",
         });
       }
     } else {
@@ -87,7 +89,9 @@ export function advanceBuyers(state: GameState): StateImpact {
           id: generateId("HL"),
           week: currWeek,
           category: "market",
-          text: pick(VULNERABILITY_HEADLINES)(buyer.name),
+          headline: pick(VULNERABILITY_HEADLINES)(buyer.name),
+          description: "",
+          type: "STUDIO_EVENT",
         });
       }
     } else {
@@ -135,7 +139,9 @@ export function advanceBuyers(state: GameState): StateImpact {
           id: generateId("HL"),
           week: currWeek,
           category: "market",
-          text: pick(MERGER_HEADLINES)(acquirer.name, target.name),
+          headline: pick(MERGER_HEADLINES)(acquirer.name, target.name),
+          description: "",
+          type: "STUDIO_EVENT",
         });
       }
     }

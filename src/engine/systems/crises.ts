@@ -86,7 +86,9 @@ export function resolveCrisis(
     id: generateId("HL"),
     week: state.week,
     category: "general",
-    text: `Crisis resolved for "${project.title}": ${option.text}`,
+    headline: `Crisis resolved for "${project.title}": ${option.text}`,
+    description: "",
+    type: "STUDIO_EVENT",
   });
 
   impact.newsEvents!.push({

@@ -24,7 +24,7 @@ describe("handleNewsAdded - Determinism", () => {
     } as unknown as StateImpact;
 
     const result = handleNewsAdded(state, impact as never);
-    expect(result.industry.newsHistory[0].id).toBe("custom-news-id");
+    expect(result.industry.newsHistory![0].id).toBe("custom-news-id");
   });
 
   it("generates deterministic ID when id is not provided (no Date.now())", () => {
@@ -38,7 +38,7 @@ describe("handleNewsAdded - Determinism", () => {
     } as unknown as StateImpact;
 
     const result = handleNewsAdded(state, impact as never);
-    const newsId = result.industry.newsHistory[0].id;
+    const newsId = result.industry.newsHistory![0].id;
     // Should be deterministic based on week, tickCount, and headline
     expect(newsId).toBe("news-10-5-Breaking News Story");
     // Should NOT contain a timestamp
@@ -56,7 +56,7 @@ describe("handleNewsAdded - Determinism", () => {
     } as unknown as StateImpact;
 
     const result1 = handleNewsAdded(state, impact as never);
-    const id1 = result1.industry.newsHistory[0].id;
+    const id1 = result1.industry.newsHistory![0].id;
 
     // Reset state to same initial conditions
     const state2 = createMockGameState();
@@ -64,7 +64,7 @@ describe("handleNewsAdded - Determinism", () => {
     state2.tickCount = 5;
 
     const result2 = handleNewsAdded(state2, impact as never);
-    const id2 = result2.industry.newsHistory[0].id;
+    const id2 = result2.industry.newsHistory![0].id;
 
     expect(id1).toBe(id2);
   });
@@ -82,7 +82,7 @@ describe("handleNewsAdded - Determinism", () => {
 
     const result1 = handleNewsAdded(state, impact1 as never);
     const result2 = handleNewsAdded(state, impact2 as never);
-    expect(result1.industry.newsHistory[0].id).not.toBe(result2.industry.newsHistory[0].id);
+    expect(result1.industry.newsHistory![0].id).not.toBe(result2.industry.newsHistory![0].id);
   });
 
   it("produces different IDs for different weeks", () => {
@@ -96,7 +96,7 @@ describe("handleNewsAdded - Determinism", () => {
     state.week = 11;
     const result2 = handleNewsAdded(state, impact as never);
 
-    expect(result1.industry.newsHistory[0].id).not.toBe(result2.industry.newsHistory[0].id);
+    expect(result1.industry.newsHistory![0].id).not.toBe(result2.industry.newsHistory![0].id);
   });
 
   it("truncates headline to 20 characters in deterministic ID", () => {
@@ -107,7 +107,7 @@ describe("handleNewsAdded - Determinism", () => {
     } as unknown as StateImpact;
 
     const result = handleNewsAdded(state, impact as never);
-    const newsId = result.industry.newsHistory[0].id;
+    const newsId = result.industry.newsHistory![0].id;
     // Should contain first 20 chars of headline
     expect(newsId).toContain(longHeadline.slice(0, 20));
     expect(newsId).not.toContain(longHeadline.slice(0, 21));

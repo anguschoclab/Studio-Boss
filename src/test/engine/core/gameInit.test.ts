@@ -8,7 +8,7 @@ describe("initializeGame", () => {
     expect(state.studio.archetype).toBe("major");
     expect(state.week).toBe(1);
     expect(state.news.headlines).toHaveLength(1);
-    expect(state.news.headlines[0].text).toContain("My Studio");
+    expect(state.news.headlines[0].headline).toContain("My Studio");
   });
 
   it("assigns player streamer ownerId to the actual studio ID", () => {
@@ -33,5 +33,14 @@ describe("initializeGame", () => {
     const state = initializeGame("My Studio", "major");
     expect(state.entities.contractsByProjectId).toBeDefined();
     expect(state.entities.contractsByProjectId).toEqual({});
+  });
+
+  it("initializes weekSummaries with launch news event", () => {
+    const state = initializeGame("My Studio", "major");
+    expect(state.weekSummaries).toBeDefined();
+    expect(state.weekSummaries).toHaveLength(1);
+    expect(state.weekSummaries[0].newsEvents).toBeDefined();
+    expect(state.weekSummaries[0].newsEvents.length).toBeGreaterThan(0);
+    expect(state.weekSummaries[0].newsEvents[0].headline).toContain("My Studio");
   });
 });

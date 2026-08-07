@@ -71,6 +71,7 @@ export function processRazzies(
           rng,
         }),
         category: "awards",
+        projectId: project.id,
       }),
     );
 
@@ -80,6 +81,7 @@ export function processRazzies(
           headline: `"${project.title}" gains ironic cult following`,
           description: `Despite its Razzie nomination, the film has developed a cult following among midnight movie audiences.`,
           category: "general",
+          projectId: project.id,
         }),
       );
     }
@@ -109,6 +111,8 @@ export function processRazzies(
           headline: `RAZZIES: ${worstLeadTalent.name} "wins" Worst Lead for "${project.title}"`,
           description: `${worstLeadTalent.name} has been "honored" with a Razzie for their performance in the critically panned "${project.title}".`,
           category: "awards",
+          projectId: project.id,
+          talentId: worstLeadTalent.id,
         }),
       );
     }

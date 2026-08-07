@@ -71,7 +71,9 @@ export class InterestRateSimulator {
           id: generateId("HL"),
           week: state.week,
           category: "market",
-          text: `Market Brief: Interest rates are ${trend} as the global economy shifts.`,
+          headline: `Market Brief: Interest rates are ${trend} as the global economy shifts.`,
+          description: "",
+          type: "STUDIO_EVENT",
         } as Headline,
       ];
     }

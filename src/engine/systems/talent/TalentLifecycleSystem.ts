@@ -68,6 +68,7 @@ export const TalentLifecycleSystem = {
                 description,
                 category: "talent",
                 publication: "Variety",
+                talentId,
               },
             });
           }
@@ -126,6 +127,7 @@ export const TalentLifecycleSystem = {
               description: `The talent will be on medical leave for approximately 8 weeks.`,
               category: "talent",
               publication: "The Hollywood Reporter",
+              talentId: talent.id,
             },
           });
           continue;

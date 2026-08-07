@@ -37,6 +37,7 @@ describe("CommandCenter", () => {
       industry: {
         newsHistory: [],
       },
+      weekSummaries: [],
       finance: { cash: 1000000 },
       ...overrides,
     },
@@ -101,12 +102,16 @@ describe("CommandCenter", () => {
   it("renders news history when available", () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = mockState({
-        industry: {
-          newsHistory: [
-            { id: "n1", week: 12, headline: "Huge Box Office", description: "A movie made money" },
-            { id: "n2", week: 13, headline: "Scandal!", description: "Oh no" },
-          ],
-        },
+        weekSummaries: [
+          {
+            fromWeek: 12, toWeek: 12, cashBefore: 0, cashAfter: 0, totalRevenue: 0, totalCosts: 0,
+            projectUpdates: [], newHeadlines: [], events: [],
+            newsEvents: [
+              { id: "n1", week: 12, type: "STUDIO_EVENT", headline: "Huge Box Office", description: "A movie made money" },
+              { id: "n2", week: 13, type: "STUDIO_EVENT", headline: "Scandal!", description: "Oh no" },
+            ],
+          },
+        ],
       });
       return selector(state);
     });

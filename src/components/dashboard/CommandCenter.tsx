@@ -2,6 +2,7 @@ import React from "react";
 import { FinancialOverviewWidget } from "./FinancialOverviewWidget";
 import { DemographicsWidget } from "./DemographicsWidget";
 import { useGameStore } from "@/store/gameStore";
+import { selectNewsHistory } from "@/store/selectors";
 import { Clapperboard, Users, PieChart, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { KPIStatCard } from "@/components/shared/KPIStatCard";
@@ -31,9 +32,9 @@ export const CommandCenter: React.FC = () => {
   const gameState = useGameStore((state) => state.gameState);
   if (!gameState) return null;
 
-  const { studio, industry, entities, finance } = gameState;
+  const { studio, entities, finance } = gameState;
   const projects = Object.values(entities?.projects || {});
-  const newsHistory = industry?.newsHistory ?? [];
+  const newsHistory = selectNewsHistory(gameState);
   const rivals = Object.values(entities?.rivals || {});
 
   const activeProjectsCount = projects.filter(

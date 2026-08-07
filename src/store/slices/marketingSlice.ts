@@ -67,13 +67,15 @@ export const createMarketingSlice: StateCreator<GameStore, [], [], MarketingSlic
         rngState: result.rngState,
       };
 
+      const newsEvents: import("@/engine/types").NewsEvent[] = [];
       for (const impact of result.impacts) {
         if (impact.newHeadlines) {
-          newState.news = {
-            ...newState.news,
-            headlines: [...impact.newHeadlines, ...newState.news.headlines],
-          };
+          newsEvents.push(...impact.newHeadlines);
         }
+      }
+
+      if (newsEvents.length > 0) {
+        s.appendNewsEvents(newsEvents);
       }
 
       return {

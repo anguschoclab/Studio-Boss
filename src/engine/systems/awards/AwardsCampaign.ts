@@ -61,6 +61,7 @@ export function launchAwardsCampaign(
         headline: `BACKLASH: Aggressive awards campaigning for "${project.title}" sparks industry outcry!`,
         description: ``,
         category: "scandal",
+        projectId,
       }),
     );
   }

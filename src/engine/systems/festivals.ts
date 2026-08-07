@@ -77,7 +77,9 @@ export function submitToFestival(
         id: generateId("HL"),
         week: state.week,
         category: "awards" as const,
-        text: `"${project.title}" officially submitted for consideration at ${fest.name}.`,
+        headline: `"${project.title}" officially submitted for consideration at ${fest.name}.`,
+        description: "",
+        type: "STUDIO_EVENT",
       },
     ],
   };
@@ -129,7 +131,9 @@ export function resolveFestivals(state: GameState): StateImpact {
           id: generateId("HL"),
           week: state.week,
           category: "awards" as const,
-          text: `Massive buzz out of ${fest.name} as "${project.title}" premieres to standing ovation!`,
+          headline: `Massive buzz out of ${fest.name} as "${project.title}" premieres to standing ovation!`,
+          description: "",
+          type: "STUDIO_EVENT",
         });
 
         updatedSubmissions.push({ ...sub, status: "selected" as const, buzzGain: fest.buzzReward });

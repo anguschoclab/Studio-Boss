@@ -131,6 +131,7 @@ export function runAwardsCeremony(
               rng,
             }),
             category: "awards",
+            projectId: bestProject.id,
           },
         });
       }

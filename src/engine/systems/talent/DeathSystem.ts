@@ -310,6 +310,8 @@ function processProjectImpacts(
       description: `Filming has been suspended following the tragic passing of ${state.entities.talents?.[deathEvent.talentId]?.name}. The studio is evaluating options to complete the project.`,
       category: "talent",
       publication: "Variety",
+      talentId: deathEvent.talentId,
+      projectId: project.id,
     },
   });
 
@@ -359,6 +361,7 @@ function processGriefImpacts(
           description: `Following the death of their co-star, ${coStar.name} has temporarily left the production to process their grief.`,
           category: "talent",
           publication: "The Hollywood Reporter",
+          talentId: coStar.id,
         },
       });
     }
@@ -443,6 +446,7 @@ export function tickDeathSystem(state: GameState, rng: RandomGenerator): StateIm
             description: `${talent.name}, ${age}, ${deathEvent.cause} ${deathEvent.location}. The industry mourns the loss of this ${talent.tier === "A_LIST" ? "legendary" : talent.tier === "B_LIST" ? "acclaimed" : "beloved"} ${talent.role}.`,
             category: "talent",
             publication: deathEvent.isPublic ? "Variety" : "Industry Insider",
+            talentId: talent.id,
           },
         });
 

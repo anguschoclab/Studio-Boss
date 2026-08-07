@@ -84,7 +84,7 @@ export function generateHeadlines(
       category = "talent";
     }
 
-    headlines.push({ id: `h-${++counter}-${week}`, text, week, category });
+    headlines.push({ id: `h-${++counter}-${week}`, headline: text, week, category } as unknown as Headline);
   }
 
   return headlines;

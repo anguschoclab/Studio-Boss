@@ -166,6 +166,7 @@ export function applyFlopPenalties(
           headline: `${isRival.name} restructures after flop streak`,
           description: `After multiple failed releases, ${isRival.name} has shaken up its executive team and reset its strategy.`,
           category: "rival" as any,
+          rivalId: isRival.id,
         },
       });
     }
@@ -224,6 +225,8 @@ export function applyFlopPenalties(
         headline: `${ownerName} writes off ${costText} after ${severityText} flop`,
         description: `${project.title} failed to perform, forcing ${ownerName} to take a significant write-off.`,
         category: "general" as any,
+        projectId: project.id,
+        rivalId: isRival?.id,
       },
     });
   }

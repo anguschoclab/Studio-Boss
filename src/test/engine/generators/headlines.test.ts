@@ -22,8 +22,8 @@ describe("generateHeadlines", () => {
       expect(typeof headline.id).toBe("string");
       expect(headline.id.startsWith("h-")).toBe(true);
 
-      expect(headline).toHaveProperty("text");
-      expect(typeof headline.text).toBe("string");
+      expect(headline).toHaveProperty("headline");
+      expect(typeof headline.headline).toBe("string");
 
       expect(headline).toHaveProperty("week");
       expect(headline.week).toBe(week);
@@ -171,8 +171,8 @@ describe("generateHeadlines", () => {
       const talentHeadline = headlines.find((h) => h.category === "talent");
       if (talentHeadline) {
         if (
-          talentHeadline.text.includes("Test Movie") ||
-          talentHeadline.text.includes("James Cameron")
+          talentHeadline.headline.includes("Test Movie") ||
+          talentHeadline.headline.includes("James Cameron")
         ) {
           foundInterpolatedHeadline = true;
           break;
@@ -333,14 +333,14 @@ describe("generateHeadlines", () => {
       const talentHeadline = headlines.find((h) => h.category === "talent");
       if (talentHeadline) {
         if (
-          talentHeadline.text.includes("Director Project") ||
-          talentHeadline.text.includes("Steven Spielberg")
+          talentHeadline.headline.includes("Director Project") ||
+          talentHeadline.headline.includes("Steven Spielberg")
         ) {
           foundDirectorProject = true;
           break;
         }
         // Should never reference the actor-only project when a director project exists
-        expect(talentHeadline.text.includes("Actor Only Project")).toBe(false);
+        expect(talentHeadline.headline.includes("Actor Only Project")).toBe(false);
       }
     }
     expect(foundDirectorProject).toBe(true);
@@ -608,7 +608,7 @@ describe("generateHeadlines", () => {
         contractsRecord as any
       );
       const talentHeadline = headlines.find((h) => h.category === "talent");
-      if (talentHeadline && talentHeadline.text.includes("Christopher Nolan")) {
+      if (talentHeadline && talentHeadline.headline.includes("Christopher Nolan")) {
         foundCorrectDirector = true;
         break;
       }
@@ -720,8 +720,8 @@ describe("generateHeadlines", () => {
       const talentHeadline = headlines.find((h) => h.category === "talent");
       if (
         talentHeadline &&
-        (talentHeadline.text.includes("No Director Movie A") ||
-          talentHeadline.text.includes("No Director Movie B"))
+        (talentHeadline.headline.includes("No Director Movie A") ||
+          talentHeadline.headline.includes("No Director Movie B"))
       ) {
         foundProjectName = true;
         break;

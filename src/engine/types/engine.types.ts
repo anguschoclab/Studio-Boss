@@ -12,6 +12,11 @@ export interface NewsEvent {
   description: string;
   impact?: string;
   publication?: string;
+  category?: HeadlineCategory;
+  talentId?: string;
+  projectId?: string;
+  rivalId?: string;
+  buyerId?: string;
 }
 
 export interface CrisisOption {
@@ -34,13 +39,7 @@ export interface ActiveCrisis {
   severity: "low" | "medium" | "high";
 }
 
-export interface Headline {
-  id: string;
-  text: string;
-  week: number;
-  category: HeadlineCategory;
-  publication?: string;
-}
+export type Headline = NewsEvent;
 
 export interface NarrativeEvent {
   type: "crisis" | "project_update" | "rival_action" | "market_event" | "general";
@@ -60,9 +59,9 @@ export interface WeekSummary {
   totalRevenue: number;
   totalCosts: number;
   projectUpdates: string[];
-  newHeadlines: Headline[];
+  newHeadlines: NewsEvent[];
   events: string[];
-  newsEvents?: NewsEvent[];
+  newsEvents: NewsEvent[];
   narrativeEvents?: NarrativeEvent[];
   isQuietWeek?: boolean;
   retiredCount?: number;

@@ -199,9 +199,19 @@ export class WeekCoordinator {
       },
     };
 
+    const summary = this.buildSummary(state, finalizedState, context);
+
+    const stateWithSummary: GameState = {
+      ...finalizedState,
+      weekSummaries: [
+        ...(finalizedState.weekSummaries || []),
+        summary,
+      ].slice(-200),
+    };
+
     return {
-      newState: finalizedState,
-      summary: this.buildSummary(state, finalizedState, context),
+      newState: stateWithSummary,
+      summary,
       impacts: context.impacts,
     };
   }
@@ -566,12 +576,16 @@ export class WeekCoordinator {
     context: TickContext
   ): WeekSummary {
     const newsImpacts: import("../types/state.types").StateImpact[] = [];
+    const compoundNewsEvents: import("../types/engine.types").NewsEvent[] = [];
+    const compoundHeadlines: import("../types/engine.types").Headline[] = [];
     const projectUpdates: string[] = [];
     let ledgerImpact: import("../types/state.types").StateImpact | undefined;
     const narrativeEvents: import("../types/engine.types").NarrativeEvent[] = [];
 
     for (const impact of context.impacts) {
       if (impact.type === "NEWS_ADDED") newsImpacts.push(impact);
+      if (impact.newsEvents) compoundNewsEvents.push(...impact.newsEvents);
+      if (impact.newHeadlines) compoundHeadlines.push(...impact.newHeadlines);
       if (impact.type === "LEDGER_UPDATED" && !ledgerImpact) ledgerImpact = impact;
       if (impact.type === "PROJECT_UPDATED") {
         const payload = impact.payload as import("../types/state.types").ProjectUpdate;
@@ -601,6 +615,50 @@ export class WeekCoordinator {
         report.expenses.production + report.expenses.marketing + report.expenses.overhead;
     }
 
+    // Build newsEvents from all sources
+    const newsEventsFromImpacts: import("../types/engine.types").NewsEvent[] = newsImpacts.map(
+      (i) => {
+        const payload = i.payload as import("../types/state.types").NewsImpact["payload"];
+        return {
+          id: payload.id || context.rng.uuid("news"),
+          week: context.week,
+          type: payload.type || "STUDIO_EVENT",
+          headline: payload.headline || "Unknown Event",
+          description: payload.description || "",
+          ...(payload.category && { category: payload.category }),
+          ...(payload.impact && { impact: payload.impact }),
+          ...(payload.publication && { publication: payload.publication }),
+          ...(payload.talentId && { talentId: payload.talentId }),
+          ...(payload.projectId && { projectId: payload.projectId }),
+          ...(payload.rivalId && { rivalId: payload.rivalId }),
+          ...(payload.buyerId && { buyerId: payload.buyerId }),
+        };
+      }
+    );
+
+    // Map compound headlines (Headline = NewsEvent alias) to NewsEvent
+    const newsEventsFromHeadlines: import("../types/engine.types").NewsEvent[] =
+      compoundHeadlines.map((h) => ({
+        id: h.id || context.rng.uuid("news"),
+        week: h.week || context.week,
+        type: h.type || "STUDIO_EVENT",
+        headline: h.headline,
+        description: h.description || "",
+        ...(h.category && { category: h.category }),
+        ...(h.impact && { impact: h.impact }),
+        ...(h.publication && { publication: h.publication }),
+        ...(h.talentId && { talentId: h.talentId }),
+        ...(h.projectId && { projectId: h.projectId }),
+        ...(h.rivalId && { rivalId: h.rivalId }),
+        ...(h.buyerId && { buyerId: h.buyerId }),
+      }));
+
+    const allNewsEvents = [
+      ...newsEventsFromImpacts,
+      ...compoundNewsEvents,
+      ...newsEventsFromHeadlines,
+    ];
+
     // Quiet week detection
     const isQuietWeek =
       projectUpdates.length === 0 &&
@@ -616,15 +674,8 @@ export class WeekCoordinator {
       totalRevenue,
       totalCosts,
       projectUpdates: Array.from(new Set(projectUpdates)),
-      newHeadlines: newsImpacts.map((i) => {
-        const payload = i.payload as import("../types/state.types").NewsImpact["payload"];
-        return {
-          id: context.rng.uuid("news"),
-          text: payload.headline || "Unknown Event",
-          week: context.week,
-          category: "general" as import("../types/engine.types").HeadlineCategory,
-        };
-      }),
+      newHeadlines: allNewsEvents,
+      newsEvents: allNewsEvents,
       events: context.events.map((e) => e.title),
       narrativeEvents,
       isQuietWeek,

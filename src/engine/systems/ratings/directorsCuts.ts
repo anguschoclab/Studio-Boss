@@ -84,7 +84,9 @@ export function releaseDirectorsCut(
     newHeadlines: [
       {
         id: rng.uuid("NWS"),
-        text: `Director's Cut of "${project.title}" arrives to critical acclaim`,
+        headline: `Director's Cut of "${project.title}" arrives to critical acclaim`,
+        description: "",
+        type: "STUDIO_EVENT",
         week: 0, // will be set by coordinator context
         category: "box_office",
         publication: "Variety",

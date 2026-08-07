@@ -68,6 +68,7 @@ interface UIStore {
 
   selectedProjectId: string | null;
   selectedTalentId: string | null;
+  selectedRivalId: string | null;
   setActiveTab: (tab: TabId) => void;
   setActiveHub: (hub: string) => void;
   setActiveSubTab: (tab: string) => void;
@@ -82,6 +83,7 @@ interface UIStore {
   closeSummary: () => void;
   selectProject: (id: string | null) => void;
   selectTalent: (id: string | null) => void;
+  selectRival: (id: string | null) => void;
 }
 
 export const useUIStore = create<UIStore>((set) => ({
@@ -130,6 +132,7 @@ export const useUIStore = create<UIStore>((set) => ({
   weekSummary: null,
   selectedProjectId: null,
   selectedTalentId: null,
+  selectedRivalId: null,
   setActiveTab: (tab) => set({ activeTab: tab }),
   setActiveHub: (hub) => set({ activeHub: hub }),
   setActiveSubTab: () => {},
@@ -144,4 +147,5 @@ export const useUIStore = create<UIStore>((set) => ({
   closeSummary: () => set({ showWeekSummary: false }),
   selectProject: (id) => set({ selectedProjectId: id }),
   selectTalent: (id) => set({ selectedTalentId: id }),
+  selectRival: (id) => set({ selectedRivalId: id, activeTab: "industry", activeHub: "intelligence" }),
 }));

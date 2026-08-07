@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Newspaper, Trophy, TrendingUp, MonitorPlay, Activity } from "lucide-react";
 import { NewsEvent } from "@/engine/types";
+import { selectNewsHistory, selectHeadlines } from "@/store/selectors";
 
 interface MappedHeadline {
   id: string;
@@ -84,13 +85,14 @@ function mapNewsEvent(ev: NewsEvent): MappedHeadline {
 }
 
 export const MediaPage = () => {
-  const newsHistory = useGameStore((s) => s.gameState?.industry.newsHistory || []);
-  const newsHeadlines = useGameStore((s) => s.gameState?.news.headlines || []);
+  const gameState = useGameStore((s) => s.gameState);
+  const newsHistory = selectNewsHistory(gameState);
+  const newsHeadlines = selectHeadlines(gameState);
 
   // Combine both sources into a unified headline format
   const allHeadlines = useMemo(() => {
     const mapped: MappedHeadline[] = [
-      ...newsHeadlines.map((h) => ({ id: h.id, week: h.week, category: h.category, text: h.text })),
+      ...newsHeadlines.map((h) => ({ id: h.id, week: h.week, category: h.category || "general", text: h.headline || "" })),
       ...newsHistory.map(mapNewsEvent),
     ];
     // Sort by week descending

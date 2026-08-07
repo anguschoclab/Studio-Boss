@@ -212,7 +212,9 @@ export function initializeGame(
       headlines: [
         {
           id: generateId("NWS"),
-          text: `${studioName} launches operations — the industry takes notice.`,
+          type: "STUDIO_EVENT" as const,
+          headline: `${studioName} launches operations — the industry takes notice.`,
+          description: "",
           week: 1,
           category: "general" as const,
         },
@@ -262,6 +264,38 @@ export function initializeGame(
     },
     history: [],
     eventHistory: [],
+    weekSummaries: [
+      {
+        fromWeek: 1,
+        toWeek: 1,
+        cashBefore: arch.startingCash,
+        cashAfter: arch.startingCash,
+        totalRevenue: 0,
+        totalCosts: 0,
+        projectUpdates: [],
+        newHeadlines: [
+          {
+            id: generateId("NWS"),
+            type: "STUDIO_EVENT" as const,
+            headline: `${studioName} launches operations — the industry takes notice.`,
+            description: "",
+            week: 1,
+            category: "general" as const,
+          },
+        ],
+        newsEvents: [
+          {
+            id: generateId("NWS"),
+            type: "STUDIO_EVENT" as const,
+            headline: `${studioName} launches operations — the industry takes notice.`,
+            description: "",
+            week: 1,
+            category: "general" as const,
+          },
+        ],
+        events: [],
+      },
+    ],
     saveVersion: CURRENT_SAVE_VERSION,
     simMemory: defaultSimMemory(),
   };

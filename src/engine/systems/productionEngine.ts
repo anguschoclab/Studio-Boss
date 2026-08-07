@@ -96,7 +96,7 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
       if (disputeResult.updates.length > 0) {
         allImpacts.push({
           type: "NEWS_ADDED",
-          payload: { headline: "ON-SET CRISIS", description: disputeResult.updates[0] },
+          payload: { headline: "ON-SET CRISIS", description: disputeResult.updates[0], projectId: project.id },
         });
       }
     }

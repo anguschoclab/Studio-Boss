@@ -6,6 +6,7 @@ export interface NewsSlice {
   news: NewsState;
   logNewsEvent: (event: Omit<NewsEvent, "id" | "week">) => void;
   addHeadline: (headline: Partial<Headline>) => void;
+  appendNewsEvents: (events: NewsEvent[]) => void;
 }
 
 export const createNewsSlice: StateCreator<GameStore, [], [], NewsSlice> = (set, _get) => ({
@@ -47,8 +48,10 @@ export const createNewsSlice: StateCreator<GameStore, [], [], NewsSlice> = (set,
         id: h.id || `hl-${s.gameState.week}-${s.news.headlines.length}`,
         week: h.week || s.gameState.week,
         category: h.category || "general",
-        text: h.text || "",
-      };
+        type: h.type || "STUDIO_EVENT",
+        headline: h.headline || "",
+        description: h.description || "",
+      } as unknown as Headline;
 
       const headlines = [newHeadline, ...s.news.headlines].slice(0, 50);
 
@@ -63,6 +66,35 @@ export const createNewsSlice: StateCreator<GameStore, [], [], NewsSlice> = (set,
             ...s.gameState.news,
             headlines,
           },
+        },
+      };
+    });
+  },
+
+  appendNewsEvents: (events) => {
+    set((s) => {
+      if (!s.gameState) return s;
+
+      const miniSummary = {
+        fromWeek: s.gameState.week,
+        toWeek: s.gameState.week,
+        cashBefore: s.gameState.finance.cash,
+        cashAfter: s.gameState.finance.cash,
+        totalRevenue: 0,
+        totalCosts: 0,
+        projectUpdates: [],
+        newHeadlines: events,
+        newsEvents: events,
+        events: [],
+      };
+
+      return {
+        gameState: {
+          ...s.gameState,
+          weekSummaries: [
+            ...(s.gameState.weekSummaries || []),
+            miniSummary,
+          ].slice(-200),
         },
       };
     });

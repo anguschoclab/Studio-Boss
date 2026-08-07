@@ -91,7 +91,9 @@ export function updateBuyers(buyers: Buyer[], currentWeek: number): StateImpact 
           id: generateId("HL"),
           week: currentWeek,
           category: "market",
-          text: headlineTemplate.replace("{name}", buyer.name),
+          headline: headlineTemplate.replace("{name}", buyer.name),
+          description: "",
+          type: "STUDIO_EVENT",
         });
       }
     }

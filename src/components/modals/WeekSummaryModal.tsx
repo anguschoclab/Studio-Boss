@@ -36,10 +36,12 @@ export const WeekSummaryModal = () => {
     totalRevenue,
     totalCosts,
     projectUpdates,
+    newsEvents,
     newHeadlines,
     narrativeEvents,
     isQuietWeek,
   } = weekSummary;
+  const headlines = (newsEvents && newsEvents.length > 0) ? newsEvents : (newHeadlines || []);
   const netDelta = cashAfter - cashBefore;
 
   // Categorize narrative events
@@ -340,7 +342,7 @@ export const WeekSummaryModal = () => {
               </div>
 
               {/* Headlines */}
-              {newHeadlines.length > 0 && (
+              {headlines.length > 0 && (
                 <div className="space-y-6">
                   <div className="flex items-center gap-4">
                     <Newspaper className="h-4 w-4 text-muted-foreground/40" />
@@ -350,14 +352,14 @@ export const WeekSummaryModal = () => {
                     <div className="h-px bg-white/5 flex-1" />
                   </div>
                   <div className="grid grid-cols-1 gap-3">
-                    {newHeadlines.map((h: Headline) => (
+                    {headlines.map((h: Headline) => (
                       <button
                         key={h.id}
                         onClick={() => setSelectedHeadline(h)}
                         className="w-full text-left text-[11px] font-black text-muted-foreground/30 hover:text-primary transition-all duration-700 p-5 rounded-none bg-black border border-white/5 hover:border-primary/40 group flex items-center gap-6 italic"
                       >
                         <div className="w-2 h-2 bg-white/10 group-hover:bg-primary group-hover:rotate-90 transition-all duration-700 shrink-0" />
-                        <span className="tracking-tight uppercase">{h.text}</span>
+                        <span className="tracking-tight uppercase">{h.headline}</span>
                       </button>
                     ))}
                   </div>

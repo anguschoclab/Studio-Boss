@@ -11,6 +11,7 @@ import {
   CharacterArchetype,
   FilmProject,
   SeriesProject,
+  NewsEvent,
 } from "@/engine/types";
 import {
   type ProjectId,
@@ -158,6 +159,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
 
   offerFirstLook: (talentId, duration, fee) => {
     let success = false;
+    const collectedNews: NewsEvent[] = [];
     set((s) => {
       const state = s.gameState;
       if (!state) return s;
@@ -185,13 +187,13 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
           exclusivity: true,
           status: "active",
         };
-        const newNewsHistory = [...state.industry.newsHistory];
-        newNewsHistory.unshift({
+        collectedNews.push({
           id: rng.uuid("NWS") as NewsId,
           week: state.week,
           type: "STUDIO_EVENT" as const,
           headline: `${talent.name} signs first-look pact with ${state.studio.name}.`,
           description: `${talent.name} has signed an exclusive first-look deal.`,
+          talentId,
         });
 
         const currentDeals = state.deals?.activeDeals || [];
@@ -203,35 +205,30 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
               ...state.deals,
               activeDeals: [...currentDeals, deal],
             } as any,
-            industry: {
-              ...state.industry,
-              newsHistory: newNewsHistory,
-            },
             rngState: rng.getState(),
           } as any,
         };
       } else {
-        const newNewsHistory = [...state.industry.newsHistory];
-        newNewsHistory.unshift({
+        collectedNews.push({
           id: rng.uuid("NWS") as NewsId,
           week: state.week,
           type: "STUDIO_EVENT" as const,
           headline: `${talent.name} passes on first-look deal with ${state.studio.name}.`,
           description: `${talent.name} has declined an exclusive first-look pact.`,
+          talentId,
         });
 
         return {
           gameState: {
             ...state,
-            industry: {
-              ...state.industry,
-              newsHistory: newNewsHistory,
-            },
             rngState: rng.getState(),
           },
         };
       }
     });
+    if (collectedNews.length > 0) {
+      get().appendNewsEvents(collectedNews);
+    }
     return success;
   },
 
@@ -296,6 +293,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
   },
 
   signBreakoutTalent: (talentId, premiumFee) => {
+    const collectedNews: NewsEvent[] = [];
     set((s) => {
       const state = s.gameState;
       if (!state) return s;
@@ -322,7 +320,9 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         type: "STUDIO_EVENT" as const,
         headline: `${state.studio.name} wins bidding war, signs breakout star ${talent.name}.`,
         description: `${talent.name} signed amid heavy rival interest.`,
+        talentId,
       };
+      collectedNews.push(newsEntry);
       return {
         gameState: {
           ...state,
@@ -332,11 +332,13 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
             talents: { ...state.entities.talents, [talentId]: updatedTalent },
           },
           deals: { ...state.deals, activeDeals: [...currentDeals, deal] } as any,
-          industry: { ...state.industry, newsHistory: [newsEntry, ...state.industry.newsHistory] },
           rngState: rng.getState(),
         } as any,
       };
     });
+    if (collectedNews.length > 0) {
+      get().appendNewsEvents(collectedNews);
+    }
   },
 
   acquireOpportunity: (oppId) => {

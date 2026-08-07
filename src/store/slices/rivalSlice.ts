@@ -23,11 +23,13 @@ export const createRivalSlice: StateCreator<GameStore, [], [], RivalSlice> = (se
   },
 
   acquireRival: (targetId) => {
-    set((s) => {
-      if (!s.gameState) return s;
-      const next = executeAcquisition(s.gameState, targetId);
-      return { gameState: next, finance: next.finance as unknown as import("@/engine/types").FinanceState };
-    });
+    const s = get();
+    if (!s.gameState) return;
+    const result = executeAcquisition(s.gameState, targetId);
+    set({ gameState: result.state, finance: result.state.finance as unknown as import("@/engine/types").FinanceState });
+    if (result.newsEvents.length > 0) {
+      get().appendNewsEvents(result.newsEvents);
+    }
   },
 
   corporateSabotage: (targetId) => {
@@ -38,9 +40,12 @@ export const createRivalSlice: StateCreator<GameStore, [], [], RivalSlice> = (se
   },
 
   poachExec: (targetId) => {
-    set((s) => {
-      if (!s.gameState) return s;
-      return { gameState: executePoach(s.gameState, targetId) };
-    });
+    const s = get();
+    if (!s.gameState) return;
+    const result = executePoach(s.gameState, targetId);
+    set({ gameState: result.state });
+    if (result.newsEvents.length > 0) {
+      get().appendNewsEvents(result.newsEvents);
+    }
   },
 });

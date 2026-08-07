@@ -42,7 +42,7 @@ describe("advanceRumors", () => {
     const impact = advanceRumors(stateWithRumor);
 
     expect(impact.newHeadlines?.length).toBeGreaterThanOrEqual(1);
-    expect(impact.newHeadlines![0].text).toBe("CONFIRMED: Test truthful rumor");
+    expect(impact.newHeadlines![0].headline).toBe("CONFIRMED: Test truthful rumor");
   });
 
   it("resolves false rumors and generates DEBUNKED headlines", () => {
@@ -66,7 +66,7 @@ describe("advanceRumors", () => {
     const impact = advanceRumors(stateWithRumor);
 
     expect(impact.newHeadlines?.length).toBeGreaterThanOrEqual(1);
-    expect(impact.newHeadlines![0].text).toBe(
+    expect(impact.newHeadlines![0].headline).toBe(
       "DEBUNKED: Previous rumors regarding test false rumor turn out to be false."
     );
   });
@@ -108,7 +108,7 @@ describe("advanceRumors", () => {
     if (impact.newRumors && impact.newRumors.length > 0) {
       const newRumor = impact.newRumors[0];
       expect(newRumor.resolved).toBe(false);
-      expect(impact.newHeadlines![0].text).toContain("RUMOR:");
+      expect(impact.newHeadlines![0].headline).toContain("RUMOR:");
     }
   });
 });

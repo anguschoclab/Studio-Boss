@@ -283,7 +283,7 @@ export function handleHeadlinePosted(state: GameState, impact: StateImpact): Gam
     text: string;
     publication?: string;
   };
-  const headline = { id, week, category, text, publication } as import("@/engine/types/engine.types").Headline;
+  const headline = { id, week, category, headline: text, publication } as unknown as import("@/engine/types/engine.types").Headline;
   return {
     ...state,
     news: {

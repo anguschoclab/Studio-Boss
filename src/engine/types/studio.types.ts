@@ -161,7 +161,7 @@ export interface GameState {
     festivalSubmissions?: FestivalSubmission[];
     rumors?: Rumor[];
     scandals?: Scandal[];
-    newsHistory: NewsEvent[];
+    newsHistory?: NewsEvent[];
     distressedOffers?: import("./distress.types").DistressedAssetOffer[];
     activeMergers?: MergerOffer[];
   };
@@ -171,6 +171,7 @@ export interface GameState {
   };
   history: StudioSnapshot[];
   eventHistory: GameEvent[];
+  weekSummaries: import("./engine.types").WeekSummary[];
   deals?: { activeDeals: import("./talent.types").TalentPact[]; pendingOffers?: unknown[]; expiredDeals: import("./talent.types").TalentPact[] };
   talentAgentRelationships?: Record<string, import("../systems/talent/talentAgentInteractions").TalentAgentRelationship>;
   relationships?: import("./relationship.types").RelationshipsState;

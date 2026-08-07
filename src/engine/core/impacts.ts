@@ -33,8 +33,14 @@ export const impacts = {
     id?: string;
     headline: string;
     description?: string;
+    type?: import("@/engine/types").NewsEventType;
     category?: HeadlineCategory;
+    impact?: string;
     publication?: string;
+    talentId?: string;
+    projectId?: string;
+    rivalId?: string;
+    buyerId?: string;
   }): NewsImpact {
     return { type: 'NEWS_ADDED', payload };
   },

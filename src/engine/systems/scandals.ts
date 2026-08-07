@@ -42,6 +42,7 @@ export function generateScandals(state: GameState): StateImpact[] {
         payload: {
           headline: "PR NIGHTMARE",
           description: `A massive ${type} scandal erupts violently around ${talent.name}!`,
+          talentId: talent.id,
         },
       });
 

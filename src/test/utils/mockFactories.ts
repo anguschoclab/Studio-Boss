@@ -193,6 +193,7 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
     culture: { genrePopularity: {} },
     history: [],
     eventHistory: [],
+    weekSummaries: [],
     saveVersion: 2,
     simMemory: {
       antitrust: { lastActionWeek: -9999 },

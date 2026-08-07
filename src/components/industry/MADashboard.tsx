@@ -3,6 +3,7 @@ import { useGameStore } from "@/store/gameStore";
 import { RegulatorSystem } from "@/engine/systems/industry/RegulatorSystem";
 import { TrendingUp, ShieldAlert, History, Users, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { selectNewsHistory } from "@/store/selectors";
 
 export const MADashboard: React.FC = () => {
   const state = useGameStore((s) => s.gameState);
@@ -29,7 +30,7 @@ export const MADashboard: React.FC = () => {
       })),
     ].sort((a, b) => b.share - a.share);
 
-    const mnaEvents = state.industry.newsHistory.filter(
+    const mnaEvents = selectNewsHistory(state).filter(
       (n) =>
         n.headline.toLowerCase().includes("consolidation") ||
         n.headline.toLowerCase().includes("acquisition") ||

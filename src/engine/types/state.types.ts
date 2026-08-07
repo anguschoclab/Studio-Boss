@@ -280,8 +280,14 @@ export type NewsImpact = BaseImpact & {
     id?: string;
     headline: string;
     description?: string;
+    type?: import("./engine.types").NewsEventType;
     category?: import("./engine.types").HeadlineCategory;
+    impact?: string;
     publication?: string;
+    talentId?: string;
+    projectId?: string;
+    rivalId?: string;
+    buyerId?: string;
   };
 };
 export type TalentUpdateImpact = BaseImpact & { type: "TALENT_UPDATED"; payload: TalentUpdate };

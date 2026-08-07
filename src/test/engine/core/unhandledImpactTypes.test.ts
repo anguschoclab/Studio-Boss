@@ -60,7 +60,7 @@ describe("Previously unhandled impact types — now properly handled", () => {
     const result = applySingleImpact(state, impact);
     expect(result.news?.headlines?.length ?? 0).toBe(1);
     expect(result.news!.headlines![0].id).toBe("HL-1-REG");
-    expect(result.news!.headlines![0].text).toBe("Regulators express concern.");
+    expect(result.news!.headlines![0].headline).toBe("Regulators express concern.");
   });
 
   it("INDUSTRY_RUMORS_UPDATED impact updates rumors and adds headlines", () => {
@@ -73,7 +73,7 @@ describe("Previously unhandled impact types — now properly handled", () => {
       payload: {
         rumors: newRumors,
         headlines: [
-          { id: "HL-2", week: 1, category: "rumor", text: "RUMOR: Test" },
+          { id: "HL-2", week: 1, category: "rumor", headline: "RUMOR: Test" },
         ],
       },
     } as unknown as StateImpact;
@@ -81,7 +81,7 @@ describe("Previously unhandled impact types — now properly handled", () => {
     const result = applySingleImpact(state, impact);
     expect(result.industry.rumors).toEqual(newRumors);
     expect(result.news?.headlines?.length ?? 0).toBe(1);
-    expect(result.news!.headlines![0].text).toBe("RUMOR: Test");
+    expect(result.news!.headlines![0].headline).toBe("RUMOR: Test");
   });
 
   it("IP_UPDATED impact updates the vault asset by assetId", () => {

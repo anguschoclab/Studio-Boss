@@ -208,8 +208,8 @@ describe("Festivals System", () => {
     const festival = FESTIVALS[0];
     const impact = submitToFestival(mockState, mockProject.id, festival.body);
     expect(impact).not.toBeNull();
-    expect(impact!.newHeadlines?.[0].text).toContain(festival.name);
-    expect(impact!.newHeadlines?.[0].text).toContain(mockProject.title);
+    expect(impact!.newHeadlines?.[0].headline).toContain(festival.name);
+    expect(impact!.newHeadlines?.[0].headline).toContain(mockProject.title);
   });
 
   // --- resolveFestivals tests ---

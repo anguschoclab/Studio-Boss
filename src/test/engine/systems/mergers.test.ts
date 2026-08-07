@@ -76,20 +76,20 @@ describe("Mergers and Sabotage System", () => {
 
   describe("executeAcquisition", () => {
     it("returns unmodified state if target ID is invalid", () => {
-      const newState = executeAcquisition(mockState, "invalid-id");
-      expect(newState).toBe(mockState);
+      const result = executeAcquisition(mockState, "invalid-id");
+      expect(result.state).toBe(mockState);
     });
 
     it("successfully executes acquisition and updates game state", () => {
-      const newState = executeAcquisition(mockState, mockTarget.id);
+      const result = executeAcquisition(mockState, mockTarget.id);
+      const newState = result.state;
 
       expect(newState.finance.cash).toBe(100_000_000 - 30_000_000 + 5_000_000);
       expect(Object.keys(newState.entities.rivals)).not.toContain(mockTarget.id);
       expect(newState.studio.prestige).toBe(52);
 
-      expect(newState.industry.newsHistory).toHaveLength(1);
-      const news = newState.industry.newsHistory[0];
-      expect(news.headline).toContain("absorbs Test Indie Studio");
+      expect(result.newsEvents).toHaveLength(1);
+      expect(result.newsEvents[0].headline).toContain("absorbs Test Indie Studio");
     });
   });
 
@@ -103,11 +103,12 @@ describe("Mergers and Sabotage System", () => {
 
   describe("executePoach", () => {
     it("successfully executes poach, stealing strength and boosting prestige", () => {
-      const newState = executePoach(mockState, mockTarget.id);
+      const result = executePoach(mockState, mockTarget.id);
+      const newState = result.state;
       expect(newState.finance.cash).toBe(97_000_000);
       expect(newState.entities.rivals[mockTarget.id].strength).toBe(5);
       expect(newState.studio.prestige).toBe(55);
-      expect(newState.industry.newsHistory).toHaveLength(1);
+      expect(result.newsEvents).toHaveLength(1);
     });
   });
 });

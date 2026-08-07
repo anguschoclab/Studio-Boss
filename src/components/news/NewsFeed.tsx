@@ -1,5 +1,7 @@
 import { useGameStore } from "@/store/gameStore";
-import { NewsEventType } from "@/engine/types";
+import { useUIStore } from "@/store/uiStore";
+import { NewsEventType, NewsEvent } from "@/engine/types";
+import { selectNewsHistory } from "@/store/selectors";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { Trophy, AlertTriangle, TrendingUp, Search, History } from "lucide-react";
@@ -35,7 +37,24 @@ const eventTypeConfig: Record<
 
 export const NewsFeed = () => {
   const [filter, setFilter] = useState<NewsEventType | "ALL">("ALL");
-  const history = useGameStore((s) => s.gameState?.industry.newsHistory || []);
+  const gameState = useGameStore((s) => s.gameState);
+  const history = selectNewsHistory(gameState);
+  const { selectTalent, selectProject, selectRival, setActiveTab } = useUIStore();
+
+  const handleEntityClick = (e: React.MouseEvent, item: NewsEvent) => {
+    e.stopPropagation();
+    if (item.talentId) {
+      selectTalent(item.talentId);
+    } else if (item.projectId) {
+      selectProject(item.projectId);
+    } else if (item.rivalId) {
+      selectRival(item.rivalId);
+    } else if (item.buyerId) {
+      setActiveTab("distribution");
+    }
+  };
+
+  const isClickable = (item: NewsEvent) => !!(item.talentId || item.projectId || item.rivalId || item.buyerId);
 
   const filteredHistory = filter === "ALL" ? history : history.filter((h) => h.type === filter);
 
@@ -95,7 +114,19 @@ export const NewsFeed = () => {
         {filteredHistory.map((item, idx) => {
           const config = eventTypeConfig[item.type];
           return (
-            <div key={item.id} className="relative pl-10 group">
+            <div
+              key={item.id}
+              className={`relative pl-10 group ${isClickable(item) ? "cursor-pointer" : ""}`}
+              onClick={isClickable(item) ? (e) => handleEntityClick(e, item) : undefined}
+              role={isClickable(item) ? "button" : undefined}
+              tabIndex={isClickable(item) ? 0 : undefined}
+              onKeyDown={isClickable(item) ? (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  handleEntityClick(e as unknown as React.MouseEvent, item);
+                }
+              } : undefined}
+            >
               {/* Vertical line connector */}
               {idx !== filteredHistory.length - 1 && (
                 <div className="absolute left-[7px] top-4 bottom-[-24px] w-[2px] bg-white/5 pointer-events-none group-hover:bg-primary/20 transition-colors" />

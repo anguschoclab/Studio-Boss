@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Newspaper, Trophy, AlertTriangle, TrendingUp, History, Zap } from "lucide-react";
 import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
 import { Headline } from "@/engine/types";
+import { selectHeadlines } from "@/store/selectors";
 import { cn } from "@/lib/utils";
 import { NewsStoryModal } from "@/components/modals/NewsStoryModal";
 
@@ -11,12 +13,33 @@ const eventTypeConfig: Record<string, { icon: React.ElementType; color: string; 
   RELEASE: { icon: TrendingUp, color: "text-emerald-500", label: "MARKET RELEASE" },
   STUDIO_EVENT: { icon: History, color: "text-blue-500", label: "INTERNAL OPS" },
   RIVAL: { icon: Zap, color: "text-primary", label: "COMPETITIVE INTEL" },
+  SCANDAL: { icon: AlertTriangle, color: "text-fuchsia-400", label: "SCANDAL" },
+  MILESTONE: { icon: Trophy, color: "text-cyan-400", label: "MILESTONE" },
   GENERAL: { icon: Newspaper, color: "text-muted-foreground/40", label: "INDUSTRY PULSE" },
 };
 
 export const NewsTicker: React.FC = () => {
-  const headlines = useGameStore((s) => s.news.headlines);
+  const gameState = useGameStore((s) => s.gameState);
+  const headlines = selectHeadlines(gameState);
+  const { selectTalent, selectProject, selectRival, setActiveTab } = useUIStore();
   const [selectedHeadline, setSelectedHeadline] = useState<Headline | null>(null);
+
+  const handleItemClick = (e: React.MouseEvent, item: Headline) => {
+    e.stopPropagation();
+    if (item.talentId) {
+      selectTalent(item.talentId);
+    } else if (item.projectId) {
+      selectProject(item.projectId);
+    } else if (item.rivalId) {
+      selectRival(item.rivalId);
+    } else if (item.buyerId) {
+      setActiveTab("distribution");
+    } else {
+      setSelectedHeadline(item);
+    }
+  };
+
+  const isClickable = (item: Headline) => !!(item.talentId || item.projectId || item.rivalId || item.buyerId);
 
   if (!headlines || headlines.length === 0) {
     return (
@@ -47,15 +70,15 @@ export const NewsTicker: React.FC = () => {
           <div className="flex whitespace-nowrap gap-16 items-center animate-marquee cursor-default">
             {displayHeadlines.map((item, idx) => {
               const config =
-                eventTypeConfig[item.category.toUpperCase()] || eventTypeConfig.GENERAL;
+                eventTypeConfig[item.type || "STUDIO_EVENT"] || eventTypeConfig.GENERAL;
               const Icon = config.icon;
 
               return (
                 <button
                   key={`${item.id}-${idx}`}
-                  onClick={() => setSelectedHeadline(item)}
-                  aria-label={`Read more about: ${item.text}`}
-                  className="flex items-center gap-6 group/item hover:opacity-100 transition-opacity focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm"
+                  onClick={(e) => handleItemClick(e, item)}
+                  aria-label={`Read more about: ${item.headline}`}
+                  className={`flex items-center gap-6 group/item hover:opacity-100 transition-opacity focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm ${isClickable(item) ? "cursor-pointer" : "cursor-pointer"}`}
                 >
                   <div className="flex items-center gap-3">
                     <Icon className={cn("h-3.5 w-3.5", config.color)} />
@@ -68,7 +91,7 @@ export const NewsTicker: React.FC = () => {
                       >
                         {config.label}:
                       </span>
-                      {item.text.toUpperCase()}
+                      {item.headline.toUpperCase()}
                     </span>
                   </div>
                   <div className="w-1.5 h-1.5 bg-white/10 rotate-45 group-hover/item:bg-primary group-hover/item:scale-125 transition-all duration-700" />

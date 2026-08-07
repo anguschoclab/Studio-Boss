@@ -21,7 +21,9 @@ export class RumorProcessor {
             id: rng.uuid("HL"),
             week: week,
             category: "rumor",
-            text: `CONFIRMED: ${r.text}`,
+            headline: `CONFIRMED: ${r.text}`,
+            description: "",
+            type: "STUDIO_EVENT",
             publication: "Variety",
           });
         } else {
@@ -29,7 +31,9 @@ export class RumorProcessor {
             id: rng.uuid("HL"),
             week: week,
             category: "rumor",
-            text: `DEBUNKED: Previous rumors regarding ${r.text.toLowerCase()} turn out to be false.`,
+            headline: `DEBUNKED: Previous rumors regarding ${r.text.toLowerCase()} turn out to be false.`,
+            description: "",
+            type: "STUDIO_EVENT",
             publication: "The Hollywood Reporter",
           });
         }
@@ -111,7 +115,9 @@ export class RumorProcessor {
         id: rng.uuid("HL"),
         week: week,
         category: "rumor",
-        text: `RUMOR: ${text}`,
+        headline: `RUMOR: ${text}`,
+        description: "",
+        type: "STUDIO_EVENT",
         publication: "Deadline",
       });
     }

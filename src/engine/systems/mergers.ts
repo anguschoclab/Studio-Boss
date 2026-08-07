@@ -1,6 +1,11 @@
-import { GameState, RivalStudio } from "@/engine/types";
+import { GameState, RivalStudio, NewsEvent } from "@/engine/types";
 import { generateId } from "../utils";
 import { RegulatorSystem } from "./industry/RegulatorSystem";
+
+export interface MergerResult {
+  state: GameState;
+  newsEvents: NewsEvent[];
+}
 
 export interface AcquisitionPreview {
   targetId: string;
@@ -81,35 +86,33 @@ export function evaluateAcquisitionTarget(
   return { viable: true, price: finalPrice };
 }
 
-export function executeAcquisition(state: GameState, targetId: string): GameState {
+export function executeAcquisition(state: GameState, targetId: string): MergerResult {
   const target = state.entities.rivals[targetId];
-  if (!target) return state;
+  if (!target) return { state, newsEvents: [] };
   const evalResult = evaluateAcquisitionTarget(target, state.finance.cash);
-  if (!evalResult.viable) return state;
+  if (!evalResult.viable) return { state, newsEvents: [] };
 
   const verdict = RegulatorSystem.isBlocked(state, "player", targetId);
   if (verdict.blocked) {
     const filingFee = Math.round(evalResult.price * 0.02);
+    const blockedNews: NewsEvent = {
+      id: generateId("NEWS"),
+      week: state.week,
+      type: "STUDIO_EVENT" as const,
+      headline: `BLOCKED: Regulators reject ${state.studio.name}'s bid for ${target.name}`,
+      description: `${verdict.reason ?? "Competition concerns"} — combined share would reach ${verdict.sharePreview.toFixed(1)}%. ${state.studio.name} forfeits $${(filingFee / 1e6).toFixed(1)}M in filing costs.`,
+      rivalId: targetId,
+    };
     return {
-      ...state,
-      finance: { ...state.finance, cash: state.finance.cash - filingFee },
-      studio: {
-        ...state.studio,
-        prestige: Math.max(0, state.studio.prestige - 3),
+      state: {
+        ...state,
+        finance: { ...state.finance, cash: state.finance.cash - filingFee },
+        studio: {
+          ...state.studio,
+          prestige: Math.max(0, state.studio.prestige - 3),
+        },
       },
-      industry: {
-        ...state.industry,
-        newsHistory: [
-          {
-            id: generateId("NEWS"),
-            week: state.week,
-            type: "STUDIO_EVENT" as const,
-            headline: `BLOCKED: Regulators reject ${state.studio.name}'s bid for ${target.name}`,
-            description: `${verdict.reason ?? "Competition concerns"} — combined share would reach ${verdict.sharePreview.toFixed(1)}%. ${state.studio.name} forfeits $${(filingFee / 1e6).toFixed(1)}M in filing costs.`,
-          },
-          ...state.industry.newsHistory,
-        ].slice(0, 50),
-      },
+      newsEvents: [blockedNews],
     };
   }
 
@@ -141,35 +144,33 @@ export function executeAcquisition(state: GameState, targetId: string): GameStat
 
   const newPrestige = Math.min(100, state.studio.prestige + target.strength * 0.2);
 
+  const consolidatedNews: NewsEvent = {
+    id: generateId("NEWS"),
+    week: state.week,
+    type: "STUDIO_EVENT" as const,
+    headline: `CONSOLIDATED: ${state.studio.name} absorbs ${target.name}!`,
+    description: `The acquisition is finalized. ${targetProjectsCount} projects and ${targetContractsCount} talent contracts have been integrated into ${state.studio.name}.`,
+    rivalId: targetId,
+  };
   return {
-    ...state,
-    finance: {
-      ...state.finance,
-      cash: state.finance.cash - evalResult.price + (target.cash || 0),
+    state: {
+      ...state,
+      finance: {
+        ...state.finance,
+        cash: state.finance.cash - evalResult.price + (target.cash || 0),
+      },
+      studio: {
+        ...state.studio,
+        prestige: newPrestige,
+      },
+      entities: {
+        ...state.entities,
+        projects: updatedProjects,
+        contracts: updatedContracts,
+        rivals: updatedRivals,
+      },
     },
-    studio: {
-      ...state.studio,
-      prestige: newPrestige,
-    },
-    entities: {
-      ...state.entities,
-      projects: updatedProjects,
-      contracts: updatedContracts,
-      rivals: updatedRivals,
-    },
-    industry: {
-      ...state.industry,
-      newsHistory: [
-        {
-          id: generateId("NEWS"),
-          week: state.week,
-          type: "STUDIO_EVENT" as const,
-          headline: `CONSOLIDATED: ${state.studio.name} absorbs ${target.name}!`,
-          description: `The acquisition is finalized. ${targetProjectsCount} projects and ${targetContractsCount} talent contracts have been integrated into ${state.studio.name}.`,
-        },
-        ...state.industry.newsHistory,
-      ].slice(0, 50),
-    },
+    newsEvents: [consolidatedNews],
   };
 }
 
@@ -197,9 +198,9 @@ export function executeSabotage(state: GameState, targetId: string): GameState {
   };
 }
 
-export function executePoach(state: GameState, targetId: string): GameState {
+export function executePoach(state: GameState, targetId: string): MergerResult {
   const target = state.entities.rivals[targetId];
-  if (!target || state.finance.cash < 3_000_000) return state;
+  if (!target || state.finance.cash < 3_000_000) return { state, newsEvents: [] };
 
   const stealAmount = Math.min(5, target.strength);
   const updatedRivals = {
@@ -207,26 +208,24 @@ export function executePoach(state: GameState, targetId: string): GameState {
     [targetId]: { ...target, strength: target.strength - stealAmount },
   };
 
+  const poachNews: NewsEvent = {
+    id: generateId("NEWS"),
+    week: state.week,
+    type: "STUDIO_EVENT" as const,
+    headline: `${state.studio.name} poaches top executive from ${target.name}!`,
+    description: `A major talent move shakes the industry.`,
+    rivalId: targetId,
+  };
   return {
-    ...state,
-    finance: { ...state.finance, cash: state.finance.cash - 3_000_000 },
-    studio: { ...state.studio, prestige: Math.min(100, state.studio.prestige + stealAmount) },
-    entities: {
-      ...state.entities,
-      rivals: updatedRivals,
+    state: {
+      ...state,
+      finance: { ...state.finance, cash: state.finance.cash - 3_000_000 },
+      studio: { ...state.studio, prestige: Math.min(100, state.studio.prestige + stealAmount) },
+      entities: {
+        ...state.entities,
+        rivals: updatedRivals,
+      },
     },
-    industry: {
-      ...state.industry,
-      newsHistory: [
-        {
-          id: generateId("NEWS"),
-          week: state.week,
-          type: "STUDIO_EVENT" as const,
-          headline: `${state.studio.name} poaches top executive from ${target.name}!`,
-          description: `A major talent move shakes the industry.`,
-        },
-        ...state.industry.newsHistory,
-      ].slice(0, 50),
-    },
+    newsEvents: [poachNews],
   };
 }
