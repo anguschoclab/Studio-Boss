@@ -41,7 +41,7 @@ export function handleRelationshipFormed(state: GameState, impact: RelationshipF
 
 export function handleRelationshipUpdated(state: GameState, impact: RelationshipUpdatedImpact): GameState {
   if (!impact.payload) return state;
-  const { key, relationship, relationshipId } = impact.payload;
+  const { key, relationship, relationshipId, update } = impact.payload;
 
   // Talent-agent relationship path
   if (relationshipId && relationship) {
@@ -50,6 +50,25 @@ export function handleRelationshipUpdated(state: GameState, impact: Relationship
       talentAgentRelationships: {
         ...(state.talentAgentRelationships || {}),
         [relationshipId]: relationship as unknown as import("../../systems/talent/talentAgentInteractions").TalentAgentRelationship,
+      },
+    };
+  }
+
+  // Partial update by relationshipId (no full relationship object)
+  if (relationshipId && update) {
+    const relationships = state.relationships?.relationships || {};
+    const existingKey = Object.keys(relationships).find(
+      (k) => relationships[k].id === relationshipId
+    );
+    if (!existingKey) return state;
+    return {
+      ...state,
+      relationships: {
+        ...state.relationships,
+        relationships: {
+          ...relationships,
+          [existingKey]: { ...relationships[existingKey], ...update },
+        },
       },
     };
   }

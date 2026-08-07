@@ -81,6 +81,7 @@ export const PipelineBoard = () => {
               className="h-12 pl-12 text-[10px] bg-black/40 border-white/5 focus-visible:border-primary/40 focus-visible:ring-0 transition-all font-black uppercase tracking-[0.3em] rounded-none italic"
               placeholder="SEARCH PROPERTY..."
               aria-label="Search properties"
+              maxLength={100}
             />
           </div>
           <Button

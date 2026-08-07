@@ -14,14 +14,19 @@ import { TalentRelationship } from "../../types/relationship.types";
  */
 function generateTVRecommendationsSection(talent: Talent, state: GameState): string | null {
   const tvRecommendations = state.tvRecommendations?.recommendations || {};
-  const talentRecommendations = Object.values(tvRecommendations).filter(
-    (r) => r.talentId === talent.id && r.expiresWeek > state.week && !r.accepted
-  );
 
-  if (talentRecommendations.length === 0) return null;
+  // ⚡ Bolt: Replaced Object.values().filter() with a for...in loop tracking the top match directly
+  let topRecommendation = null;
+  for (const key in tvRecommendations) {
+    const r = tvRecommendations[key];
+    if (r.talentId === talent.id && r.expiresWeek > state.week && !r.accepted) {
+      if (!topRecommendation || r.matchScore > topRecommendation.matchScore) {
+        topRecommendation = r;
+      }
+    }
+  }
 
-  // Get the highest-scoring recommendation
-  const topRecommendation = talentRecommendations.sort((a, b) => b.matchScore - a.matchScore)[0];
+  if (!topRecommendation) return null;
 
   const parts: string[] = [];
 
@@ -125,12 +130,19 @@ function generateCareerSummary(talent: Talent, state: GameState): string {
   // Breakout status
   const isBreakout = talent.isBreakout;
   if (isBreakout) {
-    const breakouts = Object.values(state.relationships?.discovery?.breakoutStars || {}).filter(
-      (b) => b.talentId === talent.id
-    );
+    const breakoutStars = state.relationships?.discovery?.breakoutStars || {};
 
-    if (breakouts.length > 0) {
-      const breakout = breakouts[0];
+    // ⚡ Bolt: Replaced Object.values().filter() with a single short-circuiting for...in loop
+    let breakout = null;
+    for (const key in breakoutStars) {
+      const b = breakoutStars[key];
+      if (b.talentId === talent.id) {
+        breakout = b;
+        break;
+      }
+    }
+
+    if (breakout) {
       parts.push(
         `Recently broke out as a major star, jumping ${breakout.starMeterJump} points in Star Meter following their breakout performance.`
       );
@@ -168,9 +180,16 @@ function generateCareerSummary(talent: Talent, state: GameState): string {
  * Generate relationships section
  */
 function generateRelationshipsSection(talent: Talent, state: GameState): string | null {
-  const relationships = Object.values(state.relationships?.relationships || {}).filter(
-    (r) => r.talentAId === talent.id || r.talentBId === talent.id
-  );
+  const rels = state.relationships?.relationships || {};
+  const relationships = [];
+
+  // ⚡ Bolt: Replaced Object.values().filter() with a single for...in loop
+  for (const key in rels) {
+    const r = rels[key];
+    if (r.talentAId === talent.id || r.talentBId === talent.id) {
+      relationships.push(r);
+    }
+  }
 
   if (relationships.length === 0) return null;
 
@@ -285,21 +304,30 @@ function generateRecentEventsSection(talent: Talent, state: GameState): string |
   // Breakout star status
   const isBreakout = talent.isBreakout;
   if (isBreakout) {
-    const breakouts = Object.values(state.relationships?.discovery?.breakoutStars || {}).filter(
-      (b) => b.talentId === talent.id && b.hypeWeeksRemaining > 0
-    );
+    const breakoutStars = state.relationships?.discovery?.breakoutStars || {};
+    let hasBreakout = false;
 
-    if (breakouts.length > 0) {
+    // ⚡ Bolt: Replaced Object.values().filter() with a single short-circuiting for...in loop
+    for (const key in breakoutStars) {
+      const b = breakoutStars[key];
+      if (b.talentId === talent.id && b.hypeWeeksRemaining > 0) {
+        hasBreakout = true;
+        break;
+      }
+    }
+
+    if (hasBreakout) {
       parts.push(`Currently experiencing breakout star status with intense media attention.`);
     }
   }
 
   // Recent scandal
-  const scandals = (state.industry?.scandals || []).filter(
+  // ⚡ Bolt: Replaced array filter() with some() to avoid intermediate array allocation
+  const hasScandal = (state.industry?.scandals || []).some(
     (s) => s.talentId === talent.id && s.weeksRemaining > 0
   );
 
-  if (scandals.length > 0) {
+  if (hasScandal) {
     parts.push(`Recently navigated through personal challenges that captured public attention.`);
   }
 

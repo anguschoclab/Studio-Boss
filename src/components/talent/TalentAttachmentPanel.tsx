@@ -148,6 +148,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
                 aria-label="Search industry database"
                 placeholder="Search industry database..."
                 className="pl-10 bg-black/40 border-slate-700 text-xs"
+                maxLength={100}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -220,6 +221,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
                       <span
                         className="font-bold text-sm text-white truncate cursor-pointer hover:text-primary transition-colors"
                         role="button"
+                        aria-label={`View ${t.name} profile`}
                         tabIndex={0}
                         onKeyDown={(e) => {
                           if (e.key === "Enter" || e.key === " ") {

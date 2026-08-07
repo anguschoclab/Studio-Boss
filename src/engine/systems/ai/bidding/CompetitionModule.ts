@@ -9,8 +9,16 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
 
   if (state.week % 4 !== 0) return [];
 
-  const rivalsList = Object.values(state.entities.rivals || {});
-  const eligibleRivals = rivalsList.filter((r) => r.cash > 100_000_000);
+  // ⚡ Bolt Optimization: Replaced Object.values().filter() with a single-pass for...in loop to avoid intermediate array allocation and GC overhead
+  const eligibleRivals: NonNullable<typeof state.entities.rivals>[string][] = [];
+  const rivals = state.entities.rivals || {};
+  for (const id in rivals) {
+    if (Object.prototype.hasOwnProperty.call(rivals, id)) {
+      if (rivals[id].cash > 100_000_000) {
+        eligibleRivals.push(rivals[id]);
+      }
+    }
+  }
   if (eligibleRivals.length === 0) return [];
 
   const availableTalent: (typeof state.entities.talents)[string][] = [];

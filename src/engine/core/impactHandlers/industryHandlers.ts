@@ -274,3 +274,45 @@ export function handleMergerResolved(state: GameState, impact: StateImpact): Gam
     },
   };
 }
+
+export function handleHeadlinePosted(state: GameState, impact: StateImpact): GameState {
+  const { id, week, category, text, publication } = impact.payload as {
+    id: string;
+    week: number;
+    category: string;
+    text: string;
+    publication?: string;
+  };
+  const headline = { id, week, category, text, publication } as import("@/engine/types/engine.types").Headline;
+  return {
+    ...state,
+    news: {
+      ...state.news,
+      headlines: [...(state.news?.headlines || []), headline],
+    },
+  };
+}
+
+export function handleIndustryRumorsUpdated(state: GameState, impact: StateImpact): GameState {
+  const { rumors, headlines } = impact.payload as {
+    rumors: import("@/engine/types/engine.types").Rumor[];
+    headlines: import("@/engine/types/engine.types").Headline[];
+  };
+  let newState = {
+    ...state,
+    industry: {
+      ...state.industry,
+      rumors: rumors || state.industry.rumors || [],
+    },
+  };
+  if (headlines && headlines.length > 0) {
+    newState = {
+      ...newState,
+      news: {
+        ...newState.news,
+        headlines: [...(newState.news?.headlines || []), ...headlines],
+      },
+    };
+  }
+  return newState;
+}

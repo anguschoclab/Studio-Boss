@@ -226,12 +226,12 @@ export function generateRelationshipScandals(
 
         // Make relationship public
         impacts.push({
-          type: "RELATIONSHIP_UPDATED" as any,
+          type: "RELATIONSHIP_UPDATED",
           payload: {
             relationshipId: romance.id,
             update: { isPublic: true },
           },
-        } as any);
+        });
 
         // News
         impacts.push({

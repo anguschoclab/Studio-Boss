@@ -116,7 +116,14 @@ function evolveRelationship(
 
 export function tickRelationshipSystem(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const talents = Object.values(state.entities.talents || {});
+  // ⚡ Bolt: Use for...in iteration to prevent intermediate array allocation from Object.values()
+  const talentsDict = state.entities.talents || {};
+  const talents: Talent[] = [];
+  for (const tid in talentsDict) {
+    if (Object.prototype.hasOwnProperty.call(talentsDict, tid)) {
+      talents.push(talentsDict[tid]);
+    }
+  }
   // ⚡ Bolt: Use Object.keys iteration to prevent massive intermediate array allocation
   const projectsDict = state.entities.projects || {};
   const projects = Object.keys(projectsDict).map((pid) => projectsDict[pid]);
@@ -217,8 +224,10 @@ export function tickRelationshipSystem(state: GameState, rng: RandomGenerator): 
   }
 
   // 2. Evolve existing relationships
-  const existingRelationships = Object.values(state.relationships?.relationships || {});
-  for (const relationship of existingRelationships) {
+  // ⚡ Bolt: Replaced Object.values() with a direct for...in loop to eliminate intermediate array allocations
+  const existingRelationships = state.relationships?.relationships || {};
+  for (const key in existingRelationships) {
+    const relationship = existingRelationships[key];
     // 30% chance to evolve each existing relationship per week
     if (rng.next() < 0.3) {
       const { updated, impacts: evolutionImpacts } = evolveRelationship(relationship, state, rng);

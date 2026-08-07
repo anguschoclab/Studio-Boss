@@ -56,8 +56,8 @@ export const AwardsHQ: React.FC = () => {
 
         <div className="flex gap-2">
           <Select value={formatFilter} onValueChange={(v) => setFormatFilter(v as "all" | "film" | "tv")}>
-            <SelectTrigger className="h-10 w-40 border-white/5 bg-black/40 text-slate-400 font-black uppercase text-[10px] tracking-widest flex items-center gap-2">
-              <Filter className="w-3 h-3" /> <SelectValue />
+            <SelectTrigger aria-label="Filter formats" className="h-10 w-40 border-white/5 bg-black/40 text-slate-400 font-black uppercase text-[10px] tracking-widest flex items-center gap-2">
+              <Filter className="w-3 h-3" aria-hidden="true" /> <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Formats</SelectItem>
@@ -224,7 +224,7 @@ export const AwardsHQ: React.FC = () => {
                           value={selectedCategories[0]}
                           onValueChange={(v) => setSelectedCategories([v])}
                         >
-                          <SelectTrigger className="h-9 border-white/5 bg-black/40 text-slate-400 font-black uppercase text-[10px] tracking-widest">
+                          <SelectTrigger aria-label="Select award category" className="h-9 border-white/5 bg-black/40 text-slate-400 font-black uppercase text-[10px] tracking-widest">
                             <SelectValue placeholder="Select Category" />
                           </SelectTrigger>
                           <SelectContent>

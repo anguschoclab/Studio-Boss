@@ -193,7 +193,10 @@ export type ImpactType =
   | "CASTING_CONSTRAINT_VIOLATION"
   | "CASTING_PREMIUM_DEMAND"
   | "CASTING_ALTERNATIVE_SUGGESTED"
-  | "CONTRACT_ADDED";
+  | "CONTRACT_ADDED"
+  | "HEADLINE_POSTED"
+  | "INDUSTRY_RUMORS_UPDATED"
+  | "IP_UPDATED";
 
 export interface ProjectUpdate {
   projectId: string;
@@ -416,7 +419,7 @@ export interface RelationshipFormedImpact extends BaseImpact {
 }
 export interface RelationshipUpdatedImpact extends BaseImpact {
   type: "RELATIONSHIP_UPDATED";
-  payload: { key?: string; relationship?: import("./relationship.types").TalentRelationship; relationshipId?: string };
+  payload: { key?: string; relationship?: import("./relationship.types").TalentRelationship; relationshipId?: string; update?: Partial<import("./relationship.types").TalentRelationship> };
 }
 export interface CliqueFormedImpact extends BaseImpact {
   type: "CLIQUE_FORMED";

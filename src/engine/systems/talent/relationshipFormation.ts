@@ -142,15 +142,22 @@ export function checkNaturalFormation(
 
   if (compatibility > 40 && rng.next() < 0.05) {
     const existingRelationships = state.relationships?.relationships || {};
-    const existingRomance = Object.values(existingRelationships).some(
-      (r) =>
+    // ⚡ Bolt: Replaced Object.values().some() with a direct for...in loop for early short-circuiting and avoiding array allocation
+    let existingRomance = false;
+    for (const key in existingRelationships) {
+      const r = existingRelationships[key];
+      if (
         (r.talentAId === talentA.id ||
           r.talentBId === talentA.id ||
           r.talentAId === talentB.id ||
           r.talentBId === talentB.id) &&
         r.type === "romantic" &&
         r.strength > 50
-    );
+      ) {
+        existingRomance = true;
+        break;
+      }
+    }
 
     if (!existingRomance) {
       return {
