@@ -18,8 +18,8 @@ import {
   MotivationProfile,
   RivalStrategy,
 } from "./talent.types";
-import { NewsEvent, Rumor, MarketEvent } from "./engine.types";
-import { FinanceState, NewsState, IPState } from "./state.types";
+import { Rumor, MarketEvent } from "./engine.types";
+import { FinanceState, IPState } from "./state.types";
 import { SyndicationTier } from "../data/syndicationConfig";
 
 export interface MergerOffer {
@@ -110,7 +110,6 @@ export interface GameState {
     currentWeek: number;
   };
   finance: FinanceState;
-  news: NewsState;
   ip: IPState;
   entities: {
     projects: Record<string, Project>;
@@ -161,7 +160,6 @@ export interface GameState {
     festivalSubmissions?: FestivalSubmission[];
     rumors?: Rumor[];
     scandals?: Scandal[];
-    newsHistory?: NewsEvent[];
     distressedOffers?: import("./distress.types").DistressedAssetOffer[];
     activeMergers?: MergerOffer[];
   };

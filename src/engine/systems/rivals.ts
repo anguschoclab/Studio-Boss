@@ -117,6 +117,7 @@ export function advanceRivals(state: GameState): StateImpact {
         headline: `${archetypeContext} ${rival.name} Vulnerable to Takeover!`,
         description: `${rival.name} has hit a critical cash shortage. Strategy: ${update.recentActivity || rival.recentActivity}`,
         impact: "Available for acquisition",
+        rivalId: rival.id,
       });
 
       // Add to narrative events for weekly summary
@@ -148,6 +149,7 @@ export function advanceRivals(state: GameState): StateImpact {
         headline: `Talent Poached by ${rival.name}`,
         description: poakMsg,
         impact: "Pool updated",
+        rivalId: rival.id,
       });
 
       // Add to narrative events for weekly summary

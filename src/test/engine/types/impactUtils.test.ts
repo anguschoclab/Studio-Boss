@@ -57,13 +57,13 @@ describe("Impact Reducer (Target A1)", () => {
     expect(nextState.entities.projects["p1"]).not.toBe(mockState.entities.projects["p1"]);
   });
 
-  it("should accurately process NEWS_ADDED impact", () => {
+  it("should process NEWS_ADDED impact (no-op — news captured by WeekCoordinator)", () => {
     const impacts: StateImpact[] = [
       { type: "NEWS_ADDED", payload: { headline: "New Hit!", description: "Great movie" } },
     ];
 
     const nextState = applyImpacts(mockState, impacts);
-    expect(nextState.industry.newsHistory.length).toBe(1);
-    expect(nextState.industry.newsHistory[0].headline).toBe("New Hit!");
+    // handleNewsAdded is a no-op — news events are captured by WeekCoordinator.buildSummary
+    expect(nextState).toBe(mockState);
   });
 });

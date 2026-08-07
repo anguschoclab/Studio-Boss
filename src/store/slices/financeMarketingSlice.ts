@@ -3,7 +3,7 @@ import { StateCreator } from "zustand";
 import { GameStore } from "../gameStore";
 import { handleReleasePhaseEntry } from "@/engine/systems/projects";
 import { executeMarketing } from "@/engine/systems/projectHandlers/MarketingHandler";
-import { Talent, NewsId } from "@/engine/types";import { type ProjectId } from "@/engine/types/shared.types";import { RandomGenerator } from "@/engine/utils/rng";
+import { Talent } from "@/engine/types";import { type ProjectId } from "@/engine/types/shared.types";import { RandomGenerator } from "@/engine/utils/rng";
 import { getContractsByProjectId } from "@/engine/utils";
 
 export interface FinanceMarketingSlice {
@@ -61,14 +61,16 @@ export const createFinanceMarketingSlice: StateCreator<GameStore, [], [], Financ
         talentMap
       );
 
-      const headlines = [...state.news.headlines];
       if (result.update) {
-        headlines.unshift({
-          id: rng.uuid("NWS") as NewsId,
+        s.appendNewsEvents([{
+          id: rng.uuid("NWS"),
           week: state.week,
-          category: "general" as const,
-          text: result.update,
-        });
+          type: "RELEASE",
+          headline: result.update,
+          description: "",
+          category: "general",
+          projectId: p.id,
+        }]);
       }
 
       const updatedProjects = { ...state.entities.projects, [p.id]: p };
@@ -87,10 +89,6 @@ export const createFinanceMarketingSlice: StateCreator<GameStore, [], [], Financ
           entities: {
             ...state.entities,
             projects: updatedProjects,
-          },
-          news: {
-            ...state.news,
-            headlines,
           },
           rngState: rng.getState(),
         },

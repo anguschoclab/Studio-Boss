@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Newspaper, Trophy, AlertTriangle, TrendingUp, History, Zap } from "lucide-react";
 import { useGameStore } from "@/store/gameStore";
 import { useUIStore } from "@/store/uiStore";
-import { Headline } from "@/engine/types";
-import { selectHeadlines } from "@/store/selectors";
+import { NewsEvent } from "@/engine/types";
+import { selectNewsHistory } from "@/store/selectors";
 import { cn } from "@/lib/utils";
 import { NewsStoryModal } from "@/components/modals/NewsStoryModal";
 
@@ -20,11 +20,11 @@ const eventTypeConfig: Record<string, { icon: React.ElementType; color: string; 
 
 export const NewsTicker: React.FC = () => {
   const gameState = useGameStore((s) => s.gameState);
-  const headlines = selectHeadlines(gameState);
+  const headlines = selectNewsHistory(gameState);
   const { selectTalent, selectProject, selectRival, setActiveTab } = useUIStore();
-  const [selectedHeadline, setSelectedHeadline] = useState<Headline | null>(null);
+  const [selectedHeadline, setSelectedHeadline] = useState<NewsEvent | null>(null);
 
-  const handleItemClick = (e: React.MouseEvent, item: Headline) => {
+  const handleItemClick = (e: React.MouseEvent, item: NewsEvent) => {
     e.stopPropagation();
     if (item.talentId) {
       selectTalent(item.talentId);
@@ -39,7 +39,7 @@ export const NewsTicker: React.FC = () => {
     }
   };
 
-  const isClickable = (item: Headline) => !!(item.talentId || item.projectId || item.rivalId || item.buyerId);
+  const isClickable = (item: NewsEvent) => !!(item.talentId || item.projectId || item.rivalId || item.buyerId);
 
   if (!headlines || headlines.length === 0) {
     return (

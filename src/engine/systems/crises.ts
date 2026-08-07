@@ -89,6 +89,7 @@ export function resolveCrisis(
     headline: `Crisis resolved for "${project.title}": ${option.text}`,
     description: "",
     type: "STUDIO_EVENT",
+    projectId,
   });
 
   impact.newsEvents!.push({
@@ -97,6 +98,7 @@ export function resolveCrisis(
     type: "CRISIS",
     headline: `Crisis at ${project.title}`,
     description: `The production faced a major setback: ${project.activeCrisis.description.slice(0, 100)}... Studio resolved it by: ${option.text}`,
+    projectId,
   });
 
   return impact;

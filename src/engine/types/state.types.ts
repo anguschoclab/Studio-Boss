@@ -1,4 +1,3 @@
-import { Headline } from "./engine.types";
 import { Franchise } from "./franchise.types";
 import { Project } from "./project.types";
 
@@ -105,10 +104,6 @@ export interface FinanceState {
 
 export type Loan = LoanRecord;
 export type FinancialMarketState = MarketState;
-
-export interface NewsState {
-  headlines: Headline[];
-}
 
 export interface IPAsset {
   id: string;

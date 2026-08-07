@@ -160,7 +160,6 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
       weeklyHistory: [],
       marketState: createMockMarketState(),
     },
-    news: { headlines: [] },
     ip: { vault: [], franchises: {} },
     studio: {
       id: "player-studio",
@@ -182,7 +181,6 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
       agencies: [],
       agents: [],
       awards: [],
-      newsHistory: [],
       scandals: [],
     },
     deals: { activeDeals: [], pendingOffers: [], expiredDeals: [] },

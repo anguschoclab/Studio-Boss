@@ -208,18 +208,6 @@ export function initializeGame(
         rateHistory: [{ week: 1, rate: 0.045 }],
       } as MarketState,
     },
-    news: {
-      headlines: [
-        {
-          id: generateId("NWS"),
-          type: "STUDIO_EVENT" as const,
-          headline: `${studioName} launches operations — the industry takes notice.`,
-          description: "",
-          week: 1,
-          category: "general" as const,
-        },
-      ],
-    },
     ip: {
       vault: starterVault,
       franchises: {},
@@ -257,7 +245,6 @@ export function initializeGame(
       agencies,
       agents,
       awards: [],
-      newsHistory: [],
     },
     culture: {
       genrePopularity,

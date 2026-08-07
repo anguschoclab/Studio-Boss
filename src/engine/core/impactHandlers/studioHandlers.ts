@@ -1,4 +1,4 @@
-import { GameState, NewsEvent } from "@/engine/types";
+import { GameState } from "@/engine/types";
 import type {
   PrestigeChangedImpact,
   NewsImpact,
@@ -21,29 +21,10 @@ export function handlePrestigeChanged(state: GameState, impact: PrestigeChangedI
   };
 }
 
-export function handleNewsAdded(state: GameState, impact: NewsImpact): GameState {
-  const { id, headline, description, publication, type, category, impact: impactField, talentId, projectId, rivalId, buyerId } = impact.payload;
-  const newsEvent: NewsEvent = {
-    id: id || `news-${state.week}-${state.tickCount}-${headline.slice(0, 20)}`,
-    week: state.week,
-    type: type || "STUDIO_EVENT",
-    headline: headline,
-    description: description || "",
-    publication: publication,
-    ...(category && { category }),
-    ...(impactField && { impact: impactField }),
-    ...(talentId && { talentId }),
-    ...(projectId && { projectId }),
-    ...(rivalId && { rivalId }),
-    ...(buyerId && { buyerId }),
-  };
-  return {
-    ...state,
-    industry: {
-      ...state.industry,
-      newsHistory: [newsEvent, ...(state.industry.newsHistory || [])].slice(0, 100),
-    },
-  };
+export function handleNewsAdded(state: GameState, _impact: NewsImpact): GameState {
+  // News events are captured by WeekCoordinator.buildSummary() into weekSummaries[].newsEvents.
+  // This handler is a no-op — the impact is still processed by the coordinator for summary collection.
+  return state;
 }
 
 export function handleSystemTick(state: GameState, impact: SystemTickImpact): GameState {

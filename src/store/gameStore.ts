@@ -7,7 +7,6 @@ import { useUIStore, ModalType } from "./uiStore";
 import { useSettingsStore } from "./settingsStore";
 
 const EMPTY_FINANCE = { cash: 0, ledger: [] };
-const EMPTY_NEWS = { headlines: [] };
 
 import { createProjectSlice, ProjectSlice } from "./slices/projectSlice";
 import { createFinanceSlice, FinanceSlice } from "./slices/financeSlice";
@@ -96,7 +95,6 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     set({
       gameState,
       finance: gameState.finance as any, // Cast for slice compatibility
-      news: gameState.news,
     });
   },
 
@@ -125,9 +123,6 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
       const newStateObj: Partial<GameStore> = { gameState: result.newState };
       if (state.finance !== result.newState.finance) {
         newStateObj.finance = result.newState.finance as any;
-      }
-      if (state.news !== result.newState.news) {
-        newStateObj.news = result.newState.news as any;
       }
 
       return newStateObj;
@@ -170,7 +165,6 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
       set({
         gameState: state,
         finance: state.finance,
-        news: state.news,
       });
       return true;
     }
@@ -185,7 +179,6 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
       return {
         gameState: null,
         finance: EMPTY_FINANCE as unknown as any,
-        news: EMPTY_NEWS as unknown as any,
       };
     }),
 
@@ -194,7 +187,6 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     set({
       gameState,
       finance: gameState.finance,
-      news: gameState.news,
     });
   },
 }));

@@ -3,14 +3,17 @@ import { useGameStore } from "@/store/gameStore";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Newspaper, Trophy, TrendingUp, MonitorPlay, Activity } from "lucide-react";
-import { NewsEvent } from "@/engine/types";
-import { selectNewsHistory, selectHeadlines } from "@/store/selectors";
+import { selectNewsHistory } from "@/store/selectors";
 
 interface MappedHeadline {
   id: string;
   week: number;
   category: string;
   text: string;
+  talentId?: string;
+  projectId?: string;
+  rivalId?: string;
+  buyerId?: string;
 }
 
 interface OutletWidgetProps {
@@ -67,38 +70,24 @@ const OutletWidget = ({ title, description, icon, headlines, colorClass }: Outle
   </Card>
 );
 
-function mapNewsEvent(ev: NewsEvent): MappedHeadline {
-  // Derive a category from the NewsEvent type
-  const categoryMap: Record<string, string> = {
-    CRISIS: "general",
-    AWARD: "awards",
-    RELEASE: "market",
-    STUDIO_EVENT: "talent",
-    RIVAL: "rival",
-  };
-  return {
-    id: ev.id,
-    week: ev.week,
-    category: categoryMap[ev.type] || "general",
-    text: ev.headline,
-  };
-}
-
 export const MediaPage = () => {
   const gameState = useGameStore((s) => s.gameState);
   const newsHistory = selectNewsHistory(gameState);
-  const newsHeadlines = selectHeadlines(gameState);
 
-  // Combine both sources into a unified headline format
   const allHeadlines = useMemo(() => {
-    const mapped: MappedHeadline[] = [
-      ...newsHeadlines.map((h) => ({ id: h.id, week: h.week, category: h.category || "general", text: h.headline || "" })),
-      ...newsHistory.map(mapNewsEvent),
-    ];
-    // Sort by week descending
+    const mapped: MappedHeadline[] = newsHistory.map((ev) => ({
+      id: ev.id,
+      week: ev.week,
+      category: ev.category || "general",
+      text: ev.headline,
+      ...(ev.talentId && { talentId: ev.talentId }),
+      ...(ev.projectId && { projectId: ev.projectId }),
+      ...(ev.rivalId && { rivalId: ev.rivalId }),
+      ...(ev.buyerId && { buyerId: ev.buyerId }),
+    }));
     mapped.sort((a, b) => b.week - a.week);
     return mapped;
-  }, [newsHistory, newsHeadlines]);
+  }, [newsHistory]);
 
   const groupedHeadlines = useMemo(
     () =>

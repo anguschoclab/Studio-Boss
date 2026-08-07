@@ -70,6 +70,7 @@ export function advanceBuyers(state: GameState): StateImpact {
           ),
           description: "",
           type: "STUDIO_EVENT",
+          buyerId: buyer.id,
         });
       }
     } else {
@@ -92,6 +93,7 @@ export function advanceBuyers(state: GameState): StateImpact {
           headline: pick(VULNERABILITY_HEADLINES)(buyer.name),
           description: "",
           type: "STUDIO_EVENT",
+          buyerId: buyer.id,
         });
       }
     } else {
@@ -142,6 +144,7 @@ export function advanceBuyers(state: GameState): StateImpact {
           headline: pick(MERGER_HEADLINES)(acquirer.name, target.name),
           description: "",
           type: "STUDIO_EVENT",
+          buyerId: acquirer.id,
         });
       }
     }

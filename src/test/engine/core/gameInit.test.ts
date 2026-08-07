@@ -7,8 +7,8 @@ describe("initializeGame", () => {
     expect(state.studio.name).toBe("My Studio");
     expect(state.studio.archetype).toBe("major");
     expect(state.week).toBe(1);
-    expect(state.news.headlines).toHaveLength(1);
-    expect(state.news.headlines[0].headline).toContain("My Studio");
+    expect(state.weekSummaries).toHaveLength(1);
+    expect(state.weekSummaries[0].newsEvents[0].headline).toContain("My Studio");
   });
 
   it("assigns player streamer ownerId to the actual studio ID", () => {

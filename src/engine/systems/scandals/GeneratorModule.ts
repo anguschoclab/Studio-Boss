@@ -71,6 +71,8 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
           context: { actor: talent.name, type },
           rng,
         }),
+        talentId: talent.id,
+        ...(talentToProjectMap.get(talent.id) && { projectId: talentToProjectMap.get(talent.id) }),
       });
 
       const projectId = talentToProjectMap.get(talent.id);

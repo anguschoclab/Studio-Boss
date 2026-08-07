@@ -394,22 +394,3 @@ export const selectNewsHistory = createSelector(
       .sort((a, b) => b.week - a.week);
   }
 );
-
-export const selectHeadlines = createSelector(
-  [selectNewsHistory],
-  (events): import("@/engine/types").Headline[] => {
-    return events.map((e) => ({
-      id: e.id,
-      headline: e.headline,
-      description: e.description,
-      week: e.week,
-      type: e.type,
-      category: e.category || "general",
-      publication: e.publication,
-      talentId: e.talentId,
-      projectId: e.projectId,
-      rivalId: e.rivalId,
-      buyerId: e.buyerId,
-    })) as unknown as import("@/engine/types").Headline[];
-  }
-);

@@ -90,6 +90,7 @@ export function releaseDirectorsCut(
         week: 0, // will be set by coordinator context
         category: "box_office",
         publication: "Variety",
+        projectId: project.id,
       },
     ],
   });
@@ -115,6 +116,8 @@ export function releaseDirectorsCut(
           headline: "DIRECTOR'S VISION VINDICATED",
           description: `The director's cut release has significantly boosted their critical standing.`,
           publication: "IndieWire",
+          projectId: project.id,
+          talentId: directorId,
         },
       ],
     });

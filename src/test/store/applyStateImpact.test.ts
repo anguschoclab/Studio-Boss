@@ -86,13 +86,14 @@ describe("applyStateImpact utility", () => {
     expect(newState.studio.prestige).toBe(60);
   });
 
-  it("should add news events", () => {
+  it("should handle NEWS_ADDED impact (no-op — news captured by WeekCoordinator)", () => {
     const impact: StateImpact = {
       type: "NEWS_ADDED",
       payload: { headline: "Award Won!", description: "Win" },
     };
-    const newState = applyStateImpact(getInitialMockState(), impact);
-    expect(newState.industry.newsHistory).toHaveLength(1);
-    expect(newState.industry.newsHistory[0].headline).toBe("Award Won!");
+    const initialState = getInitialMockState();
+    const newState = applyStateImpact(initialState, impact);
+    // handleNewsAdded is a no-op — news events are captured by WeekCoordinator.buildSummary
+    expect(newState).toBe(initialState);
   });
 });
