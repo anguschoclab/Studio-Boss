@@ -1,8 +1,8 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { FranchiseHub } from "@/components/ip/FranchiseHub";
-import { useGameStore } from "@/store/gameStore";
+import {render screen} from "@testing-library/react";
+import {describe it expect vi beforeEach} from "vitest";
+import {FranchiseHub} from "@/components/ip/FranchiseHub";
+import {useGameStore} from "@/store/gameStore";
 
 vi.mock("@/components/ui/card", () => ({
   Card: ({ children }: any) => <div data-testid="card">{children}</div>,

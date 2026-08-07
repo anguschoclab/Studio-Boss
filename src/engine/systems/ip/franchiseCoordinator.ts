@@ -1,6 +1,6 @@
-import { GameState, Project, Franchise } from "../../types";
-import { generateId, clamp } from "../../utils";
-import { calculateFranchiseEquity } from "./EquityCalculator";
+import {GameState Project Franchise} from "../../types";
+import {generateId clamp} from "../../utils";
+import {calculateFranchiseEquity} from "./EquityCalculator";
 
 /**
  * Franchise Coordinator.

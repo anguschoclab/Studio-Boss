@@ -1,6 +1,6 @@
-import { Project } from "@/engine/types";
-import { RandomGenerator } from "../../utils/rng";
-import { randRange } from "../../utils";
+import {Project} from "@/engine/types";
+import {RandomGenerator} from "../../utils/rng";
+import {randRange} from "../../utils";
 
 export interface PostReleaseResult {
   update: string | null;

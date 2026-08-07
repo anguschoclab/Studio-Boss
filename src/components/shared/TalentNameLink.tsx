@@ -1,6 +1,6 @@
 import React from "react";
-import { useUIStore } from "@/store/uiStore";
-import { cn } from "@/lib/utils";
+import {useUIStore} from "@/store/uiStore";
+import {cn} from "@/lib/utils";
 
 interface TalentNameLinkProps {
   talentId: string;

@@ -1,6 +1,6 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import {render screen fireEvent} from "@testing-library/react";
+import {describe it expect vi beforeEach} from "vitest";
 
 const {
   mockAcquireDistressedAsset,
@@ -88,8 +88,8 @@ vi.mock("@/engine/utils", () => ({
   formatMoney: (n: number) => `$${n.toLocaleString()}`,
 }));
 
-import { DistressedAssetOfferModal } from "@/components/modals/DistressedAssetOfferModal";
-import { useUIStore } from "@/store/uiStore";
+import {DistressedAssetOfferModal} from "@/components/modals/DistressedAssetOfferModal";
+import {useUIStore} from "@/store/uiStore";
 
 function setModal(payload: any) {
   (useUIStore as any).mockImplementation(() => ({

@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { existsSync } from "fs";
-import { join } from "path";
+import {describe it expect} from "vitest";
+import {existsSync} from "fs";
+import {join} from "path";
 
 const slicesDir = join(__dirname, "..", "..", "..", "src", "store", "slices");
 const systemsDir = join(__dirname, "..", "..", "..", "src", "engine", "systems");

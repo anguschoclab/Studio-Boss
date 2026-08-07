@@ -1,6 +1,6 @@
-import { Buyer, MandateType, Project, ProjectContractType } from "@/engine/types";
-import { StateImpact } from "../types/state.types";
-import { pick, randRange, rand, generateId } from "../utils";
+import {Buyer MandateType Project ProjectContractType} from "@/engine/types";
+import {StateImpact} from "../types/state.types";
+import {pick randRange rand generateId} from "../utils";
 
 const MANDATE_TYPES: MandateType[] = [
   "sci-fi",
@@ -61,7 +61,7 @@ for (let i = 0; i < MANDATE_TYPES.length; i++) {
 export function updateBuyers(buyers: Buyer[], currentWeek: number): StateImpact {
   const impact: StateImpact = {
     buyerUpdates: [],
-    newHeadlines: [],
+    newsEvents: [],
   };
 
   buyers.forEach((buyer) => {
@@ -87,7 +87,7 @@ export function updateBuyers(buyers: Buyer[], currentWeek: number): StateImpact 
 
       const headlineTemplate = MANDATE_HEADLINES[newMandateType];
       if (headlineTemplate && rand() < 0.6) {
-        impact.newHeadlines!.push({
+        impact.newsEvents!.push({
           id: generateId("HL"),
           week: currentWeek,
           category: "market",

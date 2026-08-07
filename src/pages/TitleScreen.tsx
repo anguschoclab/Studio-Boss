@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect } from "react";
-import { useNavigate } from "@tanstack/react-router";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useGameStore } from "@/store/gameStore";
-import { formatMoney, getWeekDisplay } from "@/engine/utils";
-import { SaveSlotInfo } from "@/persistence/saveLoad";
-import { Play, Database, Terminal, Shield, Zap, Target } from "lucide-react";
+import {useState useEffect} from "react";
+import {useNavigate} from "@tanstack/react-router";
+import {Button} from "@/components/ui/button";
+import {Dialog DialogContent DialogHeader DialogTitle} from "@/components/ui/dialog";
+import {useGameStore} from "@/store/gameStore";
+import {formatMoney getWeekDisplay} from "@/engine/utils";
+import {SaveSlotInfo} from "@/persistence/saveLoad";
+import {Play Database Terminal Shield Zap Target} from "lucide-react";
 
 const TitleScreen = () => {
   const navigate = useNavigate();

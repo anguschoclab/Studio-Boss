@@ -1,6 +1,6 @@
-import { Project, Buyer, Contract } from "../../types";
-import { IPAsset } from "../../types/state.types";
-import { calculateWeeklyIPRevenue } from "../ip/merchandisingEngine";
+import {Project Buyer Contract} from "../../types";
+import {IPAsset} from "../../types/state.types";
+import {calculateWeeklyIPRevenue} from "../ip/merchandisingEngine";
 
 /**
  * RevenueProcessor handles all income-related calculations for the studio.

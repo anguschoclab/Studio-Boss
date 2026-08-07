@@ -1,7 +1,7 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
-import { Heatmap } from "@/components/shared/Heatmap";
+import {render screen fireEvent} from "@testing-library/react";
+import {describe it expect vi} from "vitest";
+import {Heatmap} from "@/components/shared/Heatmap";
 
 // TooltipWrapper is already mocked in setup.ts
 

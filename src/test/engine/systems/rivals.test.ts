@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { updateRival, advanceRivals } from "../../../engine/systems/rivals";
-import { createMockGameState, createMockRival } from "../generators/mockFactory";
-import { setDeterministicSeed } from "../../../engine/utils";
+import {describe it expect beforeEach} from "vitest";
+import {updateRival advanceRivals} from "../../../engine/systems/rivals";
+import {createMockGameState createMockRival} from "../generators/mockFactory";
+import {setDeterministicSeed} from "../../../engine/utils";
 
 describe("rivals system", () => {
   beforeEach(() => {

@@ -1,6 +1,6 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import {render screen fireEvent} from "@testing-library/react";
+import {describe it expect vi beforeEach} from "vitest";
 
 const { mockDevelopFromOwnedIP, mockResolveCurrentModal } = vi.hoisted(() => ({
   mockDevelopFromOwnedIP: vi.fn(),
@@ -53,8 +53,8 @@ vi.mock("@/engine/utils", () => ({
   formatMoney: (n: number) => `$${n.toLocaleString()}`,
 }));
 
-import { RebootOpportunityModal } from "@/components/modals/RebootOpportunityModal";
-import { useUIStore } from "@/store/uiStore";
+import {RebootOpportunityModal} from "@/components/modals/RebootOpportunityModal";
+import {useUIStore} from "@/store/uiStore";
 
 function makeProposal(overrides: any = {}) {
   return {

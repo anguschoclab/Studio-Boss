@@ -1,9 +1,9 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { TelevisionDashboard } from "@/components/pipeline/TelevisionDashboard";
-import { useGameStore } from "@/store/gameStore";
-import { Project, SeriesProject } from "@/engine/types";
+import {render screen} from "@testing-library/react";
+import {describe it expect vi beforeEach} from "vitest";
+import {TelevisionDashboard} from "@/components/pipeline/TelevisionDashboard";
+import {useGameStore} from "@/store/gameStore";
+import {Project SeriesProject} from "@/engine/types";
 
 vi.mock("@/store/gameStore", () => ({
   useGameStore: vi.fn(),

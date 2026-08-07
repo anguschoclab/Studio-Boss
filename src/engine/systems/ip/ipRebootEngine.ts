@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IPAsset, Project } from "../../types";
+import {IPAsset Project} from "../../types";
 import type { CreateProjectParams } from "@/store/storeUtils";
 
 export interface RebootProposal {

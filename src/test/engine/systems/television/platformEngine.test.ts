@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
-import { GameState, StreamerPlatform, Talent, BuyerUpdateImpact } from "../../../../engine/types";
-import { tickPlatforms } from "../../../../engine/systems/television/platformEngine";
-import { RandomGenerator } from "../../../../engine/utils/rng";
+import {describe it expect} from "vitest";
+import {GameState StreamerPlatform Talent BuyerUpdateImpact} from "../../../../engine/types";
+import {tickPlatforms} from "../../../../engine/systems/television/platformEngine";
+import {RandomGenerator} from "../../../../engine/utils/rng";
 
 describe("Platform Engine (Target B1)", () => {
   const rng = new RandomGenerator(42);

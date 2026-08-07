@@ -1,21 +1,13 @@
 import React, { useState } from "react";
-import { TabsContent } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { BarChart3, CheckCircle2, Megaphone, TrendingUp, ChevronDown } from "lucide-react";
-import { Project } from "@/engine/types";
-import { MarketingAngle } from "@/engine/types/project.types";
-import { formatMoney } from "@/engine/utils";
-import { cn } from "@/lib/utils";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import {TabsContent} from "@/components/ui/tabs";
+import {Badge} from "@/components/ui/badge";
+import {Button} from "@/components/ui/button";
+import {BarChart3 CheckCircle2 Megaphone TrendingUp ChevronDown} from "lucide-react";
+import {Project} from "@/engine/types";
+import {MarketingAngle} from "@/engine/types/project.types";
+import {formatMoney} from "@/engine/utils";
+import {cn} from "@/lib/utils";
+import {AreaChart Area XAxis YAxis CartesianGrid Tooltip ResponsiveContainer} from "recharts";
 
 // Extended type that includes the 6 new angles planned in game design
 // (project.types.ts is not modified — these are cast as string where the base type is used)

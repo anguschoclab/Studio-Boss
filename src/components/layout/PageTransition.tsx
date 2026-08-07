@@ -1,7 +1,7 @@
 import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { pageTransition, subTabTransition } from "@/lib/animations";
+import {motion AnimatePresence} from "framer-motion";
+import {cn} from "@/lib/utils";
+import {pageTransition subTabTransition} from "@/lib/animations";
 
 type TransitionType = "page" | "subTab" | "fade";
 

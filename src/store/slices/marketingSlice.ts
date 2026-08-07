@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { StateCreator } from "zustand";
-import { GameStore } from "../gameStore";
-import { RandomGenerator } from "@/engine/utils/rng";
-import { AudienceQuadrant, MarketingAngle } from "@/engine/types";
-import { calculateAudienceIndex } from "@/engine/systems/demographics";
-import { applyImpacts } from "@/engine/core/impactReducer";
-import { launchAwardsCampaign as launchAwardsCampaignEngine } from "@/engine/systems/awards/AwardsCampaign";
+import {StateCreator} from "zustand";
+import {GameStore} from "../gameStore";
+import {RandomGenerator} from "@/engine/utils/rng";
+import {AudienceQuadrant MarketingAngle} from "@/engine/types";
+import {calculateAudienceIndex} from "@/engine/systems/demographics";
+import {applyImpacts} from "@/engine/core/impactReducer";
+import {launchAwardsCampaign as launchAwardsCampaignEngine} from "@/engine/systems/awards/AwardsCampaign";
 
 export interface CampaignTier {
   cost: number;
@@ -69,8 +69,8 @@ export const createMarketingSlice: StateCreator<GameStore, [], [], MarketingSlic
 
       const newsEvents: import("@/engine/types").NewsEvent[] = [];
       for (const impact of result.impacts) {
-        if (impact.newHeadlines) {
-          newsEvents.push(...impact.newHeadlines);
+        if (impact.newsEvents) {
+          newsEvents.push(...impact.newsEvents);
         }
       }
 

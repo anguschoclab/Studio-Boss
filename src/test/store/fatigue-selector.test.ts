@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
-import { selectFatigueForAsset } from "@/store/selectors";
-import { GameState, IPAsset, Franchise } from "@/engine/types";
-import { createMockGameState } from "@/test/mockFactory";
+import {describe it expect} from "vitest";
+import {selectFatigueForAsset} from "@/store/selectors";
+import {GameState IPAsset Franchise} from "@/engine/types";
+import {createMockGameState} from "@/test/mockFactory";
 
 function makeFranchise(overrides: Partial<Franchise> = {}): Franchise {
   return {

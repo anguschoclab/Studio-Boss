@@ -1,4 +1,4 @@
-import { UnscriptedFormatKey } from "@/engine/types";
+import {UnscriptedFormatKey} from "@/engine/types";
 
 interface UnscriptedFormatData {
   key: UnscriptedFormatKey;

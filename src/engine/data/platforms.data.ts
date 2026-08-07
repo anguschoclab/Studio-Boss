@@ -1,4 +1,4 @@
-import { BuyerArchetype } from "../types/studio.types";
+import {BuyerArchetype} from "../types/studio.types";
 
 export interface PlatformData {
   id: string;

@@ -1,8 +1,8 @@
-import { describe, it, expect } from "vitest";
-import { tickWorldEvents } from "../../../../engine/systems/ai/WorldSimulator";
-import { Project, Talent, NewsImpact } from "../../../../engine/types";
-import { RandomGenerator } from "../../../../engine/utils/rng";
-import { createMockGameState } from "../../../mockFactory";
+import {describe it expect} from "vitest";
+import {tickWorldEvents} from "../../../../engine/systems/ai/WorldSimulator";
+import {Project Talent NewsImpact} from "../../../../engine/types";
+import {RandomGenerator} from "../../../../engine/utils/rng";
+import {createMockGameState} from "../../../mockFactory";
 
 describe("tickWorldEvents", () => {
   it("generates MARKET SATURATION news when a project is released", () => {

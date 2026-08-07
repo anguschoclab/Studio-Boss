@@ -1,8 +1,8 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { FinancePanel } from "@/components/finance/FinancePanel";
-import { useGameStore } from "@/store/gameStore";
+import {render screen} from "@testing-library/react";
+import {describe it expect vi beforeEach} from "vitest";
+import {FinancePanel} from "@/components/finance/FinancePanel";
+import {useGameStore} from "@/store/gameStore";
 
 // Mock Recharts to avoid SVG/JSDOM issues
 vi.mock("recharts", () => ({

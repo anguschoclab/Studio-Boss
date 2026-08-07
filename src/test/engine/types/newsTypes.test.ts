@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
+import {describe it expect} from "vitest";
 import type {
   NewsEvent,
-  Headline,
+  NewsEvent,
   WeekSummary,
 } from "@/engine/types";
 import type { NewsImpact } from "@/engine/types/state.types";
@@ -64,9 +64,9 @@ describe("NewsEvent type", () => {
   });
 });
 
-describe("Headline type (migration alias)", () => {
+describe("NewsEvent type (migration alias)", () => {
   it("is assignable to NewsEvent", () => {
-    const headline: Headline = {
+    const headline: NewsEvent = {
       id: "h-1",
       week: 1,
       type: "STUDIO_EVENT",
@@ -88,7 +88,6 @@ describe("WeekSummary type", () => {
       totalRevenue: 500,
       totalCosts: 300,
       projectUpdates: [],
-      newHeadlines: [],
       newsEvents: [],
       events: [],
     };
@@ -113,7 +112,6 @@ describe("WeekSummary type", () => {
       totalRevenue: 0,
       totalCosts: 0,
       projectUpdates: [],
-      newHeadlines: [],
       newsEvents: [event],
       events: [],
     };

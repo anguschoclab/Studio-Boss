@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { defaultSimMemory, getSimMemory } from "@/engine/core/simMemory";
+import {describe it expect} from "vitest";
+import {defaultSimMemory getSimMemory} from "@/engine/core/simMemory";
 import type { GameState } from "@/engine/types";
 
 describe("SimMemory extended defaults", () => {

@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { WeekCoordinator } from "@/engine/services/WeekCoordinator";
-import { GameState } from "@/engine/types";
-import { RandomGenerator } from "@/engine/utils/rng";
-import { createMockGameState } from "@/test/utils/mockFactories";
+import {describe it expect beforeEach} from "vitest";
+import {WeekCoordinator} from "@/engine/services/WeekCoordinator";
+import {GameState} from "@/engine/types";
+import {RandomGenerator} from "@/engine/utils/rng";
+import {createMockGameState} from "@/test/utils/mockFactories";
 
 describe("WeekCoordinator", () => {
   let state: GameState;

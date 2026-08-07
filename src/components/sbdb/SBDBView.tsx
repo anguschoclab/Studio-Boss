@@ -1,19 +1,13 @@
 import React, { useState, useMemo } from "react";
-import { useGameStore } from "@/store/gameStore";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Search, Filter, Users } from "lucide-react";
-import { TalentRole } from "@/engine/types";
-import { TalentCard } from "../talent/TalentCard";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
+import {useGameStore} from "@/store/gameStore";
+import {Input} from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
+import {Select SelectContent SelectItem SelectTrigger SelectValue} from "@/components/ui/select";
+import {Search Filter Users} from "lucide-react";
+import {TalentRole} from "@/engine/types";
+import {TalentCard} from "../talent/TalentCard";
+import {ScrollArea} from "@/components/ui/scroll-area";
+import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";
 
 export const SBDBView = () => {
   const gameState = useGameStore((s) => s.gameState);

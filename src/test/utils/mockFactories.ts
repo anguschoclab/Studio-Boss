@@ -1,25 +1,4 @@
-import {
-  Project,
-  Talent,
-  GameState,
-  Contract,
-  IPAsset,
-  RivalStudio,
-  Buyer,
-  Agency,
-  Opportunity,
-  MarketState,
-  TVSeasonDetails,
-  AwardsProfile,
-  FilmProject,
-  SeriesProject,
-  StreamerPlatform,
-  PremiumPlatform,
-  NetworkPlatform,
-  ProjectType,
-  ProjectFormat,
-  ScriptMetrics,
-} from "@/engine/types";
+import {Project Talent GameState Contract IPAsset RivalStudio Buyer Agency Opportunity MarketState TVSeasonDetails AwardsProfile FilmProject SeriesProject StreamerPlatform PremiumPlatform NetworkPlatform ProjectType ProjectFormat ScriptMetrics} from "@/engine/types";
 
 export const createMockTalent = (overrides: Partial<Talent> = {}): Talent =>
   ({

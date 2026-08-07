@@ -1,12 +1,5 @@
-import {
-  GameState,
-  RivalStudio,
-  Opportunity,
-  StateImpact,
-  ArchetypeKey,
-  StudioMotivation,
-} from "@/engine/types";
-import { RandomGenerator } from "../../utils/rng";
+import {GameState RivalStudio Opportunity StateImpact ArchetypeKey StudioMotivation} from "@/engine/types";
+import {RandomGenerator} from "../../utils/rng";
 
 /**
  * AI Decision Multipliers.

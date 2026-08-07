@@ -1,13 +1,7 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import {
-  shouldTalentHireAgent,
-  shouldTalentFireAgent,
-  selectAgentForTalent,
-  createAgentHiringEvent,
-  createAgentFiringEvent,
-} from "@/engine/systems/talent/talentAgentEvents";
-import { RandomGenerator } from "@/engine/utils/rng";
-import { createMockGameState, createMockTalent } from "../../generators/mockFactory";
+import {describe it expect beforeEach} from "vitest";
+import {shouldTalentHireAgent shouldTalentFireAgent selectAgentForTalent createAgentHiringEvent createAgentFiringEvent} from "@/engine/systems/talent/talentAgentEvents";
+import {RandomGenerator} from "@/engine/utils/rng";
+import {createMockGameState createMockTalent} from "../../generators/mockFactory";
 import type { GameState } from "@/engine/types/studio.types";
 import type { Talent, Agent, Agency } from "@/engine/types/talent.types";
 import type { TalentAgentRelationship } from "@/engine/systems/talent/talentAgentInteractions";

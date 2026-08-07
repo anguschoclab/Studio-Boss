@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { AnnualScans } from "@/engine/services/filters/AnnualScans";
-import { GameState } from "@/engine/types";
-import { RandomGenerator } from "@/engine/utils/rng";
-import { TickContext } from "@/engine/services/filters/types";
+import {describe it expect beforeEach} from "vitest";
+import {AnnualScans} from "@/engine/services/filters/AnnualScans";
+import {GameState} from "@/engine/types";
+import {RandomGenerator} from "@/engine/utils/rng";
+import {TickContext} from "@/engine/services/filters/types";
 
 describe("AnnualScans", () => {
   let mockState: GameState;

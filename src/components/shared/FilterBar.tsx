@@ -1,9 +1,9 @@
 import React from "react";
-import { Search, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import {Search X} from "lucide-react";
+import {cn} from "@/lib/utils";
 
-import { Button } from "@/components/ui/button";
-import { Stack, HorizontalStack } from "@/components/layout/Stack";
+import {Button} from "@/components/ui/button";
+import {Stack HorizontalStack} from "@/components/layout/Stack";
 
 interface FilterOption {
   value: string;

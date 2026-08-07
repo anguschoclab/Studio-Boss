@@ -1,13 +1,8 @@
-import { describe, it, expect } from "vitest";
-import { tickProductionEnhancementSystem } from "@/engine/systems/talent/ProductionEnhancementSystem";
-import { RandomGenerator } from "@/engine/utils/rng";
-import {
-  createMockGameState,
-  createMockTalent,
-  createMockProject,
-  createMockContract,
-} from "../../generators/mockFactory";
-import { Project } from "@/engine/types";
+import {describe it expect} from "vitest";
+import {tickProductionEnhancementSystem} from "@/engine/systems/talent/ProductionEnhancementSystem";
+import {RandomGenerator} from "@/engine/utils/rng";
+import {createMockGameState createMockTalent createMockProject createMockContract} from "../../generators/mockFactory";
+import {Project} from "@/engine/types";
 
 function makeProject(overrides: Partial<Project> = {}): Project {
   return createMockProject({

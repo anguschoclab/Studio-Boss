@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import {GoogleGenerativeAI} from "@google/generative-ai";
 
 /**
  * AI Service for Studio Boss Narrative Engine

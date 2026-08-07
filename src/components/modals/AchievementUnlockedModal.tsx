@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useUIStore } from "@/store/uiStore";
-import { Trophy, Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import {useUIStore} from "@/store/uiStore";
+import {Trophy Star} from "lucide-react";
+import {Button} from "@/components/ui/button";
+import {cn} from "@/lib/utils";
 
 interface AchievementUnlockedPayload {
   achievementId: string;

@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { useGameStore } from "../../store/gameStore";
-import { WeeklyFinancialReport } from "../../engine/types";
+import {describe it expect beforeEach} from "vitest";
+import {useGameStore} from "../../store/gameStore";
+import {WeeklyFinancialReport} from "../../engine/types";
 
 describe("financeSlice", () => {
   beforeEach(() => {

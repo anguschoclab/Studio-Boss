@@ -1,8 +1,8 @@
-import { GameState, RivalStudio, StudioMotivation, StateImpact, SeriesProject } from "@/engine/types";
-import { RandomGenerator } from "../../utils/rng";
-import { determineSyndicationTier, getSyndicationImpact, calculateSyndicationProgress } from "../ip/syndicationEngine";
-import { SyndicationTier } from "../../data/syndicationConfig";
-import { getSimMemory } from "../../core/simMemory";
+import {GameState RivalStudio StudioMotivation StateImpact SeriesProject} from "@/engine/types";
+import {RandomGenerator} from "../../utils/rng";
+import {determineSyndicationTier getSyndicationImpact calculateSyndicationProgress} from "../ip/syndicationEngine";
+import {SyndicationTier} from "../../data/syndicationConfig";
+import {getSimMemory} from "../../core/simMemory";
 
 /**
  * Utility Scores for each Studio Motivation.

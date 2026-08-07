@@ -1,16 +1,13 @@
-import {
-  GameState,
-  StateImpact,
-} from "@/engine/types";
-import { RandomGenerator } from "../../utils/rng";
-import { buildProjectAndContracts } from "../../../store/storeUtils";
-import { generateOpportunity } from "../../generators/opportunities";
+import {GameState StateImpact} from "@/engine/types";
+import {RandomGenerator} from "../../utils/rng";
+import {buildProjectAndContracts} from "../../../store/storeUtils";
+import {generateOpportunity} from "../../generators/opportunities";
 
 /**
  * Opportunity System
  * Handles the resolution of expired project auctions.
  */
-import { CreateProjectParams } from "../../../store/storeUtils";
+import {CreateProjectParams} from "../../../store/storeUtils";
 
 /**
  * Opportunity System

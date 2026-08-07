@@ -1,5 +1,5 @@
-import { pick, rand } from "../utils";
-import { CONGLOMERATE_PREFIXES, PREFIXES, NETWORK_SUFFIXES } from "../data/names.data";
+import {pick rand} from "../utils";
+import {CONGLOMERATE_PREFIXES PREFIXES NETWORK_SUFFIXES} from "../data/names.data";
 
 export type BrandIdentity = {
   core: string;

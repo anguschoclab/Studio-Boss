@@ -1,25 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  Project,
-  Contract,
-  Talent,
-  Award,
-  MarketingCampaign,
-  SeriesProject,
-  UnscriptedProject,
-} from "@/engine/types";
-import { TV_FORMATS } from "../data/tvFormats";
-import { UNSCRIPTED_FORMATS } from "../data/unscriptedFormats";
-import { clamp, randRange } from "../utils";
-import { TalentSystem } from "./TalentSystem";
-import {
-  calculateReviewScore,
-  calculateOpeningWeekend,
-  simulateWeeklyBoxOffice,
-} from "./releaseSimulation";
-import { RandomGenerator } from "../utils/rng";
-import { computeCampaignMultiplier } from "./projectHandlers/MarketingHandler";
-import { handlePostReleasePhase } from "./projectHandlers/PostReleaseHandler";
+import {Project Contract Talent Award MarketingCampaign SeriesProject UnscriptedProject} from "@/engine/types";
+import {TV_FORMATS} from "../data/tvFormats";
+import {UNSCRIPTED_FORMATS} from "../data/unscriptedFormats";
+import {clamp randRange} from "../utils";
+import {TalentSystem} from "./TalentSystem";
+import {calculateReviewScore calculateOpeningWeekend simulateWeeklyBoxOffice} from "./releaseSimulation";
+import {RandomGenerator} from "../utils/rng";
+import {computeCampaignMultiplier} from "./projectHandlers/MarketingHandler";
+import {handlePostReleasePhase} from "./projectHandlers/PostReleaseHandler";
 
 function getAttachedTalent(contracts: Contract[], talentPoolMap: Map<string, Talent>): Talent[] {
   const acc: Talent[] = [];

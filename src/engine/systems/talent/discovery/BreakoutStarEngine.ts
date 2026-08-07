@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GameState, Talent, Project } from "../../../types";
-import { RandomGenerator } from "../../../utils/rng";
-import { BreakoutStar, BreakoutTrigger } from "../../../types/discovery.types";
+import {GameState Talent Project} from "../../../types";
+import {RandomGenerator} from "../../../utils/rng";
+import {BreakoutStar BreakoutTrigger} from "../../../types/discovery.types";
 
 // Base breakout chances
 const INDIE_HIT_CHANCE = 0.05;

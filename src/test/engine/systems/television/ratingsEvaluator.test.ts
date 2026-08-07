@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
-import { SeriesProject } from "../../../../engine/types";
-import { calculateWeeklyRating } from "../../../../engine/systems/television/ratingsEvaluator";
-import { RandomGenerator } from "../../../../engine/utils/rng";
+import {describe it expect} from "vitest";
+import {SeriesProject} from "../../../../engine/types";
+import {calculateWeeklyRating} from "../../../../engine/systems/television/ratingsEvaluator";
+import {RandomGenerator} from "../../../../engine/utils/rng";
 
 describe("Ratings Evaluator (Target B2)", () => {
   const rng = new RandomGenerator(12345);

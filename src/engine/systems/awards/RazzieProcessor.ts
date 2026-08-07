@@ -1,7 +1,7 @@
-import { GameState, StateImpact, Talent } from "@/engine/types";
-import { RandomGenerator } from "../../utils/rng";
-import { BardResolver } from "../bardResolver";
-import { impacts as I } from "../../core/impacts";
+import {GameState StateImpact Talent} from "@/engine/types";
+import {RandomGenerator} from "../../utils/rng";
+import {BardResolver} from "../bardResolver";
+import {impacts as I} from "../../core/impacts";
 
 export function processRazzies(
   state: GameState,

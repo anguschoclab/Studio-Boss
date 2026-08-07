@@ -5,9 +5,9 @@
  * This is now a facade for the modular avatar engine.
  */
 
-import { Talent, TalentDemographics } from "../types/talent.types";
-import { deriveFeatures } from "./avatar/core";
-import { renderAvatarSVG } from "./avatar/renderer";
+import {Talent TalentDemographics} from "../types/talent.types";
+import {deriveFeatures} from "./avatar/core";
+import {renderAvatarSVG} from "./avatar/renderer";
 
 /**
  * The primary entry point for generating an avatar SVG string.

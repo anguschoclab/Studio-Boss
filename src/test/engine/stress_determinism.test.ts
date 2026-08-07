@@ -1,6 +1,6 @@
-import { expect, test, describe } from "vitest";
-import { initializeGame } from "../../engine/core/gameInit";
-import { WeekCoordinator } from "../../engine/services/WeekCoordinator";
+import {expect test describe} from "vitest";
+import {initializeGame} from "../../engine/core/gameInit";
+import {WeekCoordinator} from "../../engine/services/WeekCoordinator";
 
 const SEED = 67890;
 const STUDIO_NAME = "Stress Test Studios";

@@ -1,6 +1,6 @@
-import { Badge } from "@/components/ui/badge";
-import { Star, Zap } from "lucide-react";
-import { GameState } from "@/engine/types";
+import {Badge} from "@/components/ui/badge";
+import {Star Zap} from "lucide-react";
+import {GameState} from "@/engine/types";
 
 interface StudioHeaderProps {
   gameState: GameState;

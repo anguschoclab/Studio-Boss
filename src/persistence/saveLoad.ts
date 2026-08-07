@@ -1,6 +1,6 @@
-import { GameState, SaveSlotMeta } from "@/engine/types";
-import { persistenceService } from "./PersistenceService";
-import { migrateSave } from "@/engine/migrations";
+import {GameState SaveSlotMeta} from "@/engine/types";
+import {persistenceService} from "./PersistenceService";
+import {migrateSave} from "@/engine/migrations";
 
 /**
  * High-level orchestration for Game State Persistence.

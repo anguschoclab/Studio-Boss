@@ -1,7 +1,7 @@
-import { TabsContent } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { Talent } from "@/engine/types";
-import { formatMoney } from "@/engine/utils";
+import {TabsContent} from "@/components/ui/tabs";
+import {Badge} from "@/components/ui/badge";
+import {Talent} from "@/engine/types";
+import {formatMoney} from "@/engine/utils";
 
 interface TalentFilmographyTabProps {
   talent: Talent;

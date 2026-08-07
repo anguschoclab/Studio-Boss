@@ -1,5 +1,5 @@
-import { Project } from "@/engine/types";
-import { StateImpact } from "../types/state.types";
+import {Project} from "@/engine/types";
+import {StateImpact} from "../types/state.types";
 
 export function calculateIPValue(project: Project): number {
   if (

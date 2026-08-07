@@ -1,15 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  GameState,
-  RivalStudio,
-  Project,
-  StateImpact,
-  BudgetTierKey,
-  ProjectType,
-} from "@/engine/types";
-import { RandomGenerator } from "@/engine/utils/rng";
-import { BUDGET_TIERS } from "@/engine/data/budgetTiers";
-import { getStudioArchetype } from "@/engine/data/aiArchetypes";
+import {GameState RivalStudio Project StateImpact BudgetTierKey ProjectType} from "@/engine/types";
+import {RandomGenerator} from "@/engine/utils/rng";
+import {BUDGET_TIERS} from "@/engine/data/budgetTiers";
+import {getStudioArchetype} from "@/engine/data/aiArchetypes";
 
 const ARCHETYPE_SPAWN_CHANCE: Record<string, number> = {
   major: 0.5,

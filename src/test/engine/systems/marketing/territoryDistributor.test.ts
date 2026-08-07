@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { calculateTerritorySplit } from "../../../../engine/systems/marketing/territoryDistributor";
-import { MarketingCampaign } from "../../../../engine/types";
+import {describe it expect} from "vitest";
+import {calculateTerritorySplit} from "../../../../engine/systems/marketing/territoryDistributor";
+import {MarketingCampaign} from "../../../../engine/types";
 
 describe("calculateTerritorySplit", () => {
   it("skews heavily foreign if foreign marketing budget vastly outpaces domestic", () => {

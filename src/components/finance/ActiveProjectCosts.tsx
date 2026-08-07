@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatMoney } from "@/engine/utils";
-import { Project } from "@/engine/types";
+import {Card CardContent CardHeader CardTitle} from "@/components/ui/card";
+import {formatMoney} from "@/engine/utils";
+import {Project} from "@/engine/types";
 
 interface ActiveProjectCostsProps {
   activeProjects: Project[];

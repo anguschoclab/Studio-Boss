@@ -1,10 +1,10 @@
-import { ContentFlag, Project, GameState, RatingCut } from "@/engine/types";
-import { StateImpact } from "@/engine/types/state.types";
-import { DirectorArchetype } from "@/engine/types/talent.types";
-import { hasCreativeControl } from "../directors";
-import { evaluateRegionalRatings } from "./regionalRatings";
-import { evaluateRating } from "./ratingEvaluation";
-import { RandomGenerator } from "../../utils/rng";
+import {ContentFlag Project GameState RatingCut} from "@/engine/types";
+import {StateImpact} from "@/engine/types/state.types";
+import {DirectorArchetype} from "@/engine/types/talent.types";
+import {hasCreativeControl} from "../directors";
+import {evaluateRegionalRatings} from "./regionalRatings";
+import {evaluateRating} from "./ratingEvaluation";
+import {RandomGenerator} from "../../utils/rng";
 
 export interface EditRatingResult {
   success: boolean;

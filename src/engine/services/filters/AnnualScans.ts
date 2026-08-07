@@ -1,10 +1,10 @@
-import { GameState, StateImpact } from "../../types";
-import { TickContext } from "./types";
+import {GameState StateImpact} from "../../types";
+import {TickContext} from "./types";
 
 // System Imports
-import { detectCultClassic } from "../../systems/ip/ipValuation";
-import { shouldAttemptHostileTakeover } from "../../systems/ai/BehaviorEngine";
-import { generateRebootProposal } from "../../systems/ip/ipRebootEngine";
+import {detectCultClassic} from "../../systems/ip/ipValuation";
+import {shouldAttemptHostileTakeover} from "../../systems/ai/BehaviorEngine";
+import {generateRebootProposal} from "../../systems/ip/ipRebootEngine";
 
 /**
  * Annual Scans

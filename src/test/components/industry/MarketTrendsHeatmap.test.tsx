@@ -1,8 +1,8 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { MarketTrendsHeatmap } from "@/components/industry/MarketTrendsHeatmap";
-import { useGameStore } from "@/store/gameStore";
+import {render screen} from "@testing-library/react";
+import {describe it expect vi beforeEach} from "vitest";
+import {MarketTrendsHeatmap} from "@/components/industry/MarketTrendsHeatmap";
+import {useGameStore} from "@/store/gameStore";
 
 vi.mock("@/components/shared/Heatmap", () => ({
   Heatmap: ({ data, rows, cols }: any) => (

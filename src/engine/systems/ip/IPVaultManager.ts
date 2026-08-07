@@ -1,8 +1,8 @@
-import { GameState, StateImpact } from "../../types";
-import { evaluateVaultSynergy } from "./synergyEvaluator";
-import { applyIPDecay } from "./ipValuation";
-import { calculateFranchiseFatigue } from "./fatigueEngine";
-import { determineSyndicationTier } from "./syndicationEngine";
+import {GameState StateImpact} from "../../types";
+import {evaluateVaultSynergy} from "./synergyEvaluator";
+import {applyIPDecay} from "./ipValuation";
+import {calculateFranchiseFatigue} from "./fatigueEngine";
+import {determineSyndicationTier} from "./syndicationEngine";
 
 /**
  * Weekly IP Vault Tick.

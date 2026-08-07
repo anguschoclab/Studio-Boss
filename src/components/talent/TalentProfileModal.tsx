@@ -1,19 +1,19 @@
-import { useMemo } from "react";
-import { useGameStore } from "@/store/gameStore";
-import { useUIStore } from "@/store/uiStore";
-import { formatMoney } from "@/engine/utils";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BarChart3, Clapperboard, Trophy, History, Star, MapPin, Calendar } from "lucide-react";
-import { TalentAvatar } from "./TalentAvatar";
-import { getTalentVisualAge, getCountryFlag } from "@/engine/generators/avatarGenerator";
+import {useMemo} from "react";
+import {useGameStore} from "@/store/gameStore";
+import {useUIStore} from "@/store/uiStore";
+import {formatMoney} from "@/engine/utils";
+import {Dialog DialogContent} from "@/components/ui/dialog";
+import {Badge} from "@/components/ui/badge";
+import {Tabs TabsList TabsTrigger} from "@/components/ui/tabs";
+import {BarChart3 Clapperboard Trophy History Star MapPin Calendar} from "lucide-react";
+import {TalentAvatar} from "./TalentAvatar";
+import {getTalentVisualAge getCountryFlag} from "@/engine/generators/avatarGenerator";
 
 // Import Tabs
-import { BioTab } from "./tabs/BioTab";
-import { StatsTab } from "./tabs/StatsTab";
-import { KnownForTab } from "./tabs/KnownForTab";
-import { FilmographyTab } from "./tabs/FilmographyTab";
+import {BioTab} from "./tabs/BioTab";
+import {StatsTab} from "./tabs/StatsTab";
+import {KnownForTab} from "./tabs/KnownForTab";
+import {FilmographyTab} from "./tabs/FilmographyTab";
 
 /**
  * A comprehensive cinematic modal component for viewing a talent's detailed profile.

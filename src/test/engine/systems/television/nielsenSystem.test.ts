@@ -1,12 +1,7 @@
-import { describe, it, expect } from "vitest";
-import {
-  calculateNielsenRatings,
-  buildNielsenProfile,
-  rankShows,
-  NielsenSnapshot,
-} from "../../../../engine/systems/television/nielsenSystem";
-import { SeriesProject } from "../../../../engine/types";
-import { RandomGenerator } from "../../../../engine/utils/rng";
+import {describe it expect} from "vitest";
+import {calculateNielsenRatings buildNielsenProfile rankShows NielsenSnapshot} from "../../../../engine/systems/television/nielsenSystem";
+import {SeriesProject} from "../../../../engine/types";
+import {RandomGenerator} from "../../../../engine/utils/rng";
 
 describe("Nielsen System (Guild Auditor)", () => {
   const mockSeries: SeriesProject = {

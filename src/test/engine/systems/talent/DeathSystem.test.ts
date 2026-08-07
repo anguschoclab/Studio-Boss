@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { tickDeathSystem, getDeathStatistics } from "@/engine/systems/talent/DeathSystem";
-import { createMockGameState, createMockTalent, createMockProject, createMockContract } from "@/test/utils/mockFactories";
-import { RandomGenerator } from "@/engine/utils/rng";
-import { GameState, Talent } from "@/engine/types";
+import {describe it expect vi beforeEach} from "vitest";
+import {tickDeathSystem getDeathStatistics} from "@/engine/systems/talent/DeathSystem";
+import {createMockGameState createMockTalent createMockProject createMockContract} from "@/test/utils/mockFactories";
+import {RandomGenerator} from "@/engine/utils/rng";
+import {GameState Talent} from "@/engine/types";
 
 describe("DeathSystem", () => {
   let state: GameState;

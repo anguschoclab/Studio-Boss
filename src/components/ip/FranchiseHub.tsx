@@ -1,12 +1,12 @@
 import React from "react";
-import { useGameStore } from "@/store/gameStore";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Network, Zap, AlertTriangle, TrendingUp, Layers, Film, Tv, Play } from "lucide-react";
-import { formatMoney } from "@/engine/utils";
-import { Franchise, IPAsset } from "@/engine/types";
-import { useShallow } from "zustand/react/shallow";
+import {useGameStore} from "@/store/gameStore";
+import {Card CardContent} from "@/components/ui/card";
+import {Badge} from "@/components/ui/badge";
+import {Progress} from "@/components/ui/progress";
+import {Network Zap AlertTriangle TrendingUp Layers Film Tv Play} from "lucide-react";
+import {formatMoney} from "@/engine/utils";
+import {Franchise IPAsset} from "@/engine/types";
+import {useShallow} from "zustand/react/shallow";
 
 export const FranchiseHub = () => {
   const ipState = useGameStore(useShallow((s) => s.gameState?.ip)) || { franchises: {}, vault: [] };

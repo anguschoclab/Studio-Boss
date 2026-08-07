@@ -1,21 +1,10 @@
-import {
-  GameState,
-  Project,
-  Talent,
-  ProjectFormat,
-  BudgetTierKey,
-  TvFormatKey,
-  UnscriptedFormatKey,
-  ReleaseModelKey,
-  StateImpact,
-  Contract,
-} from "@/engine/types";
-import { BUDGET_TIERS } from "@/engine/data/budgetTiers";
-import { TV_FORMATS } from "@/engine/data/tvFormats";
-import { UNSCRIPTED_FORMATS } from "@/engine/data/unscriptedFormats";
-import { getFilmStats, getTvStats, getUnscriptedStats } from "@/engine/systems/stats";
-import { randRange, generateId } from "@/engine/utils";
-import { applyImpacts } from "@/engine/core/impactReducer";
+import {GameState Project Talent ProjectFormat BudgetTierKey TvFormatKey UnscriptedFormatKey ReleaseModelKey StateImpact Contract} from "@/engine/types";
+import {BUDGET_TIERS} from "@/engine/data/budgetTiers";
+import {TV_FORMATS} from "@/engine/data/tvFormats";
+import {UNSCRIPTED_FORMATS} from "@/engine/data/unscriptedFormats";
+import {getFilmStats getTvStats getUnscriptedStats} from "@/engine/systems/stats";
+import {randRange generateId} from "@/engine/utils";
+import {applyImpacts} from "@/engine/core/impactReducer";
 
 export interface CreateProjectParams {
   title: string;

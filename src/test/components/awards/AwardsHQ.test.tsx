@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { AwardsHQ } from "@/components/awards/AwardsHQ";
-import { useGameStore } from "@/store/gameStore";
-import { useUIStore } from "@/store/uiStore";
+import {describe it expect beforeEach vi} from "vitest";
+import {render screen fireEvent} from "@testing-library/react";
+import {AwardsHQ} from "@/components/awards/AwardsHQ";
+import {useGameStore} from "@/store/gameStore";
+import {useUIStore} from "@/store/uiStore";
 import type { GameState, Project, AwardsProfile, CampaignData } from "@/engine/types";
 
 // Mock ResizeObserver

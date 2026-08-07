@@ -1,18 +1,11 @@
 import React from "react";
-import { cn, formatCurrency } from "@/lib/utils";
-import {
-  AlertTriangle,
-  DollarSign,
-  TrendingUp,
-  AlertOctagon,
-  CheckCircle2,
-  Clock,
-} from "lucide-react";
-import { Section } from "@/components/layout/Section";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { tokens } from "@/lib/tokens";
+import {cn formatCurrency} from "@/lib/utils";
+import {AlertTriangle DollarSign TrendingUp AlertOctagon CheckCircle2 Clock} from "lucide-react";
+import {Section} from "@/components/layout/Section";
+import {Card} from "@/components/ui/card";
+import {Badge} from "@/components/ui/badge";
+import {Button} from "@/components/ui/button";
+import {tokens} from "@/lib/tokens";
 
 interface OverrunCause {
   category: string;

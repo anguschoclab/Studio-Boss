@@ -1,8 +1,8 @@
-import { describe, it, expect } from "vitest";
-import { RivalStudio, Project } from "@/engine/types";
-import { RandomGenerator } from "@/engine/utils/rng";
-import { RivalRevenueCalculator } from "@/engine/systems/rivals/RivalRevenueCalculator";
-import { createMockRival } from "@/test/utils/mockFactories";
+import {describe it expect} from "vitest";
+import {RivalStudio Project} from "@/engine/types";
+import {RandomGenerator} from "@/engine/utils/rng";
+import {RivalRevenueCalculator} from "@/engine/systems/rivals/RivalRevenueCalculator";
+import {createMockRival} from "@/test/utils/mockFactories";
 
 function releasedProject(ownerId: string): Project {
   return {

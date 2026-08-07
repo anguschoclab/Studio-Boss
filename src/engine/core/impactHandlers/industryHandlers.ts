@@ -1,5 +1,5 @@
-import { GameState, StateImpact } from "@/engine/types";
-import { getContractsByTalentId } from "../../utils";
+import {GameState StateImpact} from "@/engine/types";
+import {getContractsByTalentId} from "../../utils";
 
 const FORBIDDEN_KEYS = new Set(["__proto__", "constructor", "prototype"]);
 
@@ -283,7 +283,7 @@ export function handleHeadlinePosted(state: GameState, impact: StateImpact): Gam
     text: string;
     publication?: string;
   };
-  const headline = { id, week, category, headline: text, publication } as unknown as import("@/engine/types/engine.types").Headline;
+  const headline = { id, week, category, headline: text, publication } as unknown as import("@/engine/types/engine.types").NewsEvent;
   return {
     ...state,
     news: {
@@ -296,7 +296,7 @@ export function handleHeadlinePosted(state: GameState, impact: StateImpact): Gam
 export function handleIndustryRumorsUpdated(state: GameState, impact: StateImpact): GameState {
   const { rumors, headlines } = impact.payload as {
     rumors: import("@/engine/types/engine.types").Rumor[];
-    headlines: import("@/engine/types/engine.types").Headline[];
+    headlines: import("@/engine/types/engine.types").NewsEvent[];
   };
   let newState = {
     ...state,

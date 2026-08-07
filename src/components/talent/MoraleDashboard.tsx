@@ -1,11 +1,11 @@
 import React from "react";
-import { cn } from "@/lib/utils";
-import { Smile, AlertTriangle, Users } from "lucide-react";
-import { Section } from "@/components/layout/Section";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { tokens } from "@/lib/tokens";
-import { TalentNameLink } from "@/components/shared/TalentNameLink";
+import {cn} from "@/lib/utils";
+import {Smile AlertTriangle Users} from "lucide-react";
+import {Section} from "@/components/layout/Section";
+import {Card} from "@/components/ui/card";
+import {Badge} from "@/components/ui/badge";
+import {tokens} from "@/lib/tokens";
+import {TalentNameLink} from "@/components/shared/TalentNameLink";
 
 interface TalentMorale {
   talentId: string;

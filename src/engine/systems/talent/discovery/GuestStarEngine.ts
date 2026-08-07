@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GameState, Talent, Project } from "../../../types";import { RandomGenerator } from "../../../utils/rng";
-import { GuestStarBooking } from "../../../types/discovery.types";
-import { getContractsByProjectId } from "../../../utils";
+import {GameState Talent Project} from "../../../types";import {RandomGenerator} from "../../../utils/rng";
+import {GuestStarBooking} from "../../../types/discovery.types";
+import {getContractsByProjectId} from "../../../utils";
 
 // Guest star thresholds
 const _MIN_STARMETER_FOR_GUEST = 60; // Must be somewhat famous

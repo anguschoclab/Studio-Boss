@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
-import { HeadlessController } from "@/engine/simulation/HeadlessController";
-import { RandomGenerator } from "@/engine/utils/rng";
-import { defaultSimMemory } from "@/engine/core/simMemory";
+import {describe it expect} from "vitest";
+import {HeadlessController} from "@/engine/simulation/HeadlessController";
+import {RandomGenerator} from "@/engine/utils/rng";
+import {defaultSimMemory} from "@/engine/core/simMemory";
 import type { GameState } from "@/engine/types";
 
 function makeState(streaks?: Record<string, number>): GameState {

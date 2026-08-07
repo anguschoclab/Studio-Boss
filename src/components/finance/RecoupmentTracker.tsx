@@ -1,8 +1,8 @@
 import React from "react";
-import { cn } from "@/lib/utils";
-import { AlertCircle, CheckCircle2, Clock } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import {cn} from "@/lib/utils";
+import {AlertCircle CheckCircle2 Clock} from "lucide-react";
+import {Card} from "@/components/ui/card";
+import {Badge} from "@/components/ui/badge";
 
 interface ProjectRecoupment {
   projectId: string;

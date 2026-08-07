@@ -1,6 +1,6 @@
-import { BUDGET_TIERS } from "@/engine/data/budgetTiers";
-import { TV_FORMATS } from "@/engine/data/tvFormats";
-import { UNSCRIPTED_FORMATS } from "@/engine/data/unscriptedFormats";
+import {BUDGET_TIERS} from "@/engine/data/budgetTiers";
+import {TV_FORMATS} from "@/engine/data/tvFormats";
+import {UNSCRIPTED_FORMATS} from "@/engine/data/unscriptedFormats";
 
 export function getFilmStats(tier: (typeof BUDGET_TIERS)[keyof typeof BUDGET_TIERS]) {
   // The Studio Comptroller: Raised risk multipliers for all high-budget films to ensure extreme volatility.

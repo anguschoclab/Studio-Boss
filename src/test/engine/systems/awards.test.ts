@@ -1,11 +1,7 @@
-import { describe, it, expect } from "vitest";
-import {
-  generateAwardsProfile,
-  runAwardsCeremony,
-  processRazzies,
-} from "../../../engine/systems/awards/index";
-import { Project, GameState } from "../../../engine/types";
-import { RandomGenerator } from "../../../engine/utils/rng";
+import {describe it expect} from "vitest";
+import {generateAwardsProfile runAwardsCeremony processRazzies} from "../../../engine/systems/awards/index";
+import {Project GameState} from "../../../engine/types";
+import {RandomGenerator} from "../../../engine/utils/rng";
 
 describe("awards system", () => {
   const getInitialState = (): GameState =>

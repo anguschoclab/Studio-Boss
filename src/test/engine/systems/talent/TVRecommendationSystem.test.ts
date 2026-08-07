@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { tickTVRecommendationSystem } from "@/engine/systems/talent/TVRecommendationSystem";
-import { createMockGameState, createMockTalent } from "@/test/utils/mockFactories";
-import { RandomGenerator } from "@/engine/utils/rng";
-import { GameState, Talent } from "@/engine/types";
+import {describe it expect beforeEach vi} from "vitest";
+import {tickTVRecommendationSystem} from "@/engine/systems/talent/TVRecommendationSystem";
+import {createMockGameState createMockTalent} from "@/test/utils/mockFactories";
+import {RandomGenerator} from "@/engine/utils/rng";
+import {GameState Talent} from "@/engine/types";
 
 describe("TVRecommendationSystem", () => {
   let state: GameState;

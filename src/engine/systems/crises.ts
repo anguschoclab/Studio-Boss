@@ -1,7 +1,7 @@
-import { Project, ActiveCrisis, GameState } from "@/engine/types";
-import { pick, rand, generateId } from "../utils";
-import { StateImpact } from "../types/state.types";
-import { CRISIS_POOLS } from "../data/crises.data";
+import {Project ActiveCrisis GameState} from "@/engine/types";
+import {pick rand generateId} from "../utils";
+import {StateImpact} from "../types/state.types";
+import {CRISIS_POOLS} from "../data/crises.data";
 
 export function generateCrisis(project: Project): StateImpact | null {
   const template = pick(CRISIS_POOLS);
@@ -54,7 +54,6 @@ export function resolveCrisis(
     prestigeChange: option.reputationPenalty ? -option.reputationPenalty : 0,
     projectUpdates: [],
     removeContracts: [],
-    newHeadlines: [],
     newsEvents: [],
   };
 
@@ -82,7 +81,7 @@ export function resolveCrisis(
     impact.removeContracts!.push(`${projectId}:${option.removeTalentId}`);
   }
 
-  impact.newHeadlines!.push({
+  impact.newsEvents!.push({
     id: generateId("HL"),
     week: state.week,
     category: "general",

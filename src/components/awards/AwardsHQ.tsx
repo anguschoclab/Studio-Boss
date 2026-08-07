@@ -1,17 +1,17 @@
 import React, { useMemo, useState } from "react";
-import { useGameStore } from "@/store/gameStore";
-import { useUIStore } from "@/store/uiStore";
-import { formatMoney } from "@/engine/utils";
-import { selectAwardsEligibleProjects, selectAwardsOddsById } from "@/store/selectors";
-import { selectAwardsProbability } from "@/store/chartSelectors";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Trophy, Sparkles, Filter, Info, Target } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { CAMPAIGN_TIERS } from "@/store/slices/marketingSlice";
-import { getCategoriesForFormat } from "@/engine/data/awards.data";
-import { AwardsProbabilityChart } from "@/components/charts/AwardsProbabilityChart";
+import {useGameStore} from "@/store/gameStore";
+import {useUIStore} from "@/store/uiStore";
+import {formatMoney} from "@/engine/utils";
+import {selectAwardsEligibleProjects selectAwardsOddsById} from "@/store/selectors";
+import {selectAwardsProbability} from "@/store/chartSelectors";
+import {Button} from "@/components/ui/button";
+import {Badge} from "@/components/ui/badge";
+import {Select SelectContent SelectItem SelectTrigger SelectValue} from "@/components/ui/select";
+import {Trophy Sparkles Filter Info Target} from "lucide-react";
+import {cn} from "@/lib/utils";
+import {CAMPAIGN_TIERS} from "@/store/slices/marketingSlice";
+import {getCategoriesForFormat} from "@/engine/data/awards.data";
+import {AwardsProbabilityChart} from "@/components/charts/AwardsProbabilityChart";
 
 export const AwardsHQ: React.FC = () => {
   const gameState = useGameStore((s) => s.gameState);

@@ -1,6 +1,6 @@
-import { GameState, StateImpact, Talent } from "../../types";
-import { RandomGenerator } from "../../utils/rng";
-import { getContractsByProjectId, getContractsByTalentId } from "../../utils";
+import {GameState StateImpact Talent} from "../../types";
+import {RandomGenerator} from "../../utils/rng";
+import {getContractsByProjectId getContractsByTalentId} from "../../utils";
 
 /**
  * Death System

@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { useGameStore } from "@/store/gameStore";
-import { IPAsset } from "@/engine/types";
+import {describe it expect beforeEach vi} from "vitest";
+import {useGameStore} from "@/store/gameStore";
+import {IPAsset} from "@/engine/types";
 
 function applySingleImpact(state: any, impact: any): any {
   if (impact.type === "NEWS_ADDED") {

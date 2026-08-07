@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
-import { ScriptMetricsCalculator } from "@/engine/systems/production/ScriptMetricsCalculator";
-import { createMockProject } from "@/test/utils/mockFactories";
-import { ScriptedProject, ScriptEvent, ScriptMetrics } from "@/engine/types";
+import {describe it expect} from "vitest";
+import {ScriptMetricsCalculator} from "@/engine/systems/production/ScriptMetricsCalculator";
+import {createMockProject} from "@/test/utils/mockFactories";
+import {ScriptedProject ScriptEvent ScriptMetrics} from "@/engine/types";
 
 describe("ScriptMetricsCalculator", () => {
   describe("calculateMetrics", () => {

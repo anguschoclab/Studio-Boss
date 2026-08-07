@@ -1,8 +1,8 @@
-import { describe, it, expect } from "vitest";
-import { getFilmStats, getTvStats, getUnscriptedStats } from "@/engine/systems/stats";
-import { BUDGET_TIERS } from "@/engine/data/budgetTiers";
-import { TV_FORMATS } from "@/engine/data/tvFormats";
-import { UNSCRIPTED_FORMATS } from "@/engine/data/unscriptedFormats";
+import {describe it expect} from "vitest";
+import {getFilmStats getTvStats getUnscriptedStats} from "@/engine/systems/stats";
+import {BUDGET_TIERS} from "@/engine/data/budgetTiers";
+import {TV_FORMATS} from "@/engine/data/tvFormats";
+import {UNSCRIPTED_FORMATS} from "@/engine/data/unscriptedFormats";
 
 describe("stats system", () => {
   describe("getFilmStats", () => {

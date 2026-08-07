@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { useGameStore } from "@/store/gameStore";
-import { Opportunity } from "@/engine/types";
+import {describe it expect beforeEach vi} from "vitest";
+import {useGameStore} from "@/store/gameStore";
+import {Opportunity} from "@/engine/types";
 
 vi.mock("@/engine/utils/rng", () => ({
   RandomGenerator: vi.fn().mockImplementation(() => ({

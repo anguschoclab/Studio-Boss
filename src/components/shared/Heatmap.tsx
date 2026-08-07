@@ -1,6 +1,6 @@
 import React from "react";
-import { cn } from "@/lib/utils";
-import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
+import {cn} from "@/lib/utils";
+import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";
 
 interface HeatmapCell {
   id: string;

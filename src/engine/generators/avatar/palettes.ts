@@ -1,4 +1,4 @@
-import { ColorPalette, HairColor } from "./types";
+import {ColorPalette HairColor} from "./types";
 
 /**
  * Skin Tone Palettes representing a wide range of human diversity.

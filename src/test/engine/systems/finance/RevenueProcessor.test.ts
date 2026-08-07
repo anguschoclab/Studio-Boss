@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { RevenueProcessor } from "../../../../engine/systems/finance/RevenueProcessor";
-import { Project, Buyer } from "../../../../engine/types";
+import {describe it expect} from "vitest";
+import {RevenueProcessor} from "../../../../engine/systems/finance/RevenueProcessor";
+import {Project Buyer} from "../../../../engine/types";
 
 describe("RevenueProcessor", () => {
   describe("calculateStreamingRevenue", () => {

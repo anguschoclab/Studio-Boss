@@ -1,10 +1,10 @@
 import React from "react";
-import { cn, formatCompactCurrency } from "@/lib/utils";
-import { Coins, Film, Tv, Music, BookOpen, TrendingUp } from "lucide-react";
-import { Section } from "@/components/layout/Section";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { tokens } from "@/lib/tokens";
+import {cn formatCompactCurrency} from "@/lib/utils";
+import {Coins Film Tv Music BookOpen TrendingUp} from "lucide-react";
+import {Section} from "@/components/layout/Section";
+import {Card} from "@/components/ui/card";
+import {Badge} from "@/components/ui/badge";
+import {tokens} from "@/lib/tokens";
 
 interface PassiveIncomeStream {
   type:

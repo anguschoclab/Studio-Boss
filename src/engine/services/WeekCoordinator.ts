@@ -1,104 +1,98 @@
-import { GameState, StateImpact, WeekSummary, GameEvent } from "../types";
-import { RandomGenerator } from "../utils/rng";
-import { applyImpacts } from "../core/impactReducer";
-import { setDeterministicSeed } from "../utils";
-import { impacts as I } from "../core/impacts";
-import { defaultSimMemory } from "../core/simMemory";
+import {GameState StateImpact WeekSummary GameEvent} from "../types";
+import {RandomGenerator} from "../utils/rng";
+import {applyImpacts} from "../core/impactReducer";
+import {setDeterministicSeed} from "../utils";
+import {impacts as I} from "../core/impacts";
+import {defaultSimMemory} from "../core/simMemory";
 
 // System Imports
-import { tickProduction } from "../systems/productionEngine";
-import { tickScriptDevelopment } from "../systems/production/ScriptDraftingSystem";
-import { tickPlatforms } from "../systems/television/platformEngine";
-import { tickAIMinds } from "../systems/ai/motivationEngine";
-import { tickRivalAwardsCampaigns } from "../systems/ai/RivalAwardsCampaigner";
-import { tickAgencies } from "../systems/ai/AgentBrain";
-import { tickAuctions } from "../systems/ai/biddingEngine";
-import { tickWorldEvents } from "../systems/ai/WorldSimulator";
-import { tickTelevision } from "../systems/television/televisionTick";
-import { tickFinance } from "../systems/finance/financeTick";
-import { advanceTrends } from "../systems/trends";
-import { advanceMarketEvents } from "../systems/marketEvents";
-import { advanceScandals, generateScandals } from "../systems/scandals";
-import { advanceBuyers } from "../systems/buyerMergers";
+import {tickProduction} from "../systems/productionEngine";
+import {tickScriptDevelopment} from "../systems/production/ScriptDraftingSystem";
+import {tickPlatforms} from "../systems/television/platformEngine";
+import {tickAIMinds} from "../systems/ai/motivationEngine";
+import {tickRivalAwardsCampaigns} from "../systems/ai/RivalAwardsCampaigner";
+import {tickAgencies} from "../systems/ai/AgentBrain";
+import {tickAuctions} from "../systems/ai/biddingEngine";
+import {tickWorldEvents} from "../systems/ai/WorldSimulator";
+import {tickTelevision} from "../systems/television/televisionTick";
+import {tickFinance} from "../systems/finance/financeTick";
+import {advanceTrends} from "../systems/trends";
+import {advanceMarketEvents} from "../systems/marketEvents";
+import {advanceScandals generateScandals} from "../systems/scandals";
+import {advanceBuyers} from "../systems/buyerMergers";
 
 // New Industry Systems
-import { tickVerticalIntegration } from "../systems/industry/VerticalIntegrationProcessor";
-import { tickIndustryUpstarts } from "../systems/industry/IndustryUpstarts";
-import { tickConsolidation } from "../systems/industry/ConsolidationEngine";
-import { tickRivalSpawner, tickHardBankruptcy } from "../systems/industry/RivalSpawner";
-import { tickAntitrust } from "../systems/industry/Antitrust";
-import { tickDistressCascade, tickDistressedOffers } from "../systems/industry/DistressCascade";
-import { tickShingleSystem } from "../systems/deals/ShingleSystem";
-import { tickShinglePitchRouter } from "../systems/deals/ShinglePitchRouter";
-import { InterestRateSimulator } from "../systems/market/InterestRateSimulator";
-import { tickLoans } from "../systems/finance/LoanSystem";
-import { tickReleaseStrategy } from "../systems/ReleaseStrategySystem";
-import { tickStudioIdentity } from "../systems/StudioIdentitySystem";
-import { checkAchievements } from "../systems/AchievementsSystem";
+import {tickVerticalIntegration} from "../systems/industry/VerticalIntegrationProcessor";
+import {tickIndustryUpstarts} from "../systems/industry/IndustryUpstarts";
+import {tickConsolidation} from "../systems/industry/ConsolidationEngine";
+import {tickRivalSpawner tickHardBankruptcy} from "../systems/industry/RivalSpawner";
+import {tickAntitrust} from "../systems/industry/Antitrust";
+import {tickDistressCascade tickDistressedOffers} from "../systems/industry/DistressCascade";
+import {tickShingleSystem} from "../systems/deals/ShingleSystem";
+import {tickShinglePitchRouter} from "../systems/deals/ShinglePitchRouter";
+import {InterestRateSimulator} from "../systems/market/InterestRateSimulator";
+import {tickLoans} from "../systems/finance/LoanSystem";
+import {tickReleaseStrategy} from "../systems/ReleaseStrategySystem";
+import {tickStudioIdentity} from "../systems/StudioIdentitySystem";
+import {checkAchievements} from "../systems/AchievementsSystem";
 
 // New Game Systems
-import { tickPostProduction } from "../systems/PostProductionSystem";
-import { tickMorale } from "../systems/talent/MoraleTick";
+import {tickPostProduction} from "../systems/PostProductionSystem";
+import {tickMorale} from "../systems/talent/MoraleTick";
 
 // Talent Lifecycle Systems
-import { tickRelationshipSystem } from "../systems/talent/RelationshipSystem";
-import { tickCliqueSystem } from "../systems/talent/CliqueSystem";
-import { tickTalentDiscoverySystem } from "../systems/talent/TalentDiscoverySystem";
-import { tickDeathSystem } from "../systems/talent/DeathSystem";
-import { tickDynastySystem } from "../systems/talent/DynastySystem";
-import { tickOrganicEvents } from "../systems/talent/OrganicEventEnhancer";
-import { tickMarketingPromotionSystem } from "../systems/talent/MarketingPromotionSystem";
-import { tickBiographyGenerator } from "../systems/talent/BiographyGenerator";
-import { tickProductionEnhancementSystem } from "../systems/talent/ProductionEnhancementSystem";
-import { tickMarketing } from "../systems/marketing/MarketingSystem";
-import { tickTVRecommendationSystem } from "../systems/talent/TVRecommendationSystem";
+import {tickRelationshipSystem} from "../systems/talent/RelationshipSystem";
+import {tickCliqueSystem} from "../systems/talent/CliqueSystem";
+import {tickTalentDiscoverySystem} from "../systems/talent/TalentDiscoverySystem";
+import {tickDeathSystem} from "../systems/talent/DeathSystem";
+import {tickDynastySystem} from "../systems/talent/DynastySystem";
+import {tickOrganicEvents} from "../systems/talent/OrganicEventEnhancer";
+import {tickMarketingPromotionSystem} from "../systems/talent/MarketingPromotionSystem";
+import {tickBiographyGenerator} from "../systems/talent/BiographyGenerator";
+import {tickProductionEnhancementSystem} from "../systems/talent/ProductionEnhancementSystem";
+import {tickMarketing} from "../systems/marketing/MarketingSystem";
+import {tickTVRecommendationSystem} from "../systems/talent/TVRecommendationSystem";
 
 // Production Support Systems
-import { checkAndTriggerCrisis } from "../systems/crises";
-import { advanceDeals } from "../systems/deals";
-import { advanceRivals } from "../systems/rivals";
-import { tickRivalProduction } from "../systems/rivals/rivalProduction";
-import { runAwardsCeremony } from "../systems/awards/CeremonyRunner";
-import { processRazzies } from "../systems/awards/RazzieProcessor";
-import { tickPilots } from "../systems/television/pilotEvaluator";
-import { runUpfronts } from "../systems/television/upfrontsEngine";
+import {checkAndTriggerCrisis} from "../systems/crises";
+import {advanceDeals} from "../systems/deals";
+import {advanceRivals} from "../systems/rivals";
+import {tickRivalProduction} from "../systems/rivals/rivalProduction";
+import {runAwardsCeremony} from "../systems/awards/CeremonyRunner";
+import {processRazzies} from "../systems/awards/RazzieProcessor";
+import {tickPilots} from "../systems/television/pilotEvaluator";
+import {runUpfronts} from "../systems/television/upfrontsEngine";
 
 // AI Competition Systems
-import { tickTalentCompetition } from "../systems/ai/bidding/CompetitionModule";
-import { runFestivalMarket } from "../systems/festivals/festivalAuctionEngine";
+import {tickTalentCompetition} from "../systems/ai/bidding/CompetitionModule";
+import {runFestivalMarket} from "../systems/festivals/festivalAuctionEngine";
 
 // IP Systems
-import { tickIPVault } from "../systems/ip/IPVaultManager";
-import { advanceIPRights } from "../systems/ipRetention";
-import { updateFranchiseHubs } from "../systems/ip/franchiseCoordinator";
-import { AnnualScans } from "./filters/AnnualScans";
-import { RegulatorSystem } from "../systems/industry/RegulatorSystem";
+import {tickIPVault} from "../systems/ip/IPVaultManager";
+import {advanceIPRights} from "../systems/ipRetention";
+import {updateFranchiseHubs} from "../systems/ip/franchiseCoordinator";
+import {AnnualScans} from "./filters/AnnualScans";
+import {RegulatorSystem} from "../systems/industry/RegulatorSystem";
 
 // Market Systems
-import { advanceRumors } from "../systems/rumors";
-import { OpportunitySystem } from "../systems/market/OpportunitySystem";
+import {advanceRumors} from "../systems/rumors";
+import {OpportunitySystem} from "../systems/market/OpportunitySystem";
 
 // Scheduling & Festivals
-import { SchedulingEngine } from "../systems/schedulingEngine";
-import { resolveFestivals } from "../systems/festivals";
+import {SchedulingEngine} from "../systems/schedulingEngine";
+import {resolveFestivals} from "../systems/festivals";
 
 // Talent Systems (ported from dead TalentFilter)
-import { TalentLifecycleSystem } from "../systems/talent/TalentLifecycleSystem";
-import { tickCastingConstraintSystem } from "../systems/talent/CastingConstraintSystem";
-import { TalentMoraleSystem } from "../systems/talent/TalentMoraleSystem";
-import {
-  shouldTalentHireAgent,
-  selectAgentForTalent,
-  shouldTalentFireAgent,
-  createAgentHiringEvent,
-  createAgentFiringEvent,
-} from "../systems/talent/talentAgentEvents";
-import { TalentAgentInteractionEngine } from "../systems/talent/talentAgentInteractions";
-import { Agency } from "../types/talent.types";
+import {TalentLifecycleSystem} from "../systems/talent/TalentLifecycleSystem";
+import {tickCastingConstraintSystem} from "../systems/talent/CastingConstraintSystem";
+import {TalentMoraleSystem} from "../systems/talent/TalentMoraleSystem";
+import {shouldTalentHireAgent selectAgentForTalent shouldTalentFireAgent createAgentHiringEvent createAgentFiringEvent} from "../systems/talent/talentAgentEvents";
+import {TalentAgentInteractionEngine} from "../systems/talent/talentAgentInteractions";
+import {Agency} from "../types/talent.types";
 
 // Rival Systems
-import { RivalRevenueCalculator } from "../systems/rivals/RivalRevenueCalculator";
-import { getBudgetInflation } from "../systems/industry/MacroCycle";
+import {RivalRevenueCalculator} from "../systems/rivals/RivalRevenueCalculator";
+import {getBudgetInflation} from "../systems/industry/MacroCycle";
 
 /**
  * Studio Boss - Simulation Tick Context
@@ -634,7 +628,7 @@ export class WeekCoordinator {
       }
     );
 
-    // Map compound headlines (Headline = NewsEvent alias) to NewsEvent
+    // Map compound headlines (NewsEvent = NewsEvent alias) to NewsEvent
     const allNewsEvents = [
       ...newsEventsFromImpacts,
       ...compoundNewsEvents,

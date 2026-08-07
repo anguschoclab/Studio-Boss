@@ -1,8 +1,8 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { IPAssetCard } from "@/components/ip/IPAssetCard";
-import { IPAsset } from "@/engine/types";
+import {render screen fireEvent} from "@testing-library/react";
+import {describe it expect vi beforeEach} from "vitest";
+import {IPAssetCard} from "@/components/ip/IPAssetCard";
+import {IPAsset} from "@/engine/types";
 
 const { mockDevelopFromOwnedIP, mockAcquireAndRebootIP, mockSelectFatigueForAsset } = vi.hoisted(() => ({
   mockDevelopFromOwnedIP: vi.fn(),

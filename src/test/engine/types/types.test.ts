@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { GameState, Contract, Talent } from "@/engine/types";
+import {describe it expect} from "vitest";
+import {GameState Contract Talent} from "@/engine/types";
 
 describe("Type definitions", () => {
   it("TalentPact interface is exported and has correct shape", () => {

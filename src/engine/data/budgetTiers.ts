@@ -1,4 +1,4 @@
-import { BudgetTierKey } from "@/engine/types";
+import {BudgetTierKey} from "@/engine/types";
 
 interface BudgetTierData {
   key: BudgetTierKey;

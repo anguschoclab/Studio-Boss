@@ -1,15 +1,15 @@
-import { GameState, StateImpact, RivalStudio, StreamerPlatform, IPAsset, Franchise, Project } from "@/engine/types";
-import { pick, secureRandom } from "../../utils";
-import { getMarketHeat } from "./MacroCycle";
-import { isAcquirerBlockedByAntitrust } from "./Antitrust";
-import { cancelHighestOverheadDeal } from "../deals/ShingleSystem";
+import {GameState StateImpact RivalStudio StreamerPlatform IPAsset Franchise Project} from "@/engine/types";
+import {pick secureRandom} from "../../utils";
+import {getMarketHeat} from "./MacroCycle";
+import {isAcquirerBlockedByAntitrust} from "./Antitrust";
+import {cancelHighestOverheadDeal} from "../deals/ShingleSystem";
 import type { DistressedAssetOffer } from "@/engine/types/distress.types";
-import { getPlayerId } from "@/engine/utils/ownership";
-import { impacts as I } from "../../core/impacts";
-import { applyImpacts } from "../../core/impactReducer";
-import { getSimMemory } from "../../core/simMemory";
+import {getPlayerId} from "@/engine/utils/ownership";
+import {impacts as I} from "../../core/impacts";
+import {applyImpacts} from "../../core/impactReducer";
+import {getSimMemory} from "../../core/simMemory";
 import type { SimMemory } from "@/engine/types/state.types";
-import { getStudioArchetype } from "../../data/aiArchetypes";
+import {getStudioArchetype} from "../../data/aiArchetypes";
 
 /**
  * DistressCascade — stepwise collapse ladder for insolvent rivals.

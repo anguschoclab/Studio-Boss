@@ -1,5 +1,5 @@
-import { AvatarFeatures, ColorPalette } from "../types";
-import { blendColor, darkenColor, lightenColor } from "../utils";
+import {AvatarFeatures ColorPalette} from "../types";
+import {blendColor darkenColor lightenColor} from "../utils";
 
 /**
  * Renders the mouth with expression-based logic.

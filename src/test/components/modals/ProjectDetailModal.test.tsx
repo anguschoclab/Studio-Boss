@@ -1,9 +1,9 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { ProjectDetailModal } from "@/components/modals/ProjectDetailModal";
-import { useGameStore } from "@/store/gameStore";
-import { useUIStore } from "@/store/uiStore";
-import { Project, AwardsProfile } from "@/engine/types";
+import {render screen fireEvent} from "@testing-library/react";
+import {describe it expect vi beforeEach} from "vitest";
+import {ProjectDetailModal} from "@/components/modals/ProjectDetailModal";
+import {useGameStore} from "@/store/gameStore";
+import {useUIStore} from "@/store/uiStore";
+import {Project AwardsProfile} from "@/engine/types";
 
 // Mock ResizeObserver for Radix UI Slider component
 class MockResizeObserver {

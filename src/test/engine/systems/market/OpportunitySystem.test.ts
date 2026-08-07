@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { GameState, StateImpact, Project, Contract } from "@/engine/types";
-import { applySingleImpact } from "@/engine/core/impactHandlers";
+import {describe it expect} from "vitest";
+import {GameState StateImpact Project Contract} from "@/engine/types";
+import {applySingleImpact} from "@/engine/core/impactHandlers";
 
 function makeMockState(): GameState {
   return {

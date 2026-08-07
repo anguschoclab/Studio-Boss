@@ -1,10 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { advanceRumors } from "../../../engine/systems/rumors";
-import { Rumor, Talent } from "../../../engine/types";
-import { createMockGameState } from "../../utils/mockFactories";
+import {describe it expect vi beforeEach} from "vitest";
+import {advanceRumors} from "../../../engine/systems/rumors";
+import {Rumor Talent} from "../../../engine/types";
+import {createMockGameState} from "../../utils/mockFactories";
 
 import * as utils from "../../../engine/utils";
-import { secureRandom } from "../../../engine/utils";
+import {secureRandom} from "../../../engine/utils";
 
 describe("advanceRumors", () => {
   beforeEach(() => {
@@ -41,8 +41,8 @@ describe("advanceRumors", () => {
     vi.spyOn(utils, "secureRandom").mockReturnValue(0.99);
     const impact = advanceRumors(stateWithRumor);
 
-    expect(impact.newHeadlines?.length).toBeGreaterThanOrEqual(1);
-    expect(impact.newHeadlines![0].headline).toBe("CONFIRMED: Test truthful rumor");
+    expect(impact.newsEvents?.length).toBeGreaterThanOrEqual(1);
+    expect(impact.newsEvents![0].headline).toBe("CONFIRMED: Test truthful rumor");
   });
 
   it("resolves false rumors and generates DEBUNKED headlines", () => {
@@ -65,8 +65,8 @@ describe("advanceRumors", () => {
     vi.spyOn(utils, "secureRandom").mockReturnValue(0.99);
     const impact = advanceRumors(stateWithRumor);
 
-    expect(impact.newHeadlines?.length).toBeGreaterThanOrEqual(1);
-    expect(impact.newHeadlines![0].headline).toBe(
+    expect(impact.newsEvents?.length).toBeGreaterThanOrEqual(1);
+    expect(impact.newsEvents![0].headline).toBe(
       "DEBUNKED: Previous rumors regarding test false rumor turn out to be false."
     );
   });
@@ -108,7 +108,7 @@ describe("advanceRumors", () => {
     if (impact.newRumors && impact.newRumors.length > 0) {
       const newRumor = impact.newRumors[0];
       expect(newRumor.resolved).toBe(false);
-      expect(impact.newHeadlines![0].headline).toContain("RUMOR:");
+      expect(impact.newsEvents![0].headline).toContain("RUMOR:");
     }
   });
 });

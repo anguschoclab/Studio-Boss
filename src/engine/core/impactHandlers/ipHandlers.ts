@@ -1,4 +1,4 @@
-import { GameState, Franchise, StateImpact } from "@/engine/types";
+import {GameState Franchise StateImpact} from "@/engine/types";
 import type {
   FranchiseUpdatedImpact,
   VaultAssetUpdatedImpact,

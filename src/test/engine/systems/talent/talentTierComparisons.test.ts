@@ -1,19 +1,14 @@
-import { describe, it, expect } from "vitest";
-import { TalentDriftEngine, DEFAULT_DRIFT_CONFIG } from "@/engine/systems/talent/driftEngine";
-import { checkForBreakout } from "@/engine/systems/talent/discovery/BreakoutStarEngine";
-import { generateGuestStarBooking } from "@/engine/systems/talent/discovery/GuestStarEngine";
-import { generateBiography } from "@/engine/systems/talent/BiographyGenerator";
-import { tickDeathSystem } from "@/engine/systems/talent/DeathSystem";
-import { TalentLifecycleSystem } from "@/engine/systems/talent/TalentLifecycleSystem";
-import { tickMarketingPromotionSystem } from "@/engine/systems/talent/MarketingPromotionSystem";
-import { selectTalentTierDistribution } from "@/store/selectors";
-import { RandomGenerator } from "@/engine/utils/rng";
-import {
-  createMockGameState,
-  createMockTalent,
-  createMockProject,
-  createMockContract,
-} from "../../generators/mockFactory";
+import {describe it expect} from "vitest";
+import {TalentDriftEngine DEFAULT_DRIFT_CONFIG} from "@/engine/systems/talent/driftEngine";
+import {checkForBreakout} from "@/engine/systems/talent/discovery/BreakoutStarEngine";
+import {generateGuestStarBooking} from "@/engine/systems/talent/discovery/GuestStarEngine";
+import {generateBiography} from "@/engine/systems/talent/BiographyGenerator";
+import {tickDeathSystem} from "@/engine/systems/talent/DeathSystem";
+import {TalentLifecycleSystem} from "@/engine/systems/talent/TalentLifecycleSystem";
+import {tickMarketingPromotionSystem} from "@/engine/systems/talent/MarketingPromotionSystem";
+import {selectTalentTierDistribution} from "@/store/selectors";
+import {RandomGenerator} from "@/engine/utils/rng";
+import {createMockGameState createMockTalent createMockProject createMockContract} from "../../generators/mockFactory";
 
 const baseEntities = {
   projects: {},

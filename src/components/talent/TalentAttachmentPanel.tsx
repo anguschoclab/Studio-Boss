@@ -1,26 +1,20 @@
 import React, { useMemo, useState } from "react";
-import { useGameStore } from "@/store/gameStore";
-import { Project, TalentRole } from "@/engine/types";
-import { formatMoney, getContractsByProjectId } from "@/engine/utils";
-import { getRecommendedTalentForProject } from "@/engine/utils/projectUtils";
-import { selectTalentPool } from "@/store/selectors";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Users, Search, Star, TrendingUp, X, Target } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { TalentAvatar } from "./TalentAvatar";
-import { CastingFeedback } from "./CastingFeedback";
-import { useUIStore } from "@/store/uiStore";
-import { useTalentMap } from "@/hooks/useTalentMap";
+import {useGameStore} from "@/store/gameStore";
+import {Project TalentRole} from "@/engine/types";
+import {formatMoney getContractsByProjectId} from "@/engine/utils";
+import {getRecommendedTalentForProject} from "@/engine/utils/projectUtils";
+import {selectTalentPool} from "@/store/selectors";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Badge} from "@/components/ui/badge";
+import {ScrollArea} from "@/components/ui/scroll-area";
+import {Select SelectContent SelectItem SelectTrigger SelectValue} from "@/components/ui/select";
+import {Users Search Star TrendingUp X Target} from "lucide-react";
+import {cn} from "@/lib/utils";
+import {TalentAvatar} from "./TalentAvatar";
+import {CastingFeedback} from "./CastingFeedback";
+import {useUIStore} from "@/store/uiStore";
+import {useTalentMap} from "@/hooks/useTalentMap";
 
 interface TalentAttachmentPanelProps {
   project: Project;

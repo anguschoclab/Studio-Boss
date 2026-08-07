@@ -1,10 +1,10 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { Gavel, Clock } from "lucide-react";
-import { Opportunity } from "@/engine/types";
-import { formatMoney } from "@/engine/utils";
-import { cn } from "@/lib/utils";
+import {Button} from "@/components/ui/button";
+import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";
+import {Gavel Clock} from "lucide-react";
+import {Opportunity} from "@/engine/types";
+import {formatMoney} from "@/engine/utils";
+import {cn} from "@/lib/utils";
 
 interface OpportunityCardProps {
   opportunity: Opportunity;

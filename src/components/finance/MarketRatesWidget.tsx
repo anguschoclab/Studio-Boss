@@ -1,7 +1,7 @@
 import React from "react";
-import { TrendingUp, TrendingDown, Percent, Landmark, Wallet, AlertCircle } from "lucide-react";
-import { useGameStore } from "@/store/gameStore";
-import { cn } from "@/lib/utils";
+import {TrendingUp TrendingDown Percent Landmark Wallet AlertCircle} from "lucide-react";
+import {useGameStore} from "@/store/gameStore";
+import {cn} from "@/lib/utils";
 
 export const MarketRatesWidget: React.FC = () => {
   const finance = useGameStore((state) => state.finance);

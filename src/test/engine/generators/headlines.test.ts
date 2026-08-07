@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { generateHeadlines } from "../../../engine/generators/headlines";
-import { RivalStudio } from "../../../engine/types";
+import {describe it expect} from "vitest";
+import {generateHeadlines} from "../../../engine/generators/headlines";
+import {RivalStudio} from "../../../engine/types";
 
 describe("generateHeadlines", () => {
   it("should generate between 1 and 3 headlines", () => {

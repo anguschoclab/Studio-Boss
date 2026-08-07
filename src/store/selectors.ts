@@ -1,7 +1,7 @@
-import { createSelector } from "reselect";
-import { GameState, Project, RivalStudio, Talent, GameEvent } from "../engine/types";
+import {createSelector} from "reselect";
+import {GameState Project RivalStudio Talent GameEvent} from "../engine/types";
 import type { DistressedAssetOffer } from "@/engine/types/distress.types";
-import { calculateFranchiseFatigue } from "@/engine/systems/ip/fatigueEngine";
+import {calculateFranchiseFatigue} from "@/engine/systems/ip/fatigueEngine";
 
 const EMPTY_PROJECTS = {};
 const EMPTY_FINANCE = { cash: 0, ledger: [], weeklyHistory: [], marketState: { baseRate: 0, savingsYield: 0, debtRate: 0, loanRate: 0, rateHistory: [] } };

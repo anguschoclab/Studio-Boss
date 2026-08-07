@@ -1,4 +1,4 @@
-import { SeriesProject } from "@/engine/types";
+import {SeriesProject} from "@/engine/types";
 
 /**
  * Pure function to evaluate if a TV show is renewed or cancelled.

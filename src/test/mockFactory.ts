@@ -1,4 +1,4 @@
-import { GameState } from "@/engine/types";
+import {GameState} from "@/engine/types";
 
 /**
  * Creates a mock GameState for testing purposes, aligning with the Phase 7 Record-based Schema.

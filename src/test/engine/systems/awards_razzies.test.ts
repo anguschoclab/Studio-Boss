@@ -1,8 +1,8 @@
-import { describe, it, expect } from "vitest";
-import { processRazzies } from "../../../engine/systems/awards/RazzieProcessor";
-import { Project, Talent, Contract } from "../../../engine/types";
-import { createMockGameState } from "../../utils/mockFactories";
-import { RandomGenerator } from "../../../engine/utils/rng";
+import {describe it expect} from "vitest";
+import {processRazzies} from "../../../engine/systems/awards/RazzieProcessor";
+import {Project Talent Contract} from "../../../engine/types";
+import {createMockGameState} from "../../utils/mockFactories";
+import {RandomGenerator} from "../../../engine/utils/rng";
 
 describe("Razzies Award System", () => {
   const createProject = (

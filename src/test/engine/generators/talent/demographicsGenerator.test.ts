@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { generateDemographics } from "../../../../engine/generators/talent/demographicsGenerator";
+import {describe it expect} from "vitest";
+import {generateDemographics} from "../../../../engine/generators/talent/demographicsGenerator";
 
 describe("generateDemographics", () => {
   it("generates local demographics favoring the provided localCountry", () => {

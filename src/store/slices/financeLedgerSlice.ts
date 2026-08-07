@@ -1,6 +1,6 @@
-import { StateCreator } from "zustand";
-import { GameStore } from "../gameStore";
-import { WeeklyFinancialReport } from "@/engine/types";import { FinancialSnapshot } from "@/engine/types/state.types";
+import {StateCreator} from "zustand";
+import {GameStore} from "../gameStore";
+import {WeeklyFinancialReport} from "@/engine/types";import {FinancialSnapshot} from "@/engine/types/state.types";
 
 export interface FinanceLedgerSlice {
   addLedgerEntry: (report: WeeklyFinancialReport) => void;

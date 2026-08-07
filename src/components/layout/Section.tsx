@@ -1,7 +1,7 @@
 import React from "react";
-import { LucideIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { tokens } from "@/lib/tokens";
+import {LucideIcon} from "lucide-react";
+import {cn} from "@/lib/utils";
+import {tokens} from "@/lib/tokens";
 
 interface SectionProps {
   /** Section title */

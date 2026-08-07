@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { useGameStore } from "@/store/gameStore";
+import {describe it expect} from "vitest";
+import {useGameStore} from "@/store/gameStore";
 
 describe("Unscripted Projects", () => {
   it("creates an unscripted project with correct stats", async () => {

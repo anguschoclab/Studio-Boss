@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useGameStore } from "@/store/gameStore";
-import { useUIStore } from "@/store/uiStore";
-import { Project } from "@/engine/types";
-import { Button } from "@/components/ui/button";
-import { Gavel, Users, TrendingUp, Clock } from "lucide-react";
-import { generateFestivalBid } from "@/engine/systems/ai/RivalBiddingEngine";
-import { RandomGenerator } from "@/engine/utils/rng";
+import {useGameStore} from "@/store/gameStore";
+import {useUIStore} from "@/store/uiStore";
+import {Project} from "@/engine/types";
+import {Button} from "@/components/ui/button";
+import {Gavel Users TrendingUp Clock} from "lucide-react";
+import {generateFestivalBid} from "@/engine/systems/ai/RivalBiddingEngine";
+import {RandomGenerator} from "@/engine/utils/rng";
 
 /**
  * FestivalMarketModal: The "Gavel Auction" live bidding interface.

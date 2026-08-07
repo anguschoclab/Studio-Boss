@@ -1,4 +1,4 @@
-import { GameState, Buyer } from "@/engine/types";
+import {GameState Buyer} from "@/engine/types";
 import type {
   BuyerUpdateImpact,
   OpportunityUpdateImpact,

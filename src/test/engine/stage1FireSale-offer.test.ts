@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { stage1IPFireSale } from "@/engine/systems/industry/DistressCascade";
+import {describe it expect} from "vitest";
+import {stage1IPFireSale} from "@/engine/systems/industry/DistressCascade";
 import type { GameState } from "@/engine/types";
 
 // stage1IPFireSale is currently not exported — Step 3 also adds the `export` keyword.

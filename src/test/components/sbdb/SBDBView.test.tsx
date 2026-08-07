@@ -1,9 +1,9 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { SBDBView } from "@/components/sbdb/SBDBView";
-import { useGameStore } from "@/store/gameStore";
-import { Talent } from "@/engine/types";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import {render screen fireEvent} from "@testing-library/react";
+import {describe it expect vi beforeEach} from "vitest";
+import {SBDBView} from "@/components/sbdb/SBDBView";
+import {useGameStore} from "@/store/gameStore";
+import {Talent} from "@/engine/types";
+import {TooltipProvider} from "@/components/ui/tooltip";
 
 // Mock the game store
 vi.mock("@/store/gameStore", () => ({

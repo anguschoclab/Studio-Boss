@@ -1,6 +1,6 @@
-import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
-import { YearInReviewChart } from "../../../../src/components/finance/YearInReviewChart";
+import {render screen} from "@testing-library/react";
+import {describe it expect vi} from "vitest";
+import {YearInReviewChart} from "../../../../src/components/finance/YearInReviewChart";
 import * as gameStore from "../../../../src/store/gameStore";
 
 // Mock the Zustand store

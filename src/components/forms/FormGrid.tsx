@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "@/lib/utils";
+import {cn} from "@/lib/utils";
 
 interface FormGridProps {
   columns?: 1 | 2 | 3;

@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { ExpenseProcessor } from "../../../../engine/systems/finance/ExpenseProcessor";
-import { Project } from "../../../../engine/types";
+import {describe it expect} from "vitest";
+import {ExpenseProcessor} from "../../../../engine/systems/finance/ExpenseProcessor";
+import {Project} from "../../../../engine/types";
 
 describe("ExpenseProcessor", () => {
   describe("calculateStudioBurn", () => {

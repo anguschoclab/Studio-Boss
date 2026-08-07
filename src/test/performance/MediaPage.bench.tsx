@@ -1,13 +1,13 @@
-import { describe, bench } from "vitest";
-import { Headline, HeadlineCategory } from "../../engine/types";
+import {describe bench} from "vitest";
+import {NewsEvent HeadlineCategory} from "../../engine/types";
 
-const generateHeadlines = (count: number): Headline[] => {
+const generateHeadlines = (count: number): NewsEvent[] => {
   const categories: HeadlineCategory[] = ["talent", "rival", "awards", "market", "general"];
-  const headlines: Headline[] = [];
+  const headlines: NewsEvent[] = [];
   for (let i = 0; i < count; i++) {
     headlines.push({
       id: `hl-${i}`,
-      text: `Headline ${i}`,
+      text: `NewsEvent ${i}`,
       category: categories[i % categories.length],
       week: 1,
     });
@@ -49,11 +49,11 @@ describe("MediaPage Grouping Performance", () => {
         return acc;
       },
       {
-        deadline: [] as Headline[],
-        variety: [] as Headline[],
-        boxOffice: [] as Headline[],
-        market: [] as Headline[],
-        insider: [] as Headline[],
+        deadline: [] as NewsEvent[],
+        variety: [] as NewsEvent[],
+        boxOffice: [] as NewsEvent[],
+        market: [] as NewsEvent[],
+        insider: [] as NewsEvent[],
       }
     );
     void grouped;

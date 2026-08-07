@@ -1,20 +1,13 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { MoreVertical, Zap, UserPlus, ShieldAlert } from "lucide-react";
-import { ARCHETYPES } from "@/engine/data/archetypes";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { formatMoney } from "@/engine/utils";
-import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { cn } from "@/lib/utils";
-import { RivalStudio } from "@/engine/types/studio.types";
-import { useUIStore } from "@/store/uiStore";
+import {Button} from "@/components/ui/button";
+import {MoreVertical Zap UserPlus ShieldAlert} from "lucide-react";
+import {ARCHETYPES} from "@/engine/data/archetypes";
+import {DropdownMenu DropdownMenuContent DropdownMenuItem DropdownMenuLabel DropdownMenuSeparator DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
+import {formatMoney} from "@/engine/utils";
+import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";
+import {cn} from "@/lib/utils";
+import {RivalStudio} from "@/engine/types/studio.types";
+import {useUIStore} from "@/store/uiStore";
 
 const strengthColor = (s: number) => {
   if (s >= 70) return "bg-destructive shadow-[0_0_15px_hsl(var(--destructive)/0.4)]";

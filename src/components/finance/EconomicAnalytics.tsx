@@ -1,8 +1,8 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { RevenueStreamChart } from "./RevenueStreamChart";
-import { ProfitWaterfallChart } from "./ProfitWaterfallChart";
-import { CashEfficiencyGauge } from "./CashEfficiencyGauge";
-import { FinancialSnapshot } from "@/engine/types/state.types";
+import {Card CardContent CardHeader CardTitle} from "@/components/ui/card";
+import {RevenueStreamChart} from "./RevenueStreamChart";
+import {ProfitWaterfallChart} from "./ProfitWaterfallChart";
+import {CashEfficiencyGauge} from "./CashEfficiencyGauge";
+import {FinancialSnapshot} from "@/engine/types/state.types";
 
 interface EconomicAnalyticsProps {
   financeHistory: FinancialSnapshot[];

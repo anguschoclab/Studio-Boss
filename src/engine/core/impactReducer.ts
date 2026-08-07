@@ -1,5 +1,5 @@
-import { GameState, StateImpact } from "@/engine/types";
-import { applySingleImpact as apply, applyImpacts as applyAll } from "./impactHandlers";
+import {GameState StateImpact} from "@/engine/types";
+import {applySingleImpact as apply applyImpacts as applyAll} from "./impactHandlers";
 
 /**
  * Legacy entry point for applying state impacts.

@@ -1,8 +1,8 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
-import { FormField } from "@/components/forms/FormField";
-import { Mail } from "lucide-react";
+import {render screen} from "@testing-library/react";
+import {describe it expect} from "vitest";
+import {FormField} from "@/components/forms/FormField";
+import {Mail} from "lucide-react";
 
 describe("FormField", () => {
   it("renders label", () => {

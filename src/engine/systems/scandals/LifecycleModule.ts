@@ -1,5 +1,5 @@
-import { GameState, StateImpact } from "@/engine/types";
-import { getContractsByTalentId } from "../../utils";
+import {GameState StateImpact} from "@/engine/types";
+import {getContractsByTalentId} from "../../utils";
 
 export function advanceScandals(state: GameState): StateImpact[] {
   const impacts: StateImpact[] = [];

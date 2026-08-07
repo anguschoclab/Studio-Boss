@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
-import { RandomGenerator } from "@/engine/utils/rng";
-import { createMockGameState, createMockRival } from "../generators/mockFactory";
-import { selectStrategicBuyer } from "@/engine/systems/industry/DistressCascade";
+import {describe it expect} from "vitest";
+import {RandomGenerator} from "@/engine/utils/rng";
+import {createMockGameState createMockRival} from "../generators/mockFactory";
+import {selectStrategicBuyer} from "@/engine/systems/industry/DistressCascade";
 import type { RivalStudio, Franchise, IPAsset, Project } from "@/engine/types";
 
 function createBuyer(overrides: Partial<RivalStudio> = {}): RivalStudio {

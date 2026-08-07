@@ -1,17 +1,11 @@
-import { describe, it, expect } from "vitest";
-import { MarketState } from "../../../../engine/types/state.types";
-import { evaluatePackageOffer } from "../../../../engine/systems/ai/AgentBrain";
-import { shouldAttemptHostileTakeover } from "../../../../engine/systems/ai/BehaviorEngine";
-import { generateFestivalBid } from "../../../../engine/systems/ai/RivalBiddingEngine";
-import { mockRandomSeed } from "../../../utils/mockRandom";
-import {
-  createMockAgency,
-  createMockTalent,
-  createMockProject,
-  createMockRival,
-  createMockGameState,
-} from "../../../utils/mockFactories";
-import { AI_ARCHETYPES } from "../../../../engine/data/aiArchetypes";
+import {describe it expect} from "vitest";
+import {MarketState} from "../../../../engine/types/state.types";
+import {evaluatePackageOffer} from "../../../../engine/systems/ai/AgentBrain";
+import {shouldAttemptHostileTakeover} from "../../../../engine/systems/ai/BehaviorEngine";
+import {generateFestivalBid} from "../../../../engine/systems/ai/RivalBiddingEngine";
+import {mockRandomSeed} from "../../../utils/mockRandom";
+import {createMockAgency createMockTalent createMockProject createMockRival createMockGameState} from "../../../utils/mockFactories";
+import {AI_ARCHETYPES} from "../../../../engine/data/aiArchetypes";
 
 const mockMarket: MarketState = {
   baseRate: 0.045,

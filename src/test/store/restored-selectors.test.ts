@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { selectLatestSnapshot, selectMarketMetrics } from "@/store/selectors";
+import {describe it expect} from "vitest";
+import {selectLatestSnapshot selectMarketMetrics} from "@/store/selectors";
 import type { GameState } from "@/engine/types";
 
 // Minimal GameState shape exercised by these three selectors.

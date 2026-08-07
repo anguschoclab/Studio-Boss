@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
-import { tickBiographyGenerator } from "../../../../engine/systems/talent/BiographyGenerator";
-import { RandomGenerator } from "../../../../engine/utils/rng";
-import { GameState, Talent } from "../../../../engine/types";
+import {describe it expect} from "vitest";
+import {tickBiographyGenerator} from "../../../../engine/systems/talent/BiographyGenerator";
+import {RandomGenerator} from "../../../../engine/utils/rng";
+import {GameState Talent} from "../../../../engine/types";
 
 function createMockState(overrides: Partial<GameState> = {}): GameState {
   const base: GameState = {

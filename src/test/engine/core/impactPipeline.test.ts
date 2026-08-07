@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { applySingleImpact } from "@/engine/core/impactHandlers";
-import { impacts } from "@/engine/core/impacts";
+import {describe it expect} from "vitest";
+import {applySingleImpact} from "@/engine/core/impactHandlers";
+import {impacts} from "@/engine/core/impacts";
 import type { GameState, StateImpact, NewsImpact } from "@/engine/types";
 
 function makeMockState(overrides?: Partial<GameState>): GameState {
@@ -69,15 +69,15 @@ describe("Impact pipeline preserves entity refs and type", () => {
     expect(result).toBe(state);
   });
 
-  it("bag-impact newHeadlines conversion produces NEWS_ADDED impacts with preserved fields", () => {
+  it("bag-impact newsEvents conversion produces NEWS_ADDED impacts with preserved fields", () => {
     const state = makeMockState();
     const bagImpact = {
-      newHeadlines: [
+      newsEvents: [
         {
           id: "h-1",
           week: 1,
           type: "STUDIO_EVENT",
-          headline: "Headline news",
+          headline: "NewsEvent news",
           description: "",
           category: "market",
           publication: "Deadline",

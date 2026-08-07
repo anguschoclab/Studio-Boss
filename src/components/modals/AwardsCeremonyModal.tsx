@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { useGameStore } from "@/store/gameStore";
-import { useUIStore } from "@/store/uiStore";
-import { Trophy, Star, Sparkles, ChevronRight } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import {useState useEffect} from "react";
+import {Dialog DialogContent} from "@/components/ui/dialog";
+import {Button} from "@/components/ui/button";
+import {useGameStore} from "@/store/gameStore";
+import {useUIStore} from "@/store/uiStore";
+import {Trophy Star Sparkles ChevronRight} from "lucide-react";
+import {motion AnimatePresence} from "framer-motion";
 
 export const AwardsCeremonyModal = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();

@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { SchedulingEngine } from "@/engine/systems/schedulingEngine";
-import { GameState, Project, Talent, Contract, ProjectUpdateImpact } from "@/engine/types";
+import {describe it expect} from "vitest";
+import {SchedulingEngine} from "@/engine/systems/schedulingEngine";
+import {GameState Project Talent Contract ProjectUpdateImpact} from "@/engine/types";
 
 describe("SchedulingEngine Hardening Tests", () => {
   const mockTalent: Talent = {

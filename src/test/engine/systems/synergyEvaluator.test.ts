@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { calculateSynergyGains } from "../../../engine/systems/ip/synergyEvaluator";
-import { Franchise, IPAsset } from "../../../engine/types";
+import {describe it expect} from "vitest";
+import {calculateSynergyGains} from "../../../engine/systems/ip/synergyEvaluator";
+import {Franchise IPAsset} from "../../../engine/types";
 
 describe("Synergy Evaluator", () => {
   const mockFranchise: Franchise = {

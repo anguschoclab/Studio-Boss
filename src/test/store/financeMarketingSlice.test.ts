@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { Contract } from "@/engine/types";
+import {describe it expect} from "vitest";
+import {Contract} from "@/engine/types";
 
 describe("financeMarketingSlice — contract filtering logic", () => {
   it("Object.values().filter() and for...in produce identical results for projectId matching", () => {

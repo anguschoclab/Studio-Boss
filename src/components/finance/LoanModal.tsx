@@ -1,11 +1,11 @@
-import { useMemo } from "react";
-import { useGameStore } from "@/store/gameStore";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { formatMoney } from "@/engine/utils";
-import { Loan } from "@/engine/systems/finance/LoanSystem";
-import { AlertTriangle, Banknote, CreditCard } from "lucide-react";
+import {useMemo} from "react";
+import {useGameStore} from "@/store/gameStore";
+import {Card CardContent CardHeader CardTitle} from "@/components/ui/card";
+import {Button} from "@/components/ui/button";
+import {Badge} from "@/components/ui/badge";
+import {formatMoney} from "@/engine/utils";
+import {Loan} from "@/engine/systems/finance/LoanSystem";
+import {AlertTriangle Banknote CreditCard} from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // Types

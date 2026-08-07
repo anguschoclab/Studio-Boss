@@ -1,9 +1,9 @@
 import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
-import { useGameStore } from "@/store/gameStore";
-import { formatCurrency } from "@/lib/utils";
+import {Card CardContent CardDescription CardHeader CardTitle} from "@/components/ui/card";
+import {ChartContainer ChartTooltip ChartTooltipContent} from "@/components/ui/chart";
+import {Area AreaChart ResponsiveContainer XAxis YAxis} from "recharts";
+import {useGameStore} from "@/store/gameStore";
+import {formatCurrency} from "@/lib/utils";
 
 export const FinancialOverviewWidget: React.FC = () => {
   const gameState = useGameStore((state) => state.gameState);

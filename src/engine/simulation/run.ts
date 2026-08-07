@@ -1,5 +1,5 @@
-import { SimulationRunner } from "./SimulationRunner";
-import { ArchetypeKey } from "@/engine/types";
+import {SimulationRunner} from "./SimulationRunner";
+import {ArchetypeKey} from "@/engine/types";
 import * as fs from "fs";
 import * as path from "path";
 

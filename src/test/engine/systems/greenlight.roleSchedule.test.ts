@@ -1,10 +1,6 @@
-import { describe, it, expect } from "vitest";
-import {
-  evaluateGreenlight,
-  roleCompletenessScore,
-  scheduleCertainty,
-} from "@/engine/systems/greenlight";
-import { Project, Talent, Contract } from "@/engine/types";
+import {describe it expect} from "vitest";
+import {evaluateGreenlight roleCompletenessScore scheduleCertainty} from "@/engine/systems/greenlight";
+import {Project Talent Contract} from "@/engine/types";
 
 function baseProject(overrides: Partial<Project> = {}): Project {
   return {

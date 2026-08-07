@@ -1,7 +1,7 @@
-import { Headline, RivalStudio, HeadlineCategory, Project, Contract, Talent } from "@/engine/types";
+import {NewsEvent RivalStudio HeadlineCategory Project Contract Talent} from "@/engine/types";
 type TalentProfile = Talent;
-import { fillTemplate, pick, secureRandom, getContractsByProjectId } from "../utils";
-import { MARKET_HEADLINES, TALENT_HEADLINES, RIVAL_TEMPLATES } from "../data/headlines.data";
+import {fillTemplate pick secureRandom getContractsByProjectId} from "../utils";
+import {MARKET_HEADLINES TALENT_HEADLINES RIVAL_TEMPLATES} from "../data/headlines.data";
 
 export function generateHeadlines(
   week: number,
@@ -11,10 +11,10 @@ export function generateHeadlines(
   contractsByProjectId?: Record<string, string[]>,
   contractsRecord?: Record<string, Contract>,
   startCounter: number = 0
-): Headline[] {
+): NewsEvent[] {
   let counter = startCounter;
   const count = 1 + Math.floor(secureRandom() * 3);
-  const headlines: Headline[] = [];
+  const headlines: NewsEvent[] = [];
   const genrePool = ["sci-fi", "drama", "action", "thriller", "comedy", "horror", "fantasy"];
   const talentById = new Map<string, TalentProfile>(talentPool.map((t) => [t.id, t]));
 
@@ -84,7 +84,7 @@ export function generateHeadlines(
       category = "talent";
     }
 
-    headlines.push({ id: `h-${++counter}-${week}`, headline: text, week, category } as unknown as Headline);
+    headlines.push({ id: `h-${++counter}-${week}`, headline: text, week, category } as unknown as NewsEvent);
   }
 
   return headlines;

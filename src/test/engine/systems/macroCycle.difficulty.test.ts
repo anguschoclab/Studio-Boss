@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { getMarketHeat } from "@/engine/systems/industry/MacroCycle";
+import {describe it expect} from "vitest";
+import {getMarketHeat} from "@/engine/systems/industry/MacroCycle";
 
 describe("getMarketHeat — difficulty", () => {
   it("accepts an optional difficulty and yields different heat", () => {

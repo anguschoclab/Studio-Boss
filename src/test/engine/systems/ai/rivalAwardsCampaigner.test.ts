@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
-import { RandomGenerator } from "@/engine/utils/rng";
-import { createMockGameState, createMockRival } from "../../generators/mockFactory";
-import { tickRivalAwardsCampaigns } from "@/engine/systems/ai/RivalAwardsCampaigner";
+import {describe it expect} from "vitest";
+import {RandomGenerator} from "@/engine/utils/rng";
+import {createMockGameState createMockRival} from "../../generators/mockFactory";
+import {tickRivalAwardsCampaigns} from "@/engine/systems/ai/RivalAwardsCampaigner";
 import type { RivalStudio, Project, GameState, StateImpact } from "@/engine/types";
 
 function createProject(

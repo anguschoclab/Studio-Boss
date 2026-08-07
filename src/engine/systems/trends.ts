@@ -1,6 +1,6 @@
-import { GenreTrend, GameState } from "@/engine/types";
-import { StateImpact } from "../types/state.types";
-import { secureRandom } from "../utils";
+import {GenreTrend GameState} from "@/engine/types";
+import {StateImpact} from "../types/state.types";
+import {secureRandom} from "../utils";
 
 export const ALL_GENRES = [
   "Action",

@@ -1,5 +1,5 @@
-import { describe, bench } from "vitest";
-import { Project, ProjectStatus } from "../../engine/types";
+import {describe bench} from "vitest";
+import {Project ProjectStatus} from "../../engine/types";
 
 // Mock data setup
 const statuses: ProjectStatus[] = [

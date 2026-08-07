@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { generateSpinoffProposal } from "../../../engine/systems/ip/spinoffFactory";
-import { Project } from "../../../engine/types";
+import {describe it expect} from "vitest";
+import {generateSpinoffProposal} from "../../../engine/systems/ip/spinoffFactory";
+import {Project} from "../../../engine/types";
 
 describe("Spinoff Factory", () => {
   const mockProject: Project = {

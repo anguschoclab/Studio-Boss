@@ -1,5 +1,5 @@
-import { GameState, RivalStudio } from "@/engine/types";
-import { getStudioArchetype } from "../../data/aiArchetypes";
+import {GameState RivalStudio} from "@/engine/types";
+import {getStudioArchetype} from "../../data/aiArchetypes";
 
 export function shouldAttemptHostileTakeover(
   attacker: RivalStudio,

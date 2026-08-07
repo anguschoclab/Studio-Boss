@@ -1,5 +1,5 @@
-import { TalentPsychology } from "../../types/talent.types";
-import { rand } from "../../utils";
+import {TalentPsychology} from "../../types/talent.types";
+import {rand} from "../../utils";
 
 export function psychologyGenerator(tier: string): TalentPsychology {
   const isGlobalSuperstar = tier === "A_LIST";

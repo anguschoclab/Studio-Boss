@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { useGameStore } from "../store/gameStore";
+import {useEffect} from "react";
+import {useGameStore} from "../store/gameStore";
 
 export function useArchetypeTheme() {
   const gameState = useGameStore((s) => s.gameState);

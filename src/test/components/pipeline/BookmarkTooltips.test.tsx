@@ -1,9 +1,9 @@
 /**
  * @vitest-environment jsdom
  */
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import {render screen fireEvent} from "@testing-library/react";
+import {describe it expect beforeEach vi} from "vitest";
+import {TooltipProvider} from "@/components/ui/tooltip";
 
 // Mock stores
 vi.mock("@/store/gameStore", () => ({
@@ -23,11 +23,11 @@ vi.mock("@/hooks/useTalentMap", () => ({
   useAgencyMap: () => new Map(),
 }));
 
-import { useGameStore } from "@/store/gameStore";
-import { useUIStore } from "@/store/uiStore";
-import { ProjectCard } from "@/components/pipeline/ProjectCard";
-import { TalentCard } from "@/components/talent/TalentCard";
-import { createMockProject, createMockTalent } from "@/test/utils/mockFactories";
+import {useGameStore} from "@/store/gameStore";
+import {useUIStore} from "@/store/uiStore";
+import {ProjectCard} from "@/components/pipeline/ProjectCard";
+import {TalentCard} from "@/components/talent/TalentCard";
+import {createMockProject createMockTalent} from "@/test/utils/mockFactories";
 
 describe("Bookmark Tooltips", () => {
   beforeEach(() => {

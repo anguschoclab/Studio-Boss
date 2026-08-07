@@ -1,17 +1,17 @@
-import { ArchetypeKey, RivalStudio, GameState } from "../types/studio.types";
-import { MarketState } from "../types/state.types";
-import { CURRENT_SAVE_VERSION, defaultSimMemory } from "./simMemory";
-import { ALL_GENRES, initializeTrends } from "../systems/trends";
-import { ARCHETYPES } from "../data/archetypes";
-import { BrandSystem } from "../generators/BrandSystem";
-import { IPAsset } from "../types";
-import { generateMotto } from "../generators/names";
-import { generateFamilies, generateTalentPool } from "../generators/talent";
-import { generateBuyers } from "../generators/buyers";
-import { generateAgencies, generateAgents } from "../generators/agencies";
-import { pick, randRange, setDeterministicSeed, rand, generateId } from "../utils";
-import { generateOpportunity } from "../generators/opportunities";
-import { generateProjectTitle } from "../generators/titles";
+import {ArchetypeKey RivalStudio GameState} from "../types/studio.types";
+import {MarketState} from "../types/state.types";
+import {CURRENT_SAVE_VERSION defaultSimMemory} from "./simMemory";
+import {ALL_GENRES initializeTrends} from "../systems/trends";
+import {ARCHETYPES} from "../data/archetypes";
+import {BrandSystem} from "../generators/BrandSystem";
+import {IPAsset} from "../types";
+import {generateMotto} from "../generators/names";
+import {generateFamilies generateTalentPool} from "../generators/talent";
+import {generateBuyers} from "../generators/buyers";
+import {generateAgencies generateAgents} from "../generators/agencies";
+import {pick randRange setDeterministicSeed rand generateId} from "../utils";
+import {generateOpportunity} from "../generators/opportunities";
+import {generateProjectTitle} from "../generators/titles";
 
 /**
  * Initializes a fresh game state for a new playthrough.

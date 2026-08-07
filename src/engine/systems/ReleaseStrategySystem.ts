@@ -1,4 +1,4 @@
-import { GameState, StateImpact, Project } from "@/engine/types";
+import {GameState StateImpact Project} from "@/engine/types";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

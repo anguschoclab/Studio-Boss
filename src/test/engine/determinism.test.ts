@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { initializeGame } from "@/engine/core/gameInit";
-import { advanceWeek } from "@/engine/core/weekAdvance";
+import {describe it expect} from "vitest";
+import {initializeGame} from "@/engine/core/gameInit";
+import {advanceWeek} from "@/engine/core/weekAdvance";
 
 /**
  * 🌌 DETERMINISM TEST

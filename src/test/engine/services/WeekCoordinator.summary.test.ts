@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { WeekCoordinator, TickContext } from "@/engine/services/WeekCoordinator";
-import { GameState, StateImpact } from "@/engine/types";
-import { RandomGenerator } from "@/engine/utils/rng";
-import { createMockGameState } from "@/test/utils/mockFactories";
+import {describe it expect beforeEach} from "vitest";
+import {WeekCoordinator TickContext} from "@/engine/services/WeekCoordinator";
+import {GameState StateImpact} from "@/engine/types";
+import {RandomGenerator} from "@/engine/utils/rng";
+import {createMockGameState} from "@/test/utils/mockFactories";
 
 describe("WeekCoordinator.buildSummary", () => {
   let beforeState: GameState;
@@ -70,16 +70,12 @@ describe("WeekCoordinator.buildSummary", () => {
     const summary = (WeekCoordinator as unknown as {
       buildSummary: (b: GameState, a: GameState, c: TickContext) => {
         newsEvents: { headline: string; type: string }[];
-        newHeadlines: { headline: string }[];
       };
     }).buildSummary(beforeState, afterState, context);
 
     expect(summary.newsEvents.length).toBeGreaterThan(0);
     expect(summary.newsEvents[0].headline).toBe("Breaking News");
     expect(summary.newsEvents[0].type).toBe("CRISIS");
-    // newHeadlines should also be populated for backward compat
-    expect(summary.newHeadlines.length).toBeGreaterThan(0);
-    expect(summary.newHeadlines[0].headline).toBe("Breaking News");
   });
 
   it("newsEvents preserves entity refs from NEWS_ADDED impacts", () => {
@@ -131,9 +127,9 @@ describe("WeekCoordinator.buildSummary", () => {
     expect(summary.newsEvents.find((e: any) => e.headline === "Compound news")?.rivalId).toBe("rival-2");
   });
 
-  it("collects compound newHeadlines from bag impacts into newsEvents", () => {
+  it("collects compound newsEvents from bag impacts into summary newsEvents", () => {
     context.impacts.push({
-      newHeadlines: [
+      newsEvents: [
         {
           id: "h-1",
           week: 2,

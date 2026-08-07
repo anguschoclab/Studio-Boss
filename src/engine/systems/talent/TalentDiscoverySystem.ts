@@ -1,10 +1,10 @@
-import { GameState, StateImpact, Talent, Project } from "../../types";
-import { RandomGenerator } from "../../utils/rng";
-import { getContractsByProjectId } from "../../utils";
-import { BreakoutStar, BreakoutTrigger, HiddenTalent } from "../../types/discovery.types";
-import { checkForBreakout } from "./discovery/BreakoutStarEngine";
-import { generateGuestStarBooking } from "./discovery/GuestStarEngine";
-import { generateHiddenTalent, discoverHiddenTalent } from "./discovery/HiddenTalentPool";
+import {GameState StateImpact Talent Project} from "../../types";
+import {RandomGenerator} from "../../utils/rng";
+import {getContractsByProjectId} from "../../utils";
+import {BreakoutStar BreakoutTrigger HiddenTalent} from "../../types/discovery.types";
+import {checkForBreakout} from "./discovery/BreakoutStarEngine";
+import {generateGuestStarBooking} from "./discovery/GuestStarEngine";
+import {generateHiddenTalent discoverHiddenTalent} from "./discovery/HiddenTalentPool";
 
 /**
  * Talent Discovery System

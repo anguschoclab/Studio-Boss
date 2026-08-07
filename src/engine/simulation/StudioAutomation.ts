@@ -1,13 +1,13 @@
-import { GameState, StateImpact, Project, RivalStudio } from "@/engine/types";
-import { BudgetTierKey } from "@/engine/types/project.types";
-import { RandomGenerator } from "../utils/rng";
-import { calculateOpeningWeekend } from "../systems/releaseSimulation";
-import { StreamingViewershipTracker } from "../systems/production/StreamingViewershipTracker";
-import { StudioArchetype, AI_ARCHETYPES } from "../data/aiArchetypes";
-import { getBudgetInflation } from "../systems/industry/MacroCycle";
-import { isPlayerOwner } from "../utils/ownership";
-import { HeadlessController } from "./HeadlessController";
-import { buildFatigueAwareGenreWeights } from "../systems/rivals/rivalProduction";
+import {GameState StateImpact Project RivalStudio} from "@/engine/types";
+import {BudgetTierKey} from "@/engine/types/project.types";
+import {RandomGenerator} from "../utils/rng";
+import {calculateOpeningWeekend} from "../systems/releaseSimulation";
+import {StreamingViewershipTracker} from "../systems/production/StreamingViewershipTracker";
+import {StudioArchetype AI_ARCHETYPES} from "../data/aiArchetypes";
+import {getBudgetInflation} from "../systems/industry/MacroCycle";
+import {isPlayerOwner} from "../utils/ownership";
+import {HeadlessController} from "./HeadlessController";
+import {buildFatigueAwareGenreWeights} from "../systems/rivals/rivalProduction";
 
 export class StudioAutomation {
   /**

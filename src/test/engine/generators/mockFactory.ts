@@ -1,4 +1,4 @@
-import { GameState, RivalStudio, Talent, Project, Contract, Buyer } from "../../../engine/types";
+import {GameState RivalStudio Talent Project Contract Buyer} from "../../../engine/types";
 
 /**
  * Centralized factory for creating compliant GameState objects for testing.
@@ -80,7 +80,7 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
   return { ...defaultState, ...overrides };
 };
 
-import { RandomGenerator } from "../../../engine/utils/rng";
+import {RandomGenerator} from "../../../engine/utils/rng";
 
 export const createMockTickContext = (
   overrides: Partial<import("../../../engine/services/WeekCoordinator").TickContext> = {}

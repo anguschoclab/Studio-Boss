@@ -1,6 +1,6 @@
-import { ArchetypeData } from "@/engine/data/archetypes";
-import { ArchetypeKey } from "@/engine/types";
-import { formatMoney } from "@/engine/utils";
+import {ArchetypeData} from "@/engine/data/archetypes";
+import {ArchetypeKey} from "@/engine/types";
+import {formatMoney} from "@/engine/utils";
 
 const archetypeIcons: Record<ArchetypeKey, string> = {
   major: "🏛️",

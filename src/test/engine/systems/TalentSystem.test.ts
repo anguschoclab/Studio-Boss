@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { TalentSystem } from "../../../engine/systems/TalentSystem";
-import { Project, Contract, Talent, GameState, ContentFlag } from "../../../engine/types";
+import {describe it expect beforeEach vi} from "vitest";
+import {TalentSystem} from "../../../engine/systems/TalentSystem";
+import {Project Contract Talent GameState ContentFlag} from "../../../engine/types";
 import * as utils from "../../../engine/utils";
 
 const mockProject: Project = {

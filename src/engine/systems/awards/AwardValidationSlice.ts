@@ -1,5 +1,5 @@
-import { AwardBody, AwardCategory } from "@/engine/types";
-import { CANNES_EQUIVALENTS, SUNDANCE_EQUIVALENTS } from "../../data/awards.data";
+import {AwardBody AwardCategory} from "@/engine/types";
+import {CANNES_EQUIVALENTS SUNDANCE_EQUIVALENTS} from "../../data/awards.data";
 
 export function isCannesEquivalentFestival(body: AwardBody | string): boolean {
   return CANNES_EQUIVALENTS.includes(body as AwardBody);

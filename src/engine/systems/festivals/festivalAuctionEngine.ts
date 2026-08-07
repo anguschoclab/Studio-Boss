@@ -1,6 +1,6 @@
-import { GameState, StateImpact, Project } from "@/engine/types";
-import { RandomGenerator } from "../../utils/rng";
-import { FestivalSubmission } from "@/engine/types/project.types";
+import {GameState StateImpact Project} from "@/engine/types";
+import {RandomGenerator} from "../../utils/rng";
+import {FestivalSubmission} from "@/engine/types/project.types";
 
 // Festival market weeks: Sundance (4), Cannes (20), TIFF (36)
 export const FESTIVAL_MARKET_WEEKS = [4, 20, 36] as const;
@@ -145,7 +145,7 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
     });
   }
 
-  // Headline for the festival market opening
+  // NewsEvent for the festival market opening
   impacts.push({
     type: "NEWS_ADDED",
     payload: {

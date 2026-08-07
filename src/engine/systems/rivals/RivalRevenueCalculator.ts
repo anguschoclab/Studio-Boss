@@ -1,5 +1,5 @@
-import { RivalStudio, Project, GameState } from "@/engine/types";
-import { RandomGenerator } from "../../utils/rng";
+import {RivalStudio Project GameState} from "@/engine/types";
+import {RandomGenerator} from "../../utils/rng";
 
 const RATING_STREAMING_PREMIUMS: Record<string, number> = {
   "TV-MA": 0.15,

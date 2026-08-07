@@ -1,26 +1,10 @@
 // Types related to Studios, Rivals, and Game State
 
-import {
-  Project,
-  Opportunity,
-  GenreTrend,
-  FestivalSubmission,
-  Award,
-} from "./project.types";
-import {
-  Contract,
-  FirstLookDeal,
-  Family,
-  Agency,
-  Agent,
-  Talent,
-  Scandal,
-  MotivationProfile,
-  RivalStrategy,
-} from "./talent.types";
-import { Rumor, MarketEvent } from "./engine.types";
-import { FinanceState, IPState } from "./state.types";
-import { SyndicationTier } from "../data/syndicationConfig";
+import {Project Opportunity GenreTrend FestivalSubmission Award} from "./project.types";
+import {Contract FirstLookDeal Family Agency Agent Talent Scandal MotivationProfile RivalStrategy} from "./talent.types";
+import {Rumor MarketEvent} from "./engine.types";
+import {FinanceState IPState} from "./state.types";
+import {SyndicationTier} from "../data/syndicationConfig";
 
 export interface MergerOffer {
   id: string;

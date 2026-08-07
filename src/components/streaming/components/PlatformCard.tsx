@@ -1,22 +1,11 @@
 import React from "react";
-import { Buyer, StreamerPlatform, NetworkPlatform } from "@/engine/types";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Wifi,
-  Radio,
-  Crown,
-  Users,
-  AlertTriangle,
-  Handshake,
-  TrendingUp,
-  TrendingDown,
-  Globe,
-  Star,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import { SubscriberTrendChart } from "./SubscriberTrendChart";
-import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
+import {Buyer StreamerPlatform NetworkPlatform} from "@/engine/types";
+import {Badge} from "@/components/ui/badge";
+import {Button} from "@/components/ui/button";
+import {Wifi Radio Crown Users AlertTriangle Handshake TrendingUp TrendingDown Globe Star} from "lucide-react";
+import {cn} from "@/lib/utils";
+import {SubscriberTrendChart} from "./SubscriberTrendChart";
+import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";
 
 const ARCHETYPE_CONFIG = {
   streamer: {

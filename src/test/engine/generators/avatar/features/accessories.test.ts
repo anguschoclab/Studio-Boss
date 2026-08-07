@@ -1,9 +1,6 @@
-import { describe, it, expect } from "vitest";
-import {
-  renderFacialHair,
-  renderAccessories,
-} from "@/engine/generators/avatar/features/accessories";
-import { AvatarFeatures } from "@/engine/generators/avatar/types";
+import {describe it expect} from "vitest";
+import {renderFacialHair renderAccessories} from "@/engine/generators/avatar/features/accessories";
+import {AvatarFeatures} from "@/engine/generators/avatar/types";
 
 describe("accessories generator", () => {
   const mockFeatures: Partial<AvatarFeatures> = {

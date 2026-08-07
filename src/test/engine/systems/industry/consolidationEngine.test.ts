@@ -1,10 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import {
-  tickConsolidation,
-} from "@/engine/systems/industry/ConsolidationEngine";
-import { GameState } from "@/engine/types";
-import { createMockGameState, createMockRival } from "../../generators/mockFactory";
-import { defaultSimMemory } from "@/engine/core/simMemory";
+import {describe it expect vi beforeEach} from "vitest";
+import {tickConsolidation} from "@/engine/systems/industry/ConsolidationEngine";
+import {GameState} from "@/engine/types";
+import {createMockGameState createMockRival} from "../../generators/mockFactory";
+import {defaultSimMemory} from "@/engine/core/simMemory";
 
 import * as utils from "@/engine/utils";
 

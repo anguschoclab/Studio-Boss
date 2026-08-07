@@ -1,23 +1,14 @@
 import React from "react";
-import { cn } from "@/lib/utils";
-import {
-  CheckCircle,
-  XCircle,
-  Play,
-  DollarSign,
-  Users,
-  Clock,
-  ShieldAlert,
-  UserCheck,
-} from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { tokens } from "@/lib/tokens";
+import {cn} from "@/lib/utils";
+import {CheckCircle XCircle Play DollarSign Users Clock ShieldAlert UserCheck} from "lucide-react";
+import {Card} from "@/components/ui/card";
+import {Button} from "@/components/ui/button";
+import {Badge} from "@/components/ui/badge";
+import {tokens} from "@/lib/tokens";
 import type { Project } from "@/engine/types";
 import type { Contract } from "@/engine/types/talent.types";
 import type { Talent } from "@/engine/types/talent.types";
-import { roleCompletenessScore, scheduleCertainty } from "@/engine/systems/greenlight";
+import {roleCompletenessScore scheduleCertainty} from "@/engine/systems/greenlight";
 
 interface GreenlightQueueProps {
   projects: Project[];

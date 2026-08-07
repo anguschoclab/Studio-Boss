@@ -1,6 +1,6 @@
-import { Project, Talent } from "@/engine/types";
-import { AwardsProfile } from "@/engine/types/project.types";
-import { RandomGenerator } from "../../utils/rng";
+import {Project Talent} from "@/engine/types";
+import {AwardsProfile} from "@/engine/types/project.types";
+import {RandomGenerator} from "../../utils/rng";
 
 /**
  * Derives an AwardsProfile from a project's core metrics.

@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { getWeekDisplay } from "./utils";
+import {describe it expect} from "vitest";
+import {getWeekDisplay} from "./utils";
 
 describe("getWeekDisplay", () => {
   it("should return correct display week and year for year 2026 (weeks 1-52)", () => {

@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
+import {describe it expect} from "vitest";
 import {} from "@/engine/types";
-import { advanceWeek } from "@/engine/core/weekAdvance";
-import { createMockGameState } from "../generators/mockFactory";
+import {advanceWeek} from "@/engine/core/weekAdvance";
+import {createMockGameState} from "../generators/mockFactory";
 
 describe("Week Advance Pipeline (Target A4)", () => {
   const mockState = createMockGameState({

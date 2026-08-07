@@ -1,11 +1,11 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { useGameStore } from "@/store/gameStore";
-import { Opportunity } from "@/engine/types";
-import { formatMoney } from "@/engine/utils";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Gavel, Clock, History, AlertCircle, Zap, Target, Trophy, Ban } from "lucide-react";
-import { cn } from "@/lib/utils";
+import {useGameStore} from "@/store/gameStore";
+import {Opportunity} from "@/engine/types";
+import {formatMoney} from "@/engine/utils";
+import {Button} from "@/components/ui/button";
+import {Badge} from "@/components/ui/badge";
+import {Gavel Clock History AlertCircle Zap Target Trophy Ban} from "lucide-react";
+import {cn} from "@/lib/utils";
 
 interface LiveAuctionDashboardProps {
   opportunity: Opportunity;

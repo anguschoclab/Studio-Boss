@@ -1,16 +1,6 @@
 import React from "react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Area,
-  ComposedChart,
-} from "recharts";
-import { cn } from "@/lib/utils";
+import {LineChart Line XAxis YAxis CartesianGrid Tooltip ResponsiveContainer Area ComposedChart} from "recharts";
+import {cn} from "@/lib/utils";
 
 interface TimePoint {
   date: string | number;

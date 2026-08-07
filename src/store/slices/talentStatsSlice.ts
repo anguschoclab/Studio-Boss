@@ -1,6 +1,6 @@
-import { StateCreator } from "zustand";
-import { GameStore } from "../gameStore";
-import { type TalentId } from "@/engine/types/shared.types";
+import {StateCreator} from "zustand";
+import {GameStore} from "../gameStore";
+import {type TalentId} from "@/engine/types/shared.types";
 
 export interface TalentStatsSlice {
   getTalentFilmography: (

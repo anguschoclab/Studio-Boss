@@ -1,4 +1,4 @@
-import { Contract } from "@/engine/types";
+import {Contract} from "@/engine/types";
 // Shared utilities for the engine layer — no React imports
 
 /**

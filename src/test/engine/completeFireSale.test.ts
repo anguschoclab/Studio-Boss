@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { completeFireSale } from "@/engine/systems/industry/DistressCascade";
+import {describe it expect} from "vitest";
+import {completeFireSale} from "@/engine/systems/industry/DistressCascade";
 import type { DistressedAssetOffer } from "@/engine/types/distress.types";
 import type { GameState } from "@/engine/types";
 

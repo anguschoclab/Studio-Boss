@@ -1,6 +1,6 @@
 import archiveData from "../data/narrative/archive.json";
-import { ResolutionRequest, NarrativeArchive, NarrativeDomainKey, NarrativeContext } from "../data/narrative/archive";
-import { RandomGenerator } from "../utils/rng";
+import {ResolutionRequest NarrativeArchive NarrativeDomainKey NarrativeContext} from "../data/narrative/archive";
+import {RandomGenerator} from "../utils/rng";
 
 const FORBIDDEN_KEYS = new Set(["__proto__", "constructor", "prototype"]);
 

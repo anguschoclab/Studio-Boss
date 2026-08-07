@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import { useGameStore } from "@/store/gameStore";
-import { useUIStore } from "@/store/uiStore";
-import { Button } from "@/components/ui/button";
-import { Plus, Search, Newspaper, Sparkles, TrendingUp } from "lucide-react";
-import { Opportunity } from "@/engine/types";
-import { selectOpportunities } from "@/store/selectors";
-import { TrendBoard } from "@/components/trends/TrendBoard";
-import { NewsFeed } from "@/components/news/NewsFeed";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Input } from "@/components/ui/input";
-import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { LiveAuctionDashboard } from "@/components/talent/LiveAuctionDashboard";
-import { OpportunityCard } from "./OpportunityCard";
+import {useGameStore} from "@/store/gameStore";
+import {useUIStore} from "@/store/uiStore";
+import {Button} from "@/components/ui/button";
+import {Plus Search Newspaper Sparkles TrendingUp} from "lucide-react";
+import {Opportunity} from "@/engine/types";
+import {selectOpportunities} from "@/store/selectors";
+import {TrendBoard} from "@/components/trends/TrendBoard";
+import {NewsFeed} from "@/components/news/NewsFeed";
+import {ScrollArea} from "@/components/ui/scroll-area";
+import {Input} from "@/components/ui/input";
+import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";
+import {LiveAuctionDashboard} from "@/components/talent/LiveAuctionDashboard";
+import {OpportunityCard} from "./OpportunityCard";
 
 const DiscoveryHeader = ({ openCreateProject }: { openCreateProject: () => void }) => (
   <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 bg-white/[0.02] p-10 rounded-none border border-white/5 backdrop-blur-3xl relative overflow-hidden group shadow-2xl">

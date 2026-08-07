@@ -1,14 +1,8 @@
-import { GameState, StateImpact, SeriesProject } from "@/engine/types";
-import { calculateWeeklyRating } from "./ratingsEvaluator";
-import { evaluateRenewal } from "./renewalEngine";
-import { RandomGenerator } from "../../utils/rng";
-import {
-  calculateNielsenRatings,
-  buildNielsenProfile,
-  rankShows,
-  assignTimeSlot,
-  NielsenSnapshot,
-} from "./nielsenSystem";
+import {GameState StateImpact SeriesProject} from "@/engine/types";
+import {calculateWeeklyRating} from "./ratingsEvaluator";
+import {evaluateRenewal} from "./renewalEngine";
+import {RandomGenerator} from "../../utils/rng";
+import {calculateNielsenRatings buildNielsenProfile rankShows assignTimeSlot NielsenSnapshot} from "./nielsenSystem";
 
 export type TVStatus =
   "IN_DEVELOPMENT" | "ON_AIR" | "ON_BUBBLE" | "RENEWED" | "CANCELLED" | "SYNDICATED";

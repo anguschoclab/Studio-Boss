@@ -1,6 +1,6 @@
-import { StateCreator } from "zustand";
-import { GameStore } from "../gameStore";
-import { Bookmark } from "@/engine/types";
+import {StateCreator} from "zustand";
+import {GameStore} from "../gameStore";
+import {Bookmark} from "@/engine/types";
 
 export interface BookmarkSlice {
   toggleBookmark: (id: string, type: "project" | "talent") => void;

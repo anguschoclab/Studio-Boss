@@ -1,11 +1,11 @@
 import React from "react";
-import { cn, formatCompactCurrency } from "@/lib/utils";
-import { History, DollarSign, CheckCircle2, XCircle, Clock } from "lucide-react";
-import { Section } from "@/components/layout/Section";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { tokens } from "@/lib/tokens";
-import { TalentNameLink } from "@/components/shared/TalentNameLink";
+import {cn formatCompactCurrency} from "@/lib/utils";
+import {History DollarSign CheckCircle2 XCircle Clock} from "lucide-react";
+import {Section} from "@/components/layout/Section";
+import {Card} from "@/components/ui/card";
+import {Badge} from "@/components/ui/badge";
+import {tokens} from "@/lib/tokens";
+import {TalentNameLink} from "@/components/shared/TalentNameLink";
 
 interface OfferAction {
   type: "made" | "countered" | "accepted" | "rejected" | "expired";

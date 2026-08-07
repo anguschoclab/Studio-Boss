@@ -1,8 +1,8 @@
-import { describe, it, expect } from "vitest";
-import { GameState } from "@/engine/types";
-import { RandomGenerator } from "@/engine/utils/rng";
-import { tickMarketing } from "@/engine/systems/marketing/MarketingSystem";
-import { createMockProject } from "@/test/utils/mockFactories";
+import {describe it expect} from "vitest";
+import {GameState} from "@/engine/types";
+import {RandomGenerator} from "@/engine/utils/rng";
+import {tickMarketing} from "@/engine/systems/marketing/MarketingSystem";
+import {createMockProject} from "@/test/utils/mockFactories";
 
 /**
  * Helpers to build a minimal deterministic GameState for marketing tests.

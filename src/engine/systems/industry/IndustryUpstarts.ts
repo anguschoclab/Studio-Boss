@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GameState, RivalStudio, StateImpact, StreamerPlatform } from "@/engine/types";import { BrandSystem } from "../../generators/BrandSystem";
-import { secureRandom, randRange } from "../../utils";import { ARCHETYPES } from "../../data/archetypes";
-import { generateMotto } from "../../generators/names";
+import {GameState RivalStudio StateImpact StreamerPlatform} from "@/engine/types";import {BrandSystem} from "../../generators/BrandSystem";
+import {secureRandom randRange} from "../../utils";import {ARCHETYPES} from "../../data/archetypes";
+import {generateMotto} from "../../generators/names";
 
 /**
  * Studio Boss - Industry Upstarts

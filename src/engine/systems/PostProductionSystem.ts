@@ -1,5 +1,5 @@
-import { GameState, StateImpact } from "@/engine/types";
-import { RandomGenerator } from "@/engine/utils/rng";
+import {GameState StateImpact} from "@/engine/types";
+import {RandomGenerator} from "@/engine/utils/rng";
 
 // Default number of weeks a project spends in post-production
 const DEFAULT_POST_PRODUCTION_WEEKS = 3;

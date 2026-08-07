@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { initializeGame } from "../../../engine/core/gameInit";
+import {describe it expect} from "vitest";
+import {initializeGame} from "../../../engine/core/gameInit";
 
 describe("initializeGame", () => {
   it("initializes game state with correctly passed parameters", () => {

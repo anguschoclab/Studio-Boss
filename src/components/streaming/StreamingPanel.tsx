@@ -1,15 +1,15 @@
 import React, { useMemo, useState } from "react";
-import { useGameStore } from "@/store/gameStore";
-import { Buyer, StreamerPlatform } from "@/engine/types";
+import {useGameStore} from "@/store/gameStore";
+import {Buyer StreamerPlatform} from "@/engine/types";
 
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { ArrowRightLeft, FileSearch, Globe, History, Activity } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { PlatformCard } from "./components/PlatformCard";
-import { DealModal } from "./components/DealModal";
-import { MAHistoryFeed } from "./components/MAHistoryFeed";
-import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
+import {Button} from "@/components/ui/button";
+import {ScrollArea} from "@/components/ui/scroll-area";
+import {ArrowRightLeft FileSearch Globe History Activity} from "lucide-react";
+import {cn} from "@/lib/utils";
+import {PlatformCard} from "./components/PlatformCard";
+import {DealModal} from "./components/DealModal";
+import {MAHistoryFeed} from "./components/MAHistoryFeed";
+import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";
 
 function formatSubscribers(n: number): string {
   if (n >= 1_000_000_000) return `${(n / 1_000_000_000).toFixed(1)}B`;

@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from "vitest";
-import { checkCampaignBacklash } from "@/engine/systems/awards/NominationCalculator";
-import { RandomGenerator } from "@/engine/utils/rng";
+import {describe it expect vi} from "vitest";
+import {checkCampaignBacklash} from "@/engine/systems/awards/NominationCalculator";
+import {RandomGenerator} from "@/engine/utils/rng";
 
 describe("checkCampaignBacklash (unified hybrid logic)", () => {
   it("Grassroots never triggers backlash regardless of score", () => {

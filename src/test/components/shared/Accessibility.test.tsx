@@ -1,9 +1,9 @@
 /**
  * @vitest-environment jsdom
  */
-import { render, screen } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
-import { FilterBar } from "@/components/shared/FilterBar";
+import {render screen} from "@testing-library/react";
+import {describe it expect} from "vitest";
+import {FilterBar} from "@/components/shared/FilterBar";
 
 describe("Accessibility - Search Inputs", () => {
   it("FilterBar search input has aria-label", () => {

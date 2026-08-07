@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GameState, StateImpact, Project } from "../../types";import { RandomGenerator } from "../../utils/rng";
-import { TalentRelationship } from "../../types/relationship.types";
-import { Clique } from "../../types/clique.types";
-import { getContractsByProjectId } from "../../utils";
+import {GameState StateImpact Project} from "../../types";import {RandomGenerator} from "../../utils/rng";
+import {TalentRelationship} from "../../types/relationship.types";
+import {Clique} from "../../types/clique.types";
+import {getContractsByProjectId} from "../../utils";
 
 /**
  * Organic Event Enhancer

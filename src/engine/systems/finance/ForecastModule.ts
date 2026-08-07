@@ -1,7 +1,7 @@
-import { GameState } from "@/engine/types";
-import { RandomGenerator } from "../../utils/rng";
-import { getContractsByProjectId } from "../../utils";
-import { generateWeeklyFinancialReport } from "./ReportsModule";
+import {GameState} from "@/engine/types";
+import {RandomGenerator} from "../../utils/rng";
+import {getContractsByProjectId} from "../../utils";
+import {generateWeeklyFinancialReport} from "./ReportsModule";
 
 export function generateCashflowForecast(
   state: GameState,

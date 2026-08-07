@@ -1,5 +1,5 @@
 // Types related to Projects, Formats, and Markets
-import { ActiveCrisis } from "./engine.types";
+import {ActiveCrisis} from "./engine.types";
 
 export type CharacterArchetype =
   | "protagonist"

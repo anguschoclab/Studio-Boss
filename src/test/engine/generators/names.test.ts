@@ -1,10 +1,5 @@
-import { describe, it, expect } from "vitest";
-import {
-  generateStudioName,
-  generateMotto,
-  generateDemographicName,
-  generateProjectName,
-} from "../../../engine/generators/names";
+import {describe it expect} from "vitest";
+import {generateStudioName generateMotto generateDemographicName generateProjectName} from "../../../engine/generators/names";
 
 describe("Names Generator", () => {
   describe("generateStudioName", () => {

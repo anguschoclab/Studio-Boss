@@ -1,4 +1,4 @@
-import { pick } from "../utils";
+import {pick} from "../utils";
 
 const GENRE_PATTERNS: Record<string, string[][]> = {
   Action: [

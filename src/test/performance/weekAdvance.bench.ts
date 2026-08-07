@@ -1,6 +1,6 @@
-import { describe, bench } from "vitest";
-import { advanceWeek } from "@/engine/core/weekAdvance";
-import { GameState, Project, Contract } from "@/engine/types";
+import {describe bench} from "vitest";
+import {advanceWeek} from "@/engine/core/weekAdvance";
+import {GameState Project Contract} from "@/engine/types";
 
 function createMockState(projectCount: number, contractsPerProject: number): GameState {
   const projects: Record<string, Project> = {};

@@ -1,5 +1,5 @@
-import { GameState, StateImpact, StreamerPlatform } from "@/engine/types";import { RandomGenerator } from "../../utils/rng";
-import { isPlayerOwner } from "../../utils/ownership";
+import {GameState StateImpact StreamerPlatform} from "@/engine/types";import {RandomGenerator} from "../../utils/rng";
+import {isPlayerOwner} from "../../utils/ownership";
 
 /**
  * Studio Boss - Vertical Integration Processor

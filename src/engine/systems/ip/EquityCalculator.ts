@@ -1,5 +1,5 @@
-import { Project, Franchise, IPAsset } from "../../types";
-import { CROSSOVER_AFFINITY, CROSSOVER_AFFINITY_LOWER_KEYS } from "../../data/genres";
+import {Project Franchise IPAsset} from "../../types";
+import {CROSSOVER_AFFINITY CROSSOVER_AFFINITY_LOWER_KEYS} from "../../data/genres";
 
 /**
  * Calculates total equity for a franchise including the "Shared Universe Premium".

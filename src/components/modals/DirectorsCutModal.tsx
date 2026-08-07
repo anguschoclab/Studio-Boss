@@ -1,11 +1,11 @@
 import React from "react";
-import { useUIStore } from "@/store/uiStore";
-import { useGameStore } from "@/store/gameStore";
-import { formatMoney } from "@/engine/utils";
-import { ProjectId } from "@/engine/types/shared.types";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Film, Sparkles, TrendingUp, DollarSign } from "lucide-react";
+import {useUIStore} from "@/store/uiStore";
+import {useGameStore} from "@/store/gameStore";
+import {formatMoney} from "@/engine/utils";
+import {ProjectId} from "@/engine/types/shared.types";
+import {Dialog DialogContent DialogHeader DialogTitle} from "@/components/ui/dialog";
+import {Button} from "@/components/ui/button";
+import {Film Sparkles TrendingUp DollarSign} from "lucide-react";
 
 export const DirectorsCutModal: React.FC = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();

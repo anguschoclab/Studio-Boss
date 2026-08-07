@@ -1,6 +1,6 @@
-import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
-import { NewsTicker } from "../../../../src/components/layout/NewsTicker";
+import {render screen} from "@testing-library/react";
+import {describe it expect vi} from "vitest";
+import {NewsTicker} from "../../../../src/components/layout/NewsTicker";
 import * as gameStore from "../../../../src/store/gameStore";
 
 vi.mock("../../../../src/store/gameStore");
@@ -31,7 +31,6 @@ describe("NewsTicker", () => {
               totalRevenue: 0,
               totalCosts: 0,
               projectUpdates: [],
-              newHeadlines: [],
               newsEvents: [
                 {
                   id: "1",

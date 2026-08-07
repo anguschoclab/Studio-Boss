@@ -1,9 +1,9 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
-import { PitchProjectModal } from "@/components/modals/PitchProjectModal";
-import { useGameStore } from "@/store/gameStore";
-import { useUIStore } from "@/store/uiStore";
+import {render screen fireEvent waitFor} from "@testing-library/react";
+import {describe it expect vi beforeEach Mock} from "vitest";
+import {PitchProjectModal} from "@/components/modals/PitchProjectModal";
+import {useGameStore} from "@/store/gameStore";
+import {useUIStore} from "@/store/uiStore";
 
 // Mock the stores
 vi.mock("@/store/gameStore", () => ({

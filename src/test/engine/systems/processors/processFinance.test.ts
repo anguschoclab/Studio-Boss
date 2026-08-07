@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
-import { tickFinance } from "../../../../engine/systems/finance/financeTick";
-import { GameState, Talent } from "../../../../engine/types";
-import { RandomGenerator } from "../../../../engine/utils/rng";
+import {describe it expect} from "vitest";
+import {tickFinance} from "../../../../engine/systems/finance/financeTick";
+import {GameState Talent} from "../../../../engine/types";
+import {RandomGenerator} from "../../../../engine/utils/rng";
 
 describe("tickFinance", () => {
   const rng = new RandomGenerator(123);

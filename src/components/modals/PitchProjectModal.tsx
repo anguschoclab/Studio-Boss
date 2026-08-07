@@ -1,17 +1,11 @@
-import { useState, useEffect, useRef } from "react";
-import { useGameStore } from "@/store/gameStore";
-import { useUIStore } from "@/store/uiStore";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import {useState useEffect useRef} from "react";
+import {useGameStore} from "@/store/gameStore";
+import {useUIStore} from "@/store/uiStore";
+import {Dialog DialogContent DialogHeader DialogTitle DialogDescription} from "@/components/ui/dialog";
+import {Button} from "@/components/ui/button";
+import {Badge} from "@/components/ui/badge";
 import type { ProjectContractType } from "@/engine/types";
-import { calculateFitScore } from "@/engine/systems/buyers";
+import {calculateFitScore} from "@/engine/systems/buyers";
 
 export const PitchProjectModal = () => {
   const { showPitchProject, closePitchProject, pitchingProjectId } = useUIStore();

@@ -3,26 +3,11 @@
  * Tests data aggregation and computation logic for visualization components
  */
 
-import { describe, it, expect } from "vitest";
-import {
-  selectCashFlowTrends,
-  selectRevenueBreakdown,
-  selectWeeklyRevenueHistory,
-  selectBudgetBurnData,
-  selectRecoupmentStatus,
-  selectProjectTimelineData,
-  selectBoxOfficeData,
-  selectProductionSlippage,
-  selectGenrePerformanceMatrix,
-  selectTalentSatisfaction,
-  selectTalentTierDistribution,
-  selectDealStats,
-  selectStudioHealthMetrics,
-  selectCrisisRiskLevel,
-} from "@/store/selectors";
+import {describe it expect} from "vitest";
+import {selectCashFlowTrends selectRevenueBreakdown selectWeeklyRevenueHistory selectBudgetBurnData selectRecoupmentStatus selectProjectTimelineData selectBoxOfficeData selectProductionSlippage selectGenrePerformanceMatrix selectTalentSatisfaction selectTalentTierDistribution selectDealStats selectStudioHealthMetrics selectCrisisRiskLevel} from "@/store/selectors";
 import type { Project, Talent } from "@/engine/types";
 
-import { createMockGameState } from "./mockFactory";
+import {createMockGameState} from "./mockFactory";
 
 describe("Phase 1: Financial Selectors", () => {
   describe("selectCashFlowTrends", () => {

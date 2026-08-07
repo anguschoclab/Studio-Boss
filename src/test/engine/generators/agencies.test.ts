@@ -1,6 +1,6 @@
-import { describe, expect, it } from "vitest";
-import { generateAgencies } from "../../../engine/generators/agencies";
-import { AGENCY_ARCHETYPES } from "../../../engine/data/archetypes";
+import {describe expect it} from "vitest";
+import {generateAgencies} from "../../../engine/generators/agencies";
+import {AGENCY_ARCHETYPES} from "../../../engine/data/archetypes";
 
 describe("Agency Generation", () => {
   it("generates the correct archetypes and prefixes", () => {

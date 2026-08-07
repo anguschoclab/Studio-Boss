@@ -1,5 +1,5 @@
-import { Franchise } from "./franchise.types";
-import { Project } from "./project.types";
+import {Franchise} from "./franchise.types";
+import {Project} from "./project.types";
 
 export interface WeeklyFinancialReport {
   week: number;

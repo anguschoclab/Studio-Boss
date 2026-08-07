@@ -1,5 +1,5 @@
-import { ContentFlag, ProjectRating, Project, RegionalRating, RatingMarket } from "@/engine/types";
-import { MARKET_CONFIGS, getBannedMarkets, getRestrictedMarkets } from "../../data/ratingMarkets";
+import {ContentFlag ProjectRating Project RegionalRating RatingMarket} from "@/engine/types";
+import {MARKET_CONFIGS getBannedMarkets getRestrictedMarkets} from "../../data/ratingMarkets";
 
 /**
  * Returns a per-market rating and ban status for all 8 markets.

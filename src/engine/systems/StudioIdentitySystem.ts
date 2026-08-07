@@ -1,4 +1,4 @@
-import { GameState, StateImpact, StudioCulture } from "@/engine/types";
+import {GameState StateImpact StudioCulture} from "@/engine/types";
 
 /**
  * StudioIdentitySystem

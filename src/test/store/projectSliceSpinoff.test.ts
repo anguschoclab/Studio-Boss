@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { useGameStore } from "@/store/gameStore";
-import { calculateFranchiseFatigue } from "@/engine/systems/ip/fatigueEngine";
-import { generateSpinoffProposal } from "@/engine/systems/ip/spinoffFactory";
+import {describe it expect beforeEach vi} from "vitest";
+import {useGameStore} from "@/store/gameStore";
+import {calculateFranchiseFatigue} from "@/engine/systems/ip/fatigueEngine";
+import {generateSpinoffProposal} from "@/engine/systems/ip/spinoffFactory";
 
 vi.mock("@/engine/utils/rng", () => ({
   RandomGenerator: vi.fn().mockImplementation(() => ({

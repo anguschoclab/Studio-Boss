@@ -1,11 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import {
-  FESTIVALS,
-  FESTIVAL_BY_BODY,
-  submitToFestival,
-  resolveFestivals,
-} from "../../../engine/systems/festivals";
-import { Project, GameState, FestivalSubmission, AwardBody } from "../../../engine/types";
+import {describe it expect vi beforeEach afterEach} from "vitest";
+import {FESTIVALS FESTIVAL_BY_BODY submitToFestival resolveFestivals} from "../../../engine/systems/festivals";
+import {Project GameState FestivalSubmission AwardBody} from "../../../engine/types";
 import * as utils from "../../../engine/utils";
 
 const mockProject: Project = {
@@ -207,8 +202,8 @@ describe("Festivals System", () => {
     const festival = FESTIVALS[0];
     const impact = submitToFestival(mockState, mockProject.id, festival.body);
     expect(impact).not.toBeNull();
-    expect(impact!.newHeadlines?.[0].headline).toContain(festival.name);
-    expect(impact!.newHeadlines?.[0].headline).toContain(mockProject.title);
+    expect(impact!.newsEvents?.[0].headline).toContain(festival.name);
+    expect(impact!.newsEvents?.[0].headline).toContain(mockProject.title);
   });
 
   // --- resolveFestivals tests ---

@@ -1,9 +1,9 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { LiveAuctionDashboard } from "@/components/talent/LiveAuctionDashboard";
-import { useGameStore } from "@/store/gameStore";
-import { Opportunity } from "@/engine/types";
+import {render screen} from "@testing-library/react";
+import {describe it expect vi beforeEach} from "vitest";
+import {LiveAuctionDashboard} from "@/components/talent/LiveAuctionDashboard";
+import {useGameStore} from "@/store/gameStore";
+import {Opportunity} from "@/engine/types";
 
 vi.mock("@/components/ui/button", () => ({
   Button: ({ children, onClick, disabled, ...rest }: any) => (

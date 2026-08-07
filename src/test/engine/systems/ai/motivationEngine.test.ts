@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
-import { calculateRivalMotivation, calculateMotivationScores, tickAIMinds } from "@/engine/systems/ai/motivationEngine";
-import { RandomGenerator } from "@/engine/utils/rng";
-import { createMockGameState, createMockRival } from "../../generators/mockFactory";
+import {describe it expect} from "vitest";
+import {calculateRivalMotivation calculateMotivationScores tickAIMinds} from "@/engine/systems/ai/motivationEngine";
+import {RandomGenerator} from "@/engine/utils/rng";
+import {createMockGameState createMockRival} from "../../generators/mockFactory";
 import type { StateImpact, SeriesProject, Project } from "@/engine/types";
 
 describe("AI Motivation Engine (Target C1)", () => {

@@ -1,7 +1,7 @@
 // Talent Discovery System Types
 // Breakout stars, guest stars, hidden gems
 
-import { TalentTier } from "./talent.types";
+import {TalentTier} from "./talent.types";
 
 export type BreakoutTrigger =
   | "indie_hit"

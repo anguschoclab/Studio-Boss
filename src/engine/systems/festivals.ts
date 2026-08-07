@@ -1,6 +1,6 @@
-import { GameState, FestivalSubmission, AwardBody } from "@/engine/types";
-import { randRange, generateId } from "../utils";
-import { StateImpact } from "../types/state.types";
+import {GameState FestivalSubmission AwardBody} from "@/engine/types";
+import {randRange generateId} from "../utils";
+import {StateImpact} from "../types/state.types";
 
 export interface Festival {
   body: AwardBody;
@@ -72,7 +72,7 @@ export function submitToFestival(
   return {
     cashChange: -fest.cost,
     newFestivalSubmissions: [...(state.industry.festivalSubmissions || []), submission],
-    newHeadlines: [
+    newsEvents: [
       {
         id: generateId("HL"),
         week: state.week,
@@ -93,7 +93,7 @@ export function resolveFestivals(state: GameState): StateImpact {
     newFestivalSubmissions: [],
     projectUpdates: [],
     prestigeChange: 0,
-    newHeadlines: [],
+    newsEvents: [],
   };
 
   const updatedSubmissions: FestivalSubmission[] = [];
@@ -127,7 +127,7 @@ export function resolveFestivals(state: GameState): StateImpact {
         });
         impact.prestigeChange! += 2;
 
-        impact.newHeadlines!.push({
+        impact.newsEvents!.push({
           id: generateId("HL"),
           week: state.week,
           category: "awards" as const,

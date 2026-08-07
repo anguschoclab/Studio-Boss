@@ -1,4 +1,4 @@
-import { createMarketingSlice } from "../../store/slices/marketingSlice";
+import {createMarketingSlice} from "../../store/slices/marketingSlice";
 
 describe("marketingSlice", () => {
   let store: any;

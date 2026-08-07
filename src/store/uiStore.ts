@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { create } from "zustand";
-import { WeekSummary } from "@/engine/types";
+import {create} from "zustand";
+import {WeekSummary} from "@/engine/types";
 
 export type ModalType =
   | "CRISIS"

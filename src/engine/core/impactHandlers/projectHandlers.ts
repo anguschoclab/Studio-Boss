@@ -1,4 +1,4 @@
-import { GameState } from "@/engine/types";
+import {GameState} from "@/engine/types";
 import type {
   ProjectUpdateImpact,
   ProjectRemovedImpact,

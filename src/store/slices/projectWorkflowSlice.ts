@@ -1,12 +1,12 @@
-import { StateCreator } from "zustand";
-import { GameStore } from "../gameStore";
-import { applyStateImpact } from "../storeUtils";
+import {StateCreator} from "zustand";
+import {GameStore} from "../gameStore";
+import {applyStateImpact} from "../storeUtils";
 import * as projectsEngine from "@/engine/systems/projects";
-import { updateCultureFromProject } from "@/engine/systems/culture";
-import { negotiateContract } from "@/engine/systems/buyers";
-import { RandomGenerator } from "@/engine/utils/rng";
-import { Project, GameState, ProjectContractType, StateImpact, NewsId } from "@/engine/types";
-import { type ProjectId, type BuyerId } from "@/engine/types/shared.types";
+import {updateCultureFromProject} from "@/engine/systems/culture";
+import {negotiateContract} from "@/engine/systems/buyers";
+import {RandomGenerator} from "@/engine/utils/rng";
+import {Project GameState ProjectContractType StateImpact NewsId} from "@/engine/types";
+import {type ProjectId type BuyerId} from "@/engine/types/shared.types";
 export interface ProjectWorkflowSlice {
   greenlightProject: (projectId: ProjectId) => Promise<void>;
   pitchProject: (

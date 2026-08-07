@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useEffect, ReactNode } from "react";
-import { useGameStore } from "../../store/gameStore";
+import {useGameStore} from "../../store/gameStore";
 
 interface ThemeContextType {
   archetype: string | undefined;

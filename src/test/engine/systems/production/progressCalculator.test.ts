@@ -1,5 +1,5 @@
-import { advanceProjectProgress } from "@/engine/systems/production/progressCalculator";
-import { Project } from "@/engine/types";
+import {advanceProjectProgress} from "@/engine/systems/production/progressCalculator";
+import {Project} from "@/engine/types";
 
 describe("advanceProjectProgress", () => {
   it("halts progress and burns budget if a crisis is active and halting", () => {

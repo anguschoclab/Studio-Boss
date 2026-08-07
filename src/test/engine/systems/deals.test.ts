@@ -1,11 +1,7 @@
-import { vi } from "vitest";
-import { describe, it, expect, beforeEach } from "vitest";
-import {
-  evaluateFirstLookDeal,
-  offerFirstLookDeal,
-  advanceDeals,
-} from "../../../engine/systems/deals";
-import { Talent, GameState, FirstLookDeal } from "../../../engine/types";
+import {vi} from "vitest";
+import {describe it expect beforeEach} from "vitest";
+import {evaluateFirstLookDeal offerFirstLookDeal advanceDeals} from "../../../engine/systems/deals";
+import {Talent GameState FirstLookDeal} from "../../../engine/types";
 import * as utils from "../../../engine/utils";
 
 describe("Deals System", () => {

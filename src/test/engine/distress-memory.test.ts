@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { tickDistressCascade } from "@/engine/systems/industry/DistressCascade";
-import { defaultSimMemory } from "@/engine/core/simMemory";
+import {describe it expect vi beforeEach} from "vitest";
+import {tickDistressCascade} from "@/engine/systems/industry/DistressCascade";
+import {defaultSimMemory} from "@/engine/core/simMemory";
 import type { GameState } from "@/engine/types";
 import * as utils from "@/engine/utils";
 

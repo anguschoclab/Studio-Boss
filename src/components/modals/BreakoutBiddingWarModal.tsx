@@ -1,11 +1,11 @@
 import React from "react";
-import { useUIStore } from "@/store/uiStore";
-import { useGameStore } from "@/store/gameStore";
-import { formatMoney } from "@/engine/utils";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Star, Zap, DollarSign, Building2, TrendingUp } from "lucide-react";
+import {useUIStore} from "@/store/uiStore";
+import {useGameStore} from "@/store/gameStore";
+import {formatMoney} from "@/engine/utils";
+import {Dialog DialogContent DialogHeader DialogTitle} from "@/components/ui/dialog";
+import {Button} from "@/components/ui/button";
+import {Badge} from "@/components/ui/badge";
+import {Star Zap DollarSign Building2 TrendingUp} from "lucide-react";
 
 export const BreakoutBiddingWarModal: React.FC = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();

@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { advanceScandals } from "../../../engine/systems/scandals";
-import { GameState, Scandal } from "../../../engine/types";
+import {describe it expect vi beforeEach} from "vitest";
+import {advanceScandals} from "../../../engine/systems/scandals";
+import {GameState Scandal} from "../../../engine/types";
 
 describe("scandals system", () => {
   beforeEach(() => {

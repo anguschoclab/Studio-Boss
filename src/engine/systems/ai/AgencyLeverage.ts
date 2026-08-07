@@ -1,6 +1,6 @@
-import { Agency, Agent, Talent, MarketState } from "../../types";
-import { clamp } from "../../utils";
-import { AGENCY_ARCHETYPES } from "../../data/archetypes";
+import {Agency Agent Talent MarketState} from "../../types";
+import {clamp} from "../../utils";
+import {AGENCY_ARCHETYPES} from "../../data/archetypes";
 
 /**
  * Phase 7: Agency Leverage Engine.

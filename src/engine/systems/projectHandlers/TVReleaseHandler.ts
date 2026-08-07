@@ -1,7 +1,7 @@
-import { SeriesProject, Contract, Talent, Award, StateImpact } from "@/engine/types";
-import { TalentSystem } from "../TalentSystem";
-import { TV_FORMATS } from "../../data/tvFormats";
-import { RandomGenerator } from "../../utils/rng";
+import {SeriesProject Contract Talent Award StateImpact} from "@/engine/types";
+import {TalentSystem} from "../TalentSystem";
+import {TV_FORMATS} from "../../data/tvFormats";
+import {RandomGenerator} from "../../utils/rng";
 
 export function handleTVReleaseEntry(
   p: SeriesProject,

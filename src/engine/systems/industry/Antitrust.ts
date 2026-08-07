@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GameState, StateImpact, RivalStudio } from "@/engine/types";
-import { secureRandom, pick } from "../../utils";
-import { getSimMemory } from "../../core/simMemory";
+import {GameState StateImpact RivalStudio} from "@/engine/types";
+import {secureRandom pick} from "../../utils";
+import {getSimMemory} from "../../core/simMemory";
 
 /**
  * Antitrust — concentration monitor + occasional interventions.

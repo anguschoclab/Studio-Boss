@@ -1,5 +1,5 @@
-import { GameState, StateImpact, StreamerPlatform, SeriesProject } from "@/engine/types";
-import { RandomGenerator } from "../../utils/rng";
+import {GameState StateImpact StreamerPlatform SeriesProject} from "@/engine/types";
+import {RandomGenerator} from "../../utils/rng";
 
 /**
  * Pure function to calculate subscriber changes for a single platform.

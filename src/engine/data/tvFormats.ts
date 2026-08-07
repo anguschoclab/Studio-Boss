@@ -1,4 +1,4 @@
-import { TvFormatKey } from "@/engine/types";
+import {TvFormatKey} from "@/engine/types";
 
 interface TvFormatData {
   key: TvFormatKey;

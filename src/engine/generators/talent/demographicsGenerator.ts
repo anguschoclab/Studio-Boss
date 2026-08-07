@@ -1,5 +1,5 @@
-import { TalentDemographics } from "../../types/talent.types";
-import { rand } from "../../utils";
+import {TalentDemographics} from "../../types/talent.types";
+import {rand} from "../../utils";
 
 export type Ethnicity =
   "Caucasian" | "Black" | "Hispanic" | "Asian" | "South Asian" | "Middle Eastern" | "Mixed";

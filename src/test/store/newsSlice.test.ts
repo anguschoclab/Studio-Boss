@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { useGameStore } from "@/store/gameStore";
-import { initializeGame } from "@/engine/core/gameInit";
+import {describe it expect beforeEach} from "vitest";
+import {useGameStore} from "@/store/gameStore";
+import {initializeGame} from "@/engine/core/gameInit";
 
 describe("appendNewsEvents store action", () => {
   beforeEach(() => {

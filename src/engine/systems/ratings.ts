@@ -1,5 +1,5 @@
-import { ContentFlag, ProjectRating, Project, GameState } from "@/engine/types";
-import { hasCreativeControl } from "./directors";
+import {ContentFlag ProjectRating Project GameState} from "@/engine/types";
+import {hasCreativeControl} from "./directors";
 
 /**
  * Determines a project's rating based on its explicit content flags.

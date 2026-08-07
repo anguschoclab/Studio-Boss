@@ -1,4 +1,4 @@
-import { Project, GameState } from "@/engine/types";
+import {Project GameState} from "@/engine/types";
 
 export function calculateProjectROI(project: Project): number {
   const totalCost = project.budget + (project.marketingBudget || 0);

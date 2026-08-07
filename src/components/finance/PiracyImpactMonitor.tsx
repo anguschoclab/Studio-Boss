@@ -1,10 +1,10 @@
 import React from "react";
-import { cn } from "@/lib/utils";
-import { AlertTriangle, Download, Lock, Globe } from "lucide-react";
-import { Section } from "@/components/layout/Section";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { tokens } from "@/lib/tokens";
+import {cn} from "@/lib/utils";
+import {AlertTriangle Download Lock Globe} from "lucide-react";
+import {Section} from "@/components/layout/Section";
+import {Card} from "@/components/ui/card";
+import {Badge} from "@/components/ui/badge";
+import {tokens} from "@/lib/tokens";
 
 interface PiracyRegion {
   region: string;

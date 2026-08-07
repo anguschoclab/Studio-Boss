@@ -1,10 +1,7 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
-import {
-  executeAcquisition,
-  evaluateAcquisitionTarget,
-} from "@/engine/systems/mergers";
-import { RegulatorSystem } from "@/engine/systems/industry/RegulatorSystem";
-import { createMockGameState, createMockRival } from "./generators/mockFactory";
+import {describe it expect vi afterEach} from "vitest";
+import {executeAcquisition evaluateAcquisitionTarget} from "@/engine/systems/mergers";
+import {RegulatorSystem} from "@/engine/systems/industry/RegulatorSystem";
+import {createMockGameState createMockRival} from "./generators/mockFactory";
 
 function makeState(playerCash = 5_000_000_000, targetCash = 50_000_000) {
   return createMockGameState({

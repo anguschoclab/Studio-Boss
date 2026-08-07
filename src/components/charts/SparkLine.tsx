@@ -1,6 +1,6 @@
 import React from "react";
-import { LineChart, Line, ResponsiveContainer, YAxis } from "recharts";
-import { cn } from "@/lib/utils";
+import {LineChart Line ResponsiveContainer YAxis} from "recharts";
+import {cn} from "@/lib/utils";
 
 interface SparkLineProps {
   data: number[];

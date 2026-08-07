@@ -17,7 +17,7 @@
 
 const WEEKS_PER_YEAR = 52;
 
-import { getDifficultyParams } from "@/store/settingsStore";
+import {getDifficultyParams} from "@/store/settingsStore";
 
 interface Shock {
   startWeek: number;

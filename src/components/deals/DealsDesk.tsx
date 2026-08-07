@@ -1,13 +1,13 @@
 import React from "react";
-import { useGameStore } from "@/store/gameStore";
-import { selectBuyers, selectProjects } from "@/store/selectors";
-import { Card, CardContent } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
-import { Handshake, Target, Briefcase } from "lucide-react";
-import { Buyer, Project, MandateType } from "@/engine/types";
-import { calculateFitScore } from "@/engine/systems/buyers";
-import { cn } from "@/lib/utils";
+import {useGameStore} from "@/store/gameStore";
+import {selectBuyers selectProjects} from "@/store/selectors";
+import {Card CardContent} from "@/components/ui/card";
+import {ScrollArea} from "@/components/ui/scroll-area";
+import {Button} from "@/components/ui/button";
+import {Handshake Target Briefcase} from "lucide-react";
+import {Buyer Project MandateType} from "@/engine/types";
+import {calculateFitScore} from "@/engine/systems/buyers";
+import {cn} from "@/lib/utils";
 
 export const DealsDesk = () => {
   const gameState = useGameStore((s) => s.gameState);

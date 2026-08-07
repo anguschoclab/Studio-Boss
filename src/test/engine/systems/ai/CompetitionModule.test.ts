@@ -1,11 +1,7 @@
-import { describe, it, expect } from "vitest";
-import { tickTalentCompetition } from "@/engine/systems/ai/bidding/CompetitionModule";
-import { RandomGenerator } from "@/engine/utils/rng";
-import {
-  createMockGameState,
-  createMockRival,
-  createMockTalent,
-} from "../../../utils/mockFactories";
+import {describe it expect} from "vitest";
+import {tickTalentCompetition} from "@/engine/systems/ai/bidding/CompetitionModule";
+import {RandomGenerator} from "@/engine/utils/rng";
+import {createMockGameState createMockRival createMockTalent} from "../../../utils/mockFactories";
 
 describe("CompetitionModule - tickTalentCompetition", () => {
   it("returns empty array when week is not divisible by 4", () => {

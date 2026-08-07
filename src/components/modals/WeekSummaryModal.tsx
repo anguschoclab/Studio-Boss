@@ -1,30 +1,17 @@
-import { useUIStore } from "@/store/uiStore";
-import { useGameStore } from "@/store/gameStore";
-import { formatMoney } from "@/engine/utils";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { useState } from "react";
-import { Headline, NarrativeEvent } from "@/engine/types";
-import { NewsStoryModal } from "./NewsStoryModal";
-import { cn } from "@/lib/utils";
-import {
-  AlertTriangle,
-  DollarSign,
-  ArrowRight,
-  Newspaper,
-  Trophy,
-  MessageSquare,
-} from "lucide-react";
+import {useUIStore} from "@/store/uiStore";
+import {useGameStore} from "@/store/gameStore";
+import {formatMoney} from "@/engine/utils";
+import {Dialog DialogContent DialogHeader DialogTitle DialogFooter} from "@/components/ui/dialog";
+import {useState} from "react";
+import {NewsEvent NarrativeEvent} from "@/engine/types";
+import {NewsStoryModal} from "./NewsStoryModal";
+import {cn} from "@/lib/utils";
+import {AlertTriangle DollarSign ArrowRight Newspaper Trophy MessageSquare} from "lucide-react";
 
 export const WeekSummaryModal = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
   const snapshots = useGameStore((s) => s.snapshots);
-  const [selectedHeadline, setSelectedHeadline] = useState<Headline | null>(null);
+  const [selectedHeadline, setSelectedHeadline] = useState<NewsEvent | null>(null);
 
   if (!activeModal || activeModal.type !== "SUMMARY") return null;
 
@@ -351,7 +338,7 @@ export const WeekSummaryModal = () => {
                     <div className="h-px bg-white/5 flex-1" />
                   </div>
                   <div className="grid grid-cols-1 gap-3">
-                    {headlines.map((h: Headline) => (
+                    {headlines.map((h: NewsEvent) => (
                       <button
                         key={h.id}
                         onClick={() => setSelectedHeadline(h)}

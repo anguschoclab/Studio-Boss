@@ -1,11 +1,11 @@
 import React from "react";
-import { useUIStore } from "@/store/uiStore";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tv, CheckCircle2, XCircle, Minus } from "lucide-react";
-import { cn } from "@/lib/utils";
+import {useUIStore} from "@/store/uiStore";
+import {Dialog DialogContent DialogHeader DialogTitle} from "@/components/ui/dialog";
+import {Button} from "@/components/ui/button";
+import {Badge} from "@/components/ui/badge";
+import {ScrollArea} from "@/components/ui/scroll-area";
+import {Tv CheckCircle2 XCircle Minus} from "lucide-react";
+import {cn} from "@/lib/utils";
 import type { UpfrontResult } from "@/engine/systems/television/upfrontsEngine";
 
 export const UpfrontsModal: React.FC = () => {

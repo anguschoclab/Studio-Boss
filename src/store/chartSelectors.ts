@@ -7,27 +7,9 @@
  * for backward compatibility.
  */
 
-import {
-  GameState,
-  Project,
-  FilmProject,
-  SeriesProject,
-} from "../engine/types";
-import {
-  selectFinance,
-  selectLatestSnapshot,
-  selectProjects,
-  selectProjectsRaw,
-  selectActiveProjects,
-  selectReleasedProjects,
-  selectRivals,
-  selectTalentPool,
-  selectMarketTrends,
-  selectMarketMetrics,
-  selectOpportunities,
-  selectStudio,
-} from "./selectors";
-import { AWARD_CONFIGS } from "../engine/data/awards.data";
+import {GameState Project FilmProject SeriesProject} from "../engine/types";
+import {selectFinance selectLatestSnapshot selectProjects selectProjectsRaw selectActiveProjects selectReleasedProjects selectRivals selectTalentPool selectMarketTrends selectMarketMetrics selectOpportunities selectStudio} from "./selectors";
+import {AWARD_CONFIGS} from "../engine/data/awards.data";
 
 export interface RecoupmentStatusData {
   title: string;

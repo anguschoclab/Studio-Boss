@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { useGameStore } from "@/store/gameStore";
-import { useUIStore } from "@/store/uiStore";
+import {describe it expect beforeEach} from "vitest";
+import {useGameStore} from "@/store/gameStore";
+import {useUIStore} from "@/store/uiStore";
 import type { GameState } from "@/engine/types";
 import type { DistressedAssetOffer } from "@/engine/types/distress.types";
 

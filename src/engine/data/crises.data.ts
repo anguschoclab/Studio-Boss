@@ -1,4 +1,4 @@
-import { CrisisOption } from "../types";
+import {CrisisOption} from "../types";
 
 export interface CrisisTemplate {
   id: string;

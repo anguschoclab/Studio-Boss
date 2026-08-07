@@ -1,18 +1,7 @@
-import { GameState, StateImpact, Talent } from "../../types";
-import { TalentTier } from "../../types/talent.types";
-import { RandomGenerator } from "../../utils/rng";
-import {
-  TVShowRecommendation,
-  TVRecommendationCriteria,
-  TVRecommendationConfig,
-  TVRoleType,
-  TVGenre,
-  TVPlatform,
-  DEFAULT_TV_RECOMMENDATION_CONFIG,
-  PLATFORM_PRESTIGE,
-  ROLE_PRESTIGE_MULTIPLIERS,
-  TV_SHOW_TEMPLATES,
-} from "../../types/tv-recommendations.types";
+import {GameState StateImpact Talent} from "../../types";
+import {TalentTier} from "../../types/talent.types";
+import {RandomGenerator} from "../../utils/rng";
+import {TVShowRecommendation TVRecommendationCriteria TVRecommendationConfig TVRoleType TVGenre TVPlatform DEFAULT_TV_RECOMMENDATION_CONFIG PLATFORM_PRESTIGE ROLE_PRESTIGE_MULTIPLIERS TV_SHOW_TEMPLATES} from "../../types/tv-recommendations.types";
 
 const TIER_TO_NUMBER: Record<TalentTier, number> = {
   A_LIST: 1,

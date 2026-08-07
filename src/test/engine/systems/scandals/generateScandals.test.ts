@@ -1,11 +1,7 @@
-import { describe, it, expect } from "vitest";
-import { generateScandals } from "@/engine/systems/scandals/GeneratorModule";
-import { RandomGenerator } from "@/engine/utils/rng";
-import {
-  createMockGameState,
-  createMockTalent,
-  createMockContract,
-} from "../../generators/mockFactory";
+import {describe it expect} from "vitest";
+import {generateScandals} from "@/engine/systems/scandals/GeneratorModule";
+import {RandomGenerator} from "@/engine/utils/rng";
+import {createMockGameState createMockTalent createMockContract} from "../../generators/mockFactory";
 
 function makeMockRng(nextValue: number = 0.001): RandomGenerator {
   return {

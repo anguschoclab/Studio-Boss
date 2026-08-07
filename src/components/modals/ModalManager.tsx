@@ -1,5 +1,5 @@
 import React from "react";
-import { useUIStore } from "@/store/uiStore";
+import {useUIStore} from "@/store/uiStore";
 // Lazy Loaded Modals
 const WeekSummaryModal = React.lazy(() =>
   import("./WeekSummaryModal").then((m) => ({ default: m.WeekSummaryModal }))

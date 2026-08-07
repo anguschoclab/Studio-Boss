@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from "vitest";
-import { resolveCrisis, checkAndTriggerCrisis } from "../../../engine/systems/crises";
-import { Project, GameState } from "../../../engine/types";
+import {describe it expect vi} from "vitest";
+import {resolveCrisis checkAndTriggerCrisis} from "../../../engine/systems/crises";
+import {Project GameState} from "../../../engine/types";
 import * as utils from "../../../engine/utils";
 
 describe("crises system", () => {

@@ -1,6 +1,6 @@
-import { GameState, RivalStudio, NewsEvent } from "@/engine/types";
-import { generateId } from "../utils";
-import { RegulatorSystem } from "./industry/RegulatorSystem";
+import {GameState RivalStudio NewsEvent} from "@/engine/types";
+import {generateId} from "../utils";
+import {RegulatorSystem} from "./industry/RegulatorSystem";
 
 export interface MergerResult {
   state: GameState;

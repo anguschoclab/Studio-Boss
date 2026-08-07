@@ -1,7 +1,6 @@
-import { MarketState, StateImpact } from "../../types/state.types";
-import { Headline } from "../../types/engine.types";
-import { GameState } from "../../types/studio.types";
-import { clamp, rand, generateId } from "../../utils";
+import {MarketState StateImpact} from "../../types/state.types";
+import {GameState} from "../../types/studio.types";
+import {clamp rand generateId} from "../../utils";
 
 /**
  * Global Market Simulation: Interest Rate Simulator.
@@ -62,11 +61,11 @@ export class InterestRateSimulator {
       payload: { marketState: updatedMarket },
     };
 
-    // Headline generation for significant shifts
+    // NewsEvent generation for significant shifts
     if (rand() < 0.05) {
       // 5% chance of a "Market Analysis" headline
       const trend = newRate > currentRate ? "rising" : "falling";
-      impact.newHeadlines = [
+      impact.newsEvents = [
         {
           id: generateId("HL"),
           week: state.week,
@@ -74,7 +73,7 @@ export class InterestRateSimulator {
           headline: `Market Brief: Interest rates are ${trend} as the global economy shifts.`,
           description: "",
           type: "STUDIO_EVENT",
-        } as Headline,
+        },
       ];
     }
 

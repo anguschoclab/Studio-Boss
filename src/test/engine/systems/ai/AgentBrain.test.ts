@@ -1,13 +1,9 @@
-import { describe, it, expect } from "vitest";
-import { NewsImpact, Agency } from "@/engine/types";
-import { MarketState } from "@/engine/types/state.types";
-import { tickAgencies, evaluatePackageOffer } from "@/engine/systems/ai/AgentBrain";
-import { RandomGenerator } from "@/engine/utils/rng";
-import {
-  createMockGameState,
-  createMockTalent,
-  createMockRival,
-} from "../../generators/mockFactory";
+import {describe it expect} from "vitest";
+import {NewsImpact Agency} from "@/engine/types";
+import {MarketState} from "@/engine/types/state.types";
+import {tickAgencies evaluatePackageOffer} from "@/engine/systems/ai/AgentBrain";
+import {RandomGenerator} from "@/engine/utils/rng";
+import {createMockGameState createMockTalent createMockRival} from "../../generators/mockFactory";
 
 const mockMarket: MarketState = {
   baseRate: 0.045,

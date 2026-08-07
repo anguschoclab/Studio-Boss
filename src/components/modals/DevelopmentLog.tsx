@@ -1,17 +1,7 @@
 import React from "react";
-import { Project, ScriptEvent, ScriptedProject } from "@/engine/types";
-import {
-  FileEdit,
-  Split,
-  Merge,
-  Search,
-  Zap,
-  Type,
-  TrendingUp,
-  Brain,
-  History as LucideHistory,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+import {Project ScriptEvent ScriptedProject} from "@/engine/types";
+import {FileEdit Split Merge Search Zap Type TrendingUp Brain History as LucideHistory} from "lucide-react";
+import {cn} from "@/lib/utils";
 
 interface DevelopmentLogProps {
   project: Project;

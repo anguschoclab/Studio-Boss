@@ -1,4 +1,4 @@
-import { ColorPalette } from "../types";
+import {ColorPalette} from "../types";
 
 /**
  * Returns the SVG path for a specific face shape.

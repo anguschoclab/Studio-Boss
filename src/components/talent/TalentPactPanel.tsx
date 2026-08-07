@@ -1,12 +1,12 @@
 import React from "react";
-import { cn } from "@/lib/utils";
-import { Handshake, Clock, DollarSign, AlertTriangle, CheckCircle2 } from "lucide-react";
-import { Section } from "@/components/layout/Section";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { tokens } from "@/lib/tokens";
-import { TalentNameLink } from "@/components/shared/TalentNameLink";
+import {cn} from "@/lib/utils";
+import {Handshake Clock DollarSign AlertTriangle CheckCircle2} from "lucide-react";
+import {Section} from "@/components/layout/Section";
+import {Card} from "@/components/ui/card";
+import {Badge} from "@/components/ui/badge";
+import {Button} from "@/components/ui/button";
+import {tokens} from "@/lib/tokens";
+import {TalentNameLink} from "@/components/shared/TalentNameLink";
 
 interface TalentPact {
   id: string;

@@ -1,10 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { DistributionBadge } from "@/components/shared/DistributionBadge";
-import { formatMoney } from "@/engine/utils";
-import { calculateProjectROI } from "@/engine/systems/finance";
-import { Project } from "@/engine/types";
+import {Card CardContent CardHeader CardTitle} from "@/components/ui/card";
+import {Badge} from "@/components/ui/badge";
+import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";
+import {DistributionBadge} from "@/components/shared/DistributionBadge";
+import {formatMoney} from "@/engine/utils";
+import {calculateProjectROI} from "@/engine/systems/finance";
+import {Project} from "@/engine/types";
 
 interface ProjectROIAnalyticsProps {
   releasedProjects: Project[];

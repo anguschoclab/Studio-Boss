@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { applyAwardBoostsToTalent } from "../../../engine/systems/talentStats";
-import { Award } from "../../../engine/types";
+import {describe it expect} from "vitest";
+import {applyAwardBoostsToTalent} from "../../../engine/systems/talentStats";
+import {Award} from "../../../engine/types";
 
 describe("applyAwardBoostsToTalent", () => {
   const baseTalent = {

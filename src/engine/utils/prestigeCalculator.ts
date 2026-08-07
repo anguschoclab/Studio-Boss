@@ -1,4 +1,4 @@
-import { Talent, TalentTier } from "@/engine/types";
+import {Talent TalentTier} from "@/engine/types";
 
 /**
  * Pure function to determine a talent's industry tier based on absolute prestige

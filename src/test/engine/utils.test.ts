@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { formatMoney, getWeekDisplay, pick, randRange, clamp } from "../../engine/utils";
+import {describe it expect} from "vitest";
+import {formatMoney getWeekDisplay pick randRange clamp} from "../../engine/utils";
 
 describe("utils", () => {
   describe("formatMoney", () => {

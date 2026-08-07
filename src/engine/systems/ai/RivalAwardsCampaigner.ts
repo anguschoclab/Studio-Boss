@@ -1,8 +1,8 @@
-import { GameState, StateImpact, Project } from "@/engine/types";
-import { RandomGenerator } from "../../utils/rng";
-import { getStudioArchetype } from "../../data/aiArchetypes";
-import { checkCampaignBacklash } from "../awards/NominationCalculator";
-import { impacts as I } from "../../core/impacts";
+import {GameState StateImpact Project} from "@/engine/types";
+import {RandomGenerator} from "../../utils/rng";
+import {getStudioArchetype} from "../../data/aiArchetypes";
+import {checkCampaignBacklash} from "../awards/NominationCalculator";
+import {impacts as I} from "../../core/impacts";
 
 type CampaignTier = "Grassroots" | "Trade" | "Blitz";
 

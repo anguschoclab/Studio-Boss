@@ -1,6 +1,6 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import {render screen fireEvent} from "@testing-library/react";
+import {describe it expect vi beforeEach} from "vitest";
 
 const { mockPreviewAcquisition, mockAcquireRival, mockResolveCurrentModal } =
   vi.hoisted(() => ({
@@ -50,8 +50,8 @@ vi.mock("lucide-react", () => ({
   X: () => <div data-testid="icon" />,
 }));
 
-import { AcquisitionConfirmModal } from "@/components/modals/AcquisitionConfirmModal";
-import { useUIStore } from "@/store/uiStore";
+import {AcquisitionConfirmModal} from "@/components/modals/AcquisitionConfirmModal";
+import {useUIStore} from "@/store/uiStore";
 
 function makePreview(overrides: any = {}) {
   return {

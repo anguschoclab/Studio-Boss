@@ -1,6 +1,6 @@
-import { Project, Contract, Talent, TalentPact, GameState, StateImpact } from "@/engine/types";
-import { RandomGenerator } from "../utils/rng";
-import { getContractsByProjectId } from "@/engine/utils";
+import {Project Contract Talent TalentPact GameState StateImpact} from "@/engine/types";
+import {RandomGenerator} from "../utils/rng";
+import {getContractsByProjectId} from "@/engine/utils";
 
 export const SchedulingEngine = {
   tick(state: GameState, rng: RandomGenerator): StateImpact[] {

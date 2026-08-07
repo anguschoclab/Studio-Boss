@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
+import {motion AnimatePresence} from "framer-motion";
+import {cn} from "@/lib/utils";
 
-import { EmptyState } from "./EmptyState";
-import { SkeletonList } from "./SkeletonCard";
-import { staggerContainer, staggerItem } from "@/lib/animations";
-import { Search, AlertCircle } from "lucide-react";
+import {EmptyState} from "./EmptyState";
+import {SkeletonList} from "./SkeletonCard";
+import {staggerContainer staggerItem} from "@/lib/animations";
+import {Search AlertCircle} from "lucide-react";
 
 interface DataListProps<T> {
   /** Array of items to display */

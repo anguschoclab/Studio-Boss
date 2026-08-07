@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { initializeGame } from "../../engine/core/gameInit";
+import {describe it expect beforeEach vi} from "vitest";
+import {initializeGame} from "../../engine/core/gameInit";
 
 // Mock the OPFS APIs that saveWorker uses
 function createMockAccessHandle(fileContent: string) {

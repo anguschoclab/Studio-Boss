@@ -39,8 +39,6 @@ export interface ActiveCrisis {
   severity: "low" | "medium" | "high";
 }
 
-export type Headline = NewsEvent;
-
 export interface NarrativeEvent {
   type: "crisis" | "project_update" | "rival_action" | "market_event" | "general";
   projectId?: string;

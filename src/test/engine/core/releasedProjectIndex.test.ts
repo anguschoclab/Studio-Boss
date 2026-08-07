@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
-import { applyStateImpact } from "@/store/storeUtils";
-import { createMockGameState } from "@/test/mockFactory";
-import { Project, GameState } from "@/engine/types";
+import {describe it expect} from "vitest";
+import {applyStateImpact} from "@/store/storeUtils";
+import {createMockGameState} from "@/test/mockFactory";
+import {Project GameState} from "@/engine/types";
 
 function makeProject(overrides: Partial<Project> = {}): Project {
   return {

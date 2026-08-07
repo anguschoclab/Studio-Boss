@@ -1,11 +1,11 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { TooltipProvider } from "@radix-ui/react-tooltip";
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { CrisisModal } from "@/components/modals/CrisisModal";
-import { useGameStore } from "@/store/gameStore";
-import { useUIStore } from "@/store/uiStore";
-import { Project, ProjectFormat } from "@/engine/types";
+import {render screen fireEvent} from "@testing-library/react";
+import {TooltipProvider} from "@radix-ui/react-tooltip";
+import {describe it expect vi beforeEach} from "vitest";
+import {CrisisModal} from "@/components/modals/CrisisModal";
+import {useGameStore} from "@/store/gameStore";
+import {useUIStore} from "@/store/uiStore";
+import {Project ProjectFormat} from "@/engine/types";
 
 // Mock the stores
 vi.mock("@/store/gameStore", () => ({

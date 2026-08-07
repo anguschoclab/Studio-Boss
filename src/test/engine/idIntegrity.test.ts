@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { GameState } from "@/engine/types/studio.types";
-import { initializeGame } from "@/engine/core/gameInit";
+import {describe it expect beforeEach} from "vitest";
+import {GameState} from "@/engine/types/studio.types";
+import {initializeGame} from "@/engine/core/gameInit";
 
 /**
  * 🌌 ID INTEGRITY SUITE

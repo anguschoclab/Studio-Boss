@@ -1,6 +1,6 @@
-import { TabsContent } from "@/components/ui/tabs";
-import { Talent } from "@/engine/types";
-import { TalentGanttChart } from "../TalentGanttChart";
+import {TabsContent} from "@/components/ui/tabs";
+import {Talent} from "@/engine/types";
+import {TalentGanttChart} from "../TalentGanttChart";
 
 interface TalentScheduleTabProps {
   talent: Talent;

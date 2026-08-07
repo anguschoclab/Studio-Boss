@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { psychologyGenerator } from "../../../../engine/generators/talent/psychologyGenerator";
+import {describe it expect} from "vitest";
+import {psychologyGenerator} from "../../../../engine/generators/talent/psychologyGenerator";
 
 describe("generatePsychology", () => {
   it("generates psychological profiles where A-listers have higher base ego", () => {

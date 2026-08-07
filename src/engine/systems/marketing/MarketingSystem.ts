@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GameState, StateImpact, Project, MarketingCampaign } from "../../types";
-import { RandomGenerator } from "../../utils/rng";
-import { computeCampaignMultiplier } from "../projectHandlers/MarketingHandler";
-import { evaluateMarketingEfficiency } from "./efficiencyEvaluator";
+import {GameState StateImpact Project MarketingCampaign} from "../../types";
+import {RandomGenerator} from "../../utils/rng";
+import {computeCampaignMultiplier} from "../projectHandlers/MarketingHandler";
+import {evaluateMarketingEfficiency} from "./efficiencyEvaluator";
 
 /**
  * MarketingSystem — weekly awareness accrual loop.

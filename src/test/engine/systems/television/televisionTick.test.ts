@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
-import { tickTelevision } from "../../../../engine/systems/television/televisionTick";
-import { GameState, SeriesProject } from "../../../../engine/types";
-import { RandomGenerator } from "../../../../engine/utils/rng";
+import {describe it expect} from "vitest";
+import {tickTelevision} from "../../../../engine/systems/television/televisionTick";
+import {GameState SeriesProject} from "../../../../engine/types";
+import {RandomGenerator} from "../../../../engine/utils/rng";
 
 describe("Television Tick System (Guild Auditor)", () => {
   const getMockState = (): GameState =>

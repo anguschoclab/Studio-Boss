@@ -1,9 +1,9 @@
 import React, { useMemo } from "react";
-import { useGameStore } from "@/store/gameStore";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Heatmap } from "@/components/shared/Heatmap";
-import { cn } from "@/lib/utils";
-import { TrendingUp, TrendingDown, Activity } from "lucide-react";
+import {useGameStore} from "@/store/gameStore";
+import {Card CardContent CardHeader CardTitle} from "@/components/ui/card";
+import {Heatmap} from "@/components/shared/Heatmap";
+import {cn} from "@/lib/utils";
+import {TrendingUp TrendingDown Activity} from "lucide-react";
 
 interface MarketTrendsHeatmapProps {
   className?: string;

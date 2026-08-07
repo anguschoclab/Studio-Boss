@@ -1,4 +1,4 @@
-import { ContentFlag, FilmRating, TvRating, ProjectRating } from "@/engine/types";
+import {ContentFlag FilmRating TvRating ProjectRating} from "@/engine/types";
 
 /**
  * Evaluates the MPAA-equivalent film rating from a set of content flags.

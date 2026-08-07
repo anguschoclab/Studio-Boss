@@ -1,15 +1,9 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { useGameStore } from "@/store/gameStore";
-import { useUIStore } from "@/store/uiStore";
-import { AlertTriangle, UserX, DollarSign, Zap } from "lucide-react";
-import { getCrisisData } from "@/engine/utils/impactUtils";
+import {Dialog DialogContent DialogHeader DialogTitle DialogDescription} from "@/components/ui/dialog";
+import {Button} from "@/components/ui/button";
+import {useGameStore} from "@/store/gameStore";
+import {useUIStore} from "@/store/uiStore";
+import {AlertTriangle UserX DollarSign Zap} from "lucide-react";
+import {getCrisisData} from "@/engine/utils/impactUtils";
 
 export const CrisisModal = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();

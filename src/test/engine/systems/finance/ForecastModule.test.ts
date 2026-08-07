@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { generateCashflowForecast } from "@/engine/systems/finance";
-import { createMockGameState } from "../../generators/mockFactory";
+import {describe it expect} from "vitest";
+import {generateCashflowForecast} from "@/engine/systems/finance";
+import {createMockGameState} from "../../generators/mockFactory";
 
 describe("ForecastModule - generateCashflowForecast", () => {
   it("returns forecast array with correct length (default 12 weeks)", () => {

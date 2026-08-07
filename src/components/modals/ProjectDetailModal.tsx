@@ -1,56 +1,26 @@
-import { useMemo, useState } from "react";
-import { useGameStore } from "@/store/gameStore";
-import { useUIStore } from "@/store/uiStore";
-import { formatMoney, getContractsByProjectId } from "@/engine/utils";
-import { BUDGET_TIERS } from "@/engine/data/budgetTiers";
-import { evaluateGreenlight } from "@/engine/systems/greenlight";
-import { FESTIVALS } from "@/engine/systems/festivals";
-import { AwardBody, Talent, ScriptedProject, SeriesProject } from "@/engine/types";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  BarChart3,
-  Users,
-  Clapperboard,
-  Trophy,
-  TrendingUp,
-  DollarSign,
-  Calendar,
-  AlertCircle,
-  Megaphone,
-  ShieldAlert,
-  CheckCircle2,
-  Brain,
-  Type,
-  Activity,
-  Package,
-} from "lucide-react";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-import { cn } from "@/lib/utils";
-import { CAMPAIGN_TIERS } from "@/store/slices/marketingSlice";
-import { getCategoriesForFormat } from "@/engine/data/awards.data";
-import { selectAwardsProbability } from "@/store/chartSelectors";
-import { SimpleBarChart } from "@/components/charts/SimpleBarChart";
-import { DevelopmentLog } from "./DevelopmentLog";
-import { CastingFeedback } from "../talent/CastingFeedback";
+import {useMemo useState} from "react";
+import {useGameStore} from "@/store/gameStore";
+import {useUIStore} from "@/store/uiStore";
+import {formatMoney getContractsByProjectId} from "@/engine/utils";
+import {BUDGET_TIERS} from "@/engine/data/budgetTiers";
+import {evaluateGreenlight} from "@/engine/systems/greenlight";
+import {FESTIVALS} from "@/engine/systems/festivals";
+import {AwardBody Talent ScriptedProject SeriesProject} from "@/engine/types";
+import {Dialog DialogContent DialogHeader DialogTitle} from "@/components/ui/dialog";
+import {Select SelectContent SelectItem SelectTrigger SelectValue} from "@/components/ui/select";
+import {Button} from "@/components/ui/button";
+import {Badge} from "@/components/ui/badge";
+import {ScrollArea} from "@/components/ui/scroll-area";
+import {Tabs TabsContent TabsList TabsTrigger} from "@/components/ui/tabs";
+import {BarChart3 Users Clapperboard Trophy TrendingUp DollarSign Calendar AlertCircle Megaphone ShieldAlert CheckCircle2 Brain Type Activity Package} from "lucide-react";
+import {AreaChart Area XAxis YAxis CartesianGrid Tooltip ResponsiveContainer} from "recharts";
+import {cn} from "@/lib/utils";
+import {CAMPAIGN_TIERS} from "@/store/slices/marketingSlice";
+import {getCategoriesForFormat} from "@/engine/data/awards.data";
+import {selectAwardsProbability} from "@/store/chartSelectors";
+import {SimpleBarChart} from "@/components/charts/SimpleBarChart";
+import {DevelopmentLog} from "./DevelopmentLog";
+import {CastingFeedback} from "../talent/CastingFeedback";
 
 export const ProjectDetailModal = () => {
   const [selectedTier, setSelectedTier] = useState<"none" | "basic" | "blockbuster">("none");

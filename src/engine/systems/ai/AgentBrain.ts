@@ -1,8 +1,8 @@
-import { Agency, Talent, GameState, StateImpact } from "@/engine/types";
-import { MarketState } from "@/engine/types/state.types";
-import { RandomGenerator } from "../../utils/rng";
-import { AGENCY_ARCHETYPES } from "../../data/archetypes";
-import { AgencyLeverageEngine } from "./AgencyLeverage";
+import {Agency Talent GameState StateImpact} from "@/engine/types";
+import {MarketState} from "@/engine/types/state.types";
+import {RandomGenerator} from "../../utils/rng";
+import {AGENCY_ARCHETYPES} from "../../data/archetypes";
+import {AgencyLeverageEngine} from "./AgencyLeverage";
 
 function getAgencyArchetype(agency: Agency) {
   const key = agency.archetype as keyof typeof AGENCY_ARCHETYPES;

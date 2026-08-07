@@ -1,4 +1,4 @@
-import { AvatarFeatures } from "../types";
+import {AvatarFeatures} from "../types";
 
 /**
  * Renders facial hair (beards, stubble).

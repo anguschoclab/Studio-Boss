@@ -1,6 +1,6 @@
-import { GameState, Rumor } from "@/engine/types";
-import { StateImpact } from "../types/state.types";
-import { pick, randRange, secureRandom, generateId } from "../utils";
+import {GameState Rumor} from "@/engine/types";
+import {StateImpact} from "../types/state.types";
+import {pick randRange secureRandom generateId} from "../utils";
 
 /**
  * Advances the industry rumor system by one week.
@@ -11,14 +11,14 @@ import { pick, randRange, secureRandom, generateId } from "../utils";
  * @returns A StateImpact containing the updated rumors list and any new headlines generated.
  */
 export function advanceRumors(state: GameState): StateImpact {
-  const newHeadlines: import("../types/engine.types").Headline[] = [];
+  const newsEvents: import("../types/engine.types").NewsEvent[] = [];
   let currentRumors = state.industry.rumors || [];
 
   // Resolve rumors that are due
   currentRumors = currentRumors.map((r) => {
     if (!r.resolved && state.week >= (r.resolutionWeek || state.week)) {
       if (r.truthful) {
-        newHeadlines.push({
+        newsEvents.push({
           id: `confirm-${r.id}-${state.week}`,
           week: state.week,
           category: "rumor",
@@ -27,7 +27,7 @@ export function advanceRumors(state: GameState): StateImpact {
           type: "STUDIO_EVENT",
         });
       } else {
-        newHeadlines.push({
+        newsEvents.push({
           id: `debunk-${r.id}-${state.week}`,
           week: state.week,
           category: "rumor",
@@ -99,7 +99,7 @@ export function advanceRumors(state: GameState): StateImpact {
 
     currentRumors.push(rumor);
 
-    newHeadlines.push({
+    newsEvents.push({
       id: `rumor-headline-${rumor.id}`,
       week: state.week,
       category: "rumor",
@@ -111,6 +111,6 @@ export function advanceRumors(state: GameState): StateImpact {
 
   return {
     newRumors: currentRumors,
-    newHeadlines,
+    newsEvents,
   };
 }

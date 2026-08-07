@@ -1,8 +1,8 @@
-import { describe, it, expect } from "vitest";
-import { runAwardsCeremony } from "../../../engine/systems/awards/index";
-import { GameState, Project } from "../../../engine/types";
-import { createMockGameState } from "../../utils/mockFactories";
-import { RandomGenerator } from "../../../engine/utils/rng";
+import {describe it expect} from "vitest";
+import {runAwardsCeremony} from "../../../engine/systems/awards/index";
+import {GameState Project} from "../../../engine/types";
+import {createMockGameState} from "../../utils/mockFactories";
+import {RandomGenerator} from "../../../engine/utils/rng";
 
 describe("TV Awards Filtering & Taxonomy", () => {
   const createTvProject = (

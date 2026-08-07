@@ -1,7 +1,7 @@
-import { Project, GameState, Buyer, TalentPact } from "@/engine/types";
-import { RevenueProcessor } from "./RevenueProcessor";
-import { ExpenseProcessor } from "./ExpenseProcessor";
-import { InterestRateSimulator } from "../market/InterestRateSimulator";
+import {Project GameState Buyer TalentPact} from "@/engine/types";
+import {RevenueProcessor} from "./RevenueProcessor";
+import {ExpenseProcessor} from "./ExpenseProcessor";
+import {InterestRateSimulator} from "../market/InterestRateSimulator";
 
 export function calculateWeeklyCosts(state: GameState): number {
   const projectsObj = state.entities.projects || {};

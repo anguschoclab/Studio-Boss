@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { evaluateGreenlight } from "@/engine/systems/greenlight";
-import { Project, Talent } from "@/engine/types";
+import {describe it expect} from "vitest";
+import {evaluateGreenlight} from "@/engine/systems/greenlight";
+import {Project Talent} from "@/engine/types";
 
 const mockProject: Project = {
   id: "p1",

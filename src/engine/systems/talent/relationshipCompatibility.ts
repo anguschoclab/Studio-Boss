@@ -1,4 +1,4 @@
-import { Talent } from "../../types";
+import {Talent} from "../../types";
 
 /**
  * Relationship compatibility scoring

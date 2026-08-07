@@ -1,7 +1,7 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
-import { ScriptList } from "@/components/development/ScriptList";
+import {render screen} from "@testing-library/react";
+import {describe it expect} from "vitest";
+import {ScriptList} from "@/components/development/ScriptList";
 
 describe("ScriptList", () => {
   it("renders empty state when no scripts", () => {

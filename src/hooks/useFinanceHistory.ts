@@ -1,5 +1,5 @@
-import { useGameStore } from "@/store/gameStore";
-import { FinancialSnapshot } from "@/engine/types/state.types";
+import {useGameStore} from "@/store/gameStore";
+import {FinancialSnapshot} from "@/engine/types/state.types";
 
 /**
  * Hook for accessing financial history from Zustand store.

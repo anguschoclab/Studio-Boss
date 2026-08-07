@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { handleNewsAdded } from "@/engine/core/impactHandlers/studioHandlers";
-import { createMockGameState } from "@/test/utils/mockFactories";
-import { GameState, StateImpact } from "@/engine/types";
+import {describe it expect beforeEach} from "vitest";
+import {handleNewsAdded} from "@/engine/core/impactHandlers/studioHandlers";
+import {createMockGameState} from "@/test/utils/mockFactories";
+import {GameState StateImpact} from "@/engine/types";
 
 describe("handleNewsAdded - No-op (news captured by WeekCoordinator)", () => {
   let state: GameState;

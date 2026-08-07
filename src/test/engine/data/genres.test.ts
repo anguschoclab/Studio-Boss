@@ -1,10 +1,5 @@
-import { describe, it, expect } from "vitest";
-import {
-  CROSSOVER_AFFINITY,
-  FRANCHISE_FATIGUE_RISK,
-  CROSSOVER_AFFINITY_LOWER_KEYS,
-  FRANCHISE_FATIGUE_RISK_LOWER_KEYS,
-} from "@/engine/data/genres";
+import {describe it expect} from "vitest";
+import {CROSSOVER_AFFINITY FRANCHISE_FATIGUE_RISK CROSSOVER_AFFINITY_LOWER_KEYS FRANCHISE_FATIGUE_RISK_LOWER_KEYS} from "@/engine/data/genres";
 
 describe("CROSSOVER_AFFINITY_LOWER_KEYS", () => {
   it("contains all keys from CROSSOVER_AFFINITY", () => {

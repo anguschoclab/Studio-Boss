@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { saveGame, loadGame, getSaveSlots } from "../../persistence/saveLoad";
-import { persistenceService } from "../../persistence/PersistenceService";
+import {describe it expect beforeEach vi} from "vitest";
+import {saveGame loadGame getSaveSlots} from "../../persistence/saveLoad";
+import {persistenceService} from "../../persistence/PersistenceService";
 import {} from "../../engine/types";
-import { initializeGame } from "../../engine/core/gameInit";
+import {initializeGame} from "../../engine/core/gameInit";
 
 // Mock the persistenceService
 vi.mock("../../persistence/PersistenceService", () => ({

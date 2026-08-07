@@ -1,6 +1,6 @@
-import { GameState, StateImpact } from "@/engine/types";
-import { RandomGenerator } from "../../utils/rng";
-import { generateWeeklyFinancialReport } from "../finance";
+import {GameState StateImpact} from "@/engine/types";
+import {RandomGenerator} from "../../utils/rng";
+import {generateWeeklyFinancialReport} from "../finance";
 
 /**
  * Weekly Finance Tick (Target A4/B).

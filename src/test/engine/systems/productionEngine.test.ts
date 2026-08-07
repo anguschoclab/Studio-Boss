@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
-import { GameState, ProjectUpdateImpact } from "@/engine/types";
-import { tickProduction } from "@/engine/systems/productionEngine";
-import { RandomGenerator } from "@/engine/utils/rng";
+import {describe it expect} from "vitest";
+import {GameState ProjectUpdateImpact} from "@/engine/types";
+import {tickProduction} from "@/engine/systems/productionEngine";
+import {RandomGenerator} from "@/engine/utils/rng";
 
 describe("Production Engine (Target A2) - Symmetry", () => {
   const rng = new RandomGenerator(555);

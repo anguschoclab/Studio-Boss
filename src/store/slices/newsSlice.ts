@@ -1,6 +1,6 @@
-import { StateCreator } from "zustand";
-import { NewsEvent } from "@/engine/types";
-import { GameStore } from "../gameStore";
+import {StateCreator} from "zustand";
+import {NewsEvent} from "@/engine/types";
+import {GameStore} from "../gameStore";
 
 export interface NewsSlice {
   appendNewsEvents: (events: NewsEvent[]) => void;

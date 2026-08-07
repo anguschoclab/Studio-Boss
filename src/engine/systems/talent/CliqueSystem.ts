@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GameState, StateImpact, Talent } from "../../types";
-import { RandomGenerator } from "../../utils/rng";
-import { Clique, CliqueReputation, CLIQUE_NAME_PATTERNS } from "../../types/clique.types";
-import { areFriends } from "./RelationshipSystem";
+import {GameState StateImpact Talent} from "../../types";
+import {RandomGenerator} from "../../utils/rng";
+import {Clique CliqueReputation CLIQUE_NAME_PATTERNS} from "../../types/clique.types";
+import {areFriends} from "./RelationshipSystem";
 
 /**
  * Clique System

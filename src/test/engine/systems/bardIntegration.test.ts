@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { BardResolver } from "../../../engine/systems/bardResolver";
-import { NarrativeArchiveSchema } from "../../../engine/data/narrative/archive";
+import {describe it expect} from "vitest";
+import {BardResolver} from "../../../engine/systems/bardResolver";
+import {NarrativeArchiveSchema} from "../../../engine/data/narrative/archive";
 import archiveData from "../../../engine/data/narrative/archive.json";
 
 describe("Bard Engine Integration", () => {

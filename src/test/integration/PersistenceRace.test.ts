@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { persistenceService } from "@/persistence/PersistenceService";
-import { GameState } from "@/engine/types";
+import {describe it expect vi beforeEach} from "vitest";
+import {persistenceService} from "@/persistence/PersistenceService";
+import {GameState} from "@/engine/types";
 
 // Mock Worker
 class MockWorker {

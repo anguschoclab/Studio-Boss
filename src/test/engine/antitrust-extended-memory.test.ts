@@ -1,12 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import {
-  tickAntitrust,
-  isAcquirerBlockedByAntitrust,
-} from "@/engine/systems/industry/Antitrust";
+import {describe it expect vi beforeEach} from "vitest";
+import {tickAntitrust isAcquirerBlockedByAntitrust} from "@/engine/systems/industry/Antitrust";
 import type { AntitrustEvent } from "@/engine/systems/industry/Antitrust";
 import type { GameState, StateImpact } from "@/engine/types";
-import { defaultSimMemory } from "@/engine/core/simMemory";
-import { createMockGameState, createMockRival } from "./generators/mockFactory";
+import {defaultSimMemory} from "@/engine/core/simMemory";
+import {createMockGameState createMockRival} from "./generators/mockFactory";
 import * as utils from "@/engine/utils";
 
 function makeRivalDict(count: number, cash: number): Record<string, any> {

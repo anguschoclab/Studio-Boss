@@ -1,9 +1,9 @@
-import { StateCreator } from "zustand";
-import { GameStore } from "../gameStore";
-import { completeFireSale } from "@/engine/systems/industry/DistressCascade";
-import { getPlayerId } from "@/engine/utils/ownership";
-import { applyImpacts } from "@/engine/core/impactReducer";
-import { useUIStore } from "@/store/uiStore";
+import {StateCreator} from "zustand";
+import {GameStore} from "../gameStore";
+import {completeFireSale} from "@/engine/systems/industry/DistressCascade";
+import {getPlayerId} from "@/engine/utils/ownership";
+import {applyImpacts} from "@/engine/core/impactReducer";
+import {useUIStore} from "@/store/uiStore";
 
 export interface DistressSlice {
   acquireDistressedAsset: (offerId: string) => void;

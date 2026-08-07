@@ -1,11 +1,11 @@
 import React from "react";
-import { useGameStore } from "@/store/gameStore";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Library, Archive } from "lucide-react";
-import { useShallow } from "zustand/react/shallow";
-import { FranchiseHub } from "./FranchiseHub";
-import { IPAssetCard } from "./IPAssetCard";
+import {useGameStore} from "@/store/gameStore";
+import {ScrollArea} from "@/components/ui/scroll-area";
+import {Tabs TabsList TabsTrigger TabsContent} from "@/components/ui/tabs";
+import {Library Archive} from "lucide-react";
+import {useShallow} from "zustand/react/shallow";
+import {FranchiseHub} from "./FranchiseHub";
+import {IPAssetCard} from "./IPAssetCard";
 
 export const IPVault = () => {
   const rawIpState = useGameStore(useShallow((s) => s.gameState?.ip));

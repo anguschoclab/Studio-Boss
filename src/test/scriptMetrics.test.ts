@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { ScriptMetricsCalculator } from "@/engine/systems/production/ScriptMetricsCalculator";
-import { ScriptedProject } from "@/engine/types";
+import {describe it expect} from "vitest";
+import {ScriptMetricsCalculator} from "@/engine/systems/production/ScriptMetricsCalculator";
+import {ScriptedProject} from "@/engine/types";
 
 describe("ScriptMetricsCalculator", () => {
   it("calculates structure score based on role count", () => {

@@ -1,9 +1,9 @@
 import React from "react";
-import { cn } from "@/lib/utils";
-import { Scroll, FileText, PenTool, CheckCircle, Clock } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { tokens } from "@/lib/tokens";
+import {cn} from "@/lib/utils";
+import {Scroll FileText PenTool CheckCircle Clock} from "lucide-react";
+import {Card} from "@/components/ui/card";
+import {Badge} from "@/components/ui/badge";
+import {tokens} from "@/lib/tokens";
 
 // Script type definition
 interface Script {

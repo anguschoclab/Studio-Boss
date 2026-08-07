@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { GameState, StateImpact } from "@/engine/types";
-import { applyImpacts } from "@/engine/core/impactReducer";
-import { createMockGameState } from "../generators/mockFactory";
+import {describe it expect beforeEach} from "vitest";
+import {GameState StateImpact} from "@/engine/types";
+import {applyImpacts} from "@/engine/core/impactReducer";
+import {createMockGameState} from "../generators/mockFactory";
 
 describe("Impact Reducer (Target A1)", () => {
   let mockState: GameState;

@@ -1,4 +1,4 @@
-import { Project } from "../../types";
+import {Project} from "../../types";
 
 /**
  * Pure function to advance production progress and calculate costs.

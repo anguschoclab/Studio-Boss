@@ -1,15 +1,15 @@
 import React from "react";
-import { Package, Bookmark, BookmarkCheck } from "lucide-react";
-import { Talent } from "@/engine/types";
-import { formatMoney } from "@/engine/utils";
-import { AGENCY_ARCHETYPES } from "@/engine/data/archetypes";
-import { cn } from "@/lib/utils";
-import { useGameStore } from "@/store/gameStore";
-import { useUIStore } from "@/store/uiStore";
-import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { TalentAvatar } from "./TalentAvatar";
-import { getTalentVisualAge } from "@/engine/generators/avatarGenerator";
-import { useAgencyMap } from "@/hooks/useTalentMap";
+import {Package Bookmark BookmarkCheck} from "lucide-react";
+import {Talent} from "@/engine/types";
+import {formatMoney} from "@/engine/utils";
+import {AGENCY_ARCHETYPES} from "@/engine/data/archetypes";
+import {cn} from "@/lib/utils";
+import {useGameStore} from "@/store/gameStore";
+import {useUIStore} from "@/store/uiStore";
+import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";
+import {TalentAvatar} from "./TalentAvatar";
+import {getTalentVisualAge} from "@/engine/generators/avatarGenerator";
+import {useAgencyMap} from "@/hooks/useTalentMap";
 
 /**
  * Props for the TalentCard component.

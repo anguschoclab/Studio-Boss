@@ -1,6 +1,6 @@
-import { StateCreator } from "zustand";
-import { GameStore } from "../gameStore";
-import { StudioSnapshot } from "@/engine/types/studio.types";
+import {StateCreator} from "zustand";
+import {GameStore} from "../gameStore";
+import {StudioSnapshot} from "@/engine/types/studio.types";
 
 export interface SnapshotSlice {
   snapshots: StudioSnapshot[];

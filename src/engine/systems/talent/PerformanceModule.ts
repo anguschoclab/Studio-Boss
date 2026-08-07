@@ -1,6 +1,6 @@
-import { Talent, Project, Contract, Award } from "@/engine/types";
-import { clamp } from "../../utils";
-import { applyAwardBoostsToTalent } from "../talentStats";
+import {Talent Project Contract Award} from "@/engine/types";
+import {clamp} from "../../utils";
+import {applyAwardBoostsToTalent} from "../talentStats";
 
 export function applyProjectResults(
   project: Project,

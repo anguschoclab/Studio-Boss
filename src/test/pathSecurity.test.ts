@@ -2,11 +2,11 @@
 /**
  * @vitest-environment node
  */
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import {describe it expect beforeEach afterEach} from "vitest";
 import * as path from "path";
 import * as fs from "fs";
 import * as os from "os";
-import { resolveSafePath } from "../../electron/pathSecurity.cjs";
+import {resolveSafePath} from "../../electron/pathSecurity.cjs";
 
 describe("resolveSafePath", () => {
   let tmpDir: string;

@@ -1,11 +1,11 @@
 import React from "react";
-import { cn } from "@/lib/utils";
-import { AlertTriangle, Shield, Clock, XCircle, CheckCircle2 } from "lucide-react";
-import { Section } from "@/components/layout/Section";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { tokens } from "@/lib/tokens";
+import {cn} from "@/lib/utils";
+import {AlertTriangle Shield Clock XCircle CheckCircle2} from "lucide-react";
+import {Section} from "@/components/layout/Section";
+import {Card} from "@/components/ui/card";
+import {Badge} from "@/components/ui/badge";
+import {Button} from "@/components/ui/button";
+import {tokens} from "@/lib/tokens";
 
 interface CrisisOption {
   text: string;

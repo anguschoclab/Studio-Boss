@@ -1,9 +1,5 @@
-import { describe, it, expect } from "vitest";
-import {
-  determineSyndicationTier,
-  getSyndicationImpact,
-  calculateSyndicationProgress,
-} from "@/engine/systems/ip/syndicationEngine";
+import {describe it expect} from "vitest";
+import {determineSyndicationTier getSyndicationImpact calculateSyndicationProgress} from "@/engine/systems/ip/syndicationEngine";
 
 describe("Syndication Engine — determineSyndicationTier", () => {
   it("returns NONE for 0 episodes", () => {

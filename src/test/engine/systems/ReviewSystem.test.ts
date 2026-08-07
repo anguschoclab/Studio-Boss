@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { createMockProject, createMockTalent } from "../../utils/mockFactories";
-import { ReviewSystem } from "../../../engine/systems/ReviewSystem";
-import { Project, Talent } from "../../../engine/types";
-import { RandomGenerator } from "../../../engine/utils/rng";
+import {describe it expect beforeEach} from "vitest";
+import {createMockProject createMockTalent} from "../../utils/mockFactories";
+import {ReviewSystem} from "../../../engine/systems/ReviewSystem";
+import {Project Talent} from "../../../engine/types";
+import {RandomGenerator} from "../../../engine/utils/rng";
 
 describe("ReviewSystem", () => {
   let rng: RandomGenerator;

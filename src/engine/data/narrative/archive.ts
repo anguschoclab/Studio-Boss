@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { RandomGenerator } from "../../utils/rng";
+import {z} from "zod";
+import {RandomGenerator} from "../../utils/rng";
 
 /**
  * The Bard Engine Archive Schema
@@ -28,7 +28,7 @@ export type ReviewSubDomain = "Standard" | "Critic";
 export type GreenlightSubDomain = "Finance" | "Talent" | "MarketSat" | "Marketing";
 export type TalentSubDomain = "Career" | "Health" | "Scandal";
 export type IndustrySubDomain = "Merger" | "Rumor" | "Scandal" | "Award";
-export type MarketSubDomain = "Headline" | "Event" | "Trend";
+export type MarketSubDomain = "NewsEvent" | "Event" | "Trend";
 export type CrisisSubDomain = "PR" | "Production" | "PR.Options" | "Production.Options";
 export type ProjectSubDomain = "Title";
 export type DictionarySubDomain =

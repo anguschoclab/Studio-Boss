@@ -1,8 +1,8 @@
-import { GameState, Project, Talent, Contract, ActiveCrisis } from "@/engine/types";
+import {GameState Project Talent Contract ActiveCrisis} from "@/engine/types";
 type TalentProfile = Talent;
 type Crisis = ActiveCrisis;
-import { RandomGenerator } from "../utils/rng";
-import { generateId, getContractsByProjectId } from "../utils";
+import {RandomGenerator} from "../utils/rng";
+import {generateId getContractsByProjectId} from "../utils";
 
 export interface DirectorDispute {
   projectId: string;

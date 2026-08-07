@@ -1,6 +1,6 @@
-import { Buyer, StreamerPlatform, GameState } from "@/engine/types";
-import { StateImpact } from "../types/state.types";
-import { pick, rand, generateId, randRange } from "../utils";
+import {Buyer StreamerPlatform GameState} from "@/engine/types";
+import {StateImpact} from "../types/state.types";
+import {pick rand generateId randRange} from "../utils";
 
 const MERGER_HEADLINES = [
   (a: string, b: string) => `BREAKING: ${a} acquires ${b} in landmark media deal!`,
@@ -35,7 +35,7 @@ const STREAMER_DECLINE_EVENTS = [
 export function advanceBuyers(state: GameState): StateImpact {
   const impact: StateImpact = {
     buyerUpdates: [],
-    newHeadlines: [],
+    newsEvents: [],
   };
 
   const currWeek = state.week;
@@ -61,7 +61,7 @@ export function advanceBuyers(state: GameState): StateImpact {
       update.strength = Math.max(10, Math.min(100, currentStrength + performance));
 
       if (rand() < 0.02) {
-        impact.newHeadlines!.push({
+        impact.newsEvents!.push({
           id: generateId("HL"),
           week: currWeek,
           category: "market",
@@ -86,7 +86,7 @@ export function advanceBuyers(state: GameState): StateImpact {
     if (finalCash < 10_000_000 && finalStrength < 35) {
       if (!buyer.isAcquirable) {
         update.isAcquirable = true;
-        impact.newHeadlines!.push({
+        impact.newsEvents!.push({
           id: generateId("HL"),
           week: currWeek,
           category: "market",
@@ -137,7 +137,7 @@ export function advanceBuyers(state: GameState): StateImpact {
           },
         });
 
-        impact.newHeadlines!.push({
+        impact.newsEvents!.push({
           id: generateId("HL"),
           week: currWeek,
           category: "market",

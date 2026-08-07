@@ -1,9 +1,9 @@
-import { GameState, StateImpact } from "@/engine/types";
-import { RandomGenerator } from "../../utils/rng";
-import { RatingMarket } from "../../types/project.types";
-import { MARKET_CONFIGS } from "../../data/ratingMarkets";
-import { Project } from "../../types/project.types";
-import { BardResolver } from "../bardResolver";
+import {GameState StateImpact} from "@/engine/types";
+import {RandomGenerator} from "../../utils/rng";
+import {RatingMarket} from "../../types/project.types";
+import {MARKET_CONFIGS} from "../../data/ratingMarkets";
+import {Project} from "../../types/project.types";
+import {BardResolver} from "../bardResolver";
 
 export type RatingEventType = "rating_controversy" | "foreign_market_cut" | "banned_in_market";
 
@@ -44,18 +44,6 @@ export function generateStudioRatingEvent(
         type: "SCANDAL",
         headline,
         description,
-        publication,
-        ...(context.projectId && { projectId: context.projectId }),
-      },
-    ],
-    newHeadlines: [
-      {
-        id: rng.uuid("NWS"),
-        headline: headline,
-        description: "",
-        week: context.week,
-        type: "SCANDAL",
-        category: "scandal",
         publication,
         ...(context.projectId && { projectId: context.projectId }),
       },
@@ -104,18 +92,6 @@ export function generateMarketBanScandal(
           context: { project: project.title, market: marketName },
           rng,
         }),
-        publication: "The Hollywood Reporter",
-        projectId: project.id,
-      },
-    ],
-    newHeadlines: [
-      {
-        id: rng.uuid("NWS"),
-        headline: headline,
-        description: "",
-        week,
-        type: "SCANDAL",
-        category: "scandal",
         publication: "The Hollywood Reporter",
         projectId: project.id,
       },

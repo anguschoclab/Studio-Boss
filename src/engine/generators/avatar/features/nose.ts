@@ -1,5 +1,5 @@
-import { AvatarFeatures, ColorPalette } from "../types";
-import { darkenColor } from "../utils";
+import {AvatarFeatures ColorPalette} from "../types";
+import {darkenColor} from "../utils";
 
 /**
  * Renders the nose with defined bridge and tip shapes.

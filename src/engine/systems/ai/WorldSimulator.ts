@@ -1,5 +1,5 @@
-import { GameState, StateImpact } from "@/engine/types";
-import { RandomGenerator } from "../../utils/rng";
+import {GameState StateImpact} from "@/engine/types";
+import {RandomGenerator} from "../../utils/rng";
 
 /**
  * AI Decision Mapping to News API (Target C3).

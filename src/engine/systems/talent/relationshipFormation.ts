@@ -1,14 +1,7 @@
-import { GameState, StateImpact, Talent } from "../../types";
-import { RandomGenerator } from "../../utils/rng";
-import {
-  RelationshipFormation,
-  TalentRelationship,
-} from "../../types/relationship.types";
-import {
-  getRelationshipKey,
-  calculateCompatibility,
-  calculatePowerCoupleRating,
-} from "./relationshipCompatibility";
+import {GameState StateImpact Talent} from "../../types";
+import {RandomGenerator} from "../../utils/rng";
+import {RelationshipFormation TalentRelationship} from "../../types/relationship.types";
+import {getRelationshipKey calculateCompatibility calculatePowerCoupleRating} from "./relationshipCompatibility";
 
 /**
  * Relationship formation logic

@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { useEffect, useCallback } from "react";
-import { useUIStore } from "@/store/uiStore";
+import {useUIStore} from "@/store/uiStore";
 
 /**
  * Keyboard shortcut definitions

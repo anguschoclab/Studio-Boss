@@ -1,7 +1,7 @@
-import { GameState, Project, Franchise, StateImpact } from "../../types";
-import { RandomGenerator } from "../../utils/rng";
-import { calculateFranchiseEquity } from "./EquityCalculator";
-import { clamp } from "../../utils";
+import {GameState Project Franchise StateImpact} from "../../types";
+import {RandomGenerator} from "../../utils/rng";
+import {calculateFranchiseEquity} from "./EquityCalculator";
+import {clamp} from "../../utils";
 
 /**
  * Evaluates a finished project and updates or creates its Franchise Hub.

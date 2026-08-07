@@ -1,8 +1,8 @@
-import { describe, it, expect } from "vitest";
-import { Opportunity, OpportunityUpdateImpact } from "@/engine/types";
-import { tickAuctions } from "@/engine/systems/ai/biddingEngine";
-import { RandomGenerator } from "@/engine/utils/rng";
-import { createMockGameState, createMockRival } from "../../generators/mockFactory";
+import {describe it expect} from "vitest";
+import {Opportunity OpportunityUpdateImpact} from "@/engine/types";
+import {tickAuctions} from "@/engine/systems/ai/biddingEngine";
+import {RandomGenerator} from "@/engine/utils/rng";
+import {createMockGameState createMockRival} from "../../generators/mockFactory";
 
 describe("AI Bidding Engine (Target C2 Refactor)", () => {
   const rng = new RandomGenerator(777);

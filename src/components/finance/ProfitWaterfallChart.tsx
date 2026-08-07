@@ -1,16 +1,7 @@
 import React from "react";
-import {
-  BarChart,
-  Bar,
-  Cell,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  ReferenceLine,
-} from "recharts";
-import { formatMoney } from "@/engine/utils";
-import { FinancialSnapshot } from "@/engine/types";
+import {BarChart Bar Cell XAxis YAxis Tooltip ResponsiveContainer ReferenceLine} from "recharts";
+import {formatMoney} from "@/engine/utils";
+import {FinancialSnapshot} from "@/engine/types";
 
 interface ProfitWaterfallChartProps {
   snapshot?: FinancialSnapshot;

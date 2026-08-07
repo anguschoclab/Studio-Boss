@@ -1,8 +1,8 @@
-import { Talent, Agency, Agent, Family } from "@/engine/types/talent.types";
-import { TabsContent } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { TalentAvatar } from "../TalentAvatar";
-import { Info, Zap, Briefcase, Heart, Users } from "lucide-react";
+import {Talent Agency Agent Family} from "@/engine/types/talent.types";
+import {TabsContent} from "@/components/ui/tabs";
+import {Badge} from "@/components/ui/badge";
+import {TalentAvatar} from "../TalentAvatar";
+import {Info Zap Briefcase Heart Users} from "lucide-react";
 
 interface BioTabProps {
   talent: Talent;

@@ -1,5 +1,5 @@
-import { GameState, Rumor, StateImpact } from "@/engine/types";
-import { RandomGenerator } from "../../utils/rng";
+import {GameState Rumor StateImpact} from "@/engine/types";
+import {RandomGenerator} from "../../utils/rng";
 
 /**
  * RumorProcessor handles the lifecycle of industry whispers.
@@ -9,7 +9,7 @@ export class RumorProcessor {
    * Advances the state of existing rumors and potentially generates new ones.
    */
   static advanceRumors(state: GameState, week: number, rng: RandomGenerator): StateImpact {
-    const newHeadlines: import("../../types/engine.types").Headline[] = [];
+    const newsEvents: import("../../types/engine.types").NewsEvent[] = [];
     const currentRumors = state.industry?.rumors || [];
     const updatedRumors: Rumor[] = [];
 
@@ -17,7 +17,7 @@ export class RumorProcessor {
     for (const r of currentRumors) {
       if (!r.resolved && week >= (r.resolutionWeek || week)) {
         if (r.truthful) {
-          newHeadlines.push({
+          newsEvents.push({
             id: rng.uuid("HL"),
             week: week,
             category: "rumor",
@@ -27,7 +27,7 @@ export class RumorProcessor {
             publication: "Variety",
           });
         } else {
-          newHeadlines.push({
+          newsEvents.push({
             id: rng.uuid("HL"),
             week: week,
             category: "rumor",
@@ -111,7 +111,7 @@ export class RumorProcessor {
 
       updatedRumors.push(rumor);
 
-      newHeadlines.push({
+      newsEvents.push({
         id: rng.uuid("HL"),
         week: week,
         category: "rumor",
@@ -126,7 +126,7 @@ export class RumorProcessor {
       type: "INDUSTRY_RUMORS_UPDATED",
       payload: {
         rumors: updatedRumors,
-        headlines: newHeadlines,
+        headlines: newsEvents,
       },
     } as unknown as StateImpact; // Using cast for modular impact
   }

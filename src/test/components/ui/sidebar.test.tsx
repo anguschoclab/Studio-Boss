@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, act } from "@testing-library/react";
+import {describe it expect vi beforeEach afterEach} from "vitest";
+import {render act} from "@testing-library/react";
 import React from "react";
-import { SidebarProvider, useSidebar } from "@/components/ui/sidebar";
+import {SidebarProvider useSidebar} from "@/components/ui/sidebar";
 
 vi.mock("@/hooks/use-mobile", () => ({
   useIsMobile: () => false,

@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { SeriesProject } from "../../../../engine/types";
-import { evaluateRenewal } from "../../../../engine/systems/television/renewalEngine";
+import {describe it expect} from "vitest";
+import {SeriesProject} from "../../../../engine/types";
+import {evaluateRenewal} from "../../../../engine/systems/television/renewalEngine";
 
 describe("Renewal Engine (Target B2)", () => {
   const mockSeries: SeriesProject = {

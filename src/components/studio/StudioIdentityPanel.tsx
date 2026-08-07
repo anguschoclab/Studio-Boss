@@ -1,7 +1,7 @@
 import React from "react";
-import { cn } from "@/lib/utils";
-import { getIdentityLabel } from "@/engine/systems/StudioIdentitySystem";
-import { StudioCulture } from "@/engine/types";
+import {cn} from "@/lib/utils";
+import {getIdentityLabel} from "@/engine/systems/StudioIdentitySystem";
+import {StudioCulture} from "@/engine/types";
 
 // ---------------------------------------------------------------------------
 // Identity label tooltip copy

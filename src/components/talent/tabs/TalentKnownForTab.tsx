@@ -1,8 +1,8 @@
-import { TabsContent } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { Star } from "lucide-react";
-import { Talent } from "@/engine/types";
-import { formatMoney } from "@/engine/utils";
+import {TabsContent} from "@/components/ui/tabs";
+import {Badge} from "@/components/ui/badge";
+import {Star} from "lucide-react";
+import {Talent} from "@/engine/types";
+import {formatMoney} from "@/engine/utils";
 
 interface TalentKnownForTabProps {
   talent: Talent;

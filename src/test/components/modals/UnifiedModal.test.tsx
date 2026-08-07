@@ -1,8 +1,8 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
-import { UnifiedModal } from "@/components/modals/UnifiedModal";
-import { Settings } from "lucide-react";
+import {render screen fireEvent} from "@testing-library/react";
+import {describe it expect vi} from "vitest";
+import {UnifiedModal} from "@/components/modals/UnifiedModal";
+import {Settings} from "lucide-react";
 
 describe("UnifiedModal", () => {
   it("renders nothing when closed", () => {

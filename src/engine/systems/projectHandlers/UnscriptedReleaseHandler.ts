@@ -1,7 +1,7 @@
-import { UnscriptedProject, Contract, Talent, Award, StateImpact } from "@/engine/types";
-import { TalentSystem } from "../TalentSystem";
-import { UNSCRIPTED_FORMATS } from "../../data/unscriptedFormats";
-import { RandomGenerator } from "../../utils/rng";
+import {UnscriptedProject Contract Talent Award StateImpact} from "@/engine/types";
+import {TalentSystem} from "../TalentSystem";
+import {UNSCRIPTED_FORMATS} from "../../data/unscriptedFormats";
+import {RandomGenerator} from "../../utils/rng";
 
 export function handleUnscriptedReleaseEntry(
   p: UnscriptedProject & { type: "SERIES" },

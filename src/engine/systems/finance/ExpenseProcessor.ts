@@ -1,4 +1,4 @@
-import { Project } from "../../types";
+import {Project} from "../../types";
 
 /**
  * ExpenseProcessor handles all loss-related calculations for the studio.

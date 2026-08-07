@@ -1,4 +1,4 @@
-import { UnscriptedFormatKey } from "@/engine/types";
+import {UnscriptedFormatKey} from "@/engine/types";
 
 export interface UnscriptedFormatTaxonomyItem {
   id: string;

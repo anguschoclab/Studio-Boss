@@ -1,12 +1,12 @@
 import React from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Newspaper, Terminal, ArrowRight } from "lucide-react";
-import { Headline } from "@/engine/types";
-import { cn } from "@/lib/utils";
+import {Dialog DialogContent} from "@/components/ui/dialog";
+import {ScrollArea} from "@/components/ui/scroll-area";
+import {Newspaper Terminal ArrowRight} from "lucide-react";
+import {NewsEvent} from "@/engine/types";
+import {cn} from "@/lib/utils";
 
 interface NewsStoryModalProps {
-  headline: Headline | null;
+  headline: NewsEvent | null;
   open: boolean;
   onClose: () => void;
 }
@@ -14,7 +14,7 @@ interface NewsStoryModalProps {
 /**
  * Generate procedural article content from a headline
  */
-function generateArticleContent(headline: Headline): string[] {
+function generateArticleContent(headline: NewsEvent): string[] {
   const paragraphs: string[] = [];
   const text = headline.headline.toUpperCase();
 

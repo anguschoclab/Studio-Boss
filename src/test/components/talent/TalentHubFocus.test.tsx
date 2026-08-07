@@ -1,9 +1,9 @@
 /**
  * @vitest-environment jsdom
  */
-import { render, screen } from "@testing-library/react";
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import {render screen} from "@testing-library/react";
+import {describe it expect beforeEach vi} from "vitest";
+import {TooltipProvider} from "@/components/ui/tooltip";
 
 // Mock stores
 vi.mock("@/store/gameStore", () => ({
@@ -25,8 +25,8 @@ vi.mock("@/hooks/useTalentMap", () => ({
   useAgencyMap: () => new Map(),
 }));
 
-import { useGameStore } from "@/store/gameStore";
-import { TalentHub } from "@/components/talent/TalentHub";
+import {useGameStore} from "@/store/gameStore";
+import {TalentHub} from "@/components/talent/TalentHub";
 
 describe("TalentHub Focus-Visible Styles", () => {
   beforeEach(() => {

@@ -1,8 +1,8 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { TalentPanel } from "@/components/talent/TalentPanel";
-import { useGameStore } from "@/store/gameStore";
+import {render screen fireEvent} from "@testing-library/react";
+import {describe it expect vi beforeEach} from "vitest";
+import {TalentPanel} from "@/components/talent/TalentPanel";
+import {useGameStore} from "@/store/gameStore";
 
 vi.mock("@/store/gameStore");
 

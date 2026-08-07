@@ -1,15 +1,9 @@
-import {
-  Project,
-  GameState,
-  WeeklyFinancialReport,
-  Contract,
-  TalentPact,
-} from "@/engine/types";
-import { RandomGenerator } from "../../utils/rng";
-import { StateImpact, FinancialSnapshot } from "../../types/state.types";
-import { RevenueProcessor } from "./RevenueProcessor";
-import { ExpenseProcessor } from "./ExpenseProcessor";
-import { InterestRateSimulator } from "../market/InterestRateSimulator";
+import {Project GameState WeeklyFinancialReport Contract TalentPact} from "@/engine/types";
+import {RandomGenerator} from "../../utils/rng";
+import {StateImpact FinancialSnapshot} from "../../types/state.types";
+import {RevenueProcessor} from "./RevenueProcessor";
+import {ExpenseProcessor} from "./ExpenseProcessor";
+import {InterestRateSimulator} from "../market/InterestRateSimulator";
 
 export function generateWeeklyFinancialReport(
   state: GameState,

@@ -1,5 +1,5 @@
-import { Project, CharacterArchetype, StateImpact } from "@/engine/types/index";import { RandomGenerator } from "../../utils/rng";
-import { ScriptMetricsCalculator } from "./ScriptMetricsCalculator";
+import {Project CharacterArchetype StateImpact} from "@/engine/types/index";import {RandomGenerator} from "../../utils/rng";
+import {ScriptMetricsCalculator} from "./ScriptMetricsCalculator";
 
 /**
  * Studio Boss - Script Drafting System

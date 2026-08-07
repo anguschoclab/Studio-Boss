@@ -1,4 +1,4 @@
-import { ContentFlag, FilmRating, RatingMarket } from "../types/project.types";
+import {ContentFlag FilmRating RatingMarket} from "../types/project.types";
 
 export interface MarketConfig {
   market: RatingMarket;

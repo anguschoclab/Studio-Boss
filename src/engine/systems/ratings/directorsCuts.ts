@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Project, RatingCut } from "@/engine/types";
-import { StateImpact } from "@/engine/types/state.types";
-import { evaluateFilmRating } from "./ratingEvaluation";
-import { evaluateRegionalRatings } from "./regionalRatings";
-import { RandomGenerator } from "../../utils/rng";
+import {Project RatingCut} from "@/engine/types";
+import {StateImpact} from "@/engine/types/state.types";
+import {evaluateFilmRating} from "./ratingEvaluation";
+import {evaluateRegionalRatings} from "./regionalRatings";
+import {RandomGenerator} from "../../utils/rng";
 
 /**
  * Checks if a project is eligible to release a director's cut.
@@ -81,7 +81,7 @@ export function releaseDirectorsCut(
         },
       },
     ],
-    newHeadlines: [
+    newsEvents: [
       {
         id: rng.uuid("NWS"),
         headline: `Director's Cut of "${project.title}" arrives to critical acclaim`,

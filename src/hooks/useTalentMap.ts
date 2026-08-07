@@ -1,7 +1,7 @@
-import { useMemo } from "react";
-import { useGameStore } from "@/store/gameStore";
-import { Talent, Agency } from "@/engine/types";
-import { selectTalentPool } from "@/store/selectors";
+import {useMemo} from "react";
+import {useGameStore} from "@/store/gameStore";
+import {Talent Agency} from "@/engine/types";
+import {selectTalentPool} from "@/store/selectors";
 
 /**
  * Hook to create a Map of talent by ID for efficient lookups

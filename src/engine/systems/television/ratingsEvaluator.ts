@@ -1,5 +1,5 @@
-import { SeriesProject } from "@/engine/types";
-import { RandomGenerator } from "../../utils/rng";
+import {SeriesProject} from "@/engine/types";
+import {RandomGenerator} from "../../utils/rng";
 
 /**
  * Pure function to calculate weekly TV viewership/ratings.

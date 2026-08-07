@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { RivalRevenueCalculator } from "@/engine/systems/rivals/RivalRevenueCalculator";
-import { RivalStudio, GameState } from "@/engine/types";
+import {describe it expect} from "vitest";
+import {RivalRevenueCalculator} from "@/engine/systems/rivals/RivalRevenueCalculator";
+import {RivalStudio GameState} from "@/engine/types";
 
 const RIVAL_ID = "rival-1";
 

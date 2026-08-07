@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { stage2AssetLiquidation } from "@/engine/systems/industry/DistressCascade";
-import { applyImpacts } from "@/engine/core/impactReducer";
+import {describe it expect beforeEach vi} from "vitest";
+import {stage2AssetLiquidation} from "@/engine/systems/industry/DistressCascade";
+import {applyImpacts} from "@/engine/core/impactReducer";
 import type { GameState } from "@/engine/types";
 import * as utils from "@/engine/utils";
 

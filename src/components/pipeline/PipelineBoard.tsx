@@ -1,15 +1,15 @@
-import { useGameStore } from "@/store/gameStore";
-import { useUIStore } from "@/store/uiStore";
-import { ProjectCard } from "./ProjectCard";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { Plus, ListFilter, Search, Clapperboard, Layers, Bookmark } from "lucide-react";
-import { ProjectStatus } from "@/engine/types";
-import { selectProjects } from "@/store/selectors";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import { useShallow } from "zustand/react/shallow";
-import { EmptyState } from "@/components/shared/EmptyState";
+import {useGameStore} from "@/store/gameStore";
+import {useUIStore} from "@/store/uiStore";
+import {ProjectCard} from "./ProjectCard";
+import {Button} from "@/components/ui/button";
+import {useState} from "react";
+import {Plus ListFilter Search Clapperboard Layers Bookmark} from "lucide-react";
+import {ProjectStatus} from "@/engine/types";
+import {selectProjects} from "@/store/selectors";
+import {Input} from "@/components/ui/input";
+import {cn} from "@/lib/utils";
+import {useShallow} from "zustand/react/shallow";
+import {EmptyState} from "@/components/shared/EmptyState";
 
 const COLUMNS: { status: ProjectStatus[]; title: string; color: string; description: string }[] = [
   {

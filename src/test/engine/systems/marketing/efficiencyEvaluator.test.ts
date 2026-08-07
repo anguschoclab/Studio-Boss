@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { evaluateMarketingEfficiency } from "../../../../engine/systems/marketing/efficiencyEvaluator";
-import { Project, MarketingCampaign } from "../../../../engine/types";
+import {describe it expect} from "vitest";
+import {evaluateMarketingEfficiency} from "../../../../engine/systems/marketing/efficiencyEvaluator";
+import {Project MarketingCampaign} from "../../../../engine/types";
 
 describe("evaluateMarketingEfficiency", () => {
   const createMockProject = (genre: string, budget: number): Project =>

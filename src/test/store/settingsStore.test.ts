@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { useSettingsStore } from "@/store/settingsStore";
-import { getDifficultyParams } from "@/store/settingsStore";
+import {describe it expect beforeEach} from "vitest";
+import {useSettingsStore} from "@/store/settingsStore";
+import {getDifficultyParams} from "@/store/settingsStore";
 
 describe("settingsStore", () => {
   beforeEach(() => {

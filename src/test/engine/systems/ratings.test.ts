@@ -1,10 +1,6 @@
-import { describe, it, expect } from "vitest";
-import {
-  evaluateRating,
-  calculateRegionalPenalties,
-  editForRating,
-} from "../../../engine/systems/ratings";
-import { Project, GameState, ContentFlag } from "../../../engine/types";
+import {describe it expect} from "vitest";
+import {evaluateRating calculateRegionalPenalties editForRating} from "../../../engine/systems/ratings";
+import {Project GameState ContentFlag} from "../../../engine/types";
 
 const mockProject: Project = {
   id: "proj-1",

@@ -1,9 +1,6 @@
-import { describe, it, expect } from "vitest";
-import {
-  calculateFranchiseFatigue,
-  calculateReleaseGapImpact,
-} from "../../../engine/systems/ip/fatigueEngine";
-import { Franchise } from "../../../engine/types";
+import {describe it expect} from "vitest";
+import {calculateFranchiseFatigue calculateReleaseGapImpact} from "../../../engine/systems/ip/fatigueEngine";
+import {Franchise} from "../../../engine/types";
 
 describe("Fatigue Engine", () => {
   const mockFranchise: Franchise = {

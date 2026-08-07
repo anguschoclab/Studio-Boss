@@ -1,6 +1,6 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { cn } from "@/lib/utils";
+import {Card CardContent} from "@/components/ui/card";
+import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";
+import {cn} from "@/lib/utils";
 
 interface Metric {
   label: string;

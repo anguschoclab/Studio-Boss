@@ -1,10 +1,10 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { WeekSummaryModal } from "@/components/modals/WeekSummaryModal";
-import { useUIStore } from "@/store/uiStore";
-import { formatMoney } from "@/engine/utils";
-import { WeekSummary } from "@/engine/types";
+import {render screen fireEvent} from "@testing-library/react";
+import {describe it expect vi beforeEach} from "vitest";
+import {WeekSummaryModal} from "@/components/modals/WeekSummaryModal";
+import {useUIStore} from "@/store/uiStore";
+import {formatMoney} from "@/engine/utils";
+import {WeekSummary} from "@/engine/types";
 
 vi.mock("@/store/uiStore", () => ({
   useUIStore: vi.fn(),
@@ -58,7 +58,6 @@ describe("WeekSummaryModal", () => {
           totalRevenue: 1500,
           totalCosts: 500,
           projectUpdates: [],
-          newHeadlines: [],
           newsEvents: [],
           events: [],
         } as WeekSummary,
@@ -91,7 +90,6 @@ describe("WeekSummaryModal", () => {
           totalRevenue: 500,
           totalCosts: 1500,
           projectUpdates: [],
-          newHeadlines: [],
           newsEvents: [],
           events: [],
         } as WeekSummary,
@@ -117,10 +115,9 @@ describe("WeekSummaryModal", () => {
           totalRevenue: 0,
           totalCosts: 0,
           projectUpdates: ["Project A advanced to Post-Production"],
-          newHeadlines: [
+          newsEvents: [
             { id: "1", headline: "Studio hit with major controversy", description: "", week: 2, type: "STUDIO_EVENT", category: "general" },
           ],
-          newsEvents: [],
           events: ["Market crashed"],
         } as WeekSummary,
       },
@@ -149,7 +146,6 @@ describe("WeekSummaryModal", () => {
           totalRevenue: 0,
           totalCosts: 0,
           projectUpdates: [],
-          newHeadlines: [],
           newsEvents: [],
           events: [],
         } as WeekSummary,

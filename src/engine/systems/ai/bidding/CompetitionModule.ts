@@ -1,8 +1,8 @@
-import { GameState, StateImpact, Project } from "@/engine/types";
-import { RandomGenerator } from "../../../utils/rng";
-import { AgencyLeverageEngine } from "../AgencyLeverage";
-import { TalentAgentInteractionEngine } from "../../talent/talentAgentInteractions";
-import { calculateWillingness } from "../../talent/willingnessEngine";
+import {GameState StateImpact Project} from "@/engine/types";
+import {RandomGenerator} from "../../../utils/rng";
+import {AgencyLeverageEngine} from "../AgencyLeverage";
+import {TalentAgentInteractionEngine} from "../../talent/talentAgentInteractions";
+import {calculateWillingness} from "../../talent/willingnessEngine";
 
 export function tickTalentCompetition(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];

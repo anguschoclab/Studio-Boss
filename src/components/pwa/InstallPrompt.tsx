@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Download, RefreshCw, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import {Button} from "@/components/ui/button";
+import {Download RefreshCw X} from "lucide-react";
+import {cn} from "@/lib/utils";
 
 /**
  * Handles two banners:

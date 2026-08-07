@@ -1,12 +1,8 @@
-import { describe, it, expect } from "vitest";
-import { TalentDriftEngine, DEFAULT_DRIFT_CONFIG } from "@/engine/systems/talent/driftEngine";
-import {
-  ARCHETYPE_TRANSITIONS,
-  PERSONALITY_TRANSITIONS,
-  CAREER_TRAJECTORY_TRANSITIONS,
-} from "@/engine/data/talentArchetypes";
-import { Talent } from "@/engine/types";
-import { RandomGenerator } from "@/engine/utils/rng";
+import {describe it expect} from "vitest";
+import {TalentDriftEngine DEFAULT_DRIFT_CONFIG} from "@/engine/systems/talent/driftEngine";
+import {ARCHETYPE_TRANSITIONS PERSONALITY_TRANSITIONS CAREER_TRAJECTORY_TRANSITIONS} from "@/engine/data/talentArchetypes";
+import {Talent} from "@/engine/types";
+import {RandomGenerator} from "@/engine/utils/rng";
 
 describe("TalentDriftEngine", () => {
   describe("ARCHETYPE_TRANSITIONS", () => {

@@ -1,4 +1,4 @@
-import { RandomGenerator } from "../../engine/utils/rng";
+import {RandomGenerator} from "../../engine/utils/rng";
 
 /**
  * Returns a RandomGenerator initialized with a deterministic seed derived from a string.

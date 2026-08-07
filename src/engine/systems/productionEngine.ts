@@ -1,7 +1,7 @@
-import { GameState, Project, StateImpact } from "@/engine/types";
-import { RandomGenerator } from "../utils/rng";
-import { processDirectorDisputes } from "./directors";
-import { getContractsByProjectId } from "@/engine/utils";
+import {GameState Project StateImpact} from "@/engine/types";
+import {RandomGenerator} from "../utils/rng";
+import {processDirectorDisputes} from "./directors";
+import {getContractsByProjectId} from "@/engine/utils";
 
 /**
  * Pure function to advance a single project's weekly production logic.

@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { calculateFitScore, negotiateContract } from "../../../engine/systems/buyers";
-import { Project, Buyer, StreamerPlatform } from "../../../engine/types";
+import {describe it expect vi beforeEach} from "vitest";
+import {calculateFitScore negotiateContract} from "../../../engine/systems/buyers";
+import {Project Buyer StreamerPlatform} from "../../../engine/types";
 import * as utils from "../../../engine/utils";
 
 const mockProject: Project = {
