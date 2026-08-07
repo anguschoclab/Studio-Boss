@@ -40,31 +40,6 @@ function makeFranchiseState(): any {
   return {
     gameState: {
       ip: {
-        vault: [],
-        franchises: {
-          "fr-1": {
-            id: "fr-1",
-            name: "Test Universe",
-            relevanceScore: 80,
-            fatigueLevel: 0.2,
-            audienceLoyalty: 70,
-            totalEquity: 500_000_000,
-            synergyMultiplier: 1.5,
-            assetIds: ["asset-1", "asset-2"],
-            activeProjectIds: [],
-            lastReleaseWeeks: [10],
-            creationWeek: 1,
-          },
-        },
-      },
-    },
-  };
-}
-
-function makeAssetState(): any {
-  return {
-    gameState: {
-      ip: {
         vault: [
           {
             id: "asset-1",
@@ -121,7 +96,7 @@ describe("FranchiseHub — a11y", () => {
   });
 
   it('Exploit IP button has type="button"', () => {
-    useGameStore.setState(makeAssetState() as any);
+    useGameStore.setState(makeFranchiseState() as any);
     render(<FranchiseHub />);
     const exploitBtn = screen.getByText("Exploit IP").closest("button");
     expect(exploitBtn).not.toBeNull();
@@ -129,7 +104,7 @@ describe("FranchiseHub — a11y", () => {
   });
 
   it('Deep Analytics button has type="button"', () => {
-    useGameStore.setState(makeAssetState() as any);
+    useGameStore.setState(makeFranchiseState() as any);
     render(<FranchiseHub />);
     const analyticsBtn = screen.getByText("Deep Analytics").closest("button");
     expect(analyticsBtn).not.toBeNull();
@@ -137,14 +112,14 @@ describe("FranchiseHub — a11y", () => {
   });
 
   it("Exploit IP button has focus-visible ring classes", () => {
-    useGameStore.setState(makeAssetState() as any);
+    useGameStore.setState(makeFranchiseState() as any);
     render(<FranchiseHub />);
     const exploitBtn = screen.getByText("Exploit IP").closest("button");
     expect(exploitBtn?.className).toContain("focus-visible:ring");
   });
 
   it('Play icon inside Exploit IP button has aria-hidden="true"', () => {
-    useGameStore.setState(makeAssetState() as any);
+    useGameStore.setState(makeFranchiseState() as any);
     render(<FranchiseHub />);
     const playIcon = screen.getByTestId("play-icon");
     expect(playIcon.getAttribute("aria-hidden")).toBe("true");
