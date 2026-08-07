@@ -1,6 +1,6 @@
 import {RivalStrategy} from "../types/talent.types";
 import {StudioMotivation} from "../types/studio.types";
-import {ProjectFormat BudgetTierKey} from "../types/project.types";
+import {ProjectFormat, BudgetTierKey} from "../types/project.types";
 
 /**
  * Unified Studio Archetype System

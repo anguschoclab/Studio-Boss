@@ -1,13 +1,5 @@
 import {GameState} from "@/engine/types";
-import type {
-  FundsImpact,
-  FundsDeductedImpact,
-  LedgerImpact,
-  FinanceSnapshotImpact,
-  SyncMAFundsImpact,
-  FinanceTransactionImpact,
-  MarketEventUpdateImpact,
-} from "@/engine/types/state.types";
+import type {FundsImpact, FundsDeductedImpact, LedgerImpact, FinanceSnapshotImpact, SyncMAFundsImpact, FinanceTransactionImpact, MarketEventUpdateImpact} from "@/engine/types/state.types";
 
 /**
  * Finance-related impact handlers

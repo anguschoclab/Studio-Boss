@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { useState, useEffect } from "react";
-import {motion AnimatePresence} from "framer-motion";
-import {Search Film Users TrendingUp DollarSign Briefcase Globe LayoutDashboard ArrowRight Clock Sparkles AlertTriangle Activity Zap Flame} from "lucide-react";
+import {motion, AnimatePresence} from "framer-motion";
+import {Search, Film, Users, TrendingUp, DollarSign, Briefcase, Globe, LayoutDashboard, ArrowRight, Clock, Sparkles, AlertTriangle, Activity, Zap, Flame} from "lucide-react";
 import {cn} from "@/lib/utils";
 import {transitions} from "@/lib/animations";
 import {useUIStore} from "@/store/uiStore";

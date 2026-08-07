@@ -1,5 +1,5 @@
 import React from "react";
-import {Minus Square X} from "lucide-react";
+import {Minus, Square, X} from "lucide-react";
 
 // Check if running in Electron environment
 const isElectron = typeof window !== "undefined" && "electronAPI" in window;

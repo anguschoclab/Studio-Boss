@@ -1,4 +1,4 @@
-import {GameState StateImpact Talent CareerTrajectory TalentPersonality} from "../../types";
+import {GameState, StateImpact, Talent, CareerTrajectory, TalentPersonality} from "../../types";
 import {RandomGenerator} from "../../utils/rng";
 import {Clique} from "../../types/clique.types";
 import {TalentRelationship} from "../../types/relationship.types";

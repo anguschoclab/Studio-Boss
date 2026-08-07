@@ -1,4 +1,4 @@
-import {Talent Project GameState} from "@/engine/types/index";
+import {Talent, Project, GameState} from "@/engine/types/index";
 
 /**
  * Studio Boss - Willingness Engine

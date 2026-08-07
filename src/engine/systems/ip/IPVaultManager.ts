@@ -1,4 +1,4 @@
-import {GameState StateImpact} from "../../types";
+import {GameState, StateImpact} from "../../types";
 import {evaluateVaultSynergy} from "./synergyEvaluator";
 import {applyIPDecay} from "./ipValuation";
 import {calculateFranchiseFatigue} from "./fatigueEngine";

@@ -1,6 +1,6 @@
-import {describe it expect} from "vitest";
-import {readFileSync existsSync readdirSync} from "fs";
-import {join extname relative} from "path";
+import {describe, it, expect} from "vitest";
+import {readFileSync, existsSync, readdirSync} from "fs";
+import {join, extname, relative} from "path";
 
 const ROOT = join(__dirname, "../../..");
 

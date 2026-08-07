@@ -1,5 +1,5 @@
 import React from "react";
-import {LineChart Line ResponsiveContainer YAxis Area AreaChart} from "recharts";
+import {LineChart, Line, ResponsiveContainer, YAxis, Area, AreaChart} from "recharts";
 import {cn} from "@/lib/utils";
 
 interface SparklineChartProps {

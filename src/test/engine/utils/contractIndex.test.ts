@@ -1,5 +1,5 @@
-import {describe it expect} from "vitest";
-import {addContractToIndex addContractsToIndex removeContractFromIndex removeContractsByTalentFromIndex getContractsByProjectId} from "@/engine/utils";
+import {describe, it, expect} from "vitest";
+import {addContractToIndex, addContractsToIndex, removeContractFromIndex, removeContractsByTalentFromIndex, getContractsByProjectId} from "@/engine/utils";
 import {Contract} from "@/engine/types";
 
 function makeContract(id: string, projectId: string, talentId: string): Contract {

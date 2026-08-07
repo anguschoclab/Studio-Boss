@@ -1,12 +1,12 @@
-import {calculateWeeklyCosts calculateWeeklyRevenue calculateStudioNetWorth generateCashflowForecast calculateProjectROI} from "@/engine/systems/finance";
+import {calculateWeeklyCosts, calculateWeeklyRevenue, calculateStudioNetWorth, generateCashflowForecast, calculateProjectROI} from "@/engine/systems/finance";
 import {LoanModal} from "@/components/finance/LoanModal";
 import {useShallow} from "zustand/react/shallow";
-import {Area XAxis YAxis Tooltip ResponsiveContainer ComposedChart Line CartesianGrid} from "recharts";
+import {Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ComposedChart, Line, CartesianGrid} from "recharts";
 import {YearInReviewChart} from "@/components/finance/YearInReviewChart";
-import {Tabs TabsContent TabsList TabsTrigger} from "@/components/ui/tabs";
-import {Sheet SheetContent SheetDescription SheetHeader SheetTitle SheetTrigger} from "@/components/ui/sheet";
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
+import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger} from "@/components/ui/sheet";
 import {Button} from "@/components/ui/button";
-import {History LayoutDashboard ReceiptText TrendingUp Package Coins ShieldCheck ArrowRightLeft Banknote} from "lucide-react";
+import {History, LayoutDashboard, ReceiptText, TrendingUp, Package, Coins, ShieldCheck, ArrowRightLeft, Banknote} from "lucide-react";
 import {RevenueStreamChart} from "@/components/finance/RevenueStreamChart";
 import {ProfitWaterfallChart} from "@/components/finance/ProfitWaterfallChart";
 import {CashEfficiencyGauge} from "@/components/finance/CashEfficiencyGauge";

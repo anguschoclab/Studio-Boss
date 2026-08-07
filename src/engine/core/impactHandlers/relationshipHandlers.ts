@@ -1,22 +1,4 @@
-import {GameState} from "@/engine/types";import type {
-  RelationshipFormedImpact,
-  RelationshipUpdatedImpact,
-  CliqueFormedImpact,
-  CliqueUpdatedImpact,
-  ScreenplayNoteCreatedImpact,
-  ScreenplayNoteImplementedImpact,
-  ProductionAdditionCreatedImpact,
-  CreditSceneCreatedImpact,
-  CreditSceneUpdatedImpact,
-  TalkShowAppearanceCreatedImpact,
-  PhotoshootCreatedImpact,
-  PressTourCreatedImpact,
-  BreakoutStarCreatedImpact,
-  BreakoutStarUpdatedImpact,
-  GuestStarOpportunityImpact,
-  GuestStarBookedImpact,
-  DiscoveryStateUpdatedImpact,
-} from "@/engine/types/state.types";
+import {GameState} from "@/engine/types";import type {RelationshipFormedImpact, RelationshipUpdatedImpact, CliqueFormedImpact, CliqueUpdatedImpact, ScreenplayNoteCreatedImpact, ScreenplayNoteImplementedImpact, ProductionAdditionCreatedImpact, CreditSceneCreatedImpact, CreditSceneUpdatedImpact, TalkShowAppearanceCreatedImpact, PhotoshootCreatedImpact, PressTourCreatedImpact, BreakoutStarCreatedImpact, BreakoutStarUpdatedImpact, GuestStarOpportunityImpact, GuestStarBookedImpact, DiscoveryStateUpdatedImpact} from "@/engine/types/state.types";
 
 /**
  * Relationship-related impact handlers

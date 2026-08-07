@@ -1,6 +1,6 @@
-import {Buyer StreamerPlatform GameState} from "@/engine/types";
+import {Buyer, StreamerPlatform, GameState} from "@/engine/types";
 import {StateImpact} from "../types/state.types";
-import {pick rand generateId randRange} from "../utils";
+import {pick, rand, generateId, randRange} from "../utils";
 
 const MERGER_HEADLINES = [
   (a: string, b: string) => `BREAKING: ${a} acquires ${b} in landmark media deal!`,

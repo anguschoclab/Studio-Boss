@@ -1,4 +1,4 @@
-import {RivalStudio Project GameState} from "@/engine/types";
+import {RivalStudio, Project, GameState} from "@/engine/types";
 import {RandomGenerator} from "../../utils/rng";
 
 const RATING_STREAMING_PREMIUMS: Record<string, number> = {

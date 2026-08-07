@@ -1,4 +1,4 @@
-import {StudioCulture ArchetypeKey Project} from "@/engine/types";
+import {StudioCulture, ArchetypeKey, Project} from "@/engine/types";
 
 const CULTURE_TEMPLATES: Record<string, StudioCulture> = {
   indie: {

@@ -1,6 +1,6 @@
 import React from "react";
-import {render screen fireEvent} from "@testing-library/react";
-import {describe it expect vi beforeEach} from "vitest";
+import {render, screen, fireEvent} from "@testing-library/react";
+import {describe, it, expect, vi, beforeEach} from "vitest";
 import {WeekSummaryModal} from "@/components/modals/WeekSummaryModal";
 import {useUIStore} from "@/store/uiStore";
 import {formatMoney} from "@/engine/utils";

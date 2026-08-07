@@ -1,10 +1,10 @@
-import {describe it expect vi beforeEach} from "vitest";
+import {describe, it, expect, vi, beforeEach} from "vitest";
 import {tickConsolidation} from "@/engine/systems/industry/ConsolidationEngine";
-import type { ConsolidationEvent } from "@/engine/systems/industry/ConsolidationEngine";
+import type {ConsolidationEvent} from "@/engine/systems/industry/ConsolidationEngine";
 import {RegulatorSystem} from "@/engine/systems/industry/RegulatorSystem";
-import type { GameState, StateImpact } from "@/engine/types";
+import type {GameState, StateImpact} from "@/engine/types";
 import {defaultSimMemory} from "@/engine/core/simMemory";
-import {createMockGameState createMockRival} from "./generators/mockFactory";
+import {createMockGameState, createMockRival} from "./generators/mockFactory";
 import * as utils from "@/engine/utils";
 
 function findConsolidationLogImpact(impacts: StateImpact[]): ConsolidationEvent[] | undefined {

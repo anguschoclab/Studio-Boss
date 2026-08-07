@@ -1,6 +1,6 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {tickWorldEvents} from "../../../../engine/systems/ai/WorldSimulator";
-import {Project Talent NewsImpact} from "../../../../engine/types";
+import {Project, Talent, NewsImpact} from "../../../../engine/types";
 import {RandomGenerator} from "../../../../engine/utils/rng";
 import {createMockGameState} from "../../../mockFactory";
 

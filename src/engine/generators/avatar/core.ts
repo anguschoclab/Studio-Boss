@@ -1,7 +1,7 @@
 import {Talent} from "../../types/talent.types";
-import {AvatarFeatures AgeBracket} from "./types";
-import {hashString seededRandom seededRange seededPick blendColor darkenColor lightenColor} from "./utils";
-import {SKIN_PALETTES HAIR_COLORS GRAY_HAIR WHITE_HAIR EYE_COLORS CLOTHING_PALETTES} from "./palettes";
+import {AvatarFeatures, AgeBracket} from "./types";
+import {hashString, seededRandom, seededRange, seededPick, blendColor, darkenColor, lightenColor} from "./utils";
+import {SKIN_PALETTES, HAIR_COLORS, GRAY_HAIR, WHITE_HAIR, EYE_COLORS, CLOTHING_PALETTES} from "./palettes";
 
 /**
  * Derives visual features from talent demographics and state.

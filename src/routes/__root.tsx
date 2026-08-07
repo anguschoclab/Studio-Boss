@@ -1,8 +1,8 @@
-import {createRootRoute Outlet} from "@tanstack/react-router";
+import {createRootRoute, Outlet} from "@tanstack/react-router";
 import {GlobalThemeProvider} from "../components/Theme/GlobalThemeProvider";
-import {Toaster as Sonner} from "@/components/ui/sonner";
+import {Toaster, as, Sonner} from "@/components/ui/sonner";
 import {Toaster} from "@/components/ui/toaster";
-import {LazyMotion domAnimation} from "framer-motion";
+import {LazyMotion, domAnimation} from "framer-motion";
 import NotFound from "../pages/NotFound";
 import {TitleBar} from "@/components/electron/TitleBar";
 

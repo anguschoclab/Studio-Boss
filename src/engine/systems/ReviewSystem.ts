@@ -1,4 +1,4 @@
-import {Project CriticConsensus Review} from "../types/project.types";
+import {Project, CriticConsensus, Review} from "../types/project.types";
 import {Talent} from "../types/talent.types";
 import {RandomGenerator} from "../utils/rng";
 import {clamp} from "../utils";

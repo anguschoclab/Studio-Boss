@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {GameState Talent Project} from "../../../types";import {RandomGenerator} from "../../../utils/rng";
+import {GameState, Talent, Project} from "../../../types";import {RandomGenerator} from "../../../utils/rng";
 import {GuestStarBooking} from "../../../types/discovery.types";
 import {getContractsByProjectId} from "../../../utils";
 

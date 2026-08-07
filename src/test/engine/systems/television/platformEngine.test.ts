@@ -1,5 +1,5 @@
-import {describe it expect} from "vitest";
-import {GameState StreamerPlatform Talent BuyerUpdateImpact} from "../../../../engine/types";
+import {describe, it, expect} from "vitest";
+import {GameState, StreamerPlatform, Talent, BuyerUpdateImpact} from "../../../../engine/types";
 import {tickPlatforms} from "../../../../engine/systems/television/platformEngine";
 import {RandomGenerator} from "../../../../engine/utils/rng";
 

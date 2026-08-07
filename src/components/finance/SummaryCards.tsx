@@ -1,4 +1,4 @@
-import {Card CardContent} from "@/components/ui/card";
+import {Card, CardContent} from "@/components/ui/card";
 import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";
 import {cn} from "@/lib/utils";
 

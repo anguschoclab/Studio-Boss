@@ -1,8 +1,8 @@
-import {describe it expect beforeEach vi} from "vitest";
+import {describe, it, expect, beforeEach, vi} from "vitest";
 import {StudioAutomation} from "@/engine/simulation/StudioAutomation";
-import {createMockGameState createMockRival createMockProject} from "@/test/utils/mockFactories";
+import {createMockGameState, createMockRival, createMockProject} from "@/test/utils/mockFactories";
 import {RandomGenerator} from "@/engine/utils/rng";
-import {GameState RivalStudio} from "@/engine/types";
+import {GameState, RivalStudio} from "@/engine/types";
 
 describe("StudioAutomation", () => {
   let state: GameState;

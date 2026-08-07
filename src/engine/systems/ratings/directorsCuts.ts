@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Project RatingCut} from "@/engine/types";
+import {Project, RatingCut} from "@/engine/types";
 import {StateImpact} from "@/engine/types/state.types";
 import {evaluateFilmRating} from "./ratingEvaluation";
 import {evaluateRegionalRatings} from "./regionalRatings";

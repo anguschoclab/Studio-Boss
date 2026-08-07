@@ -1,6 +1,6 @@
 import React from "react";
-import {motion AnimatePresence} from "framer-motion";
-import {Plus Clock Users Film TrendingUp Settings ChevronUp ChevronDown Zap} from "lucide-react";
+import {motion, AnimatePresence} from "framer-motion";
+import {Plus, Clock, Users, Film, TrendingUp, Settings, ChevronUp, ChevronDown, Zap} from "lucide-react";
 import {cn} from "@/lib/utils";
 import {tokens} from "@/lib/tokens";
 import {useUIStore} from "@/store/uiStore";

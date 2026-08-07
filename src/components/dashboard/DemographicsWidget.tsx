@@ -1,7 +1,7 @@
 import React from "react";
-import {Card CardContent CardDescription CardHeader CardTitle} from "@/components/ui/card";
-import {ChartContainer ChartTooltip ChartTooltipContent} from "@/components/ui/chart";
-import {Bar BarChart ResponsiveContainer XAxis YAxis} from "recharts";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {ChartContainer, ChartTooltip, ChartTooltipContent} from "@/components/ui/chart";
+import {Bar, BarChart, ResponsiveContainer, XAxis, YAxis} from "recharts";
 import {useGameStore} from "@/store/gameStore";
 
 export const DemographicsWidget: React.FC = () => {

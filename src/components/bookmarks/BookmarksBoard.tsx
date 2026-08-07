@@ -3,7 +3,7 @@ import {useGameStore} from "@/store/gameStore";
 import {ProjectCard} from "@/components/pipeline/ProjectCard";
 import {TalentCard} from "@/components/talent/TalentCard";
 import {EmptyState} from "@/components/shared/EmptyState";
-import {Bookmark Layers Users} from "lucide-react";
+import {Bookmark, Layers, Users} from "lucide-react";
 
 export const BookmarksBoard = () => {
   const gameState = useGameStore((s) => s.gameState);

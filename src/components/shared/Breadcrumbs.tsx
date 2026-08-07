@@ -1,5 +1,5 @@
 import React from "react";
-import {ChevronRight Home} from "lucide-react";
+import {ChevronRight, Home} from "lucide-react";
 import {cn} from "@/lib/utils";
 
 interface BreadcrumbItem {

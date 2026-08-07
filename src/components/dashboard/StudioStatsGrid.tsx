@@ -1,5 +1,5 @@
 import {StatCard} from "@/components/shared/StatCard";
-import {Clapperboard DollarSign Award Users} from "lucide-react";
+import {Clapperboard, DollarSign, Award, Users} from "lucide-react";
 import {formatMoney} from "@/engine/utils";
 import {SparklineChart} from "@/components/shared/SparklineChart";
 import {ProgressIndicator} from "@/components/shared/ProgressIndicator";

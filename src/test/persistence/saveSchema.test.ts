@@ -1,5 +1,5 @@
-import {describe it expect} from "vitest";
-import {safeJsonParse validateSaveData parseAndValidate} from "../../persistence/saveSchema";
+import {describe, it, expect} from "vitest";
+import {safeJsonParse, validateSaveData, parseAndValidate} from "../../persistence/saveSchema";
 import {initializeGame} from "../../engine/core/gameInit";
 
 describe("saveSchema", () => {

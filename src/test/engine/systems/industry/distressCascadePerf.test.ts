@@ -1,6 +1,6 @@
-import {describe it expect beforeEach} from "vitest";
+import {describe, it, expect, beforeEach} from "vitest";
 import {stage1IPFireSale} from "@/engine/systems/industry/DistressCascade";
-import type { GameState } from "@/engine/types";
+import type {GameState} from "@/engine/types";
 
 function makeState(playerCash: number): GameState {
   return {

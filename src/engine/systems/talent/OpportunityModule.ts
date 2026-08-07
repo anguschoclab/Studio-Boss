@@ -1,4 +1,4 @@
-import {GameState Opportunity} from "@/engine/types";
+import {GameState, Opportunity} from "@/engine/types";
 import {RandomGenerator} from "../../utils/rng";
 import {generateOpportunity} from "../../generators/opportunities";
 import {getContractsByTalentId} from "../../utils";

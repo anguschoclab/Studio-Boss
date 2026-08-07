@@ -1,9 +1,5 @@
-import {GameState Franchise StateImpact} from "@/engine/types";
-import type {
-  FranchiseUpdatedImpact,
-  VaultAssetUpdatedImpact,
-  FormatLicensedImpact,
-} from "@/engine/types/state.types";
+import {GameState, Franchise, StateImpact} from "@/engine/types";
+import type {FranchiseUpdatedImpact, VaultAssetUpdatedImpact, FormatLicensedImpact} from "@/engine/types/state.types";
 
 /**
  * IP-related impact handlers

@@ -1,4 +1,4 @@
-import {Link LinkProps} from "@tanstack/react-router";
+import {Link, LinkProps} from "@tanstack/react-router";
 import {forwardRef} from "react";
 
 interface NavLinkCompatProps extends Omit<LinkProps, "className"> {

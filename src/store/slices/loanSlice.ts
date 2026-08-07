@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {StateCreator} from "zustand";
 import {GameStore} from "../gameStore";
-import {createLoan Loan} from "@/engine/systems/finance/LoanSystem";
+import {createLoan, Loan} from "@/engine/systems/finance/LoanSystem";
 
 // ---------------------------------------------------------------------------
 // Slice interface

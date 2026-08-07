@@ -1,8 +1,8 @@
 import {TabsContent} from "@/components/ui/tabs";
-import {DollarSign Star TrendingUp} from "lucide-react";
+import {DollarSign, Star, TrendingUp} from "lucide-react";
 import {Talent} from "@/engine/types";
 import {formatMoney} from "@/engine/utils";
-import {BarChart Bar XAxis YAxis CartesianGrid Tooltip ResponsiveContainer Cell} from "recharts";
+import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell} from "recharts";
 
 interface StatEntry {
   name: string;

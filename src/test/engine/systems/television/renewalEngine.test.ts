@@ -1,4 +1,4 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {SeriesProject} from "../../../../engine/types";
 import {evaluateRenewal} from "../../../../engine/systems/television/renewalEngine";
 

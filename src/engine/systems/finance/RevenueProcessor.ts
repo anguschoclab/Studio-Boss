@@ -1,4 +1,4 @@
-import {Project Buyer Contract} from "../../types";
+import {Project, Buyer, Contract} from "../../types";
 import {IPAsset} from "../../types/state.types";
 import {calculateWeeklyIPRevenue} from "../ip/merchandisingEngine";
 

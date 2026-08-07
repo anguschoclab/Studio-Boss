@@ -1,18 +1,9 @@
-export {
-  isCannesEquivalentFestival,
-  isSundanceEquivalentFestival,
-  isMajorCategoryNomination,
-  isSupportingCategoryNomination,
-} from "./AwardValidationSlice";
+export {isCannesEquivalentFestival, isSundanceEquivalentFestival, isMajorCategoryNomination, isSupportingCategoryNomination} from "./AwardValidationSlice";
 
-export {
-  generateAwardsProfile,
-  calculateNominationWeight,
-  checkCampaignBacklash,
-} from "./NominationCalculator";
+export {generateAwardsProfile, calculateNominationWeight, checkCampaignBacklash} from "./NominationCalculator";
 
-export { runAwardsCeremony } from "./CeremonyRunner";
+export {runAwardsCeremony} from "./CeremonyRunner";
 
-export { processRazzies } from "./RazzieProcessor";
+export {processRazzies} from "./RazzieProcessor";
 
-export { launchAwardsCampaign } from "./AwardsCampaign";
+export {launchAwardsCampaign} from "./AwardsCampaign";

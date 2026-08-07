@@ -1,4 +1,4 @@
-import {Card CardContent CardHeader CardTitle} from "@/components/ui/card";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {formatMoney} from "@/engine/utils";
 import {Project} from "@/engine/types";
 

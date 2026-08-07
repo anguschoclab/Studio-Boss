@@ -2,7 +2,7 @@
 import {StateCreator} from "zustand";
 import {GameStore} from "../gameStore";
 import {RandomGenerator} from "@/engine/utils/rng";
-import {AudienceQuadrant MarketingAngle} from "@/engine/types";
+import {AudienceQuadrant, MarketingAngle} from "@/engine/types";
 import {calculateAudienceIndex} from "@/engine/systems/demographics";
 import {applyImpacts} from "@/engine/core/impactReducer";
 import {launchAwardsCampaign as launchAwardsCampaignEngine} from "@/engine/systems/awards/AwardsCampaign";

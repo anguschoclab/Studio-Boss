@@ -1,10 +1,10 @@
 import {useGameStore} from "@/store/gameStore";
 import {useUIStore} from "@/store/uiStore";
-import {NewsEventType NewsEvent} from "@/engine/types";
+import {NewsEventType, NewsEvent} from "@/engine/types";
 import {selectNewsHistory} from "@/store/selectors";
 import {Badge} from "@/components/ui/badge";
 import {useState} from "react";
-import {Trophy AlertTriangle TrendingUp Search History} from "lucide-react";
+import {Trophy, AlertTriangle, TrendingUp, Search, History} from "lucide-react";
 
 const eventTypeConfig: Record<
   NewsEventType,

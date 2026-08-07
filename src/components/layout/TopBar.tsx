@@ -1,7 +1,7 @@
 import {useGameStore} from "@/store/gameStore";
 import {useUIStore} from "@/store/uiStore";
-import {formatMoney getWeekDisplay} from "@/engine/utils";
-import {Save FastForward Activity Star} from "lucide-react";
+import {formatMoney, getWeekDisplay} from "@/engine/utils";
+import {Save, FastForward, Activity, Star} from "lucide-react";
 import {selectActiveProjects} from "@/store/selectors";
 import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";
 import {NewsTicker} from "./NewsTicker";

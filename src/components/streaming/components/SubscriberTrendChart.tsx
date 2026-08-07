@@ -1,5 +1,5 @@
 import React from "react";
-import {XAxis YAxis CartesianGrid Tooltip ResponsiveContainer AreaChart Area} from "recharts";
+import {XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area} from "recharts";
 import {StreamerPlatform} from "@/engine/types";
 
 interface SubscriberTrendChartProps {

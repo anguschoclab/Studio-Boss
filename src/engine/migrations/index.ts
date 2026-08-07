@@ -1,4 +1,4 @@
-import type { GameState } from "../types";
+import type {GameState} from "../types";
 import {defaultSimMemory} from "../core/simMemory";
 
 interface Migration {

@@ -1,6 +1,6 @@
 import React from "react";
-import {cn formatCompactCurrency} from "@/lib/utils";
-import {History DollarSign CheckCircle2 XCircle Clock} from "lucide-react";
+import {cn, formatCompactCurrency} from "@/lib/utils";
+import {History, DollarSign, CheckCircle2, XCircle, Clock} from "lucide-react";
 import {Section} from "@/components/layout/Section";
 import {Card} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";

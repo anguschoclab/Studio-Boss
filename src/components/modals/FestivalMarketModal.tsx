@@ -3,7 +3,7 @@ import {useGameStore} from "@/store/gameStore";
 import {useUIStore} from "@/store/uiStore";
 import {Project} from "@/engine/types";
 import {Button} from "@/components/ui/button";
-import {Gavel Users TrendingUp Clock} from "lucide-react";
+import {Gavel, Users, TrendingUp, Clock} from "lucide-react";
 import {generateFestivalBid} from "@/engine/systems/ai/RivalBiddingEngine";
 import {RandomGenerator} from "@/engine/utils/rng";
 

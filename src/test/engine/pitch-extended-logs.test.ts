@@ -1,9 +1,9 @@
-import {describe it expect vi beforeEach} from "vitest";
+import {describe, it, expect, vi, beforeEach} from "vitest";
 import {tickShinglePitchRouter} from "@/engine/systems/deals/ShinglePitchRouter";
-import type { ShinglePitchOutcome } from "@/engine/systems/deals/ShinglePitchRouter";
-import type { GameState, StateImpact } from "@/engine/types";
+import type {ShinglePitchOutcome} from "@/engine/systems/deals/ShinglePitchRouter";
+import type {GameState, StateImpact} from "@/engine/types";
 import {defaultSimMemory} from "@/engine/core/simMemory";
-import {createMockGameState createMockRival} from "./generators/mockFactory";
+import {createMockGameState, createMockRival} from "./generators/mockFactory";
 import {RandomGenerator} from "@/engine/utils/rng";
 
 function findPitchLogImpact(impacts: StateImpact[]): ShinglePitchOutcome[] | undefined {

@@ -1,4 +1,4 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {calculateTerritorySplit} from "../../../../engine/systems/marketing/territoryDistributor";
 import {MarketingCampaign} from "../../../../engine/types";
 

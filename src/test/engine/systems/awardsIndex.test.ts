@@ -1,7 +1,7 @@
-import {describe it expect} from "vitest";
-import {runAwardsCeremony processRazzies} from "@/engine/systems/awards/index";
+import {describe, it, expect} from "vitest";
+import {runAwardsCeremony, processRazzies} from "@/engine/systems/awards/index";
 import {createMockGameState} from "@/test/mockFactory";
-import {Project GameState} from "@/engine/types";
+import {Project, GameState} from "@/engine/types";
 import {RandomGenerator} from "@/engine/utils/rng";
 
 function makeProject(overrides: Partial<Project> = {}): Project {

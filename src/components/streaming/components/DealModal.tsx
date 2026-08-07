@@ -1,9 +1,9 @@
 import React, { useMemo, useState, useEffect, useRef } from "react";
 import {useGameStore} from "@/store/gameStore";
-import {Buyer Project ProjectContractType} from "@/engine/types";
-import {Dialog DialogContent} from "@/components/ui/dialog";
+import {Buyer, Project, ProjectContractType} from "@/engine/types";
+import {Dialog, DialogContent} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
-import {Handshake Film CheckCircle2 XCircle} from "lucide-react";
+import {Handshake, Film, CheckCircle2, XCircle} from "lucide-react";
 import {cn} from "@/lib/utils";
 import {calculateFitScore} from "@/engine/systems/buyers";
 import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";

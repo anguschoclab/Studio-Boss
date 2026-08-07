@@ -1,8 +1,8 @@
-import {describe it expect beforeEach} from "vitest";
+import {describe, it, expect, beforeEach} from "vitest";
 import {useGameStore} from "@/store/gameStore";
 import {useUIStore} from "@/store/uiStore";
-import type { GameState } from "@/engine/types";
-import type { DistressedAssetOffer } from "@/engine/types/distress.types";
+import type {GameState} from "@/engine/types";
+import type {DistressedAssetOffer} from "@/engine/types/distress.types";
 
 const offer: DistressedAssetOffer = {
   id: "o1",

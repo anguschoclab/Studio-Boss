@@ -1,10 +1,10 @@
 import React from "react";
-import {useUIStore TabId} from "@/store/uiStore";
+import {useUIStore, TabId} from "@/store/uiStore";
 import {useGameStore} from "@/store/gameStore";
 import {formatMoney} from "@/engine/utils";
-import {Building2 Clapperboard Newspaper Users Tv2 Archive TrendingUp DollarSign ChevronLeft ChevronRight LogOut Settings Star Zap Bookmark Trophy} from "lucide-react";
+import {Building2, Clapperboard, Newspaper, Users, Tv2, Archive, TrendingUp, DollarSign, ChevronLeft, ChevronRight, LogOut, Settings, Star, Zap, Bookmark, Trophy} from "lucide-react";
 import {cn} from "@/lib/utils";
-import {Tooltip TooltipContent TooltipTrigger} from "@/components/ui/tooltip";
+import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 import {useNavigate} from "@tanstack/react-router";
 
 interface NavItem {

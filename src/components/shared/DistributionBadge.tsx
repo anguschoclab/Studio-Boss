@@ -1,5 +1,5 @@
 import React from "react";
-import {Film Monitor Tv} from "lucide-react";
+import {Film, Monitor, Tv} from "lucide-react";
 
 interface DistributionBadgeProps {
   status?: "theatrical" | "streaming" | "syndicated";

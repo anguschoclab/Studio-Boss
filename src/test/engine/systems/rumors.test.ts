@@ -1,6 +1,6 @@
-import {describe it expect vi beforeEach} from "vitest";
+import {describe, it, expect, vi, beforeEach} from "vitest";
 import {advanceRumors} from "../../../engine/systems/rumors";
-import {Rumor Talent} from "../../../engine/types";
+import {Rumor, Talent} from "../../../engine/types";
 import {createMockGameState} from "../../utils/mockFactories";
 
 import * as utils from "../../../engine/utils";

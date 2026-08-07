@@ -1,9 +1,5 @@
-import {GameState Buyer} from "@/engine/types";
-import type {
-  BuyerUpdateImpact,
-  OpportunityUpdateImpact,
-  TrendsUpdateImpact,
-} from "@/engine/types/state.types";
+import {GameState, Buyer} from "@/engine/types";
+import type {BuyerUpdateImpact, OpportunityUpdateImpact, TrendsUpdateImpact} from "@/engine/types/state.types";
 
 /**
  * Market-related impact handlers

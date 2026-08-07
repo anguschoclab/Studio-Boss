@@ -1,4 +1,4 @@
-import {GameState StateImpact GameEvent} from "../../types";
+import {GameState, StateImpact, GameEvent} from "../../types";
 import {RandomGenerator} from "../../utils/rng";
 
 /**

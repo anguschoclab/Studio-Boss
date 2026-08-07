@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from "react";
 import {useGameStore} from "@/store/gameStore";
-import {Buyer StreamerPlatform} from "@/engine/types";
+import {Buyer, StreamerPlatform} from "@/engine/types";
 
 import {Button} from "@/components/ui/button";
 import {ScrollArea} from "@/components/ui/scroll-area";
-import {ArrowRightLeft FileSearch Globe History Activity} from "lucide-react";
+import {ArrowRightLeft, FileSearch, Globe, History, Activity} from "lucide-react";
 import {cn} from "@/lib/utils";
 import {PlatformCard} from "./components/PlatformCard";
 import {DealModal} from "./components/DealModal";

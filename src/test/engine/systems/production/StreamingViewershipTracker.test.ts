@@ -1,6 +1,6 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {StreamingViewershipTracker} from "@/engine/systems/production/StreamingViewershipTracker";
-import {createMockProject createMockBuyer} from "@/test/utils/mockFactories";
+import {createMockProject, createMockBuyer} from "@/test/utils/mockFactories";
 import {RandomGenerator} from "@/engine/utils/rng";
 
 describe("StreamingViewershipTracker", () => {

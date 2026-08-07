@@ -1,7 +1,7 @@
 import React from "react";
 import {TimeSeriesChart} from "@/components/charts/TimeSeriesChart";
 import {cn} from "@/lib/utils";
-import {TrendingUp TrendingDown Flame Snowflake Activity} from "lucide-react";
+import {TrendingUp, TrendingDown, Flame, Snowflake, Activity} from "lucide-react";
 import {useGameStore} from "@/store/gameStore";
 import {selectMarketTrends} from "@/store/selectors";
 

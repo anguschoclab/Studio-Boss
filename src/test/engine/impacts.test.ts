@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { impacts } from '@/engine/core/impacts';
-import type { StateImpact, HeadlineCategory } from '@/engine/types';
+import {describe, it, expect} from 'vitest';
+import {impacts} from '@/engine/core/impacts';
+import type {StateImpact, HeadlineCategory} from '@/engine/types';
 
 describe('typed impact constructors', () => {
   // ── newsAdded ──

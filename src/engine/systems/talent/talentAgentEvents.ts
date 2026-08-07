@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Talent Agent Agency} from "../../types/talent.types";
+import {Talent, Agent, Agency} from "../../types/talent.types";
 import {GameState} from "../../types/studio.types";
 import {TalentAgentRelationship} from "./talentAgentInteractions";
 import {RandomGenerator} from "../../utils/rng";

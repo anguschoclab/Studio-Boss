@@ -1,8 +1,8 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {tickDistressedOffers} from "@/engine/systems/industry/DistressCascade";
 import {applyImpacts} from "@/engine/core/impactReducer";
-import type { GameState } from "@/engine/types";
-import type { DistressedAssetOffer } from "@/engine/types/distress.types";
+import type {GameState} from "@/engine/types";
+import type {DistressedAssetOffer} from "@/engine/types/distress.types";
 
 const offer: DistressedAssetOffer = {
   id: "o1",

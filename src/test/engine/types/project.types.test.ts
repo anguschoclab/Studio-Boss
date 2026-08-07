@@ -1,5 +1,5 @@
-import {describe it expect} from "vitest";
-import {Project FilmProject SeriesProject} from "@/engine/types/project.types";
+import {describe, it, expect} from "vitest";
+import {Project, FilmProject, SeriesProject} from "@/engine/types/project.types";
 
 describe("Unified Project Schema (Target A1)", () => {
   it("should allow casting a BaseProject to a FilmProject via discriminator", () => {

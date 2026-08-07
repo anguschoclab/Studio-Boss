@@ -1,4 +1,4 @@
-import {GameState StateImpact Project} from "@/engine/types";
+import {GameState, StateImpact, Project} from "@/engine/types";
 import {RandomGenerator} from "../../../utils/rng";
 import {AgencyLeverageEngine} from "../AgencyLeverage";
 import {TalentAgentInteractionEngine} from "../../talent/talentAgentInteractions";

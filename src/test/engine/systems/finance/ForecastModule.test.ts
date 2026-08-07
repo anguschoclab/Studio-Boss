@@ -1,4 +1,4 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {generateCashflowForecast} from "@/engine/systems/finance";
 import {createMockGameState} from "../../generators/mockFactory";
 

@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useMemo } from "react";
 import {useGameStore} from "@/store/gameStore";
-import {Card CardContent CardHeader CardTitle CardDescription} from "@/components/ui/card";
+import {Card, CardContent, CardHeader, CardTitle, CardDescription} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
 import {KPIStatCard} from "@/components/shared/KPIStatCard";
 import {formatMoney} from "@/engine/utils";
-import {Building2 Users TrendingDown Zap ShieldAlert Target Brain BarChart3 Globe2 Activity Monitor} from "lucide-react";
+import {Building2, Users, TrendingDown, Zap, ShieldAlert, Target, Brain, BarChart3, Globe2, Activity, Monitor} from "lucide-react";
 import {m} from "framer-motion";import {cn} from "@/lib/utils";
 import {MarketTrendsHeatmap} from "@/components/industry/MarketTrendsHeatmap";
 

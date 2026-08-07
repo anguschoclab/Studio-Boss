@@ -1,6 +1,6 @@
-import {describe bench} from "vitest";
+import {describe, bench} from "vitest";
 import {SchedulingEngine} from "../../engine/systems/schedulingEngine";
-import {GameState Project Talent Contract} from "../../engine/types";
+import {GameState, Project, Talent, Contract} from "../../engine/types";
 
 const PROJECT_COUNT = 200;
 const TOTAL_CONTRACTS = 2000;

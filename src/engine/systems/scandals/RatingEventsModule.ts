@@ -1,4 +1,4 @@
-import {GameState StateImpact} from "@/engine/types";
+import {GameState, StateImpact} from "@/engine/types";
 import {RandomGenerator} from "../../utils/rng";
 import {RatingMarket} from "../../types/project.types";
 import {MARKET_CONFIGS} from "../../data/ratingMarkets";

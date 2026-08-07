@@ -1,8 +1,8 @@
 /**
  * @vitest-environment jsdom
  */
-import {render screen fireEvent} from "@testing-library/react";
-import {describe it expect beforeEach vi} from "vitest";
+import {render, screen, fireEvent} from "@testing-library/react";
+import {describe, it, expect, beforeEach, vi} from "vitest";
 import {TooltipProvider} from "@/components/ui/tooltip";
 
 // Mock stores
@@ -27,7 +27,7 @@ import {useGameStore} from "@/store/gameStore";
 import {useUIStore} from "@/store/uiStore";
 import {ProjectCard} from "@/components/pipeline/ProjectCard";
 import {TalentCard} from "@/components/talent/TalentCard";
-import {createMockProject createMockTalent} from "@/test/utils/mockFactories";
+import {createMockProject, createMockTalent} from "@/test/utils/mockFactories";
 
 describe("Bookmark Tooltips", () => {
   beforeEach(() => {

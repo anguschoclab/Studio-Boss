@@ -1,8 +1,8 @@
-import {GameState StateImpact WeekSummary GameEvent} from "../types";
+import {GameState, StateImpact, WeekSummary, GameEvent} from "../types";
 import {RandomGenerator} from "../utils/rng";
 import {applyImpacts} from "../core/impactReducer";
 import {setDeterministicSeed} from "../utils";
-import {impacts as I} from "../core/impacts";
+import {impacts, as, I} from "../core/impacts";
 import {defaultSimMemory} from "../core/simMemory";
 
 // System Imports
@@ -18,16 +18,16 @@ import {tickTelevision} from "../systems/television/televisionTick";
 import {tickFinance} from "../systems/finance/financeTick";
 import {advanceTrends} from "../systems/trends";
 import {advanceMarketEvents} from "../systems/marketEvents";
-import {advanceScandals generateScandals} from "../systems/scandals";
+import {advanceScandals, generateScandals} from "../systems/scandals";
 import {advanceBuyers} from "../systems/buyerMergers";
 
 // New Industry Systems
 import {tickVerticalIntegration} from "../systems/industry/VerticalIntegrationProcessor";
 import {tickIndustryUpstarts} from "../systems/industry/IndustryUpstarts";
 import {tickConsolidation} from "../systems/industry/ConsolidationEngine";
-import {tickRivalSpawner tickHardBankruptcy} from "../systems/industry/RivalSpawner";
+import {tickRivalSpawner, tickHardBankruptcy} from "../systems/industry/RivalSpawner";
 import {tickAntitrust} from "../systems/industry/Antitrust";
-import {tickDistressCascade tickDistressedOffers} from "../systems/industry/DistressCascade";
+import {tickDistressCascade, tickDistressedOffers} from "../systems/industry/DistressCascade";
 import {tickShingleSystem} from "../systems/deals/ShingleSystem";
 import {tickShinglePitchRouter} from "../systems/deals/ShinglePitchRouter";
 import {InterestRateSimulator} from "../systems/market/InterestRateSimulator";
@@ -86,7 +86,7 @@ import {resolveFestivals} from "../systems/festivals";
 import {TalentLifecycleSystem} from "../systems/talent/TalentLifecycleSystem";
 import {tickCastingConstraintSystem} from "../systems/talent/CastingConstraintSystem";
 import {TalentMoraleSystem} from "../systems/talent/TalentMoraleSystem";
-import {shouldTalentHireAgent selectAgentForTalent shouldTalentFireAgent createAgentHiringEvent createAgentFiringEvent} from "../systems/talent/talentAgentEvents";
+import {shouldTalentHireAgent, selectAgentForTalent, shouldTalentFireAgent, createAgentHiringEvent, createAgentFiringEvent} from "../systems/talent/talentAgentEvents";
 import {TalentAgentInteractionEngine} from "../systems/talent/talentAgentInteractions";
 import {Agency} from "../types/talent.types";
 

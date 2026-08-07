@@ -1,5 +1,5 @@
 import React from "react";
-import {Package Bookmark BookmarkCheck} from "lucide-react";
+import {Package, Bookmark, BookmarkCheck} from "lucide-react";
 import {Talent} from "@/engine/types";
 import {formatMoney} from "@/engine/utils";
 import {AGENCY_ARCHETYPES} from "@/engine/data/archetypes";

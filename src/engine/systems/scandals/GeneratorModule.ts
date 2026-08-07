@@ -1,5 +1,5 @@
-import {pick getContractsByTalentId} from "../../utils";
-import {GameState Scandal ScandalType} from "@/engine/types";
+import {pick, getContractsByTalentId} from "../../utils";
+import {GameState, Scandal, ScandalType} from "@/engine/types";
 import {StateImpact} from "../../types/state.types";
 import {RandomGenerator} from "../../utils/rng";
 import {BardResolver} from "../bardResolver";

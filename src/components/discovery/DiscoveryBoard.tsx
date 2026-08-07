@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {useGameStore} from "@/store/gameStore";
 import {useUIStore} from "@/store/uiStore";
 import {Button} from "@/components/ui/button";
-import {Plus Search Newspaper Sparkles TrendingUp} from "lucide-react";
+import {Plus, Search, Newspaper, Sparkles, TrendingUp} from "lucide-react";
 import {Opportunity} from "@/engine/types";
 import {selectOpportunities} from "@/store/selectors";
 import {TrendBoard} from "@/components/trends/TrendBoard";

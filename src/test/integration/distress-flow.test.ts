@@ -1,4 +1,4 @@
-import {describe it expect beforeEach} from "vitest";
+import {describe, it, expect, beforeEach} from "vitest";
 import {useUIStore} from "@/store/uiStore";
 
 // The doAdvanceWeek bridge does: for MODAL_TRIGGERED impacts,

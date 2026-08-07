@@ -4,7 +4,7 @@ import {Talent} from "@/engine/types";
 import {generateAvatarSVG} from "@/engine/generators/avatarGenerator";
 import {useGameStore} from "@/store/gameStore";
 import {cn} from "@/lib/utils";
-import {Clapperboard PenLine Mic Briefcase type LucideIcon} from "lucide-react";
+import {Clapperboard, PenLine, Mic, Briefcase, type LucideIcon} from "lucide-react";
 
 interface TalentAvatarProps {
   talent: Talent;

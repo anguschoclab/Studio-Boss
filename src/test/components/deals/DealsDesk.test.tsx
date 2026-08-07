@@ -1,10 +1,10 @@
 import React from "react";
-import {render screen} from "@testing-library/react";
-import {describe it expect vi beforeEach} from "vitest";
+import {render, screen} from "@testing-library/react";
+import {describe, it, expect, vi, beforeEach} from "vitest";
 import {DealsDesk} from "@/components/deals/DealsDesk";
 import {useGameStore} from "@/store/gameStore";
 import {calculateFitScore} from "@/engine/systems/buyers";
-import {Project Buyer} from "@/engine/types";
+import {Project, Buyer} from "@/engine/types";
 
 vi.mock("@/store/gameStore");
 vi.mock("@/engine/systems/buyers", () => ({

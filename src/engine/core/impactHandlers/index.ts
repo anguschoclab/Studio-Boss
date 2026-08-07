@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {GameState StateImpact ImpactType} from "@/engine/types";
-import {addContractsToIndex addContractsToTalentIndex removeContractsByTalentFromIndex removeContractsByProjectFromTalentIndex} from "@/engine/utils";
+import {GameState, StateImpact, ImpactType} from "@/engine/types";
+import {addContractsToIndex, addContractsToTalentIndex, removeContractsByTalentFromIndex, removeContractsByProjectFromTalentIndex} from "@/engine/utils";
 
 // Import all handler modules
 import * as financeHandlers from "./financeHandlers";

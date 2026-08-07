@@ -1,4 +1,4 @@
-import {ActorArchetype WriterArchetype ProducerArchetype PersonalityArchetype TalentPersonality TalentTier CareerTrajectory} from "../types/talent.types";
+import {ActorArchetype, WriterArchetype, ProducerArchetype, PersonalityArchetype, TalentPersonality, TalentTier, CareerTrajectory} from "../types/talent.types";
 
 /**
  * Archetype configuration interface

@@ -1,6 +1,6 @@
-import {describe it expect vi beforeEach afterEach} from "vitest";
-import {advanceProject handleReleasePhaseEntry} from "../../../engine/systems/projects";
-import {Project Talent Contract} from "../../../engine/types";
+import {describe, it, expect, vi, beforeEach, afterEach} from "vitest";
+import {advanceProject, handleReleasePhaseEntry} from "../../../engine/systems/projects";
+import {Project, Talent, Contract} from "../../../engine/types";
 import * as utils from "../../../engine/utils";
 import {RandomGenerator} from "../../../engine/utils/rng";
 

@@ -3,9 +3,9 @@ import {useUIStore} from "@/store/uiStore";
 import {useGameStore} from "@/store/gameStore";
 import {selectDistressedOffer} from "@/store/selectors";
 import {formatMoney} from "@/engine/utils";
-import {Dialog DialogContent DialogHeader DialogTitle DialogDescription} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
-import {AlertTriangle DollarSign Clock Building2} from "lucide-react";
+import {AlertTriangle, DollarSign, Clock, Building2} from "lucide-react";
 
 export const DistressedAssetOfferModal: React.FC = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();

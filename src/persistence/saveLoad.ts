@@ -1,4 +1,4 @@
-import {GameState SaveSlotMeta} from "@/engine/types";
+import {GameState, SaveSlotMeta} from "@/engine/types";
 import {persistenceService} from "./PersistenceService";
 import {migrateSave} from "@/engine/migrations";
 

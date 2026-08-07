@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import {Dialog DialogContent DialogHeader DialogTitle} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
 import {Badge} from "@/components/ui/badge";
 import {useUIStore} from "@/store/uiStore";
 import {useGameStore} from "@/store/gameStore";
 import {cn} from "@/lib/utils";
-import {Clapperboard Clock Zap Film ChevronRight} from "lucide-react";
+import {Clapperboard, Clock, Zap, Film, ChevronRight} from "lucide-react";
 import {Project} from "@/engine/types";
 
 // ─── Post-production timeline steps ──────────────────────────────────────────

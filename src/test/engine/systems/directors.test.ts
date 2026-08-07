@@ -1,6 +1,6 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {hasCreativeControl} from "../../../engine/systems/directors";
-import {GameState Talent Contract} from "../../../engine/types";
+import {GameState, Talent, Contract} from "../../../engine/types";
 
 describe("hasCreativeControl", () => {
   const createMockState = (

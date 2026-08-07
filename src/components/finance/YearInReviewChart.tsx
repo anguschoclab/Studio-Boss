@@ -1,9 +1,9 @@
 import {useMemo} from "react";
 import {useGameStore} from "@/store/gameStore";
 import {formatMoney} from "@/engine/utils";
-import {Card CardContent CardHeader CardTitle} from "@/components/ui/card";
-import {AreaChart Area XAxis YAxis Tooltip ResponsiveContainer CartesianGrid ReferenceLine} from "recharts";
-import {BarChartIcon TrendingUp TrendingDown} from "lucide-react";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine} from "recharts";
+import {BarChartIcon, TrendingUp, TrendingDown} from "lucide-react";
 import {cn} from "@/lib/utils";
 
 export const YearInReviewChart = () => {

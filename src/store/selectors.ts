@@ -1,6 +1,6 @@
 import {createSelector} from "reselect";
-import {GameState Project RivalStudio Talent GameEvent} from "../engine/types";
-import type { DistressedAssetOffer } from "@/engine/types/distress.types";
+import {GameState, Project, RivalStudio, Talent, GameEvent} from "../engine/types";
+import type {DistressedAssetOffer} from "@/engine/types/distress.types";
 import {calculateFranchiseFatigue} from "@/engine/systems/ip/fatigueEngine";
 
 const EMPTY_PROJECTS = {};

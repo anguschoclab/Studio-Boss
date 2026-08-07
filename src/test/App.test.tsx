@@ -1,5 +1,5 @@
-import {describe it expect vi} from "vitest";
-import {render screen waitFor} from "@testing-library/react";
+import {describe, it, expect, vi} from "vitest";
+import {render, screen, waitFor} from "@testing-library/react";
 import App from "@/App";
 
 // Make ResizeObserver a mock to prevent Recharts/Radix issues in JSDOM

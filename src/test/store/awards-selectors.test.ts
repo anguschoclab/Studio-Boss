@@ -1,7 +1,7 @@
-import {describe it expect} from "vitest";
-import {selectAwardsEligibleProjects selectAwardsOddsById} from "@/store/selectors";
+import {describe, it, expect} from "vitest";
+import {selectAwardsEligibleProjects, selectAwardsOddsById} from "@/store/selectors";
 import {createMockGameState} from "../mockFactory";
-import type { Project, AwardsProfile } from "@/engine/types";
+import type {Project, AwardsProfile} from "@/engine/types";
 
 const mockAwardsProfile: AwardsProfile = {
   criticScore: 85,

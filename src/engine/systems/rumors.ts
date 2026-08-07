@@ -1,6 +1,6 @@
-import {GameState Rumor} from "@/engine/types";
+import {GameState, Rumor} from "@/engine/types";
 import {StateImpact} from "../types/state.types";
-import {pick randRange secureRandom generateId} from "../utils";
+import {pick, randRange, secureRandom, generateId} from "../utils";
 
 /**
  * Advances the industry rumor system by one week.

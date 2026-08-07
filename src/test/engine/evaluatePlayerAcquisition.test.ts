@@ -1,6 +1,6 @@
-import {describe it expect} from "vitest";
-import {evaluatePlayerAcquisition evaluateAcquisitionTarget} from "@/engine/systems/mergers";
-import {createMockGameState createMockRival} from "./generators/mockFactory";
+import {describe, it, expect} from "vitest";
+import {evaluatePlayerAcquisition, evaluateAcquisitionTarget} from "@/engine/systems/mergers";
+import {createMockGameState, createMockRival} from "./generators/mockFactory";
 
 function makeState(opts: {
   playerCash?: number;

@@ -1,9 +1,9 @@
 import {WeekCoordinator} from "@/engine/services/WeekCoordinator";
 import {initializeGame} from "@/engine/core/gameInit";
 
-import {describe expect beforeEach test} from "vitest";
-import {GameState Project IPAsset} from "@/engine/types";
-import {type ProjectId type AssetId} from "@/engine/types/shared.types";
+import {describe, expect, beforeEach, test} from "vitest";
+import {GameState, Project, IPAsset} from "@/engine/types";
+import {type ProjectId, type AssetId} from "@/engine/types/shared.types";
 
 describe("System Connectivity - Phase 3 Integration", () => {
   let state: GameState;

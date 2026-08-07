@@ -1,4 +1,4 @@
-import {GameState Project Franchise StateImpact} from "../../types";
+import {GameState, Project, Franchise, StateImpact} from "../../types";
 import {RandomGenerator} from "../../utils/rng";
 import {calculateFranchiseEquity} from "./EquityCalculator";
 import {clamp} from "../../utils";

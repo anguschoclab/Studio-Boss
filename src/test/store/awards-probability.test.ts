@@ -1,7 +1,7 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {selectAwardsProbability} from "@/store/chartSelectors";
-import {createMockGameState createMockProject} from "@/test/utils/mockFactories";
-import type { AwardsProfile } from "@/engine/types";
+import {createMockGameState, createMockProject} from "@/test/utils/mockFactories";
+import type {AwardsProfile} from "@/engine/types";
 import {AWARD_CONFIGS} from "@/engine/data/awards.data";
 
 const mockAwardsProfile: AwardsProfile = {

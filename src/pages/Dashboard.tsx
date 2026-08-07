@@ -15,7 +15,7 @@ import {DistributionHub} from "@/components/distribution/DistributionHub";
 import {BookmarksBoard} from "@/components/bookmarks/BookmarksBoard";
 import {AwardsHQ} from "@/components/awards/AwardsHQ";
 import {ErrorBoundary} from "@/components/ErrorBoundary";
-import {AnimatePresence motion} from "framer-motion";
+import {AnimatePresence, motion} from "framer-motion";
 
 // Modals
 import {CreateProjectModal} from "@/components/modals/CreateProjectModal";

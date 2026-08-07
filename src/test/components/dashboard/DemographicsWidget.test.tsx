@@ -1,6 +1,6 @@
 import React from "react";
-import {render screen} from "@testing-library/react";
-import {describe it expect beforeEach vi} from "vitest";
+import {render, screen} from "@testing-library/react";
+import {describe, it, expect, beforeEach, vi} from "vitest";
 import {DemographicsWidget} from "@/components/dashboard/DemographicsWidget";
 
 // In vitest we have to import vi from vitest, and then call vi.mock

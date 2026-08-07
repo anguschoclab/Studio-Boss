@@ -1,6 +1,6 @@
-import {MarketState StateImpact} from "../../types/state.types";
+import {MarketState, StateImpact} from "../../types/state.types";
 import {GameState} from "../../types/studio.types";
-import {clamp rand generateId} from "../../utils";
+import {clamp, rand, generateId} from "../../utils";
 
 /**
  * Global Market Simulation: Interest Rate Simulator.

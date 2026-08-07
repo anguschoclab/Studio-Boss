@@ -1,21 +1,21 @@
-import {useState useEffect} from "react";
+import {useState, useEffect} from "react";
 import {useGameStore} from "@/store/gameStore";
 import {useUIStore} from "@/store/uiStore";
-import {GENRE_TAXONOMY GENRES TARGET_AUDIENCES} from "@/engine/data/genres";
+import {GENRE_TAXONOMY, GENRES, TARGET_AUDIENCES} from "@/engine/data/genres";
 import {BUDGET_TIERS} from "@/engine/data/budgetTiers";
-import {TV_FORMATS TV_FORMAT_TAXONOMY} from "@/engine/data/tvFormats";
+import {TV_FORMATS, TV_FORMAT_TAXONOMY} from "@/engine/data/tvFormats";
 import {UNSCRIPTED_FORMATS} from "@/engine/data/unscriptedFormats";
 import {UNSCRIPTED_FORMAT_TAXONOMY} from "@/engine/data/unscriptedTaxonomy";
 import {generateProjectTitle} from "@/engine/generators/titles";
-import {BudgetTierKey ProjectFormat TvFormatKey UnscriptedFormatKey ReleaseModelKey} from "@/engine/types";
+import {BudgetTierKey, ProjectFormat, TvFormatKey, UnscriptedFormatKey, ReleaseModelKey} from "@/engine/types";
 import {formatMoney} from "@/engine/utils";
-import {Dialog DialogContent DialogHeader DialogTitle DialogDescription DialogFooter} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
-import {Select SelectContent SelectItem SelectTrigger SelectValue} from "@/components/ui/select";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Slider} from "@/components/ui/slider";
-import {Dices Info} from "lucide-react";
+import {Dices, Info} from "lucide-react";
 
 export const CreateProjectModal = () => {
   const { showCreateProject, closeCreateProject } = useUIStore();

@@ -1,4 +1,4 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {GameState} from "@/engine/types";
 import {RandomGenerator} from "@/engine/utils/rng";
 import {tickMarketing} from "@/engine/systems/marketing/MarketingSystem";

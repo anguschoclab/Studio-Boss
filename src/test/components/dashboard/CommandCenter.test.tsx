@@ -1,6 +1,6 @@
 import React from "react";
-import {render screen} from "@testing-library/react";
-import {describe it expect vi beforeEach} from "vitest";
+import {render, screen} from "@testing-library/react";
+import {describe, it, expect, vi, beforeEach} from "vitest";
 import {CommandCenter} from "@/components/dashboard/CommandCenter";
 import {useGameStore} from "@/store/gameStore";
 import {TooltipProvider} from "@/components/ui/tooltip";

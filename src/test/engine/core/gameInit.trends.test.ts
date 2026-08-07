@@ -1,6 +1,6 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {initializeGame} from "../../../engine/core/gameInit";
-import {ALL_GENRES initializeTrends} from "../../../engine/systems/trends";
+import {ALL_GENRES, initializeTrends} from "../../../engine/systems/trends";
 
 describe("initializeGame — genrePopularity from trends", () => {
   it("populates genrePopularity for all 10 ALL_GENRES entries", () => {

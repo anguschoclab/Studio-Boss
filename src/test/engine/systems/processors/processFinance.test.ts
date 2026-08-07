@@ -1,6 +1,6 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {tickFinance} from "../../../../engine/systems/finance/financeTick";
-import {GameState Talent} from "../../../../engine/types";
+import {GameState, Talent} from "../../../../engine/types";
 import {RandomGenerator} from "../../../../engine/utils/rng";
 
 describe("tickFinance", () => {

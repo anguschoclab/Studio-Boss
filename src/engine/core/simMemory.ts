@@ -1,5 +1,5 @@
-import type { GameState } from "../types";
-import type { SimMemory } from "../types/state.types";
+import type {GameState} from "../types";
+import type {SimMemory} from "../types/state.types";
 
 export const CURRENT_SAVE_VERSION = 2;
 

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Project Contract Talent StateImpact MarketingCampaign} from "@/engine/types";
+import {Project, Contract, Talent, StateImpact, MarketingCampaign} from "@/engine/types";
 import {RandomGenerator} from "../../utils/rng";
 
 type ExtendedMarketingAngle =

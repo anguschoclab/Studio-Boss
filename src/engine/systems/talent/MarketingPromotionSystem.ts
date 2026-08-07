@@ -1,6 +1,6 @@
-import {GameState StateImpact Talent Project} from "../../types";import {RandomGenerator} from "../../utils/rng";
+import {GameState, StateImpact, Talent, Project} from "../../types";import {RandomGenerator} from "../../utils/rng";
 import {getContractsByProjectId} from "../../utils";
-import {TalkShowAppearance TalkShowType MagazinePhotoshoot PhotoshootType PressTour FAMOUS_TALK_SHOWS PRESTIGIOUS_MAGAZINES} from "../../types/marketing.types";
+import {TalkShowAppearance, TalkShowType, MagazinePhotoshoot, PhotoshootType, PressTour, FAMOUS_TALK_SHOWS, PRESTIGIOUS_MAGAZINES} from "../../types/marketing.types";
 import {areRomantic} from "./RelationshipSystem";
 
 /**

@@ -1,5 +1,5 @@
-import {Project Contract Talent StateImpact} from "@/engine/types";
-import {calculateOpeningWeekend simulateWeeklyBoxOffice} from "../releaseSimulation";
+import {Project, Contract, Talent, StateImpact} from "@/engine/types";
+import {calculateOpeningWeekend, simulateWeeklyBoxOffice} from "../releaseSimulation";
 import {TalentSystem} from "../TalentSystem";
 import {RandomGenerator} from "../../utils/rng";
 

@@ -1,7 +1,7 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {migrateSave} from "@/engine/migrations";
 import {CURRENT_SAVE_VERSION} from "@/engine/core/simMemory";
-import type { GameState } from "@/engine/types";
+import type {GameState} from "@/engine/types";
 
 describe("migrateSave", () => {
   it("upgrades a v1 save (no saveVersion, no simMemory) to current", () => {

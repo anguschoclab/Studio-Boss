@@ -1,7 +1,7 @@
-import {describe it expect beforeEach vi afterEach} from "vitest";
+import {describe, it, expect, beforeEach, vi, afterEach} from "vitest";
 import {useGameStore} from "@/store/gameStore";
 import {RegulatorSystem} from "@/engine/systems/industry/RegulatorSystem";
-import {createMockGameState createMockRival} from "../engine/generators/mockFactory";
+import {createMockGameState, createMockRival} from "../engine/generators/mockFactory";
 
 function seed() {
   return createMockGameState({

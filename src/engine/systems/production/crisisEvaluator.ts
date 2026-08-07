@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {GameState Project StateImpact ProjectUpdateImpact} from "@/engine/types";
+import {GameState, Project, StateImpact, ProjectUpdateImpact} from "@/engine/types";
 
 /**
  * Strategy Pattern for Crisis Resolution (Target A3).

@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useMemo } from "react";
 import {useGameStore} from "@/store/gameStore";
-import {Card CardContent CardHeader CardTitle} from "@/components/ui/card";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {formatMoney} from "@/engine/utils";
 import {cn} from "@/lib/utils";
-import {BarChart Bar XAxis YAxis Tooltip ResponsiveContainer Cell} from "recharts";
-import {Wallet AlertTriangle} from "lucide-react";
+import {BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell} from "recharts";
+import {Wallet, AlertTriangle} from "lucide-react";
 
 interface ResourceAllocationProps {
   className?: string;

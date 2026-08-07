@@ -1,6 +1,6 @@
 import React from "react";
-import {cn formatCurrency} from "@/lib/utils";
-import {AlertTriangle DollarSign TrendingUp AlertOctagon CheckCircle2 Clock} from "lucide-react";
+import {cn, formatCurrency} from "@/lib/utils";
+import {AlertTriangle, DollarSign, TrendingUp, AlertOctagon, CheckCircle2, Clock} from "lucide-react";
 import {Section} from "@/components/layout/Section";
 import {Card} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";

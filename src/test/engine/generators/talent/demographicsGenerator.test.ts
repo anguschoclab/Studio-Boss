@@ -1,4 +1,4 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {generateDemographics} from "../../../../engine/generators/talent/demographicsGenerator";
 
 describe("generateDemographics", () => {

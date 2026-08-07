@@ -1,4 +1,4 @@
-import {Contract Talent} from "@/engine/types";
+import {Contract, Talent} from "@/engine/types";
 
 export function getAttachedTalent(
   contracts: Contract[],

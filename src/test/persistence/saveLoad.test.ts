@@ -1,5 +1,5 @@
-import {describe it expect beforeEach vi} from "vitest";
-import {saveGame loadGame getSaveSlots} from "../../persistence/saveLoad";
+import {describe, it, expect, beforeEach, vi} from "vitest";
+import {saveGame, loadGame, getSaveSlots} from "../../persistence/saveLoad";
 import {persistenceService} from "../../persistence/PersistenceService";
 import {} from "../../engine/types";
 import {initializeGame} from "../../engine/core/gameInit";

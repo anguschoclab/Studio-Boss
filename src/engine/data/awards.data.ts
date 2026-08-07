@@ -1,4 +1,4 @@
-import {AwardBody AwardCategory Project ProjectFormat} from "../types";
+import {AwardBody, AwardCategory, Project, ProjectFormat} from "../types";
 
 export const CANNES_EQUIVALENTS: AwardBody[] = [
   "Cannes Film Festival",

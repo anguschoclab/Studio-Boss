@@ -1,5 +1,5 @@
-import {Talent ActorArchetype WriterArchetype ProducerArchetype PersonalityArchetype DirectorArchetype TalentPersonality CareerTrajectory} from "../../types/talent.types";
-import {ARCHETYPE_TRANSITIONS PERSONALITY_TRANSITIONS CAREER_TRAJECTORY_TRANSITIONS} from "../../data/talentArchetypes";
+import {Talent, ActorArchetype, WriterArchetype, ProducerArchetype, PersonalityArchetype, DirectorArchetype, TalentPersonality, CareerTrajectory} from "../../types/talent.types";
+import {ARCHETYPE_TRANSITIONS, PERSONALITY_TRANSITIONS, CAREER_TRAJECTORY_TRANSITIONS} from "../../data/talentArchetypes";
 import {RandomGenerator} from "../../utils/rng";
 
 /**

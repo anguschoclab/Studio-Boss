@@ -1,4 +1,4 @@
-import {Project Talent} from "@/engine/types";
+import {Project, Talent} from "@/engine/types";
 import {AwardsProfile} from "@/engine/types/project.types";
 import {RandomGenerator} from "../../utils/rng";
 

@@ -1,6 +1,6 @@
-import {describe it expect beforeEach} from "vitest";
-import {WeekCoordinator TickContext} from "@/engine/services/WeekCoordinator";
-import {GameState StateImpact} from "@/engine/types";
+import {describe, it, expect, beforeEach} from "vitest";
+import {WeekCoordinator, TickContext} from "@/engine/services/WeekCoordinator";
+import {GameState, StateImpact} from "@/engine/types";
 import {RandomGenerator} from "@/engine/utils/rng";
 import {createMockGameState} from "@/test/utils/mockFactories";
 

@@ -1,7 +1,7 @@
-import {describe it expect beforeEach} from "vitest";
+import {describe, it, expect, beforeEach} from "vitest";
 import {tickIPVault} from "@/engine/systems/ip/IPVaultManager";
-import {createMockGameState createMockIPAsset createMockProject} from "@/test/utils/mockFactories";
-import {GameState IPAsset Franchise} from "@/engine/types";
+import {createMockGameState, createMockIPAsset, createMockProject} from "@/test/utils/mockFactories";
+import {GameState, IPAsset, Franchise} from "@/engine/types";
 
 describe("tickIPVault — franchise fatigue with vault lookup", () => {
   let state: GameState;

@@ -1,5 +1,5 @@
-import {describe bench} from "vitest";
-import {NewsEvent HeadlineCategory} from "../../engine/types";
+import {describe, bench} from "vitest";
+import {NewsEvent, HeadlineCategory} from "../../engine/types";
 
 const generateHeadlines = (count: number): NewsEvent[] => {
   const categories: HeadlineCategory[] = ["talent", "rival", "awards", "market", "general"];

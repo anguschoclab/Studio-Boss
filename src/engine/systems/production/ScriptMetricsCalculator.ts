@@ -1,4 +1,4 @@
-import {ScriptedProject ScriptEvent ScriptMetrics} from "@/engine/types/project.types";
+import {ScriptedProject, ScriptEvent, ScriptMetrics} from "@/engine/types/project.types";
 
 /**
  * Calculates script quality metrics from scriptEvents and scriptHeat.

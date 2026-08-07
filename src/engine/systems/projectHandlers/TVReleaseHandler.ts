@@ -1,4 +1,4 @@
-import {SeriesProject Contract Talent Award StateImpact} from "@/engine/types";
+import {SeriesProject, Contract, Talent, Award, StateImpact} from "@/engine/types";
 import {TalentSystem} from "../TalentSystem";
 import {TV_FORMATS} from "../../data/tvFormats";
 import {RandomGenerator} from "../../utils/rng";

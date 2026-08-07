@@ -1,7 +1,7 @@
-import {describe it expect vi beforeEach afterEach} from "vitest";
-import {evaluateAcquisitionTarget executeAcquisition executeSabotage executePoach} from "../../../engine/systems/mergers";
-import {GameState RivalStudio} from "../../../engine/types";
-import {createMockGameState createMockRival} from "../generators/mockFactory";
+import {describe, it, expect, vi, beforeEach, afterEach} from "vitest";
+import {evaluateAcquisitionTarget, executeAcquisition, executeSabotage, executePoach} from "../../../engine/systems/mergers";
+import {GameState, RivalStudio} from "../../../engine/types";
+import {createMockGameState, createMockRival} from "../generators/mockFactory";
 import {RegulatorSystem} from "../../../engine/systems/industry/RegulatorSystem";
 
 describe("Mergers and Sabotage System", () => {

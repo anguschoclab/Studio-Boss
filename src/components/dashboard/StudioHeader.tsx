@@ -1,5 +1,5 @@
 import {Badge} from "@/components/ui/badge";
-import {Star Zap} from "lucide-react";
+import {Star, Zap} from "lucide-react";
 import {GameState} from "@/engine/types";
 
 interface StudioHeaderProps {

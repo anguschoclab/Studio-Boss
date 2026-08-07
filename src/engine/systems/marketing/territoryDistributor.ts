@@ -1,4 +1,4 @@
-import {MarketingCampaign BoxOfficeResult} from "../../types";
+import {MarketingCampaign, BoxOfficeResult} from "../../types";
 
 export function calculateTerritorySplit(
   baseGross: number,

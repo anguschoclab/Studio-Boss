@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Talent Agent Agency TalentPersonality AgentPersonality} from "../../types/talent.types";
+import {Talent, Agent, Agency, TalentPersonality, AgentPersonality} from "../../types/talent.types";
 import {AGENCY_ARCHETYPES} from "../../data/archetypes";
 import {RandomGenerator} from "../../utils/rng";
 
-export type { AgentPersonality } from "../../types/talent.types";
+export type {AgentPersonality} from "../../types/talent.types";
 
 /**
  * Agent personality configuration

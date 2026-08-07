@@ -1,8 +1,8 @@
 import React from "react";
 import {cn} from "@/lib/utils";
-import {Building2 Package Eye Star DollarSign Users ChevronRight Zap} from "lucide-react";
+import {Building2, Package, Eye, Star, DollarSign, Users, ChevronRight, Zap} from "lucide-react";
 import {TalentNameLink} from "@/components/shared/TalentNameLink";
-import type { Agency, Opportunity } from "@/engine/types";
+import type {Agency, Opportunity} from "@/engine/types";
 
 // Extended agency interface for UI display
 interface AgencyDisplay extends Agency {

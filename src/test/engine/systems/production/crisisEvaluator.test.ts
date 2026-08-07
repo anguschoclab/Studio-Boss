@@ -1,5 +1,5 @@
-import {describe it expect} from "vitest";
-import {GameState StateImpact Project} from "@/engine/types";
+import {describe, it, expect} from "vitest";
+import {GameState, StateImpact, Project} from "@/engine/types";
 import {resolveCrisisWithHandlers} from "@/engine/systems/production/crisisEvaluator";
 
 describe("Crisis Evaluator (Target A3)", () => {

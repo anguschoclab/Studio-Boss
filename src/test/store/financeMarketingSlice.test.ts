@@ -1,4 +1,4 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {Contract} from "@/engine/types";
 
 describe("financeMarketingSlice — contract filtering logic", () => {

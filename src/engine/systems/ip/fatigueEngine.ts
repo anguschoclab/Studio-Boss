@@ -1,6 +1,6 @@
 import {Franchise} from "../../types";
 import {clamp} from "../../utils";
-import {FRANCHISE_FATIGUE_RISK FRANCHISE_FATIGUE_RISK_LOWER_KEYS} from "../../data/genres";
+import {FRANCHISE_FATIGUE_RISK, FRANCHISE_FATIGUE_RISK_LOWER_KEYS} from "../../data/genres";
 
 /**
  * Fatigue Logic Engine.

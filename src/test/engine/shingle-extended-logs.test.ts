@@ -1,9 +1,9 @@
-import {describe it expect vi beforeEach} from "vitest";
+import {describe, it, expect, vi, beforeEach} from "vitest";
 import {cancelHighestOverheadDeal} from "@/engine/systems/deals/ShingleSystem";
-import type { ShingleLogEntry } from "@/engine/systems/deals/ShingleSystem";
-import type { GameState, StateImpact } from "@/engine/types";
+import type {ShingleLogEntry} from "@/engine/systems/deals/ShingleSystem";
+import type {GameState, StateImpact} from "@/engine/types";
 import {defaultSimMemory} from "@/engine/core/simMemory";
-import {createMockGameState createMockRival} from "./generators/mockFactory";
+import {createMockGameState, createMockRival} from "./generators/mockFactory";
 import * as utils from "@/engine/utils";
 
 function findShingleLogImpact(impacts: StateImpact[]): ShingleLogEntry[] | undefined {

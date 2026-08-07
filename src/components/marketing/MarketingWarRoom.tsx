@@ -1,14 +1,14 @@
 import React, { useState, useMemo } from "react";
 import {useGameStore} from "@/store/gameStore";
-import {MarketingAngle MarketingCampaign} from "@/engine/types";
+import {MarketingAngle, MarketingCampaign} from "@/engine/types";
 import {Button} from "@/components/ui/button";
 import {Zap} from "lucide-react";
 import {Slider} from "@/components/ui/slider";
-import {Select SelectContent SelectItem SelectTrigger SelectValue} from "@/components/ui/select";
-import {Card CardHeader CardTitle CardContent CardFooter} from "@/components/ui/card";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {Card, CardHeader, CardTitle, CardContent, CardFooter} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
 import {Progress} from "@/components/ui/progress";
-import {Globe Home Target TrendingUp AlertCircle} from "lucide-react";
+import {Globe, Home, Target, TrendingUp, AlertCircle} from "lucide-react";
 import {evaluateMarketingEfficiency} from "@/engine/systems/marketing/efficiencyEvaluator";
 import {formatCurrency} from "@/lib/utils"; // Assuming this exists
 import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";

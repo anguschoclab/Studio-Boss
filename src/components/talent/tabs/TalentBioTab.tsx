@@ -1,7 +1,7 @@
 import {TabsContent} from "@/components/ui/tabs";
 import {Badge} from "@/components/ui/badge";
-import {Briefcase Heart Info Users Zap} from "lucide-react";
-import {Talent Agency Agent Family} from "@/engine/types";
+import {Briefcase, Heart, Info, Users, Zap} from "lucide-react";
+import {Talent, Agency, Agent, Family} from "@/engine/types";
 import {TalentAvatar} from "../TalentAvatar";
 
 const Quote = (props: React.SVGProps<SVGSVGElement>) => (

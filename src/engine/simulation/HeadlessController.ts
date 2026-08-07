@@ -1,12 +1,12 @@
-import {GameState StateImpact Project RivalStudio CampaignData} from "@/engine/types";
+import {GameState, StateImpact, Project, RivalStudio, CampaignData} from "@/engine/types";
 import {RandomGenerator} from "../utils/rng";
-import {isPlayerOwner getPlayerId} from "../utils/ownership";
-import {executeGreenlight executeMarketing} from "../systems/projects";
+import {isPlayerOwner, getPlayerId} from "../utils/ownership";
+import {executeGreenlight, executeMarketing} from "../systems/projects";
 import {BudgetTierKey} from "../types/project.types";
 import {processFlops} from "../systems/finance/FlopMechanics";
 import {calculateOpeningWeekend} from "../systems/releaseSimulation";
 import {getSimMemory} from "../core/simMemory";
-import {getMarketHeat getBudgetInflation BANKRUPTCY_CASH_FLOOR BANKRUPTCY_WEEKS_REQUIRED} from "../systems/industry/MacroCycle";
+import {getMarketHeat, getBudgetInflation, BANKRUPTCY_CASH_FLOOR, BANKRUPTCY_WEEKS_REQUIRED} from "../systems/industry/MacroCycle";
 import {buildFatigueAwareGenreWeights} from "../systems/rivals/rivalProduction";
 import {checkCampaignBacklash} from "../systems/awards/NominationCalculator";
 

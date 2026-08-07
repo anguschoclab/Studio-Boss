@@ -1,8 +1,8 @@
-import {Project RivalStudio} from "@/engine/types";
+import {Project, RivalStudio} from "@/engine/types";
 import {RandomGenerator} from "../../utils/rng";
 import {getStudioArchetype} from "../../data/aiArchetypes";
 import {SeriesProject} from "@/engine/types/project.types";
-import {assignTimeSlot TimeSlot} from "../television/nielsenSystem";
+import {assignTimeSlot, TimeSlot} from "../television/nielsenSystem";
 
 export function generateFestivalBid(
   rival: RivalStudio,

@@ -1,6 +1,6 @@
-import {Buyer BuyerArchetype NetworkPlatform PremiumPlatform StreamerPlatform} from "@/engine/types";
-import {pick randRange generateId rand} from "../utils";
-import {PREMIUM_PREFIXES PREMIUM_SUFFIXES} from "../data/names.data";
+import {Buyer, BuyerArchetype, NetworkPlatform, PremiumPlatform, StreamerPlatform} from "@/engine/types";
+import {pick, randRange, generateId, rand} from "../utils";
+import {PREMIUM_PREFIXES, PREMIUM_SUFFIXES} from "../data/names.data";
 import {BrandSystem} from "./BrandSystem";
 
 function generateBuyerName(archetype: BuyerArchetype, existing: Set<string>): string {

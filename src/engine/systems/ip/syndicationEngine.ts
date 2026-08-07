@@ -1,4 +1,4 @@
-import {SYNDICATION_TIERS GENRE_SYNDICATION_MODIFIERS SyndicationTier} from "../../data/syndicationConfig";
+import {SYNDICATION_TIERS, GENRE_SYNDICATION_MODIFIERS, SyndicationTier} from "../../data/syndicationConfig";
 
 /**
  * Pure logic for determining the syndication package tier.

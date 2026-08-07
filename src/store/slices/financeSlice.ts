@@ -1,6 +1,6 @@
 import {StateCreator} from "zustand";
 import {GameStore} from "../gameStore";
-import {WeeklyFinancialReport FinanceState} from "@/engine/types";
+import {WeeklyFinancialReport, FinanceState} from "@/engine/types";
 import {FinancialSnapshot} from "@/engine/types/state.types";import {InterestRateSimulator} from "@/engine/systems/market/InterestRateSimulator";
 
 export interface FinanceSlice {

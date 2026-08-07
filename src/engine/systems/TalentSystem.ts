@@ -1,8 +1,8 @@
-import {GameState Talent Project Contract Award Opportunity} from "@/engine/types";
+import {GameState, Talent, Project, Contract, Award, Opportunity} from "@/engine/types";
 type TalentProfile = Talent;
 import {StateImpact} from "../types/state.types";
 import {generateOpportunity} from "../generators/opportunities";
-import {clamp secureRandom getContractsByTalentId} from "../utils";
+import {clamp, secureRandom, getContractsByTalentId} from "../utils";
 import {isPlayerOwner} from "../utils/ownership";
 import {applyAwardBoostsToTalent} from "./talentStats";
 import {calculateTalentTier} from "../utils/prestigeCalculator";

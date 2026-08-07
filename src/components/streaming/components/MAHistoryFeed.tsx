@@ -1,7 +1,7 @@
 import React from "react";
 import {Buyer} from "@/engine/types";
 import {formatMoney} from "@/engine/utils";
-import {History Calendar DollarSign ArrowRight} from "lucide-react";
+import {History, Calendar, DollarSign, ArrowRight} from "lucide-react";
 
 interface MAHistoryFeedProps {
   buyer: Buyer;

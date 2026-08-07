@@ -1,4 +1,4 @@
-import {Project GameState Buyer TalentPact} from "@/engine/types";
+import {Project, GameState, Buyer, TalentPact} from "@/engine/types";
 import {RevenueProcessor} from "./RevenueProcessor";
 import {ExpenseProcessor} from "./ExpenseProcessor";
 import {InterestRateSimulator} from "../market/InterestRateSimulator";

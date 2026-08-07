@@ -1,4 +1,4 @@
-import {Agency Agent Talent MarketState} from "../../types";
+import {Agency, Agent, Talent, MarketState} from "../../types";
 import {clamp} from "../../utils";
 import {AGENCY_ARCHETYPES} from "../../data/archetypes";
 

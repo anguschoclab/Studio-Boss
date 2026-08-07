@@ -1,6 +1,6 @@
 import React from "react";
-import {render screen} from "@testing-library/react";
-import {describe it expect vi beforeEach} from "vitest";
+import {render, screen} from "@testing-library/react";
+import {describe, it, expect, vi, beforeEach} from "vitest";
 import {FranchiseHub} from "@/components/ip/FranchiseHub";
 import {useGameStore} from "@/store/gameStore";
 

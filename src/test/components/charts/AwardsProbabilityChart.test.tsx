@@ -1,7 +1,7 @@
-import {render screen} from "@testing-library/react";
-import {describe it expect vi} from "vitest";
+import {render, screen} from "@testing-library/react";
+import {describe, it, expect, vi} from "vitest";
 import {AwardsProbabilityChart} from "@/components/charts/AwardsProbabilityChart";
-import type { AwardProbability } from "@/store/chartSelectors";
+import type {AwardProbability} from "@/store/chartSelectors";
 
 // Mock ResizeObserver
 global.ResizeObserver = vi.fn().mockImplementation(() => ({

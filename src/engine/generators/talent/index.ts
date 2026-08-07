@@ -1,8 +1,8 @@
-import {Talent TalentRole Family Agency Agent TalentTier} from "../../types/talent.types";
+import {Talent, TalentRole, Family, Agency, Agent, TalentTier} from "../../types/talent.types";
 import {generateDemographics} from "./demographicsGenerator";
 import {psychologyGenerator} from "./psychologyGenerator";
 import {generateDemographicName} from "../names";
-import {randRange pick rand generateId} from "../../utils";
+import {randRange, pick, rand, generateId} from "../../utils";
 
 const TALENT_QUIRKS = [
   "Refuses to do press",

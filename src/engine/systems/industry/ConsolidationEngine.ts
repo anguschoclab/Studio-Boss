@@ -1,9 +1,9 @@
-import {GameState StateImpact StreamerPlatform RivalStudio} from "@/engine/types";
+import {GameState, StateImpact, StreamerPlatform, RivalStudio} from "@/engine/types";
 import {RegulatorSystem} from "./RegulatorSystem";
-import {pick secureRandom} from "../../utils";
+import {pick, secureRandom} from "../../utils";
 import {isAcquirerBlockedByAntitrust} from "./Antitrust";
 import {getSimMemory} from "../../core/simMemory";
-import {impacts as I} from "../../core/impacts";
+import {impacts, as, I} from "../../core/impacts";
 
 export interface ConsolidationEvent {
   week: number;

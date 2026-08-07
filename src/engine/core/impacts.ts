@@ -1,26 +1,5 @@
-import type {
-  HeadlineCategory,
-  Project,
-  Talent,
-  RivalStudio,
-  Buyer,
-  Franchise,
-  Award,
-} from '@/engine/types';
-import type {
-  NewsImpact,
-  FundsImpact,
-  FundsDeductedImpact,
-  ProjectUpdateImpact,
-  TalentUpdateImpact,
-  PrestigeChangedImpact,
-  BuyerUpdateImpact,
-  RivalUpdateImpact,
-  IndustryUpdateImpact,
-  ModalTriggeredImpact,
-  FranchiseUpdatedImpact,
-  AwardWonImpact,
-} from '@/engine/types/state.types';
+import type {HeadlineCategory, Project, Talent, RivalStudio, Buyer, Franchise, Award} from '@/engine/types';
+import type {NewsImpact, FundsImpact, FundsDeductedImpact, ProjectUpdateImpact, TalentUpdateImpact, PrestigeChangedImpact, BuyerUpdateImpact, RivalUpdateImpact, IndustryUpdateImpact, ModalTriggeredImpact, FranchiseUpdatedImpact, AwardWonImpact} from '@/engine/types/state.types';
 
 /**
  * Typed impact constructor functions.

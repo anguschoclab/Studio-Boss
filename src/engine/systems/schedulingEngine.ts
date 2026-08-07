@@ -1,4 +1,4 @@
-import {Project Contract Talent TalentPact GameState StateImpact} from "@/engine/types";
+import {Project, Contract, Talent, TalentPact, GameState, StateImpact} from "@/engine/types";
 import {RandomGenerator} from "../utils/rng";
 import {getContractsByProjectId} from "@/engine/utils";
 

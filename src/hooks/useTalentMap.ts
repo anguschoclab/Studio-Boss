@@ -1,6 +1,6 @@
 import {useMemo} from "react";
 import {useGameStore} from "@/store/gameStore";
-import {Talent Agency} from "@/engine/types";
+import {Talent, Agency} from "@/engine/types";
 import {selectTalentPool} from "@/store/selectors";
 
 /**

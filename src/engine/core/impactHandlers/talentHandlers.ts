@@ -1,11 +1,5 @@
 import {GameState} from "@/engine/types";
-import type {
-  TalentUpdateImpact,
-  TalentAddedImpact,
-  TalentRemovedImpact,
-  CastingConstraintCheckedImpact,
-  MedicalLeaveTriggeredImpact,
-} from "@/engine/types/state.types";
+import type {TalentUpdateImpact, TalentAddedImpact, TalentRemovedImpact, CastingConstraintCheckedImpact, MedicalLeaveTriggeredImpact} from "@/engine/types/state.types";
 
 /**
  * Talent-related impact handlers

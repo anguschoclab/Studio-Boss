@@ -1,4 +1,4 @@
-import {GameState StateImpact StreamerPlatform SeriesProject} from "@/engine/types";
+import {GameState, StateImpact, StreamerPlatform, SeriesProject} from "@/engine/types";
 import {RandomGenerator} from "../../utils/rng";
 
 /**

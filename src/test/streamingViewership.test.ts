@@ -1,9 +1,9 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {StreamingViewershipTracker} from "@/engine/systems/production/StreamingViewershipTracker";
-import {Project Buyer} from "@/engine/types";
+import {Project, Buyer} from "@/engine/types";
 import {StreamingViewershipHistory} from "@/engine/types/project.types";
 import {RandomGenerator} from "@/engine/utils/rng";
-import {createMockProject createMockBuyer} from "./utils/mockFactories";
+import {createMockProject, createMockBuyer} from "./utils/mockFactories";
 
 describe("StreamingViewershipTracker", () => {
   const rng = new RandomGenerator(123);

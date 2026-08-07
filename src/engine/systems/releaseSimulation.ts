@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Project Talent ActiveCrisis MarketingCampaign} from "@/engine/types";import {randRange clamp} from "../utils";
+import {Project, Talent, ActiveCrisis, MarketingCampaign} from "@/engine/types";import {randRange, clamp} from "../utils";
 import {evaluateMarketingEfficiency} from "./marketing/efficiencyEvaluator";
 import {calculateTerritorySplit} from "./marketing/territoryDistributor";
 import {getMarketHeat} from "./industry/MacroCycle";

@@ -1,7 +1,7 @@
-import {NewsEvent RivalStudio HeadlineCategory Project Contract Talent} from "@/engine/types";
+import {NewsEvent, RivalStudio, HeadlineCategory, Project, Contract, Talent} from "@/engine/types";
 type TalentProfile = Talent;
-import {fillTemplate pick secureRandom getContractsByProjectId} from "../utils";
-import {MARKET_HEADLINES TALENT_HEADLINES RIVAL_TEMPLATES} from "../data/headlines.data";
+import {fillTemplate, pick, secureRandom, getContractsByProjectId} from "../utils";
+import {MARKET_HEADLINES, TALENT_HEADLINES, RIVAL_TEMPLATES} from "../data/headlines.data";
 
 export function generateHeadlines(
   week: number,

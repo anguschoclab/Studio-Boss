@@ -1,4 +1,4 @@
-import {Agency Talent GameState StateImpact} from "@/engine/types";
+import {Agency, Talent, GameState, StateImpact} from "@/engine/types";
 import {MarketState} from "@/engine/types/state.types";
 import {RandomGenerator} from "../../utils/rng";
 import {AGENCY_ARCHETYPES} from "../../data/archetypes";

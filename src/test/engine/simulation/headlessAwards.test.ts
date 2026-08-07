@@ -1,8 +1,8 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {RandomGenerator} from "@/engine/utils/rng";
 import {createMockGameState} from "../generators/mockFactory";
 import {HeadlessController} from "@/engine/simulation/HeadlessController";
-import type { Project, GameState, StateImpact } from "@/engine/types";
+import type {Project, GameState, StateImpact} from "@/engine/types";
 
 function createProject(
   id: string,

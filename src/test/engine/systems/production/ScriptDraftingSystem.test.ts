@@ -1,5 +1,5 @@
 import {vi} from "vitest";
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {Project} from "@/engine/types";
 import {RandomGenerator} from "@/engine/utils/rng";
 import {tickScriptDevelopment} from "@/engine/systems/production/ScriptDraftingSystem";

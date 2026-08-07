@@ -1,5 +1,5 @@
-import {Project ActiveCrisis GameState} from "@/engine/types";
-import {pick rand generateId} from "../utils";
+import {Project, ActiveCrisis, GameState} from "@/engine/types";
+import {pick, rand, generateId} from "../utils";
 import {StateImpact} from "../types/state.types";
 import {CRISIS_POOLS} from "../data/crises.data";
 

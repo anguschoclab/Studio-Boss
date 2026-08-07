@@ -1,10 +1,10 @@
 import React from "react";
-import {Card CardContent} from "@/components/ui/card";
+import {Card, CardContent} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";
 import {useGameStore} from "@/store/gameStore";
 import {selectFatigueForAsset} from "@/store/selectors";
-import {TrendingUp DollarSign History Globe Lock} from "lucide-react";
+import {TrendingUp, DollarSign, History, Globe, Lock} from "lucide-react";
 import {formatMoney} from "@/engine/utils";
 import {IPAsset} from "@/engine/types";
 import {SYNDICATION_TIERS} from "@/engine/data/syndicationConfig";

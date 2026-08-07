@@ -1,5 +1,5 @@
-import {describe it expect beforeEach} from "vitest";
-import {GameState StateImpact} from "@/engine/types";
+import {describe, it, expect, beforeEach} from "vitest";
+import {GameState, StateImpact} from "@/engine/types";
 import {applyImpacts} from "@/engine/core/impactReducer";
 import {createMockGameState} from "../generators/mockFactory";
 

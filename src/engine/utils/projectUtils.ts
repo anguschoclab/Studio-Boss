@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Project FilmProject SeriesProject UnscriptedProject BudgetTierKey} from "../types/project.types";
+import {Project, FilmProject, SeriesProject, UnscriptedProject, BudgetTierKey} from "../types/project.types";
 import {Talent} from "../types/talent.types";
 
 const BUDGET_TIER_RANK: Record<BudgetTierKey, number> = {

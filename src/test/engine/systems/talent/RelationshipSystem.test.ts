@@ -1,8 +1,8 @@
-import {describe it expect} from "vitest";
-import {haveCompeted areFriends areRivals areRomantic getTalentRelationships getCastingChemistry tickRelationshipSystem} from "@/engine/systems/talent/RelationshipSystem";
+import {describe, it, expect} from "vitest";
+import {haveCompeted, areFriends, areRivals, areRomantic, getTalentRelationships, getCastingChemistry, tickRelationshipSystem} from "@/engine/systems/talent/RelationshipSystem";
 import {RandomGenerator} from "@/engine/utils/rng";
 
-import {createMockGameState createMockProject createMockTalent createMockContract} from "../../../utils/mockFactories";
+import {createMockGameState, createMockProject, createMockTalent, createMockContract} from "../../../utils/mockFactories";
 
 describe("RelationshipSystem - Award Nominee Tracking", () => {
   it("should return false when no awards exist", () => {

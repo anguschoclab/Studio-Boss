@@ -1,11 +1,11 @@
-import {useState useMemo} from "react";
+import {useState, useMemo} from "react";
 import {useGameStore} from "@/store/gameStore";
-import {Project TalentRole} from "@/engine/types";
-import {formatMoney getContractsByProjectId} from "@/engine/utils";
+import {Project, TalentRole} from "@/engine/types";
+import {formatMoney, getContractsByProjectId} from "@/engine/utils";
 import {Button} from "@/components/ui/button";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {TalentAvatar} from "@/components/talent/TalentAvatar";
-import {Users Clapperboard PenTool CheckCircle2 Info} from "lucide-react";
+import {Users, Clapperboard, PenTool, CheckCircle2, Info} from "lucide-react";
 import {useTalentMap} from "@/hooks/useTalentMap";
 
 type AttachmentPhase = "producers_writers" | "cast_directors";

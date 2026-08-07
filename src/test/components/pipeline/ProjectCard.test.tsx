@@ -1,5 +1,5 @@
-import {render screen fireEvent} from "@testing-library/react";
-import {describe it expect vi beforeEach} from "vitest";
+import {render, screen, fireEvent} from "@testing-library/react";
+import {describe, it, expect, vi, beforeEach} from "vitest";
 import {ProjectCard} from "@/components/pipeline/ProjectCard";
 import {useUIStore} from "@/store/uiStore";
 import {Project} from "@/engine/types";

@@ -1,5 +1,5 @@
 import React from "react";
-import {TrendingUp TrendingDown Percent Landmark Wallet AlertCircle} from "lucide-react";
+import {TrendingUp, TrendingDown, Percent, Landmark, Wallet, AlertCircle} from "lucide-react";
 import {useGameStore} from "@/store/gameStore";
 import {cn} from "@/lib/utils";
 

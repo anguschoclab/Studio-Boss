@@ -1,6 +1,6 @@
 import React from "react";
-import {render screen fireEvent} from "@testing-library/react";
-import {describe it expect vi beforeEach} from "vitest";
+import {render, screen, fireEvent} from "@testing-library/react";
+import {describe, it, expect, vi, beforeEach} from "vitest";
 import {CreateProjectModal} from "@/components/modals/CreateProjectModal";
 import {useUIStore} from "@/store/uiStore";
 import {useGameStore} from "@/store/gameStore";

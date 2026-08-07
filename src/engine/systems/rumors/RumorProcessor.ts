@@ -1,4 +1,4 @@
-import {GameState Rumor StateImpact} from "@/engine/types";
+import {GameState, Rumor, StateImpact} from "@/engine/types";
 import {RandomGenerator} from "../../utils/rng";
 
 /**

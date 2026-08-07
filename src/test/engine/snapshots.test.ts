@@ -1,4 +1,4 @@
-import {describe it expect beforeEach} from "vitest";
+import {describe, it, expect, beforeEach} from "vitest";
 import {useGameStore} from "@/store/gameStore";
 import {initializeGame} from "@/engine/core/gameInit";
 

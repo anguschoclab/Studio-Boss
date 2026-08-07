@@ -1,5 +1,5 @@
-import {describe it expect} from "vitest";
-import {calculateProjectROI calculateStudioNetWorth generateWeeklyFinancialReport} from "../../../engine/systems/finance";
+import {describe, it, expect} from "vitest";
+import {calculateProjectROI, calculateStudioNetWorth, generateWeeklyFinancialReport} from "../../../engine/systems/finance";
 import {tickFinance} from "../../../engine/systems/finance/financeTick";
 import {Project} from "../../../engine/types";
 import {RandomGenerator} from "../../../engine/utils/rng";

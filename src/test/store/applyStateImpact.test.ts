@@ -1,6 +1,6 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {applyStateImpact} from "../../store/storeUtils";
-import {GameState Project StateImpact} from "../../engine/types";
+import {GameState, Project, StateImpact} from "../../engine/types";
 
 describe("applyStateImpact utility", () => {
   const getInitialMockState = (): GameState =>

@@ -1,5 +1,5 @@
 import React from "react";
-import {Talent TalentCommitment} from "@/engine/types";
+import {Talent, TalentCommitment} from "@/engine/types";
 
 interface TalentGanttChartProps {
   talent: Talent;

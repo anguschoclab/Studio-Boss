@@ -1,7 +1,7 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {tickTalentDiscoverySystem} from "@/engine/systems/talent/TalentDiscoverySystem";
 import {RandomGenerator} from "@/engine/utils/rng";
-import {createMockGameState createMockTalent createMockProject createMockContract} from "../../generators/mockFactory";
+import {createMockGameState, createMockTalent, createMockProject, createMockContract} from "../../generators/mockFactory";
 import {BreakoutStar} from "@/engine/types/discovery.types";
 
 describe("tickTalentDiscoverySystem", () => {

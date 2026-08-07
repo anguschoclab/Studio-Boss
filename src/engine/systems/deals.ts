@@ -1,4 +1,4 @@
-import {Talent GameState Project FirstLookDeal Agency StateImpact} from "@/engine/types";
+import {Talent, GameState, Project, FirstLookDeal, Agency, StateImpact} from "@/engine/types";
 import {rand} from "../utils";
 
 const ACCESS_LEVEL_BONUSES: Record<string, number> = {

@@ -1,6 +1,6 @@
-import {describe it expect} from "vitest";
-import {defaultSimMemory getSimMemory} from "@/engine/core/simMemory";
-import type { GameState } from "@/engine/types";
+import {describe, it, expect} from "vitest";
+import {defaultSimMemory, getSimMemory} from "@/engine/core/simMemory";
+import type {GameState} from "@/engine/types";
 
 describe("SimMemory extended defaults", () => {
   it("defaultSimMemory returns all new fields with correct empty defaults", () => {

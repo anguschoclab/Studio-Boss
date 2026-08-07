@@ -1,5 +1,5 @@
-import {describe it expect} from "vitest";
-import {buildRebootParams generateRebootProposal RebootProposal} from "@/engine/systems/ip/ipRebootEngine";
+import {describe, it, expect} from "vitest";
+import {buildRebootParams, generateRebootProposal, RebootProposal} from "@/engine/systems/ip/ipRebootEngine";
 import {IPAsset} from "@/engine/types";
 import {RandomGenerator} from "@/engine/utils/rng";
 import {CreateProjectParams} from "@/store/storeUtils";

@@ -1,4 +1,4 @@
-import {GameState StateImpact} from "../../types";
+import {GameState, StateImpact} from "../../types";
 import {TickContext} from "./types";
 
 // System Imports

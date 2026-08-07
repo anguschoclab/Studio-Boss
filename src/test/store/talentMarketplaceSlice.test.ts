@@ -1,4 +1,4 @@
-import {describe it expect beforeEach vi} from "vitest";
+import {describe, it, expect, beforeEach, vi} from "vitest";
 import {useGameStore} from "@/store/gameStore";
 import {Opportunity} from "@/engine/types";
 

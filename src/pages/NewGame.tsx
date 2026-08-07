@@ -1,11 +1,11 @@
-import {useState useEffect} from "react";
+import {useState, useEffect} from "react";
 import {useNavigate} from "@tanstack/react-router";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
-import {Dices Shield Target ArrowRight} from "lucide-react";
+import {Dices, Shield, Target, ArrowRight} from "lucide-react";
 import {generateStudioName} from "@/engine/generators/names";
 import {useGameStore} from "@/store/gameStore";
-import {ARCHETYPES ArchetypeData} from "@/engine/data/archetypes";
+import {ARCHETYPES, ArchetypeData} from "@/engine/data/archetypes";
 import {ArchetypeKey} from "@/engine/types";
 import {ArchetypeCard} from "@/components/setup/ArchetypeCard";
 

@@ -1,7 +1,7 @@
-import {describe it expect} from "vitest";
-import {selectDistressedOffers selectDistressedOffer} from "@/store/selectors";
-import type { GameState } from "@/engine/types";
-import type { DistressedAssetOffer } from "@/engine/types/distress.types";
+import {describe, it, expect} from "vitest";
+import {selectDistressedOffers, selectDistressedOffer} from "@/store/selectors";
+import type {GameState} from "@/engine/types";
+import type {DistressedAssetOffer} from "@/engine/types/distress.types";
 
 const offer: DistressedAssetOffer = {
   id: "o1",

@@ -1,4 +1,4 @@
-import {GameState RivalStudio Opportunity StateImpact ArchetypeKey StudioMotivation} from "@/engine/types";
+import {GameState, RivalStudio, Opportunity, StateImpact, ArchetypeKey, StudioMotivation} from "@/engine/types";
 import {RandomGenerator} from "../../utils/rng";
 
 /**

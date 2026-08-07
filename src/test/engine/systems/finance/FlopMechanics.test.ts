@@ -1,6 +1,6 @@
-import {describe it expect beforeEach} from "vitest";
-import {FlopSeverity calculateFlopSeverity calculateFlopPenalties shouldRestructureStudio applyFlopPenalties processFlops} from "../../../../engine/systems/finance/FlopMechanics";
-import {createMockGameState createMockProject createMockRival} from "../../../utils/mockFactories";
+import {describe, it, expect, beforeEach} from "vitest";
+import {FlopSeverity, calculateFlopSeverity, calculateFlopPenalties, shouldRestructureStudio, applyFlopPenalties, processFlops} from "../../../../engine/systems/finance/FlopMechanics";
+import {createMockGameState, createMockProject, createMockRival} from "../../../utils/mockFactories";
 import {GameState} from "../../../../engine/types";
 
 describe("FlopMechanics", () => {

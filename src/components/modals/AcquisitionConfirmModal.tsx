@@ -1,9 +1,9 @@
 import React from "react";
-import {Dialog DialogContent DialogHeader DialogTitle DialogDescription} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
 import {useGameStore} from "@/store/gameStore";
 import {useUIStore} from "@/store/uiStore";
-import {Building2 ShieldAlert X} from "lucide-react";
+import {Building2, ShieldAlert, X} from "lucide-react";
 
 function fmt(n: number): string {
   if (Math.abs(n) >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(2)}B`;

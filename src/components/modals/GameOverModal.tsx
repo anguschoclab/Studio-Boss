@@ -1,7 +1,7 @@
-import {useState useMemo} from "react";
+import {useState, useMemo} from "react";
 import {useGameStore} from "@/store/gameStore";
 import {formatMoney} from "@/engine/utils";
-import {Skull Trophy BarChart3 RefreshCw Star Terminal ArrowRight} from "lucide-react";
+import {Skull, Trophy, BarChart3, RefreshCw, Star, Terminal, ArrowRight} from "lucide-react";
 import {cn} from "@/lib/utils";
 
 // ---------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 import React from "react";
-import {render screen fireEvent} from "@testing-library/react";
-import {describe it expect vi beforeEach} from "vitest";
+import {render, screen, fireEvent} from "@testing-library/react";
+import {describe, it, expect, vi, beforeEach} from "vitest";
 
 const { mockDevelopFromOwnedIP, mockResolveCurrentModal } = vi.hoisted(() => ({
   mockDevelopFromOwnedIP: vi.fn(),

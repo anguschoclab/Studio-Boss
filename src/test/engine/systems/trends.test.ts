@@ -1,5 +1,5 @@
-import {describe it expect} from "vitest";
-import {initializeTrends advanceTrends getTrendMultiplier} from "../../../engine/systems/trends";
+import {describe, it, expect} from "vitest";
+import {initializeTrends, advanceTrends, getTrendMultiplier} from "../../../engine/systems/trends";
 
 describe("Trends System", () => {
   it("initializes with a set of default genre trends", () => {

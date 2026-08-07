@@ -1,5 +1,5 @@
-import {describe it expect} from "vitest";
-import {generateFamilies generateTalentPool} from "@/engine/generators/talent";
+import {describe, it, expect} from "vitest";
+import {generateFamilies, generateTalentPool} from "@/engine/generators/talent";
 import {} from "@/engine/types";
 
 describe("talent generator", () => {

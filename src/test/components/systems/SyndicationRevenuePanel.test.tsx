@@ -1,6 +1,6 @@
 import React from "react";
-import {render screen cleanup within} from "@testing-library/react";
-import {describe it expect afterEach vi} from "vitest";
+import {render, screen, cleanup, within} from "@testing-library/react";
+import {describe, it, expect, afterEach, vi} from "vitest";
 import {SyndicationRevenuePanel} from "@/components/distribution/SyndicationRevenuePanel";
 
 // Mock recharts to avoid SVG/JSDOM issues

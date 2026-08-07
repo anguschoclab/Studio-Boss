@@ -3,7 +3,7 @@ import {FinancialOverviewWidget} from "./FinancialOverviewWidget";
 import {DemographicsWidget} from "./DemographicsWidget";
 import {useGameStore} from "@/store/gameStore";
 import {selectNewsHistory} from "@/store/selectors";
-import {Clapperboard Users PieChart TrendingUp} from "lucide-react";
+import {Clapperboard, Users, PieChart, TrendingUp} from "lucide-react";
 import {cn} from "@/lib/utils";
 import {KPIStatCard} from "@/components/shared/KPIStatCard";
 import {StudioIdentityPanel} from "@/components/studio/StudioIdentityPanel";

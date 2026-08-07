@@ -1,4 +1,4 @@
-import {GameState StateImpact} from "@/engine/types";
+import {GameState, StateImpact} from "@/engine/types";
 import {getContractsByTalentId} from "../../utils";
 
 const FORBIDDEN_KEYS = new Set(["__proto__", "constructor", "prototype"]);

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {GameState StateImpact Talent Project} from "../../types";
+import {GameState, StateImpact, Talent, Project} from "../../types";
 import {RandomGenerator} from "../../utils/rng";
 import {getContractsByProjectId} from "../../utils";
-import {ScreenplayNote ScreenplayNoteType ProductionAddition ProductionAdditionType CreditScene CreditSceneType} from "../../types/production.types";
+import {ScreenplayNote, ScreenplayNoteType, ProductionAddition, ProductionAdditionType, CreditScene, CreditSceneType} from "../../types/production.types";
 
 /**
  * Production Enhancement System

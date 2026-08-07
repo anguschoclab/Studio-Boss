@@ -2,7 +2,7 @@ import React from "react";
 import {Project} from "@/engine/types";
 import {formatMoney} from "@/engine/utils";
 import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";
-import {TrendingUp CheckCircle2 Info} from "lucide-react";
+import {TrendingUp, CheckCircle2, Info} from "lucide-react";
 import {cn} from "@/lib/utils";
 
 interface RecoupmentStatusProps {

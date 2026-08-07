@@ -1,11 +1,11 @@
 import {AvatarFeatures} from "./types";
-import {getFaceShapePath renderEars} from "./geometry/faceShapes";
-import {renderHairBack renderHairFront} from "./features/hairStyles";
-import {renderEyes EYE_ANIMATION_CSS} from "./features/eyes";
+import {getFaceShapePath, renderEars} from "./geometry/faceShapes";
+import {renderHairBack, renderHairFront} from "./features/hairStyles";
+import {renderEyes, EYE_ANIMATION_CSS} from "./features/eyes";
 import {renderMouth} from "./features/mouth";
 import {renderNose} from "./features/nose";
-import {renderClothing CLOTHING_ANIMATION_CSS} from "./features/clothing";
-import {renderFacialHair renderAccessories} from "./features/accessories";
+import {renderClothing, CLOTHING_ANIMATION_CSS} from "./features/clothing";
+import {renderFacialHair, renderAccessories} from "./features/accessories";
 import {darkenColor} from "./utils";
 
 /**

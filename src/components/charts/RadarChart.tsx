@@ -1,5 +1,5 @@
 import React from "react";
-import {RadarChart as ReRadarChart PolarGrid PolarAngleAxis PolarRadiusAxis Radar ResponsiveContainer Tooltip Legend} from "recharts";
+import {RadarChart as ReRadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Tooltip, Legend} from "recharts";
 import {cn} from "@/lib/utils";
 
 interface RadarDataPoint {

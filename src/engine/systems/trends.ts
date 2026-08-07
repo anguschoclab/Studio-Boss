@@ -1,4 +1,4 @@
-import {GenreTrend GameState} from "@/engine/types";
+import {GenreTrend, GameState} from "@/engine/types";
 import {StateImpact} from "../types/state.types";
 import {secureRandom} from "../utils";
 

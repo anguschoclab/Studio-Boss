@@ -1,8 +1,8 @@
-import {describe it expect} from "vitest";
-import {GameState RivalStudio Project} from "@/engine/types";
+import {describe, it, expect} from "vitest";
+import {GameState, RivalStudio, Project} from "@/engine/types";
 import {RandomGenerator} from "@/engine/utils/rng";
 import {tickRivalProduction} from "@/engine/systems/rivals/rivalProduction";
-import {createMockRival createMockProject} from "@/test/utils/mockFactories";
+import {createMockRival, createMockProject} from "@/test/utils/mockFactories";
 
 function makeState(rivals: RivalStudio[]): GameState {
   const rivalMap: Record<string, RivalStudio> = {};

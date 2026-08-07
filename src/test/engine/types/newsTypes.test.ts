@@ -1,11 +1,7 @@
-import {describe it expect} from "vitest";
-import type {
-  NewsEvent,
-  NewsEvent,
-  WeekSummary,
-} from "@/engine/types";
-import type { NewsImpact } from "@/engine/types/state.types";
-import type { GameState } from "@/engine/types/studio.types";
+import {describe, it, expect} from "vitest";
+import type {NewsEvent, NewsEvent, WeekSummary} from "@/engine/types";
+import type {NewsImpact} from "@/engine/types/state.types";
+import type {GameState} from "@/engine/types/studio.types";
 
 describe("NewsEvent type", () => {
   it("includes category field as optional HeadlineCategory", () => {

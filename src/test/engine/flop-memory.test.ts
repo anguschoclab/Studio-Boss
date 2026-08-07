@@ -1,7 +1,7 @@
-import {describe it expect} from "vitest";
-import {applyFlopPenalties processFlops FlopSeverity} from "@/engine/systems/finance/FlopMechanics";
+import {describe, it, expect} from "vitest";
+import {applyFlopPenalties, processFlops, FlopSeverity} from "@/engine/systems/finance/FlopMechanics";
 import {defaultSimMemory} from "@/engine/core/simMemory";
-import type { GameState, Project } from "@/engine/types";
+import type {GameState, Project} from "@/engine/types";
 
 function makeState(week = 10, flops?: Record<string, any>): GameState {
   return {

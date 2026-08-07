@@ -1,5 +1,5 @@
-import {describe it expect} from "vitest";
-import {generateOpportunity generateProjectTitle} from "@/engine/generators/opportunities";
+import {describe, it, expect} from "vitest";
+import {generateOpportunity, generateProjectTitle} from "@/engine/generators/opportunities";
 
 describe("Opportunity Generator", () => {
   it("should generate a valid opportunity", () => {

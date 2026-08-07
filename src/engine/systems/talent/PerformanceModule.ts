@@ -1,4 +1,4 @@
-import {Talent Project Contract Award} from "@/engine/types";
+import {Talent, Project, Contract, Award} from "@/engine/types";
 import {clamp} from "../../utils";
 import {applyAwardBoostsToTalent} from "../talentStats";
 

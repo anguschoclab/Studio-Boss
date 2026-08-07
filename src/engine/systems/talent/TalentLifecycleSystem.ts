@@ -1,7 +1,7 @@
-import {GameState StateImpact Talent TalentTier} from "../../types";
+import {GameState, StateImpact, Talent, TalentTier} from "../../types";
 import {RandomGenerator} from "../../utils/rng";
 import {generateTalent} from "../../generators/talent/index";
-import {TalentDriftEngine DEFAULT_DRIFT_CONFIG} from "./driftEngine";
+import {TalentDriftEngine, DEFAULT_DRIFT_CONFIG} from "./driftEngine";
 
 /**
  * Talent Lifecycle System

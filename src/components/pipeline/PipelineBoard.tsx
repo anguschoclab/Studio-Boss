@@ -3,7 +3,7 @@ import {useUIStore} from "@/store/uiStore";
 import {ProjectCard} from "./ProjectCard";
 import {Button} from "@/components/ui/button";
 import {useState} from "react";
-import {Plus ListFilter Search Clapperboard Layers Bookmark} from "lucide-react";
+import {Plus, ListFilter, Search, Clapperboard, Layers, Bookmark} from "lucide-react";
 import {ProjectStatus} from "@/engine/types";
 import {selectProjects} from "@/store/selectors";
 import {Input} from "@/components/ui/input";

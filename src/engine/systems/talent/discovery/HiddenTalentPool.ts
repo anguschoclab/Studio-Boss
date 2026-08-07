@@ -1,6 +1,6 @@
-import {GameState Talent} from "../../../types";
+import {GameState, Talent} from "../../../types";
 import {RandomGenerator} from "../../../utils/rng";
-import {HiddenTalent DiscoveryEvent} from "../../../types/discovery.types";
+import {HiddenTalent, DiscoveryEvent} from "../../../types/discovery.types";
 
 // Hidden talent generation
 const _HIDDEN_TALENT_POOL_SIZE = 20;

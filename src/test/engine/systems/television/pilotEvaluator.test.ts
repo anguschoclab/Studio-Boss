@@ -1,6 +1,6 @@
-import {describe it expect vi} from "vitest";
+import {describe, it, expect, vi} from "vitest";
 import {tickPilots} from "../../../../engine/systems/television/pilotEvaluator";
-import {GameState SeriesProject} from "../../../../engine/types";
+import {GameState, SeriesProject} from "../../../../engine/types";
 import {RandomGenerator} from "../../../../engine/utils/rng";
 
 describe("Pilot Evaluator (Guild Auditor)", () => {

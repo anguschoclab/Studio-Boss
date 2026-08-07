@@ -1,6 +1,6 @@
-import {describe it expect} from "vitest";
-import {initializeCulture updateCultureFromProject} from "../../../engine/systems/culture";
-import {Project ContentFlag} from "../../../engine/types";
+import {describe, it, expect} from "vitest";
+import {initializeCulture, updateCultureFromProject} from "../../../engine/systems/culture";
+import {Project, ContentFlag} from "../../../engine/types";
 
 const mockProject: Project = {
   id: "proj-1",

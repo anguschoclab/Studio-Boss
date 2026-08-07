@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {StateCreator} from "zustand";
 import {GameStore} from "../gameStore";
-import {CreateProjectParams buildProjectAndContracts applyStateImpact} from "../storeUtils";
+import {CreateProjectParams, buildProjectAndContracts, applyStateImpact} from "../storeUtils";
 import * as projectsEngine from "@/engine/systems/projects";
 import {updateCultureFromProject} from "@/engine/systems/culture";
 import {negotiateContract} from "@/engine/systems/buyers";
@@ -11,11 +11,11 @@ import {buildRebootParams} from "@/engine/systems/ip/ipRebootEngine";
 import {selectFatigueForAsset} from "@/store/selectors";
 import {resolveCrisis} from "@/engine/systems/crises";
 import * as festivalsEngine from "@/engine/systems/festivals";
-import {Project GameState AwardBody ProjectContractType StateImpact SeriesProject} from "@/engine/types";
+import {Project, GameState, AwardBody, ProjectContractType, StateImpact, SeriesProject} from "@/engine/types";
 import {ReleaseStrategy} from "@/engine/types/project.types";
 import {RandomGenerator} from "@/engine/utils/rng";
-import {addContractsToIndex addContractsToTalentIndex} from "@/engine/utils";
-import {type ProjectId} from "@/engine/types/shared.types";
+import {addContractsToIndex, addContractsToTalentIndex} from "@/engine/utils";
+import {type, ProjectId} from "@/engine/types/shared.types";
 export interface ProjectSlice {
   createProject: (params: CreateProjectParams) => void;
   renewProject: (id: string) => void;

@@ -1,9 +1,5 @@
 import {GameState} from "@/engine/types";
-import type {
-  TVRecommendationCreatedImpact,
-  TVRecommendationAcceptedImpact,
-  TVRecommendationStateUpdatedImpact,
-} from "@/engine/types/state.types";
+import type {TVRecommendationCreatedImpact, TVRecommendationAcceptedImpact, TVRecommendationStateUpdatedImpact} from "@/engine/types/state.types";
 
 /**
  * TV-related impact handlers

@@ -1,5 +1,5 @@
 import React from "react";
-import {PieChart Pie Cell ResponsiveContainer Label} from "recharts";
+import {PieChart, Pie, Cell, ResponsiveContainer, Label} from "recharts";
 
 interface CashEfficiencyGaugeProps {
   score: number; // 0 to 100

@@ -1,5 +1,5 @@
-import {describe it expect} from "vitest";
-import {GameState ProjectUpdateImpact} from "@/engine/types";
+import {describe, it, expect} from "vitest";
+import {GameState, ProjectUpdateImpact} from "@/engine/types";
 import {tickProduction} from "@/engine/systems/productionEngine";
 import {RandomGenerator} from "@/engine/utils/rng";
 

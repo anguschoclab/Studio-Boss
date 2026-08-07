@@ -1,7 +1,7 @@
 import React from "react";
-import {render screen fireEvent} from "@testing-library/react";
+import {render, screen, fireEvent} from "@testing-library/react";
 import {TooltipProvider} from "@/components/ui/tooltip";
-import {describe it expect vi beforeEach} from "vitest";
+import {describe, it, expect, vi, beforeEach} from "vitest";
 import {PipelineBoard} from "@/components/pipeline/PipelineBoard";
 import {useGameStore} from "@/store/gameStore";
 import {useUIStore} from "@/store/uiStore";

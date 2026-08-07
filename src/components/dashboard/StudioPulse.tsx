@@ -1,10 +1,10 @@
 import React, { useMemo } from "react";
 import {useGameStore} from "@/store/gameStore";
-import {useUIStore TabId} from "@/store/uiStore";
-import {Card CardContent CardHeader CardTitle} from "@/components/ui/card";
+import {useUIStore, TabId} from "@/store/uiStore";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {cn} from "@/lib/utils";
 import {Button} from "@/components/ui/button";
-import {Activity AlertTriangle Users Film DollarSign Zap CheckCircle2 Clock AlertCircle} from "lucide-react";
+import {Activity, AlertTriangle, Users, Film, DollarSign, Zap, CheckCircle2, Clock, AlertCircle} from "lucide-react";
 import {ProgressIndicator} from "@/components/shared/ProgressIndicator";
 import {SparklineChart} from "@/components/shared/SparklineChart";
 import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";

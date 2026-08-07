@@ -1,6 +1,6 @@
 import React from "react";
-import {render screen} from "@testing-library/react";
-import {describe it expect vi beforeEach} from "vitest";
+import {render, screen} from "@testing-library/react";
+import {describe, it, expect, vi, beforeEach} from "vitest";
 import {LiveAuctionDashboard} from "@/components/discovery/LiveAuctionDashboard";
 import {useGameStore} from "@/store/gameStore";
 import {Opportunity} from "@/engine/types";

@@ -1,4 +1,4 @@
-import {GameState RivalStudio Talent Project Contract Buyer} from "../../../engine/types";
+import {GameState, RivalStudio, Talent, Project, Contract, Buyer} from "../../../engine/types";
 
 /**
  * Centralized factory for creating compliant GameState objects for testing.

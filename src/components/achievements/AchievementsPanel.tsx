@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useMemo } from "react";
 import {useGameStore} from "@/store/gameStore";
-import {ACHIEVEMENT_CATALOGUE Achievement} from "@/engine/systems/AchievementsSystem";
-import {Trophy Lock CheckCircle2 Star DollarSign Users Globe} from "lucide-react";
+import {ACHIEVEMENT_CATALOGUE, Achievement} from "@/engine/systems/AchievementsSystem";
+import {Trophy, Lock, CheckCircle2, Star, DollarSign, Users, Globe} from "lucide-react";
 import {cn} from "@/lib/utils";
 
 type Category = "all" | "financial" | "creative" | "talent" | "empire";

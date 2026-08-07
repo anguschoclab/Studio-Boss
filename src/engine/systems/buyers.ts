@@ -1,6 +1,6 @@
-import {Buyer MandateType Project ProjectContractType} from "@/engine/types";
+import {Buyer, MandateType, Project, ProjectContractType} from "@/engine/types";
 import {StateImpact} from "../types/state.types";
-import {pick randRange rand generateId} from "../utils";
+import {pick, randRange, rand, generateId} from "../utils";
 
 const MANDATE_TYPES: MandateType[] = [
   "sci-fi",

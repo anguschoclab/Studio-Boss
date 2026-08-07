@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Project Talent Contract} from "@/engine/types";
+import {Project, Talent, Contract} from "@/engine/types";
 
 export type GreenlightRecommendation =
   | "Easy Greenlight"

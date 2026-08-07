@@ -1,6 +1,6 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {applySingleImpact} from "@/engine/core/impactHandlers";
-import {GameState StateImpact} from "@/engine/types";
+import {GameState, StateImpact} from "@/engine/types";
 
 function makeMockState(overrides: Partial<GameState> = {}): GameState {
   return {

@@ -1,4 +1,4 @@
-import {AvatarFeatures ColorPalette} from "../types";
+import {AvatarFeatures, ColorPalette} from "../types";
 import {darkenColor} from "../utils";
 
 /**

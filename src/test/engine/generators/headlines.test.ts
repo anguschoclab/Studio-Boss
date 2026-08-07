@@ -1,4 +1,4 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {generateHeadlines} from "../../../engine/generators/headlines";
 import {RivalStudio} from "../../../engine/types";
 

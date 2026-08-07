@@ -1,4 +1,4 @@
-import {ProjectRating RatingEconomics} from "@/engine/types";
+import {ProjectRating, RatingEconomics} from "@/engine/types";
 
 /**
  * Economic modifiers for each rating.

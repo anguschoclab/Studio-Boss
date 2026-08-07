@@ -2,10 +2,10 @@ import {useUIStore} from "@/store/uiStore";
 import {useGameStore} from "@/store/gameStore";
 import {evaluateGreenlight} from "@/engine/systems/greenlight";
 import {getContractsByProjectId} from "@/engine/utils";
-import {Dialog DialogContent DialogHeader DialogTitle DialogFooter} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
 import {cn} from "@/lib/utils";
-import {CheckCircle2 XCircle Clock UserCheck ShieldAlert} from "lucide-react";
+import {CheckCircle2, XCircle, Clock, UserCheck, ShieldAlert} from "lucide-react";
 
 /**
  * GreenlightDecisionModal — surfaces the engine's GreenlightReport for a

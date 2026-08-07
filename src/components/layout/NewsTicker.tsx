@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Newspaper Trophy AlertTriangle TrendingUp History Zap} from "lucide-react";
+import {Newspaper, Trophy, AlertTriangle, TrendingUp, History, Zap} from "lucide-react";
 import {useGameStore} from "@/store/gameStore";
 import {useUIStore} from "@/store/uiStore";
 import {NewsEvent} from "@/engine/types";

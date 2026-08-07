@@ -1,6 +1,6 @@
 import React from "react";
-import {render screen cleanup within} from "@testing-library/react";
-import {describe it expect afterEach} from "vitest";
+import {render, screen, cleanup, within} from "@testing-library/react";
+import {describe, it, expect, afterEach} from "vitest";
 import {MerchandiseRevenuePanel} from "@/components/ip/MerchandiseRevenuePanel";
 
 describe("MerchandiseRevenuePanel", () => {

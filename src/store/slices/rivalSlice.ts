@@ -1,6 +1,6 @@
 import {StateCreator} from "zustand";
 import {GameStore} from "../gameStore";
-import {executeAcquisition executeSabotage executePoach evaluatePlayerAcquisition type AcquisitionPreview} from "@/engine/systems/mergers";
+import {executeAcquisition, executeSabotage, executePoach, evaluatePlayerAcquisition, type AcquisitionPreview} from "@/engine/systems/mergers";
 
 export interface RivalSlice {
   previewAcquisition: (targetId: string) => AcquisitionPreview | null;

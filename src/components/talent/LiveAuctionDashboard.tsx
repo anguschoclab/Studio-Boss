@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import {useGameStore} from "@/store/gameStore";
 import {Opportunity} from "@/engine/types";
 import {formatMoney} from "@/engine/utils";
-import {Gavel TrendingUp AlertCircle CheckCircle2 ShieldAlert History as LucideHistory X} from "lucide-react";
+import {Gavel, TrendingUp, AlertCircle, CheckCircle2, ShieldAlert, History as LucideHistory, X} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import {Badge} from "@/components/ui/badge";
 import {Progress} from "@/components/ui/progress";

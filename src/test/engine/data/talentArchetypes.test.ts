@@ -1,6 +1,6 @@
-import {describe it expect} from "vitest";
-import {ACTOR_ARCHETYPES WRITER_ARCHETYPES PRODUCER_ARCHETYPES PERSONALITY_ARCHETYPES generateArchetypeForRole} from "@/engine/data/talentArchetypes";
-import type { TalentTier } from "@/engine/types/talent.types";
+import {describe, it, expect} from "vitest";
+import {ACTOR_ARCHETYPES, WRITER_ARCHETYPES, PRODUCER_ARCHETYPES, PERSONALITY_ARCHETYPES, generateArchetypeForRole} from "@/engine/data/talentArchetypes";
+import type {TalentTier} from "@/engine/types/talent.types";
 
 const VALID_TIERS: TalentTier[] = ["A_LIST", "B_LIST", "C_LIST", "RISING_STAR", "NEWCOMER"];
 

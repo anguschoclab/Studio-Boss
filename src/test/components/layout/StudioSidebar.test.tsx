@@ -1,10 +1,10 @@
-import {render screen} from "@testing-library/react";
-import {describe it expect vi beforeEach} from "vitest";
+import {render, screen} from "@testing-library/react";
+import {describe, it, expect, vi, beforeEach} from "vitest";
 import {StudioSidebar} from "@/components/layout/StudioSidebar";
 import {TooltipProvider} from "@/components/ui/tooltip";
 import {useGameStore} from "@/store/gameStore";
 import {useUIStore} from "@/store/uiStore";
-import {createRootRoute createRouter RouterProvider} from "@tanstack/react-router";
+import {createRootRoute, createRouter, RouterProvider} from "@tanstack/react-router";
 import React from "react";
 
 // Mock ResizeObserver

@@ -1,5 +1,5 @@
 import {StateImpact} from "../types/state.types";
-import {CRISIS_POOLS CrisisTemplate} from "../data/crises.data";
+import {CRISIS_POOLS, CrisisTemplate} from "../data/crises.data";
 
 export function getCrisisData(id: string): CrisisTemplate | undefined {
   return CRISIS_POOLS.find((c) => c.id === id);

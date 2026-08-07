@@ -1,5 +1,5 @@
-import {describe it expect} from "vitest";
-import {calculateNielsenRatings buildNielsenProfile rankShows NielsenSnapshot} from "../../../../engine/systems/television/nielsenSystem";
+import {describe, it, expect} from "vitest";
+import {calculateNielsenRatings, buildNielsenProfile, rankShows, NielsenSnapshot} from "../../../../engine/systems/television/nielsenSystem";
 import {SeriesProject} from "../../../../engine/types";
 import {RandomGenerator} from "../../../../engine/utils/rng";
 

@@ -1,6 +1,6 @@
-import {useState useMemo} from "react";
+import {useState, useMemo} from "react";
 import {useGameStore} from "@/store/gameStore";
-import {Talent TalentRole} from "@/engine/types";
+import {Talent, TalentRole} from "@/engine/types";
 import {TalentModal} from "./TalentProfileModal";
 import {TalentCard} from "./TalentCard";
 import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";

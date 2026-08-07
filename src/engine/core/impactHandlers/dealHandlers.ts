@@ -1,5 +1,5 @@
 import {GameState} from "@/engine/types";
-import type { DealUpdatedImpact } from "@/engine/types/state.types";
+import type {DealUpdatedImpact} from "@/engine/types/state.types";
 
 /**
  * Deal-related impact handlers

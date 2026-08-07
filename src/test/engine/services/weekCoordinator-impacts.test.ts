@@ -1,7 +1,7 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {WeekCoordinator} from "../../../engine/services/WeekCoordinator";
-import {createMockGameState createMockProject} from "../../utils/mockFactories";
-import type { StateImpact } from "../../../engine/types";
+import {createMockGameState, createMockProject} from "../../utils/mockFactories";
+import type {StateImpact} from "../../../engine/types";
 
 function findImpacts(impacts: StateImpact[], type: string): StateImpact[] {
   return impacts.filter((i) => i.type === type);

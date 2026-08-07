@@ -1,7 +1,7 @@
-import {describe it expect} from "vitest";
-import {tickCliqueSystem getCliqueFameBonus} from "@/engine/systems/talent/CliqueSystem";
+import {describe, it, expect} from "vitest";
+import {tickCliqueSystem, getCliqueFameBonus} from "@/engine/systems/talent/CliqueSystem";
 import {RandomGenerator} from "@/engine/utils/rng";
-import {createMockGameState createMockTalent} from "../../generators/mockFactory";
+import {createMockGameState, createMockTalent} from "../../generators/mockFactory";
 import {Clique} from "@/engine/types/clique.types";
 
 function makeClique(overrides: Partial<Clique> = {}): Clique {

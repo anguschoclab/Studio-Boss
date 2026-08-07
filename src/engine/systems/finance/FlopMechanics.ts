@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {GameState Project StateImpact} from "@/engine/types";
+import {GameState, Project, StateImpact} from "@/engine/types";
 import {clamp} from "../../utils";
 import {isPlayerOwner} from "../../utils/ownership";
-import type { StudioFlopHistory } from "@/engine/types/state.types";
+import type {StudioFlopHistory} from "@/engine/types/state.types";
 import {getSimMemory} from "../../core/simMemory";
 export type { StudioFlopHistory };
 

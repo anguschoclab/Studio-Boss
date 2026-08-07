@@ -1,4 +1,4 @@
-import {GameState WeekSummary StateImpact} from "@/engine/types";
+import {GameState, WeekSummary, StateImpact} from "@/engine/types";
 import {WeekCoordinator} from "../services/WeekCoordinator";
 import {getSimMemory} from "./simMemory";
 

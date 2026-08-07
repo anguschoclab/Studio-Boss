@@ -1,6 +1,6 @@
 import React from "react";
-import {cn formatCompactCurrency} from "@/lib/utils";
-import {Globe TrendingUp Tv ChevronRight Zap} from "lucide-react";
+import {cn, formatCompactCurrency} from "@/lib/utils";
+import {Globe, TrendingUp, Tv, ChevronRight, Zap} from "lucide-react";
 
 interface SyndicationMarket {
   region: string;

@@ -1,4 +1,4 @@
-import {describe it expect beforeEach} from "vitest";
+import {describe, it, expect, beforeEach} from "vitest";
 import {AnnualScans} from "@/engine/services/filters/AnnualScans";
 import {GameState} from "@/engine/types";
 import {RandomGenerator} from "@/engine/utils/rng";

@@ -1,7 +1,7 @@
 import {TabsContent} from "@/components/ui/tabs";
 import {Badge} from "@/components/ui/badge";
-import {Activity Brain Calendar DollarSign TrendingUp Users} from "lucide-react";
-import {Project ScriptedProject} from "@/engine/types";
+import {Activity, Brain, Calendar, DollarSign, TrendingUp, Users} from "lucide-react";
+import {Project, ScriptedProject} from "@/engine/types";
 import {formatMoney} from "@/engine/utils";
 import {calculateAudienceIndex} from "@/engine/systems/demographics";
 import {cn} from "@/lib/utils";

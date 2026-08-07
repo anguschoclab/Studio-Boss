@@ -1,7 +1,7 @@
-import {RivalStudio GameState Talent NewsEvent} from "@/engine/types";
+import {RivalStudio, GameState, Talent, NewsEvent} from "@/engine/types";
 type TalentProfile = Talent;
-import {StateImpact RivalUpdate} from "../types/state.types";
-import {clamp pick rand generateId} from "../utils";
+import {StateImpact, RivalUpdate} from "../types/state.types";
+import {clamp, pick, rand, generateId} from "../utils";
 
 const INDIE_ACTIVITIES = [
   "Quietly developing a prestige drama slate",

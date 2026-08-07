@@ -1,5 +1,5 @@
 import React from "react";
-import {PieChart as RePieChart Pie Cell Tooltip ResponsiveContainer Legend} from "recharts";
+import {PieChart as RePieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend} from "recharts";
 import {cn} from "@/lib/utils";
 
 interface PieDataPoint {

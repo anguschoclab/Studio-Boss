@@ -1,14 +1,8 @@
-import {describe it expect beforeEach} from "vitest";
-import {completeFireSale tickDistressCascade} from "../../../engine/systems/industry/DistressCascade";
-import {createMockGameState createMockIPAsset} from "../../utils/mockFactories";
-import type {
-  GameState,
-  RivalStudio,
-  IPAsset,
-  Franchise,
-  StateImpact,
-} from "../../../engine/types";
-import type { DistressedAssetOffer } from "../../../engine/types/distress.types";
+import {describe, it, expect, beforeEach} from "vitest";
+import {completeFireSale, tickDistressCascade} from "../../../engine/systems/industry/DistressCascade";
+import {createMockGameState, createMockIPAsset} from "../../utils/mockFactories";
+import type {GameState, RivalStudio, IPAsset, Franchise, StateImpact} from "../../../engine/types";
+import type {DistressedAssetOffer} from "../../../engine/types/distress.types";
 
 function createMockRival(overrides: Partial<RivalStudio> = {}): RivalStudio {
   return {

@@ -1,6 +1,6 @@
-import {Award Talent TalentTier} from "@/engine/types";
+import {Award, Talent, TalentTier} from "@/engine/types";
 type TalentProfile = Talent;
-import {isCannesEquivalentFestival isSundanceEquivalentFestival isMajorCategoryNomination isSupportingCategoryNomination} from "./awards";
+import {isCannesEquivalentFestival, isSundanceEquivalentFestival, isMajorCategoryNomination, isSupportingCategoryNomination} from "./awards";
 
 export interface AwardBoosts {
   feeMultiplier: number;

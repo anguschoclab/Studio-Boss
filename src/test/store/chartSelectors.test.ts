@@ -1,7 +1,7 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {selectGenrePerformanceMatrix} from "@/store/chartSelectors";
 import {GameState} from "@/engine/types";
-import {createMockGameState createMockProject} from "@/test/utils/mockFactories";
+import {createMockGameState, createMockProject} from "@/test/utils/mockFactories";
 
 describe("selectGenrePerformanceMatrix", () => {
   it("returns empty array for null state", () => {

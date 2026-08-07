@@ -1,13 +1,13 @@
-import {useState useMemo} from "react";
+import {useState, useMemo} from "react";
 import {useGameStore} from "@/store/gameStore";
-import {Talent TalentRole} from "@/engine/types";
+import {Talent, TalentRole} from "@/engine/types";
 import {TalentModal} from "./TalentProfileModal";
 import {TalentCard} from "./TalentCard";
-import {Tabs TabsContent TabsList TabsTrigger} from "@/components/ui/tabs";
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {Input} from "@/components/ui/input";
 import {ScrollArea} from "@/components/ui/scroll-area";
-import {Select SelectContent SelectItem SelectTrigger SelectValue} from "@/components/ui/select";
-import {Search Users Star Database Bookmark} from "lucide-react";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {Search, Users, Star, Database, Bookmark} from "lucide-react";
 import {cn} from "@/lib/utils";
 import {EmptyState} from "@/components/shared/EmptyState";
 

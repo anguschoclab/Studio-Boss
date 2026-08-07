@@ -1,7 +1,7 @@
-import {describe it expect vi beforeEach} from "vitest";
+import {describe, it, expect, vi, beforeEach} from "vitest";
 import {tickAntitrust} from "@/engine/systems/industry/Antitrust";
 import {defaultSimMemory} from "@/engine/core/simMemory";
-import type { GameState } from "@/engine/types";
+import type {GameState} from "@/engine/types";
 import * as utils from "@/engine/utils";
 
 function makeState(lastActionWeek: number): GameState {

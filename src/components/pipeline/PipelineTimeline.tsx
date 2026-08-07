@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import {useGameStore} from "@/store/gameStore";
-import {Project ProjectStatus} from "@/engine/types";
+import {Project, ProjectStatus} from "@/engine/types";
 import {cn} from "@/lib/utils";
 import {formatMoney} from "@/engine/utils";
 import {DollarSign} from "lucide-react";

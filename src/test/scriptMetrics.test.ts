@@ -1,4 +1,4 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {ScriptMetricsCalculator} from "@/engine/systems/production/ScriptMetricsCalculator";
 import {ScriptedProject} from "@/engine/types";
 

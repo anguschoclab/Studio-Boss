@@ -1,9 +1,9 @@
-import {describe it expect} from "vitest";
-import {checkRelationshipCrises checkCliqueCrises generateRelationshipScandals tickOrganicEvents calculateSocialCrisisModifier} from "../../../engine/systems/talent/OrganicEventEnhancer";
+import {describe, it, expect} from "vitest";
+import {checkRelationshipCrises, checkCliqueCrises, generateRelationshipScandals, tickOrganicEvents, calculateSocialCrisisModifier} from "../../../engine/systems/talent/OrganicEventEnhancer";
 import {RandomGenerator} from "../../../engine/utils/rng";
 import {TalentRelationship} from "../../../engine/types/relationship.types";
 import {Clique} from "../../../engine/types/clique.types";
-import {createMockGameState createMockTalent createMockContract} from "../generators/mockFactory";
+import {createMockGameState, createMockTalent, createMockContract} from "../generators/mockFactory";
 
 function makeRng(seed = 999): RandomGenerator {
   return new RandomGenerator(seed);

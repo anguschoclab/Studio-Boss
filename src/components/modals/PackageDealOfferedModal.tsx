@@ -1,9 +1,9 @@
 import {useUIStore} from "@/store/uiStore";
 import {useGameStore} from "@/store/gameStore";
-import {Dialog DialogContent DialogHeader DialogTitle DialogDescription DialogFooter} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
 import {Badge} from "@/components/ui/badge";
-import {Package AlertTriangle Users Percent} from "lucide-react";
+import {Package, AlertTriangle, Users, Percent} from "lucide-react";
 import {TalentNameLink} from "@/components/shared/TalentNameLink";
 
 interface PackageDealPayload {

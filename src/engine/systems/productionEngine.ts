@@ -1,4 +1,4 @@
-import {GameState Project StateImpact} from "@/engine/types";
+import {GameState, Project, StateImpact} from "@/engine/types";
 import {RandomGenerator} from "../utils/rng";
 import {processDirectorDisputes} from "./directors";
 import {getContractsByProjectId} from "@/engine/utils";

@@ -1,7 +1,7 @@
 import React from "react";
-import {BarChart Bar XAxis YAxis Tooltip ResponsiveContainer Cell LabelList} from "recharts";
-import type { TooltipProps } from "recharts";
-import type { AwardProbability } from "@/store/chartSelectors";
+import {BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, LabelList} from "recharts";
+import type {TooltipProps} from "recharts";
+import type {AwardProbability} from "@/store/chartSelectors";
 
 interface AwardsProbabilityChartProps {
   data: AwardProbability[];

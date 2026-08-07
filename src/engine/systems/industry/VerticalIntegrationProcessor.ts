@@ -1,4 +1,4 @@
-import {GameState StateImpact StreamerPlatform} from "@/engine/types";import {RandomGenerator} from "../../utils/rng";
+import {GameState, StateImpact, StreamerPlatform} from "@/engine/types";import {RandomGenerator} from "../../utils/rng";
 import {isPlayerOwner} from "../../utils/ownership";
 
 /**

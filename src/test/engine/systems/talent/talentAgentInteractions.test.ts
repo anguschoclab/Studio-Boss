@@ -1,6 +1,6 @@
-import {describe it expect} from "vitest";
-import {TalentAgentInteractionEngine AGENT_PERSONALITIES} from "@/engine/systems/talent/talentAgentInteractions";
-import {Talent Agent Agency} from "@/engine/types";
+import {describe, it, expect} from "vitest";
+import {TalentAgentInteractionEngine, AGENT_PERSONALITIES} from "@/engine/systems/talent/talentAgentInteractions";
+import {Talent, Agent, Agency} from "@/engine/types";
 import {RandomGenerator} from "@/engine/utils/rng";
 
 describe("TalentAgentInteractionEngine", () => {

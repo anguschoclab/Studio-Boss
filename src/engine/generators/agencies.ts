@@ -1,5 +1,5 @@
-import {Agency Agent AgencyTier AgencyCulture AgentSpecialty AgencyArchetype AgencyMotivation MotivationProfile} from "@/engine/types";
-import {pick randRange secureRandom generateId} from "../utils";
+import {Agency, Agent, AgencyTier, AgencyCulture, AgentSpecialty, AgencyArchetype, AgencyMotivation, MotivationProfile} from "@/engine/types";
+import {pick, randRange, secureRandom, generateId} from "../utils";
 
 const POWERHOUSE_PREFIXES = [
   "United Global",

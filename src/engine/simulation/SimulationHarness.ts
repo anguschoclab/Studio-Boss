@@ -1,4 +1,4 @@
-import {GameState ArchetypeKey} from "../types";
+import {GameState, ArchetypeKey} from "../types";
 import {initializeGame} from "../core/gameInit";
 import {advanceWeek} from "../core/weekAdvance";
 import {RandomGenerator} from "../utils/rng";

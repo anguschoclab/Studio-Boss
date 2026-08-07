@@ -1,4 +1,4 @@
-import {ContentFlag Project GameState RatingCut} from "@/engine/types";
+import {ContentFlag, Project, GameState, RatingCut} from "@/engine/types";
 import {StateImpact} from "@/engine/types/state.types";
 import {DirectorArchetype} from "@/engine/types/talent.types";
 import {hasCreativeControl} from "../directors";

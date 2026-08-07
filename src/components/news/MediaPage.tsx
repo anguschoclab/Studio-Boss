@@ -1,8 +1,8 @@
 import {useMemo} from "react";
 import {useGameStore} from "@/store/gameStore";
 import {Badge} from "@/components/ui/badge";
-import {Card CardContent CardHeader CardTitle CardDescription} from "@/components/ui/card";
-import {Newspaper Trophy TrendingUp MonitorPlay Activity} from "lucide-react";
+import {Card, CardContent, CardHeader, CardTitle, CardDescription} from "@/components/ui/card";
+import {Newspaper, Trophy, TrendingUp, MonitorPlay, Activity} from "lucide-react";
 import {selectNewsHistory} from "@/store/selectors";
 
 interface MappedHeadline {

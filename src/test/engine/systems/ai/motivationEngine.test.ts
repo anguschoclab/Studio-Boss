@@ -1,8 +1,8 @@
-import {describe it expect} from "vitest";
-import {calculateRivalMotivation calculateMotivationScores tickAIMinds} from "@/engine/systems/ai/motivationEngine";
+import {describe, it, expect} from "vitest";
+import {calculateRivalMotivation, calculateMotivationScores, tickAIMinds} from "@/engine/systems/ai/motivationEngine";
 import {RandomGenerator} from "@/engine/utils/rng";
-import {createMockGameState createMockRival} from "../../generators/mockFactory";
-import type { StateImpact, SeriesProject, Project } from "@/engine/types";
+import {createMockGameState, createMockRival} from "../../generators/mockFactory";
+import type {StateImpact, SeriesProject, Project} from "@/engine/types";
 
 describe("AI Motivation Engine (Target C1)", () => {
   const rng = new RandomGenerator(999);
@@ -535,7 +535,7 @@ describe("tickAIMinds — FRANCHISE_BUILDING syndication tracking", () => {
 
 // ─── Flop-History-Aware Motivation Tests (Gap 3) ─────────────────────────────
 
-import type { StudioFlopHistory } from "@/engine/types/state.types";
+import type {StudioFlopHistory} from "@/engine/types/state.types";
 
 function createFlopHistory(
   rivalId: string,

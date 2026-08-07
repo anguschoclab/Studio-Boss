@@ -1,6 +1,6 @@
-import {GameState Project StateImpact} from "@/engine/types";import {RandomGenerator} from "../../utils/rng";
+import {GameState, Project, StateImpact} from "@/engine/types";import {RandomGenerator} from "../../utils/rng";
 import {BardResolver} from "../bardResolver";
-import {AWARDS_CALENDAR AWARD_CONFIGS} from "../../data/awards.data";
+import {AWARDS_CALENDAR, AWARD_CONFIGS} from "../../data/awards.data";
 import {calculateNominationWeight} from "./NominationCalculator";
 import {getContractsByProjectId} from "@/engine/utils";
 

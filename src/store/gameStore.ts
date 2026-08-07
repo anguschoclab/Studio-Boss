@@ -1,24 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {create} from "zustand";
-import {GameState WeekSummary ArchetypeKey} from "@/engine/types";import {initializeGame} from "@/engine/core/gameInit";
+import {GameState, WeekSummary, ArchetypeKey} from "@/engine/types";import {initializeGame} from "@/engine/core/gameInit";
 import {advanceWeek} from "@/engine/core/weekAdvance";
-import {saveGame loadGame getSaveSlots SaveSlotInfo} from "@/persistence/saveLoad";
-import {useUIStore ModalType} from "./uiStore";
+import {saveGame, loadGame, getSaveSlots, SaveSlotInfo} from "@/persistence/saveLoad";
+import {useUIStore, ModalType} from "./uiStore";
 import {useSettingsStore} from "./settingsStore";
 
 const EMPTY_FINANCE = { cash: 0, ledger: [] };
 
-import {createProjectSlice ProjectSlice} from "./slices/projectSlice";
-import {createFinanceSlice FinanceSlice} from "./slices/financeSlice";
-import {createTalentSlice TalentSlice} from "./slices/talentSlice";
-import {createRivalSlice RivalSlice} from "./slices/rivalSlice";
-import {createNewsSlice NewsSlice} from "./slices/newsSlice";
-import {createSnapshotSlice SnapshotSlice} from "./slices/snapshotSlice";
-import {createLoanSlice LoanSlice} from "./slices/loanSlice";
-import {createBookmarkSlice BookmarkSlice} from "./slices/bookmarkSlice";
-import {createDistressSlice DistressSlice} from "./slices/distressSlice";
-import {createMarketingSlice MarketingSlice} from "./slices/marketingSlice";
-import {createProjectEventsSlice ProjectEventsSlice} from "./slices/projectEventsSlice";
+import {createProjectSlice, ProjectSlice} from "./slices/projectSlice";
+import {createFinanceSlice, FinanceSlice} from "./slices/financeSlice";
+import {createTalentSlice, TalentSlice} from "./slices/talentSlice";
+import {createRivalSlice, RivalSlice} from "./slices/rivalSlice";
+import {createNewsSlice, NewsSlice} from "./slices/newsSlice";
+import {createSnapshotSlice, SnapshotSlice} from "./slices/snapshotSlice";
+import {createLoanSlice, LoanSlice} from "./slices/loanSlice";
+import {createBookmarkSlice, BookmarkSlice} from "./slices/bookmarkSlice";
+import {createDistressSlice, DistressSlice} from "./slices/distressSlice";
+import {createMarketingSlice, MarketingSlice} from "./slices/marketingSlice";
+import {createProjectEventsSlice, ProjectEventsSlice} from "./slices/projectEventsSlice";
 
 /**
  * The main game store interface, combining multiple slices for state management.

@@ -1,5 +1,5 @@
-import {Card CardContent} from "@/components/ui/card";
-import {Zap ChevronRight} from "lucide-react";
+import {Card, CardContent} from "@/components/ui/card";
+import {Zap, ChevronRight} from "lucide-react";
 import {cn} from "@/lib/utils";
 import {NewsEvent} from "@/engine/types";
 

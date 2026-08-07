@@ -1,4 +1,4 @@
-import {Project MarketingCampaign} from "../../types";
+import {Project, MarketingCampaign} from "../../types";
 
 export function evaluateMarketingEfficiency(
   project: Project,

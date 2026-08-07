@@ -1,4 +1,4 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {tickVerticalIntegration} from "../../../../engine/systems/industry/VerticalIntegrationProcessor";
 import {createMockGameState} from "../../../utils/mockFactories";
 import {RandomGenerator} from "../../../../engine/utils/rng";

@@ -1,7 +1,7 @@
-import {GameState StateImpact Talent Project} from "../../types";
+import {GameState, StateImpact, Talent, Project} from "../../types";
 import {RandomGenerator} from "../../utils/rng";
 import {getContractsByProjectId} from "../../utils";
-import {TalentComfortLevel ComfortPremiumRates ScriptRequirement ScriptRequirementType CastingConstraintCheck CastingConstraintViolation CastingConstraintOption REQUIREMENT_COMFORT_MAPPING NUDITY_PREMIUM_RATES STUNT_PREMIUM_RATES INTIMACY_PREMIUM_RATES} from "../../types/casting.types";
+import {TalentComfortLevel, ComfortPremiumRates, ScriptRequirement, ScriptRequirementType, CastingConstraintCheck, CastingConstraintViolation, CastingConstraintOption, REQUIREMENT_COMFORT_MAPPING, NUDITY_PREMIUM_RATES, STUNT_PREMIUM_RATES, INTIMACY_PREMIUM_RATES} from "../../types/casting.types";
 
 const PERSONALITY_COMFORT_BASE: Record<string, Partial<TalentComfortLevel>> = {
   charismatic: { intimacy: "passionate", risk: "adventurous" },

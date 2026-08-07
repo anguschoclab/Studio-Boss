@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {Talent} from "@/engine/types/talent.types";
 import {TabsContent} from "@/components/ui/tabs";
-import {Star DollarSign TrendingUp} from "lucide-react";
+import {Star, DollarSign, TrendingUp} from "lucide-react";
 import {formatMoney} from "@/engine/utils";
-import {CartesianGrid Cell Bar BarChart XAxis YAxis ResponsiveContainer} from "recharts";
+import {CartesianGrid, Cell, Bar, BarChart, XAxis, YAxis, ResponsiveContainer} from "recharts";
 
 interface StatsTabProps {
   talent: Talent;

@@ -1,6 +1,6 @@
-import {describe it expect} from "vitest";
+import {describe, it, expect} from "vitest";
 import {calculateIPValue} from "../../../engine/systems/ipRetention";
-import {Project AwardsProfile} from "../../../engine/types";
+import {Project, AwardsProfile} from "../../../engine/types";
 
 describe("calculateIPValue", () => {
   const baseProject: Project = {

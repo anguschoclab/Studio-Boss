@@ -1,6 +1,6 @@
-import {Project GameState WeeklyFinancialReport Contract TalentPact} from "@/engine/types";
+import {Project, GameState, WeeklyFinancialReport, Contract, TalentPact} from "@/engine/types";
 import {RandomGenerator} from "../../utils/rng";
-import {StateImpact FinancialSnapshot} from "../../types/state.types";
+import {StateImpact, FinancialSnapshot} from "../../types/state.types";
 import {RevenueProcessor} from "./RevenueProcessor";
 import {ExpenseProcessor} from "./ExpenseProcessor";
 import {InterestRateSimulator} from "../market/InterestRateSimulator";
