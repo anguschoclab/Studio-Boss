@@ -488,7 +488,13 @@ export class HeadlessController {
     ratingScore: number
   ): StateImpact[] {
     const impacts: StateImpact[] = [];
-    const pool = Object.values(state.entities.talents || {});
+    // ⚡ Bolt Optimization: Replace Object.values() with direct for...in loop to avoid array allocation
+    const pool: typeof state.entities.talents[keyof typeof state.entities.talents][] = [];
+    const talentsObj = state.entities.talents || {};
+    for (const key in talentsObj) {
+      if (!Object.prototype.hasOwnProperty.call(talentsObj, key)) continue;
+      pool.push(talentsObj[key]);
+    }
     if (pool.length === 0) return impacts;
     const totalCost = ((project.budget as number) || 0) + ((project.marketingBudget as number) || 0);
     const ROI = totalCost > 0 ? revenue / totalCost : 0;
