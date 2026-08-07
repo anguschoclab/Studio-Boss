@@ -116,7 +116,14 @@ function evolveRelationship(
 
 export function tickRelationshipSystem(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const talents = Object.values(state.entities.talents || {});
+  // ⚡ Bolt: Use for...in iteration to prevent intermediate array allocation from Object.values()
+  const talentsDict = state.entities.talents || {};
+  const talents: Talent[] = [];
+  for (const tid in talentsDict) {
+    if (Object.prototype.hasOwnProperty.call(talentsDict, tid)) {
+      talents.push(talentsDict[tid]);
+    }
+  }
   // ⚡ Bolt: Use Object.keys iteration to prevent massive intermediate array allocation
   const projectsDict = state.entities.projects || {};
   const projects = Object.keys(projectsDict).map((pid) => projectsDict[pid]);
