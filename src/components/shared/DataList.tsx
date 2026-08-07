@@ -208,6 +208,7 @@ export function FilterableDataList<T>({
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={searchPlaceholder}
             aria-label={searchPlaceholder || "Search"}
+            maxLength={100}
             className={cn(
               "w-full pl-12 pr-6 py-4",
               "bg-white/[0.02] border border-white/5 rounded-none",

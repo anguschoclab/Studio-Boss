@@ -88,6 +88,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={searchPlaceholder}
             aria-label={searchPlaceholder || "Search"}
+            maxLength={100}
             className={cn(
               "w-full pl-12 pr-12 py-3",
               "bg-white/5 border border-white/10 rounded-none",

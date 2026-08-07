@@ -148,6 +148,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
                 aria-label="Search industry database"
                 placeholder="Search industry database..."
                 className="pl-10 bg-black/40 border-slate-700 text-xs"
+                maxLength={100}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />

@@ -326,6 +326,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="SEARCH COMMANDS & TAC INTEL..."
                   className="flex-1 bg-transparent border-none outline-none text-sm font-black uppercase tracking-[0.2em] placeholder:text-muted-foreground/30 italic"
+                  maxLength={100}
                   autoFocus
                 />
                 <kbd className="px-3 py-1 bg-white/5 border border-white/10 rounded-none text-[10px] font-black text-muted-foreground/40 italic">
