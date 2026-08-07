@@ -98,7 +98,6 @@ function makeFranchiseState(
       agencies: [],
       agents: [],
       awards: [],
-      newsHistory: [],
       rumors: [],
       scandals: [],
     },

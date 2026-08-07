@@ -28,7 +28,7 @@ function makeMockState(): GameState {
       internal: { projects: {}, contracts: [] },
     },
     market: { opportunities: [], buyers: [] },
-    industry: { rivals: [], families: [], agencies: [], agents: [], newsHistory: [] },
+    industry: { rivals: [], families: [], agencies: [], agents: [] },
     culture: { genrePopularity: {} },
     history: [],
   } as unknown as GameState;

@@ -59,7 +59,6 @@ export interface WeekSummary {
   totalRevenue: number;
   totalCosts: number;
   projectUpdates: string[];
-  newHeadlines: NewsEvent[];
   events: string[];
   newsEvents: NewsEvent[];
   narrativeEvents?: NarrativeEvent[];

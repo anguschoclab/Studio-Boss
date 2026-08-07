@@ -19,7 +19,6 @@ export const createNewsSlice: StateCreator<GameStore, [], [], NewsSlice> = (set,
         totalRevenue: 0,
         totalCosts: 0,
         projectUpdates: [],
-        newHeadlines: events,
         newsEvents: events,
         events: [],
       };

@@ -88,7 +88,6 @@ describe("Festivals System", () => {
         agencies: [],
         agents: [],
         talentPool: {},
-        newsHistory: [],
         festivalSubmissions: [],
         rumors: [],
       },

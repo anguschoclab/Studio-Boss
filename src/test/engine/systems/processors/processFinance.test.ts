@@ -39,7 +39,6 @@ describe("tickFinance", () => {
         agencies: [],
         agents: [],
         talentPool: {} as Record<string, Talent>,
-        newsHistory: [],
         rumors: [],
       },
       culture: {

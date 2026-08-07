@@ -39,7 +39,6 @@ describe("awards system", () => {
         families: [],
         agencies: [],
         agents: [],
-        newsHistory: [],
         rumors: [],
       },
       culture: { genrePopularity: {} },

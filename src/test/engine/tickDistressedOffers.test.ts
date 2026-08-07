@@ -30,7 +30,7 @@ function makeState(week: number, offers: DistressedAssetOffer[]): GameState {
       },
     },
     ip: { franchises: { f1: { id: "f1", name: "Rambo", ownerId: "r1" } }, vault: [] },
-    industry: { distressedOffers: offers, newsHistory: [] },
+    industry: { distressedOffers: offers },
   } as unknown as GameState;
 }
 

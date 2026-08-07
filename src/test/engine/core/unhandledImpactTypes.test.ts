@@ -36,7 +36,6 @@ function makeMockState(overrides: Partial<GameState> = {}): GameState {
       families: [],
       agencies: [],
       agents: [],
-      newsHistory: [],
     },
     culture: { genrePopularity: {} },
     history: [],

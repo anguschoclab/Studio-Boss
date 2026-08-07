@@ -37,11 +37,10 @@ export const WeekSummaryModal = () => {
     totalCosts,
     projectUpdates,
     newsEvents,
-    newHeadlines,
     narrativeEvents,
     isQuietWeek,
   } = weekSummary;
-  const headlines = (newsEvents && newsEvents.length > 0) ? newsEvents : (newHeadlines || []);
+  const headlines = newsEvents || [];
   const netDelta = cashAfter - cashBefore;
 
   // Categorize narrative events

@@ -115,7 +115,6 @@ const makeGameState = (overrides: Partial<GameState> = {}): GameState =>
       agencies: [],
       agents: [],
       awards: [],
-      newsHistory: [],
       scandals: [],
     },
     culture: { genrePopularity: {} },
@@ -367,7 +366,6 @@ describe("AwardsHQ", () => {
         families: [],
         agencies: [],
         agents: [],
-        newsHistory: [],
         scandals: [],
         awards: [
           { id: "a1", projectId: "p1", name: "Best Picture", category: "Best Picture", body: "Academy Awards", status: "won", year: currentSeason },

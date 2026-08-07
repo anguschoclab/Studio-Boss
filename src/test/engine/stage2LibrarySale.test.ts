@@ -36,7 +36,7 @@ function makeStage2State(): GameState {
         { id: "v3", title: "Other", ownerStudioId: "r1", baseValue: 100_000_000, rightsOwner: "RIVAL" },
       ],
     },
-    industry: { distressedOffers: [], newsHistory: [] },
+    industry: { distressedOffers: [] },
     market: { buyers: [] },
   } as unknown as GameState;
 }

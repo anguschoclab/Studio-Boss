@@ -223,7 +223,6 @@ export interface BaseImpact {
   rivalUpdates?: RivalUpdate[];
   buyerUpdates?: BuyerUpdate[];
   newsEvents?: import("./engine.types").NewsEvent[];
-  newHeadlines?: import("./engine.types").Headline[];
   newOpportunities?: import("./project.types").Opportunity[];
   newTrends?: import("./project.types").GenreTrend[];
   newMarketEvents?: import("./engine.types").MarketEvent[];

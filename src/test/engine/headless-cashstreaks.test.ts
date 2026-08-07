@@ -21,7 +21,7 @@ function makeState(streaks?: Record<string, number>): GameState {
       contractsByProjectId: {},
       contractsByTalentId: {},
     },
-    industry: { newsHistory: [] },
+    industry: {  },
     ip: { vault: [], franchises: {} },
     market: { buyers: [], opportunities: [] },
     simMemory: { ...defaultSimMemory(), headlessCashStreaks: streaks ?? {} },

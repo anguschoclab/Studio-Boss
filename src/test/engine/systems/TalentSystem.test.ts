@@ -150,7 +150,6 @@ describe("TalentSystem", () => {
             t1: { ...mockTalent1 },
             t2: { ...mockTalent2 },
           },
-          newsHistory: [],
           rumors: [],
         },
         culture: { genrePopularity: {} },

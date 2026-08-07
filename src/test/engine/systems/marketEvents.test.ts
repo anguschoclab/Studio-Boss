@@ -35,7 +35,6 @@ describe("Market Events System", () => {
         agencies: [],
         agents: [],
         talentPool: {} as Record<string, Talent>,
-        newsHistory: [],
         rumors: [],
       },
       culture: { genrePopularity: {} },

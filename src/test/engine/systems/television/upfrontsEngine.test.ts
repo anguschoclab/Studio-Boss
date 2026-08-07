@@ -26,7 +26,6 @@ describe("Upfronts Engine (Guild Auditor)", () => {
         agencies: [],
         agents: [],
         talentPool: {},
-        newsHistory: [],
         rumors: [],
       },
       market: { opportunities: [], buyers: [], activeMarketEvents: [] },

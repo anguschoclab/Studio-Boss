@@ -253,26 +253,6 @@ export function applySingleImpact(state: GameState, impact: StateImpact): GameSt
         newState = applySingleImpact(newState, { type: "RIVAL_UPDATED", payload: u });
       });
     }
-    if (impact.newHeadlines) {
-      impact.newHeadlines.forEach((h) => {
-        newState = applySingleImpact(newState, {
-          type: "NEWS_ADDED",
-          payload: {
-            id: h.id,
-            headline: h.headline,
-            description: h.description || "",
-            type: h.type,
-            category: h.category,
-            impact: h.impact,
-            publication: h.publication,
-            talentId: h.talentId,
-            projectId: h.projectId,
-            rivalId: h.rivalId,
-            buyerId: h.buyerId,
-          },
-        });
-      });
-    }
     if (impact.newsEvents) {
       impact.newsEvents.forEach((e) => {
         newState = applySingleImpact(newState, {

@@ -39,7 +39,7 @@ function makeState(simMemory?: unknown): GameState {
       contractsByProjectId: {},
       contractsByTalentId: {},
     },
-    industry: { newsHistory: [] },
+    industry: {  },
     ip: { vault: [], franchises: {} },
     market: { buyers: [], opportunities: [] },
     simMemory: (simMemory ?? defaultSimMemory()) as any,

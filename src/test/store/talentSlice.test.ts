@@ -72,7 +72,6 @@ describe("talentSlice — acquireOpportunity currentHighest", () => {
           agencies: [],
           agents: [],
           awards: [],
-          newsHistory: [],
           rumors: [],
           scandals: [],
         },

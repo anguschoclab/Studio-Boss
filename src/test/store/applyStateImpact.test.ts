@@ -45,7 +45,6 @@ describe("applyStateImpact utility", () => {
         families: [],
         agencies: [],
         agents: [],
-        newsHistory: [],
       },
       market: {
         opportunities: [],

@@ -48,7 +48,6 @@ describe("hasCreativeControl", () => {
         agencies: [],
         agents: [],
         talentPool,
-        newsHistory: [],
       },
       culture: { genrePopularity: {} },
       history: [],

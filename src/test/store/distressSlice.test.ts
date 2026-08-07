@@ -31,7 +31,7 @@ function seed(): GameState {
       projects: {},
     },
     ip: { franchises: { f1: { id: "f1", name: "Rambo", ownerId: "r1" } }, vault: [] },
-    industry: { distressedOffers: [offer], newsHistory: [] },
+    industry: { distressedOffers: [offer] },
   } as unknown as GameState;
 }
 

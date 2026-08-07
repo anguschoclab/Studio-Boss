@@ -34,7 +34,6 @@ function createMockState(overrides: Partial<GameState> = {}): GameState {
       families: [],
       agencies: [],
       agents: [],
-      newsHistory: [],
     },
     culture: { genrePopularity: {} },
     history: [],
@@ -309,7 +308,6 @@ describe("tickBiographyGenerator", () => {
         families: [],
         agencies: [],
         agents: [],
-        newsHistory: [],
         scandals: [
           {
             id: "sc1",
@@ -344,7 +342,6 @@ describe("tickBiographyGenerator", () => {
         families: [],
         agencies: [],
         agents: [],
-        newsHistory: [],
         scandals: [
           {
             id: "sc1",
@@ -443,7 +440,6 @@ describe("tickBiographyGenerator", () => {
         families: [],
         agencies: [],
         agents: [],
-        newsHistory: [],
       },
     });
     const impacts = tickBiographyGenerator(state, rng());

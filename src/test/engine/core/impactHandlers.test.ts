@@ -37,7 +37,6 @@ function makeMockState(): GameState {
       families: [],
       agencies: [],
       agents: [],
-      newsHistory: [],
     },
     culture: { genrePopularity: {} },
     history: [],

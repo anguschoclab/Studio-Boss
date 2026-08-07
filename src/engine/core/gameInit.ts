@@ -260,16 +260,6 @@ export function initializeGame(
         totalRevenue: 0,
         totalCosts: 0,
         projectUpdates: [],
-        newHeadlines: [
-          {
-            id: generateId("NWS"),
-            type: "STUDIO_EVENT" as const,
-            headline: `${studioName} launches operations — the industry takes notice.`,
-            description: "",
-            week: 1,
-            category: "general" as const,
-          },
-        ],
         newsEvents: [
           {
             id: generateId("NWS"),

@@ -86,7 +86,6 @@ describe("Demographics System", () => {
           families: [],
           agencies: [],
           agents: [],
-          newsHistory: [],
         },
         culture: { genrePopularity: {} },
         history: [],

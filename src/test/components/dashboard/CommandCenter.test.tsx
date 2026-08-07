@@ -35,7 +35,6 @@ describe("CommandCenter", () => {
         prestige: 42,
       },
       industry: {
-        newsHistory: [],
       },
       weekSummaries: [],
       finance: { cash: 1000000 },

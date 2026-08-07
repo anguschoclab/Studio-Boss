@@ -131,7 +131,7 @@ function makeState(overrides: any = {}) {
       contractsByTalentId: {},
     },
     market: { opportunities: [], trends: [], activeMarketEvents: [], buyers: [] },
-    industry: { families: [], agencies: [], agents: [], awards: [], newsHistory: [], rumors: [], scandals: [] },
+    industry: { families: [], agencies: [], agents: [], awards: [], rumors: [], scandals: [] },
     culture: { genrePopularity: {} },
     news: { headlines: [] },
     ip: {

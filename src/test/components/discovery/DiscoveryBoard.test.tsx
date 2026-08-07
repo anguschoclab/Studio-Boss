@@ -25,7 +25,7 @@ describe("DiscoveryBoard", () => {
     useGameStore.setState({
       gameState: {
         market: { opportunities: [], trends: [] },
-        industry: { newsHistory: [] },
+        industry: {  },
       },
       acquireOpportunity: mockAcquireOpportunity,
     } as any);
@@ -46,7 +46,7 @@ describe("DiscoveryBoard", () => {
     useGameStore.setState({
       gameState: {
         market: { opportunities: [], trends: [] },
-        industry: { newsHistory: [] },
+        industry: {  },
       },
       acquireOpportunity: mockAcquireOpportunity,
     } as any);
@@ -105,7 +105,7 @@ describe("DiscoveryBoard", () => {
     useGameStore.setState({
       gameState: {
         market: { opportunities: mockOpportunities, trends: [] },
-        industry: { newsHistory: [] },
+        industry: {  },
       },
       acquireOpportunity: mockAcquireOpportunity,
     } as any);
@@ -142,7 +142,7 @@ describe("DiscoveryBoard", () => {
     useGameStore.setState({
       gameState: {
         market: { opportunities: mockOpportunities, trends: [] },
-        industry: { newsHistory: [] },
+        industry: {  },
       },
       acquireOpportunity: mockAcquireOpportunity,
     } as any);

@@ -26,7 +26,6 @@ describe("Television Tick System (Guild Auditor)", () => {
         agencies: [],
         agents: [],
         talentPool: {},
-        newsHistory: [],
         rumors: [],
       },
       market: { opportunities: [], buyers: [], activeMarketEvents: [] },

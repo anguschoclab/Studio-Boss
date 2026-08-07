@@ -67,7 +67,6 @@ describe("Production Engine (Target A2) - Symmetry", () => {
       agents: [],
       rivals: [],
       awards: [],
-      newsHistory: [],
       rumors: [],
       scandals: [],
     },

@@ -18,7 +18,7 @@ vi.mock("../../persistence/saveLoad", () => ({
           prestige: 50,
           internal: { projects: {}, contracts: [] },
         },
-        industry: { talentPool: {}, rivals: [], newsHistory: [] },
+        industry: { talentPool: {}, rivals: [] },
         market: { buyers: [], opportunities: [] },
       } as unknown as GameState;
     return null;

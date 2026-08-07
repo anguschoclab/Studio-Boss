@@ -35,7 +35,7 @@ function makeState(rivals: RivalStudio[]): GameState {
       buyers: [],
       marketingIntensity: 0,
     },
-    industry: { families: [], agencies: [], agents: [], newsHistory: [] },
+    industry: { families: [], agencies: [], agents: [] },
     culture: { genrePopularity: {} },
   } as unknown as GameState;
 }

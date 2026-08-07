@@ -26,7 +26,6 @@ describe("Pilot Evaluator (Guild Auditor)", () => {
         agencies: [],
         agents: [],
         talentPool: {},
-        newsHistory: [],
         rumors: [],
       },
       market: { opportunities: [], buyers: [], activeMarketEvents: [] },

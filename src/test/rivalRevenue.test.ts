@@ -38,7 +38,7 @@ function makeState(projects: Record<string, any>): GameState {
       internal: { projectHistory: [] },
     },
     market: { opportunities: [], buyers: [] },
-    industry: { families: [], agencies: [], agents: [], rivals: [], awards: [], newsHistory: [] },
+    industry: { families: [], agencies: [], agents: [], rivals: [], awards: [] },
     culture: { genrePopularity: {} },
     relationships: { discovery: {} },
     history: [],

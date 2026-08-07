@@ -71,7 +71,6 @@ describe("RelationshipSystem - Award Nominee Tracking", () => {
         rumors: [],
         scandals: [],
         activeMergers: [],
-        newsHistory: [],
       },
     });
 
@@ -113,7 +112,6 @@ describe("RelationshipSystem - Award Nominee Tracking", () => {
         rumors: [],
         scandals: [],
         activeMergers: [],
-        newsHistory: [],
       },
     });
 
@@ -155,7 +153,6 @@ describe("RelationshipSystem - Award Nominee Tracking", () => {
         rumors: [],
         scandals: [],
         activeMergers: [],
-        newsHistory: [],
       },
     });
 

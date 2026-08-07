@@ -56,7 +56,6 @@ function createMockState(projectCount: number, contractsPerProject: number): Gam
     },
     industry: {
       rivals: [],
-      newsHistory: [],
       families: [],
       agencies: [],
       agents: [],

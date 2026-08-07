@@ -577,7 +577,6 @@ export class WeekCoordinator {
   ): WeekSummary {
     const newsImpacts: import("../types/state.types").StateImpact[] = [];
     const compoundNewsEvents: import("../types/engine.types").NewsEvent[] = [];
-    const compoundHeadlines: import("../types/engine.types").Headline[] = [];
     const projectUpdates: string[] = [];
     let ledgerImpact: import("../types/state.types").StateImpact | undefined;
     const narrativeEvents: import("../types/engine.types").NarrativeEvent[] = [];
@@ -585,7 +584,6 @@ export class WeekCoordinator {
     for (const impact of context.impacts) {
       if (impact.type === "NEWS_ADDED") newsImpacts.push(impact);
       if (impact.newsEvents) compoundNewsEvents.push(...impact.newsEvents);
-      if (impact.newHeadlines) compoundHeadlines.push(...impact.newHeadlines);
       if (impact.type === "LEDGER_UPDATED" && !ledgerImpact) ledgerImpact = impact;
       if (impact.type === "PROJECT_UPDATED") {
         const payload = impact.payload as import("../types/state.types").ProjectUpdate;
@@ -637,26 +635,9 @@ export class WeekCoordinator {
     );
 
     // Map compound headlines (Headline = NewsEvent alias) to NewsEvent
-    const newsEventsFromHeadlines: import("../types/engine.types").NewsEvent[] =
-      compoundHeadlines.map((h) => ({
-        id: h.id || context.rng.uuid("news"),
-        week: h.week || context.week,
-        type: h.type || "STUDIO_EVENT",
-        headline: h.headline,
-        description: h.description || "",
-        ...(h.category && { category: h.category }),
-        ...(h.impact && { impact: h.impact }),
-        ...(h.publication && { publication: h.publication }),
-        ...(h.talentId && { talentId: h.talentId }),
-        ...(h.projectId && { projectId: h.projectId }),
-        ...(h.rivalId && { rivalId: h.rivalId }),
-        ...(h.buyerId && { buyerId: h.buyerId }),
-      }));
-
     const allNewsEvents = [
       ...newsEventsFromImpacts,
       ...compoundNewsEvents,
-      ...newsEventsFromHeadlines,
     ];
 
     // Quiet week detection
@@ -674,7 +655,6 @@ export class WeekCoordinator {
       totalRevenue,
       totalCosts,
       projectUpdates: Array.from(new Set(projectUpdates)),
-      newHeadlines: allNewsEvents,
       newsEvents: allNewsEvents,
       events: context.events.map((e) => e.title),
       narrativeEvents,

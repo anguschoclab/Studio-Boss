@@ -37,7 +37,6 @@ function makeState(project: Project): GameState {
       agents: [],
       rivals: [],
       awards: [],
-      newsHistory: [],
       rumors: [],
       scandals: [],
     },

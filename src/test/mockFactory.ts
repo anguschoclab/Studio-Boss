@@ -49,7 +49,6 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
       families: [],
       agencies: [],
       agents: [],
-      newsHistory: [],
     },
     culture: {
       genrePopularity: {},

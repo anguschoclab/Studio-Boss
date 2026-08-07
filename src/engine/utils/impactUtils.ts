@@ -39,9 +39,6 @@ export function mergeImpacts(...impacts: (StateImpact | undefined)[]): StateImpa
     if (impact.removeContracts) {
       result.removeContracts = [...(result.removeContracts || []), ...impact.removeContracts];
     }
-    if (impact.newHeadlines) {
-      result.newHeadlines = [...(result.newHeadlines || []), ...impact.newHeadlines];
-    }
     if (impact.newsEvents) {
       result.newsEvents = [...(result.newsEvents || []), ...impact.newsEvents];
     }

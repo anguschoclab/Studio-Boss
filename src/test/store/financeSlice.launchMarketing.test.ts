@@ -74,7 +74,6 @@ describe("MarketingSlice — launchMarketingCampaign", () => {
           agencies: [],
           agents: [],
           awards: [],
-          newsHistory: [],
           rumors: [],
           scandals: [],
           talentPool: {},

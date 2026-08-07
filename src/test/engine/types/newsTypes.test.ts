@@ -178,7 +178,6 @@ describe("GameState type", () => {
         families: [],
         agencies: [],
         agents: [],
-        newsHistory: [],
       },
       culture: { genrePopularity: {} },
       history: [],

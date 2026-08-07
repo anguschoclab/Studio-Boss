@@ -42,7 +42,6 @@ describe("Platform Engine (Target B1)", () => {
         agencies: [],
         agents: [],
         talentPool: {} as Record<string, Talent>,
-        newsHistory: [],
         rumors: [],
       },
       culture: { genrePopularity: {} },

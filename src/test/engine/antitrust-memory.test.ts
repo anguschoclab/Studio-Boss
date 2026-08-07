@@ -27,7 +27,7 @@ function makeState(lastActionWeek: number): GameState {
       contractsByProjectId: {},
       contractsByTalentId: {},
     },
-    industry: { newsHistory: [] },
+    industry: {  },
     simMemory: { ...defaultSimMemory(), antitrust: { lastActionWeek } },
   } as unknown as GameState;
 }

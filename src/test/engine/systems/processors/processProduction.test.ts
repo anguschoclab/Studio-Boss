@@ -35,7 +35,6 @@ describe("tickProduction", () => {
         families: [],
         agencies: [],
         agents: [],
-        newsHistory: [],
         rumors: [],
       },
       culture: { genrePopularity: {} },

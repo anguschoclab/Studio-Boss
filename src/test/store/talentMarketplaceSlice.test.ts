@@ -72,7 +72,6 @@ describe("talentMarketplaceSlice", () => {
           agencies: [],
           agents: [],
           awards: [],
-          newsHistory: [],
           rumors: [],
           scandals: [],
         },

@@ -23,7 +23,7 @@ function makeState(week = 10, flops?: Record<string, any>): GameState {
       contractsByProjectId: {},
       contractsByTalentId: {},
     },
-    industry: { newsHistory: [] },
+    industry: {  },
     simMemory: { ...defaultSimMemory(), flops: flops ?? {} },
   } as unknown as GameState;
 }
