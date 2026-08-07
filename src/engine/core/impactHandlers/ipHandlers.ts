@@ -1,4 +1,4 @@
-import { GameState, Franchise } from "@/engine/types";
+import { GameState, Franchise, StateImpact } from "@/engine/types";
 import type {
   FranchiseUpdatedImpact,
   VaultAssetUpdatedImpact,
@@ -49,5 +49,22 @@ export function handleFormatLicensed(state: GameState, impact: FormatLicensedImp
   return {
     ...state,
     ip: { ...state.ip, vault: [...state.ip.vault, asset] },
+  };
+}
+
+export function handleIpUpdated(state: GameState, impact: StateImpact): GameState {
+  const { assetId, update } = impact.payload as {
+    assetId: string;
+    update: Partial<import("@/engine/types").IPAsset>;
+  };
+  const vault = state.ip.vault.map((asset) =>
+    asset.id === assetId ? { ...asset, ...update } : asset
+  );
+  return {
+    ...state,
+    ip: {
+      ...state.ip,
+      vault,
+    },
   };
 }

@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { applySingleImpact } from "@/engine/core/impactHandlers";
 import { GameState, StateImpact } from "@/engine/types";
 
-function makeMockState(): GameState {
+function makeMockState(overrides: Partial<GameState> = {}): GameState {
   return {
     week: 1,
     gameSeed: 1,
@@ -40,11 +40,12 @@ function makeMockState(): GameState {
     },
     culture: { genrePopularity: {} },
     history: [],
+    ...overrides,
   } as unknown as GameState;
 }
 
-describe("Unhandled impact types — silently dropped by handler registry", () => {
-  it("HEADLINE_POSTED impact is silently dropped (no handler exists)", () => {
+describe("Previously unhandled impact types — now properly handled", () => {
+  it("HEADLINE_POSTED impact adds headline to state.news.headlines", () => {
     const state = makeMockState();
     const impact = {
       type: "HEADLINE_POSTED",
@@ -57,18 +58,20 @@ describe("Unhandled impact types — silently dropped by handler registry", () =
     } as unknown as StateImpact;
 
     const result = applySingleImpact(state, impact);
-    // The impact has no handler, so state is returned unchanged
-    // This proves the bug: the headline is never added to state
-    expect(result).toBe(state);
-    expect(result.news?.headlines?.length ?? 0).toBe(0);
+    expect(result.news?.headlines?.length ?? 0).toBe(1);
+    expect(result.news!.headlines![0].id).toBe("HL-1-REG");
+    expect(result.news!.headlines![0].text).toBe("Regulators express concern.");
   });
 
-  it("INDUSTRY_RUMORS_UPDATED impact is silently dropped (no handler exists)", () => {
+  it("INDUSTRY_RUMORS_UPDATED impact updates rumors and adds headlines", () => {
     const state = makeMockState();
+    const newRumors = [
+      { id: "r1", text: "Test rumor", week: 1, category: "talent", resolved: false },
+    ];
     const impact = {
       type: "INDUSTRY_RUMORS_UPDATED",
       payload: {
-        rumors: [],
+        rumors: newRumors,
         headlines: [
           { id: "HL-2", week: 1, category: "rumor", text: "RUMOR: Test" },
         ],
@@ -76,13 +79,20 @@ describe("Unhandled impact types — silently dropped by handler registry", () =
     } as unknown as StateImpact;
 
     const result = applySingleImpact(state, impact);
-    // The impact has no handler, so state is returned unchanged
-    expect(result).toBe(state);
-    expect(result.news?.headlines?.length ?? 0).toBe(0);
+    expect(result.industry.rumors).toEqual(newRumors);
+    expect(result.news?.headlines?.length ?? 0).toBe(1);
+    expect(result.news!.headlines![0].text).toBe("RUMOR: Test");
   });
 
-  it("IP_UPDATED impact is silently dropped (no handler exists)", () => {
-    const state = makeMockState();
+  it("IP_UPDATED impact updates the vault asset by assetId", () => {
+    const state = makeMockState({
+      ip: {
+        vault: [
+          { id: "asset-1", title: "Test IP", rightsOwner: "RIVAL" } as any,
+        ],
+        franchises: {},
+      },
+    });
     const impact = {
       type: "IP_UPDATED",
       payload: {
@@ -95,7 +105,30 @@ describe("Unhandled impact types — silently dropped by handler registry", () =
     } as unknown as StateImpact;
 
     const result = applySingleImpact(state, impact);
-    // The impact has no handler, so state is returned unchanged
-    expect(result).toBe(state);
+    expect(result.ip.vault[0].rightsOwner).toBe("STUDIO");
+    expect((result.ip.vault[0] as any).ownerStudioId).toBe("player");
+  });
+
+  it("IP_UPDATED impact leaves other assets unchanged", () => {
+    const state = makeMockState({
+      ip: {
+        vault: [
+          { id: "asset-1", title: "IP One", rightsOwner: "RIVAL" } as any,
+          { id: "asset-2", title: "IP Two", rightsOwner: "RIVAL" } as any,
+        ],
+        franchises: {},
+      },
+    });
+    const impact = {
+      type: "IP_UPDATED",
+      payload: {
+        assetId: "asset-1",
+        update: { rightsOwner: "STUDIO" },
+      },
+    } as unknown as StateImpact;
+
+    const result = applySingleImpact(state, impact);
+    expect(result.ip.vault[0].rightsOwner).toBe("STUDIO");
+    expect(result.ip.vault[1].rightsOwner).toBe("RIVAL");
   });
 });

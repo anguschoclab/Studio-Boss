@@ -114,6 +114,8 @@ const handlerRegistry: Record<
   RIVAL_UPDATED: industryHandlers.handleRivalUpdated,
   MERGER_OFFERED: industryHandlers.handleMergerOffered,
   MERGER_RESOLVED: industryHandlers.handleMergerResolved,
+  HEADLINE_POSTED: industryHandlers.handleHeadlinePosted,
+  INDUSTRY_RUMORS_UPDATED: industryHandlers.handleIndustryRumorsUpdated,
 
   // Studio handlers
   PRESTIGE_CHANGED: studioHandlers.handlePrestigeChanged,
@@ -124,6 +126,7 @@ const handlerRegistry: Record<
   FRANCHISE_UPDATED: ipHandlers.handleFranchiseUpdated,
   VAULT_ASSET_UPDATED: ipHandlers.handleVaultAssetUpdated,
   FORMAT_LICENSED: ipHandlers.handleFormatLicensed,
+  IP_UPDATED: ipHandlers.handleIpUpdated,
 
   // TV handlers
   TV_RECOMMENDATION_CREATED: tvHandlers.handleTVRecommendationCreated,
