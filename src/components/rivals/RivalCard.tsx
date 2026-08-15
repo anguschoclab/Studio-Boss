@@ -50,9 +50,10 @@ export const RivalCard: React.FC<RivalCardProps> = ({
             <Button
               variant="ghost"
               size="sm"
+              aria-label="Rival actions"
               className="h-10 w-10 p-0 hover:bg-white/10 rounded-none border border-white/5"
             >
-              <MoreVertical className="h-4 w-4" />
+              <MoreVertical className="h-4 w-4" aria-hidden="true" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
