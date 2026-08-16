@@ -65,6 +65,9 @@ export const SubNav: React.FC<SubNavProps> = ({
           <button
             key={tab.id}
             onClick={() => onChange(tab.id)}
+            aria-label={tab.label}
+            aria-pressed={isActive}
+            role="tab"
             className={cn(
               "relative flex items-center gap-3 whitespace-nowrap group",
               tabStyles[variant](isActive)
