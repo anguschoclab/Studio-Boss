@@ -15,7 +15,7 @@ import {Project, GameState, AwardBody, ProjectContractType, StateImpact, SeriesP
 import {ReleaseStrategy} from "@/engine/types/project.types";
 import {RandomGenerator} from "@/engine/utils/rng";
 import {addContractsToIndex, addContractsToTalentIndex} from "@/engine/utils";
-import {type, ProjectId} from "@/engine/types/shared.types";
+import {type ProjectId} from "@/engine/types/shared.types";
 export interface ProjectSlice {
   createProject: (params: CreateProjectParams) => void;
   renewProject: (id: string) => void;
