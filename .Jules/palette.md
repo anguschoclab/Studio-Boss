@@ -1,0 +1,3 @@
+## 2024-05-19 - Standardizing Tooltips for Accessibility and Polish
+**Learning:** Browser native tooltips (via `title` attribute) present a poor UX due to inconsistent visual styling, slow delay times before appearing, and lack of thematic integration with the design system. Replacing them with custom tooltip components (`<TooltipWrapper>`) enhances visual polish and provides a consistent experience across all interactive elements.
+**Action:** When adding new interactive elements or auditing existing ones, always prefer the design system's tooltip component over native `title` attributes for rich, immediate contextual information.
