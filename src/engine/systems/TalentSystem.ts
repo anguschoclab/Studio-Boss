@@ -100,12 +100,13 @@ export class TalentSystem {
   static applyProjectResults(
     project: Project,
     contracts: Contract[],
-    talentPool: TalentProfile[],
+    talentPool: TalentProfile[] | Map<string, TalentProfile> | Record<string, TalentProfile>,
     projectAwards: Award[] = []
   ): TalentProfile[] {
     if (contracts.length === 0) return [];
 
-    const talentPoolMap = new Map(talentPool.map((t) => [t.id, t]));
+    const isArray = Array.isArray(talentPool);
+    const talentPoolMap = isArray ? new Map((talentPool as TalentProfile[]).map((t) => [t.id, t])) : null;
     const totalCost = project.budget + (project.marketingBudget || 0);
     const ROI = totalCost > 0 ? project.revenue / totalCost : 0;
 
@@ -139,7 +140,14 @@ export class TalentSystem {
     const updatedTalent: TalentProfile[] = [];
 
     for (const contract of contracts) {
-      const talent = talentPoolMap.get(contract.talentId);
+      let talent: TalentProfile | undefined;
+      if (talentPoolMap) {
+        talent = talentPoolMap.get(contract.talentId);
+      } else if (talentPool instanceof Map) {
+        talent = talentPool.get(contract.talentId);
+      } else {
+        talent = (talentPool as Record<string, TalentProfile>)[contract.talentId];
+      }
       if (!talent) continue;
 
       let talentAwardsDrawBonus = 0;

@@ -82,7 +82,7 @@ export function handleFilmReleasedPhase(
     const talentUpdates = TalentSystem.applyProjectResults(
       p,
       projectContracts,
-      Object.values(talentPool),
+      talentPool,
       projectAwards
     );
     talentUpdates.forEach((t) => {
