@@ -12,6 +12,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
           className
         )}
         ref={ref}
+        maxLength={props.maxLength ?? 255}
         {...props}
       />
     );
