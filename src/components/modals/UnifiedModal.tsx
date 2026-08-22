@@ -119,6 +119,7 @@ export const UnifiedModal: React.FC<UnifiedModalProps> = ({
                   aria-label="Close"
                 >
                   <X
+                    aria-hidden="true"
                     className="h-5 w-5 group-hover:rotate-90 transition-transform duration-700"
                     strokeWidth={1}
                   />
