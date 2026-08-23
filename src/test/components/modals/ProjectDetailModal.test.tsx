@@ -38,6 +38,7 @@ describe("ProjectDetailModal", () => {
   const mockGreenlightProject = vi.fn();
   const mockLaunchMarketingCampaign = vi.fn();
   const mockRenewProject = vi.fn();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const mockExploitFranchise = vi.fn();
   const mockLaunchAwardsCampaign = vi.fn();
   const mockSubmitToFestival = vi.fn();

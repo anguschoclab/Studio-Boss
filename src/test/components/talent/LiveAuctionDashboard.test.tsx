@@ -6,7 +6,8 @@ import {useGameStore} from "@/store/gameStore";
 import {Opportunity} from "@/engine/types";
 
 vi.mock("@/components/ui/button", () => ({
-  Button: ({ children, onClick, disabled, ...rest }: any) => (
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  Button: ({ children, onClick, disabled, ..._rest }: any) => (
     <button onClick={onClick} disabled={disabled} data-testid="button">
       {children}
     </button>
