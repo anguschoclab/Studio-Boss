@@ -1,4 +1,5 @@
 import {describe, it, expect} from "vitest";
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {applyFlopPenalties, processFlops, FlopSeverity} from "@/engine/systems/finance/FlopMechanics";
 import {defaultSimMemory} from "@/engine/core/simMemory";
 import type {GameState, Project} from "@/engine/types";

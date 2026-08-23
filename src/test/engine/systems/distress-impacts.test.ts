@@ -1,6 +1,7 @@
 import {describe, it, expect, beforeEach} from "vitest";
 import {completeFireSale, tickDistressCascade} from "../../../engine/systems/industry/DistressCascade";
 import {createMockGameState, createMockIPAsset} from "../../utils/mockFactories";
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type {GameState, RivalStudio, IPAsset, Franchise, StateImpact} from "../../../engine/types";
 import type {DistressedAssetOffer} from "../../../engine/types/distress.types";
 

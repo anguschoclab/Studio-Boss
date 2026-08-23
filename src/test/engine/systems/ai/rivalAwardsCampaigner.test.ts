@@ -43,6 +43,7 @@ function setupState(
   return state;
 }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function findImpact(impacts: StateImpact[], type: string): StateImpact | undefined {
   return impacts.find((i) => i.type === type);
 }

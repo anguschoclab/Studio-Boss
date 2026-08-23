@@ -1,6 +1,7 @@
 import {describe, it, expect, vi, beforeEach} from "vitest";
 import {cancelHighestOverheadDeal} from "@/engine/systems/deals/ShingleSystem";
 import type {ShingleLogEntry} from "@/engine/systems/deals/ShingleSystem";
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type {GameState, StateImpact} from "@/engine/types";
 import {defaultSimMemory} from "@/engine/core/simMemory";
 import {createMockGameState, createMockRival} from "./generators/mockFactory";

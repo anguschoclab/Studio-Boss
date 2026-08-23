@@ -1,5 +1,6 @@
 import {describe, it, expect} from "vitest";
 import {selectFatigueForAsset} from "@/store/selectors";
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {GameState, IPAsset, Franchise} from "@/engine/types";
 import {createMockGameState} from "@/test/mockFactory";
 

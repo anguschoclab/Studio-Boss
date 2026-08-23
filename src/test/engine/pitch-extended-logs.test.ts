@@ -1,7 +1,5 @@
-import {describe, it, expect, vi, beforeEach} from "vitest";
 import {tickShinglePitchRouter} from "@/engine/systems/deals/ShinglePitchRouter";
 import type {ShinglePitchOutcome} from "@/engine/systems/deals/ShinglePitchRouter";
-import type {GameState, StateImpact} from "@/engine/types";
 import {defaultSimMemory} from "@/engine/core/simMemory";
 import {createMockGameState, createMockRival} from "./generators/mockFactory";
 import {RandomGenerator} from "@/engine/utils/rng";
@@ -20,10 +18,10 @@ function findPitchLogImpact(impacts: StateImpact[]): ShinglePitchOutcome[] | und
 }
 
 describe("ShinglePitchRouter simMemory log migration", () => {
-  let rng: RandomGenerator;
+  let _rng: RandomGenerator;
 
   beforeEach(() => {
-    rng = new RandomGenerator(12345);
+    _rng = new RandomGenerator(12345);
   });
 
   it("writes to simMemory.eventLogs.pitch via INDUSTRY_UPDATE impact", () => {
@@ -78,8 +76,6 @@ describe("ShinglePitchRouter simMemory log migration", () => {
     const riggedRng = {
       next: () => 0.001,
       pick: <T>(arr: T[]): T => arr[0],
-      range: (min: number, max: number) => min,
-      rangeInt: (min: number, max: number) => min,
       uuid: (prefix: string) => `${prefix}-1`,
       getState: () => 0,
     } as unknown as RandomGenerator;
@@ -166,8 +162,6 @@ describe("ShinglePitchRouter simMemory log migration", () => {
     const riggedRng = {
       next: () => 0.001,
       pick: <T>(arr: T[]): T => arr[0],
-      range: (min: number, max: number) => min,
-      rangeInt: (min: number, max: number) => min,
       uuid: (prefix: string) => `${prefix}-1`,
       getState: () => 0,
     } as unknown as RandomGenerator;

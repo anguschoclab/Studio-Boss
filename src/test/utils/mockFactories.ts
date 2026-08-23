@@ -1,3 +1,4 @@
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {Project, Talent, GameState, Contract, IPAsset, RivalStudio, Buyer, Agency, Opportunity, MarketState, TVSeasonDetails, AwardsProfile, FilmProject, SeriesProject, StreamerPlatform, PremiumPlatform, NetworkPlatform, ProjectType, ProjectFormat, ScriptMetrics} from "@/engine/types";
 
 export const createMockTalent = (overrides: Partial<Talent> = {}): Talent =>
@@ -29,6 +30,7 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
   const type = overrides.type || "FILM";
   const title = overrides.title || "Mock Project";
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const commonReception = {
     metaScore: 0,
     audienceScore: 0,
@@ -294,7 +296,7 @@ export const createMockBuyer = (overrides: Partial<Buyer> = {}): Buyer => {
     return premium;
   }
 
-  const networkOverrides = overrides as Partial<NetworkPlatform>;
+  const _networkOverrides = overrides as Partial<NetworkPlatform>;
   const network: NetworkPlatform = {
     ...baseDefaults,
     archetype: "network",

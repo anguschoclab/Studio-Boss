@@ -1,6 +1,8 @@
 import {describe, it, expect, vi, beforeEach} from "vitest";
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {tickDistressCascade, stage1IPFireSale, stage2AssetLiquidation} from "@/engine/systems/industry/DistressCascade";
 import type {DistressEvent} from "@/engine/systems/industry/DistressCascade";
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type {GameState, StateImpact} from "@/engine/types";
 import {defaultSimMemory} from "@/engine/core/simMemory";
 import {createMockGameState, createMockRival} from "./generators/mockFactory";

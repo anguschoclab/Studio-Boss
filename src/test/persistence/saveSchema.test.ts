@@ -121,6 +121,7 @@ describe("saveSchema", () => {
     });
 
     it("rejects missing week field", () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { week, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
@@ -137,12 +138,14 @@ describe("saveSchema", () => {
     });
 
     it("rejects missing gameSeed", () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { gameSeed, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
     });
 
     it("rejects missing tickCount", () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { tickCount, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
@@ -210,18 +213,21 @@ describe("saveSchema", () => {
     });
 
     it("rejects missing entities field", () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { entities, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
     });
 
     it("rejects missing market field", () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { market, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
     });
 
     it("rejects missing industry field", () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { industry, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
@@ -238,6 +244,7 @@ describe("saveSchema", () => {
     });
 
     it("rejects missing history field", () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { history, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
@@ -249,6 +256,7 @@ describe("saveSchema", () => {
     });
 
     it("rejects missing eventHistory field", () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { eventHistory, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
@@ -293,6 +301,7 @@ describe("saveSchema", () => {
     });
 
     it("accepts when optional fields are absent", () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { news, ip, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(true);

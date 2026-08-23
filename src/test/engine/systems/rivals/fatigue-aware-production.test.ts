@@ -1,4 +1,5 @@
 import {describe, it, expect} from "vitest";
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {RandomGenerator} from "@/engine/utils/rng";
 import {createMockGameState, createMockRival} from "../../generators/mockFactory";
 import {buildFatigueAwareGenreWeights} from "@/engine/systems/rivals/rivalProduction";

@@ -1,5 +1,6 @@
 import {describe, it, expect} from "vitest";
 import {calculateFranchiseEquity} from "@/engine/systems/ip/EquityCalculator";
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {CROSSOVER_AFFINITY} from "@/engine/data/genres";
 import {Franchise, IPAsset, Project} from "@/engine/types";
 

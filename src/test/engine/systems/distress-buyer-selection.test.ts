@@ -1,4 +1,5 @@
 import {describe, it, expect} from "vitest";
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {RandomGenerator} from "@/engine/utils/rng";
 import {createMockGameState, createMockRival} from "../generators/mockFactory";
 import {selectStrategicBuyer} from "@/engine/systems/industry/DistressCascade";
@@ -15,6 +16,7 @@ function createBuyer(overrides: Partial<RivalStudio> = {}): RivalStudio {
   });
 }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function createFranchise(id: string, ownerId: string, genre: string = "Action"): Franchise {
   return {
     id,
