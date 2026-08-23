@@ -100,12 +100,22 @@ export class TalentSystem {
   static applyProjectResults(
     project: Project,
     contracts: Contract[],
-    talentPool: TalentProfile[],
+    talentPool: Record<string, TalentProfile> | Map<string, TalentProfile> | TalentProfile[],
     projectAwards: Award[] = []
   ): TalentProfile[] {
     if (contracts.length === 0) return [];
 
-    const talentPoolMap = new Map(talentPool.map((t) => [t.id, t]));
+    // ⚡ Bolt: Use a direct lookup function instead of forcing O(N) Map allocation to prevent GC overhead
+    let getTalent: (id: string) => TalentProfile | undefined;
+    if (Array.isArray(talentPool)) {
+      const map = new Map(talentPool.map((t) => [t.id, t]));
+      getTalent = (id) => map.get(id);
+    } else if (talentPool instanceof Map) {
+      getTalent = (id) => talentPool.get(id);
+    } else {
+      getTalent = (id) => talentPool[id];
+    }
+
     const totalCost = project.budget + (project.marketingBudget || 0);
     const ROI = totalCost > 0 ? project.revenue / totalCost : 0;
 
@@ -139,7 +149,7 @@ export class TalentSystem {
     const updatedTalent: TalentProfile[] = [];
 
     for (const contract of contracts) {
-      const talent = talentPoolMap.get(contract.talentId);
+      const talent = getTalent(contract.talentId);
       if (!talent) continue;
 
       let talentAwardsDrawBonus = 0;
