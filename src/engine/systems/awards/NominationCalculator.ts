@@ -66,7 +66,13 @@ export function calculateNominationWeight(
 
   let weight = (metaScore - 60) * 1.5;
 
-  const maxPrestige = talent.length > 0 ? Math.max(...talent.map((t) => t.prestige)) : 0;
+  // ⚡ Bolt Optimization: Replaced Math.max(...talent.map()) with a direct loop to avoid intermediate array allocation and spread operator call stack limits
+  let maxPrestige = 0;
+  for (let i = 0; i < talent.length; i++) {
+    if (talent[i].prestige > maxPrestige) {
+      maxPrestige = talent[i].prestige;
+    }
+  }
 
   if (maxPrestige > 80) {
     weight += (maxPrestige - 80) * 2;
