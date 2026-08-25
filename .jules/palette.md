@@ -17,3 +17,7 @@
 
 **Learning:** Bookmark toggle buttons in `PipelineBoard.tsx` and `ProjectCard.tsx` lacked `focus-visible` ring styles, making them invisible to keyboard users when focused. Additionally, the `Bookmark` and `BookmarkCheck` icons lacked `aria-hidden="true"`, causing screen readers to announce them unnecessarily.
 **Action:** Added `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black` classes to bookmark buttons and `aria-hidden="true"` to all bookmark icons in both components.
+## 2024-05-20 - Add aria-hidden to decorative close icons in UI components
+
+**Learning:** Radix UI primitive close buttons in components like `Dialog` and `Sheet` include a screen reader only span (e.g., `<span className="sr-only">Close</span>`) but the decorative `<X>` icons often lack `aria-hidden="true"`, causing screen readers to announce both elements redundantly.
+**Action:** Always ensure that decorative SVG icons inside buttons with explicit screen reader text have `aria-hidden="true"`.
