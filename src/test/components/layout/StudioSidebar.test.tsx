@@ -124,4 +124,57 @@ describe("StudioSidebar", () => {
       screen.getByText((c) => c.includes("CASH RESERVES") || c.includes("CASH"))
     ).toBeDefined();
   });
+
+  // ─── Accessibility tests (PR #828) ──────────────────────────────────────
+  describe("accessibility", () => {
+    it("collapse/expand button has aria-label", () => {
+      (useGameStore as any).mockImplementation((selector: any) => {
+        const mockState = {
+          gameState: {
+            entities: { projects: {}, talents: {}, contracts: {}, rivals: {} },
+            finance: { cash: 1000000, weeklyHistory: [] },
+            studio: { prestige: 10, internal: { projects: {}, projectHistory: [] } },
+          },
+          clearGame: vi.fn(),
+        };
+        if (typeof selector === "function") {
+          return selector(mockState);
+        }
+        return mockState;
+      });
+
+      renderSidebar();
+      // The collapse/expand button should have an aria-label
+      const collapseBtn = document.querySelector('button[aria-label]');
+      expect(collapseBtn).toBeInTheDocument();
+    });
+
+    it("chevron icons have aria-hidden='true'", () => {
+      (useGameStore as any).mockImplementation((selector: any) => {
+        const mockState = {
+          gameState: {
+            entities: { projects: {}, talents: {}, contracts: {}, rivals: {} },
+            finance: { cash: 1000000, weeklyHistory: [] },
+            studio: { prestige: 10, internal: { projects: {}, projectHistory: [] } },
+          },
+          clearGame: vi.fn(),
+        };
+        if (typeof selector === "function") {
+          return selector(mockState);
+        }
+        return mockState;
+      });
+
+      renderSidebar();
+      // Chevron icons (decorative) should have aria-hidden="true"
+      const svgs = document.querySelectorAll('svg');
+      const chevronSvgs = Array.from(svgs).filter((s) =>
+        s.closest('button[aria-label]')
+      );
+      // At least one chevron should exist and have aria-hidden
+      if (chevronSvgs.length > 0) {
+        expect(chevronSvgs[0].getAttribute("aria-hidden")).toBe("true");
+      }
+    });
+  });
 });

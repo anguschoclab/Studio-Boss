@@ -148,4 +148,52 @@ describe("UnifiedModal", () => {
 
     expect(document.querySelector(".custom-modal-class")).toBeInTheDocument();
   });
+
+  // ─── Accessibility tests (PR #822 / #834) ───────────────────────────────
+  describe("accessibility", () => {
+    it("close button has aria-label='Close modal'", () => {
+      render(
+        <UnifiedModal isOpen={true} onClose={() => {}} title="Test">
+          <div>Content</div>
+        </UnifiedModal>
+      );
+
+      const closeBtn = screen.getByRole("button", { name: /close/i });
+      expect(closeBtn.getAttribute("aria-label")).toBe("Close modal");
+    });
+
+    it("close button has focus-visible ring classes", () => {
+      render(
+        <UnifiedModal isOpen={true} onClose={() => {}} title="Test">
+          <div>Content</div>
+        </UnifiedModal>
+      );
+
+      const closeBtn = screen.getByRole("button", { name: /close/i });
+      expect(closeBtn.className).toContain("focus-visible:ring");
+    });
+
+    it("X icon has aria-hidden='true'", () => {
+      render(
+        <UnifiedModal isOpen={true} onClose={() => {}} title="Test">
+          <div>Content</div>
+        </UnifiedModal>
+      );
+
+      const closeBtn = screen.getByRole("button", { name: /close/i });
+      const svg = closeBtn.querySelector("svg");
+      expect(svg).toBeInTheDocument();
+      expect(svg?.getAttribute("aria-hidden")).toBe("true");
+    });
+
+    it("close button is not rendered when preventClose is true", () => {
+      render(
+        <UnifiedModal isOpen={true} onClose={() => {}} title="Test" preventClose>
+          <div>Content</div>
+        </UnifiedModal>
+      );
+
+      expect(screen.queryByRole("button", { name: /close/i })).not.toBeInTheDocument();
+    });
+  });
 });
