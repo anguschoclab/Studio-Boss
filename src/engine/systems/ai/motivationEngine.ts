@@ -121,12 +121,15 @@ export function calculateRivalMotivation(
   let bestScore = -1;
   let bestMotivation: StudioMotivation = "STABILITY";
 
-  (Object.keys(scores) as StudioMotivation[]).forEach((motivation) => {
-    if (scores[motivation] > bestScore) {
-      bestScore = scores[motivation];
-      bestMotivation = motivation;
+  // ⚡ Bolt Optimization: Replaced Object.keys().forEach with a for...in loop to avoid array allocations in high-frequency AI ticks.
+  for (const motivation in scores) {
+    if (!Object.prototype.hasOwnProperty.call(scores, motivation)) continue;
+    const typedMotivation = motivation as StudioMotivation;
+    if (scores[typedMotivation] > bestScore) {
+      bestScore = scores[typedMotivation];
+      bestMotivation = typedMotivation;
     }
-  });
+  }
 
   return bestMotivation;
 }
