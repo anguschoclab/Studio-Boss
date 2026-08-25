@@ -7,7 +7,16 @@ import {describe, it, expect, vi} from "vitest";
 
 // Mock embla-carousel-react
 vi.mock("embla-carousel-react", () => ({
-  default: () => [{} as any, { selectedScrollSnap: () => 0, on: () => {}, scrollNext: () => {}, scrollPrev: () => {}, canScrollNext: () => false, canScrollPrev: () => false }],
+  default: () => [{
+    scrollSnaps: () => [0, 1],
+    scrollPrev: () => {},
+    scrollNext: () => {},
+    canScrollPrev: () => false,
+    canScrollNext: () => false,
+    selectedScrollSnap: () => 0,
+    on: () => {},
+    off: () => {},
+  }, undefined],
 }));
 
 import {

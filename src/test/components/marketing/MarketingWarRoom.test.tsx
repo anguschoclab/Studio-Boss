@@ -5,6 +5,13 @@ import React from "react";
 import {render, screen} from "@testing-library/react";
 import {describe, it, expect, vi} from "vitest";
 
+// Mock ResizeObserver
+global.ResizeObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
+}));
+
 // Mock the store to avoid pulling in the full game state
 vi.mock("@/store/gameStore", () => ({
   useGameStore: vi.fn((selector: any) => {
@@ -43,18 +50,19 @@ vi.mock("@/components/ui/tooltip-wrapper", () => ({
 }));
 
 import {MarketingWarRoom} from "@/components/marketing/MarketingWarRoom";
+import {useGameStore} from "@/store/gameStore";
+import {TooltipProvider} from "@/components/ui/tooltip";
 
 describe("MarketingWarRoom", () => {
   it("renders without crashing when project exists", () => {
-    render(<MarketingWarRoom projectId="p1" />);
+    render(<TooltipProvider><MarketingWarRoom projectId="p1" /></TooltipProvider>);
     // Component should render — we just verify it doesn't crash
     expect(document.body).toBeDefined();
   });
 
   it("renders without crashing when project does not exist", () => {
     // Override mock for this test
-    const { useGameStore } = require("@/store/gameStore");
-    useGameStore.mockImplementationOnce((selector: any) => {
+    (useGameStore as any).mockImplementationOnce((selector: any) => {
       const state = {
         gameState: {
           studio: { internal: { projects: {} } },
@@ -66,7 +74,7 @@ describe("MarketingWarRoom", () => {
       return state;
     });
 
-    render(<MarketingWarRoom projectId="nonexistent" />);
+    render(<TooltipProvider><MarketingWarRoom projectId="nonexistent" /></TooltipProvider>);
     expect(document.body).toBeDefined();
   });
 
@@ -77,7 +85,7 @@ describe("MarketingWarRoom", () => {
       // rather than Object.values().find() which is O(N).
       // After PR #832, the lookup should be: gameState?.studio.internal.projects?.[projectId]
       // We verify the component renders correctly with the project found
-      const { container } = render(<MarketingWarRoom projectId="p1" />);
+      const { container } = render(<TooltipProvider><MarketingWarRoom projectId="p1" /></TooltipProvider>);
       expect(container).toBeDefined();
     });
   });

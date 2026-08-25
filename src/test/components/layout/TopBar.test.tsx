@@ -14,14 +14,40 @@ vi.mock("@/components/ui/tooltip-wrapper", () => ({
   ),
 }));
 
+// Mock NewsTicker to avoid pulling in its lucide-react deps
+vi.mock("@/components/layout/NewsTicker", () => ({
+  NewsTicker: () => <div data-testid="news-ticker" />,
+}));
+
 // Mock lucide-react icons
 vi.mock("lucide-react", () => ({
   Save: (props: any) => <svg data-testid="save-icon" {...props} />,
   FastForward: (props: any) => <svg {...props} />,
-  History: (props: any) => <svg {...props} />,
-  DollarSign: (props: any) => <svg {...props} />,
+  Activity: (props: any) => <svg {...props} />,
   Star: (props: any) => <svg {...props} />,
-  Clapperboard: (props: any) => <svg {...props} />,
+}));
+
+// Mock engine utils
+vi.mock("@/engine/utils", () => ({
+  formatMoney: vi.fn((n: number) => `$${n.toLocaleString()}`),
+  getWeekDisplay: vi.fn((week: number) => `Week ${week}`),
+}));
+
+// Mock selectors
+vi.mock("@/store/selectors", () => ({
+  selectActiveProjects: vi.fn(() => []),
+}));
+
+// Mock cn utility
+vi.mock("@/lib/utils", () => ({
+  cn: (...classes: string[]) => classes.filter(Boolean).join(" "),
+}));
+
+// Mock UI store
+vi.mock("@/store/uiStore", () => ({
+  useUIStore: vi.fn(() => ({
+    showSummary: vi.fn(),
+  })),
 }));
 
 // Mock game store
