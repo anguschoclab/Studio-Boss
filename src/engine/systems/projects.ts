@@ -113,7 +113,7 @@ function handleReleasedPhase(
         talentUpdates = TalentSystem.applyProjectResults(
           p,
           projectContracts,
-          Array.from(talentPoolMap.values()),
+          talentPoolMap,
           projectAwards
         );
       }
@@ -139,7 +139,7 @@ function handleReleasedPhase(
         talentUpdates = TalentSystem.applyProjectResults(
           p,
           projectContracts,
-          Array.from(talentPoolMap.values()),
+          talentPoolMap,
           projectAwards
         );
       }
@@ -164,7 +164,7 @@ function handleReleasedPhase(
           talentUpdates = TalentSystem.applyProjectResults(
             p,
             projectContracts,
-            Array.from(talentPoolMap.values()),
+            talentPoolMap,
             projectAwards
           );
         }
@@ -197,7 +197,7 @@ function handleReleasedPhase(
       talentUpdates = TalentSystem.applyProjectResults(
         p,
         projectContracts,
-        Array.from(talentPoolMap.values()),
+        talentPoolMap,
         projectAwards
       );
     } else {
