@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {Project, Contract, Talent, Award, MarketingCampaign, SeriesProject, UnscriptedProject} from "@/engine/types";
 import {TV_FORMATS} from "../data/tvFormats";
 import {UNSCRIPTED_FORMATS} from "../data/unscriptedFormats";
@@ -210,9 +209,9 @@ function handleReleasedPhase(
 }
 
 function handlePostProductionPhase(p: Project): { update: string | null; talentUpdates: Talent[] } {
-  p.state = "post_production" as any;
+  p.state = "post_production";
   p.weeksInPhase = 0;
-  (p as any).postProductionWeeksRemaining = 3; // Default 3 weeks
+  p.postProductionWeeksRemaining = 3; // Default 3 weeks
   return {
     update: `"${p.title}" has wrapped production and entered post-production.`,
     talentUpdates: [],
@@ -291,15 +290,18 @@ export function advanceProject(
     // Handled externally by PostProductionSystem tick, but we don't advance the core phase here until it transitions
   } else if (p.state === "marketing") {
     if (p.marketingCampaign) {
-      const multiplier = computeCampaignMultiplier(p.marketingCampaign as any, p);
+      const multiplier = computeCampaignMultiplier(
+        p.marketingCampaign as MarketingCampaign & { secondaryAngle?: import("@/engine/types").MarketingAngle | "SELL_THE_SCARES" | "SELL_THE_ROMANCE" | "SELL_THE_WORLD_MYTHOLOGY" | "SELL_THE_TRUE_STORY_HOOK" | "SELL_THE_MUSIC" | "BROAD_FOUR_QUADRANT_MARKETING" },
+        p
+      );
       const angleBuzzBonus = Math.round((multiplier - 1.0) * 20);
       p.buzz = clamp(p.buzz + angleBuzzBonus, 0, 100);
 
-      if ((p as any).activeCut === "sanitized" && rng) {
-        const directorContract = projectContracts.find((c) => (c as any).role === "director");
+      if (p.activeCut === "sanitized" && rng) {
+        const directorContract = projectContracts.find((c) => c.role === "director");
         if (directorContract) {
           const director = talentPoolMap.get(directorContract.talentId);
-          if (director && (director as any).directorArchetype === "auteur" && rng.next() < 0.8) {
+          if (director && director.directorArchetype === "auteur" && rng.next() < 0.8) {
             p.buzz = Math.max(0, p.buzz - 15);
             update = `Director scandal: ${director.name} disowns the sanitized cut of "${p.title}"!`;
           }

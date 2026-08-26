@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {Project, Contract, Talent, StateImpact, MarketingCampaign} from "@/engine/types";
 import {RandomGenerator} from "../../utils/rng";
 
@@ -80,10 +79,10 @@ export function handleMarketingPhase(
   let newBuzz = p.buzz;
 
   if (p.activeCut === "sanitized") {
-    const directorContract = projectContracts.find((c) => (c as any).role === "director");
+    const directorContract = projectContracts.find((c) => c.role === "director");
     if (directorContract) {
       const director = talentPool[directorContract.talentId];
-      if (director && (director as any).directorArchetype === "auteur") {
+      if (director && director.directorArchetype === "auteur") {
         if (rng.next() < 0.8) {
           impacts.push({
             type: "SCANDAL_ADDED",
