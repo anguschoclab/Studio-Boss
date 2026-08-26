@@ -64,7 +64,9 @@
 | ARIA completeness | SubNav.tsx | Added `role="tablist"` to parent div to complete tab pattern |
 | Redundant eslint-disable | setup.ts | Removed 5 `eslint-disable-next-line` comments on `_`-prefixed params (already covered by `argsIgnorePattern: "^_"`) |
 | Redundant eslint-disable | driftEngine.test.ts | Removed 1 `eslint-disable-next-line` comment on `_personality` (already `_`-prefixed) |
-| Type safety | projects.ts | Replaced 9 `(p as any).tvDetails` casts with proper `SeriesProject` type narrowing |
+| Type safety | gameStore.ts | Removed 5 `as any` casts: finance type matches directly, `WeekSummary.fromWeek` accessed without cast, `EMPTY_FINANCE` typed as `FinanceState` with proper `InterestRateSimulator.initialize()` |
+| Type safety | projects.ts | Replaced all 9 `(p as any).tvDetails` casts with `SeriesProject` type narrowing, `(p as any).activeCut` → `p.activeCut`, `(p as any).postProductionWeeksRemaining` → `p.postProductionWeeksRemaining`, `(c as any).role` → `c.role`, `(director as any).directorArchetype` → `director.directorArchetype`, removed `eslint-disable` |
+| Type safety | MarketingHandler.ts | Replaced `(c as any).role` → `c.role`, `(director as any).directorArchetype` → `director.directorArchetype`, removed `eslint-disable` |
 | Test mock fixes | TopBar.test.tsx | Added missing mocks for NewsTicker, useUIStore, engine utils, selectors, cn |
 | Test mock fixes | Carousel.test.tsx | Fixed embla-carousel-react mock to include `off()` method |
 | Test mock fixes | MarketingWarRoom.test.tsx | Added ResizeObserver mock, TooltipProvider wrapper, fixed require() → import |
@@ -83,10 +85,10 @@
 
 | Check | Result |
 |-------|--------|
-| `bun run lint` | 0 errors (67 pre-existing warnings) |
+| `bun run lint` | 0 errors (66 pre-existing warnings, down from 67 — removed 1 eslint-disable) |
 | `bun run typecheck` | 23 errors (all pre-existing, down from 30 on main — our import fixes resolved 7) |
 | `bun run test` | 1740 passed, 16 failed (all pre-existing: pathSecurity 12, settingsStore 4) |
-| `bun run build` | Succeeds (3301 modules, 15.55s) |
+| `bun run build` | Succeeds (3301 modules, 17.96s) |
 | `bun run format:check` | Skipped (prettier not installed) |
 | Playwright E2E | Skipped (requires dev server) |
 
@@ -99,6 +101,10 @@
 - [x] All merge conflicts resolved
 - [x] `PerformanceModule.ts` dead code deleted
 - [x] Redundant eslint-disable comments in `src/test/setup.ts` removed
+- [x] All `as any` casts in `gameStore.ts`, `projects.ts`, and `MarketingHandler.ts` replaced with proper type narrowing
+- [x] `eslint-disable` comments in `projects.ts` and `MarketingHandler.ts` removed (no longer needed)
+- [x] Redundant eslint-disable in `driftEngine.test.ts` removed
+- [x] Phase 7.3 audit completed: gameStore.ts inline logic documented, Object.values().find() in components verified clean, use-toast.ts duplicate verified absent, error handling flagged as out of scope, 71 Object.values() in 38 engine files flagged for future optimization
 - [x] Bugs discovered during analysis fixed with test-first approach
 - [x] All Phase 0 red tests now green after cherry-picks
 - [x] All Phase 0 green tests still green — no regressions
