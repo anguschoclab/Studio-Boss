@@ -1,0 +1,3 @@
+## 2024-05-15 - Optimize array allocations in ipRetention
+**Learning:** `Object.values(state.entities.projects)` creates intermediate arrays which causes garbage collection overhead inside the game loop, particularly for frequently-run tick methods like `runIPFilter`. Helper functions should accept records instead of arrays to optimize performance without affecting logic.
+**Action:** Replaced `Object.values(state.entities.projects)` passed to `advanceIPRights` with direct passing of the dictionary object (`Record<string, Project>`) and iterated over properties directly using a single `for...in` pass inside `advanceIPRights` and `catalogValue`. Added prototype guard inside `for...in` loop to prevent iterating over inherited properties.

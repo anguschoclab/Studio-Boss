@@ -37,13 +37,16 @@ export function checkRightsExpiry(project: Project, currentWeek: number): string
   return null;
 }
 
-export function advanceIPRights(projects: Project[], currentWeek: number): StateImpact {
+// ⚡ Bolt Optimization: Accept Record instead of array to avoid Object.values allocation
+export function advanceIPRights(projects: Record<string, Project>, currentWeek: number): StateImpact {
   const impact: StateImpact = {
     projectUpdates: [],
     uiNotifications: [],
   };
 
-  for (const p of projects) {
+  for (const id in projects) {
+    if (!Object.prototype.hasOwnProperty.call(projects, id)) continue;
+    const p = projects[id];
     if (p.ipRights && p.ipRights.reversionWeek !== undefined) {
       if (currentWeek >= p.ipRights.reversionWeek) {
         impact.uiNotifications!.push(`You lost the exclusive IP rights to ${p.title}.`);
@@ -76,10 +79,12 @@ export function advanceIPRights(projects: Project[], currentWeek: number): State
   return impact;
 }
 
-export function catalogValue(projects: Project[]): number {
+// ⚡ Bolt Optimization: Accept Record instead of array to avoid Object.values allocation
+export function catalogValue(projects: Record<string, Project>): number {
   let total = 0;
-  for (let i = 0; i < projects.length; i++) {
-    const p = projects[i];
+  for (const id in projects) {
+    if (!Object.prototype.hasOwnProperty.call(projects, id)) continue;
+    const p = projects[id];
     if (p.ipRights) {
       if (p.ipRights.rightsOwner === "studio") {
         total += p.ipRights.catalogValue || calculateIPValue(p);
