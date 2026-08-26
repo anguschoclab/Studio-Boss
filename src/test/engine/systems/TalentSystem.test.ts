@@ -102,6 +102,109 @@ describe("TalentSystem", () => {
       expect(t1.draw).toBe(56);
       expect(t1.prestige).toBe(53);
     });
+
+    // ─── Tests for Record/Map input types (PR #836) ──────────────────────
+    it("accepts Record<string, TalentProfile> directly", () => {
+      const talentRecord: Record<string, typeof mockTalent1> = {
+        t1: { ...mockTalent1 },
+        t2: { ...mockTalent2 },
+      };
+      const solidHit = { ...mockProject, revenue: 25_000_000 } as Project;
+      const results = TalentSystem.applyProjectResults(
+        solidHit,
+        mockContracts,
+        talentRecord as unknown as typeof talentPool
+      );
+
+      const t1 = results.find((t) => t.id === "t1")!;
+      expect(t1).toBeDefined();
+      expect(t1.draw).toBe(56);
+      expect(t1.prestige).toBe(53);
+    });
+
+    it("accepts Map<string, TalentProfile> directly", () => {
+      const talentMap = new Map([
+        ["t1", { ...mockTalent1 }],
+        ["t2", { ...mockTalent2 }],
+      ]);
+      const solidHit = { ...mockProject, revenue: 25_000_000 } as Project;
+      const results = TalentSystem.applyProjectResults(
+        solidHit,
+        mockContracts,
+        talentMap as unknown as typeof talentPool
+      );
+
+      const t1 = results.find((t) => t.id === "t1")!;
+      expect(t1).toBeDefined();
+      expect(t1.draw).toBe(56);
+      expect(t1.prestige).toBe(53);
+    });
+
+    it("Record input produces same results as Array input", () => {
+      const solidHit = { ...mockProject, revenue: 25_000_000 } as Project;
+      const arrayResults = TalentSystem.applyProjectResults(solidHit, mockContracts, talentPool);
+
+      const talentRecord: Record<string, typeof mockTalent1> = {
+        t1: { ...mockTalent1 },
+        t2: { ...mockTalent2 },
+      };
+      const recordResults = TalentSystem.applyProjectResults(
+        solidHit,
+        mockContracts,
+        talentRecord as unknown as typeof talentPool
+      );
+
+      expect(recordResults).toHaveLength(arrayResults.length);
+      for (const r of recordResults) {
+        const match = arrayResults.find((a) => a.id === r.id);
+        expect(match).toBeDefined();
+        expect(r.draw).toBe(match!.draw);
+        expect(r.prestige).toBe(match!.prestige);
+      }
+    });
+
+    it("Map input produces same results as Array input", () => {
+      const solidHit = { ...mockProject, revenue: 25_000_000 } as Project;
+      const arrayResults = TalentSystem.applyProjectResults(solidHit, mockContracts, talentPool);
+
+      const talentMap = new Map([
+        ["t1", { ...mockTalent1 }],
+        ["t2", { ...mockTalent2 }],
+      ]);
+      const mapResults = TalentSystem.applyProjectResults(
+        solidHit,
+        mockContracts,
+        talentMap as unknown as typeof talentPool
+      );
+
+      expect(mapResults).toHaveLength(arrayResults.length);
+      for (const r of mapResults) {
+        const match = arrayResults.find((a) => a.id === r.id);
+        expect(match).toBeDefined();
+        expect(r.draw).toBe(match!.draw);
+        expect(r.prestige).toBe(match!.prestige);
+      }
+    });
+
+    it("handles empty Record talent pool gracefully", () => {
+      const solidHit = { ...mockProject, revenue: 25_000_000 } as Project;
+      const results = TalentSystem.applyProjectResults(
+        solidHit,
+        mockContracts,
+        {} as unknown as typeof talentPool
+      );
+      expect(results).toHaveLength(0);
+    });
+
+    it("handles empty Map talent pool gracefully", () => {
+      const solidHit = { ...mockProject, revenue: 25_000_000 } as Project;
+      const results = TalentSystem.applyProjectResults(
+        solidHit,
+        mockContracts,
+        new Map() as unknown as typeof talentPool
+      );
+      expect(results).toHaveLength(0);
+    });
   });
 
   describe("advance", () => {

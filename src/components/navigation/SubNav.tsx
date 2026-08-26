@@ -56,7 +56,7 @@ export const SubNav: React.FC<SubNavProps> = ({
   };
 
   return (
-    <div className={cn("flex items-center w-fit", variantStyles[variant], className)}>
+    <div role="tablist" className={cn("flex items-center w-fit", variantStyles[variant], className)}>
       {tabs.map((tab) => {
         const isActive = activeTab === tab.id;
         const hasBadge = tab.badge && tab.badge > 0;
@@ -65,6 +65,9 @@ export const SubNav: React.FC<SubNavProps> = ({
           <button
             key={tab.id}
             onClick={() => onChange(tab.id)}
+            aria-label={tab.label}
+            aria-pressed={isActive}
+            role="tab"
             className={cn(
               "relative flex items-center gap-3 whitespace-nowrap group",
               tabStyles[variant](isActive)

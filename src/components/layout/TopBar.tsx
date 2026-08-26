@@ -142,15 +142,16 @@ export const TopBar = () => {
 
       {/* Functional Actions */}
       <div className="flex items-center gap-4 ml-6">
-        <button
-          type="button"
-          onClick={handleSave}
-          title="SAVE SYSTEM STATE"
-          aria-label="Save system state"
-          className="h-12 w-12 rounded-none bg-white/[0.02] border border-white/5 flex items-center justify-center text-muted-foreground/40 hover:text-primary hover:bg-primary/10 hover:border-primary/40 transition-all duration-700 active:scale-90 shadow-2xl focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none"
-        >
-          <Save className="h-5 w-5" aria-hidden="true" />
-        </button>
+        <TooltipWrapper tooltip="SAVE SYSTEM STATE" side="bottom">
+          <button
+            type="button"
+            onClick={handleSave}
+            aria-label="Save system state"
+            className="h-12 w-12 rounded-none bg-white/[0.02] border border-white/5 flex items-center justify-center text-muted-foreground/40 hover:text-primary hover:bg-primary/10 hover:border-primary/40 transition-all duration-700 active:scale-90 shadow-2xl focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none"
+          >
+            <Save className="h-5 w-5" aria-hidden="true" />
+          </button>
+        </TooltipWrapper>
 
         <button
           type="button"

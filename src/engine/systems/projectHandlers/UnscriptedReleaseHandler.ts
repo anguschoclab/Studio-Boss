@@ -58,7 +58,7 @@ export function handleUnscriptedReleasedPhase(
     const talentUpdates = TalentSystem.applyProjectResults(
       p,
       projectContracts,
-      Object.values(talentPool),
+      talentPool,
       projectAwards
     );
     talentUpdates.forEach((t) => {

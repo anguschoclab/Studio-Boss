@@ -115,10 +115,11 @@ export const UnifiedModal: React.FC<UnifiedModalProps> = ({
               {showCloseButton && !preventClose && (
                 <button
                   onClick={onClose}
-                  className="h-10 w-10 border border-white/5 hover:border-primary/40 hover:bg-primary/5 text-muted-foreground/40 hover:text-primary transition-all duration-700 flex items-center justify-center group"
-                  aria-label="Close"
+                  className="h-10 w-10 border border-white/5 hover:border-primary/40 hover:bg-primary/5 text-muted-foreground/40 hover:text-primary transition-all duration-700 flex items-center justify-center group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  aria-label="Close modal"
                 >
                   <X
+                    aria-hidden="true"
                     className="h-5 w-5 group-hover:rotate-90 transition-transform duration-700"
                     strokeWidth={1}
                   />

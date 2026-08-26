@@ -119,6 +119,7 @@ export const NewsFeed = () => {
               className={`relative pl-10 group ${isClickable(item) ? "cursor-pointer" : ""}`}
               onClick={isClickable(item) ? (e) => handleEntityClick(e, item) : undefined}
               role={isClickable(item) ? "button" : undefined}
+              aria-label={isClickable(item) ? `View details for: ${item.headline}` : undefined}
               tabIndex={isClickable(item) ? 0 : undefined}
               onKeyDown={isClickable(item) ? (e) => {
                 if (e.key === "Enter" || e.key === " ") {

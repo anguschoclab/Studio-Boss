@@ -293,9 +293,9 @@ export const StudioSidebar = () => {
           className="w-full flex justify-center h-10 items-center hover:bg-white/5 text-muted-foreground/20 hover:text-primary transition-all duration-500 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:outline-none focus-visible:transition-none"
         >
           {isCollapsed ? (
-            <ChevronRight className="h-5 w-5" strokeWidth={3} />
+            <ChevronRight className="h-5 w-5" strokeWidth={3} aria-hidden="true" />
           ) : (
-            <ChevronLeft className="h-5 w-5" strokeWidth={3} />
+            <ChevronLeft className="h-5 w-5" strokeWidth={3} aria-hidden="true" />
           )}
         </button>
       </div>
