@@ -465,7 +465,7 @@ export class WeekCoordinator {
 
   private static runIPFilter(state: GameState, context: TickContext) {
     context.impacts.push(...tickIPVault(state));
-    context.impacts.push(advanceIPRights(Object.values(state.entities.projects), context.week));
+    context.impacts.push(advanceIPRights(state.entities.projects, context.week));
     AnnualScans.execute(state, context);
   }
 

@@ -37,13 +37,17 @@ export function checkRightsExpiry(project: Project, currentWeek: number): string
   return null;
 }
 
-export function advanceIPRights(projects: Project[], currentWeek: number): StateImpact {
+export function advanceIPRights(
+  projects: Record<string, Project> | Project[],
+  currentWeek: number
+): StateImpact {
   const impact: StateImpact = {
     projectUpdates: [],
     uiNotifications: [],
   };
 
-  for (const p of projects) {
+  // ⚡ Bolt: Use inline processing to avoid GC overhead and iterate Record directly
+  const processProject = (p: Project) => {
     if (p.ipRights && p.ipRights.reversionWeek !== undefined) {
       if (currentWeek >= p.ipRights.reversionWeek) {
         impact.uiNotifications!.push(`You lost the exclusive IP rights to ${p.title}.`);
@@ -56,7 +60,7 @@ export function advanceIPRights(projects: Project[], currentWeek: number): State
             },
           },
         });
-        continue;
+        return;
       }
     }
 
@@ -70,6 +74,17 @@ export function advanceIPRights(projects: Project[], currentWeek: number): State
           },
         },
       });
+    }
+  };
+
+  if (Array.isArray(projects)) {
+    for (let i = 0; i < projects.length; i++) {
+      processProject(projects[i]);
+    }
+  } else {
+    for (const key in projects) {
+      if (!Object.prototype.hasOwnProperty.call(projects, key)) continue;
+      processProject(projects[key]);
     }
   }
 
