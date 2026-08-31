@@ -444,6 +444,7 @@ export const CreateProjectModal = () => {
           <Button
             onClick={handleCreate}
             disabled={!title.trim()}
+            tooltip={!title.trim() ? "A project title is required to proceed" : undefined}
             className="font-display font-bold tracking-wide shadow-sm hover:shadow-[0_0_15px_rgba(var(--primary),0.4)] transition-all"
           >
             Greenlight Project
