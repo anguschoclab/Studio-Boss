@@ -110,21 +110,25 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
     // --- Rumor / Poach Pass ---
     if (agency.culture === "shark" || agency.currentMotivation === "THE_SHARK") {
       if (rng.next() < 0.1) {
+        // ⚡ Bolt: Eliminate multiple intermediate array allocations (brands, vulnerableRivals) by tracking candidates in a single pass.
         const brands: import("@/engine/types").RivalStudio[] = [];
+        const vulnerableRivals: import("@/engine/types").RivalStudio[] = [];
         const rivalsObj = state.entities.rivals || {};
         for (const id in rivalsObj) {
-          brands.push(rivalsObj[id]);
+          const r = rivalsObj[id];
+          brands.push(r);
+          if (
+            r.prestige < 50 ||
+            r.currentMotivation === "CASH_CRUNCH" ||
+            (r.prestige < 60 && r.cash > 10_000_000)
+          ) {
+            vulnerableRivals.push(r);
+          }
         }
         if (brands.length > 0) {
           let rival = rng.pick(brands);
 
           // 🎭 The Method Actor Tuning: Shark agencies smell blood in the water and specifically target vulnerable studios.
-          const vulnerableRivals = brands.filter(
-            (r) =>
-              r.prestige < 50 ||
-              r.currentMotivation === "CASH_CRUNCH" ||
-              (r.prestige < 60 && r.cash > 10_000_000)
-          );
           if (vulnerableRivals.length > 0 && rng.next() < 0.8) {
             rival = rng.pick(vulnerableRivals);
           }
@@ -142,13 +146,20 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
 
     // --- Package Deal Pass ---
     if (archetype.pact_aggression > 0 && rng.next() < archetype.pact_aggression) {
-      // Find the highest-prestige player-contracted talent at this agency
-      const agencyPlayerTalents = (talentsByAgency[agency.id] || [])
-        .filter((t) => playerContractedTalentIds.has(t.id))
-        .sort((a, b) => b.prestige - a.prestige);
+      // ⚡ Bolt: Replaced .filter().sort() with a single O(N) pass to find the maximum prestige talent,
+      // eliminating multiple intermediate array allocations and O(N log N) sorting overhead.
+      let leadTalent: Talent | undefined = undefined;
+      const agencyTalents = talentsByAgency[agency.id] || [];
+      for (let i = 0; i < agencyTalents.length; i++) {
+        const t = agencyTalents[i];
+        if (playerContractedTalentIds.has(t.id)) {
+          if (!leadTalent || t.prestige > leadTalent.prestige) {
+            leadTalent = t;
+          }
+        }
+      }
 
-      if (agencyPlayerTalents.length > 0) {
-        const leadTalent = agencyPlayerTalents[0];
+      if (leadTalent) {
         const marketState = state.finance?.marketState ?? {
           baseRate: 0.045,
           savingsYield: 0.025,
