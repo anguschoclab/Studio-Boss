@@ -1,0 +1,3 @@
+## 2025-05-15 - Eliminate Object.keys() allocations in relationship systems
+**Learning:** Using `Object.keys().map()` or `for (const key of Object.keys(obj))` allocates an intermediate array of keys in memory, causing unnecessary garbage collection spikes in high-frequency game loops operating over large ECS state dictionaries (like `projects`).
+**Action:** Always prefer a direct, prototype-guarded `for...in` loop (e.g., `for (const id in obj) { if (!Object.prototype.hasOwnProperty.call(obj, id)) continue; ... }`) instead of `Object.keys()` to avoid intermediate allocations while iterating over objects.

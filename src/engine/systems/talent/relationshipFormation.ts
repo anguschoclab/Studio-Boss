@@ -32,7 +32,8 @@ export function haveWorkedTogether(
   }
 
   const projectsDict = state.entities.projects || {};
-  for (const pid of Object.keys(projectsDict)) {
+  for (const pid in projectsDict) {
+    if (!Object.prototype.hasOwnProperty.call(projectsDict, pid)) continue;
     const project = projectsDict[pid];
     const talentIds = project.attachedTalentIds || [];
     if (talentIds.includes(talentAId) && talentIds.includes(talentBId)) return true;
@@ -58,7 +59,8 @@ export function haveCompeted(
   const awardedProjectIds = awards.map((a) => a.projectId);
   const projectsDict = state.entities.projects || {};
 
-  for (const pid of Object.keys(projectsDict)) {
+  for (const pid in projectsDict) {
+    if (!Object.prototype.hasOwnProperty.call(projectsDict, pid)) continue;
     const project = projectsDict[pid];
     if (!awardedProjectIds.includes(project.id)) continue;
     const talentIds = project.attachedTalentIds || [];

@@ -118,9 +118,14 @@ export function tickRelationshipSystem(state: GameState, rng: RandomGenerator): 
       talents.push(talentsDict[tid]);
     }
   }
-  // ⚡ Bolt: Use Object.keys iteration to prevent massive intermediate array allocation
+  // ⚡ Bolt: Use direct for...in loop to prevent intermediate array allocations from Object.keys() and .map()
   const projectsDict = state.entities.projects || {};
-  const projects = Object.keys(projectsDict).map((pid) => projectsDict[pid]);
+  const projects: typeof projectsDict[keyof typeof projectsDict][] = [];
+  for (const pid in projectsDict) {
+    if (Object.prototype.hasOwnProperty.call(projectsDict, pid)) {
+      projects.push(projectsDict[pid]);
+    }
+  }
   const awards = state.industry?.awards || [];
   const awardedProjectIds = new Set(awards.map((a) => a.projectId));
 
