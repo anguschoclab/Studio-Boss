@@ -98,15 +98,19 @@ export function calculateMotivationScores(
     STABILITY: 0,
   };
 
-  Object.entries(MotivationScores).forEach(([motivation, scorer]) => {
+  // ⚡ Bolt: Replace Object.entries with a prototype-guarded for...in loop to reduce GC overhead.
+  for (const motivation in MotivationScores) {
+    if (!Object.prototype.hasOwnProperty.call(MotivationScores, motivation)) continue;
+    const typedMotivation = motivation as StudioMotivation;
+    const scorer = MotivationScores[typedMotivation];
     const baseScore = scorer(rival, state);
-    const profileKey = profileMap[motivation as StudioMotivation];
+    const profileKey = profileMap[typedMotivation];
     const bias =
       Number(rival.motivationProfile[profileKey as keyof typeof rival.motivationProfile]) || 0;
-    const flopAdj = flopAdjustments[motivation as StudioMotivation] || 0;
+    const flopAdj = flopAdjustments[typedMotivation] || 0;
     const variance = rng.range(-5, 5);
-    scores[motivation as StudioMotivation] = baseScore + bias + flopAdj + variance;
-  });
+    scores[typedMotivation] = baseScore + bias + flopAdj + variance;
+  }
 
   return scores;
 }
