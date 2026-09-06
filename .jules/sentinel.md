@@ -1,0 +1,4 @@
+## 2024-09-06 - Globably bind web contents handlers
+**Vulnerability:** The `will-navigate` and `setWindowOpenHandler` handlers were only bound to the main window's webContents. New windows created by the application could navigate to arbitrary URLs without these restrictions.
+**Learning:** For Electron security, prevent unauthorized main frame navigation by handling the `will-navigate` and `setWindowOpenHandler` events on ALL `webContents` globally (using `app.on("web-contents-created", ...)`), restricting navigation strictly to internal `app://` or verified local development URLs. Do not bind these only to instance-specific webContents like `mainWindow.webContents` to avoid bypasses via window creation.
+**Prevention:** Always use global application event handlers for navigation restrictions instead of instance-specific handlers to ensure all spawned WebContents instances enforce the same policies.
