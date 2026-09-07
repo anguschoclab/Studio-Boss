@@ -1,0 +1,3 @@
+## 2026-09-07 - Add aria-hidden to decorative close icons
+**Learning:** Decorative SVG icons inside close buttons (e.g., `<X>` icon in Radix UI wrapper components like Dialog, Sheet, and Toast) must explicitly include `aria-hidden="true"`. Even if the button has a screen reader only span (e.g., `<span className="sr-only">Close</span>`), omitting `aria-hidden="true"` on the icon can cause redundant or confusing announcements.
+**Action:** Always add `aria-hidden="true"` to decorative `lucide-react` icons within buttons.
