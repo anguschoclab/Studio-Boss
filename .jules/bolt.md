@@ -1,0 +1,3 @@
+## 2024-05-18 - Optimize Object Iteration in High-Frequency Game Loops
+**Learning:** In highly-called game loops (like AI motivation calculations), `Object.entries().forEach()` allocates unnecessary intermediate arrays (an array of arrays for keys and values) causing garbage collection spikes.
+**Action:** Use a prototype-guarded `for...in` loop instead to iterate over objects in high-frequency paths.
