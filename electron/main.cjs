@@ -165,29 +165,6 @@ async function createWindow() {
     mainWindow.show();
   });
 
-  // Open external links in the real browser, not inside the app
-  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    if (url.startsWith("http://") || url.startsWith("https://")) {
-      shell.openExternal(url);
-    }
-    return { action: "deny" };
-  });
-
-  // Prevent navigation away from the app origin (security hardening)
-  mainWindow.webContents.on("will-navigate", (event, url) => {
-    try {
-      const parsed = new URL(url);
-      if (parsed.protocol === "app:") return;
-      const isLocalhost = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
-        && (parsed.protocol === "http:" || parsed.protocol === "https:");
-      if (!IS_DEV || !isLocalhost) {
-        event.preventDefault();
-      }
-    } catch (_e) {
-      event.preventDefault();
-    }
-  });
-
   if (IS_DEV) {
     // In dev mode load the Vite dev server
     mainWindow.loadURL("http://localhost:8081");
@@ -637,6 +614,29 @@ app.whenReady().then(async () => {
 });
 
 app.on("web-contents-created", (event, contents) => {
+  // Open external links in the real browser, not inside the app
+  contents.setWindowOpenHandler(({ url }) => {
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      shell.openExternal(url);
+    }
+    return { action: "deny" };
+  });
+
+  // Prevent navigation away from the app origin (security hardening)
+  contents.on("will-navigate", (evt, url) => {
+    try {
+      const parsed = new URL(url);
+      if (parsed.protocol === "app:") return;
+      const isLocalhost = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
+        && (parsed.protocol === "http:" || parsed.protocol === "https:");
+      if (!IS_DEV || !isLocalhost) {
+        evt.preventDefault();
+      }
+    } catch (_e) {
+      evt.preventDefault();
+    }
+  });
+
   contents.on("will-attach-webview", (event, webPreferences, params) => {
     // Delete preload scripts if any
     delete webPreferences.preload;
