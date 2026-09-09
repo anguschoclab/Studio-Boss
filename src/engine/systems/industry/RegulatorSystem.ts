@@ -24,26 +24,22 @@ export class RegulatorSystem {
       ? state.studio.prestige
       : state.entities.rivals[studioId]?.prestige || 0;
 
-    const totalSubs = state.market.buyers
-      .filter((b) => b.archetype === "streamer")
-      .reduce(
-        (acc, b) =>
-          acc +
-          ((b as unknown as import("../../types/studio.types").StreamerPlatform).subscribers || 0),
-        0
-      );
+    // ⚡ Bolt Optimization: Combined two .filter().reduce() chains into a single O(N) loop to eliminate multiple iterations and intermediate array allocations
+    let totalSubs = 0;
+    let studioSubs = 0;
+    const targetOwnerId = isTargetPlayer ? playerStudioId : studioId;
 
-    const studioSubs = state.market.buyers
-      .filter(
-        (b) =>
-          b.archetype === "streamer" && b.ownerId === (isTargetPlayer ? playerStudioId : studioId)
-      )
-      .reduce(
-        (acc, b) =>
-          acc +
-          ((b as unknown as import("../../types/studio.types").StreamerPlatform).subscribers || 0),
-        0
-      );
+    for (let i = 0; i < state.market.buyers.length; i++) {
+      const b = state.market.buyers[i];
+      if (b.archetype === "streamer") {
+        const platform = b as unknown as import("../../types/studio.types").StreamerPlatform;
+        const subs = platform.subscribers || 0;
+        totalSubs += subs;
+        if (b.ownerId === targetOwnerId) {
+          studioSubs += subs;
+        }
+      }
+    }
 
     const prestigeShare = (studioPrestige / totalPrestige) * 100;
     const subShare = totalSubs > 0 ? (studioSubs / totalSubs) * 100 : 0;
