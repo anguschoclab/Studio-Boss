@@ -1,0 +1,3 @@
+## 2024-09-10 - Prevent GC Thrashing in Nested Matrix Loops
+**Learning:** Calling `Object.entries(agents)` inside a loop over `Object.entries(talents)` creates a massive number of intermediate arrays (M arrays created N times), causing severe garbage collection spikes in O(N*M) matrix calculations (like `calculateCompatibilityMatrix`).
+**Action:** Always use prototype-guarded `for...in` loops instead of `Object.entries()` when iterating over entities in high-frequency game loops or nested structures, avoiding redundant array allocations entirely.
