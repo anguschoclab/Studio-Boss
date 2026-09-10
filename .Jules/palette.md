@@ -1,0 +1,3 @@
+## 2025-02-18 - Add aria-hidden to Radix UI close icons
+**Learning:** When using Radix UI wrapper components (Dialog, Sheet, Toast), the close buttons often include a screen-reader-only text span (like `<span className="sr-only">Close</span>`). However, the decorative SVG icons (like `<X>`) must explicitly include `aria-hidden="true"`, otherwise screen readers may attempt to announce both, leading to redundancy.
+**Action:** Always ensure decorative icons inside accessible buttons have `aria-hidden="true"`.
