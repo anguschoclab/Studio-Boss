@@ -1,0 +1,3 @@
+## 2024-09-12 - Eliminate chained filter/reduce loops in charting selectors
+**Learning:** React selectors in high-frequency dashboards (like `selectTalentSatisfaction`) that repeatedly call `Object.values().map().filter().reduce()` for each category tier cause severe array allocation and garbage collection thrashing on every state update, leading to stuttering during game loops.
+**Action:** Replace `Object.values().map().filter().reduce()` patterns in chart selectors with a single pass `for...in` loop over the raw state dictionary that aggregates all categories simultaneously, using `if (!Object.prototype.hasOwnProperty.call(obj, key)) continue;` as a guard.

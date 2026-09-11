@@ -520,19 +520,42 @@ export const selectStreamingViewership = (
  */
 export const selectTalentSatisfaction = (state: GameState | null): TalentSatisfactionData => {
   const talentPool = selectTalentPool(state);
-  const talents = Object.values(talentPool);
-  if (talents.length === 0) return { overallScore: 0, byCategory: [] };
+  let totalScore = 0;
+  let totalCount = 0;
+
+  const tierScores: Record<number, { sum: number; count: number }> = {
+    1: { sum: 0, count: 0 },
+    2: { sum: 0, count: 0 },
+    3: { sum: 0, count: 0 },
+    4: { sum: 0, count: 0 },
+  };
+
   const tierMap: Record<string, number> = { A_LIST: 1, B_LIST: 2, C_LIST: 3, RISING_STAR: 4, NEWCOMER: 4 };
-  const scores = talents.map((t) => ({ id: t.id, score: t.psychology?.mood || 70, tier: tierMap[t.tier] || 4 }));
-  const overallScore = scores.reduce((sum, s) => sum + s.score, 0) / scores.length;
+
+  for (const id in talentPool) {
+    if (!Object.prototype.hasOwnProperty.call(talentPool, id)) continue;
+    // ⚡ Bolt: Replaced Object.values().map().filter().reduce() with a single loop pass
+    const t = talentPool[id];
+    const score = t.psychology?.mood || 70;
+    const tier = tierMap[t.tier] || 4;
+
+    totalScore += score;
+    totalCount++;
+
+    if (tierScores[tier]) {
+      tierScores[tier].sum += score;
+      tierScores[tier].count++;
+    }
+  }
+
+  if (totalCount === 0) return { overallScore: 0, byCategory: [] };
+
+  const overallScore = totalScore / totalCount;
   const byCategory = [1, 2, 3, 4].map((tier) => ({
     category: tier === 1 ? "A-list" : tier === 2 ? "B-list" : tier === 3 ? "C-list" : "Emerging",
-    score:
-      scores.filter((s) => s.tier === tier).length > 0
-        ? scores.filter((s) => s.tier === tier).reduce((sum, s) => sum + s.score, 0) /
-          scores.filter((s) => s.tier === tier).length
-        : 50,
+    score: tierScores[tier].count > 0 ? tierScores[tier].sum / tierScores[tier].count : 50,
   }));
+
   return { overallScore: Math.round(overallScore), byCategory };
 };
 
@@ -543,7 +566,7 @@ export const selectTalentTierDistribution = (
   state: GameState | null
 ): { data: TalentTierData[]; totalTalent: number } => {
   const talentPool = selectTalentPool(state);
-  const talents = Object.values(talentPool);
+
   const tierMap: Record<string, number> = { A_LIST: 1, B_LIST: 2, C_LIST: 3, RISING_STAR: 4, NEWCOMER: 4 };
   const tierNames: Record<number, string> = {
     1: "A-list",
@@ -551,15 +574,37 @@ export const selectTalentTierDistribution = (
     3: "C-list",
     4: "Emerging",
   };
+
+  const tierAggregates: Record<number, { count: number; sumSalary: number }> = {
+    1: { count: 0, sumSalary: 0 },
+    2: { count: 0, sumSalary: 0 },
+    3: { count: 0, sumSalary: 0 },
+    4: { count: 0, sumSalary: 0 },
+  };
+
+  let totalTalent = 0;
+
+  for (const id in talentPool) {
+    if (!Object.prototype.hasOwnProperty.call(talentPool, id)) continue;
+    // ⚡ Bolt: Replaced Object.values().filter().reduce() per tier with single loop pass
+    const t = talentPool[id];
+    const tier = tierMap[t.tier] || 4;
+
+    totalTalent++;
+
+    if (tierAggregates[tier]) {
+      tierAggregates[tier].count++;
+      tierAggregates[tier].sumSalary += (t.fee || 0);
+    }
+  }
+
   const byTier = [1, 2, 3, 4].map((tier) => {
-    const tierTalents = talents.filter((t) => (tierMap[t.tier] || 4) === tier);
-    const avgSalary =
-      tierTalents.length > 0
-        ? tierTalents.reduce((sum, t) => sum + (t.fee || 0), 0) / tierTalents.length
-        : 0;
-    return { tier: tierNames[tier], count: tierTalents.length, avgSalary };
+    const agg = tierAggregates[tier];
+    const avgSalary = agg.count > 0 ? agg.sumSalary / agg.count : 0;
+    return { tier: tierNames[tier], count: agg.count, avgSalary };
   });
-  return { data: byTier, totalTalent: talents.length };
+
+  return { data: byTier, totalTalent };
 };
 
 /**
