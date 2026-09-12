@@ -30,7 +30,6 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
         rateHistory: [],
       },
     },
-    news: { headlines: [] },
     ip: { vault: [], franchises: {} },
     studio: {
       id: "studio-1",

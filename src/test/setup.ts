@@ -1,10 +1,15 @@
+// Must be first: installs a working localStorage before any module that
+// initializes zustand persist() storage (see storageShim.ts for why).
+import "./storageShim";
 import "@testing-library/jest-dom";
 import {vi, beforeEach} from "vitest";
 import React from "react";
 import {resetAdvanceWeekCache} from "@/engine/core/weekAdvance";
+import {memoryStorage} from "./storageShim";
 
 beforeEach(() => {
   resetAdvanceWeekCache();
+  memoryStorage.clear();
 });
 
 vi.mock("@/components/ui/tooltip-wrapper", () => ({

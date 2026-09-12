@@ -5,7 +5,7 @@ import {initializeGame} from "@/engine/core/gameInit";
 describe("Store Slice Isolation", () => {
   beforeEach(() => {
     const gameState = initializeGame("Test Studio", "major", 42);
-    useGameStore.setState({ gameState, finance: gameState.finance as any, news: gameState.news });
+    useGameStore.setState({ gameState, finance: gameState.finance as any });
   });
 
   describe("Finance Slice Isolation", () => {

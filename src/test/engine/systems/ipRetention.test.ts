@@ -1,5 +1,5 @@
 import {describe, it, expect} from "vitest";
-import {calculateIPValue} from "../../../engine/systems/ipRetention";
+import {calculateIPValue, advanceIPRights, catalogValue} from "../../../engine/systems/ipRetention";
 import {Project, AwardsProfile} from "../../../engine/types";
 
 describe("calculateIPValue", () => {
@@ -69,5 +69,67 @@ describe("calculateIPValue", () => {
     } as Project;
     // 5000000 * 0.4 * 1.5 = 3000000
     expect(calculateIPValue(prestigeProject)).toBe(3_000_000);
+  });
+});
+
+describe("advanceIPRights", () => {
+  const base = {
+    title: "IP",
+    state: "released",
+    revenue: 4_000_000,
+    budget: 1_000_000,
+  } as unknown as Project;
+
+  it("accepts a Record<string, Project> and reverts expired rights", () => {
+    const projects: Record<string, Project> = {
+      p1: {
+        ...base,
+        id: "p1",
+        ipRights: { reversionWeek: 5, rightsOwner: "studio" },
+      } as unknown as Project,
+    };
+    const impact = advanceIPRights(projects, 5);
+    expect(impact.uiNotifications![0]).toContain("lost the exclusive IP rights");
+    expect(impact.projectUpdates![0].projectId).toBe("p1");
+    expect(impact.projectUpdates![0].update.ipRights!.rightsOwner).toBe("external");
+  });
+
+  it("refreshes catalogValue for studio-owned rights not yet reverted", () => {
+    const projects: Record<string, Project> = {
+      p1: {
+        ...base,
+        id: "p1",
+        ipRights: { reversionWeek: 100, rightsOwner: "studio", catalogValue: 0 },
+      } as unknown as Project,
+    };
+    const impact = advanceIPRights(projects, 5);
+    expect(impact.projectUpdates![0].update.ipRights!.catalogValue).toBe(1_600_000);
+  });
+
+  it("ignores projects without ipRights", () => {
+    const projects: Record<string, Project> = {
+      p1: { ...base, id: "p1" } as unknown as Project,
+    };
+    const impact = advanceIPRights(projects, 5);
+    expect(impact.projectUpdates).toEqual([]);
+    expect(impact.uiNotifications).toEqual([]);
+  });
+});
+
+describe("catalogValue", () => {
+  it("accepts a Record and sums studio-owned catalog values", () => {
+    const projects: Record<string, Project> = {
+      a: {
+        id: "a", title: "A", state: "released", revenue: 10_000_000, budget: 1_000_000,
+        ipRights: { rightsOwner: "studio", catalogValue: 4_000_000 },
+      } as unknown as Project,
+      b: {
+        id: "b", title: "B", state: "released", revenue: 10_000_000, budget: 1_000_000,
+        ipRights: { rightsOwner: "shared", catalogValue: 2_000_000 },
+      } as unknown as Project,
+      c: { id: "c", title: "C" } as unknown as Project,
+    };
+    // 4,000,000 + (2,000,000 * 0.5) = 5,000,000
+    expect(catalogValue(projects)).toBe(5_000_000);
   });
 });

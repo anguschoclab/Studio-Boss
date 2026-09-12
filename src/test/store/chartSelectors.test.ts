@@ -1,5 +1,5 @@
 import {describe, it, expect} from "vitest";
-import {selectGenrePerformanceMatrix} from "@/store/chartSelectors";
+import {selectGenrePerformanceMatrix, selectTalentSatisfaction} from "@/store/chartSelectors";
 import {GameState} from "@/engine/types";
 import {createMockGameState, createMockProject} from "@/test/utils/mockFactories";
 
@@ -141,5 +141,63 @@ describe("selectGenrePerformanceMatrix", () => {
     const result = selectGenrePerformanceMatrix(state);
     expect(result[0].projectCount).toBe(2);
     expect(result[0].avgRevenue).toBe(75_000_000);
+  });
+});
+
+describe("selectTalentSatisfaction", () => {
+  const makeTalent = (id: string, tier: string, mood?: number) =>
+    ({ id, tier, psychology: mood === undefined ? undefined : { mood } }) as never;
+
+  const stateWithTalents = (talents: Record<string, unknown>) =>
+    createMockGameState({ entities: { talents } } as unknown as Partial<GameState>);
+
+  it("returns zeroed data for null state", () => {
+    expect(selectTalentSatisfaction(null)).toEqual({ overallScore: 0, byCategory: [] });
+  });
+
+  it("returns zeroed data for an empty talent pool", () => {
+    expect(selectTalentSatisfaction(stateWithTalents({}))).toEqual({
+      overallScore: 0,
+      byCategory: [],
+    });
+  });
+
+  it("computes overallScore as the mean mood across all talents", () => {
+    const state = stateWithTalents({
+      a: makeTalent("a", "A_LIST", 80),
+      b: makeTalent("b", "B_LIST", 60),
+    });
+    expect(selectTalentSatisfaction(state).overallScore).toBe(70);
+  });
+
+  it("defaults missing mood to 70 and missing tier to Emerging", () => {
+    const state = stateWithTalents({
+      a: makeTalent("a", "A_LIST", undefined),
+      u: makeTalent("u", "UNKNOWN_TIER", 40),
+    });
+    const result = selectTalentSatisfaction(state);
+    // (70 + 40) / 2
+    expect(result.overallScore).toBe(55);
+    expect(result.byCategory[0]).toEqual({ category: "A-list", score: 70 });
+    expect(result.byCategory[3]).toEqual({ category: "Emerging", score: 40 });
+  });
+
+  it("buckets tiers into the four display categories correctly", () => {
+    const state = stateWithTalents({
+      a: makeTalent("a", "A_LIST", 90),
+      b: makeTalent("b", "B_LIST", 80),
+      c: makeTalent("c", "C_LIST", 60),
+      d: makeTalent("d", "RISING_STAR", 40),
+      e: makeTalent("e", "NEWCOMER", 60),
+    });
+    const result = selectTalentSatisfaction(state);
+    expect(result.byCategory).toEqual([
+      { category: "A-list", score: 90 },
+      { category: "B-list", score: 80 },
+      { category: "C-list", score: 60 },
+      { category: "Emerging", score: 50 }, // mean of RISING_STAR(40) + NEWCOMER(60)
+    ]);
+    // overall mean: (90+80+60+40+60)/5 = 66
+    expect(result.overallScore).toBe(66);
   });
 });

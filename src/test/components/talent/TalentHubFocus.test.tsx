@@ -70,7 +70,7 @@ describe("TalentHub Focus-Visible Styles", () => {
     expect(sbdbTab).toBeDefined();
   });
 
-  it("roster bookmark icon does not have aria-hidden (roster tab lacks accessibility fix)", () => {
+  it("roster bookmark icon is aria-hidden (decorative — button provides the accessible name)", () => {
     render(
       <TooltipProvider>
         <TalentHub />
@@ -78,8 +78,7 @@ describe("TalentHub Focus-Visible Styles", () => {
     );
     const bookmarkBtn = screen.getByRole("button", { name: /Show bookmarks only/i });
     const svg = bookmarkBtn.querySelector("svg");
-    // Roster tab's bookmark button does not have aria-hidden on svg
-    expect(svg).toBeDefined();
+    expect(svg).toHaveAttribute("aria-hidden", "true");
   });
 
   it("roster bookmark button has aria-label", () => {

@@ -7,7 +7,9 @@ const generateHeadlines = (count: number): NewsEvent[] => {
   for (let i = 0; i < count; i++) {
     headlines.push({
       id: `hl-${i}`,
-      text: `NewsEvent ${i}`,
+      type: "STUDIO_EVENT",
+      headline: `NewsEvent ${i}`,
+      description: "",
       category: categories[i % categories.length],
       week: 1,
     });

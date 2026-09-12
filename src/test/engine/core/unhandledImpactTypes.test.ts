@@ -9,7 +9,6 @@ function makeMockState(overrides: Partial<GameState> = {}): GameState {
     tickCount: 0,
     game: { currentWeek: 1 },
     finance: { cash: 1_000_000, ledger: [] },
-    news: { headlines: [] },
     ip: { vault: [], franchises: {} },
     entities: {
       projects: {},
@@ -44,7 +43,10 @@ function makeMockState(overrides: Partial<GameState> = {}): GameState {
 }
 
 describe("Previously unhandled impact types — now properly handled", () => {
-  it("HEADLINE_POSTED impact adds headline to state.news.headlines", () => {
+  it("HEADLINE_POSTED impact does not write a phantom state.news field", () => {
+    // News flows through impact.newsEvents → WeekCoordinator.buildSummary →
+    // WeekSummary.newsEvents. The handler must not resurrect the removed
+    // state.news shape (a dead write that dropped headlines from the feed).
     const state = makeMockState();
     const impact = {
       type: "HEADLINE_POSTED",
@@ -57,12 +59,10 @@ describe("Previously unhandled impact types — now properly handled", () => {
     } as unknown as StateImpact;
 
     const result = applySingleImpact(state, impact);
-    expect(result.news?.headlines?.length ?? 0).toBe(1);
-    expect(result.news!.headlines![0].id).toBe("HL-1-REG");
-    expect(result.news!.headlines![0].headline).toBe("Regulators express concern.");
+    expect("news" in result).toBe(false);
   });
 
-  it("INDUSTRY_RUMORS_UPDATED impact updates rumors and adds headlines", () => {
+  it("INDUSTRY_RUMORS_UPDATED impact updates rumors without writing state.news", () => {
     const state = makeMockState();
     const newRumors = [
       { id: "r1", text: "Test rumor", week: 1, category: "talent", resolved: false },
@@ -79,8 +79,7 @@ describe("Previously unhandled impact types — now properly handled", () => {
 
     const result = applySingleImpact(state, impact);
     expect(result.industry.rumors).toEqual(newRumors);
-    expect(result.news?.headlines?.length ?? 0).toBe(1);
-    expect(result.news!.headlines![0].headline).toBe("RUMOR: Test");
+    expect("news" in result).toBe(false);
   });
 
   it("IP_UPDATED impact updates the vault asset by assetId", () => {

@@ -1,244 +1,65 @@
-import {describe, it, expect, vi, beforeEach} from "vitest";
+import {describe, it, expect} from "vitest";
+import {readFileSync} from "fs";
+import {join} from "path";
 
-// Mock electron module
-const _mockEvent = { preventDefault: vi.fn() };
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const {
+  shouldAllowNavigation,
+  // @ts-expect-error - CJS module without type declarations
+} = await import("../../../electron/navigationGuards.cjs");
 
-const mockWebContents = {
-  setWindowOpenHandler: vi.fn(),
-  on: vi.fn(),
-};
+const MAIN_SRC = readFileSync(join(__dirname, "../../../electron/main.cjs"), "utf-8");
 
-vi.mock("electron", () => ({
-  app: {
-    getPath: vi.fn(() => "/tmp/test"),
-    whenReady: vi.fn(() => Promise.resolve()),
-    on: vi.fn(),
-    quit: vi.fn(),
-    getVersion: vi.fn(() => "1.0.0"),
-    setAsDefaultProtocolClient: vi.fn(),
-    dock: { setBadge: vi.fn() },
-    name: "Studio Boss",
-  },
-  BrowserWindow: vi.fn(() => ({
-    webContents: mockWebContents,
-    on: vi.fn(),
-    once: vi.fn(),
-    show: vi.fn(),
-    loadURL: vi.fn(),
-    getBounds: vi.fn(() => ({ x: 0, y: 0, width: 1440, height: 900 })),
-    isMaximized: vi.fn(),
-    minimize: vi.fn(),
-    maximize: vi.fn(),
-    unmaximize: vi.fn(),
-    close: vi.fn(),
-  })),
-  protocol: {
-    registerSchemesAsPrivileged: vi.fn(),
-    handle: vi.fn(),
-  },
-  net: { fetch: vi.fn() },
-  shell: { openExternal: vi.fn() },
-  Menu: {
-    buildFromTemplate: vi.fn(),
-    setApplicationMenu: vi.fn(),
-  },
-  ipcMain: {
-    handle: vi.fn(),
-  },
-  Notification: { isSupported: vi.fn(() => false) },
-  dialog: {
-    showSaveDialog: vi.fn(),
-    showOpenDialog: vi.fn(),
-  },
-  Tray: vi.fn(),
-  nativeImage: { createEmpty: vi.fn() },
-}));
+describe("Electron main process — navigation security", () => {
+  // NOTE: main.cjs cannot be imported under vi.mock("electron") — the module is
+  // externalized and its require("electron") resolves to the real package.
+  // Behavioral coverage of the navigation rules lives in
+  // navigationGuards.test.ts against the real exported functions; the tests
+  // below guard the *wiring*: main.cjs must install those guards globally on
+  // every webContents via app.on("web-contents-created"), not just on
+  // mainWindow.webContents.
 
-describe("Electron Security - will-navigate handler", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
+  it("installs navigation guards globally for every webContents", () => {
+    const createdBlock = MAIN_SRC.match(
+      /app\.on\("web-contents-created"[\s\S]*?\}\);/
+    );
+    expect(createdBlock).not.toBeNull();
+    // The global handler must call installNavigationGuards so that ALL
+    // webContents (windows, popups, devtools) get the restrictions — not only
+    // the initial mainWindow.
+    expect(createdBlock![0]).toMatch(/installNavigationGuards\(contents/);
   });
 
-  it("registers a will-navigate handler on webContents", () => {
-    expect(mockWebContents.on).toBeDefined();
+  it("does not bind navigation restrictions only to mainWindow.webContents", () => {
+    // Regression guard for the Sentinel navigation-bypass fixes: per-window
+    // binding lets any newly created webContents navigate freely.
+    expect(MAIN_SRC).not.toMatch(/mainWindow\.webContents\.setWindowOpenHandler/);
+    expect(MAIN_SRC).not.toMatch(/mainWindow\.webContents\.on\("will-navigate"/);
   });
 
-  it("preventDefault is called for non-localhost URLs", () => {
-    const IS_DEV = false;
-    const url = "https://evil.com";
-    const event = { preventDefault: vi.fn() };
+  it("still prevents webview attachment", () => {
+    expect(MAIN_SRC).toMatch(/will-attach-webview/);
+  });
+});
 
-    try {
-      const parsed = new URL(url);
-      if (parsed.protocol === "app:") return;
-      const isLocalhost = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
-        && (parsed.protocol === "http:" || parsed.protocol === "https:");
-      if (!IS_DEV || !isLocalhost) {
-        event.preventDefault();
-      }
-    } catch (_e) {
-      event.preventDefault();
-    }
-
-    expect(event.preventDefault).toHaveBeenCalled();
+describe("shouldAllowNavigation (production predicate)", () => {
+  it("preventDefault-equivalent: blocks non-localhost URLs in production", () => {
+    expect(shouldAllowNavigation("https://evil.com", false)).toBe(false);
   });
 
-  it("preventDefault is called for malformed URLs", () => {
-    const event = { preventDefault: vi.fn() };
-    const url = "not-a-valid-url";
-
-    try {
-      const parsed = new URL(url);
-      if (parsed.protocol === "app:") return;
-      const isLocalhost = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
-        && (parsed.protocol === "http:" || parsed.protocol === "https:");
-      if (!isLocalhost) {
-        event.preventDefault();
-      }
-    } catch (_e) {
-      event.preventDefault();
-    }
-
-    expect(event.preventDefault).toHaveBeenCalled();
+  it("blocks malformed URLs", () => {
+    expect(shouldAllowNavigation("not-a-valid-url", false)).toBe(false);
   });
 
   it("allows localhost navigation in dev mode", () => {
-    const IS_DEV = true;
-    const url = "http://localhost:8081";
-    const event = { preventDefault: vi.fn() };
-
-    try {
-      const parsed = new URL(url);
-      if (parsed.protocol === "app:") return;
-      const isLocalhost = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
-        && (parsed.protocol === "http:" || parsed.protocol === "https:");
-      if (!IS_DEV || !isLocalhost) {
-        event.preventDefault();
-      }
-    } catch (_e) {
-      event.preventDefault();
-    }
-
-    expect(event.preventDefault).not.toHaveBeenCalled();
+    expect(shouldAllowNavigation("http://localhost:8081", true)).toBe(true);
   });
 
   it("blocks localhost navigation in production mode", () => {
-    const IS_DEV = false;
-    const url = "http://localhost:8081";
-    const event = { preventDefault: vi.fn() };
-
-    try {
-      const parsed = new URL(url);
-      if (parsed.protocol === "app:") return;
-      const isLocalhost = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
-        && (parsed.protocol === "http:" || parsed.protocol === "https:");
-      if (!IS_DEV || !isLocalhost) {
-        event.preventDefault();
-      }
-    } catch (_e) {
-      event.preventDefault();
-    }
-
-    expect(event.preventDefault).toHaveBeenCalled();
+    expect(shouldAllowNavigation("http://localhost:8081", false)).toBe(false);
   });
 
-  it("allows 127.0.0.1 navigation in dev mode", () => {
-    const IS_DEV = true;
-    const url = "http://127.0.0.1:8081";
-    const event = { preventDefault: vi.fn() };
-
-    try {
-      const parsed = new URL(url);
-      if (parsed.protocol === "app:") return;
-      const isLocalhost = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
-        && (parsed.protocol === "http:" || parsed.protocol === "https:");
-      if (!IS_DEV || !isLocalhost) {
-        event.preventDefault();
-      }
-    } catch (_e) {
-      event.preventDefault();
-    }
-
-    expect(event.preventDefault).not.toHaveBeenCalled();
-  });
-
-  it("allows app: protocol navigation in production", () => {
-    const IS_DEV = false;
-    const url = "app://localhost/dashboard";
-    const event = { preventDefault: vi.fn() };
-
-    try {
-      const parsed = new URL(url);
-      if (parsed.protocol === "app:") return;
-      const isLocalhost = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
-        && (parsed.protocol === "http:" || parsed.protocol === "https:");
-      if (!IS_DEV || !isLocalhost) {
-        event.preventDefault();
-      }
-    } catch (_e) {
-      event.preventDefault();
-    }
-
-    expect(event.preventDefault).not.toHaveBeenCalled();
-  });
-
-  it("allows app: protocol navigation in dev mode", () => {
-    const IS_DEV = true;
-    const url = "app://localhost/settings";
-    const event = { preventDefault: vi.fn() };
-
-    try {
-      const parsed = new URL(url);
-      if (parsed.protocol === "app:") return;
-      const isLocalhost = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
-        && (parsed.protocol === "http:" || parsed.protocol === "https:");
-      if (!IS_DEV || !isLocalhost) {
-        event.preventDefault();
-      }
-    } catch (_e) {
-      event.preventDefault();
-    }
-
-    expect(event.preventDefault).not.toHaveBeenCalled();
-  });
-
-  it("blocks file: protocol in production", () => {
-    const IS_DEV = false;
-    const url = "file:///etc/passwd";
-    const event = { preventDefault: vi.fn() };
-
-    try {
-      const parsed = new URL(url);
-      if (parsed.protocol === "app:") return;
-      const isLocalhost = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
-        && (parsed.protocol === "http:" || parsed.protocol === "https:");
-      if (!IS_DEV || !isLocalhost) {
-        event.preventDefault();
-      }
-    } catch (_e) {
-      event.preventDefault();
-    }
-
-    expect(event.preventDefault).toHaveBeenCalled();
-  });
-
-  it("blocks javascript: protocol", () => {
-    const IS_DEV = true;
-    const url = "javascript:alert(1)";
-    const event = { preventDefault: vi.fn() };
-
-    try {
-      const parsed = new URL(url);
-      if (parsed.protocol === "app:") return;
-      const isLocalhost = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
-        && (parsed.protocol === "http:" || parsed.protocol === "https:");
-      if (!IS_DEV || !isLocalhost) {
-        event.preventDefault();
-      }
-    } catch (_e) {
-      event.preventDefault();
-    }
-
-    expect(event.preventDefault).toHaveBeenCalled();
+  it("allows app: protocol navigation", () => {
+    expect(shouldAllowNavigation("app://index.html", false)).toBe(true);
   });
 });

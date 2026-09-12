@@ -8,7 +8,6 @@ describe("Historical Snapshots System", () => {
     useGameStore.setState({
       gameState,
       finance: gameState.finance as any,
-      news: gameState.news,
       snapshots: [],
     });
   });

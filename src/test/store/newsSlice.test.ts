@@ -8,7 +8,6 @@ describe("appendNewsEvents store action", () => {
     useGameStore.setState({
       gameState: state,
       finance: state.finance as any,
-      news: state.news,
     });
   });
 

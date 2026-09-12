@@ -293,7 +293,7 @@ describe("saveSchema", () => {
     });
 
     it("accepts when optional fields are absent", () => {
-      const { news, ip, ...rest } = validState;
+      const { ip: _ip, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(true);
     });
