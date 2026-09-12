@@ -27,7 +27,10 @@ const TitleScreen = () => {
 
     // Handle Auto-Start redirect
     const params = new URLSearchParams(window.location.search);
-    if (params.get("autoStart") === "true" && useGameStore.getState().gameState) {
+    if (params.get("autoStart") === "true") {
+      if (!useGameStore.getState().gameState) {
+        useGameStore.getState().devAutoInit();
+      }
       navigate({ to: "/dashboard" });
     }
     return () => {
