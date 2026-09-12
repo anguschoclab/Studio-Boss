@@ -130,7 +130,7 @@ export const TalentHub = () => {
                   : "bg-white/[0.02] text-muted-foreground/30 border-white/5 hover:bg-white/[0.05] hover:text-foreground hover:border-white/20"
               )}
             >
-              <Bookmark className="h-5 w-5" strokeWidth={2} />
+              <Bookmark className="h-5 w-5" strokeWidth={2} aria-hidden="true" />
             </button>
           </div>
 

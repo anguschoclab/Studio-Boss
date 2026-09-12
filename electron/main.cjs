@@ -17,6 +17,7 @@ const fs = require("fs").promises;
 const { pathToFileURL } = require("url");
 const { resolveSafePath } = require("./pathSecurity.cjs");
 const { safeJsonParse, validateSaveData } = require("./saveValidator.cjs");
+const { installNavigationGuards } = require("./navigationGuards.cjs");
 
 const DIST = path.join(__dirname, "../dist");
 const IS_DEV = process.env.NODE_ENV === "development";
@@ -163,29 +164,6 @@ async function createWindow() {
   // Show once first paint is done
   mainWindow.once("ready-to-show", () => {
     mainWindow.show();
-  });
-
-  // Open external links in the real browser, not inside the app
-  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    if (url.startsWith("http://") || url.startsWith("https://")) {
-      shell.openExternal(url);
-    }
-    return { action: "deny" };
-  });
-
-  // Prevent navigation away from the app origin (security hardening)
-  mainWindow.webContents.on("will-navigate", (event, url) => {
-    try {
-      const parsed = new URL(url);
-      if (parsed.protocol === "app:") return;
-      const isLocalhost = (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
-        && (parsed.protocol === "http:" || parsed.protocol === "https:");
-      if (!IS_DEV || !isLocalhost) {
-        event.preventDefault();
-      }
-    } catch (_e) {
-      event.preventDefault();
-    }
   });
 
   if (IS_DEV) {
@@ -637,6 +615,13 @@ app.whenReady().then(async () => {
 });
 
 app.on("web-contents-created", (event, contents) => {
+  // Navigation restrictions must apply to EVERY webContents — binding them to
+  // mainWindow.webContents alone lets newly created contents bypass them.
+  installNavigationGuards(contents, {
+    isDev: IS_DEV,
+    openExternal: (url) => shell.openExternal(url),
+  });
+
   contents.on("will-attach-webview", (event, webPreferences, params) => {
     // Delete preload scripts if any
     delete webPreferences.preload;

@@ -126,8 +126,9 @@ export class RumorProcessor {
       type: "INDUSTRY_RUMORS_UPDATED",
       payload: {
         rumors: updatedRumors,
-        headlines: newsEvents,
       },
+      // Collected by WeekCoordinator.buildSummary into WeekSummary.newsEvents
+      newsEvents,
     } as unknown as StateImpact; // Using cast for modular impact
   }
 }

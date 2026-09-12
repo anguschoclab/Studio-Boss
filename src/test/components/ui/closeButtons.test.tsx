@@ -66,8 +66,13 @@ describe("Close buttons — decorative icon accessibility", () => {
         <ToastViewport />
       </ToastProvider>
     );
-    const closeButton = screen.getByRole("button", { name: /close/i });
-    const icon = closeButton.querySelector("svg");
+    // ToastClose renders an icon-only button (no accessible name) — find it by
+    // its svg rather than by name.
+    const closeButton = screen
+      .getAllByRole("button")
+      .find((b) => b.querySelector("svg") !== null);
+    expect(closeButton).not.toBeNull();
+    const icon = closeButton!.querySelector("svg");
     expect(icon).not.toBeNull();
     expect(icon).toHaveAttribute("aria-hidden", "true");
   });

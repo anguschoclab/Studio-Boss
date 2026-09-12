@@ -421,10 +421,17 @@ export const TalentAgentInteractionEngine = {
   ): Map<string, CompatibilityScore> {
     const matrix = new Map<string, CompatibilityScore>();
 
-    for (const [talentId, talent] of Object.entries(talents)) {
+    // ⚡ Bolt Optimization: Replaced O(N) Object.entries() in nested loop with O(1) for...in loops
+    // to prevent allocating an intermediate array of agents inside every talent iteration,
+    // avoiding massive garbage collection overhead in O(N*M) combinations.
+    for (const talentId in talents) {
+      if (!Object.prototype.hasOwnProperty.call(talents, talentId)) continue;
+      const talent = talents[talentId];
       if (!talent.personality) continue;
 
-      for (const [agentId, agent] of Object.entries(agents)) {
+      for (const agentId in agents) {
+        if (!Object.prototype.hasOwnProperty.call(agents, agentId)) continue;
+        const agent = agents[agentId];
         // Get agent personality from agent or agency
         let agentPersonality: AgentPersonality = "diplomat"; // default
 

@@ -63,6 +63,7 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
     },
     history: [],
     eventHistory: [],
+    weekSummaries: [],
     saveVersion: 2,
     simMemory: {
       antitrust: { lastActionWeek: -9999 },

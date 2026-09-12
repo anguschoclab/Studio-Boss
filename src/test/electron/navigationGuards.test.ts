@@ -4,7 +4,6 @@ import {describe, it, expect, vi, beforeEach} from "vitest";
 const {
   shouldAllowNavigation,
   installNavigationGuards,
-  // @ts-expect-error - CJS module without type declarations
 } = await import("../../../electron/navigationGuards.cjs");
 
 describe("shouldAllowNavigation", () => {
@@ -48,7 +47,7 @@ describe("installNavigationGuards", () => {
   beforeEach(() => {
     contents = { setWindowOpenHandler: vi.fn(), on: vi.fn() };
     openExternal = vi.fn();
-    installNavigationGuards(contents, { isDev: false, openExternal });
+    installNavigationGuards(contents as never, { isDev: false, openExternal });
   });
 
   it("registers a setWindowOpenHandler on the contents", () => {
@@ -91,7 +90,7 @@ describe("installNavigationGuards", () => {
 
   it("will-navigate handler allows dev localhost navigation only when isDev", () => {
     const devContents = { setWindowOpenHandler: vi.fn(), on: vi.fn() };
-    installNavigationGuards(devContents, { isDev: true, openExternal });
+    installNavigationGuards(devContents as never, { isDev: true, openExternal });
     const devNavigate = devContents.on.mock.calls.find((c) => c[0] === "will-navigate")![1];
     const devEvent = { preventDefault: vi.fn() };
     devNavigate(devEvent, "http://localhost:8081");

@@ -275,44 +275,23 @@ export function handleMergerResolved(state: GameState, impact: StateImpact): Gam
   };
 }
 
-export function handleHeadlinePosted(state: GameState, impact: StateImpact): GameState {
-  const { id, week, category, text, publication } = impact.payload as {
-    id: string;
-    week: number;
-    category: string;
-    text: string;
-    publication?: string;
-  };
-  const headline = { id, week, category, headline: text, publication } as unknown as import("@/engine/types/engine.types").NewsEvent;
-  return {
-    ...state,
-    news: {
-      ...state.news,
-      headlines: [...(state.news?.headlines || []), headline],
-    },
-  };
+// News is carried on impact.newsEvents and collected by
+// WeekCoordinator.buildSummary into WeekSummary.newsEvents. Handlers must not
+// write a state.news field — that shape was removed, and writing it is a dead
+// store that drops headlines from the feed.
+export function handleHeadlinePosted(state: GameState, _impact: StateImpact): GameState {
+  return state;
 }
 
 export function handleIndustryRumorsUpdated(state: GameState, impact: StateImpact): GameState {
-  const { rumors, headlines } = impact.payload as {
+  const { rumors } = impact.payload as {
     rumors: import("@/engine/types/engine.types").Rumor[];
-    headlines: import("@/engine/types/engine.types").NewsEvent[];
   };
-  let newState = {
+  return {
     ...state,
     industry: {
       ...state.industry,
       rumors: rumors || state.industry.rumors || [],
     },
   };
-  if (headlines && headlines.length > 0) {
-    newState = {
-      ...newState,
-      news: {
-        ...newState.news,
-        headlines: [...(newState.news?.headlines || []), ...headlines],
-      },
-    };
-  }
-  return newState;
 }

@@ -306,6 +306,7 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
               <div className="flex items-center gap-2 shrink-0">
                 {activeSecondary && !isLocked && (
                   <button
+                    aria-label="Clear secondary marketing angle"
                     onClick={(e) => {
                       e.stopPropagation();
                       handlePickSecondary(null);

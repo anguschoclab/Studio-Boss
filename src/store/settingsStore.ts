@@ -1,5 +1,5 @@
 import {create} from "zustand";
-import {persist} from "zustand/middleware";
+import {persist, createJSONStorage} from "zustand/middleware";
 
 export type Difficulty = "relaxed" | "standard" | "cutthroat";
 export type AutosaveFrequency = "weekly" | "off";
@@ -76,6 +76,16 @@ export const useSettingsStore = create<SettingsState>()(
     }),
     {
       name: "studio-boss-settings",
+      // Accessing localStorage can throw (Node's experimental stub without
+      // --localstorage-file, disabled cookies, SSR). zustand skips persistence
+      // gracefully when the getter returns undefined.
+      storage: createJSONStorage(() => {
+        try {
+          return window.localStorage;
+        } catch {
+          return undefined as unknown as Storage;
+        }
+      }),
     }
   )
 );

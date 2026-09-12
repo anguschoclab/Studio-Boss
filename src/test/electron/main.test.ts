@@ -5,7 +5,6 @@ import {join} from "path";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const {
   shouldAllowNavigation,
-  // @ts-expect-error - CJS module without type declarations
 } = await import("../../../electron/navigationGuards.cjs");
 
 const MAIN_SRC = readFileSync(join(__dirname, "../../../electron/main.cjs"), "utf-8");

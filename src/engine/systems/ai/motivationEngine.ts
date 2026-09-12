@@ -98,15 +98,19 @@ export function calculateMotivationScores(
     STABILITY: 0,
   };
 
-  Object.entries(MotivationScores).forEach(([motivation, scorer]) => {
+  // ⚡ Bolt Optimization: Replaced Object.entries().forEach with a for...in loop to avoid intermediate array allocation
+  for (const key in MotivationScores) {
+    if (!Object.prototype.hasOwnProperty.call(MotivationScores, key)) continue;
+    const motivation = key as StudioMotivation;
+    const scorer = MotivationScores[motivation];
     const baseScore = scorer(rival, state);
-    const profileKey = profileMap[motivation as StudioMotivation];
+    const profileKey = profileMap[motivation];
     const bias =
       Number(rival.motivationProfile[profileKey as keyof typeof rival.motivationProfile]) || 0;
-    const flopAdj = flopAdjustments[motivation as StudioMotivation] || 0;
+    const flopAdj = flopAdjustments[motivation] || 0;
     const variance = rng.range(-5, 5);
-    scores[motivation as StudioMotivation] = baseScore + bias + flopAdj + variance;
-  });
+    scores[motivation] = baseScore + bias + flopAdj + variance;
+  }
 
   return scores;
 }
