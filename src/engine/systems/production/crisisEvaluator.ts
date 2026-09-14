@@ -66,23 +66,26 @@ export function resolveCrisisWithHandlers(
   const option = project.activeCrisis.options[optionIndex];
   if (!option) return [];
 
-  const rawImpacts = Object.values(CrisisHandlers).flatMap((handler) => handler(project, option));
+  // ⚡ Bolt: Replaced Object.values().flatMap() and multiple .filter() calls with a single pass loop
+  const rawImpacts: StateImpact[] = [];
+  for (const key in CrisisHandlers) {
+    if (Object.prototype.hasOwnProperty.call(CrisisHandlers, key)) {
+      rawImpacts.push(...CrisisHandlers[key](project, option));
+    }
+  }
 
   // Merge all PROJECT_UPDATED impacts for this specific project into one
-  const projectImpacts = rawImpacts.filter(
-    (i): i is ProjectUpdateImpact =>
-      i.type === "PROJECT_UPDATED" && i.payload.projectId === projectId
-  );
+  let mergedUpdate: Partial<Project> = { activeCrisis: { ...project.activeCrisis, resolved: true } };
+  const otherImpacts: StateImpact[] = [];
 
-  const mergedUpdate = projectImpacts.reduce<Partial<Project>>(
-    (acc, i) => ({ ...acc, ...i.payload.update }),
-    { activeCrisis: { ...project.activeCrisis, resolved: true } }
-  );
-
-  const otherImpacts = rawImpacts.filter(
-    (i) =>
-      !(i.type === "PROJECT_UPDATED" && (i as ProjectUpdateImpact).payload.projectId === projectId)
-  );
+  for (let i = 0; i < rawImpacts.length; i++) {
+    const impact = rawImpacts[i];
+    if (impact.type === "PROJECT_UPDATED" && impact.payload.projectId === projectId) {
+      mergedUpdate = { ...mergedUpdate, ...impact.payload.update };
+    } else {
+      otherImpacts.push(impact);
+    }
+  }
 
   return [
     ...otherImpacts,
