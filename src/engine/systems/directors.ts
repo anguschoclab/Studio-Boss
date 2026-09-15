@@ -40,7 +40,7 @@ export function hasCreativeControl(projectId: string, state: GameState): boolean
 export function processDirectorDisputes(
   project: Project,
   projectContracts: Contract[],
-  talentPoolMap: Map<string, TalentProfile>,
+  talentPoolMap: Record<string, TalentProfile>,
   rng: RandomGenerator
 ): { updates: string[]; newCrises: { projectId: string; crisis: Crisis }[] } {
   const updates: string[] = [];
@@ -52,8 +52,8 @@ export function processDirectorDisputes(
   const dirContract = projectContracts.find((c) => c.projectId === project.id);
   if (!dirContract) return { updates, newCrises };
 
-  // O(1) Map lookup instead of full array .find()
-  const director = talentPoolMap.get(dirContract.talentId);
+  // O(1) Record lookup instead of full array .find()
+  const director = talentPoolMap[dirContract.talentId];
   if (!director || !director.roles.includes("director")) return { updates, newCrises };
 
   // Auteurs and Visionaries cause more disputes

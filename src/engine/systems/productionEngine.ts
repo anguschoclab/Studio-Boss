@@ -73,8 +73,6 @@ function tickProject(project: Project, rng: RandomGenerator): StateImpact[] {
 export function tickProduction(state: GameState, rng: RandomGenerator): StateImpact[] {
   const allImpacts: StateImpact[] = [];
 
-  const talentMap = new Map(Object.entries(state.entities.talents));
-
   // ⚡ Bolt: Iterate over global projects record to advance all active titles (Player & Rivals)
   for (const key in state.entities.projects) {
     const project = state.entities.projects[key];
@@ -86,7 +84,7 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
         state.entities.contracts,
         project.id
       );
-      const disputeResult = processDirectorDisputes(project, projectContracts, talentMap, rng);
+      const disputeResult = processDirectorDisputes(project, projectContracts, state.entities.talents, rng);
       disputeResult.newCrises.forEach(({ projectId, crisis }) => {
         allImpacts.push({
           type: "PROJECT_UPDATED",
