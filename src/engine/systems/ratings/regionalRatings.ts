@@ -12,18 +12,23 @@ export function evaluateRegionalRatings(
   const bannedMarkets = getBannedMarkets(flags);
   const restrictedMarkets = getRestrictedMarkets(flags);
 
-  return (Object.keys(MARKET_CONFIGS) as RatingMarket[]).map((market) => {
+  // ⚡ Bolt Optimization: Replace Object.keys().map() with a direct for...in loop
+  const ratings: RegionalRating[] = [];
+  for (const key in MARKET_CONFIGS) {
+    if (!Object.prototype.hasOwnProperty.call(MARKET_CONFIGS, key)) continue;
+    const market = key as RatingMarket;
     const isBanned = bannedMarkets.includes(market);
     const isRestricted = restrictedMarkets.includes(market);
     const restrictionLevel = isBanned ? "banned" : isRestricted ? "major" : "none";
 
-    return {
+    ratings.push({
       market,
       rating: baseRating,
       isBanned,
       restrictionLevel,
-    } as RegionalRating;
-  });
+    });
+  }
+  return ratings;
 }
 
 /**
@@ -40,7 +45,10 @@ export function calculateRegionalPenalties(project: Project): number {
 
   let totalLoss = 0;
 
-  for (const market of Object.keys(MARKET_CONFIGS) as RatingMarket[]) {
+  // ⚡ Bolt Optimization: Replace Object.keys() iteration with a direct for...in loop
+  for (const key in MARKET_CONFIGS) {
+    if (!Object.prototype.hasOwnProperty.call(MARKET_CONFIGS, key)) continue;
+    const market = key as RatingMarket;
     const config = MARKET_CONFIGS[market];
     const isBanned = config.bannedFlags.some((f) => flags.includes(f));
     const isRestricted = config.restrictedFlags.some((f) => flags.includes(f));

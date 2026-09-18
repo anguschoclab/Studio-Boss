@@ -113,18 +113,32 @@ export const MARKET_CONFIGS: Record<RatingMarket, MarketConfig> = {
 
 /** Returns all markets where this set of flags results in a ban */
 export function getBannedMarkets(flags: ContentFlag[]): RatingMarket[] {
-  return (Object.keys(MARKET_CONFIGS) as RatingMarket[]).filter((market) => {
+  // ⚡ Bolt Optimization: Replace Object.keys().filter() with a single-pass for...in loop
+  const banned: RatingMarket[] = [];
+  for (const key in MARKET_CONFIGS) {
+    if (!Object.prototype.hasOwnProperty.call(MARKET_CONFIGS, key)) continue;
+    const market = key as RatingMarket;
     const config = MARKET_CONFIGS[market];
-    return config.bannedFlags.some((f) => flags.includes(f));
-  });
+    if (config.bannedFlags.some((f) => flags.includes(f))) {
+      banned.push(market);
+    }
+  }
+  return banned;
 }
 
 /** Returns all markets where this set of flags results in restriction (not ban) */
 export function getRestrictedMarkets(flags: ContentFlag[]): RatingMarket[] {
-  return (Object.keys(MARKET_CONFIGS) as RatingMarket[]).filter((market) => {
+  // ⚡ Bolt Optimization: Replace Object.keys().filter() with a single-pass for...in loop
+  const restricted: RatingMarket[] = [];
+  for (const key in MARKET_CONFIGS) {
+    if (!Object.prototype.hasOwnProperty.call(MARKET_CONFIGS, key)) continue;
+    const market = key as RatingMarket;
     const config = MARKET_CONFIGS[market];
     const isBanned = config.bannedFlags.some((f) => flags.includes(f));
     const isRestricted = config.restrictedFlags.some((f) => flags.includes(f));
-    return isRestricted && !isBanned;
-  });
+    if (isRestricted && !isBanned) {
+      restricted.push(market);
+    }
+  }
+  return restricted;
 }
