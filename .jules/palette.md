@@ -1,0 +1,3 @@
+## 2024-05-24 - Explain Disabled States for Modals
+**Learning:** Users can get confused when core action buttons (like "Acquire" or "Sign" in modals) are disabled without clear feedback as to why, especially in high-stakes bidding or offer scenarios where they might not immediately notice their current cash balance relative to the cost.
+**Action:** Always provide an explanatory `tooltip` on buttons that are disabled due to game state conditions (like insufficient funds), leveraging the custom `<Button>` component's native tooltip prop.

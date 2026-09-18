@@ -90,7 +90,7 @@ export const DistressedAssetOfferModal: React.FC = () => {
             <Button onClick={handleDecline} variant="outline" className="flex-1">
               Decline
             </Button>
-            <Button onClick={handleAcquire} className="flex-1" disabled={!canAfford}>
+            <Button onClick={handleAcquire} className="flex-1" disabled={!canAfford} tooltip={!canAfford ? "Insufficient funds" : undefined}>
               <DollarSign className="h-4 w-4 mr-2" />
               Acquire
             </Button>
