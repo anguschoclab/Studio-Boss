@@ -63,6 +63,12 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
   );
   // ⚡ Bolt: Removed ALL_RIVALS Object.values allocation
 
+  // ⚡ Bolt: Refactored trends .find() inside map to a Map lookup to prevent O(M*O*R) operations.
+  const genreTrendMap = new Map<string, NonNullable<typeof state.market.trends>[number]>();
+  state.market.trends?.forEach((t) => {
+    if (t.genre) genreTrendMap.set(t.genre.toLowerCase(), t);
+  });
+
   opportunities.forEach((opportunity) => {
     // ⚡ Bolt: Replaced Object.values().reduce() with direct for...in loop
     let currentHighest = 0;
@@ -97,9 +103,7 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
         const newBid = Math.floor(currentHighest * (1 + rng.range(0.05, 0.2) * totalMultiplier));
 
         let trendMultiplier = 1.0;
-        const genreTrend = state.market.trends?.find(
-          (t) => t.genre?.toLowerCase() === opportunity.genre?.toLowerCase()
-        );
+        const genreTrend = opportunity.genre ? genreTrendMap.get(opportunity.genre.toLowerCase()) : undefined;
         if (genreTrend) {
           if (genreTrend.heat >= 60) trendMultiplier = 1.2;
           else if (genreTrend.heat <= 30) trendMultiplier = 0.8;

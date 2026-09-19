@@ -58,15 +58,19 @@ export function generateWeeklyFinancialReport(
   const buyerMap = new Map<string, Buyer>();
   state.market?.buyers?.forEach((b) => buyerMap.set(b.id, b));
 
+  // ⚡ Bolt: Refactored trends .find() inside map to a Map lookup, improving performance from O(n^2) to O(n).
+  const genreTrendMap = new Map<string, NonNullable<typeof state.market.trends>[number]>();
+  state.market.trends?.forEach((t) => {
+    if (t.genre) genreTrendMap.set(t.genre.toLowerCase(), t);
+  });
+
   projects.forEach((p) => {
     if (p.state === "released") {
       let weeklyGross = 0;
       let trendMultiplier = 1.0;
 
       // Check for genre trend
-      const genreTrend = state.market.trends?.find(
-        (t) => t.genre?.toLowerCase() === p.genre?.toLowerCase()
-      );
+      const genreTrend = p.genre ? genreTrendMap.get(p.genre.toLowerCase()) : undefined;
       if (genreTrend) {
         trendMultiplier = genreTrend.heat >= 60 ? 1.2 : genreTrend.heat <= 30 ? 0.8 : 1.0;
         if (trendMultiplier !== 1.0) {
