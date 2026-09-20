@@ -1,0 +1,3 @@
+## 2024-03-01 - Add aria-hidden to decorative icons in modals
+**Learning:** Many interactive components (like modal close buttons or action buttons with text) use `lucide-react` icons (e.g., `<X>`, `<Film>`, `<Search>`). Even if the button has a visible text label or an `aria-label`, omitting `aria-hidden="true"` on the SVG icon itself can cause redundant or confusing screen reader announcements. This is especially prevalent in custom modals or dashboards that don't rely on the base Radix wrappers.
+**Action:** Always verify that decorative `lucide-react` icons explicitly include `aria-hidden="true"`, particularly in custom components like `LiveAuctionDashboard` or `RebootOpportunityModal`.

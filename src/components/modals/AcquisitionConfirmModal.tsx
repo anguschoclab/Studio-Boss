@@ -125,7 +125,7 @@ export const AcquisitionConfirmModal: React.FC = () => {
             className="flex-1"
             onClick={() => resolveCurrentModal()}
           >
-            <X className="h-4 w-4 mr-2" />
+            <X className="h-4 w-4 mr-2" aria-hidden="true" />
             Walk Away
           </Button>
           <Button
