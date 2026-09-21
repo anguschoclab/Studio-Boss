@@ -1,0 +1,3 @@
+## 2024-03-12 - Decorative icons missing aria-hidden
+**Learning:** Shadcn/Radix wrapper components often include decorative SVG icons (like ChevronDown, Check, etc.) from `lucide-react` without explicit `aria-hidden="true"`. This can cause redundant or confusing screen reader announcements.
+**Action:** When updating Radix/Shadcn wrapper components, always verify decorative icons have `aria-hidden="true"`.
