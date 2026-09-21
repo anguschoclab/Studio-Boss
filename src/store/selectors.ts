@@ -232,8 +232,29 @@ export const selectRecentEvents = createSelector([selectEventHistory], (history)
 
 export const selectProjectTimelineData = (state: GameState | null, weeksPast: number = 12) => {
   if (!state) return [];
-  const projects = Object.values(state.entities.projects || {});
   const currentWeek = state.week;
+
+  // ⚡ Bolt: Pre-calculate project counts in a single O(N) pass to avoid O(N*M) redundant filtering and array allocations in the loop
+  let development = 0;
+  let preProduction = 0;
+  let production = 0;
+  let postProduction = 0;
+  const releasedByWeek: Record<number, number> = {};
+
+  const projects = state.entities.projects || {};
+  for (const id in projects) {
+    if (!Object.prototype.hasOwnProperty.call(projects, id)) continue;
+    const p = projects[id];
+
+    if (p.state === "development") development++;
+    else if (p.state === "needs_greenlight" || p.state === "pitching") preProduction++;
+    else if (p.state === "production") production++;
+    else if (p.state === "marketing") postProduction++;
+
+    if (p.releaseWeek !== undefined) {
+      releasedByWeek[p.releaseWeek] = (releasedByWeek[p.releaseWeek] || 0) + 1;
+    }
+  }
 
   // For each week in the range, count projects in each state
   const data = [];
@@ -241,15 +262,11 @@ export const selectProjectTimelineData = (state: GameState | null, weeksPast: nu
     const targetWeek = currentWeek - (weeksPast - 1) + i;
     data.push({
       week: targetWeek,
-      development: projects.filter((p) => p.state === "development").length,
-      preProduction: projects.filter(
-        (p) => p.state === "needs_greenlight" || p.state === "pitching"
-      ).length,
-      production: projects.filter((p) => p.state === "production").length,
-      postProduction: projects.filter(
-        (p) => p.state === "marketing"
-      ).length,
-      released: projects.filter((p) => p.releaseWeek === targetWeek).length,
+      development,
+      preProduction,
+      production,
+      postProduction,
+      released: releasedByWeek[targetWeek] || 0,
     });
   }
   return data;
