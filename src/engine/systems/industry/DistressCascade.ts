@@ -135,9 +135,16 @@ function updateStreaks(state: GameState, distress: DistressMem) {
   for (const id in rivalsObj) {
     live.add(id);
   }
-  for (const k of Object.keys(distress.negativeStreak)) if (!live.has(k)) delete distress.negativeStreak[k];
-  for (const k of Object.keys(distress.lastActionWeek)) if (!live.has(k)) delete distress.lastActionWeek[k];
-  for (const k of Object.keys(distress.stageActionCount)) if (!live.has(k)) delete distress.stageActionCount[k];
+  // ⚡ Bolt Optimization: Replace Object.keys() array allocation with direct for...in loop for high-frequency game loop
+  for (const k in distress.negativeStreak) {
+    if (Object.prototype.hasOwnProperty.call(distress.negativeStreak, k) && !live.has(k)) delete distress.negativeStreak[k];
+  }
+  for (const k in distress.lastActionWeek) {
+    if (Object.prototype.hasOwnProperty.call(distress.lastActionWeek, k) && !live.has(k)) delete distress.lastActionWeek[k];
+  }
+  for (const k in distress.stageActionCount) {
+    if (Object.prototype.hasOwnProperty.call(distress.stageActionCount, k) && !live.has(k)) delete distress.stageActionCount[k];
+  }
 
   for (const id in rivalsObj) {
     const r = rivalsObj[id];
@@ -800,9 +807,16 @@ export function tickDistressCascade(state: GameState): StateImpact[] {
   const distress: DistressMem = {
     negativeStreak: { ...mem.distress.negativeStreak },
     lastActionWeek: { ...mem.distress.lastActionWeek },
-    stageActionCount: Object.fromEntries(
-      Object.entries(mem.distress.stageActionCount).map(([k, v]) => [k, { ...v }])
-    ),
+    stageActionCount: (() => {
+      // ⚡ Bolt Optimization: Avoid Object.entries() and .map() array allocations
+      const copy: Record<string, any> = {};
+      for (const k in mem.distress.stageActionCount) {
+        if (Object.prototype.hasOwnProperty.call(mem.distress.stageActionCount, k)) {
+          copy[k] = { ...mem.distress.stageActionCount[k] };
+        }
+      }
+      return copy;
+    })(),
   };
 
   updateStreaks(state, distress);
