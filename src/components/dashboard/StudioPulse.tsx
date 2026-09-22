@@ -384,7 +384,7 @@ export const StudioPulse: React.FC = () => {
             className="flex-1 h-12 text-[10px] font-black uppercase tracking-[0.25em] border border-white/5 rounded-none hover:bg-white/5"
             onClick={() => setActiveTab("pipeline" as TabId)}
           >
-            <Film className="w-4 h-4 mr-3 opacity-20" />
+            <Film className="w-4 h-4 mr-3 opacity-20" aria-hidden="true" />
             PIPELINE
           </Button>
           <Button
@@ -393,7 +393,7 @@ export const StudioPulse: React.FC = () => {
             className="flex-1 h-12 text-[10px] font-black uppercase tracking-[0.25em] border border-white/5 rounded-none hover:bg-white/5"
             onClick={() => setActiveTab("finance" as TabId)}
           >
-            <DollarSign className="w-4 h-4 mr-3 opacity-20" />
+            <DollarSign className="w-4 h-4 mr-3 opacity-20" aria-hidden="true" />
             FINANCES
           </Button>
           <Button
@@ -402,7 +402,7 @@ export const StudioPulse: React.FC = () => {
             className="flex-1 h-12 text-[10px] font-black uppercase tracking-[0.25em] border border-white/5 rounded-none hover:bg-white/5"
             onClick={() => setActiveTab("talent" as TabId)}
           >
-            <Users className="w-4 h-4 mr-3 opacity-20" />
+            <Users className="w-4 h-4 mr-3 opacity-20" aria-hidden="true" />
             TALENT
           </Button>
         </div>
