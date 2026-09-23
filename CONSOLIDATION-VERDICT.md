@@ -104,3 +104,102 @@ Triaged PRs #820–#837 (12 cherry-picked, 5 superseded/rejected, 1 approved-as-
 - [x] All merge conflicts resolved (none arose — fast-forward)
 - [x] `main` pushed; all 38 PRs closed; all 38 remote branches deleted; integration branch deleted
 - [x] Authoritative verification: `gh pr list --state open` = 0; `git ls-remote --heads origin` = main only
+
+---
+
+## Round 3 (2026-09-23)
+
+**Commits:** `23610ffb` (test-first red suite) → `dbb02f07` (correctness sweep + dead-code removal) → `d6a5a8f4` (sentinel normalization, navigation, PR integrations) → `9852eb9a` (electron list-saves fix) → `5d8679b6` (modal pipeline + electron hardening + honesty sweep)
+**Branch strategy:** applied directly on `main` (zero back-compat mandate); all 16 PR diffs manually integrated — `.jules` metadata and generated artifacts excluded.
+
+### Per-PR Verdict Table
+
+| PR | Cluster | Verdict | Rationale |
+| ---- | --------- | --------- | ----------- |
+| #876 | bolt nielsen | **Integrated** | Nielsen aggregation loop optimization in `nielsenSystem.ts`. |
+| #877 | bolt crisis | **Integrated** | Crisis evaluator loop optimization. |
+| #878 | palette disabled-tooltip | **Integrated + root-fixed** | Disabled attach-button tooltip; the underlying inert-tooltip bug was fixed in `button.tsx` (span wrapper for disabled buttons), making this actually functional. |
+| #879 | palette sidebar | **Integrated** | Collapsed-sidebar tooltips in `StudioSidebar.tsx`. |
+| #880 | bolt map-alloc | **Integrated** | Eliminated redundant Map allocation. |
+| #881 | palette aria-hidden | **Integrated** | Winning variant of the icon aria-hidden cluster (`select.tsx`, `accordion.tsx`, `pagination.tsx`). |
+| #882 | sentinel textarea | **Integrated + fixed** | `maxLength={5000}` default — prop order corrected so an explicit `maxLength` prop can't silently disable the cap. |
+| #883 | bolt regional-ratings | **Integrated** | Regional ratings loop optimizations. |
+| #884 | palette disabled-tooltip | **Integrated + root-fixed** | Disabled-tooltips PR; functional after the `button.tsx` disabled-tooltip fix. |
+| #885 | palette aria-hidden | **Superseded** | Byte-identical subset of #881. |
+| #886 | bolt map-lookup | **Integrated + modified** | `Map` trend lookups in `biddingEngine.ts`/`finance.ts` — rewritten to preserve first-match semantics (`Map.set` is last-wins vs `.find()` first-wins). |
+| #887 | palette aria-hidden | **Integrated** | Icon aria-hidden variant; stray 353-line `vitest.out` artifact excluded. |
+| #888 | bolt timeline-selector | **Moot — target deleted** | Optimized `selectProjectTimelineData`, which was deleted as dead code this round. |
+| #889 | palette aria-hidden | **Superseded** | Byte-identical subset of #881. |
+| #890 | bolt distress-cascade | **Integrated + tightened** | DistressCascade loop/allocation optimization; `Record<string, any>` leak replaced with the real value type. |
+| #891 | palette a11y | **Integrated** | StudioPulse icon aria-hidden. |
+
+**Totals: 12 integrated (3 with corrections), 3 superseded, 1 moot, 0 unresolved.**
+
+### Verified Bugs Fixed This Round (beyond PRs)
+
+| Finding | Fix |
+| --------- | ----- |
+| **Talent pool starvation (CRITICAL)** — `TALENT_ADDED` emitted `{newTalents}` but handler read `payload.talent` → replenishment silently dropped, pool drained to 0 over long sims | Emitters aligned to `payload.talents`; handler reads the array |
+| **Modal pipeline broken** — engine MODAL_TRIGGERED impacts enqueued `{priority, payload:{...}}` but every modal reads `payload.<field>` flat → all engine-triggered modals received empty data; `ModalManager` was never mounted so most types never rendered and could jam the queue | Payload normalized (nested + flat conventions); real `WeekSummary` attached to SUMMARY; `ModalManager` mounted in Dashboard; unhandled types auto-resolve |
+| **Dual finance mirror** — top-level `s.finance` went stale vs `gameState.finance` (FestivalMarketModal bid on stale cash) | Mirror deleted; all consumers read `gameState.finance` |
+| **Impure `set()` updaters** — `appendNewsEvents` called inside zustand updaters (double-invoke → duplicate news) | Hoisted outside `set()` |
+| **`advanceWeek` cache** — content-insensitive `lp === tc` check could return a stale result from a different game | Removed the clause |
+| **Player-sentinel fragmentation** — `"player"`/`"PLAYER"`/`studio.id` checked inconsistently; MetricsCollector reported 0 player projects; liquidation orphaned acquired assets | Normalized via `isPlayerOwner`/`getPlayerId` |
+| **Rival-acquisition dropped assets** — player path transferred vault IP but dropped the rival's projects + platforms | Projects transferred to `entities.projects` with player `ownerId`; platforms appended to `studio.ownedPlatforms` |
+| **`handleFinanceTransaction`** — player-targeted transactions fell into the rival branch and silently dropped | Player-id gate fixed; rival cash NaN-clamped |
+| **`handleCliqueUpdated`** — wrote clique but didn't rebuild `memberCliqueMap` | Map rebuilt on update |
+| **Tick-path agent hires** — `createRelationship` return discarded → `talentAgentRelationships` never populated for AI-initiated hires | Emits `RELATIONSHIP_UPDATED` |
+| **CommandPalette navigation** — `setActiveSubTab` was a no-op (nothing read it) | Commands now call `setActiveTab` with real `TabId`s |
+| **Disabled-button tooltips inert** — `TooltipTrigger asChild` on a disabled `<button>` gets no pointer events | Button wraps in `<span>` when disabled + tooltip |
+| **Honesty sweep** — fabricated rival `projectCount` drift, `Date.now()` save timestamps, dead "cash guard" | `projectCount` derived from real slate; `savedAt` stamped at save; dead conditions removed |
+| **Electron** — `list-saves` leaked NaN slots; `import-save` had no size cap; store IPC accepted `__proto__` keys; dead worker stubs + protocol registration | All fixed (`main.cjs`/`preload.cjs`) |
+| **CI** — no typecheck or e2e gates | Both added to `ci.yml` |
+| **Autosave** — unbounded FIFO queue | Coalesced to latest pending state |
+| **Persistence** — worker requests could hang forever | 30s timeout → reject |
+
+### Dead Code Removed
+
+- `deals.ts` first-look subsystem (`FirstLookDeal`, `offerFirstLookDeal`, `advanceDeals` — zero callers; the TalentPact path in `deals.activeDeals` is live)
+- `advanceProject` + phase helpers in `projects.ts` (~200 lines; tick path uses `projectHandlers/*`)
+- `aiService.ts` + `@google/generative-ai` dep + broken `refill-narrative.yml` cron (ran a nonexistent script)
+- ~19 dead chart selectors (fabricated `theaters`/`slippage`/flat-history data, zero consumers) — `chartSelectors.ts` slimmed to live exports; `selectors.ts` deduplicated
+- Orphan `src/engine/utils.test.ts` (outside vitest include; merged into live test)
+- Legacy modal flags in `uiStore` (shadowed by the modal queue)
+- Tracked junk: `.env` (contained `GEMINI_API_KEY` — **rotate it**), `test-results.json`, `verification/` artifacts
+- Dead worker IPC stubs (`worker-init-game`/`worker-advance-week`) and `setAsDefaultProtocolClient` (no handlers)
+
+### Plan-Validation Record (approve/disprove)
+
+| Claim | Verdict |
+| ------- | --------- |
+| 16 PRs ↔ 16 branches, all merge-bases on current main | **Approved** |
+| #885/#889 byte-identical subsets of #881 | **Approved** |
+| `.env` tracked secret | **Approved — confirmed; `git rm --cached` applied; rotation flagged to user** |
+| `TalentAvatar` `dangerouslySetInnerHTML` unsafe | **Disproven** — already DOMPurify-sanitized |
+| `.DS_Store`/empty dirs are repo problems | **Disproven** — untracked local junk only |
+| Disabled-button tooltips inert | **Approved — fixed via span wrapper** |
+| `releaseSimulation` global `randRange` breaks determinism | **Partially disproven** — module `rand()` is re-seeded per tick, so draws are deterministic per-tick; parallel-stream correlation (F-025) documented as an architectural note |
+| 49 `as unknown as StateImpact` casts = missing union members | **Partially approved** — most are payload-shape mismatches, not missing types; recorded as type-debt rather than expanded |
+| `saveSchema` passthrough is a hardening gap | **Approved** — deferred (schema validates load-bearing fields; deeper validation logged as follow-up) |
+
+### Verification Results
+
+| Check | Result |
+| ------- | -------- |
+| `bun run typecheck` | **0 errors** |
+| `bun run lint` | 0 errors / **58 warnings** (baseline: 66) |
+| `bun run test` | **1743 pass / 0 fail** (255 files; two 52-week sim tests now yield to the event loop to avoid vitest RPC heartbeat timeouts) |
+| `bun run build` | **pass** (4.4s; existing >500kB chunk warning unchanged) |
+| Playwright e2e | **4/4 pass** |
+| Determinism | **bit-identical** per seed (1234, 5678); cross-seed divergence confirmed |
+| `node --check electron/*.cjs` | pass |
+| Benchmarks | MediaPage 5.49x optimized; PipelineBoard 1.30x; SchedulingEngine ~146k hz |
+
+### Remaining Known Limitations (honest list)
+
+- `src/routes/` file-route tree is vestigial — the live router is inline in `App.tsx`. Left in place; flagged for removal or adoption.
+- `STRATEGY_CHOICE`/`CASTING_CONSTRAINT` modal types have no renderer — auto-resolved so they can't jam the queue.
+- ~49 `as unknown as StateImpact` casts remain (payload-shape mismatches) — typed surface improved but not eliminated.
+- `saveSchema` remains passthrough on `entities`/`market`/`industry` — malformed-but-valid saves could still crash edge paths.
+- 58 lint warnings remain (pre-existing class; none new).
+- `GEMINI_API_KEY` in git history needs rotation — untracked going forward but the old value is recoverable from history.
