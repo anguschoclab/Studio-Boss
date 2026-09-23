@@ -1,27 +1,21 @@
-import type {GameState} from "../types";
-import {defaultSimMemory} from "../core/simMemory";
+import type { GameState } from "../types";
+import { CURRENT_SAVE_VERSION, defaultSimMemory } from "../core/simMemory";
 
-interface Migration {
-  toVersion: number;
-  migrate: (state: GameState) => GameState;
-}
-
-const MIGRATIONS: Migration[] = [
-  {
-    toVersion: 2,
-    migrate: (s) => ({ ...s, simMemory: s.simMemory ?? defaultSimMemory() }),
-  },
-];
-
+/**
+ * Save normalization for current-version saves.
+ *
+ * Backward compatibility with old save versions is intentionally not
+ * supported: saves older than CURRENT_SAVE_VERSION are rejected by the
+ * caller, not upgraded. This function only stamps the current version and
+ * backfills `simMemory` if absent (defensive default for partially written
+ * states).
+ */
 export function migrateSave(raw: GameState): GameState {
-  let state = raw;
-  let version = raw.saveVersion ?? 1;
-  for (const m of MIGRATIONS) {
-    if (version < m.toVersion) {
-      state = m.migrate(state);
-      version = m.toVersion;
-    }
+  if ((raw.saveVersion ?? 0) !== CURRENT_SAVE_VERSION) {
+    throw new Error(
+      `Unsupported save version ${raw.saveVersion ?? "none"}; expected ${CURRENT_SAVE_VERSION}`
+    );
   }
-  if (state.saveVersion !== version) state = { ...state, saveVersion: version };
-  return state;
+  if (raw.simMemory != null) return raw;
+  return { ...raw, simMemory: defaultSimMemory() };
 }

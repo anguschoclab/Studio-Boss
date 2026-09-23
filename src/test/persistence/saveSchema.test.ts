@@ -121,7 +121,7 @@ describe("saveSchema", () => {
     });
 
     it("rejects missing week field", () => {
-      const { week, ...rest } = validState;
+      const { week: _week, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
     });
@@ -137,13 +137,13 @@ describe("saveSchema", () => {
     });
 
     it("rejects missing gameSeed", () => {
-      const { gameSeed, ...rest } = validState;
+      const { gameSeed: _gameSeed, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
     });
 
     it("rejects missing tickCount", () => {
-      const { tickCount, ...rest } = validState;
+      const { tickCount: _tickCount, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
     });
@@ -210,19 +210,19 @@ describe("saveSchema", () => {
     });
 
     it("rejects missing entities field", () => {
-      const { entities, ...rest } = validState;
+      const { entities: _entities, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
     });
 
     it("rejects missing market field", () => {
-      const { market, ...rest } = validState;
+      const { market: _market, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
     });
 
     it("rejects missing industry field", () => {
-      const { industry, ...rest } = validState;
+      const { industry: _industry, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
     });
@@ -238,7 +238,7 @@ describe("saveSchema", () => {
     });
 
     it("rejects missing history field", () => {
-      const { history, ...rest } = validState;
+      const { history: _history, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
     });
@@ -249,7 +249,7 @@ describe("saveSchema", () => {
     });
 
     it("rejects missing eventHistory field", () => {
-      const { eventHistory, ...rest } = validState;
+      const { eventHistory: _eventHistory, ...rest } = validState;
       const result = validateSaveData(rest);
       expect(result.success).toBe(false);
     });

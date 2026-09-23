@@ -1,72 +1,52 @@
 # Codebase Architecture Audit: Studio Boss
 
+_Last refreshed after the Round-3 consolidation sweep (see `CONSOLIDATION-VERDICT.md`)._
+
 ## Overview
 
-The `Studio Boss` codebase is built with modern tools (React, Vite, Zustand, Tailwind). Overall, it has a solid foundation, especially concerning the separation of the engine simulation logic (`src/engine/`) from the UI components (`src/components/`). However, as the application has grown, several architectural bottlenecks have emerged regarding state management, file organization, and separation of concerns.
+Studio Boss is a deterministic, tick-based studio simulation: React 18 + Vite frontend, Zustand store, a headless TypeScript engine under `src/engine/`, and an Electron shell with OPFS persistence via a Web Worker.
 
-Below is an ordered list of recommendations to improve structure and maintainability, ranked from most critical to optional enhancements.
+### Current architecture
 
----
+- **Engine** (`src/engine/`): `WeekCoordinator.execute(state)` runs the weekly tick — seeds `gameSeed + tickCount` into both the module `rand()` source and a `RandomGenerator` instance in `TickContext`, runs the system pipeline, and returns `{newState, summary, impacts}`. State mutations go exclusively through `StateImpact` objects applied by `applyImpacts`/`handlerRegistry` (`src/engine/core/`).
+- **Entities**: normalized under `entities` (`projects`, `talents`, `contracts`, `rivals`, `contractsByProjectId`, `contractsByTalentId`, `releasedProjectIds`). `studio.internal.projects` is the player's own project map.
+- **Store** (`src/store/`): composed Zustand slices (`projectSlice`, `financeSlice`, `talentSlice`, `rivalSlice`, `newsSlice`, `snapshotSlice`, `loanSlice`, `bookmarkSlice`, `distressSlice`, `marketingSlice`, `projectEventsSlice`). Store actions call pure engine functions and commit via `applyStateImpact`.
+- **Selectors** (`src/store/selectors.ts`, `chartSelectors.ts`): derived-state reads. The dead/divergent visualization selector layer was removed in Round 3; `chartSelectors.ts` currently exports only the live `selectMediaCoverage` selector.
+- **Routing**: inline TanStack Router tree in `src/App.tsx` (`/`, `/new-game`, `/dashboard`). `Dashboard` and `NewGame` are lazy; every dashboard tab panel and modal is code-split. The vestigial `src/routes/` file-router tree and `routeTree.gen.ts` were deleted — no file-router plugin is configured.
+- **Modals**: `uiStore` holds a `modalQueue` + `activeModal` discriminated union (`QueuedModal`) keyed by `ModalType` with a per-type `ModalPayloadMap`. Engine `MODAL_TRIGGERED` impacts are normalized to flat payloads in `gameStore` and rendered by `ModalManager`; unknown types auto-resolve so the queue can't jam.
+- **Persistence** (`src/persistence/`): `PersistenceService` talks to `saveWorker.ts` (OPFS). Saves carry `savedAt` and `saveVersion = CURRENT_SAVE_VERSION`. `saveSchema.ts` validates load-bearing fields (`entities`, `market`, `industry`, `studio.internal`, `finance`) via zod. `migrateSave` enforces the current version outright — **no backward compatibility with older save versions**; missing `simMemory` is backfilled defensively. Workerless environments surface `PersistenceUnavailableError` → `saveGame` returns `{ok:false, reason:"worker-unavailable"}` → `saveToSlot` shows a toast.
+- **Electron** (`electron/`): contextIsolation on, navigation guards, validated IPC (numeric save-slot filtering, `__proto__` key rejection, import-size cap), narrow preload API.
 
-## 1. State Management Restructuring (Critical)
+## Resolved since the original audit
 
-**Issue:** `src/store/gameStore.ts` is becoming a monolith.
+- Store monolith → split into slices; inline business logic moved to engine systems.
+- Dual finance mirror removed — `gameState.finance` is the single source.
+- Impure `set()` updaters (news appends inside updaters) hoisted out.
+- `Math.max(0, rival.cash)` floors removed — rival insolvency now flows to `DistressCascade`.
+- `advanceWeek`'s content-insensitive memo cache removed.
+- Dead code deleted: `projects.ts` phase helpers, `deals.ts`/`FirstLookDeal` subsystem (the TalentPact path is live), dead selectors, vestigial routes.
+- Talent updates treat explicit `undefined` as field deletion — serialization-stable.
+- Talent replenishment bounded to 100/week (was: entire 2,500-pool deficit in one tick).
+- `FESTIVAL_MARKET` modal rewired to its real emitted payload (auction results accept/decline) — previously rendered null and jammed the queue.
+- `CASTING_CONSTRAINT` modal implemented (`CastingConstraintModal` + `resolveCastingConstraint`); `STRATEGY_CHOICE` removed as dead.
+- Lint: 0 errors / 0 warnings (from 0/58).
 
-- The file is currently over 560 lines long and handles everything from basic state initialization to complex game loop dispatches, derived state, and inline business logic.
-- **Example:** The `pitchProject` action inside `gameStore.ts` contains inline logic for generating specific `headlines` based on the outcome of a pitch (e.g., `talent.name passes on first-look deal...`). This logic belongs in the engine domain, not the UI state store.
+## Known limitations / remaining debt
 
-**Recommendation:**
+- **Committed secret**: a `GEMINI_API_KEY` was committed in `c5a0862f`/`72a02b11` and remains recoverable from git history — rotate the key; `.env` is untracked but history persists.
+- **`any` debt**: ~90 `any`/`as any` sites remain across ~40 files under file-level `no-explicit-any` disables (heaviest: `talentSlice.ts`, `projectSlice.ts`, `OrganicEventEnhancer.ts`, `ProductionEnhancementSystem.ts`, `RivalSpawner.ts`). They reflect genuine shape friction between loose engine literals and strict `GameState` interfaces — converting them requires adding real fields/union members rather than mechanical renames.
+- **`GenericImpact` escape hatch**: `StateImpact` includes a `type: string; payload?: any` member so engine emitters compile without `as unknown as` casts. Unregistered impact types still hit the `console.warn` passthrough in `applySingleImpact` — declare real interfaces for hot paths over time.
+- **`saveSchema` is structural, not deep**: required fields and index shapes are validated; entity *contents* (individual project/talent records) are `unknown` — deep validation would require per-entity zod schemas.
+- **Pre-existing dev-mode noise**: framer-motion v12's `PopChild` reads `props.ref` (React-18 warning) on any `AnimatePresence` child — avoided in `tabs.tsx`; other `AnimatePresence` usages may still log it until React 19.
 
-- **Extract Engine Logic:** Move all inline string generation, array manipulation, and complex branching out of `gameStore.ts` and into pure functions within the appropriate `src/engine/systems/` files. The store actions should solely be responsible for calling these pure functions and setting the resulting state.
-- **Implement Zustand Slices:** Break `gameStore.ts` into feature-specific slices (e.g., `createProjectSlice`, `createFinanceSlice`, `createWorldSlice`) using the Zustand slice pattern to improve maintainability and readability.
+## Verification commands
 
----
-
-## 2. Separation of Concerns & Data Derivation (High)
-
-**Issue:** UI Components are too coupled to raw state structures and are performing inline data derivation.
-
-- Components are manually filtering arrays on every render or pulling deep nested objects from the store.
-- **Example:** `src/components/layout/TopBar.tsx` manually filters `projects.filter(p => p.status === 'development' || p.status === 'production').length` on every render.
-- **Example:** Components frequently use `useGameStore(s => s.gameState?.projects || [])` inline, which can lead to referential equality issues and unnecessary re-renders.
-
-**Recommendation:**
-
-- **Create Selectors:** Establish a dedicated file (e.g., `src/store/selectors.ts` or co-located in slices) for derived state. For instance, `selectActiveProjectsCount` or `selectOpportunities`.
-- **Memoization:** Ensure fallback arrays (like `[]`) are handled correctly to preserve referential equality, preventing React from re-rendering child components unnecessarily when the state hasn't actually changed.
-
----
-
-## 3. Directory Structure & File Consolidation (Medium)
-
-**Issue:** Redundant or fragmented utility files.
-
-- There are multiple utility files serving similar purposes across the codebase.
-- **Example:** The repository contains both `src/hooks/use-toast.ts` and `src/components/ui/use-toast.ts`.
-
-**Recommendation:**
-
-- **Consolidate UI Utilities:** Standardize the location of UI-specific utilities and hooks. Remove duplicate `use-toast` implementations and ensure `src/lib/utils.ts` is strictly used for UI/Tailwind merging, while `src/engine/utils.ts` handles simulation math and array manipulation.
-- **Feature-based Folder Structure:** Consider moving towards a feature-based structure for UI components (e.g., grouping `components/pipeline`, `store/pipelineSlice`, and `test/pipeline` together) as the application scales, rather than separating by technical concern.
-
----
-
-## 4. Error Handling in Engine Systems (Medium)
-
-**Issue:** Business logic constraints rely on throwing Errors, which risks crashing the UI if uncaught.
-
-- **Example:** In `src/engine/systems/ratings.ts` (specifically `editForRating`), the function throws a hard `Error` if the director has final cut: `throw new Error("Director has final cut...")`.
-
-**Recommendation:**
-
-- **Use Result Objects:** Refactor engine system functions to return standardized Result objects (e.g., `{ success: boolean; data?: Project; error?: string }`) instead of throwing exceptions for predictable game rule violations. This allows the UI store to gracefully handle failures (e.g., showing a Toast notification) rather than crashing the React tree.
-
----
-
-## 5. Performance Optimizations in Hot Loops (Optional / Preventative)
-
-**Issue:** While the `advanceWeek` engine loop has seen some optimizations (e.g., using `for` loops instead of `.map().filter()`), there is still room for improvement in avoiding intermediate allocations during the game tick.
-
-**Recommendation:**
-
-- Continue auditing `src/engine/core/weekAdvance.ts` and its underlying systems to ensure that large arrays (like `projects` and `talentPool`) are not being shallow-copied unnecessarily or iterated over multiple times when a single pass would suffice.
+```bash
+bun run typecheck   # tsc -p tsconfig.app.json --noEmit
+bun run lint        # eslint . — 0 errors, 0 warnings
+bun run test        # vitest run
+bun run build       # vite build — all chunks < 500 kB
+bun run bench       # vitest bench src/test/performance
+bunx playwright test # e2e
+node --check electron/main.cjs && node --check electron/preload.cjs
+```

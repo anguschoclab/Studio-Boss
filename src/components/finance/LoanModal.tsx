@@ -259,18 +259,11 @@ const ActiveLoansList = ({ loans, onRepayEarly }: ActiveLoansListProps) => {
 
 export const LoanModal = () => {
   const gameState = useGameStore((s) => s.gameState);
-  const addLoan = useGameStore(
-    (s) => (s as unknown as { addLoan: (amount: number, termWeeks: number) => void }).addLoan
-  );
-  const repayLoanEarly = useGameStore(
-    (s) => (s as unknown as { repayLoanEarly: (id: string) => void }).repayLoanEarly
-  );
+  const addLoan = useGameStore((s) => s.addLoan);
+  const repayLoanEarly = useGameStore((s) => s.repayLoanEarly);
 
   const loanRate = gameState?.finance?.marketState?.loanRate ?? 0.08;
-  const loans: Loan[] = useMemo(
-    () => (gameState?.studio as unknown as { loans: Loan[] })?.loans || [],
-    [gameState]
-  );
+  const loans: Loan[] = useMemo(() => gameState?.studio?.loans ?? [], [gameState]);
 
   const offers = useMemo(() => buildOffers(loanRate), [loanRate]);
 

@@ -1,4 +1,4 @@
-import {GameState, StateImpact} from "../../types";
+import {GameState} from "../../types";
 import {TickContext} from "./types";
 
 // System Imports
@@ -90,7 +90,7 @@ export const AnnualScans = {
         context.impacts.push({
           type: "VAULT_ASSET_UPDATED",
           payload: { assetId: asset.id, update: { tier: "CULT_CLASSIC" } },
-        } as unknown as StateImpact);
+        });
         context.impacts.push({
           type: "NEWS_ADDED",
           payload: {

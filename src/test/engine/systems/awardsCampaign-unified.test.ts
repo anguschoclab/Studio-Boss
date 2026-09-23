@@ -1,7 +1,7 @@
 import {describe, it, expect, vi} from "vitest";
-import {launchAwardsCampaign, AwardsCampaignResult} from "@/engine/systems/awards/AwardsCampaign";
+import {launchAwardsCampaign} from "@/engine/systems/awards/AwardsCampaign";
 import {RandomGenerator} from "@/engine/utils/rng";
-import {GameState, Project, AwardsProfile} from "@/engine/types";
+import {GameState, AwardsProfile} from "@/engine/types";
 import {createMockGameState, createMockProject} from "@/test/utils/mockFactories";
 
 const mockAwardsProfile: AwardsProfile = {

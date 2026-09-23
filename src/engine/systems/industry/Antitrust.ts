@@ -99,14 +99,14 @@ export function tickAntitrust(state: GameState): StateImpact[] {
   impacts.push({
     type: "INDUSTRY_UPDATE",
     payload: { update: { "simMemory.antitrust": { lastActionWeek: week } } },
-  } as unknown as StateImpact);
+  });
 
   // Block dominant player from M&A for 2 years.
   blockList.push({ acquirerId: leader.id, untilWeek: week + 104 });
   impacts.push({
     type: "INDUSTRY_UPDATE",
     payload: { update: { "simMemory.antitrustBlockList": blockList } },
-  } as unknown as StateImpact);
+  });
 
   // Pick intervention: divestiture if top1 > 35%, else block-warning + fine.
   const kind: AntitrustEvent["kind"] = top1 > TOP1_THRESHOLD ? "divestiture" : "block-warning";
@@ -195,7 +195,7 @@ export function tickAntitrust(state: GameState): StateImpact[] {
         ],
       },
     },
-  } as unknown as StateImpact);
+  });
 
   return impacts;
 }

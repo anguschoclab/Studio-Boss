@@ -221,7 +221,7 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
         type: "RIVAL_UPDATED",
         payload: {
           rivalId: rival.id,
-          update: { cash: Math.max(0, rival.cash - crisisCost) },
+          update: { cash: rival.cash - crisisCost },
         },
       });
       impacts.push({

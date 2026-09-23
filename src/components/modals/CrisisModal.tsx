@@ -13,7 +13,10 @@ export const CrisisModal = () => {
   if (!gameState || !activeModal || activeModal.type !== "CRISIS") return null;
 
   const { projectId } = activeModal.payload;
-  const project = gameState.studio.internal.projects[projectId];
+  const project = projectId
+    ? (gameState.studio.internal?.projects?.[projectId] ??
+      gameState.entities?.projects?.[projectId])
+    : undefined;
 
   if (!project || !project.activeCrisis) {
     resolveCurrentModal();
@@ -29,7 +32,7 @@ export const CrisisModal = () => {
   }
 
   const handleResolve = (index: number) => {
-    resolveProjectCrisis(projectId, index);
+    if (projectId) resolveProjectCrisis(projectId, index);
     resolveCurrentModal();
   };
 

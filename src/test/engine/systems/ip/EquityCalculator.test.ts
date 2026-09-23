@@ -1,6 +1,5 @@
 import {describe, it, expect} from "vitest";
 import {calculateFranchiseEquity} from "@/engine/systems/ip/EquityCalculator";
-import {CROSSOVER_AFFINITY} from "@/engine/data/genres";
 import {Franchise, IPAsset, Project} from "@/engine/types";
 
 describe("calculateFranchiseEquity", () => {

@@ -1,4 +1,4 @@
-import {GameState, StateImpact} from "@/engine/types";
+import {GameState} from "@/engine/types";
 import {rand} from "../../utils";
 
 /**
@@ -112,7 +112,7 @@ export class RegulatorSystem {
             type: "STUDIO_EVENT",
           },
         ],
-      } as unknown as StateImpact);
+      });
     }
 
     return impacts;

@@ -52,6 +52,9 @@ const AcquisitionConfirmModal = React.lazy(() =>
 const GreenlightDecisionModal = React.lazy(() =>
   import("./GreenlightDecisionModal").then((m) => ({ default: m.GreenlightDecisionModal }))
 );
+const CastingConstraintModal = React.lazy(() =>
+  import("./CastingConstraintModal").then((m) => ({ default: m.CastingConstraintModal }))
+);
 
 /** Modal types with a renderer in the switch below — others are auto-resolved. */
 const HANDLED_MODAL_TYPES: ReadonlySet<string> = new Set([
@@ -72,6 +75,7 @@ const HANDLED_MODAL_TYPES: ReadonlySet<string> = new Set([
   "DISTRESSED_ASSET_OFFER",
   "ACQUISITION_CONFIRM",
   "GREENLIGHT_DECISION",
+  "CASTING_CONSTRAINT",
 ]);
 
 /**
@@ -127,6 +131,8 @@ export const ModalManager: React.FC = () => {
             return <AcquisitionConfirmModal key={activeModal.id} />;
           case "GREENLIGHT_DECISION":
             return <GreenlightDecisionModal key={activeModal.id} />;
+          case "CASTING_CONSTRAINT":
+            return <CastingConstraintModal key={activeModal.id} />;
           default:
             return null;
         }

@@ -176,7 +176,7 @@ function buildUnlockImpacts(
   impacts.push({
     type: "SYSTEM_TICK",
     payload: { newAchievementId: achievement.id },
-  } as unknown as StateImpact);
+  });
 
   return impacts;
 }

@@ -75,8 +75,9 @@ describe("gameStore", () => {
     expect(active?.type).toBe("SUMMARY");
     // The modal must receive the actual WeekSummary — not a bare {priority, payload}
     // wrapper — so WeekSummaryModal renders real numbers.
-    expect(active?.payload?.toWeek).toBe(summary.toWeek);
-    expect(active?.payload?.cashAfter).toBe(summary.cashAfter);
+    if (active?.type !== "SUMMARY") throw new Error("expected SUMMARY modal");
+    expect(active.payload.toWeek).toBe(summary.toWeek);
+    expect(active.payload.cashAfter).toBe(summary.cashAfter);
   });
 
   it("creates a project", async () => {

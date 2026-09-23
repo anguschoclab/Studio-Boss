@@ -15,7 +15,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "bench": "vitest bench --run src/test/performance"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.11",

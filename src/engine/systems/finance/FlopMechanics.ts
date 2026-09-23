@@ -144,7 +144,7 @@ export function applyFlopPenalties(
     impacts.push({
       type: "INDUSTRY_UPDATE",
       payload: { update: { [`simMemory.flops.${ownerId}`]: history } },
-    } as unknown as StateImpact);
+    });
 
     if (shouldRestructureStudio(history, state.week)) {
       impacts.push({
@@ -178,7 +178,9 @@ export function applyFlopPenalties(
         payload: {
           rivalId: ownerId,
           update: {
-            cash: Math.max(0, isRival.cash - penalties.writeOffCost),
+            // Rivals may carry negative cash — distress/bankruptcy systems
+            // read the real balance, so flooring at 0 would hide insolvency.
+            cash: isRival.cash - penalties.writeOffCost,
           },
         },
       });

@@ -199,10 +199,16 @@ export const TalentLifecycleSystem = {
       }
     }
 
-    // 3. Replenishment (Maintain ~2,500 talent pool)
+    // 3. Replenishment (Maintain ~2,500 talent pool).
+    // Bounded per week so a depleted pool refills gradually instead of
+    // generating thousands of talents in a single synchronous tick.
     const targetPoolSize = 2500;
+    const maxWeeklyReplenishment = 100;
     currentSize = currentSize - retiredIds.length;
-    const needsReplacement = Math.max(0, targetPoolSize - currentSize);
+    const needsReplacement = Math.min(
+      maxWeeklyReplenishment,
+      Math.max(0, targetPoolSize - currentSize)
+    );
 
     if (needsReplacement > 0) {
       const newTalents: Talent[] = [];

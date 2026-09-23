@@ -31,7 +31,7 @@ export const createDistressSlice: StateCreator<GameStore, [], [], DistressSlice>
       {
         type: "INDUSTRY_UPDATE",
         payload: { update: { "industry.distressedOffers": remaining } },
-      } as unknown as import("@/engine/types").StateImpact,
+      },
     ]);
     set({ gameState: withRemoval });
     useUIStore.getState().resolveCurrentModal();
@@ -53,7 +53,7 @@ export const createDistressSlice: StateCreator<GameStore, [], [], DistressSlice>
       {
         type: "INDUSTRY_UPDATE",
         payload: { update: { "industry.distressedOffers": remaining } },
-      } as unknown as import("@/engine/types").StateImpact,
+      },
     ]);
     set({ gameState: withRemoval });
     useUIStore.getState().resolveCurrentModal();

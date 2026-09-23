@@ -1,10 +1,10 @@
-import {StateCreator} from "zustand";
-import {GameStore} from "../gameStore";
-import {RandomGenerator} from "@/engine/utils/rng";
-import {AudienceQuadrant, MarketingAngle, StateImpact} from "@/engine/types";
-import {calculateAudienceIndex} from "@/engine/systems/demographics";
-import {applyImpacts} from "@/engine/core/impactReducer";
-import {launchAwardsCampaign as launchAwardsCampaignEngine} from "@/engine/systems/awards/AwardsCampaign";
+import { StateCreator } from "zustand";
+import { GameStore } from "../gameStore";
+import { RandomGenerator } from "@/engine/utils/rng";
+import { AudienceQuadrant, MarketingAngle, StateImpact } from "@/engine/types";
+import { calculateAudienceIndex } from "@/engine/systems/demographics";
+import { applyImpacts } from "@/engine/core/impactReducer";
+import { launchAwardsCampaign as launchAwardsCampaignEngine } from "@/engine/systems/awards/AwardsCampaign";
 
 export interface CampaignTier {
   cost: number;
@@ -26,7 +26,11 @@ export const CAMPAIGN_TIERS: Record<string, CampaignTier> = {
 };
 
 export interface MarketingSlice {
-  launchAwardsCampaign: (projectId: string, tierKey: "Grassroots" | "Trade" | "Blitz", targetCategories?: string[]) => void;
+  launchAwardsCampaign: (
+    projectId: string,
+    tierKey: "Grassroots" | "Trade" | "Blitz",
+    targetCategories?: string[]
+  ) => void;
   launchMarketingCampaign: (
     projectId: string,
     tierKey: "Standard" | "Tentpole" | "Saturation",

@@ -322,7 +322,7 @@ export class WeekCoordinator {
     context.impacts.push(...SchedulingEngine.tick(state, context.rng));
 
     // 9. Festival resolution (ported from dead IndustryFilter)
-    context.impacts.push(resolveFestivals(state) as unknown as StateImpact);
+    context.impacts.push(resolveFestivals(state));
   }
 
   private static runTalentFilter(state: GameState, context: TickContext) {
@@ -394,7 +394,7 @@ export class WeekCoordinator {
               relationshipId: `${talentId}-${newAgent.id}`,
               relationship: newRelationship,
             },
-          } as unknown as StateImpact);
+          });
 
           context.impacts.push({
             type: "TALENT_UPDATED",
@@ -404,7 +404,7 @@ export class WeekCoordinator {
           context.impacts.push({
             type: "NEWS_ADDED",
             payload: createAgentHiringEvent(talent, newAgent, context.week),
-          } as unknown as StateImpact);
+          });
         }
       }
 
@@ -414,7 +414,7 @@ export class WeekCoordinator {
           context.impacts.push({
             type: "NEWS_ADDED",
             payload: createAgentFiringEvent(talent, talent.agentId, context.week),
-          } as unknown as StateImpact);
+          });
 
           context.impacts.push({
             type: "TALENT_UPDATED",
@@ -433,7 +433,7 @@ export class WeekCoordinator {
             context.impacts.push({
               type: "RELATIONSHIP_UPDATED",
               payload: { relationshipId, relationship: evolved },
-            } as unknown as StateImpact);
+            });
           }
         }
       }

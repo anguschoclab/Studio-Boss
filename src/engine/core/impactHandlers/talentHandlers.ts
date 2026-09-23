@@ -12,7 +12,13 @@ export function handleTalentUpdated(state: GameState, impact: TalentUpdateImpact
   const talents = { ...state.entities.talents };
   const talent = talents[talentId];
   if (talent) {
-    talents[talentId] = { ...talent, ...update };
+    const merged = { ...talent, ...update };
+    // An explicit `undefined` in the update clears the field entirely, so the
+    // entity serializes identically to a never-set field (no phantom keys).
+    for (const k of Object.keys(update) as (keyof typeof update)[]) {
+      if (update[k] === undefined) delete merged[k];
+    }
+    talents[talentId] = merged;
   }
   return {
     ...state,

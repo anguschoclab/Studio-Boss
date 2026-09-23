@@ -1,7 +1,7 @@
 import {describe, it, expect, vi, beforeEach} from "vitest";
-import {tickDistressCascade, stage1IPFireSale, stage2AssetLiquidation} from "@/engine/systems/industry/DistressCascade";
+import {tickDistressCascade, stage2AssetLiquidation} from "@/engine/systems/industry/DistressCascade";
 import type {DistressEvent} from "@/engine/systems/industry/DistressCascade";
-import type {GameState, StateImpact} from "@/engine/types";
+import type {StateImpact} from "@/engine/types";
 import {defaultSimMemory} from "@/engine/core/simMemory";
 import {createMockGameState, createMockRival} from "./generators/mockFactory";
 import * as utils from "@/engine/utils";

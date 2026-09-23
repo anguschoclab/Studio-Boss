@@ -1,23 +1,33 @@
-import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import {RouterProvider, createRouter, createRoute, createRootRoute, Outlet} from "@tanstack/react-router";
-import {Toaster as Sonner} from "@/components/ui/sonner";
-import {Toaster} from "@/components/ui/toaster";
-import {TooltipProvider} from "@/components/ui/tooltip";
-import {useArchetypeTheme} from "@/hooks/useArchetypeTheme";
-import {useKeyboardShortcuts} from "@/hooks/useKeyboardShortcuts";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  RouterProvider,
+  createRouter,
+  createRoute,
+  createRootRoute,
+  Outlet,
+} from "@tanstack/react-router";
+import { Suspense, lazy } from "react";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { useArchetypeTheme } from "@/hooks/useArchetypeTheme";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import TitleScreen from "./pages/TitleScreen";
-import NewGame from "./pages/NewGame";
-import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
+
+const NewGame = lazy(() => import("./pages/NewGame"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
 
 const queryClient = new QueryClient();
 
-import {GlobalThemeProvider} from "./components/Theme/GlobalThemeProvider";
+import { GlobalThemeProvider } from "./components/Theme/GlobalThemeProvider";
 
 const rootRoute = createRootRoute({
   component: () => (
     <GlobalThemeProvider>
-      <Outlet />
+      <Suspense fallback={null}>
+        <Outlet />
+      </Suspense>
       <Toaster />
       <Sonner />
     </GlobalThemeProvider>

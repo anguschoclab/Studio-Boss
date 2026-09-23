@@ -9,11 +9,23 @@
 
 const REQUEST_TIMEOUT_MS = 30_000;
 
+/** Thrown when the save worker is unavailable (e.g. no Worker support). */
+export class PersistenceUnavailableError extends Error {
+  constructor() {
+    super("Persistence worker unavailable — saves are not persisted");
+    this.name = "PersistenceUnavailableError";
+  }
+}
+
 class PersistenceService {
   private worker: Worker | null = null;
   private pendingPromises: Map<
     number,
-    { resolve: (data: any) => void; reject: (err: Error) => void; timer: ReturnType<typeof setTimeout> }
+    {
+      resolve: (data: any) => void;
+      reject: (err: Error) => void;
+      timer: ReturnType<typeof setTimeout>;
+    }
   > = new Map();
   private requestCounter = 0;
 
@@ -62,9 +74,11 @@ class PersistenceService {
 
   /**
    * Save the current game state to a named slot (.sb file).
+   * Resolves `true` on success; rejects on worker error/timeout; throws
+   * PersistenceUnavailableError when no worker exists.
    */
   async save(slotId: string | number, state: any): Promise<boolean> {
-    if (!this.worker) return false;
+    if (!this.worker) throw new PersistenceUnavailableError();
     return this.request("SAVE_GAME", { slotId, state });
   }
 

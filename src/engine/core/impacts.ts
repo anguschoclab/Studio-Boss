@@ -4,7 +4,7 @@ import type {NewsImpact, FundsImpact, FundsDeductedImpact, ProjectUpdateImpact, 
 /**
  * Typed impact constructor functions.
  *
- * Replaces `as any` / `as unknown as StateImpact` casts at call sites
+ * Replaces `as any` / `` casts at call sites
  * with factory functions that produce correctly-typed impacts.
  */
 export const impacts = {

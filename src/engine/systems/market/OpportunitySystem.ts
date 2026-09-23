@@ -26,7 +26,7 @@ export const OpportunitySystem = {
         impacts.push({
           type: "OPPORTUNITY_UPDATED", // We'll use this to signal removal in the future or just handle it below
           payload: { opportunityId: opp.id, action: "EXPIRE" },
-        } as unknown as StateImpact);
+        });
         return;
       }
 
@@ -124,7 +124,7 @@ export const OpportunitySystem = {
       impacts.push({
         type: "INDUSTRY_UPDATE",
         payload: { "market.opportunities": [...remainingOpportunities, ...newOpps] },
-      } as unknown as StateImpact);
+      });
     }
 
     return impacts;

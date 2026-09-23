@@ -236,7 +236,7 @@ export class HeadlessController {
             impacts.push({
               type: "PROJECT_CREATED",
               payload: { project: nextProject },
-            } as unknown as StateImpact);
+            });
 
             // On its 3rd season, promote the line to a franchise (if not already).
             if (currentSeason + 1 >= 3 && !(project as unknown as Record<string, unknown>).franchiseId) {
@@ -257,7 +257,7 @@ export class HeadlessController {
                     },
                   },
                 },
-              } as unknown as StateImpact);
+              });
               impacts.push({
                 type: "PROJECT_UPDATED",
                 payload: { projectId: project.id, update: { franchiseId: fid } },
@@ -415,14 +415,14 @@ export class HeadlessController {
             description: `${r.name} has posted negative cash for over a year and is now seeking a buyer or restructuring.`,
             category: "business",
           },
-        } as unknown as StateImpact);
+        });
         cashStreaks[r.id] = 0;
       }
     });
     impacts.push({
       type: "INDUSTRY_UPDATE",
       payload: { update: { "simMemory.headlessCashStreaks": cashStreaks } },
-    } as unknown as StateImpact);
+    });
 
     return impacts;
   }
@@ -644,7 +644,7 @@ export class HeadlessController {
     return {
       type: "PROJECT_CREATED",
       payload: { project },
-    } as unknown as StateImpact;
+    };
   }
 
   private static tickPlayerAwardsCampaigns(state: GameState, rng: RandomGenerator): StateImpact[] {
@@ -696,7 +696,7 @@ export class HeadlessController {
       impacts.push({
         type: "FUNDS_CHANGED",
         payload: { amount: -cost },
-      } as unknown as StateImpact);
+      });
 
       // Boost project buzz (capped at 100)
       const newBuzz = Math.min(100, (project.buzz ?? 50) + buzzBonus);
@@ -713,7 +713,7 @@ export class HeadlessController {
             description: `Critics question the sincerity of the campaign given the project's reception.`,
             category: "scandal",
           },
-        } as unknown as StateImpact);
+        });
       }
     }
 

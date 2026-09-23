@@ -100,7 +100,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
             currentFee: Math.floor(talent.fee * breakout.feeMultiplier),
             competingStudios: Object.keys(state.entities.rivals || {}).slice(0, 3),
           },
-        } as unknown as StateImpact);
+        });
       }
     }
   }
@@ -152,7 +152,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
               booking,
               notification: `${guest.name} available for guest appearance on "${series.title}"`,
             },
-          } as unknown as StateImpact);
+          });
 
           // News about exciting casting
           impacts.push({
@@ -327,7 +327,7 @@ export function acceptGuestStarBooking(
         isGuestAppearance: true,
       } as unknown as import("../../types").Contract,
     },
-  } as unknown as StateImpact);
+  });
 
   // News
   const series = state.entities.projects?.[booking.seriesId];
@@ -395,7 +395,7 @@ export function signBreakoutStar(
           fee: offerFee,
         } as unknown as Partial<Talent>,
       },
-    } as unknown as StateImpact);
+    });
 
     // News
     impacts.push({

@@ -1,5 +1,5 @@
 import {describe, it, expect} from "vitest";
-import {applyFlopPenalties, processFlops, FlopSeverity} from "@/engine/systems/finance/FlopMechanics";
+import {applyFlopPenalties} from "@/engine/systems/finance/FlopMechanics";
 import {defaultSimMemory} from "@/engine/core/simMemory";
 import type {GameState, Project} from "@/engine/types";
 

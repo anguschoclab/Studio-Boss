@@ -107,7 +107,7 @@ export function runUpfronts(state: GameState, rng: RandomGenerator): StateImpact
         category: "development",
         publication: "Deadline",
       },
-    } as unknown as StateImpact);
+    });
   }
 
   return impacts;

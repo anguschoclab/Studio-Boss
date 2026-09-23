@@ -1,5 +1,4 @@
 import {describe, it, expect} from "vitest";
-import {RandomGenerator} from "@/engine/utils/rng";
 import {createMockGameState, createMockRival} from "../generators/mockFactory";
 import {selectStrategicBuyer} from "@/engine/systems/industry/DistressCascade";
 import type {RivalStudio, Franchise, IPAsset, Project} from "@/engine/types";
@@ -15,7 +14,7 @@ function createBuyer(overrides: Partial<RivalStudio> = {}): RivalStudio {
   });
 }
 
-function createFranchise(id: string, ownerId: string, genre: string = "Action"): Franchise {
+function createFranchise(id: string, ownerId: string, _genre: string = "Action"): Franchise {
   return {
     id,
     name: `Franchise ${id}`,

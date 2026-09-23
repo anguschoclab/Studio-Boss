@@ -80,7 +80,7 @@ export function tickStudioIdentity(state: GameState): StateImpact[] {
     {
       type: "SYSTEM_TICK" as unknown as "STUDIO_CULTURE_UPDATED",
       payload: { studioCulture: updatedCulture },
-    } as unknown as StateImpact,
+    },
   ];
 }
 

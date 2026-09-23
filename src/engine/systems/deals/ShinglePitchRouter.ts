@@ -189,7 +189,7 @@ export function tickShinglePitchRouter(state: GameState, rng: RandomGenerator): 
           lastPitchWeek: state.week,
         },
       },
-    } as unknown as StateImpact);
+    });
   }
   return impacts;
 }

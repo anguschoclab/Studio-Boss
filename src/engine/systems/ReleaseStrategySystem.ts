@@ -86,7 +86,7 @@ export function tickReleaseStrategy(state: GameState): StateImpact[] {
           priority: 90,
           payload: { projectId: project.id, projectTitle: project.title },
         },
-      } as unknown as StateImpact);
+      });
     }
   }
 

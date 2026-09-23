@@ -278,7 +278,7 @@ export function tickMarketingPromotionSystem(
             talentId: talent.id,
             appearance,
           },
-        } as unknown as StateImpact);
+        });
 
         // Apply star meter boost
         if (appearance.starMeterBoost !== 0) {
@@ -326,7 +326,7 @@ export function tickMarketingPromotionSystem(
                 careerImpact: -5,
               },
             },
-          } as unknown as StateImpact);
+          });
         }
       }
     }
@@ -345,7 +345,7 @@ export function tickMarketingPromotionSystem(
             talentId: talent.id,
             photoshoot,
           },
-        } as unknown as StateImpact);
+        });
 
         // Apply boosts when published
         if (photoshoot.publicationWeek === state.week) {
@@ -446,13 +446,13 @@ export function tickMarketingPromotionSystem(
                 tour,
                 notification: `Press tour launched for "${project.title}" with ${projectTalents.length} talents`,
               },
-            } as unknown as StateImpact);
+            });
 
             // Deduct cost
             impacts.push({
               type: "FUNDS_DEDUCTED",
               cashChange: -tour.totalCost,
-            } as unknown as StateImpact);
+            });
 
             // News about tour
             impacts.push({

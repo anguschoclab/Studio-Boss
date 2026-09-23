@@ -299,7 +299,7 @@ function processProjectImpacts(
         },
       },
     },
-  } as unknown as StateImpact);
+  });
 
   // Add news about production halt
   impacts.push({
@@ -459,7 +459,7 @@ export function tickDeathSystem(state: GameState, rng: RandomGenerator): StateIm
             deathType: deathEvent.type,
             deathWeek: state.week,
           },
-        } as unknown as StateImpact);
+        });
 
         // Check if talent was owned by AI studio
         const owner = getTalentOwner(talent, state);

@@ -70,12 +70,33 @@ describe("saveLoad", () => {
 
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
-    await saveGame(5, mockState);
+    const result = await saveGame(5, mockState);
 
+    expect(result.ok).toBe(false);
     expect(consoleSpy).toHaveBeenCalledWith(
       expect.stringContaining("Failed to save game state"),
       expect.any(Error)
     );
     consoleSpy.mockRestore();
+  });
+
+  it("reports worker-unavailable without logging an error", async () => {
+    const mockState = initializeGame("Workerless Studio", "indie");
+    const err = new Error("no worker");
+    err.name = "PersistenceUnavailableError";
+    vi.mocked(persistenceService.save).mockRejectedValue(err);
+
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const result = await saveGame(5, mockState);
+
+    expect(result).toMatchObject({ ok: false, reason: "worker-unavailable" });
+    expect(consoleSpy).not.toHaveBeenCalled();
+    consoleSpy.mockRestore();
+  });
+
+  it("returns ok on successful save", async () => {
+    const mockState = initializeGame("Ok Studio", "indie");
+    vi.mocked(persistenceService.save).mockResolvedValue(true);
+    expect(await saveGame(5, mockState)).toEqual({ ok: true });
   });
 });

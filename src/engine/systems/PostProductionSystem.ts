@@ -66,7 +66,7 @@ export function tickPostProduction(state: GameState, rng: RandomGenerator): Stat
           priority: 40,
           payload: { projectId: project.id, projectTitle: project.title },
         },
-      } as unknown as StateImpact);
+      });
     }
 
     // ── Decrement counter ────────────────────────────────────────────────────

@@ -43,7 +43,7 @@ function setupState(
   return state;
 }
 
-function findImpact(impacts: StateImpact[], type: string): StateImpact | undefined {
+function _findImpact(impacts: StateImpact[], type: string): StateImpact | undefined {
   return impacts.find((i) => i.type === type);
 }
 

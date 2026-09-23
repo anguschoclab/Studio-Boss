@@ -42,7 +42,7 @@ export function tickPilots(state: GameState, rng: RandomGenerator): StateImpact[
             category: "development",
             week: state.week,
           },
-        } as unknown as StateImpact);
+        });
       } else {
         impacts.push({
           type: "PROJECT_UPDATED",
@@ -60,7 +60,7 @@ export function tickPilots(state: GameState, rng: RandomGenerator): StateImpact[
             category: "cancellation",
             week: state.week,
           },
-        } as unknown as StateImpact);
+        });
       }
     }
   }

@@ -1,10 +1,10 @@
-import {useState, useEffect} from "react";
-import {Dialog, DialogContent} from "@/components/ui/dialog";
-import {Button} from "@/components/ui/button";
-import {useGameStore} from "@/store/gameStore";
-import {useUIStore} from "@/store/uiStore";
-import {Trophy, Star, Sparkles, ChevronRight} from "lucide-react";
-import {motion, AnimatePresence} from "framer-motion";
+import { useState, useEffect } from "react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
+import { Trophy, Star, Sparkles, ChevronRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export const AwardsCeremonyModal = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
@@ -80,33 +80,22 @@ export const AwardsCeremonyModal = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-                {awards.map(
-                  (
-                    award: {
-                      id: string;
-                      projectId: string;
-                      category: string;
-                      targetName: string;
-                      isPrestige?: boolean;
-                    },
-                    i: number
-                  ) => (
-                    <motion.div
-                      key={award.id}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.1 }}
-                      className="bg-stone-900/50 border border-stone-800 p-4 rounded-none flex flex-col gap-1 hover:border-amber-500/50 transition-colors"
-                    >
-                      <span className="text-xs font-black text-amber-500/60 uppercase tracking-tighter">
-                        {award.category}
-                      </span>
-                      <span className="text-lg font-bold text-white leading-tight">
-                        {getProjectTitle(award.projectId)}
-                      </span>
-                    </motion.div>
-                  )
-                )}
+                {awards.map((award, i) => (
+                  <motion.div
+                    key={award.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.1 }}
+                    className="bg-stone-900/50 border border-stone-800 p-4 rounded-none flex flex-col gap-1 hover:border-amber-500/50 transition-colors"
+                  >
+                    <span className="text-xs font-black text-amber-500/60 uppercase tracking-tighter">
+                      {award.category}
+                    </span>
+                    <span className="text-lg font-bold text-white leading-tight">
+                      {getProjectTitle(award.projectId)}
+                    </span>
+                  </motion.div>
+                ))}
               </div>
 
               <Button

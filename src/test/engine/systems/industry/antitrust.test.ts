@@ -1,6 +1,5 @@
 import {describe, it, expect, vi, beforeEach} from "vitest";
 import {tickAntitrust, isAcquirerBlockedByAntitrust} from "@/engine/systems/industry/Antitrust";
-import {GameState} from "@/engine/types";
 import {createMockGameState, createMockRival} from "../../generators/mockFactory";
 import {defaultSimMemory} from "@/engine/core/simMemory";
 

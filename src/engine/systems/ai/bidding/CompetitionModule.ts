@@ -131,7 +131,7 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
             category: "talent",
             week: state.week,
           },
-        } as unknown as StateImpact);
+        });
       }
     }
   });

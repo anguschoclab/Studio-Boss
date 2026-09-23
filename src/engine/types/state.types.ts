@@ -1,5 +1,5 @@
-import {Franchise} from "./franchise.types";
-import {Project} from "./project.types";
+import { Franchise } from "./franchise.types";
+import { Project } from "./project.types";
 
 export interface WeeklyFinancialReport {
   week: number;
@@ -340,11 +340,27 @@ export interface SyncMAFundsImpact extends BaseImpact {
 }
 export interface SystemTickImpact extends BaseImpact {
   type: "SYSTEM_TICK";
-  payload: { week?: number; tickCount?: number; __studioUpdate?: Record<string, unknown>; studioIdentity?: Record<string, unknown>; newAchievementId?: string; deathEvents?: unknown[]; deathCount?: number };
+  payload: {
+    week?: number;
+    tickCount?: number;
+    __studioUpdate?: Record<string, unknown>;
+    studioIdentity?: Record<string, unknown>;
+    newAchievementId?: string;
+    deathEvents?: unknown[];
+    deathCount?: number;
+  };
 }
 export interface ModalTriggeredImpact extends BaseImpact {
   type: "MODAL_TRIGGERED";
-  payload: { modalType: string; priority?: number; payload?: unknown; violationId?: string; projectId?: string; talentId?: string; options?: unknown[] };
+  payload: {
+    modalType: string;
+    priority?: number;
+    payload?: unknown;
+    violationId?: string;
+    projectId?: string;
+    talentId?: string;
+    options?: unknown[];
+  };
 }
 export interface PilotGraduatedImpact extends BaseImpact {
   type: "PILOT_GRADUATED";
@@ -408,7 +424,11 @@ export interface TalentRemovedImpact extends BaseImpact {
 }
 export interface CastingConstraintCheckedImpact extends BaseImpact {
   type: "CASTING_CONSTRAINT_CHECKED";
-  payload: { check: unknown; comfortLevel?: import("./casting.types").TalentComfortLevel; premiumRates?: import("./casting.types").ComfortPremiumRates };
+  payload: {
+    check: unknown;
+    comfortLevel?: import("./casting.types").TalentComfortLevel;
+    premiumRates?: import("./casting.types").ComfortPremiumRates;
+  };
 }
 export interface MedicalLeaveTriggeredImpact extends BaseImpact {
   type: "MEDICAL_LEAVE_TRIGGERED";
@@ -420,7 +440,12 @@ export interface RelationshipFormedImpact extends BaseImpact {
 }
 export interface RelationshipUpdatedImpact extends BaseImpact {
   type: "RELATIONSHIP_UPDATED";
-  payload: { key?: string; relationship?: import("./relationship.types").TalentRelationship; relationshipId?: string; update?: Partial<import("./relationship.types").TalentRelationship> };
+  payload: {
+    key?: string;
+    relationship?: import("./relationship.types").TalentRelationship;
+    relationshipId?: string;
+    update?: Partial<import("./relationship.types").TalentRelationship>;
+  };
 }
 export interface CliqueFormedImpact extends BaseImpact {
   type: "CLIQUE_FORMED";
@@ -460,11 +485,19 @@ export interface PhotoshootCreatedImpact extends BaseImpact {
 }
 export interface PressTourCreatedImpact extends BaseImpact {
   type: "PRESS_TOUR_CREATED";
-  payload: { tour: import("./marketing.types").PressTour; projectId?: string; notification?: string };
+  payload: {
+    tour: import("./marketing.types").PressTour;
+    projectId?: string;
+    notification?: string;
+  };
 }
 export interface BreakoutStarCreatedImpact extends BaseImpact {
   type: "BREAKOUT_STAR_CREATED";
-  payload: { breakoutId?: string; breakout: import("./discovery.types").BreakoutStar; notification?: string };
+  payload: {
+    breakoutId?: string;
+    breakout: import("./discovery.types").BreakoutStar;
+    notification?: string;
+  };
 }
 export interface BreakoutStarUpdatedImpact extends BaseImpact {
   type: "BREAKOUT_STAR_UPDATED";
@@ -504,7 +537,11 @@ export interface FormatLicensedImpact extends BaseImpact {
 }
 export interface DealUpdatedImpact extends BaseImpact {
   type: "DEAL_UPDATED";
-  payload: { dealId?: string; action: "add" | "expire" | "terminate"; deal: import("./talent.types").TalentPact };
+  payload: {
+    dealId?: string;
+    action: "add" | "expire" | "terminate";
+    deal: import("./talent.types").TalentPact;
+  };
 }
 export interface CastingConstraintViolationImpact extends BaseImpact {
   type: "CASTING_CONSTRAINT_VIOLATION";
@@ -512,11 +549,22 @@ export interface CastingConstraintViolationImpact extends BaseImpact {
 }
 export interface CastingPremiumDemandImpact extends BaseImpact {
   type: "CASTING_PREMIUM_DEMAND";
-  payload: { talentId: string; projectId: string; requirement: unknown; requestedPremium: number; notification: string };
+  payload: {
+    talentId: string;
+    projectId: string;
+    requirement: unknown;
+    requestedPremium: number;
+    notification: string;
+  };
 }
 export interface CastingAlternativeSuggestedImpact extends BaseImpact {
   type: "CASTING_ALTERNATIVE_SUGGESTED";
-  payload: { projectId: string; originalTalentId: string; alternativeTalentIds: string[]; requirement: unknown };
+  payload: {
+    projectId: string;
+    originalTalentId: string;
+    alternativeTalentIds: string[];
+    requirement: unknown;
+  };
 }
 export interface ContractAddedImpact extends BaseImpact {
   type: "CONTRACT_ADDED";
@@ -533,6 +581,16 @@ export interface IndustryRumorsUpdatedImpact extends BaseImpact {
 export interface IpUpdatedImpact extends BaseImpact {
   type: "IP_UPDATED";
   payload: { assetId: string; update: Partial<IPAsset> };
+}
+
+/**
+ * Escape-hatch impact for emitters whose payload doesn't (yet) have a declared
+ * interface in the union. Prefer adding a typed member over relying on this.
+ */
+export interface GenericImpact extends BaseImpact {
+  type: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  payload?: any;
 }
 
 export type StateImpact =
@@ -601,4 +659,5 @@ export type StateImpact =
   | HeadlinePostedImpact
   | IndustryRumorsUpdatedImpact
   | IpUpdatedImpact
+  | GenericImpact
   | (BaseImpact & { type?: undefined }); // The "Bag" impact

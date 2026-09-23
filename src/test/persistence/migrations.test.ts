@@ -3,33 +3,39 @@ import {migrateSave} from "@/engine/migrations";
 import {CURRENT_SAVE_VERSION} from "@/engine/core/simMemory";
 import type {GameState} from "@/engine/types";
 
-describe("migrateSave", () => {
-  it("upgrades a v1 save (no saveVersion, no simMemory) to current", () => {
+describe("migrateSave (zero-backward-compatibility)", () => {
+  it("rejects saves older than the current version", () => {
     const oldSave = { week: 30, finance: { cash: 100 } } as unknown as GameState;
-    const migrated = migrateSave(oldSave);
-    expect(migrated.saveVersion).toBe(CURRENT_SAVE_VERSION);
-    expect(migrated.simMemory?.antitrust.lastActionWeek).toBe(-9999);
-    expect(migrated.simMemory?.headlessCashStreaks).toEqual({});
-    expect(migrated.week).toBe(30);
+    expect(() => migrateSave(oldSave)).toThrow(/Unsupported save version/);
   });
 
-  it("leaves a current-version save unchanged (idempotent)", () => {
-    const fresh = migrateSave({ week: 1 } as unknown as GameState);
-    const again = migrateSave(fresh);
-    expect(again).toEqual(fresh);
+  it("rejects versioned saves below CURRENT_SAVE_VERSION", () => {
+    expect(() =>
+      migrateSave({ week: 30, saveVersion: CURRENT_SAVE_VERSION - 1 } as unknown as GameState)
+    ).toThrow(/Unsupported save version/);
   });
 
-  it("preserves existing simMemory if a save already has one", () => {
+  it("rejects saves from the future", () => {
+    expect(() =>
+      migrateSave({ week: 30, saveVersion: CURRENT_SAVE_VERSION + 1 } as unknown as GameState)
+    ).toThrow(/Unsupported save version/);
+  });
+
+  it("returns a current-version save unchanged (idempotent)", () => {
     const save = {
-      week: 5,
-      saveVersion: 1,
-      simMemory: {
-        antitrust: { lastActionWeek: 7 },
-        distress: { negativeStreak: {}, lastActionWeek: {}, stageActionCount: {} },
-        flops: {},
-        headlessCashStreaks: {},
-      },
+      week: 1,
+      saveVersion: CURRENT_SAVE_VERSION,
+      simMemory: { antitrust: { lastActionWeek: 7 } },
     } as unknown as GameState;
-    expect(migrateSave(save).simMemory?.antitrust.lastActionWeek).toBe(7);
+    expect(migrateSave(save)).toBe(save);
+  });
+
+  it("backfills simMemory on a current-version save missing it", () => {
+    const save = { week: 5, saveVersion: CURRENT_SAVE_VERSION } as unknown as GameState;
+    const normalized = migrateSave(save);
+    expect(normalized.saveVersion).toBe(CURRENT_SAVE_VERSION);
+    expect(normalized.simMemory?.antitrust.lastActionWeek).toBe(-9999);
+    expect(normalized.simMemory?.headlessCashStreaks).toEqual({});
+    expect(normalized.week).toBe(5);
   });
 });

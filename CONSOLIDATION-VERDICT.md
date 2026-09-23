@@ -203,3 +203,38 @@ Triaged PRs #820–#837 (12 cherry-picked, 5 superseded/rejected, 1 approved-as-
 - `saveSchema` remains passthrough on `entities`/`market`/`industry` — malformed-but-valid saves could still crash edge paths.
 - 58 lint warnings remain (pre-existing class; none new).
 - `GEMINI_API_KEY` in git history needs rotation — untracked going forward but the old value is recoverable from history.
+
+---
+
+## Round-3 Continuation — Deferred & Optional Items Implemented
+
+All items previously deferred or marked out-of-scope have been implemented under the zero-backward-compatibility mandate.
+
+| Item | Outcome |
+| ------ | -------- |
+| F-055 impact union | **Done** — `GenericImpact` (`type: string; payload?`) added to `StateImpact`; all 49 `as unknown as StateImpact` casts removed across 23 emitter files |
+| F-067 rng threading | **Disproven** — `WeekCoordinator.execute` calls `setDeterministicSeed(gameSeed + tickCount)` before the pipeline, so `randRange` draws are already deterministic per-tick; UI draws between ticks are wiped by reseed. Verified, no change needed |
+| F-056 saveSchema | **Done** — `entities` now requires `projects`/`releasedProjectIds`/`talents`/`contracts`/`rivals`/contract indexes; `market` validates `opportunities`/`buyers`; `industry` validates `families`/`agencies`/`agents`; `studio.internal` and `finance` structure required; `saveVersion` now required |
+| F-057 migrations | **Done** — migration framework deleted; `migrateSave` throws on any version ≠ `CURRENT_SAVE_VERSION`, backfills `simMemory` defensively. Tests rewritten for the zero-compat policy |
+| F-009 tabs ref warning | **Fixed** — root cause: framer-motion v12 `PopChild` reads `props.ref` (React-18 dev warning). `AnimatePresence` removed from `TabsContent`; `asChild` now composes `motion.div` directly. Regression test: `src/test/components/ui/tabs.test.tsx` |
+| F-017 bundle size | **Fixed** — routes `NewGame`/`Dashboard` lazy; all 9 tab panels lazy; `manualChunks` splits react/motion/charts/radix/icons/vendor/engine. Largest chunk now 363 kB (was 2,071 kB); zero >500 kB warnings |
+| F-072 medicalLeave undefined | **Fixed** — `handleTalentUpdated` treats explicit `undefined` as field deletion; entities serialize identically after round-trip |
+| F-073 rival cash floor | **Fixed** — `Math.max(0, …)` floors removed in `FlopMechanics` + `AgentBrain`; rivals can go negative, which `DistressCascade` stage-1 (`cash < 0`) requires |
+| F-075 replenishment spike | **Fixed** — bounded to `maxWeeklyReplenishment = 100` talents/week (was: full 2,500-pool deficit in one tick) |
+| F-085 modal payloads | **Done** — `ModalPayloadMap` discriminated union keyed by `ModalType`; `QueuedModal` is now a mapped discriminated union so `type` narrows `payload`. All modals re-verified against emitted shapes |
+| F-086 workerless save | **Done** — `PersistenceUnavailableError` thrown; `saveGame` returns `SaveResult`; `saveToSlot` surfaces a toast on failure |
+| STRATEGY_CHOICE | **Removed** — never emitted; deleted from `ModalType` |
+| CASTING_CONSTRAINT | **Implemented** — `CastingConstraintModal` + `resolveCastingConstraint` slice action (applies cashCost/prestigeCost/weeksDelay/recast); registered in `ModalManager` |
+| FESTIVAL_MARKET crash | **Fixed** — modal expected `payload.project`, emitter sent `{results, festivalBody, week}`; rendered null forever → queue jam. Rewired to real results payload with accept/decline + submission status settlement |
+| Vestigial `src/routes/` | **Removed** — `routeTree.gen.ts` + 7 route files deleted; inline `App.tsx` router is authoritative |
+| docs/codebase_audit.md | **Rewritten** — reflects slices, normalized entities, impact pipeline, persistence policy, residual debt |
+| bench script | **Added** — `bun run bench` → `vitest bench src/test/performance` |
+| Lint warnings | **0 remaining** (was 58) — all unused vars/imports/directives swept; 2 real bugs found in the process (write-only `rng` test declarations) |
+| Latent bug: CRISIS without `projectId` | **Fixed** — `ratingEditing` emits CRISIS sans `projectId`; `CrisisModal` previously indexed `projects[undefined]` — now guards and auto-resolves |
+
+### Residual debt (documented, not silently ignored)
+
+- ~90 `as any` / file-level `no-explicit-any` disables remain across ~40 files (heaviest: `talentSlice.ts`, `projectSlice.ts`, `OrganicEventEnhancer.ts`, `ProductionEnhancementSystem.ts`, `RivalSpawner.ts`). These are genuine shape friction between loose engine object literals and strict `GameState` interfaces — fixing them properly means declaring real union members/fields, not renames.
+- `GenericImpact` accepts `payload?: any` by design — registered types are still preferred; unregistered literals hit the `console.warn` passthrough.
+- `saveSchema` validates structure, not per-entity record contents.
+- `GEMINI_API_KEY` still recoverable from git history — **user must rotate**.

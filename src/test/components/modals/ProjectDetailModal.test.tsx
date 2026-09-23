@@ -38,7 +38,7 @@ describe("ProjectDetailModal", () => {
   const mockGreenlightProject = vi.fn();
   const mockLaunchMarketingCampaign = vi.fn();
   const mockRenewProject = vi.fn();
-  const mockExploitFranchise = vi.fn();
+  const _mockExploitFranchise = vi.fn();
   const mockLaunchAwardsCampaign = vi.fn();
   const mockSubmitToFestival = vi.fn();
 

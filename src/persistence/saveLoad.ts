@@ -1,20 +1,28 @@
-import {GameState, SaveSlotMeta} from "@/engine/types";
-import {persistenceService} from "./PersistenceService";
-import {migrateSave} from "@/engine/migrations";
+import { GameState, SaveSlotMeta } from "@/engine/types";
+import { persistenceService } from "./PersistenceService";
+import { migrateSave } from "@/engine/migrations";
 
 /**
  * High-level orchestration for Game State Persistence.
  * This bridges the UI/Store to the background Save Worker.
  */
 
-export async function saveGame(slot: number, state: GameState): Promise<void> {
+export type SaveResult =
+  { ok: true } | { ok: false; reason: "worker-unavailable" | "error"; error?: unknown };
+
+export async function saveGame(slot: number, state: GameState): Promise<SaveResult> {
   try {
     // 1. Offload to background worker (OPFS)
     await persistenceService.save(slot, { ...state, savedAt: Date.now() });
+    return { ok: true };
 
     // 2. We skip synchronous metadata cache for now, or we could store it in OPFS too.
   } catch (e) {
+    if (e instanceof Error && e.name === "PersistenceUnavailableError") {
+      return { ok: false, reason: "worker-unavailable", error: e };
+    }
     console.error("[SaveLoad] Failed to save game state", e);
+    return { ok: false, reason: "error", error: e };
   }
 }
 

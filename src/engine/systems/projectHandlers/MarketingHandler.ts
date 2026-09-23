@@ -97,7 +97,7 @@ export function handleMarketingPhase(
                 weekDiscovered: 0,
               },
             },
-          } as unknown as StateImpact);
+          });
           newBuzz = Math.max(0, p.buzz - 15);
         }
       }

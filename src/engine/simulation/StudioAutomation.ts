@@ -216,7 +216,7 @@ export class StudioAutomation {
             activeCrisis: null,
           },
         },
-      } as unknown as StateImpact);
+      });
 
       // Attribute prestige to the crew on rival releases too — without this the
       // talent pool only gains prestige from ~1/week player releases and the whole
@@ -256,7 +256,7 @@ export class StudioAutomation {
         category: "business",
         week: state.week,
       },
-    } as unknown as StateImpact);
+    });
 
     impacts.push({
       type: "RIVAL_UPDATED",
@@ -277,7 +277,7 @@ export class StudioAutomation {
           ownerStudioId: getPlayerId(state),
         },
       },
-    } as unknown as StateImpact);
+    });
   }
 
   private static triggerPlatformLaunch(
@@ -295,7 +295,7 @@ export class StudioAutomation {
         description: `Aiming for vertical integration, ${rival.name} has invested $200M in a new SVOD platform.`,
         category: "business",
       },
-    } as unknown as StateImpact);
+    });
     impacts.push({
       type: "RIVAL_UPDATED",
       payload: { rivalId: rival.id, update: { cash: (Number(rival.cash) || 0) - cost } },
@@ -364,7 +364,7 @@ export class StudioAutomation {
     impacts.push({
       type: "PROJECT_CREATED",
       payload: { project },
-    } as unknown as StateImpact);
+    });
   }
 
   /**

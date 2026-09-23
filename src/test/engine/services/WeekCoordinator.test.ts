@@ -1,16 +1,14 @@
 import {describe, it, expect, beforeEach} from "vitest";
 import {WeekCoordinator} from "@/engine/services/WeekCoordinator";
 import {GameState} from "@/engine/types";
-import {RandomGenerator} from "@/engine/utils/rng";
+
 import {createMockGameState} from "@/test/utils/mockFactories";
 
 describe("WeekCoordinator", () => {
   let state: GameState;
-  let rng: RandomGenerator;
 
   beforeEach(() => {
     state = createMockGameState();
-    rng = new RandomGenerator(42);
   });
 
   it("should execute all filters and return new state", () => {

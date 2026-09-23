@@ -129,6 +129,6 @@ export class RumorProcessor {
       },
       // Collected by WeekCoordinator.buildSummary into WeekSummary.newsEvents
       newsEvents,
-    } as unknown as StateImpact; // Using cast for modular impact
+    }; // Using cast for modular impact
   }
 }

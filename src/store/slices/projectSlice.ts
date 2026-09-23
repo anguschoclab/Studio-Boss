@@ -33,6 +33,10 @@ export interface ProjectSlice {
     extraProjectUpdates?: Partial<Project>
   ) => void;
   resolveProjectCrisis: (projectId: string, optionIndex: number) => void;
+  resolveCastingConstraint: (
+    payload: import("@/store/uiStore").ModalPayloadMap["CASTING_CONSTRAINT"],
+    optionId: string
+  ) => void;
   exploitFranchise: (projectId: string) => void;
   acquireAndRebootIP: (ipAssetId: string) => void;
   developFromOwnedIP: (ipAssetId: string) => void;
@@ -431,6 +435,47 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
         } as any,
       };
     });
+  },
+
+  resolveCastingConstraint: (payload, optionId) => {
+    const state = get().gameState;
+    if (!state) return;
+    const option = payload.options.find((o) => o.id === optionId);
+    if (!option) return;
+
+    const impacts: StateImpact[] = [];
+    if (option.cashCost && option.cashCost > 0) {
+      impacts.push({ type: "FUNDS_DEDUCTED", payload: { amount: option.cashCost } });
+    }
+    if (option.prestigeCost && option.prestigeCost > 0) {
+      impacts.push({ type: "PRESTIGE_CHANGED", payload: { amount: -option.prestigeCost } });
+    }
+    const project = state.entities.projects[payload.projectId];
+    if (option.weeksDelay && option.weeksDelay > 0 && project) {
+      impacts.push({
+        type: "PROJECT_UPDATED",
+        payload: {
+          projectId: payload.projectId,
+          update: { weeksInPhase: Math.max(0, project.weeksInPhase - option.weeksDelay) },
+        },
+      });
+    }
+    if (option.replaceTalentId) {
+      const contractIds = state.entities.contractsByProjectId[payload.projectId] ?? [];
+      const oldContract = contractIds
+        .map((id) => state.entities.contracts[id])
+        .find((c) => c && c.talentId === payload.talentId);
+      if (oldContract) {
+        const { id: _oldId, ...rest } = oldContract;
+        impacts.push({
+          removeContracts: [oldContract.id],
+          newContracts: [{ ...rest, id: `${oldContract.id}-r${state.week}`, talentId: option.replaceTalentId }],
+        });
+      }
+    }
+    if (impacts.length > 0) {
+      set({ gameState: applyStateImpact(state, impacts) as GameState });
+    }
   },
 
   resolveProjectCrisis: (projectId, optionIndex) => {

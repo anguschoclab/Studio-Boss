@@ -2,7 +2,8 @@ import {create} from "zustand";
 import {GameState, WeekSummary, ArchetypeKey} from "@/engine/types";import {initializeGame} from "@/engine/core/gameInit";
 import {advanceWeek} from "@/engine/core/weekAdvance";
 import {saveGame, loadGame, getSaveSlots, SaveSlotInfo} from "@/persistence/saveLoad";
-import {useUIStore, ModalType} from "./uiStore";
+import {toast} from "sonner";
+import {useUIStore, ModalType, ModalPayload} from "./uiStore";
 import {useSettingsStore} from "./settingsStore";
 
 import {createProjectSlice, ProjectSlice} from "./slices/projectSlice";
@@ -138,7 +139,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
         // SUMMARY is emitted before the week's summary exists — attach the real one.
         ui.enqueueModal(
           modalType as ModalType,
-          modalType === "SUMMARY" ? summary : modalPayload
+          (modalType === "SUMMARY" ? summary : modalPayload) as ModalPayload
         );
       }
     }
@@ -154,7 +155,15 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
 
   saveToSlot: async (slot) => {
     const state = get().gameState;
-    if (state) await saveGame(slot, state);
+    if (!state) return;
+    const result = await saveGame(slot, state);
+    if (!result.ok) {
+      toast.error(
+        result.reason === "worker-unavailable"
+          ? "Save unavailable: persistence is not supported in this environment."
+          : "Save failed — your progress may not be persisted."
+      );
+    }
   },
 
   loadFromSlot: async (slot) => {
