@@ -1,6 +1,5 @@
 import {describe, it, expect, beforeEach, vi} from "vitest";
 import {useGameStore} from "@/store/gameStore";
-import {Project} from "@/engine/types";
 
 vi.mock("@/engine/systems/projects", () => ({
   executeMarketing: vi.fn((project: any) => ({
@@ -105,9 +104,9 @@ describe("MarketingSlice — launchMarketingCampaign", () => {
 
   it("returns unchanged state when projectId not found in projects dict", () => {
     const store = useGameStore.getState() as any;
-    const before = useGameStore.getState().finance.cash;
+    const before = useGameStore.getState().gameState?.finance.cash ?? 0;
     store.launchMarketingCampaign("nonexistent", "Standard", "viral", "Q1_M");
-    expect(useGameStore.getState().finance.cash).toBe(before);
+    expect(useGameStore.getState().gameState?.finance.cash).toBe(before);
   });
 
   it("returns unchanged state when budget > cash", () => {
@@ -130,13 +129,13 @@ describe("MarketingSlice — launchMarketingCampaign", () => {
         },
         finance: { ...(useGameStore.getState().gameState as any).finance, cash: 1_000_000 },
       },
-      finance: { ...useGameStore.getState().finance, cash: 1_000_000 },
+      
     } as any);
 
     const store = useGameStore.getState() as any;
-    const before = useGameStore.getState().finance.cash;
+    const before = useGameStore.getState().gameState?.finance.cash ?? 0;
     store.launchMarketingCampaign("proj-1", "Saturation", "viral", "Q1_M");
-    expect(useGameStore.getState().finance.cash).toBe(before);
+    expect(useGameStore.getState().gameState?.finance.cash).toBe(before);
   });
 
   it("returns unchanged state when project state !== marketing", () => {
@@ -161,12 +160,12 @@ describe("MarketingSlice — launchMarketingCampaign", () => {
     } as any);
 
     const store = useGameStore.getState() as any;
-    const before = useGameStore.getState().finance.cash;
+    const before = useGameStore.getState().gameState?.finance.cash ?? 0;
     // MarketingSlice doesn't check project.state, it just applies the campaign
     // But the cost should still be deducted
     store.launchMarketingCampaign("proj-1", "Standard", "viral", "Q1_M");
     // Standard tier costs 2_000_000
-    expect(useGameStore.getState().finance.cash).toBe(before - 2_000_000);
+    expect(useGameStore.getState().gameState?.finance.cash).toBe(before - 2_000_000);
   });
 
   it("deducts tier cost from cash when project is in marketing state", () => {
@@ -201,7 +200,7 @@ describe("MarketingSlice — launchMarketingCampaign", () => {
     const store = useGameStore.getState() as any;
     // Standard tier costs 2_000_000
     store.launchMarketingCampaign("proj-1", "Standard", "viral", "Q1_M");
-    expect(useGameStore.getState().finance.cash).toBe(98_000_000);
+    expect(useGameStore.getState().gameState?.finance.cash).toBe(98_000_000);
   });
 
   it("works with projects stored as dict (verifies O(1) lookup path)", () => {
@@ -246,13 +245,13 @@ describe("MarketingSlice — launchMarketingCampaign", () => {
     } as any);
 
     const store = useGameStore.getState() as any;
-    const before = useGameStore.getState().finance.cash;
+    const before = useGameStore.getState().gameState?.finance.cash ?? 0;
     // proj-a: Standard tier costs 2_000_000
     store.launchMarketingCampaign("proj-a", "Standard", "viral", "Q1_M");
-    expect(useGameStore.getState().finance.cash).toBe(before - 2_000_000);
+    expect(useGameStore.getState().gameState?.finance.cash).toBe(before - 2_000_000);
 
     // proj-b: Standard tier costs 2_000_000
     store.launchMarketingCampaign("proj-b", "Standard", "viral", "Q1_M");
-    expect(useGameStore.getState().finance.cash).toBe(before - 4_000_000);
+    expect(useGameStore.getState().gameState?.finance.cash).toBe(before - 4_000_000);
   });
 });

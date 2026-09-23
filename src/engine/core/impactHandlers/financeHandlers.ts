@@ -1,4 +1,5 @@
 import {GameState} from "@/engine/types";
+import {isPlayerOwner} from "../../utils/ownership";
 import type {FundsImpact, FundsDeductedImpact, LedgerImpact, FinanceSnapshotImpact, SyncMAFundsImpact, FinanceTransactionImpact, MarketEventUpdateImpact} from "@/engine/types/state.types";
 
 /**
@@ -63,11 +64,20 @@ export function handleFundsDeducted(state: GameState, impact: FundsDeductedImpac
 
 export function handleFinanceTransaction(state: GameState, impact: FinanceTransactionImpact): GameState {
   const { amount, targetId } = impact.payload;
-  if (targetId && targetId !== "player") {
+  const isPlayerTarget =
+    !targetId ||
+    targetId === "player" ||
+    targetId === "PLAYER" ||
+    isPlayerOwner(state, targetId);
+  if (!isPlayerTarget) {
+    const rival = state.entities.rivals[targetId];
+    if (!rival) return state;
+    let safeAmount = amount;
+    if (isNaN(safeAmount) || safeAmount === null) safeAmount = 0;
+    if (Math.abs(safeAmount) > 10_000_000_000)
+      safeAmount = Math.sign(safeAmount) * 10_000_000_000;
     const rivals = { ...state.entities.rivals };
-    if (rivals[targetId]) {
-      rivals[targetId] = { ...rivals[targetId], cash: rivals[targetId].cash + amount };
-    }
+    rivals[targetId] = { ...rival, cash: rival.cash + safeAmount };
     return {
       ...state,
       entities: {

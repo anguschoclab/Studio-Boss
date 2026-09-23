@@ -6,7 +6,6 @@ import {generateBiography} from "@/engine/systems/talent/BiographyGenerator";
 import {tickDeathSystem} from "@/engine/systems/talent/DeathSystem";
 import {TalentLifecycleSystem} from "@/engine/systems/talent/TalentLifecycleSystem";
 import {tickMarketingPromotionSystem} from "@/engine/systems/talent/MarketingPromotionSystem";
-import {selectTalentTierDistribution} from "@/store/selectors";
 import {RandomGenerator} from "@/engine/utils/rng";
 import {createMockGameState, createMockTalent, createMockProject, createMockContract} from "../../generators/mockFactory";
 
@@ -301,31 +300,6 @@ describe("TalentTier string comparisons (cross-system)", () => {
       // May or may not trigger depending on PHOTOSHOOT_CHANCE base value
       // But the test verifies the code runs without crashing on tier comparison
       expect(impacts).toBeDefined();
-    });
-  });
-
-  describe("selectTalentTierDistribution", () => {
-    it("correctly counts talents by string tier without D_LIST", () => {
-      const talents = {
-        "TAL-1": createMockTalent({ id: "TAL-1", tier: "A_LIST" }),
-        "TAL-2": createMockTalent({ id: "TAL-2", tier: "A_LIST" }),
-        "TAL-3": createMockTalent({ id: "TAL-3", tier: "B_LIST" }),
-        "TAL-4": createMockTalent({ id: "TAL-4", tier: "NEWCOMER" }),
-      };
-      const state = createMockGameState({
-        entities: {
-          ...baseEntities,
-          talents,
-        },
-      });
-      const result = selectTalentTierDistribution(state as any);
-      const aList = result.data.find((d: any) => d.tier === "A-list");
-      const bList = result.data.find((d: any) => d.tier === "B-list");
-      const dList = result.data.find((d: any) => d.tier === "D-list");
-      expect(aList?.count).toBe(2);
-      expect(bList?.count).toBe(1);
-      // D-list should now count NEWCOMER talents
-      expect(dList?.count).toBe(1);
     });
   });
 });

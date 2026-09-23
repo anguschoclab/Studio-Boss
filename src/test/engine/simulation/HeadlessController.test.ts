@@ -1,6 +1,6 @@
 import {describe, it, expect, beforeEach} from "vitest";
 import {HeadlessController} from "@/engine/simulation/HeadlessController";
-import {GameState, Talent, StateImpact} from "@/engine/types";
+import {GameState, Talent} from "@/engine/types";
 import {RandomGenerator} from "@/engine/utils/rng";
 
 const makeTalent = (id: string, prestige: number = 50): Talent =>

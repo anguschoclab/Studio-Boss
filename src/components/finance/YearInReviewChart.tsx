@@ -7,7 +7,7 @@ import {BarChartIcon, TrendingUp, TrendingDown} from "lucide-react";
 import {cn} from "@/lib/utils";
 
 export const YearInReviewChart = () => {
-  const ledger = useGameStore((s) => s.finance.ledger);
+  const ledger = useGameStore((s) => s.gameState?.finance.ledger ?? []);
 
   const chartData = useMemo(() => {
     return ledger.slice(-52).map((entry) => ({

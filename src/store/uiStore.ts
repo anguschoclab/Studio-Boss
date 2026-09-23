@@ -45,6 +45,7 @@ export type TabId =
 interface UIStore {
   activeTab: TabId;
   activeHub: string;
+  activeSubTab: string | null;
   showQuickActions: boolean;
   showCreateProject: boolean;
   showPitchProject: boolean;
@@ -89,6 +90,7 @@ interface UIStore {
 export const useUIStore = create<UIStore>((set) => ({
   activeTab: "command",
   activeHub: "studio",
+  activeSubTab: null,
   showQuickActions: false,
   showCreateProject: false,
   showPitchProject: false,
@@ -135,7 +137,7 @@ export const useUIStore = create<UIStore>((set) => ({
   selectedRivalId: null,
   setActiveTab: (tab) => set({ activeTab: tab }),
   setActiveHub: (hub) => set({ activeHub: hub }),
-  setActiveSubTab: () => {},
+  setActiveSubTab: (tab) => set({ activeSubTab: tab }),
   toggleQuickActions: () => set((s) => ({ showQuickActions: !s.showQuickActions })),
   openCreateProject: () => set({ showCreateProject: true }),
   closeCreateProject: () => set({ showCreateProject: false }),

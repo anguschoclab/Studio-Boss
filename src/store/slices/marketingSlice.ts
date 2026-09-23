@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {StateCreator} from "zustand";
 import {GameStore} from "../gameStore";
 import {RandomGenerator} from "@/engine/utils/rng";
-import {AudienceQuadrant, MarketingAngle} from "@/engine/types";
+import {AudienceQuadrant, MarketingAngle, StateImpact} from "@/engine/types";
 import {calculateAudienceIndex} from "@/engine/systems/demographics";
 import {applyImpacts} from "@/engine/core/impactReducer";
 import {launchAwardsCampaign as launchAwardsCampaignEngine} from "@/engine/systems/awards/AwardsCampaign";
@@ -44,45 +43,43 @@ export const createMarketingSlice: StateCreator<GameStore, [], [], MarketingSlic
     const state = get().gameState;
     if (!state) return;
 
-    const rng = new RandomGenerator(state.rngState ?? 0);
+    const rng = new RandomGenerator(state.rngState ?? state.gameSeed);
     const result = launchAwardsCampaignEngine(state, projectId, tierKey, rng, targetCategories);
     if (!result) return;
+
+    const newsEvents: import("@/engine/types").NewsEvent[] = [];
+    for (const impact of result.impacts) {
+      if (impact.newsEvents) {
+        newsEvents.push(...impact.newsEvents);
+      }
+    }
 
     set((s) => {
       if (!s.gameState) return s;
 
-      const newState = {
-        ...s.gameState,
-        finance: {
-          ...s.gameState.finance,
-          cash: s.gameState.finance.cash - result.cost,
-        },
-        studio: {
-          ...s.gameState.studio,
-          activeCampaigns: {
-            ...s.gameState.studio.activeCampaigns,
-            [projectId]: result.campaign,
-          },
-        },
-        rngState: result.rngState,
-      };
-
-      const newsEvents: import("@/engine/types").NewsEvent[] = [];
-      for (const impact of result.impacts) {
-        if (impact.newsEvents) {
-          newsEvents.push(...impact.newsEvents);
-        }
-      }
-
-      if (newsEvents.length > 0) {
-        s.appendNewsEvents(newsEvents);
-      }
-
       return {
-        gameState: newState,
-        finance: newState.finance,
+        gameState: {
+          ...s.gameState,
+          finance: {
+            ...s.gameState.finance,
+            cash: s.gameState.finance.cash - result.cost,
+          },
+          studio: {
+            ...s.gameState.studio,
+            activeCampaigns: {
+              ...s.gameState.studio.activeCampaigns,
+              [projectId]: result.campaign,
+            },
+          },
+          rngState: result.rngState,
+        },
       };
     });
+
+    // Side effects must run outside the set() updater — updaters can re-run.
+    if (newsEvents.length > 0) {
+      get().appendNewsEvents(newsEvents);
+    }
   },
 
   launchMarketingCampaign: (projectId, tierKey, angle, target) => {
@@ -100,9 +97,8 @@ export const createMarketingSlice: StateCreator<GameStore, [], [], MarketingSlic
 
     set((s) => {
       if (!s.gameState) return s;
-      const rng = new RandomGenerator(s.gameState.rngState ?? 0);
 
-      const impact = {
+      const impact: StateImpact = {
         type: "PROJECT_UPDATED",
         payload: {
           projectId,
@@ -114,19 +110,13 @@ export const createMarketingSlice: StateCreator<GameStore, [], [], MarketingSlic
         },
       };
 
-      const fundsImpact = {
+      const fundsImpact: StateImpact = {
         type: "FUNDS_CHANGED",
         payload: { amount: -tier.cost },
       };
 
-      const newState = applyImpacts(s.gameState, [impact as any, fundsImpact as any]);
-
       return {
-        gameState: {
-          ...newState,
-          rngState: rng.getState(),
-        },
-        finance: newState.finance,
+        gameState: applyImpacts(s.gameState, [impact, fundsImpact]),
       };
     });
   },

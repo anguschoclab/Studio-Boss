@@ -232,6 +232,7 @@ export interface BaseImpact {
   removeContracts?: string[];
   newContracts?: import("./talent.types").Contract[];
   newProjects?: import("./project.types").Project[];
+  newTalents?: import("./talent.types").Talent[];
   uiNotifications?: string[];
   newAwards?: import("./project.types").Award[];
   cultClassicProjectIds?: string[];
@@ -399,7 +400,7 @@ export interface AwardWonImpact extends BaseImpact {
 }
 export interface TalentAddedImpact extends BaseImpact {
   type: "TALENT_ADDED";
-  payload: { talent: import("./talent.types").Talent };
+  payload: { talents: import("./talent.types").Talent[] };
 }
 export interface TalentRemovedImpact extends BaseImpact {
   type: "TALENT_REMOVED";
@@ -521,6 +522,18 @@ export interface ContractAddedImpact extends BaseImpact {
   type: "CONTRACT_ADDED";
   payload: { contract: import("./talent.types").Contract };
 }
+export interface HeadlinePostedImpact extends BaseImpact {
+  type: "HEADLINE_POSTED";
+  payload?: { headline?: import("./engine.types").NewsEvent };
+}
+export interface IndustryRumorsUpdatedImpact extends BaseImpact {
+  type: "INDUSTRY_RUMORS_UPDATED";
+  payload: { rumors?: import("./engine.types").Rumor[] };
+}
+export interface IpUpdatedImpact extends BaseImpact {
+  type: "IP_UPDATED";
+  payload: { assetId: string; update: Partial<IPAsset> };
+}
 
 export type StateImpact =
   | FundsImpact
@@ -585,4 +598,7 @@ export type StateImpact =
   | CastingPremiumDemandImpact
   | CastingAlternativeSuggestedImpact
   | ContractAddedImpact
+  | HeadlinePostedImpact
+  | IndustryRumorsUpdatedImpact
+  | IpUpdatedImpact
   | (BaseImpact & { type?: undefined }); // The "Bag" impact

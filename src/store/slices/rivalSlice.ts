@@ -20,7 +20,7 @@ export const createRivalSlice: StateCreator<GameStore, [], [], RivalSlice> = (se
     const s = get();
     if (!s.gameState) return;
     const result = executeAcquisition(s.gameState, targetId);
-    set({ gameState: result.state, finance: result.state.finance as unknown as import("@/engine/types").FinanceState });
+    set({ gameState: result.state });
     if (result.newsEvents.length > 0) {
       get().appendNewsEvents(result.newsEvents);
     }

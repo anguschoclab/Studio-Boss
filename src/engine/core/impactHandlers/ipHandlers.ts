@@ -12,7 +12,8 @@ export function handleFranchiseUpdated(state: GameState, impact: FranchiseUpdate
   const franchise = franchises[franchiseId];
   if (franchise) {
     franchises[franchiseId] = { ...franchise, ...update };
-  } else {
+  } else if (update.id === franchiseId) {
+    // Creation path: emitters send the full franchise object on first write
     franchises[franchiseId] = update as Franchise;
   }
   return {

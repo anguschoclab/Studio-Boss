@@ -39,7 +39,6 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
       prestige: 50,
       internal: {
         projectHistory: [],
-        firstLookDeals: [],
         projects: {},
         contracts: [],
       },

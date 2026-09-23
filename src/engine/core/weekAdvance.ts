@@ -1,6 +1,5 @@
 import {GameState, WeekSummary, StateImpact} from "@/engine/types";
 import {WeekCoordinator} from "../services/WeekCoordinator";
-import {getSimMemory} from "./simMemory";
 
 let lastAdvancedStateRef: GameState | null = null;
 let lastResultRef: { newState: GameState; summary: WeekSummary; impacts: StateImpact[] } | null =
@@ -21,13 +20,11 @@ export function advanceWeek(state: GameState): {
   summary: WeekSummary;
   impacts: StateImpact[];
 } {
-  const mem = getSimMemory(state);
-  const tickCount = state.tickCount || 0;
-
-  if (
-    (state === lastAdvancedStateRef || mem.lastProcessedTickCount === tickCount) &&
-    lastResultRef
-  ) {
+  // Identity-only dedup: the previous tick-count clause compared a state's own
+  // lastProcessedTickCount to its own tickCount — never true after a real tick
+  // (lp is written as input.tickCount while the result increments tickCount),
+  // and on crafted states it returned a cached result from a DIFFERENT game.
+  if (state === lastAdvancedStateRef && lastResultRef) {
     return lastResultRef;
   }
 

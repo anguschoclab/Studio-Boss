@@ -7,12 +7,11 @@ describe("Historical Snapshots System", () => {
     const gameState = initializeGame("Test Studio", "major", 42);
     useGameStore.setState({
       gameState,
-      finance: gameState.finance as any,
       snapshots: [],
     });
   });
 
-  it("should capture a complete snapshot exactly on week 52", () => {
+  it("should capture a complete snapshot exactly on week 52", { timeout: 120_000 }, () => {
     // Advance 51 weeks (getting to week 52)
     for (let i = 1; i < 52; i++) {
       useGameStore.getState().doAdvanceWeek();

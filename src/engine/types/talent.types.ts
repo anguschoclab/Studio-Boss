@@ -301,13 +301,6 @@ export interface TalentCommitment {
   isHoldingDeal?: boolean;
 }
 
-export interface FirstLookDeal {
-  id: string;
-  talentId: string;
-  weeksRemaining: number;
-  exclusivity: boolean;
-}
-
 // Vanity shingle / production company — producer or A-list talent-owned banner
 // with a structural home-studio deal (Bad Robot / Plan B / LuckyChap parallels).
 // PLAYER studio id is the string 'PLAYER'; rivals use their rival id.

@@ -32,22 +32,9 @@ export class HeadlessController {
       const pitchResult = this.pitchNewProject(state, rng);
       if (pitchResult) {
         impacts.push(pitchResult);
-        console.log(`[HeadlessController] Pitched new project for PLAYER`);
         // Extract the newly pitched project for immediate processing
-        if (
-          pitchResult.type === "INDUSTRY_UPDATE" &&
-          pitchResult.payload.update?.["entities.projects"]
-        ) {
-          const newProjects = pitchResult.payload.update["entities.projects"] as Record<
-            string,
-            Project
-          >;
-          const newProjectIds = Object.keys(newProjects).filter(
-            (id) => !state.entities.projects[id]
-          );
-          if (newProjectIds.length > 0) {
-            newlyPitchedProject = newProjects[newProjectIds[0]];
-          }
+        if (pitchResult.type === "PROJECT_CREATED") {
+          newlyPitchedProject = pitchResult.payload.project as Project;
         }
       }
     }
@@ -58,21 +45,6 @@ export class HeadlessController {
       allProjects.push(newlyPitchedProject);
     }
     allProjects.forEach((project) => {
-      // Track all player project states for debugging
-      if (isPlayerOwner(state, project.ownerId) && project.state !== "archived") {
-        if (project.state === "production" && project.weeksInPhase === 0) {
-          console.log(
-            `[HeadlessController] Project ${project.title} entered production, productionWeeks: ${project.productionWeeks}`
-          );
-        } else if (project.state === "post_production" && project.weeksInPhase === 0) {
-          console.log(`[HeadlessController] Project ${project.title} entered post_production`);
-        } else if (project.state === "marketing" && project.weeksInPhase === 0) {
-          console.log(`[HeadlessController] Project ${project.title} entered marketing`);
-        } else if (project.state === "released") {
-          console.log(`[HeadlessController] Project ${project.title} RELEASED`);
-        }
-      }
-
       // 1. Auto-Greenlight
       if (project.state === "needs_greenlight") {
         // In headless simulation, always greenlight projects
@@ -83,9 +55,6 @@ export class HeadlessController {
           ...result.project,
           productionWeeks,
         };
-        console.log(
-          `[HeadlessController] Greenlighting ${project.title}: state goes from ${project.state} to ${updateWithProductionWeeks.state}, productionWeeks: ${productionWeeks}`
-        );
 
         // Use PROJECT_UPDATED (supported by impact reducer)
         impacts.push({
@@ -113,9 +82,6 @@ export class HeadlessController {
             postProductionWeeksRemaining: 1,
             progress: 100,
           };
-          console.log(
-            `[HeadlessController] Advancing ${project.title} from production to post_production`
-          );
           impacts.push({
             type: "PROJECT_UPDATED",
             payload: { projectId: project.id, update: updateWithPostProduction },
@@ -150,9 +116,6 @@ export class HeadlessController {
               weeksInMarketing: 0,
             },
           };
-          console.log(
-            `[HeadlessController] Advancing ${project.title} from post_production to marketing`
-          );
           impacts.push({
             type: "PROJECT_UPDATED",
             payload: { projectId: project.id, update: updateWithMarketing },
@@ -235,9 +198,6 @@ export class HeadlessController {
           } as StateImpact);
           const netCash = revenue - (project.budget || 0) - marketingBudget;
           impacts.push({ type: "FUNDS_CHANGED", payload: { amount: netCash } });
-          console.log(
-            `[HeadlessController] Released TV: ${project.title} S${currentSeason}, rating=${ratingScore}, revenue=$${(revenue / 1e6).toFixed(1)}M, net=$${(netCash / 1e6).toFixed(1)}M, ${renewed ? "RENEWED" : "CANCELLED"}`
-          );
           impacts.push(
             ...HeadlessController.attributeTalent(state, project as unknown as Record<string, unknown>, revenue, rng, isHit, ratingScore)
           );
@@ -340,9 +300,6 @@ export class HeadlessController {
             type: "FUNDS_CHANGED",
             payload: { amount: netCash },
           });
-          console.log(
-            `[HeadlessController] Released project: ${project.title}, net cash: $${(netCash / 1_000_000).toFixed(1)}M`
-          );
           const filmRev = releasedProject.revenue || 0;
           const filmHit = filmRev > (project.budget || 0) * 2;
           impacts.push(
@@ -377,10 +334,10 @@ export class HeadlessController {
     // 3. Auto-Bidding on Opportunities
     state.market.opportunities.forEach((opportunity) => {
       const isAlreadyBid = !!opportunity.bids[getPlayerId(state)];
-      const isSimulation = true; // We are in headless mode
 
-      let shouldBid =
-        !isAlreadyBid && (state.finance.cash > opportunity.costToAcquire * 2 || isSimulation);
+      // Headless mode: always bid when affordable-by-fiat (the controller is the
+      // market's buyer of last resort, so the cash guard is intentionally bypassed).
+      let shouldBid = !isAlreadyBid;
 
       // Persona Overrides
       const persona = (state as unknown as Record<string, unknown>).persona || "balanced";

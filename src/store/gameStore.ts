@@ -1,13 +1,9 @@
 import {create} from "zustand";
 import {GameState, WeekSummary, ArchetypeKey} from "@/engine/types";import {initializeGame} from "@/engine/core/gameInit";
-import {FinanceState} from "@/engine/types";
-import {InterestRateSimulator} from "@/engine/systems/market/InterestRateSimulator";
 import {advanceWeek} from "@/engine/core/weekAdvance";
 import {saveGame, loadGame, getSaveSlots, SaveSlotInfo} from "@/persistence/saveLoad";
 import {useUIStore, ModalType} from "./uiStore";
 import {useSettingsStore} from "./settingsStore";
-
-const EMPTY_FINANCE: FinanceState = { cash: 0, ledger: [], weeklyHistory: [], marketState: InterestRateSimulator.initialize() };
 
 import {createProjectSlice, ProjectSlice} from "./slices/projectSlice";
 import {createFinanceSlice, FinanceSlice} from "./slices/financeSlice";
@@ -93,10 +89,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   newGame: async (studioName, archetype) => {
     const gameState = initializeGame(studioName, archetype, Date.now()); // Added seed
     await saveGame(0, gameState);
-    set({
-      gameState,
-      finance: gameState.finance,
-    });
+    set({ gameState });
   },
 
   doAdvanceWeek: () => {
@@ -120,13 +113,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
         processSaveQueue();
       }
 
-      // The Tech Supervisor: Maintain strict object references for unchanged slices
-      const newStateObj: Partial<GameStore> = { gameState: result.newState };
-      if (state.finance !== result.newState.finance) {
-        newStateObj.finance = result.newState.finance;
-      }
-
-      return newStateObj;
+      return { gameState: result.newState };
     });
 
     if (!summary || !nextState) throw new Error("Failed to advance week");
@@ -164,10 +151,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   loadFromSlot: async (slot) => {
     const state = await loadGame(slot);
     if (state) {
-      set({
-        gameState: state,
-        finance: state.finance,
-      });
+      set({ gameState: state });
       return true;
     }
     return false;
@@ -178,17 +162,11 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   clearGame: () =>
     set((state) => {
       if (state.gameState === null) return state;
-      return {
-        gameState: null,
-        finance: EMPTY_FINANCE,
-      };
+      return { gameState: null };
     }),
 
   devAutoInit: (archetype = "major") => {
     const gameState = initializeGame("Alpha Studios", archetype);
-    set({
-      gameState,
-      finance: gameState.finance,
-    });
+    set({ gameState });
   },
 }));

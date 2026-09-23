@@ -290,10 +290,10 @@ export function checkAchievements(state: GameState): StateImpact[] {
   check("star_maker", hasStarMaker);
 
   // Big Agency Deal — First Look deal with a powerhouse agency
-  const firstLookDeals = state.studio.internal.firstLookDeals ?? [];
+  const firstLookPacts = (state.deals?.activeDeals ?? []).filter((p) => p.type === "first_look");
   const agencyMap = new Map(state.industry.agencies.map((a) => [a.id, a]));
-  const hasPowerhouseDeal = firstLookDeals.some((deal) => {
-    const agency = agencyMap.get(state.entities.talents[deal.talentId]?.agencyId ?? "");
+  const hasPowerhouseDeal = firstLookPacts.some((pact) => {
+    const agency = agencyMap.get(state.entities.talents[pact.talentId]?.agencyId ?? "");
     return agency?.tier === "powerhouse";
   });
   check("big_agency_deal", hasPowerhouseDeal);

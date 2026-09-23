@@ -227,8 +227,8 @@ export const TalentLifecycleSystem = {
       }
       impacts.push({
         type: "TALENT_ADDED",
-        newTalents,
-      } as unknown as StateImpact);
+        payload: { talents: newTalents },
+      });
     }
 
     // Pass metadata to industry tick for metrics

@@ -5,10 +5,7 @@ import {initializeGame} from "@/engine/core/gameInit";
 describe("appendNewsEvents store action", () => {
   beforeEach(() => {
     const state = initializeGame("Test Studio", "major");
-    useGameStore.setState({
-      gameState: state,
-      finance: state.finance as any,
-    });
+    useGameStore.setState({ gameState: state });
   });
 
   it("appends news events to weekSummaries", () => {

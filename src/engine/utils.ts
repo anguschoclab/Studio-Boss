@@ -170,8 +170,9 @@ export function addContractsToIndex(
 ): Record<string, string[]> {
   const updates: Record<string, string[]> = {};
   for (const c of contracts) {
-    if (!updates[c.projectId]) updates[c.projectId] = [];
-    updates[c.projectId].push(c.id);
+    const pending = updates[c.projectId] ?? [];
+    if (pending.includes(c.id) || (index[c.projectId] ?? []).includes(c.id)) continue;
+    updates[c.projectId] = [...pending, c.id];
   }
   const result = { ...index };
   for (const pid in updates) {

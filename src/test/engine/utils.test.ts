@@ -46,6 +46,11 @@ describe("utils", () => {
       expect(getWeekDisplay(52)).toEqual({ displayWeek: 52, year: 2026 });
       expect(getWeekDisplay(53)).toEqual({ displayWeek: 1, year: 2027 });
       expect(getWeekDisplay(104)).toEqual({ displayWeek: 52, year: 2027 });
+      expect(getWeekDisplay(105)).toEqual({ displayWeek: 1, year: 2028 });
+    });
+
+    it("characterizes week 0 and negative weeks", () => {
+      expect(getWeekDisplay(0)).toEqual({ displayWeek: 0, year: 2025 });
     });
   });
 

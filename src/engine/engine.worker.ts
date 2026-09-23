@@ -1,6 +1,5 @@
 import {initializeGame} from "./core/gameInit";
 import {advanceWeek} from "./core/weekAdvance";
-import {RandomGenerator} from "./utils/rng";
 import {GameState, ArchetypeKey} from "./types";
 
 /**
@@ -21,9 +20,7 @@ self.onmessage = (e: MessageEvent) => {
 
     case "ADVANCE_WEEK": {
       const { state } = payload;
-      const rng = new RandomGenerator(state.rngState ?? state.gameSeed);
       const { newState, summary, impacts } = advanceWeek(state as GameState);
-      newState.rngState = rng.getState();
       self.postMessage({ type: "ADVANCE_RESULT", payload: { newState, summary, impacts } });
       break;
     }

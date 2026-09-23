@@ -13,7 +13,7 @@ import {RandomGenerator} from "@/engine/utils/rng";
  */
 export const FestivalMarketModal: React.FC = () => {
   const gameState = useGameStore((s) => s.gameState);
-  const studioFinance = useGameStore((s) => s.finance);
+  const studioCash = useGameStore((s) => s.gameState?.finance.cash ?? 0);
   const addProject = useGameStore((s) => s.addProject);
   const addFunds = useGameStore((s) => s.addFunds);
 
@@ -141,7 +141,7 @@ export const FestivalMarketModal: React.FC = () => {
   const handlePlayerBid = () => {
     if (!gameState) return;
     const nextBid = Math.round(currentBidRef.current * 1.05);
-    if (studioFinance.cash < nextBid) return;
+    if (studioCash < nextBid) return;
 
     setCurrentBid(nextBid);
     setHighestBidderId("PLAYER");
@@ -208,14 +208,14 @@ export const FestivalMarketModal: React.FC = () => {
               <Button
                 size="lg"
                 onClick={handlePlayerBid}
-                disabled={studioFinance.cash < currentBid * 1.05}
+                disabled={studioCash < currentBid * 1.05}
                 className="h-16 text-lg font-black uppercase tracking-wider bg-white text-black hover:bg-slate-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]"
               >
                 <TrendingUp className="w-5 h-5 mr-2" />
                 Bid ${((currentBid * 1.05) / 1000000).toFixed(2)}M
               </Button>
               <div className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">
-                Your Cash: ${(studioFinance.cash / 1000000).toFixed(1)}M
+                Your Cash: ${(studioCash / 1000000).toFixed(1)}M
               </div>
             </div>
           )}

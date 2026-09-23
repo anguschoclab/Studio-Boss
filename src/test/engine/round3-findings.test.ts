@@ -27,12 +27,12 @@ const fakeTalent = (id: string): Talent =>
   }) as unknown as Talent;
 
 describe("F-069: talent pool replenishment", () => {
-  it("applies TALENT_ADDED bag impacts carrying newTalents", () => {
+  it("applies TALENT_ADDED impacts carrying a talents array", () => {
     const state = createMockGameState();
     const t1 = fakeTalent("t-new-1");
     const t2 = fakeTalent("t-new-2");
     const next = applyImpacts(state, [
-      { type: "TALENT_ADDED", newTalents: [t1, t2] } as unknown as StateImpact,
+      { type: "TALENT_ADDED", payload: { talents: [t1, t2] } },
     ]);
     expect(next.entities.talents["t-new-1"]).toBeDefined();
     expect(next.entities.talents["t-new-2"]).toBeDefined();
@@ -70,7 +70,7 @@ describe("F-035: CLIQUE_UPDATED must rebuild memberCliqueMap", () => {
       formedWeek: 1,
       status: "active",
       fameBonus: 10,
-      reputation: "neutral",
+      reputation: "prestigious",
       exclusivity: 50,
       combinedStarPower: 100,
       reunionPotential: 10,
@@ -193,12 +193,12 @@ describe("F-041: applySingleImpact must not mutate the impact payload", () => {
       payload: { amount: NaN },
     } as unknown as StateImpact;
     applyImpacts(state, [impact]);
-    expect(impact.payload!.amount).toBeNaN(); // payload object itself unchanged
+    expect((impact.payload as { amount: number }).amount).toBeNaN(); // payload object itself unchanged
   });
 });
 
-describe("F-059: top-level finance mirror stays in sync with gameState.finance", () => {
-  it("s.finance.cash reflects a non-finance-slice cash change", async () => {
+describe("F-059: the top-level finance mirror is removed (single source of truth)", () => {
+  it("non-finance-slice cash changes are visible to finance readers", async () => {
     const { useGameStore } = await import("@/store/gameStore");
     const base = createMockGameState({
       entities: {
@@ -206,14 +206,14 @@ describe("F-059: top-level finance mirror stays in sync with gameState.finance",
         talents: { t1: fakeTalent("t1") },
       },
     } as Partial<GameState>);
-    useGameStore.setState({ gameState: base, finance: base.finance });
+    useGameStore.setState({ gameState: base });
 
     useGameStore.getState().signBreakoutTalent("t1", 500_000);
 
     const s = useGameStore.getState();
     expect(s.gameState?.finance.cash).toBe(base.finance.cash - 500_000);
-    // The top-level finance mirror must not go stale when other slices write cash
-    expect(s.finance.cash).toBe(s.gameState?.finance.cash);
+    // The stale-prone mirror field must not exist at all
+    expect("finance" in s).toBe(false);
   });
 });
 

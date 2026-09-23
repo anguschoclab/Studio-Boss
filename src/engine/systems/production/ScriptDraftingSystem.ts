@@ -13,7 +13,13 @@ export function tickScriptDevelopment(project: Project, rng: RandomGenerator): S
   // Only evolve scripted projects
   if (!("scriptHeat" in project)) return [];
 
-  const p = { ...project } as import("@/engine/types").ScriptedProject;
+  // Deep-copy the nested arrays we mutate below — a shallow clone would leak
+  // pushes/splices into the caller's project object (F-029).
+  const p = {
+    ...project,
+    scriptEvents: [...(project.scriptEvents || [])],
+    activeRoles: [...(project.activeRoles || [])],
+  } as import("@/engine/types").ScriptedProject;
   const roll = rng.next();
 
   // 1. Script Heat Drift

@@ -4,7 +4,7 @@ import {useGameStore} from "@/store/gameStore";
 import {cn} from "@/lib/utils";
 
 export const MarketRatesWidget: React.FC = () => {
-  const finance = useGameStore((state) => state.finance);
+  const finance = useGameStore((state) => state.gameState?.finance);
   const market = finance?.marketState;
 
   if (!market) return null;

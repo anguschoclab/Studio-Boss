@@ -24,14 +24,17 @@ export function handleTalentUpdated(state: GameState, impact: TalentUpdateImpact
 }
 
 export function handleTalentAdded(state: GameState, impact: TalentAddedImpact): GameState {
-  if (!impact.payload) return state;
-  const { talent } = impact.payload;
-  if (!talent || !state.entities) return state;
+  const talents = impact.payload?.talents;
+  if (!talents?.length || !state.entities) return state;
+  const next = { ...state.entities.talents };
+  for (const t of talents) {
+    if (t?.id) next[t.id] = t;
+  }
   return {
     ...state,
     entities: {
       ...state.entities,
-      talents: { ...state.entities.talents, [talent.id]: talent },
+      talents: next,
     },
   };
 }

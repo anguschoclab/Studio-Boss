@@ -208,19 +208,23 @@ const handlerRegistry: Record<
  * This replaces the massive switch statement in the original impactReducer
  */
 export function applySingleImpact(state: GameState, impact: StateImpact): GameState {
-  // Apply validation/sanitization for specific impact types
+  // Apply validation/sanitization for specific impact types — clone payloads so the
+  // caller's impact object is never mutated.
   if (impact.type === "FUNDS_CHANGED") {
     let amount = impact.payload.amount;
     if (isNaN(amount) || amount === null) amount = 0;
     if (Math.abs(amount) > 10_000_000_000) amount = Math.sign(amount) * 10_000_000_000;
-    impact.payload.amount = amount;
+    impact = { ...impact, payload: { ...impact.payload, amount } };
   }
 
   if (impact.type === "RIVAL_UPDATED" && impact.payload.update?.cash !== undefined) {
     let val = impact.payload.update.cash;
     if (isNaN(val) || val === null) val = 0;
     if (Math.abs(val) > 1_000_000_000_000) val = Math.sign(val) * 1_000_000_000_000;
-    impact.payload.update.cash = val;
+    impact = {
+      ...impact,
+      payload: { ...impact.payload, update: { ...impact.payload.update, cash: val } },
+    };
   }
 
   // Handle "bag" impacts (impacts with undefined type but other impact fields)
@@ -337,6 +341,19 @@ export function applySingleImpact(state: GameState, impact: StateImpact): GameSt
         },
       };
     }
+    if (impact.newTalents && impact.newTalents.length > 0) {
+      const talents = { ...newState.entities.talents };
+      impact.newTalents.forEach((t) => {
+        talents[t.id] = t;
+      });
+      newState = {
+        ...newState,
+        entities: {
+          ...newState.entities,
+          talents,
+        },
+      };
+    }
     if (impact.removeContracts && impact.removeContracts.length > 0) {
       const contracts = { ...newState.entities.contracts };
       let contractsByProjectId = newState.entities.contractsByProjectId;
@@ -390,7 +407,8 @@ export function applySingleImpact(state: GameState, impact: StateImpact): GameSt
     return handler(state, impact);
   }
 
-  // If no handler found, return state unchanged
+  // Unregistered impact types are a bug (see F-069: silent drops hide whole systems)
+  console.warn(`[impactReducer] Unhandled impact type: ${String(impact.type)}`);
   return state;
 }
 

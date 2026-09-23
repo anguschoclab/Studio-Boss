@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {StateCreator} from "zustand";
 import {GameStore} from "../gameStore";
-import {createLoan, Loan} from "@/engine/systems/finance/LoanSystem";
+import {createLoan} from "@/engine/systems/finance/LoanSystem";
 
 // ---------------------------------------------------------------------------
 // Slice interface
@@ -28,16 +27,12 @@ export const createLoanSlice: StateCreator<GameStore, [], [], LoanSlice> = (set,
       const loanRate = state.finance.marketState?.loanRate ?? 0.08;
       const loan = createLoan(amount, termWeeks, loanRate, state.week);
 
-      const existingLoans: Loan[] = (state.studio as any).loans || [];
+      const existingLoans = state.studio.loans || [];
       const updatedLoans = [...existingLoans, loan];
 
       const newCash = state.finance.cash + amount;
 
       return {
-        finance: {
-          ...s.finance,
-          cash: newCash,
-        },
         gameState: {
           ...state,
           finance: {
@@ -47,7 +42,7 @@ export const createLoanSlice: StateCreator<GameStore, [], [], LoanSlice> = (set,
           studio: {
             ...state.studio,
             loans: updatedLoans,
-          } as any,
+          },
         },
       };
     });
@@ -61,7 +56,7 @@ export const createLoanSlice: StateCreator<GameStore, [], [], LoanSlice> = (set,
       if (!s.gameState) return s;
 
       const state = s.gameState;
-      const loans: Loan[] = (state.studio as any).loans || [];
+      const loans = state.studio.loans || [];
       const loan = loans.find((l) => l.id === loanId);
 
       if (!loan) return s;
@@ -75,10 +70,6 @@ export const createLoanSlice: StateCreator<GameStore, [], [], LoanSlice> = (set,
       const updatedLoans = loans.filter((l) => l.id !== loanId);
 
       return {
-        finance: {
-          ...s.finance,
-          cash: newCash,
-        },
         gameState: {
           ...state,
           finance: {
@@ -88,7 +79,7 @@ export const createLoanSlice: StateCreator<GameStore, [], [], LoanSlice> = (set,
           studio: {
             ...state.studio,
             loans: updatedLoans,
-          } as any,
+          },
         },
       };
     });

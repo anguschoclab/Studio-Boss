@@ -27,9 +27,9 @@ vi.mock("recharts", () => ({
 }));
 
 const sampleData: AwardProbability[] = [
-  { projectTitle: "Oscar Bait", awardBody: "Academy Awards", category: "Best Picture", probability: 85, trend: "stable" },
-  { projectTitle: "Indie Gem", awardBody: "Sundance Film Festival", category: "Grand Jury Prize", probability: 60, trend: "stable" },
-  { projectTitle: "TV Drama", awardBody: "Primetime Emmys", category: "Best Series", probability: 45, trend: "stable" },
+  { projectTitle: "Oscar Bait", awardBody: "Academy Awards", category: "Best Picture", probability: 85 },
+  { projectTitle: "Indie Gem", awardBody: "Sundance Film Festival", category: "Grand Jury Prize", probability: 60 },
+  { projectTitle: "TV Drama", awardBody: "Primetime Emmys", category: "Best Series", probability: 45 },
 ];
 
 describe("AwardsProbabilityChart", () => {

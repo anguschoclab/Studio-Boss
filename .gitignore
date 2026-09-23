@@ -76,3 +76,6 @@ failures.log
 all_files.txt
 vitest.json
 vitest_output.txt
+vitest.out
+test-results.json
+verification/

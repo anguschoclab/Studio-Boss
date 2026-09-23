@@ -72,12 +72,12 @@ describe("rivalSlice acquisition", () => {
     expect(state!.entities.rivals.r1).toBeUndefined();
   });
 
-  it("acquireRival syncs finance to top-level store slice", () => {
-    const beforeFinance = useGameStore.getState().finance;
+  it("acquireRival updates gameState.finance", () => {
+    const beforeFinance = useGameStore.getState().gameState?.finance;
     useGameStore.getState().acquireRival("r1");
-    const afterFinance = useGameStore.getState().finance;
+    const afterFinance = useGameStore.getState().gameState?.finance;
     expect(afterFinance).not.toBe(beforeFinance);
-    expect(afterFinance.cash).not.toBe(beforeFinance.cash);
+    expect(afterFinance!.cash).not.toBe(beforeFinance!.cash);
   });
 
   it("acquireRival with null gameState is a no-op", () => {
@@ -89,7 +89,7 @@ describe("rivalSlice acquisition", () => {
 
   it("finance state after acquisition has FinanceState fields, not FinanceRecord fields", () => {
     useGameStore.getState().acquireRival("r1");
-    const finance = useGameStore.getState().finance;
+    const finance = useGameStore.getState().gameState?.finance;
     expect(finance).toHaveProperty("cash");
     expect(finance).toHaveProperty("ledger");
     expect(finance).toHaveProperty("weeklyHistory");

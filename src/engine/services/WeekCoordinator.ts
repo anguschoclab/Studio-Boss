@@ -55,7 +55,6 @@ import {tickTVRecommendationSystem} from "../systems/talent/TVRecommendationSyst
 
 // Production Support Systems
 import {checkAndTriggerCrisis} from "../systems/crises";
-import {advanceDeals} from "../systems/deals";
 import {advanceRivals} from "../systems/rivals";
 import {tickRivalProduction} from "../systems/rivals/rivalProduction";
 import {runAwardsCeremony} from "../systems/awards/CeremonyRunner";
@@ -484,12 +483,6 @@ export class WeekCoordinator {
 
     // Rival studio status tick
     context.impacts.push(advanceRivals(state));
-
-    // First-look deal expiry
-    const deals = (state.studio as unknown as { firstLookDeals?: unknown[] }).firstLookDeals || [];
-    if (deals.length > 0) {
-      context.impacts.push(...advanceDeals(deals as import("../types").FirstLookDeal[]));
-    }
 
     // Regulator warnings (ported from dead IndustryFilter)
     context.impacts.push(...RegulatorSystem.tick(state, context.rng));

@@ -229,7 +229,6 @@ export function initializeGame(
       prestige: arch.startingPrestige,
       internal: {
         projectHistory: [],
-        firstLookDeals: [],
         projects: {},
         contracts: [],
       },

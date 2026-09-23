@@ -1,7 +1,6 @@
 import {GameState, ArchetypeKey} from "../types";
 import {initializeGame} from "../core/gameInit";
 import {advanceWeek} from "../core/weekAdvance";
-import {RandomGenerator} from "../utils/rng";
 
 export interface SimulationResult {
   finalState: GameState;
@@ -32,8 +31,6 @@ export class SimulationHarness {
     const metrics: SimulationResult["metrics"] = [];
 
     for (let w = 1; w <= weeks; w++) {
-      const _rng = new RandomGenerator(state.gameSeed + w + state.tickCount);
-
       try {
         const { newState } = advanceWeek(state);
         state = newState;

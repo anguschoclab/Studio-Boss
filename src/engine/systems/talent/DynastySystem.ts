@@ -183,8 +183,8 @@ export function processComingOfAge(state: GameState, rng: RandomGenerator): Stat
   if (newTalents.length > 0) {
     impacts.push({
       type: "TALENT_ADDED",
-      payload: { newTalents },
-    } as any);
+      payload: { talents: newTalents },
+    });
   }
 
   return impacts;

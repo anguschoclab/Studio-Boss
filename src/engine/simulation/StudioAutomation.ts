@@ -5,7 +5,7 @@ import {calculateOpeningWeekend} from "../systems/releaseSimulation";
 import {StreamingViewershipTracker} from "../systems/production/StreamingViewershipTracker";
 import {StudioArchetype, AI_ARCHETYPES} from "../data/aiArchetypes";
 import {getBudgetInflation} from "../systems/industry/MacroCycle";
-import {isPlayerOwner} from "../utils/ownership";
+import {isPlayerOwner, getPlayerId} from "../utils/ownership";
 import {HeadlessController} from "./HeadlessController";
 import {buildFatigueAwareGenreWeights} from "../systems/rivals/rivalProduction";
 
@@ -274,7 +274,7 @@ export class StudioAutomation {
         assetId: asset.id,
         update: {
           rightsOwner: "STUDIO",
-          ownerStudioId: "player",
+          ownerStudioId: getPlayerId(state),
         },
       },
     } as unknown as StateImpact);

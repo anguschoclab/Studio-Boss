@@ -105,7 +105,7 @@ export class MetricsCollector {
         if (isFinished) worldCompletedCount++;
 
         // Player active projects tracking
-        if (studio.id === "PLAYER" && !isFinished) {
+        if (isPlayerOwner(state, studio.id) && !isFinished) {
           activeBudgets += p.budget || 0;
           activeProjectsCount++;
         }

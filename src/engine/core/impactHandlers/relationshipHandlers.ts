@@ -105,6 +105,17 @@ export function handleCliqueUpdated(state: GameState, impact: CliqueUpdatedImpac
   const existingCliques = state.relationships?.cliques?.cliques || {};
   const existingMemberMap = state.relationships?.cliques?.memberCliqueMap || {};
 
+  // Rebuild the member→clique index so dropped members stop resolving to this
+  // clique and added members start resolving (F-035).
+  const memberCliqueMap: Record<string, string[]> = {};
+  for (const memberId in existingMemberMap) {
+    const remaining = existingMemberMap[memberId].filter((cid) => cid !== cliqueId);
+    if (remaining.length > 0) memberCliqueMap[memberId] = remaining;
+  }
+  for (const memberId of clique.members || []) {
+    memberCliqueMap[memberId] = [...(memberCliqueMap[memberId] || []), cliqueId];
+  }
+
   return {
     ...state,
     relationships: {
@@ -114,7 +125,7 @@ export function handleCliqueUpdated(state: GameState, impact: CliqueUpdatedImpac
           ...existingCliques,
           [cliqueId]: clique,
         },
-        memberCliqueMap: existingMemberMap,
+        memberCliqueMap,
       },
     },
   };

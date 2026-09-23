@@ -78,7 +78,7 @@ describe("Agent Brain (Target C2)", () => {
           name: "Player Studio",
           archetype: "major",
           prestige: 50,
-          internal: { projectHistory: [], firstLookDeals: [], projects: {}, contracts: [] },
+          internal: { projectHistory: [], projects: {}, contracts: [] },
         },
         entities: {
           projects: {

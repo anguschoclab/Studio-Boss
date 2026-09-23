@@ -217,7 +217,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
       // Add talent to pool
       impacts.push({
         type: "TALENT_ADDED",
-        payload: { talent },
+        payload: { talents: [talent] },
       });
 
       // Remove from hidden pool

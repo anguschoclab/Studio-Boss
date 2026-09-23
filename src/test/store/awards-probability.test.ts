@@ -53,7 +53,7 @@ describe("selectAwardsProbability (chartSelectors)", () => {
     expect(result.length).toBe(filmConfigs.length);
   });
 
-  it("each entry has projectTitle, awardBody, category, probability, trend", () => {
+  it("each entry has projectTitle, awardBody, category, probability", () => {
     const project = createMockProject({
       id: "proj-1",
       title: "Awards Contender",
@@ -67,10 +67,8 @@ describe("selectAwardsProbability (chartSelectors)", () => {
       expect(entry).toHaveProperty("awardBody");
       expect(entry).toHaveProperty("category");
       expect(entry).toHaveProperty("probability");
-      expect(entry).toHaveProperty("trend");
       expect(entry.projectTitle).toBe("Awards Contender");
       expect(typeof entry.probability).toBe("number");
-      expect(entry.trend).toBe("stable");
     }
   });
 
@@ -213,17 +211,4 @@ describe("selectAwardsProbability (chartSelectors)", () => {
     expect(filmOnlyEntries).toHaveLength(0);
   });
 
-  it("trend is always stable", () => {
-    const project = createMockProject({
-      id: "proj-1",
-      title: "Awards Contender",
-      format: "film",
-      awardsProfile: mockAwardsProfile,
-    });
-    const state = makeState({ "proj-1": project });
-    const result = selectAwardsProbability(state);
-    for (const entry of result) {
-      expect(entry.trend).toBe("stable");
-    }
-  });
 });

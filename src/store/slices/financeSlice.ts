@@ -1,27 +1,14 @@
 import {StateCreator} from "zustand";
 import {GameStore} from "../gameStore";
-import {WeeklyFinancialReport, FinanceState} from "@/engine/types";
-import {FinancialSnapshot} from "@/engine/types/state.types";import {InterestRateSimulator} from "@/engine/systems/market/InterestRateSimulator";
+import {WeeklyFinancialReport} from "@/engine/types";
+import {FinancialSnapshot} from "@/engine/types/state.types";
 
 export interface FinanceSlice {
-  finance: FinanceState;
   addLedgerEntry: (report: WeeklyFinancialReport) => void;
-  executeMarketingEvent: (
-    eventName: "superbowl_ad" | "viral_campaign" | "press_tour",
-    cost: number,
-    projectId: string
-  ) => void;
   addFunds: (amount: number) => void;
 }
 
 export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> = (set, _get) => ({
-  finance: {
-    cash: 0,
-    ledger: [],
-    weeklyHistory: [],
-    marketState: InterestRateSimulator.initialize(),
-  },
-
   addLedgerEntry: (report: WeeklyFinancialReport) =>
     set((state) => {
       if (!state.gameState) return state;
@@ -45,12 +32,6 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
       };
 
       return {
-        finance: {
-          ...state.finance,
-          cash: report.endingCash,
-          ledger: [report, ...state.finance.ledger].slice(0, 100),
-          weeklyHistory: [snapshot, ...state.finance.weeklyHistory].slice(0, 52),
-        },
         gameState: {
           ...state.gameState,
           finance: {
@@ -63,19 +44,11 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
       };
     }),
 
-  executeMarketingEvent: (_eventName, _cost, _projectId) => {
-    // Marketing event executed
-  },
-
   addFunds: (amount) => {
     set((s) => {
       if (!s.gameState) return s;
-      const newCash = s.finance.cash + amount;
+      const newCash = s.gameState.finance.cash + amount;
       return {
-        finance: {
-          ...s.finance,
-          cash: newCash,
-        },
         gameState: {
           ...s.gameState,
           finance: {
