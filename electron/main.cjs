@@ -338,7 +338,8 @@ ipcMain.handle("list-saves", async () => {
       const files = await fs.readdir(saveDir);
       return files
         .filter((f) => f.endsWith(".sb"))
-        .map((f) => parseInt(f.replace("slot_", "").replace(".sb", "")));
+        .map((f) => parseInt(f.replace("slot_", "").replace(".sb", ""), 10))
+        .filter((n) => Number.isInteger(n));
     } catch (e) {
       return [];
     }
