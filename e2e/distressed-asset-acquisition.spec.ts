@@ -29,6 +29,9 @@ test("distressed asset acquisition: modal appears, acquire works, decline works"
       const gameMod = await import("/src/store/gameStore.ts");
       const uiMod = await import("/src/store/uiStore.ts");
       if (gameMod?.useGameStore && uiMod?.useUIStore) {
+        // Expose the stores so later evaluate blocks can use them.
+        (window as any).__GAME_STORE__ = gameMod.useGameStore;
+        (window as any).__UI_STORE__ = uiMod.useUIStore;
         return { method: "import" as const };
       }
     } catch {
@@ -53,8 +56,9 @@ test("distressed asset acquisition: modal appears, acquire works, decline works"
   // ── Stores are accessible — inject a test offer and exercise the modal ──
 
   await page.evaluate(() => {
-    const store = (window as any).__GAME_STORE__ || (window as any).useGameStore?.getState?.();
-    if (store && store.gameState) {
+    const store = (window as any).__GAME_STORE__ || (window as any).useGameStore;
+    const state = store?.getState?.() ?? store;
+    if (state && state.gameState) {
       const offer = {
         id: "test-offer-1",
         sellerId: "rival-1",
@@ -65,27 +69,24 @@ test("distressed asset acquisition: modal appears, acquire works, decline works"
         price: 100_000_000,
         aiBuyerId: "rival-2",
         aiBuyerName: "Helix",
-        createdWeek: store.gameState.week,
-        expiresWeek: store.gameState.week + 2,
+        createdWeek: state.gameState.week,
+        expiresWeek: state.gameState.week + 2,
       };
-      store.gameState.industry = store.gameState.industry || {};
-      store.gameState.industry.distressedOffers = [offer];
-      store.setState?.({ gameState: store.gameState });
+      const next = { ...state.gameState, industry: { ...state.gameState.industry, distressedOffers: [offer] } };
+      store.setState({ gameState: next });
     }
   });
 
   await page.evaluate(() => {
-    const uiStore = (window as any).__UI_STORE__ || (window as any).useUIStore?.getState?.();
-    if (uiStore) {
-      uiStore.enqueueModal("DISTRESSED_ASSET_OFFER", { offerId: "test-offer-1" });
-    }
+    const uiStore = (window as any).__UI_STORE__ || (window as any).useUIStore;
+    uiStore?.getState?.().enqueueModal?.("DISTRESSED_ASSET_OFFER", { offerId: "test-offer-1" });
   });
 
   // Verify modal appears
   await expect(page.getByText("Distressed Asset Sale")).toBeVisible({ timeout: 5000 });
-  await expect(page.getByText("franchise 'Rambo'")).toBeVisible();
+  await expect(page.getByText("franchise 'Rambo'", { exact: true })).toBeVisible();
   await expect(page.getByText("From Carolco")).toBeVisible();
-  await expect(page.getByText("$100,000,000")).toBeVisible();
+  await expect(page.getByText("$100.0M")).toBeVisible();
 
   // Test decline path
   await page.getByRole("button", { name: "Decline" }).click();
@@ -93,15 +94,17 @@ test("distressed asset acquisition: modal appears, acquire works, decline works"
 
   await page.waitForTimeout(500);
   const offersAfterDecline = await page.evaluate(() => {
-    const store = (window as any).__GAME_STORE__ || (window as any).useGameStore?.getState?.();
-    return store?.gameState?.industry?.distressedOffers?.length ?? 0;
+    const store = (window as any).__GAME_STORE__ || (window as any).useGameStore;
+    const state = store?.getState?.() ?? store;
+    return state?.gameState?.industry?.distressedOffers?.length ?? 0;
   });
   expect(offersAfterDecline).toBe(0);
 
   // Re-inject offer for acquire test
   await page.evaluate(() => {
-    const store = (window as any).__GAME_STORE__ || (window as any).useGameStore?.getState?.();
-    if (store && store.gameState) {
+    const store = (window as any).__GAME_STORE__ || (window as any).useGameStore;
+    const state = store?.getState?.() ?? store;
+    if (state && state.gameState) {
       const offer = {
         id: "test-offer-2",
         sellerId: "rival-1",
@@ -112,24 +115,44 @@ test("distressed asset acquisition: modal appears, acquire works, decline works"
         price: 50_000_000,
         aiBuyerId: "rival-2",
         aiBuyerName: "Helix",
-        createdWeek: store.gameState.week,
-        expiresWeek: store.gameState.week + 2,
+        createdWeek: state.gameState.week,
+        expiresWeek: state.gameState.week + 2,
       };
-      store.gameState.industry.distressedOffers = [offer];
-      store.setState?.({ gameState: store.gameState });
+      // Inject the franchise being sold — the engine only transfers real assets.
+      const franchise = {
+        id: "franchise-2",
+        name: "Terminator",
+        ownerId: "rival-1",
+        relevanceScore: 80,
+        fatigueLevel: 0.1,
+        audienceLoyalty: 70,
+        totalEquity: 500_000_000,
+        synergyMultiplier: 1.2,
+        assetIds: [],
+        activeProjectIds: [],
+        lastReleaseWeeks: [],
+        creationWeek: 1,
+      };
+      const next = {
+        ...state.gameState,
+        industry: { ...state.gameState.industry, distressedOffers: [offer] },
+        ip: {
+          ...state.gameState.ip,
+          franchises: { ...(state.gameState.ip?.franchises || {}), "franchise-2": franchise },
+        },
+      };
+      store.setState({ gameState: next });
     }
   });
 
   await page.evaluate(() => {
-    const uiStore = (window as any).__UI_STORE__ || (window as any).useUIStore?.getState?.();
-    if (uiStore) {
-      uiStore.enqueueModal("DISTRESSED_ASSET_OFFER", { offerId: "test-offer-2" });
-    }
+    const uiStore = (window as any).__UI_STORE__ || (window as any).useUIStore;
+    uiStore?.getState?.().enqueueModal?.("DISTRESSED_ASSET_OFFER", { offerId: "test-offer-2" });
   });
 
   // Verify modal appears again
   await expect(page.getByText("Distressed Asset Sale")).toBeVisible({ timeout: 5000 });
-  await expect(page.getByText("franchise 'Terminator'")).toBeVisible();
+  await expect(page.getByText("franchise 'Terminator'", { exact: true })).toBeVisible();
 
   // Test acquire path
   await page.getByRole("button", { name: "Acquire" }).click();
@@ -137,9 +160,10 @@ test("distressed asset acquisition: modal appears, acquire works, decline works"
 
   await page.waitForTimeout(500);
   const playerFranchises = await page.evaluate(() => {
-    const store = (window as any).__GAME_STORE__ || (window as any).useGameStore?.getState?.();
-    const playerId = store?.gameState?.studio?.id;
-    const franchises = store?.gameState?.ip?.franchises || {};
+    const store = (window as any).__GAME_STORE__ || (window as any).useGameStore;
+    const state = store?.getState?.() ?? store;
+    const playerId = state?.gameState?.studio?.id;
+    const franchises = state?.gameState?.ip?.franchises || {};
     return Object.values(franchises).filter((f: any) => f.ownerId === playerId).length;
   });
   expect(playerFranchises).toBeGreaterThan(0);

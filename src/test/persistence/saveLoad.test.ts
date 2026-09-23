@@ -36,7 +36,10 @@ describe("saveLoad", () => {
     vi.mocked(persistenceService.load).mockResolvedValue(mockState);
 
     await saveGame(0, mockState);
-    expect(persistenceService.save).toHaveBeenCalledWith(0, mockState);
+    expect(persistenceService.save).toHaveBeenCalledWith(
+      0,
+      expect.objectContaining({ ...mockState, savedAt: expect.any(Number) })
+    );
 
     const loaded = await loadGame(0);
     expect(loaded).toEqual(mockState);
