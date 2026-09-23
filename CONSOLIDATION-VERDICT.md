@@ -17,7 +17,7 @@ Triaged PRs #820–#837 (12 cherry-picked, 5 superseded/rejected, 1 approved-as-
 ### Per-PR Verdict Table
 
 | PR | Cluster | Verdict | Rationale |
-|----|---------|---------|-----------|
+| ---- | --------- | --------- | ----------- |
 | #838 | palette close-icons | **Superseded** | 9-file diff; extra 6 files were stale merge-base import churn already fixed on main. Real content = same dialog/sheet aria-hidden, covered by #874. |
 | #839, #842, #845, #853, #855, #860, #862, #864, #870 | palette close-icons | **Superseded** | Identical dialog/sheet/toast `aria-hidden` diffs (#874 vs #845 byte-identical modulo `.Jules` metadata). |
 | #874 | palette close-icons | **Integrated** | Winning variant: `aria-hidden` on decorative X icons in `dialog.tsx`, `sheet.tsx`, `toast.tsx`. |
@@ -40,7 +40,7 @@ Triaged PRs #820–#837 (12 cherry-picked, 5 superseded/rejected, 1 approved-as-
 ### Plan-Validation Findings (approve/disprove record)
 
 | Claim | Verdict | Outcome |
-|-------|---------|---------|
+| ------- | --------- | --------- |
 | 38 PRs ↔ 38 branches, no stale refs | **Approved** | Verified; cleanup verified post-deletion. |
 | Sentinel cluster ≈ 10 near-identical | **Approved** | Implemented via extracted module instead of one variant. |
 | Palette close-icons ≈ 10 duplicates | **Approved** | #874 integrated; 10 superseded (incl. #838's stale churn). |
@@ -62,7 +62,7 @@ Triaged PRs #820–#837 (12 cherry-picked, 5 superseded/rejected, 1 approved-as-
 ### Additional Bugs Found & Fixed This Round
 
 | Bug | File | Fix |
-|-----|------|-----|
+| ----- | ------ | ----- |
 | Regulator/rumor headlines silently dropped | `industryHandlers.ts`, `RegulatorSystem.ts`, `RumorProcessor.ts` | Route through `impact.newsEvents` |
 | `?autoStart=true` at `/` dead-ends (redirect required existing gameState) | `TitleScreen.tsx` | `devAutoInit()` before navigate, matching Dashboard + dev-bypass button |
 | e2e `getByText("Alpha Studios")` strict-mode violation (4 matches) | `e2e/auto_start.spec.ts` | `getByRole("heading")` + nav timeout |
@@ -86,7 +86,7 @@ Triaged PRs #820–#837 (12 cherry-picked, 5 superseded/rejected, 1 approved-as-
 ### Verification Results (baseline → final)
 
 | Check | Baseline | Final |
-|-------|----------|-------|
+| ------- | ---------- | ------- |
 | `bun run lint` | 0 err / 66 warn | 0 err / 66 warn |
 | `bun run typecheck` | 22 errors | **0 errors** |
 | `bun run test` | 1752 pass / 4 fail | **1801 pass / 0 fail** (260 files) |
