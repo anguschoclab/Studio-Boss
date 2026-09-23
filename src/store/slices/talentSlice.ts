@@ -8,6 +8,7 @@ import {calculateLiveCounterBid} from "@/engine/systems/ai/biddingEngine";
 import {RandomGenerator} from "@/engine/utils/rng";
 import {addContractToIndex, addContractsToIndex, removeContractsByTalentFromIndex, addContractToTalentIndex, addContractsToTalentIndex, removeContractsByProjectFromTalentIndex} from "@/engine/utils";
 import {TalentAgentInteractionEngine} from "@/engine/systems/talent/talentAgentInteractions";
+import {getPlayerId} from "@/engine/utils/ownership";
 
 export interface TalentSlice {
   signContract: (talentId: string, projectId: string) => void;
@@ -155,7 +156,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         const deal: TalentPact = {
           id: rng.uuid("PCT") as PactId,
           talentId,
-          studioId: "PLAYER" as StudioId,
+          studioId: getPlayerId(state) as StudioId,
           type: "first_look",
           startDate: state.week,
           endDate: state.week + duration,
@@ -280,7 +281,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       const deal: TalentPact = {
         id: rng.uuid("PCT") as PactId,
         talentId,
-        studioId: "PLAYER" as StudioId,
+        studioId: getPlayerId(state) as StudioId,
         type: "first_look",
         startDate: state.week,
         endDate: state.week + 52,

@@ -307,24 +307,30 @@ export function buildNielsenProfile(
     };
   }
 
-  const avgHH = snapshots.reduce((s, snap) => s + snap.householdRating, 0) / snapshots.length;
-  const avgDemo = snapshots.reduce((s, snap) => s + snap.keyDemo, 0) / snapshots.length;
-  const avgViewers = snapshots.reduce((s, snap) => s + snap.totalViewers, 0) / snapshots.length;
-  const peak = snapshots.reduce(
-    (best, snap) => (snap.totalViewers > best.totalViewers ? snap : best),
-    snapshots[0]
-  );
+  // ⚡ Bolt Optimization: Replaced multiple reduce passes with a single loop to avoid repeated O(N) array iterations
+  let sumHH = 0;
+  let sumDemo = 0;
+  let sumViewers = 0;
+  let peak = snapshots[0];
+  let sumDvrLift = 0;
+
+  for (let i = 0; i < snapshots.length; i++) {
+    const snap = snapshots[i];
+    sumHH += snap.householdRating;
+    sumDemo += snap.keyDemo;
+    sumViewers += snap.totalViewers;
+    if (snap.totalViewers > peak.totalViewers) peak = snap;
+    sumDvrLift += (snap.live7Viewers - snap.liveSDViewers) / Math.max(snap.liveSDViewers, 0.1);
+  }
+
+  const avgHH = sumHH / snapshots.length;
+  const avgDemo = sumDemo / snapshots.length;
+  const avgViewers = sumViewers / snapshots.length;
   const premiere = snapshots[0];
   const latest = snapshots[snapshots.length - 1];
   const retention =
     premiere.totalViewers > 0 ? (latest.totalViewers / premiere.totalViewers) * 100 : 100;
-  const avgDvrLift =
-    (snapshots.reduce(
-      (s, snap) => s + (snap.live7Viewers - snap.liveSDViewers) / Math.max(snap.liveSDViewers, 0.1),
-      0
-    ) /
-      snapshots.length) *
-    100;
+  const avgDvrLift = (sumDvrLift / snapshots.length) * 100;
 
   return {
     snapshots,

@@ -1,5 +1,6 @@
 import {GameState, StateImpact} from "@/engine/types";
 import {getContractsByTalentId} from "../../utils";
+import {isPlayerOwner} from "../../utils/ownership";
 
 const FORBIDDEN_KEYS = new Set(["__proto__", "constructor", "prototype"]);
 
@@ -93,7 +94,7 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
   if (mergedRivalId && acquirerId) {
     const target = state.entities.rivals[mergedRivalId];
     if (target) {
-      if (acquirerId === "player") {
+      if (acquirerId === "player" || acquirerId === "PLAYER" || isPlayerOwner(state, acquirerId)) {
         const mergedVault = nextState.ip.vault.map((asset) => {
           if (asset.ownerStudioId === mergedRivalId) {
             return {

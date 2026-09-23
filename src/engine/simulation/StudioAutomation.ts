@@ -165,7 +165,7 @@ export class StudioAutomation {
             : "none";
 
       const rivalPrestige =
-        studioId === "PLAYER"
+        studioId === "PLAYER" || isPlayerOwner(state, studioId)
           ? state.studio.prestige
           : state.entities.rivals[studioId]?.prestige || 50;
       const { project: releasedProject } = calculateOpeningWeekend(

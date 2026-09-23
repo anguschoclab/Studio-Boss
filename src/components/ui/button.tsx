@@ -68,9 +68,20 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       return buttonElement;
     }
 
+    // Disabled buttons don't emit pointer/focus events — wrap in a span so the
+    // tooltip still works (the button's disabled:pointer-events-none lets events
+    // reach the wrapper).
+    const trigger = props.disabled ? (
+      <span className="inline-flex cursor-not-allowed" tabIndex={0}>
+        {buttonElement}
+      </span>
+    ) : (
+      buttonElement
+    );
+
     return (
       <Tooltip>
-        <TooltipTrigger asChild>{buttonElement}</TooltipTrigger>
+        <TooltipTrigger asChild>{trigger}</TooltipTrigger>
         <TooltipContent
           side={tooltipSide}
           align={tooltipAlign}

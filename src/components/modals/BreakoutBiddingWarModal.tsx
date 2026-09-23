@@ -110,6 +110,7 @@ export const BreakoutBiddingWarModal: React.FC = () => {
               className="flex-1 bg-primary hover:bg-primary/90 font-bold"
               onClick={handleSign}
               disabled={!canAfford}
+              tooltip={!canAfford ? "Insufficient funds" : undefined}
             >
               <Star className="h-4 w-4 mr-2" />
               Sign at {formatMoney(premiumFee)}

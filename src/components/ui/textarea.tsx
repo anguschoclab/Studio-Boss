@@ -14,6 +14,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         )}
         ref={ref}
         {...props}
+        maxLength={props.maxLength ?? 5000}
       />
     );
   }

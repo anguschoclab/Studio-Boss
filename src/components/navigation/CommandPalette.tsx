@@ -38,7 +38,7 @@ interface CommandPaletteProps {
 const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const { openCreateProject, setActiveHub, setActiveSubTab } = useUIStore();
+  const { openCreateProject, setActiveTab, setActiveSubTab } = useUIStore();
   const doAdvanceWeek = useGameStore((s) => s.doAdvanceWeek);
 
   // Build command list
@@ -51,7 +51,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
         subtitle: "OVERVIEW OPERATIONS STRATEGY",
         icon: LayoutDashboard,
         shortcut: "⌘1",
-        action: () => setActiveHub("hq"),
+        action: () => setActiveTab("command"),
         section: "NAVIGATION HUB",
       },
       {
@@ -60,7 +60,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
         subtitle: "SLATE DEVELOPMENT DISTRIBUTION",
         icon: Film,
         shortcut: "⌘2",
-        action: () => setActiveHub("production"),
+        action: () => setActiveTab("pipeline"),
         section: "NAVIGATION HUB",
       },
       {
@@ -69,7 +69,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
         subtitle: "ROSTER MARKETPLACE AGENCIES",
         icon: Users,
         shortcut: "⌘3",
-        action: () => setActiveHub("talent"),
+        action: () => setActiveTab("talent"),
         section: "NAVIGATION HUB",
       },
       {
@@ -78,7 +78,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
         subtitle: "RIVALS AWARDS MARKET FINANCIALS",
         icon: Globe,
         shortcut: "⌘4",
-        action: () => setActiveHub("intelligence"),
+        action: () => setActiveTab("industry"),
         section: "NAVIGATION HUB",
       },
       // Actions
@@ -109,7 +109,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
         icon: AlertTriangle,
         shortcut: "⌘⇧C",
         action: () => {
-          setActiveHub("hq");
+          setActiveTab("command");
           setActiveSubTab("operations");
         },
         section: "CRISIS MANAGEMENT",
@@ -121,7 +121,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
         subtitle: "REVIEW PROJECTS AWAITING APPROVAL",
         icon: Zap,
         action: () => {
-          setActiveHub("production");
+          setActiveTab("pipeline");
           setActiveSubTab("slate");
         },
         section: "CRISIS MANAGEMENT",
@@ -134,7 +134,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
         subtitle: "VIEW GENRE TRENDS AND MARKET SENTIMENT",
         icon: TrendingUp,
         action: () => {
-          setActiveHub("intelligence");
+          setActiveTab("industry");
           setActiveSubTab("market");
         },
         section: "INTELLIGENCE REPORTS",
@@ -146,7 +146,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
         subtitle: "CHECK OVERALL STUDIO PERFORMANCE METRICS",
         icon: Activity,
         action: () => {
-          setActiveHub("hq");
+          setActiveTab("command");
           setActiveSubTab("overview");
         },
         section: "INTELLIGENCE REPORTS",
@@ -159,7 +159,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
         subtitle: "CHECK ROSTER SATISFACTION LEVELS",
         icon: Users,
         action: () => {
-          setActiveHub("talent");
+          setActiveTab("talent");
           setActiveSubTab("roster");
         },
         section: "TALENT MANAGEMENT",
@@ -171,7 +171,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
         subtitle: "VIEW NEGOTIATION HISTORY AND OFFERS",
         icon: Briefcase,
         action: () => {
-          setActiveHub("talent");
+          setActiveTab("talent");
           setActiveSubTab("negotiations");
         },
         section: "TALENT MANAGEMENT",
@@ -184,7 +184,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
         subtitle: "MONITOR PRODUCTION SPENDING VS PLANNED",
         icon: Flame,
         action: () => {
-          setActiveHub("production");
+          setActiveTab("pipeline");
           setActiveSubTab("development");
         },
         section: "FINANCIAL INTELLIGENCE",
@@ -196,7 +196,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
         subtitle: "VIEW REVENUE AND EXPENSE TRENDS",
         icon: DollarSign,
         action: () => {
-          setActiveHub("intelligence");
+          setActiveTab("finance");
           setActiveSubTab("financials");
         },
         section: "FINANCIAL INTELLIGENCE",
@@ -205,7 +205,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
     ];
 
     return list;
-  }, [setActiveHub, setActiveSubTab, openCreateProject, doAdvanceWeek]);
+  }, [setActiveTab, setActiveSubTab, openCreateProject, doAdvanceWeek]);
 
   // Filter commands based on query
   const filteredCommands = React.useMemo(() => {

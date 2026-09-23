@@ -35,7 +35,7 @@ export const RebootOpportunityModal: React.FC = () => {
       <DialogContent className="max-w-lg bg-card/90 backdrop-blur-2xl border border-white/10">
         <DialogHeader>
           <div className="flex items-center gap-2 mb-1">
-            <Film className="h-5 w-5 text-primary" />
+            <Film className="h-5 w-5 text-primary" aria-hidden="true" />
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               IP Reboot Opportunity
             </span>
@@ -79,11 +79,11 @@ export const RebootOpportunityModal: React.FC = () => {
 
         <div className="flex gap-3 mt-4">
           <Button variant="outline" className="flex-1" onClick={handleDecline}>
-            <X className="h-4 w-4 mr-2" />
+            <X className="h-4 w-4 mr-2" aria-hidden="true" />
             Pass
           </Button>
           <Button className="flex-1" onClick={handleGreenlight}>
-            <Film className="h-4 w-4 mr-2" />
+            <Film className="h-4 w-4 mr-2" aria-hidden="true" />
             Greenlight Reboot
           </Button>
         </div>

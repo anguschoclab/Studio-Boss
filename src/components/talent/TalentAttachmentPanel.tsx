@@ -270,6 +270,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({
                       setHoveredTalentId(null);
                     }}
                     disabled={gameState && gameState.finance.cash < t.fee ? true : false}
+                    tooltip={gameState && gameState.finance.cash < t.fee ? "Insufficient studio capital" : undefined}
                   >
                     Attach
                   </Button>

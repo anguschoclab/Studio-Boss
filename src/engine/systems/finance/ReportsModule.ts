@@ -4,6 +4,7 @@ import {StateImpact, FinancialSnapshot} from "../../types/state.types";
 import {RevenueProcessor} from "./RevenueProcessor";
 import {ExpenseProcessor} from "./ExpenseProcessor";
 import {InterestRateSimulator} from "../market/InterestRateSimulator";
+import {isPlayerOwner} from "../../utils/ownership";
 
 export function generateWeeklyFinancialReport(
   state: GameState,
@@ -41,7 +42,9 @@ export function generateWeeklyFinancialReport(
   for (let i = 0; i < pendingImpacts.length; i++) {
     const impact = pendingImpacts[i];
     const isTarget = impact.payload && (impact.payload as Record<string, unknown>).targetId === studioId;
-    const isGenericPlayer = studioId === "player" && !(impact.payload as Record<string, unknown>)?.targetId;
+    const isGenericPlayer =
+      (studioId === "player" || isPlayerOwner(state, studioId)) &&
+      !(impact.payload as Record<string, unknown>)?.targetId;
 
     if (isTarget || isGenericPlayer) {
       if (impact.type === "FINANCE_TRANSACTION" && impact.payload) {

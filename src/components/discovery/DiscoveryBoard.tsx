@@ -37,7 +37,7 @@ const DiscoveryHeader = ({ openCreateProject }: { openCreateProject: () => void 
 
     <div className="flex items-center gap-6 relative z-10">
       <div className="relative w-64 hidden xl:block">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/20" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/20" aria-hidden="true" />
         <TooltipWrapper tooltip="FILTER LISTINGS BY PROPERTY NAME, WRITER, OR GENRE" side="bottom">
           <Input
             disabled

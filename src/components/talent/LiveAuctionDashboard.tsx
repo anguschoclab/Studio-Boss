@@ -101,7 +101,7 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({
             onClick={onClose}
             className="p-2 hover:bg-white/5 rounded-none transition-colors"
           >
-            <X className="w-6 h-6 text-slate-500" />
+            <X className="w-6 h-6 text-slate-500" aria-hidden="true" />
           </button>
         </div>
 

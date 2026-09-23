@@ -207,8 +207,8 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
     if (undiscovered.length > 0) {
       const toDiscover = rng.pick(undiscovered);
       const { talent } = discoverHiddenTalent(
-        { ...toDiscover, discoveredBy: "player", discoveryWeek: state.week },
-        "player",
+        { ...toDiscover, discoveredBy: state.studio.id, discoveryWeek: state.week },
+        state.studio.id,
         state.week,
         state,
         rng
