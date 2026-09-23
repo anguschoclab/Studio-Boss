@@ -33,11 +33,16 @@ export class MetricsCollector {
   private genreStats: Record<string, { cost: number; revenue: number }> = {};
   private tvGenreStats: Record<string, { cost: number; revenue: number }> = {};
   private totalTvAwards = 0;
+  private initialStudioCount = 0;
 
   public record(state: GameState, summary: WeekSummary): void {
     const platforms = state.market.buyers.filter(
       (b) => b.archetype === "streamer"
     ) as import("@/engine/types").StreamerPlatform[];
+
+    if (this.initialStudioCount === 0) {
+      this.initialStudioCount = Object.keys(state.entities.rivals || {}).length + 1;
+    }
 
     // Total bails tracking (Phase 2 hardening)
     const currentBailouts = summary.totalBailouts || 0;
@@ -211,7 +216,7 @@ export class MetricsCollector {
       avgNielsenKeyDemo: tvProjectCount > 0 ? totalNielsenDemo / tvProjectCount : 0,
       cutCounts: cutCounts,
       activeStudioCount: rivalsCount + 1,
-      consolidationCount: 11 - (rivalsCount + 1),
+      consolidationCount: Math.max(0, this.initialStudioCount - (rivalsCount + 1)),
     };
 
     this.history.push(metrics);
@@ -235,7 +240,7 @@ export class MetricsCollector {
     return `
 --- SIMULATION REPORT (Week ${last.week}) ---
 Player Cash: ${format(initial.playerCash)} -> ${format(last.playerCash)}
-Active Studios: ${last.activeStudioCount} / 11 (Mergers: ${last.consolidationCount})
+Active Studios: ${last.activeStudioCount} / ${this.initialStudioCount} (Mergers: ${last.consolidationCount})
 Total System Cash: ${format(last.totalSystemCash)}
 Industry Leader: ${last.industryLeader || "None"}
 Talent Pool Size: ${last.talentPoolSize} (Avg Prestige: ${last.avgTalentPrestige.toFixed(1)})

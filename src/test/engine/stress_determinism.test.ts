@@ -7,7 +7,7 @@ const STUDIO_NAME = "Stress Test Studios";
 const ARCHETYPE = "major";
 
 describe("52-Week Determinism Stress Test", () => {
-  test("should produce bit-identical results after 52 weeks of simulation", { timeout: 300_000 }, () => {
+  test("should produce bit-identical results after 52 weeks of simulation", { timeout: 300_000 }, async () => {
     const stateA = initializeGame(STUDIO_NAME, ARCHETYPE, SEED);
     const stateB = initializeGame(STUDIO_NAME, ARCHETYPE, SEED);
 
@@ -20,6 +20,9 @@ describe("52-Week Determinism Stress Test", () => {
     for (let week = 1; week <= 52; week++) {
       currentStateA = WeekCoordinator.execute(currentStateA).newState;
       currentStateB = WeekCoordinator.execute(currentStateB).newState;
+
+      // Yield so the vitest worker heartbeat isn't starved by the synchronous tick
+      await new Promise((r) => setImmediate(r));
 
       // Per-week comparison to find the exact drift point
       try {

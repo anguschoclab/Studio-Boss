@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {create} from "zustand";
-import {WeekSummary} from "@/engine/types";
 
 export type ModalType =
   | "CRISIS"
@@ -61,12 +60,6 @@ interface UIStore {
   showSettings: boolean;
   setShowSettings: (v: boolean) => void;
 
-  // Legacy (Will be refactored to use queue)
-  showCrisisModal: boolean;
-  crisisProjectId: string | null;
-  showWeekSummary: boolean;
-  weekSummary: WeekSummary | null;
-
   selectedProjectId: string | null;
   selectedTalentId: string | null;
   selectedRivalId: string | null;
@@ -78,10 +71,6 @@ interface UIStore {
   closeCreateProject: () => void;
   openPitchProject: (projectId: string) => void;
   closePitchProject: () => void;
-  openCrisisModal: (projectId: string) => void;
-  closeCrisisModal: () => void;
-  showSummary: (summary: WeekSummary) => void;
-  closeSummary: () => void;
   selectProject: (id: string | null) => void;
   selectTalent: (id: string | null) => void;
   selectRival: (id: string | null) => void;
@@ -128,10 +117,6 @@ export const useUIStore = create<UIStore>((set) => ({
     });
   },
 
-  showCrisisModal: false,
-  crisisProjectId: null,
-  showWeekSummary: false,
-  weekSummary: null,
   selectedProjectId: null,
   selectedTalentId: null,
   selectedRivalId: null,
@@ -143,10 +128,6 @@ export const useUIStore = create<UIStore>((set) => ({
   closeCreateProject: () => set({ showCreateProject: false }),
   openPitchProject: (projectId) => set({ showPitchProject: true, pitchingProjectId: projectId }),
   closePitchProject: () => set({ showPitchProject: false, pitchingProjectId: null }),
-  openCrisisModal: (projectId) => set({ showCrisisModal: true, crisisProjectId: projectId }),
-  closeCrisisModal: () => set({ showCrisisModal: false, crisisProjectId: null }),
-  showSummary: (summary) => set({ showWeekSummary: true, weekSummary: summary }),
-  closeSummary: () => set({ showWeekSummary: false }),
   selectProject: (id) => set({ selectedProjectId: id }),
   selectTalent: (id) => set({ selectedTalentId: id }),
   selectRival: (id) => set({ selectedRivalId: id, activeTab: "industry", activeHub: "intelligence" }),

@@ -7,11 +7,13 @@
  * an asynchronous interface to the Redux/Zustand store.
  */
 
+const REQUEST_TIMEOUT_MS = 30_000;
+
 class PersistenceService {
   private worker: Worker | null = null;
   private pendingPromises: Map<
     number,
-    { resolve: (data: any) => void; reject: (err: Error) => void }
+    { resolve: (data: any) => void; reject: (err: Error) => void; timer: ReturnType<typeof setTimeout> }
   > = new Map();
   private requestCounter = 0;
 
@@ -32,6 +34,7 @@ class PersistenceService {
         const pending = this.pendingPromises.get(requestId);
         if (!pending) return;
         this.pendingPromises.delete(requestId);
+        clearTimeout(pending.timer);
 
         if (type === "SAVE_SUCCESS") {
           pending.resolve(true);
@@ -45,22 +48,24 @@ class PersistenceService {
     }
   }
 
+  private request(type: string, payload: Record<string, unknown>): Promise<any> {
+    const requestId = ++this.requestCounter;
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => {
+        this.pendingPromises.delete(requestId);
+        reject(new Error(`[PersistenceService] ${type} request ${requestId} timed out`));
+      }, REQUEST_TIMEOUT_MS);
+      this.pendingPromises.set(requestId, { resolve, reject, timer });
+      this.worker?.postMessage({ type, requestId, ...payload });
+    });
+  }
+
   /**
    * Save the current game state to a named slot (.sb file).
    */
   async save(slotId: string | number, state: any): Promise<boolean> {
     if (!this.worker) return false;
-
-    const requestId = ++this.requestCounter;
-    return new Promise((resolve, reject) => {
-      this.pendingPromises.set(requestId, { resolve, reject });
-      this.worker?.postMessage({
-        type: "SAVE_GAME",
-        slotId,
-        state,
-        requestId,
-      });
-    });
+    return this.request("SAVE_GAME", { slotId, state });
   }
 
   /**
@@ -68,16 +73,7 @@ class PersistenceService {
    */
   async load(slotId: string | number): Promise<any | null> {
     if (!this.worker) return null;
-
-    const requestId = ++this.requestCounter;
-    return new Promise((resolve, reject) => {
-      this.pendingPromises.set(requestId, { resolve, reject });
-      this.worker?.postMessage({
-        type: "LOAD_GAME",
-        slotId,
-        requestId,
-      });
-    });
+    return this.request("LOAD_GAME", { slotId });
   }
 
   /**

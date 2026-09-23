@@ -271,11 +271,7 @@ export class WeekCoordinator {
     for (const id in state.entities.projects) {
       const project = state.entities.projects[id];
       if (project.state === "development") {
-        const result = tickScriptDevelopment(project, context.rng);
-        if (result.length > 0) {
-          context.impacts.push(I.projectUpdated(project.id, project));
-          context.impacts.push(...result);
-        }
+        context.impacts.push(...tickScriptDevelopment(project, context.rng));
       }
     }
 
@@ -293,7 +289,7 @@ export class WeekCoordinator {
     }
 
     // 6. Awards ceremonies — run every week (CeremonyRunner checks internal calendar)
-    const awardsYear = Math.floor(context.week / 52) + 1;
+    const awardsYear = Math.floor((context.week - 1) / 52) + 1;
     const awardsImpacts = runAwardsCeremony(state, context.week, awardsYear, context.rng);
     context.impacts.push(...awardsImpacts);
 
@@ -385,13 +381,20 @@ export class WeekCoordinator {
 
           const agentPersonality = newAgent.personality || this.derivePersonalityFromAgent(newAgent, agencyMap);
           const agency = newAgent.agencyId ? agencyMap.get(newAgent.agencyId) : undefined;
-          TalentAgentInteractionEngine.createRelationship(
+          const newRelationship = TalentAgentInteractionEngine.createRelationship(
             talentId,
             newAgent.id,
             (talent.personality as import("../types/talent.types").TalentPersonality) || "pragmatic",
             agentPersonality,
             agency?.tier
           );
+          context.impacts.push({
+            type: "RELATIONSHIP_UPDATED",
+            payload: {
+              relationshipId: `${talentId}-${newAgent.id}`,
+              relationship: newRelationship,
+            },
+          } as unknown as StateImpact);
 
           context.impacts.push({
             type: "TALENT_UPDATED",

@@ -1,5 +1,4 @@
 import {useGameStore} from "@/store/gameStore";
-import {useUIStore} from "@/store/uiStore";
 import {formatMoney, getWeekDisplay} from "@/engine/utils";
 import {Save, FastForward, Activity, Star} from "lucide-react";
 import {selectActiveProjects} from "@/store/selectors";
@@ -12,7 +11,6 @@ export const TopBar = () => {
   const doAdvanceWeek = useGameStore((s) => s.doAdvanceWeek);
   const saveToSlot = useGameStore((s) => s.saveToSlot);
 
-  const { showSummary } = useUIStore();
   const activeProjectsList = useGameStore((s) => selectActiveProjects(s.gameState));
 
   if (!gameState) return null;
@@ -26,8 +24,7 @@ export const TopBar = () => {
   const { displayWeek, year } = getWeekDisplay(week);
 
   const handleAdvanceWeek = () => {
-    const summary = doAdvanceWeek();
-    showSummary(summary);
+    doAdvanceWeek();
   };
 
   const handleSave = () => {

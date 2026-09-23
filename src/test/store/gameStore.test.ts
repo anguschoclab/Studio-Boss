@@ -60,6 +60,25 @@ describe("gameStore", () => {
     expect(useGameStore.getState().gameState?.week).toBe(2);
   });
 
+  it("routes MODAL_TRIGGERED impacts to the UI queue with the real summary payload", async () => {
+    const {useUIStore} = await import("../../store/uiStore");
+    await useGameStore.getState().newGame("My Studio", "major");
+    const state = useGameStore.getState().gameState!;
+    state.studio.internal.contracts = [];
+    state.entities.talents = {};
+    useGameStore.setState({ gameState: state });
+    useUIStore.setState({ activeModal: null, modalQueue: [] });
+
+    const summary = useGameStore.getState().doAdvanceWeek();
+
+    const active = useUIStore.getState().activeModal;
+    expect(active?.type).toBe("SUMMARY");
+    // The modal must receive the actual WeekSummary — not a bare {priority, payload}
+    // wrapper — so WeekSummaryModal renders real numbers.
+    expect(active?.payload?.toWeek).toBe(summary.toWeek);
+    expect(active?.payload?.cashAfter).toBe(summary.cashAfter);
+  });
+
   it("creates a project", async () => {
     await useGameStore.getState().newGame("My Studio", "major");
     useGameStore.getState().createProject({

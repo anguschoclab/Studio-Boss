@@ -49,15 +49,45 @@ const DistressedAssetOfferModal = React.lazy(() =>
 const AcquisitionConfirmModal = React.lazy(() =>
   import("./AcquisitionConfirmModal").then((m) => ({ default: m.AcquisitionConfirmModal }))
 );
+const GreenlightDecisionModal = React.lazy(() =>
+  import("./GreenlightDecisionModal").then((m) => ({ default: m.GreenlightDecisionModal }))
+);
+
+/** Modal types with a renderer in the switch below — others are auto-resolved. */
+const HANDLED_MODAL_TYPES: ReadonlySet<string> = new Set([
+  "SUMMARY",
+  "CRISIS",
+  "AWARDS",
+  "FESTIVAL_MARKET",
+  "DIRECTORS_CUT_AVAILABLE",
+  "UPFRONTS",
+  "BIDDING_WAR",
+  "BREAKOUT_BIDDING_WAR",
+  "REBOOT_OPPORTUNITY",
+  "GAME_OVER",
+  "RELEASE_STRATEGY",
+  "POST_PRODUCTION",
+  "ACHIEVEMENT_UNLOCKED",
+  "PACKAGE_DEAL_OFFERED",
+  "DISTRESSED_ASSET_OFFER",
+  "ACQUISITION_CONFIRM",
+  "GREENLIGHT_DECISION",
+]);
 
 /**
  * Unified Modal Manager.
  * Listens to the UI Store's modalQueue and renders the active high-priority modal.
  */
 export const ModalManager: React.FC = () => {
-  const { activeModal } = useUIStore();
+  const { activeModal, resolveCurrentModal } = useUIStore();
 
-  if (!activeModal) return null;
+  const isHandled = !!activeModal && HANDLED_MODAL_TYPES.has(activeModal.type);
+
+  React.useEffect(() => {
+    if (activeModal && !isHandled) resolveCurrentModal();
+  }, [activeModal, isHandled, resolveCurrentModal]);
+
+  if (!activeModal || !isHandled) return null;
 
   return (
     <React.Suspense fallback={null}>
@@ -95,6 +125,8 @@ export const ModalManager: React.FC = () => {
             return <DistressedAssetOfferModal key={activeModal.id} />;
           case "ACQUISITION_CONFIRM":
             return <AcquisitionConfirmModal key={activeModal.id} />;
+          case "GREENLIGHT_DECISION":
+            return <GreenlightDecisionModal key={activeModal.id} />;
           default:
             return null;
         }

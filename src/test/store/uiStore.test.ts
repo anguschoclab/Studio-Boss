@@ -7,8 +7,6 @@ describe("uiStore", () => {
     useUIStore.setState({
       activeTab: "pipeline",
       showCreateProject: false,
-      showWeekSummary: false,
-      weekSummary: null,
       selectedProjectId: null,
     });
   });
@@ -39,16 +37,4 @@ describe("uiStore", () => {
     expect(useUIStore.getState().selectedProjectId).toBeNull();
   });
 
-  it("shows and closes week summary", () => {
-    const summary = {
-      fromWeek: 1,
-      toWeek: 2,
-    } as unknown as import("../../engine/types").WeekSummary;
-    useUIStore.getState().showSummary(summary);
-    expect(useUIStore.getState().showWeekSummary).toBe(true);
-    expect(useUIStore.getState().weekSummary).toBe(summary);
-
-    useUIStore.getState().closeSummary();
-    expect(useUIStore.getState().showWeekSummary).toBe(false);
-  });
 });

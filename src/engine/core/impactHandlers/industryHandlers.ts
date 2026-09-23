@@ -106,8 +106,23 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
           return asset;
         });
 
+        // Transfer the absorbed rival's slate and platforms to the player
+        const playerId = state.studio.id;
+        const transferredProjects = { ...nextState.entities.projects };
+        for (const pid in target.projects) {
+          transferredProjects[pid] = { ...target.projects[pid], ownerId: playerId };
+        }
+
         nextState = {
           ...nextState,
+          entities: { ...nextState.entities, projects: transferredProjects },
+          studio: {
+            ...nextState.studio,
+            ownedPlatforms: [
+              ...(nextState.studio.ownedPlatforms || []),
+              ...(target.ownedPlatforms || []),
+            ],
+          },
           ip: { ...nextState.ip, vault: mergedVault },
         };
       } else {

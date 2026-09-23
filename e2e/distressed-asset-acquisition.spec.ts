@@ -26,8 +26,8 @@ test("distressed asset acquisition: modal appears, acquire works, decline works"
     // Fallback: try dynamic import through Vite's module graph.
     // This only works in dev builds where modules are served individually.
     try {
-      const gameMod = await (window as any).import("/src/store/gameStore.ts");
-      const uiMod = await (window as any).import("/src/store/uiStore.ts");
+      const gameMod = await import("/src/store/gameStore.ts");
+      const uiMod = await import("/src/store/uiStore.ts");
       if (gameMod?.useGameStore && uiMod?.useUIStore) {
         return { method: "import" as const };
       }

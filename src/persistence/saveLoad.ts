@@ -10,7 +10,7 @@ import {migrateSave} from "@/engine/migrations";
 export async function saveGame(slot: number, state: GameState): Promise<void> {
   try {
     // 1. Offload to background worker (OPFS)
-    await persistenceService.save(slot, state);
+    await persistenceService.save(slot, { ...state, savedAt: Date.now() });
 
     // 2. We skip synchronous metadata cache for now, or we could store it in OPFS too.
   } catch (e) {
@@ -51,7 +51,7 @@ export async function getSaveSlots(): Promise<SaveSlotInfo[]> {
         archetype: state.studio.archetype || "major",
         week: state.week || 1,
         cash: state.finance.cash || 0,
-        timestamp: Date.now(), // ideally state.saveTimestamp
+        timestamp: state.savedAt || 0,
       });
     } else {
       slots.push({

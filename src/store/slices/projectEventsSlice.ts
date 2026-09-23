@@ -26,7 +26,7 @@ export const createProjectEventsSlice: StateCreator<GameStore, [], [], ProjectEv
       if (!state) return s;
       const project = state.entities.projects[projectId as ProjectId];
       if (!project) return s;
-      const rng = new RandomGenerator(state.rngState ?? 0);
+      const rng = new RandomGenerator(state.rngState ?? state.gameSeed);
       const projectContracts = getContractsByProjectId(
         state.entities.contractsByProjectId,
         state.entities.contracts,

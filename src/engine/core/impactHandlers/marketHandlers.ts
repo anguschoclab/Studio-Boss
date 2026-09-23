@@ -8,7 +8,7 @@ import type {BuyerUpdateImpact, OpportunityUpdateImpact, TrendsUpdateImpact} fro
 
 export function handleBuyerUpdated(state: GameState, impact: BuyerUpdateImpact): GameState {
   const { buyerId, update } = impact.payload;
-  const buyers = state.market.buyers.map((b) =>
+  const buyers = (state.market.buyers || []).map((b) =>
     b.id === buyerId ? ({ ...b, ...update } as Buyer) : b
   );
   return {
@@ -22,7 +22,7 @@ export function handleBuyerUpdated(state: GameState, impact: BuyerUpdateImpact):
 
 export function handleOpportunityUpdated(state: GameState, impact: OpportunityUpdateImpact): GameState {
   const { opportunityId, rivalId, bid } = impact.payload;
-  const opportunities = state.market.opportunities.map((o) => {
+  const opportunities = (state.market.opportunities || []).map((o) => {
     if (o.id === opportunityId) {
       return {
         ...o,

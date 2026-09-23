@@ -19,13 +19,9 @@ import {AnimatePresence, motion} from "framer-motion";
 
 // Modals
 import {CreateProjectModal} from "@/components/modals/CreateProjectModal";
-import {WeekSummaryModal} from "@/components/modals/WeekSummaryModal";
 import {ProjectDetailModal} from "@/components/modals/ProjectDetailModal";
 import {PitchProjectModal} from "@/components/modals/PitchProjectModal";
-import {CrisisModal} from "@/components/modals/CrisisModal";
-import {AwardsCeremonyModal} from "@/components/modals/AwardsCeremonyModal";
-import {GreenlightDecisionModal} from "@/components/modals/GreenlightDecisionModal";
-import {AcquisitionConfirmModal} from "@/components/modals/AcquisitionConfirmModal";
+import {ModalManager} from "@/components/modals/ModalManager";
 import {SettingsModal} from "@/components/modals/SettingsModal";
 
 import {TabId} from "@/store/uiStore";
@@ -96,13 +92,9 @@ const Dashboard: React.FC = () => {
       </div>
 
       <CreateProjectModal />
-      <WeekSummaryModal />
       <ProjectDetailModal />
       <PitchProjectModal />
-      <CrisisModal />
-      <AwardsCeremonyModal />
-      <GreenlightDecisionModal />
-      <AcquisitionConfirmModal />
+      <ModalManager />
       <SettingsModal open={showSettings} onClose={() => setShowSettings(false)} />
     </div>
   );

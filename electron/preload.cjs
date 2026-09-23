@@ -28,11 +28,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
   maximizeWindow: () => ipcRenderer.invoke("window-maximize"),
   closeWindow: () => ipcRenderer.invoke("window-close"),
 
-  // Worker operations (simulation engine)
-  initGame: (studioName, archetype, seed) =>
-    ipcRenderer.invoke("worker-init-game", studioName, archetype, seed),
-  advanceWeek: (state) => ipcRenderer.invoke("worker-advance-week", state),
-
   // App info
   getVersion: () => ipcRenderer.invoke("get-version"),
   getPlatform: () => ipcRenderer.invoke("get-platform"),

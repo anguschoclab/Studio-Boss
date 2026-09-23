@@ -47,8 +47,12 @@ export function rivalPoachTalent(rival: RivalStudio, stars: TalentProfile[]): st
   return null;
 }
 
-export function updateRival(rival: RivalStudio): Partial<RivalStudio> {
+export function updateRival(rival: RivalStudio, realProjectCount?: number): Partial<RivalStudio> {
   const update: Partial<RivalStudio> = {};
+
+  // projectCount reflects the real slate when provided; otherwise it stays honest
+  // (no fabricated drift) and is left untouched.
+  if (realProjectCount !== undefined) update.projectCount = realProjectCount;
 
   // Natural fluctuation
   update.strength = clamp(rival.strength + (rand() * 6 - 3), 20, 100);
@@ -57,18 +61,15 @@ export function updateRival(rival: RivalStudio): Partial<RivalStudio> {
   if (rival.archetype === "major") {
     update.cash = rival.cash + (rand() * 40_000_000 - 10_000_000);
     if (rand() < 0.25) update.recentActivity = pick(MAJOR_ACTIVITIES);
-    update.projectCount = Math.max(2, rival.projectCount + (rand() < 0.6 ? 1 : 0));
     update.strategy = "acquirer";
   } else if (rival.archetype === "indie") {
     update.cash = rival.cash + (rand() * 10_000_000 - 4_000_000);
     if (rand() < 0.25) update.recentActivity = pick(INDIE_ACTIVITIES);
-    if (rand() < 0.1) update.projectCount = Math.max(1, rival.projectCount + 1);
     update.strategy = "prestige_chaser";
   } else {
     // mid-tier
     update.cash = rival.cash + (rand() * 20_000_000 - 5_000_000);
     if (rand() < 0.25) update.recentActivity = pick(MID_ACTIVITIES);
-    if (rand() < 0.2) update.projectCount = Math.max(1, rival.projectCount + 1);
     update.strategy = "genre_specialist";
   }
 
@@ -92,9 +93,15 @@ export function advanceRivals(state: GameState): StateImpact {
   const uiNotifications: string[] = [];
   const rivalsObj = state.entities.rivals;
 
+  const projectsObj = state.entities.projects || {};
+
   for (const id in rivalsObj) {
     const rival = rivalsObj[id];
-    const update = updateRival(rival);
+    let realProjectCount = Object.keys(rival.projects || {}).length;
+    for (const pid in projectsObj) {
+      if (projectsObj[pid].ownerId === rival.id) realProjectCount++;
+    }
+    const update = updateRival(rival, realProjectCount);
 
     rivalUpdates.push({
       rivalId: rival.id,

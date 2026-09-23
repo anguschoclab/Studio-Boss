@@ -1,7 +1,7 @@
 import {useState, useMemo} from "react";
 import {useGameStore} from "@/store/gameStore";
 import {Project, TalentRole} from "@/engine/types";
-import {formatMoney, getContractsByProjectId} from "@/engine/utils";
+import {formatMoney, getContractsByProjectId, generateId} from "@/engine/utils";
 import {Button} from "@/components/ui/button";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {TalentAvatar} from "@/components/talent/TalentAvatar";
@@ -90,7 +90,7 @@ export const TalentAttachmentPanel: React.FC<{ project: Project }> = ({ project 
       const t = talentMap.get(talentId);
       if (!t) return;
       const newContract = {
-        id: `contract-${crypto.randomUUID()}`,
+        id: generateId("contract"),
         talentId,
         projectId: project.id,
         fee: t.fee,

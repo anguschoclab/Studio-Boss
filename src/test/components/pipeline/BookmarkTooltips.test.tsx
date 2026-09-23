@@ -46,7 +46,7 @@ describe("Bookmark Tooltips", () => {
       selectProject: vi.fn(),
       selectTalent: vi.fn(),
       openPitchProject: vi.fn(),
-      openCrisisModal: vi.fn(),
+      enqueueModal: vi.fn(),
     };
     vi.mocked(useUIStore).mockImplementation((selector: any) => {
       if (typeof selector === "function") {

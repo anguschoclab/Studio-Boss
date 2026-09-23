@@ -20,7 +20,7 @@ vi.mock("@/store/uiStore", () => ({
 
 const mockSelectProject = vi.fn();
 const mockOpenPitchProject = vi.fn();
-const mockOpenCrisisModal = vi.fn();
+const mockEnqueueModal = vi.fn();
 
 const baseProject: Project = {
   id: "test-project-1",
@@ -53,7 +53,7 @@ describe("ProjectCard", () => {
     (useUIStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       selectProject: mockSelectProject,
       openPitchProject: mockOpenPitchProject,
-      openCrisisModal: mockOpenCrisisModal,
+      enqueueModal: mockEnqueueModal,
     });
   });
 
@@ -115,7 +115,7 @@ describe("ProjectCard", () => {
     expect(button).toBeInTheDocument();
 
     fireEvent.click(button);
-    expect(mockOpenCrisisModal).toHaveBeenCalledWith("test-project-1");
+    expect(mockEnqueueModal).toHaveBeenCalledWith("CRISIS", { projectId: "test-project-1" });
   });
 
   it("renders progress text for development state", () => {

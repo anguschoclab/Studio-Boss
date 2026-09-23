@@ -52,20 +52,20 @@ export interface GameStore
   devAutoInit: (archetype?: ArchetypeKey) => void;
 }
 
-// The Tech Supervisor: Background save queue using a decoupled while-loop to avoid tail-call recursion/memory leaks
-const saveQueue: GameState[] = [];
+// The Tech Supervisor: Background autosave — coalesced to the latest queued state.
+// Consecutive queued autosaves all target slot 0, so only the newest matters.
+let pendingAutosave: GameState | null = null;
 let isSaving = false;
 const processSaveQueue = async () => {
   if (isSaving) return;
   isSaving = true;
-  while (saveQueue.length > 0) {
-    const stateToSave = saveQueue.shift();
-    if (stateToSave) {
-      try {
-        await saveGame(0, stateToSave);
-      } catch (err) {
-        console.error("[GameStore] Background autosave failed:", err);
-      }
+  while (pendingAutosave) {
+    const stateToSave = pendingAutosave;
+    pendingAutosave = null;
+    try {
+      await saveGame(0, stateToSave);
+    } catch (err) {
+      console.error("[GameStore] Background autosave failed:", err);
     }
   }
   isSaving = false;
@@ -109,7 +109,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
       // The Tech Supervisor: Queue the save in the decoupled while-loop worker
       // (unless autosave is disabled via settings — Plan 4).
       if (useSettingsStore.getState().autosaveFrequency !== "off") {
-        saveQueue.push(result.newState);
+        pendingAutosave = result.newState;
         processSaveQueue();
       }
 
@@ -126,11 +126,20 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     const ui = useUIStore.getState();
     for (const impact of weekImpacts) {
       if (impact.type === "MODAL_TRIGGERED") {
-        const { modalType, ...rest } = impact.payload as {
+        const { modalType, payload: innerPayload, ...rest } = impact.payload as {
           modalType: string;
+          payload?: Record<string, unknown>;
           [key: string]: unknown;
         };
-        ui.enqueueModal(modalType as ModalType, rest);
+        // Two emit conventions exist: nested ({modalType, payload:{...}}) and flat
+        // ({modalType, fieldA, fieldB}). Normalize to the flat payload modals expect.
+        const modalPayload =
+          innerPayload && typeof innerPayload === "object" ? innerPayload : rest;
+        // SUMMARY is emitted before the week's summary exists — attach the real one.
+        ui.enqueueModal(
+          modalType as ModalType,
+          modalType === "SUMMARY" ? summary : modalPayload
+        );
       }
     }
 

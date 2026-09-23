@@ -36,7 +36,7 @@ describe("WeekSummaryModal", () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it("renders nothing when showWeekSummary is false (Dialog handles open state, but if weekSummary is null it returns null anyway)", () => {
+  it("renders nothing for non-SUMMARY modal types", () => {
     mockUseUIStore.mockReturnValue({
       activeModal: { type: "OTHER" } as any,
       resolveCurrentModal: mockCloseSummary,
@@ -134,7 +134,7 @@ describe("WeekSummaryModal", () => {
     expect(screen.getByText("Studio hit with major controversy")).toBeDefined();
   });
 
-  it("calls closeSummary when the Continue button is clicked", () => {
+  it("calls resolveCurrentModal when the Continue button is clicked", () => {
     mockUseUIStore.mockReturnValue({
       activeModal: {
         type: "SUMMARY",

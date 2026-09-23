@@ -46,7 +46,6 @@ vi.mock("@/lib/utils", () => ({
 // Mock UI store
 vi.mock("@/store/uiStore", () => ({
   useUIStore: vi.fn(() => ({
-    showSummary: vi.fn(),
   })),
 }));
 

@@ -22,10 +22,6 @@ export interface ElectronAPI {
   maximizeWindow: () => void;
   closeWindow: () => void;
 
-  // Worker operations
-  initGame: (studioName: string, archetype: string, seed: number) => Promise<unknown | null>;
-  advanceWeek: (state: unknown) => Promise<unknown | null>;
-
   // App info
   getVersion: () => Promise<string>;
   getPlatform: () => Promise<string>;

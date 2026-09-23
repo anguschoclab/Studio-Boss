@@ -26,7 +26,7 @@ interface ProjectCardProps {
  * @param props - Component properties
  */
 export const ProjectCard = ({ project }: ProjectCardProps) => {
-  const { selectProject, openPitchProject, openCrisisModal } = useUIStore();
+  const { selectProject, openPitchProject, enqueueModal } = useUIStore();
   const gameState = useGameStore((s) => s.gameState);
   const toggleBookmark = useGameStore((s) => s.toggleBookmark);
   const isBookmarked = useGameStore((s) => s.isBookmarked);
@@ -279,7 +279,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
               className="w-full h-12 text-[10px] font-black uppercase tracking-[0.3em] animate-pulse border border-red-400/30 bg-red-400/10 hover:bg-red-400 text-red-400 hover:text-white transition-all duration-700 rounded-none italic"
               onClick={(e) => {
                 e.stopPropagation();
-                openCrisisModal(project.id);
+                enqueueModal("CRISIS", { projectId: project.id });
               }}
             >
               <AlertTriangle className="w-4 h-4 mr-3" strokeWidth={3} />

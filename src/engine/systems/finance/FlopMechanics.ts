@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {GameState, Project, StateImpact} from "@/engine/types";
 import {clamp} from "../../utils";
 import {isPlayerOwner} from "../../utils/ownership";
@@ -73,7 +72,7 @@ export function calculateFlopSeverity(project: Project): FlopSeverity {
  */
 export function calculateFlopPenalties(project: Project, severity: FlopSeverity): FlopResult {
   const budget = project.budget || 1;
-  const marketingBudget = (project as any).marketingBudget || 0;
+  const marketingBudget = project.marketingBudget || 0;
   const totalCost = budget + marketingBudget;
 
   const config = severity !== FlopSeverity.NONE ? FLOP_PENALTY_CONFIGS[severity] : null;
@@ -165,7 +164,7 @@ export function applyFlopPenalties(
         payload: {
           headline: `${isRival.name} restructures after flop streak`,
           description: `After multiple failed releases, ${isRival.name} has shaken up its executive team and reset its strategy.`,
-          category: "rival" as any,
+          category: "rival",
           rivalId: isRival.id,
         },
       });
@@ -224,7 +223,7 @@ export function applyFlopPenalties(
       payload: {
         headline: `${ownerName} writes off ${costText} after ${severityText} flop`,
         description: `${project.title} failed to perform, forcing ${ownerName} to take a significant write-off.`,
-        category: "general" as any,
+        category: "general",
         projectId: project.id,
         rivalId: isRival?.id,
       },

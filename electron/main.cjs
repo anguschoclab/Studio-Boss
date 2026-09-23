@@ -410,6 +410,13 @@ ipcMain.handle("import-save", async () => {
 
     if (canceled || filePaths.length === 0) return null;
 
+    // Same 10MB cap as save-game
+    const stat = await fs.stat(filePaths[0]);
+    if (stat.size > 10 * 1024 * 1024) {
+      console.error("Import file too large:", stat.size);
+      return null;
+    }
+
     const data = await fs.readFile(filePaths[0], "utf-8");
     try {
       const parsed = safeJsonParse(data);
@@ -429,17 +436,23 @@ ipcMain.handle("import-save", async () => {
   }
 });
 
-// electron-store operations
+// electron-store operations — reject dangerous keys
+const FORBIDDEN_STORE_KEYS = new Set(["__proto__", "constructor", "prototype"]);
+const isValidStoreKey = (key) => typeof key === "string" && !FORBIDDEN_STORE_KEYS.has(key);
+
 ipcMain.handle("store-get", async (event, key) => {
+  if (!isValidStoreKey(key)) return null;
   return await store.get(key);
 });
 
 ipcMain.handle("store-set", async (event, key, value) => {
+  if (!isValidStoreKey(key)) return false;
   await store.set(key, value);
   return true;
 });
 
 ipcMain.handle("store-delete", async (event, key) => {
+  if (!isValidStoreKey(key)) return false;
   await store.delete(key);
   return true;
 });
@@ -492,33 +505,6 @@ ipcMain.handle("set-badge", (event, count) => {
   }
 });
 
-ipcMain.handle("worker-init-game", async (event, studioName, archetype, seed) => {
-  try {
-    // Import the game initialization function
-    // Note: This requires the engine to be transpiled to CommonJS or we need to use dynamic import
-    // For now, we'll return a placeholder that the renderer can use
-    console.log("[Main Process] init-game called with:", studioName, archetype, seed);
-    // In a full implementation, we would call the actual engine functions here
-    // For now, we'll let the renderer handle the worker
-    return null; // This signals to use the renderer worker fallback
-  } catch (error) {
-    console.error("Worker init-game error:", error);
-    return null;
-  }
-});
-
-ipcMain.handle("worker-advance-week", async (event, state) => {
-  try {
-    console.log("[Main Process] advance-week called");
-    // In a full implementation, we would call the actual engine functions here
-    // For now, we'll let the renderer handle the worker
-    return null; // This signals to use the renderer worker fallback
-  } catch (error) {
-    console.error("Worker advance-week error:", error);
-    return null;
-  }
-});
-
 // App info
 ipcMain.handle("get-version", () => {
   return app.getVersion();
@@ -530,10 +516,8 @@ ipcMain.handle("get-platform", () => {
 
 app.whenReady().then(async () => {
   try {
-    // Set file associations for Windows
-    if (process.platform === "win32") {
-      app.setAsDefaultProtocolClient("studio-boss");
-    }
+    // Note: no custom protocol client is registered — deep links would need
+    // second-instance/open-url handlers, which don't exist.
 
     // Handle app:// requests by serving files from dist/
     protocol.handle("app", (request) => {

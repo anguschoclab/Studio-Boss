@@ -90,6 +90,8 @@ export interface GameState {
   gameSeed: number;
   tickCount: number;
   rngState?: number;
+  /** Wall-clock ms when this state was last persisted (set by saveGame). */
+  savedAt?: number;
   game: {
     currentWeek: number;
   };

@@ -89,12 +89,15 @@ describe("ModalManager", () => {
     expect(await screen.findByTestId("acquisition-confirm-modal")).toBeInTheDocument();
   });
 
-  it("renders nothing for an unknown modal type", () => {
+  it("renders nothing for an unknown modal type and auto-resolves it so the queue can't jam", () => {
+    const mockResolve = vi.fn();
     (useUIStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       activeModal: { id: "test-5", type: "UNKNOWN_TYPE", payload: null },
+      resolveCurrentModal: mockResolve,
     });
 
     const { container } = render(<ModalManager />);
     expect(container.firstChild).toBeNull();
+    expect(mockResolve).toHaveBeenCalled();
   });
 });

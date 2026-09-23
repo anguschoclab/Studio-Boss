@@ -72,7 +72,7 @@ export function initializeGame(
       cash: rArchData.startingCash * randRange(0.5, 1.2),
       prestige: rArchData.startingPrestige + Math.floor(randRange(-10, 10)),
       recentActivity: "Setting up operations for the new season",
-      projectCount: 2 + Math.floor(rand() * 5),
+      projectCount: 0,
       motivationProfile,
       currentMotivation: pick(motivations),
       projects: {},
@@ -179,7 +179,7 @@ export function initializeGame(
         rightsExpirationWeek: 99999,
         rightsOwner: "RIVAL",
         ownerStudioId: rival.id,
-      } as unknown as IPAsset);
+      } as IPAsset);
     }
   });
 
