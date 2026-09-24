@@ -113,6 +113,8 @@ describe("CrisisModal", () => {
       </TooltipProvider>
     );
     expect(screen.queryByRole("dialog")).toBeNull();
+    // Stale modal must still be resolved so the queue can't deadlock.
+    expect(mockCloseCrisisModal).toHaveBeenCalled();
   });
 
   it("renders nothing if crisisProjectId is missing", () => {
@@ -130,6 +132,7 @@ describe("CrisisModal", () => {
       </TooltipProvider>
     );
     expect(screen.queryByRole("dialog")).toBeNull();
+    expect(mockCloseCrisisModal).toHaveBeenCalled();
   });
 
   it("renders nothing if project is not found", () => {
@@ -147,6 +150,7 @@ describe("CrisisModal", () => {
       </TooltipProvider>
     );
     expect(screen.queryByRole("dialog")).toBeNull();
+    expect(mockCloseCrisisModal).toHaveBeenCalled();
   });
 
   it("renders nothing if project has no active crisis", () => {
@@ -170,10 +174,10 @@ describe("CrisisModal", () => {
         <CrisisModal />
       </TooltipProvider>
     );
-    // The new structure just looks at activeModal.crisis, but let's assume if it expects an activeCrisis on project it should fail.
-    // Actually the new modal code only checks `project` exists. It doesn't check if it's resolved. So this test might not align with current code.
-    // However, since it's just tests, we can skip or adapt. We'll leave it testing empty just in case.
-    // Actually, let's just test that the modal details render.
+    // A project with no active crisis can't be rendered — the modal must
+    // resolve itself so the queue keeps moving.
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(mockCloseCrisisModal).toHaveBeenCalled();
   });
 
   it("renders the modal with crisis details correctly", () => {
@@ -189,6 +193,25 @@ describe("CrisisModal", () => {
     expect(screen.getByText("Costs $1M")).toBeInTheDocument();
     expect(screen.getByText("Let it burn")).toBeInTheDocument();
     expect(screen.getByText("Delays 2 weeks")).toBeInTheDocument();
+  });
+
+  it("renders embedded crisis data when the template lookup fails (real instance ids)", async () => {
+    // Engine crises carry generated instance ids (generateId("CRI")), never
+    // CRISIS_POOLS template ids — getCrisisData returns undefined in
+    // production. The modal must render from project.activeCrisis directly.
+    const impactUtils = await import("@/engine/utils/impactUtils");
+    (impactUtils.getCrisisData as unknown as ReturnType<typeof vi.fn>).mockReturnValue(undefined);
+
+    render(
+      <TooltipProvider>
+        <CrisisModal />
+      </TooltipProvider>
+    );
+
+    expect(screen.getByText(/Phase 2: Production Crisis/i)).toBeInTheDocument();
+    expect(screen.getByText("The set is on fire.")).toBeInTheDocument();
+    expect(screen.getByText("Put it out")).toBeInTheDocument();
+    expect(mockCloseCrisisModal).not.toHaveBeenCalled();
   });
 
   it("calls resolveProjectCrisis and closeCrisisModal when an option is selected", () => {
