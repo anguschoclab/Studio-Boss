@@ -26,8 +26,12 @@ test("distressed asset acquisition: modal appears, acquire works, decline works"
     // Fallback: try dynamic import through Vite's module graph.
     // This only works in dev builds where modules are served individually.
     try {
-      const gameMod = await import("/src/store/gameStore.ts");
-      const uiMod = await import("/src/store/uiStore.ts");
+      // Non-literal specifiers keep TS from resolving these paths — they only
+      // exist in the browser, served by Vite's dev server.
+      const gameStorePath = "/src/store/gameStore.ts";
+      const uiStorePath = "/src/store/uiStore.ts";
+      const gameMod = await import(/* @vite-ignore */ gameStorePath);
+      const uiMod = await import(/* @vite-ignore */ uiStorePath);
       if (gameMod?.useGameStore && uiMod?.useUIStore) {
         // Expose the stores so later evaluate blocks can use them.
         (window as any).__GAME_STORE__ = gameMod.useGameStore;
@@ -75,9 +79,8 @@ test("distressed asset acquisition: modal appears, acquire works, decline works"
       const next = { ...state.gameState, industry: { ...state.gameState.industry, distressedOffers: [offer] } };
       store.setState({ gameState: next });
     }
-  });
-
-  await page.evaluate(() => {
+    // Enqueue in the same evaluate — a separate call can race the
+    // re-render/navigation triggered by setState.
     const uiStore = (window as any).__UI_STORE__ || (window as any).useUIStore;
     uiStore?.getState?.().enqueueModal?.("DISTRESSED_ASSET_OFFER", { offerId: "test-offer-1" });
   });
@@ -143,9 +146,6 @@ test("distressed asset acquisition: modal appears, acquire works, decline works"
       };
       store.setState({ gameState: next });
     }
-  });
-
-  await page.evaluate(() => {
     const uiStore = (window as any).__UI_STORE__ || (window as any).useUIStore;
     uiStore?.getState?.().enqueueModal?.("DISTRESSED_ASSET_OFFER", { offerId: "test-offer-2" });
   });

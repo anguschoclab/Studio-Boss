@@ -1,10 +1,11 @@
 import {describe, it, expect} from "vitest";
 import {CROSSOVER_AFFINITY, FRANCHISE_FATIGUE_RISK, CROSSOVER_AFFINITY_LOWER_KEYS, FRANCHISE_FATIGUE_RISK_LOWER_KEYS} from "@/engine/data/genres";
+import {countKeys} from "@/engine/utils";
 
 describe("CROSSOVER_AFFINITY_LOWER_KEYS", () => {
   it("contains all keys from CROSSOVER_AFFINITY", () => {
     const originalKeys = Object.keys(CROSSOVER_AFFINITY);
-    expect(Object.keys(CROSSOVER_AFFINITY_LOWER_KEYS).length).toBe(originalKeys.length);
+    expect(countKeys(CROSSOVER_AFFINITY_LOWER_KEYS)).toBe(originalKeys.length);
   });
 
   it("has all lowercase keys", () => {
@@ -45,7 +46,7 @@ describe("CROSSOVER_AFFINITY_LOWER_KEYS", () => {
 describe("FRANCHISE_FATIGUE_RISK_LOWER_KEYS", () => {
   it("contains all keys from FRANCHISE_FATIGUE_RISK", () => {
     const originalKeys = Object.keys(FRANCHISE_FATIGUE_RISK);
-    expect(Object.keys(FRANCHISE_FATIGUE_RISK_LOWER_KEYS).length).toBe(originalKeys.length);
+    expect(countKeys(FRANCHISE_FATIGUE_RISK_LOWER_KEYS)).toBe(originalKeys.length);
   });
 
   it("has all lowercase keys", () => {

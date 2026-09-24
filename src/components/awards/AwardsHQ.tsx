@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import {useGameStore} from "@/store/gameStore";
 import {useUIStore} from "@/store/uiStore";
-import {formatMoney} from "@/engine/utils";
+import {formatMoney, countKeys} from "@/engine/utils";
 import {selectAwardsEligibleProjects, selectAwardsOddsById} from "@/store/selectors";
 import {selectAwardsProbability} from "@/store/chartSelectors";
 import {Button} from "@/components/ui/button";
@@ -79,7 +79,7 @@ export const AwardsHQ: React.FC = () => {
         {[
           {
             label: "Active Campaigns",
-            val: Object.keys(gameState.studio.activeCampaigns || {}).length,
+            val: countKeys(gameState.studio.activeCampaigns),
             icon: Target,
             color: "text-primary",
           },

@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { initializeGame } from "@/engine/core/gameInit";
 import { applySingleImpact } from "@/engine/core/impactHandlers";
-import { setDeterministicSeed } from "@/engine/utils";
+import { setDeterministicSeed, countKeys } from "@/engine/utils";
 import { tickRivalSpawner, tickHardBankruptcy } from "@/engine/systems/industry/RivalSpawner";
 import { getProjectQualityBonus } from "@/engine/systems/talent/ProductionEnhancementSystem";
 import type { GameState, RivalStudio } from "@/engine/types";
@@ -59,7 +59,7 @@ describe("impact emitter semantics", () => {
     expect(spawnImpact).toBeTruthy();
 
     const next = applySingleImpact(state, spawnImpact!);
-    expect(Object.keys(next.entities.rivals).length).toBeGreaterThan(0);
+    expect(countKeys(next.entities.rivals)).toBeGreaterThan(0);
   });
 
   it("hard-bankrupt rival is removed from entities.rivals after apply", () => {

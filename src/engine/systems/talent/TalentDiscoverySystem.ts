@@ -1,6 +1,6 @@
 import {GameState, StateImpact, Talent, Project} from "../../types";
 import {RandomGenerator} from "../../utils/rng";
-import {getContractsByProjectId} from "../../utils";
+import {getContractsByProjectId, countKeys} from "../../utils";
 import {BreakoutStar, BreakoutTrigger, HiddenTalent} from "../../types/discovery.types";
 import {checkForBreakout} from "./discovery/BreakoutStarEngine";
 import {generateGuestStarBooking} from "./discovery/GuestStarEngine";
@@ -175,7 +175,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
   let hiddenPool = discoveryState.hiddenTalentPool || {};
 
   // Replenish pool if low
-  const hiddenCount = Object.keys(hiddenPool).length;
+  const hiddenCount = countKeys(hiddenPool);
   if (hiddenCount < HIDDEN_TALENT_POOL_SIZE) {
     const toAdd = HIDDEN_TALENT_POOL_SIZE - hiddenCount;
     for (let i = 0; i < toAdd; i++) {

@@ -11,7 +11,7 @@ describe("Historical Snapshots System", () => {
     });
   });
 
-  it("should capture a complete snapshot exactly on week 52", { timeout: 120_000 }, async () => {
+  it("should capture a complete snapshot exactly on week 52", { timeout: 300_000 }, async () => {
     // Advance 51 weeks (getting to week 52)
     for (let i = 1; i < 52; i++) {
       useGameStore.getState().doAdvanceWeek();

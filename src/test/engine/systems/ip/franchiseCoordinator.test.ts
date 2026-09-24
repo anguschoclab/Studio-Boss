@@ -2,6 +2,7 @@ import {describe, it, expect, beforeEach} from "vitest";
 import {updateFranchiseHub, updateFranchiseHubs} from "@/engine/systems/ip/franchiseCoordinator";
 import {createMockGameState, createMockProject, createMockIPAsset} from "@/test/utils/mockFactories";
 import {GameState, Franchise} from "@/engine/types";
+import {countKeys} from "@/engine/utils";
 
 describe("franchiseCoordinator", () => {
   let state: GameState;
@@ -84,7 +85,7 @@ describe("franchiseCoordinator", () => {
       state.entities.projects = { "proj-boring": project };
 
       const result = updateFranchiseHubs(state, [project]);
-      expect(Object.keys(result.ip.franchises).length).toBe(0);
+      expect(countKeys(result.ip.franchises)).toBe(0);
     });
 
     it("assigns franchiseId to project after hub creation", () => {
@@ -204,7 +205,7 @@ describe("franchiseCoordinator", () => {
       state.entities.projects = { "proj-single": project };
 
       const result = updateFranchiseHub(state, project);
-      expect(Object.keys(result.ip.franchises).length).toBe(1);
+      expect(countKeys(result.ip.franchises)).toBe(1);
     });
   });
 });

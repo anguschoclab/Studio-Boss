@@ -1,6 +1,7 @@
 import {describe, it, expect} from "vitest";
 import {initializeGame} from "@/engine/core/gameInit";
 import {advanceWeek} from "@/engine/core/weekAdvance";
+import {countKeys} from "@/engine/utils";
 
 /**
  * 🌌 DETERMINISM TEST
@@ -34,15 +35,9 @@ describe("Simulation Determinism", () => {
     expect(stateA.studio.prestige).toBe(stateB.studio.prestige);
 
     // Compare entity counts
-    expect(Object.keys(stateA.entities.talents).length).toBe(
-      Object.keys(stateB.entities.talents).length
-    );
-    expect(Object.keys(stateA.entities.projects).length).toBe(
-      Object.keys(stateB.entities.projects).length
-    );
-    expect(Object.keys(stateA.entities.rivals).length).toBe(
-      Object.keys(stateB.entities.rivals).length
-    );
+    expect(countKeys(stateA.entities.talents)).toBe(countKeys(stateB.entities.talents));
+    expect(countKeys(stateA.entities.projects)).toBe(countKeys(stateB.entities.projects));
+    expect(countKeys(stateA.entities.rivals)).toBe(countKeys(stateB.entities.rivals));
 
     // Deep equality check for stable properties
     expect(stateA.finance).toEqual(stateB.finance);

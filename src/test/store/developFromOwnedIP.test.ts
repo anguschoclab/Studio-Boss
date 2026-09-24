@@ -1,6 +1,7 @@
 import {describe, it, expect, beforeEach, vi} from "vitest";
 import {useGameStore} from "@/store/gameStore";
 import {IPAsset} from "@/engine/types";
+import {countKeys} from "@/engine/utils";
 
 function applySingleImpact(state: any, impact: any): any {
   if (impact.type === "NEWS_ADDED") {
@@ -219,7 +220,7 @@ describe("developFromOwnedIP", () => {
     const store = useGameStore.getState() as any;
     store.developFromOwnedIP("ip-1");
     const gs = useGameStore.getState().gameState as any;
-    expect(Object.keys(gs.entities.projects).length).toBe(0);
+    expect(countKeys(gs.entities.projects)).toBe(0);
   });
 
   it("no-op for RIVAL asset (no project created)", () => {
@@ -233,7 +234,7 @@ describe("developFromOwnedIP", () => {
     const store = useGameStore.getState() as any;
     store.developFromOwnedIP("ip-1");
     const gs = useGameStore.getState().gameState as any;
-    expect(Object.keys(gs.entities.projects).length).toBe(0);
+    expect(countKeys(gs.entities.projects)).toBe(0);
   });
 
   it("no-op for unknown asset ID (no project created)", () => {
@@ -241,7 +242,7 @@ describe("developFromOwnedIP", () => {
     const store = useGameStore.getState() as any;
     store.developFromOwnedIP("nonexistent");
     const gs = useGameStore.getState().gameState as any;
-    expect(Object.keys(gs.entities.projects).length).toBe(0);
+    expect(countKeys(gs.entities.projects)).toBe(0);
   });
 
   it("updates contractsByProjectId index", () => {

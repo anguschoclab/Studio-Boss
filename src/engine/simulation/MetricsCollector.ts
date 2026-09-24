@@ -1,5 +1,6 @@
 import {GameState, WeekSummary} from "../types";
 import {isPlayerOwner} from "../utils/ownership";
+import {countKeys} from "../utils";
 
 export interface SimulationMetrics {
   week: number;
@@ -41,7 +42,7 @@ export class MetricsCollector {
     ) as import("@/engine/types").StreamerPlatform[];
 
     if (this.initialStudioCount === 0) {
-      this.initialStudioCount = Object.keys(state.entities.rivals || {}).length + 1;
+      this.initialStudioCount = countKeys(state.entities.rivals) + 1;
     }
 
     // Total bails tracking (Phase 2 hardening)

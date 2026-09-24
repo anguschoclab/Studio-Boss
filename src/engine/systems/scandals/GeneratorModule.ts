@@ -1,4 +1,4 @@
-import {pick, getContractsByTalentId} from "../../utils";
+import {pick, getContractsByTalentId, countKeys} from "../../utils";
 import {GameState, Scandal, ScandalType} from "@/engine/types";
 import {StateImpact} from "../../types/state.types";
 import {RandomGenerator} from "../../utils/rng";
@@ -29,7 +29,7 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
 
   const studioProjects = state.entities.projects || {};
 
-  const studioProjectsCount = Object.keys(studioProjects).length;
+  const studioProjectsCount = countKeys(studioProjects);
   const sizeModifier = 1.0 + numContracts * 0.5 + studioProjectsCount * 0.75;
 
   const talentPool = state.entities.talents || {};

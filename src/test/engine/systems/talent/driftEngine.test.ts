@@ -3,39 +3,40 @@ import {TalentDriftEngine, DEFAULT_DRIFT_CONFIG} from "@/engine/systems/talent/d
 import {ARCHETYPE_TRANSITIONS, PERSONALITY_TRANSITIONS, CAREER_TRAJECTORY_TRANSITIONS} from "@/engine/data/talentArchetypes";
 import {Talent} from "@/engine/types";
 import {RandomGenerator} from "@/engine/utils/rng";
+import {countKeys} from "@/engine/utils";
 
 describe("TalentDriftEngine", () => {
   describe("ARCHETYPE_TRANSITIONS", () => {
     it("should have valid transitions for all actor archetypes", () => {
       expect(ARCHETYPE_TRANSITIONS.actor).toBeDefined();
-      expect(Object.keys(ARCHETYPE_TRANSITIONS.actor).length).toBeGreaterThan(0);
+      expect(countKeys(ARCHETYPE_TRANSITIONS.actor)).toBeGreaterThan(0);
     });
 
     it("should have valid transitions for all writer archetypes", () => {
       expect(ARCHETYPE_TRANSITIONS.writer).toBeDefined();
-      expect(Object.keys(ARCHETYPE_TRANSITIONS.writer).length).toBeGreaterThan(0);
+      expect(countKeys(ARCHETYPE_TRANSITIONS.writer)).toBeGreaterThan(0);
     });
 
     it("should have valid transitions for all producer archetypes", () => {
       expect(ARCHETYPE_TRANSITIONS.producer).toBeDefined();
-      expect(Object.keys(ARCHETYPE_TRANSITIONS.producer).length).toBeGreaterThan(0);
+      expect(countKeys(ARCHETYPE_TRANSITIONS.producer)).toBeGreaterThan(0);
     });
 
     it("should have valid transitions for all personality archetypes", () => {
       expect(ARCHETYPE_TRANSITIONS.personality).toBeDefined();
-      expect(Object.keys(ARCHETYPE_TRANSITIONS.personality).length).toBeGreaterThan(0);
+      expect(countKeys(ARCHETYPE_TRANSITIONS.personality)).toBeGreaterThan(0);
     });
 
     it("should have valid transitions for all director archetypes", () => {
       expect(ARCHETYPE_TRANSITIONS.director).toBeDefined();
-      expect(Object.keys(ARCHETYPE_TRANSITIONS.director).length).toBeGreaterThan(0);
+      expect(countKeys(ARCHETYPE_TRANSITIONS.director)).toBeGreaterThan(0);
     });
   });
 
   describe("PERSONALITY_TRANSITIONS", () => {
     it("should have transitions for all personality traits", () => {
       expect(PERSONALITY_TRANSITIONS).toBeDefined();
-      expect(Object.keys(PERSONALITY_TRANSITIONS).length).toBeGreaterThan(0);
+      expect(countKeys(PERSONALITY_TRANSITIONS)).toBeGreaterThan(0);
     });
 
     it("should have at least one transition for each personality", () => {
@@ -49,7 +50,7 @@ describe("TalentDriftEngine", () => {
   describe("CAREER_TRAJECTORY_TRANSITIONS", () => {
     it("should have transitions for all career trajectories", () => {
       expect(CAREER_TRAJECTORY_TRANSITIONS).toBeDefined();
-      expect(Object.keys(CAREER_TRAJECTORY_TRANSITIONS).length).toBeGreaterThan(0);
+      expect(countKeys(CAREER_TRAJECTORY_TRANSITIONS)).toBeGreaterThan(0);
     });
   });
 
@@ -353,7 +354,7 @@ describe("TalentDriftEngine", () => {
 
       expect(result.updatedTalents).toBeDefined();
       expect(result.driftResults).toBeDefined();
-      expect(Object.keys(result.updatedTalents).length).toBe(2);
+      expect(countKeys(result.updatedTalents)).toBe(2);
     });
   });
 

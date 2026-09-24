@@ -1,7 +1,7 @@
 import {RivalStudio, GameState, Talent} from "@/engine/types";
 type TalentProfile = Talent;
 import {StateImpact} from "../types/state.types";
-import {pick, rand, generateId} from "../utils";
+import {pick, rand, generateId, countRivalProjects} from "../utils";
 
 const INDIE_ACTIVITIES = [
   "Quietly developing a prestige drama slate",
@@ -98,14 +98,9 @@ export function advanceRivals(state: GameState): StateImpact[] {
   const uiNotifications: string[] = [];
   const rivalsObj = state.entities.rivals;
 
-  const projectsObj = state.entities.projects || {};
-
   for (const id in rivalsObj) {
     const rival = rivalsObj[id];
-    let realProjectCount = Object.keys(rival.projects || {}).length;
-    for (const pid in projectsObj) {
-      if (projectsObj[pid].ownerId === rival.id) realProjectCount++;
-    }
+    const realProjectCount = countRivalProjects(state, rival);
     const { update, cashDelta, statDeltas } = updateRival(rival, realProjectCount);
 
     impacts.push({

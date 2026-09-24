@@ -2,6 +2,7 @@ import {describe, it, expect} from "vitest";
 import {calculateRivalMotivation, calculateMotivationScores, tickAIMinds} from "@/engine/systems/ai/motivationEngine";
 import {applyImpacts} from "@/engine/core/impactReducer";
 import {RandomGenerator} from "@/engine/utils/rng";
+import {countKeys} from "@/engine/utils";
 import {createMockGameState, createMockRival} from "../../generators/mockFactory";
 import type {StateImpact, SeriesProject, Project} from "@/engine/types";
 
@@ -835,7 +836,7 @@ describe("calculateRivalMotivation — flop history influence", () => {
     const scores = getMotivationScores(rival, state);
 
     // Should have results (no crash, no flop adjustment)
-    expect(Object.keys(scores).length).toBeGreaterThan(0);
+    expect(countKeys(scores)).toBeGreaterThan(0);
   });
 
   it("graduated adjustments do not force a motivation override", () => {

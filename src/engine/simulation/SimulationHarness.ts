@@ -1,6 +1,7 @@
 import {GameState, ArchetypeKey} from "../types";
 import {initializeGame} from "../core/gameInit";
 import {advanceWeek} from "../core/weekAdvance";
+import {countKeys} from "../utils";
 
 export interface SimulationResult {
   finalState: GameState;
@@ -42,7 +43,7 @@ export class SimulationHarness {
         for (const rid in state.entities.rivals || {}) {
           const r = state.entities.rivals[rid];
           totalRivalCash += r.cash || 0;
-          rivalProjectsCount += Object.keys(r.projects || {}).length;
+          rivalProjectsCount += countKeys(r.projects);
           const ms = r.marketShare || 0;
           hhi += (ms * 100) ** 2;
           rivalsCount++;
@@ -50,7 +51,7 @@ export class SimulationHarness {
 
         // Collect Snapshot Metrics
         const totalIndustryCash = totalRivalCash + state.finance.cash;
-        const totalProjects = Object.keys(state.entities.projects).length + rivalProjectsCount;
+        const totalProjects = countKeys(state.entities.projects) + rivalProjectsCount;
 
         // Talent Burnout Audit
         let talentPoolCount = 0;

@@ -3,6 +3,7 @@ import {useGameStore} from "@/store/gameStore";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, Cell} from "recharts";
 import {formatMoney} from "@/engine/utils";
+import {computeRadarMetrics} from "./competitorMetrics";
 import {cn} from "@/lib/utils";
 import {Building2, Wallet, Trophy, TrendingUp} from "lucide-react";
 
@@ -53,43 +54,7 @@ export const CompetitorComparison: React.FC<CompetitorComparisonProps> = ({ clas
     if (!gameState || !gameState.finance) {
       return [];
     }
-    const maxCash = Math.max(gameState.finance.cash, ...rivals.map((r) => r.cash)) || 1;
-    const maxProjects =
-      Math.max(
-        Object.keys(gameState.entities.projects).length,
-        ...rivals.map((r) => Object.keys(r.projects || {}).length)
-      ) || 1;
-
-    return [
-      {
-        metric: "Cash",
-        player: (gameState.finance.cash / maxCash) * 100,
-        avgRival:
-          (rivals.reduce((sum, r) => sum + r.cash, 0) / (rivals.length || 1) / maxCash) * 100,
-      },
-      {
-        metric: "Prestige",
-        player: studio.prestige,
-        avgRival: rivals.reduce((sum, r) => sum + r.prestige, 0) / (rivals.length || 1),
-      },
-      {
-        metric: "Projects",
-        player: (Object.keys(gameState.entities.projects).length / maxProjects) * 100,
-        avgRival:
-          (rivals.reduce((sum, r) => sum + Object.keys(r.projects || {}).length, 0) /
-            (rivals.length || 1) /
-            maxProjects) *
-          100,
-      },
-      {
-        metric: "Strength",
-        player:
-          rivals.length > 0
-            ? 100 - rivals.reduce((sum, r) => sum + r.strength, 0) / rivals.length
-            : 50,
-        avgRival: 50,
-      },
-    ];
+    return computeRadarMetrics(gameState, studio, rivals);
   }, [studio, rivals, gameState]);
 
   if (!gameState) return null;
