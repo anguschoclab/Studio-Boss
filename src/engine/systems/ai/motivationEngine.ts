@@ -240,7 +240,8 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
       // rather than rival.syndicationPotential, which is cleared on exit — a
       // rival re-entering FRANCHISE_BUILDING must not re-announce old news. The
       // field is kept as a fallback so pre-existing tracked state still counts.
-      const announced = getSimMemory(state).syndication[rival.id] ?? rival.syndicationPotential;
+      const announced =
+        (getSimMemory(state).syndication ?? {})[rival.id] ?? rival.syndicationPotential;
       const isNewMilestone =
         milestoneShow !== null &&
         (announced === undefined ||

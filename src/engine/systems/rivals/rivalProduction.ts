@@ -1,4 +1,4 @@
-import {GameState, RivalStudio, Project, StateImpact, BudgetTierKey, ProjectType} from "@/engine/types";
+import {GameState, RivalStudio, Project, SeriesProject, StateImpact, BudgetTierKey, ProjectType} from "@/engine/types";
 import {RandomGenerator} from "@/engine/utils/rng";
 import {BUDGET_TIERS} from "@/engine/data/budgetTiers";
 import {getStudioArchetype} from "@/engine/data/aiArchetypes";
@@ -129,8 +129,8 @@ function buildRivalProject(
     scriptHeat: 50,
   } as Project;
 
-  if (type === "SERIES" && "tvDetails" in base) {
-    base.tvDetails = {
+  if (type === "SERIES") {
+    (base as SeriesProject).tvDetails = {
       currentSeason: 1,
       episodesOrdered: 10,
       episodesCompleted: 0,

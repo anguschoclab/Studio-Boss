@@ -1,5 +1,16 @@
 import {describe, it, expect} from "vitest";
-import {formatMoney, getWeekDisplay, pick, randRange, clamp} from "../../engine/utils";
+import {
+  formatMoney,
+  getWeekDisplay,
+  pick,
+  randRange,
+  clamp,
+  countKeys,
+  countRivalProjects,
+  countPlayerProjects,
+} from "../../engine/utils";
+import {RivalStudio, Project} from "../../engine/types";
+import {createMockGameState} from "../utils/mockFactories";
 
 describe("utils", () => {
   describe("formatMoney", () => {
@@ -81,6 +92,67 @@ describe("utils", () => {
 
     it("returns the maximum when value is above max", () => {
       expect(clamp(15, 1, 10)).toBe(10);
+    });
+  });
+
+  describe("countKeys", () => {
+    it("returns 0 for an empty object", () => {
+      expect(countKeys({})).toBe(0);
+    });
+
+    it("returns 0 for null and undefined", () => {
+      expect(countKeys(null)).toBe(0);
+      expect(countKeys(undefined)).toBe(0);
+    });
+
+    it("counts own enumerable keys", () => {
+      expect(countKeys({ a: 1, b: 2, c: 3 })).toBe(3);
+    });
+
+    it("ignores inherited prototype properties", () => {
+      const proto = { inherited: true };
+      const obj = Object.create(proto);
+      obj.own1 = 1;
+      obj.own2 = 2;
+      expect(countKeys(obj)).toBe(2);
+    });
+  });
+
+  describe("countRivalProjects", () => {
+    const rival = { id: "r1", projects: { a: {}, b: {} } } as unknown as RivalStudio;
+
+    it("counts rival.projects plus entity-store projects tagged ownerId", () => {
+      const state = createMockGameState();
+      state.entities.projects = {
+        p1: { ownerId: "r1" } as Project,
+        p2: { ownerId: "r1" } as Project,
+        p3: { ownerId: "r2" } as Project,
+        p4: {} as Project,
+      };
+      expect(countRivalProjects(state, rival)).toBe(4);
+    });
+
+    it("handles missing rival.projects and empty entity store", () => {
+      const state = createMockGameState();
+      const bareRival = { id: "r1" } as unknown as RivalStudio;
+      expect(countRivalProjects(state, bareRival)).toBe(0);
+    });
+  });
+
+  describe("countPlayerProjects", () => {
+    it("counts unowned and player-owned entity projects, excluding rival-owned", () => {
+      const state = createMockGameState(); // studio.id === "player-studio"
+      state.entities.projects = {
+        p1: { ownerId: "player-studio" } as Project,
+        p2: {} as Project,
+        p3: { ownerId: "r1" } as Project,
+        p4: { ownerId: "r2" } as Project,
+      };
+      expect(countPlayerProjects(state)).toBe(2);
+    });
+
+    it("returns 0 when there are no projects", () => {
+      expect(countPlayerProjects(createMockGameState())).toBe(0);
     });
   });
 });

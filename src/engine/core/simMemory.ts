@@ -32,6 +32,7 @@ export function getSimMemory(state: GameState): SimMemory {
     ...mem,
     antitrust: { ...defaults.antitrust, ...mem.antitrust },
     distress: { ...defaults.distress, ...mem.distress },
+    syndication: mem.syndication ?? defaults.syndication,
     eventLogs: { ...defaults.eventLogs, ...mem.eventLogs },
   };
 }

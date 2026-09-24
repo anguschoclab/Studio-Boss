@@ -91,7 +91,7 @@ export class ExpenseProcessor {
       (p) => p.state !== "released" && p.state !== "archived" && p.state !== "completed"
     );
 
-    const overhead = this.calculateStudioBurn(1, activeProjects.length);
+    const overhead = this.calculateStudioBurn(state.studio?.level ?? 1, activeProjects.length);
     const production = this.calculateProductionBurn(projects);
     const marketing = this.calculateMarketingBurn(projects);
     const interest = this.calculateDebtInterest(cash, market.debtRate);

@@ -1,4 +1,5 @@
-import {Contract} from "@/engine/types";
+import {Contract, GameState, RivalStudio} from "@/engine/types";
+import {isPlayerOwner} from "./utils/ownership";
 // Shared utilities for the engine layer — no React imports
 
 /**
@@ -328,4 +329,33 @@ export function getContractsByTalentId(
     if (c) result.push(c);
   }
   return result;
+}
+
+/** Counts own enumerable keys without allocating an intermediate array. */
+export function countKeys(obj: object | null | undefined): number {
+  if (obj == null) return 0;
+  let n = 0;
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) n++;
+  }
+  return n;
+}
+
+/** Rival's total projects across both stores: rival.projects + entities.projects tagged ownerId === rival.id. */
+export function countRivalProjects(state: GameState, rival: RivalStudio): number {
+  let n = countKeys(rival.projects);
+  for (const pid in state.entities.projects) {
+    if (state.entities.projects[pid].ownerId === rival.id) n++;
+  }
+  return n;
+}
+
+/** Player-owned projects in entities.projects: ownerId unset or isPlayerOwner. */
+export function countPlayerProjects(state: GameState): number {
+  let n = 0;
+  for (const pid in state.entities.projects) {
+    const ownerId = state.entities.projects[pid].ownerId;
+    if (!ownerId || isPlayerOwner(state, ownerId)) n++;
+  }
+  return n;
 }
