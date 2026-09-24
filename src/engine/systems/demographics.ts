@@ -23,14 +23,15 @@ export function calculateAudienceIndex(project: Project, target: AudienceQuadran
   const genre = project.genre;
   if (genre) {
     // Check specific quadrant affinities
-    Object.entries(GENRE_AFFINITIES).forEach(([quadrant, affinities]) => {
+    for (const quadrant in GENRE_AFFINITIES) {
+      const affinities = GENRE_AFFINITIES[quadrant];
       if (target === quadrant || target.includes(quadrant)) {
         const affinity = affinities[genre];
         if (affinity !== undefined) {
           index += affinity;
         }
       }
-    });
+    }
   }
 
   if (target === "four_quadrant") {

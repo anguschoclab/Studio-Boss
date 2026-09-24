@@ -412,7 +412,9 @@ export class HeadlessController {
     // A failed rival is marked acquirable so ConsolidationEngine sweeps it next downturn.
     const mem = getSimMemory(state);
     const cashStreaks: Record<string, number> = { ...mem.headlessCashStreaks };
-    Object.values(state.entities.rivals || {}).forEach((r) => {
+    const streakRivals = state.entities.rivals || {};
+    for (const rid in streakRivals) {
+      const r = streakRivals[rid];
       const cash = Number(r.cash) || 0;
       const prev = cashStreaks[r.id] || 0;
       const next = cash < BANKRUPTCY_CASH_FLOOR ? prev + 1 : 0;
@@ -432,7 +434,7 @@ export class HeadlessController {
         });
         cashStreaks[r.id] = 0;
       }
-    });
+    }
     impacts.push({
       type: "INDUSTRY_UPDATE",
       payload: { update: { "simMemory.headlessCashStreaks": cashStreaks } },

@@ -88,16 +88,16 @@ export const BardResolver = {
     }
 
     // 3. Extreme fallback: Pick any valid tier
-    const allPossibleKeys = Object.keys(data);
-    for (const key of allPossibleKeys) {
+    for (const key in data) {
+      if (!Object.prototype.hasOwnProperty.call(data, key)) continue;
       const potentialTierData = data[key];
       if (Array.isArray(potentialTierData)) {
         const result = pickAndResolve(potentialTierData);
         if (result) return result;
       } else if (typeof potentialTierData === "object" && potentialTierData !== null) {
         const folder = potentialTierData as Record<string, string[]>;
-        const nestedTiers = Object.keys(folder);
-        for (const t of nestedTiers) {
+        for (const t in folder) {
+          if (!Object.prototype.hasOwnProperty.call(folder, t)) continue;
           if (Array.isArray(folder[t])) {
             const result = pickAndResolve(folder[t]);
             if (result) return result;

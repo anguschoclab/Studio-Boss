@@ -139,7 +139,9 @@ function checkReferentialIntegrity(data: unknown): string | null {
     ["contract", contracts],
     ["rival", rivals],
   ] as const) {
-    for (const [key, entity] of Object.entries(record)) {
+    for (const key in record) {
+      if (!Object.prototype.hasOwnProperty.call(record, key)) continue;
+      const entity = record[key];
       if (!entity || typeof entity !== "object") {
         return `entities.${label}s['${key}'] is not an object`;
       }
@@ -154,8 +156,9 @@ function checkReferentialIntegrity(data: unknown): string | null {
   }
 
   // Projects must carry load-bearing identity and lifecycle fields.
-  for (const [key, project] of Object.entries(projects)) {
-    const p = project as { title?: unknown; type?: unknown; state?: unknown };
+  for (const key in projects) {
+    if (!Object.prototype.hasOwnProperty.call(projects, key)) continue;
+    const p = projects[key] as { title?: unknown; type?: unknown; state?: unknown };
     if (typeof p.title !== "string" || p.title.length === 0) {
       return `project '${key}' is missing required field 'title'`;
     }
@@ -168,8 +171,9 @@ function checkReferentialIntegrity(data: unknown): string | null {
   }
 
   // Talents must carry identity and tier.
-  for (const [key, talent] of Object.entries(talents)) {
-    const t = talent as { name?: unknown; tier?: unknown };
+  for (const key in talents) {
+    if (!Object.prototype.hasOwnProperty.call(talents, key)) continue;
+    const t = talents[key] as { name?: unknown; tier?: unknown };
     if (typeof t.name !== "string" || t.name.length === 0) {
       return `talent '${key}' is missing required field 'name'`;
     }
@@ -179,8 +183,9 @@ function checkReferentialIntegrity(data: unknown): string | null {
   }
 
   // Rivals must carry identity, archetype, and treasury.
-  for (const [key, rival] of Object.entries(rivals)) {
-    const r = rival as { name?: unknown; archetype?: unknown; cash?: unknown };
+  for (const key in rivals) {
+    if (!Object.prototype.hasOwnProperty.call(rivals, key)) continue;
+    const r = rivals[key] as { name?: unknown; archetype?: unknown; cash?: unknown };
     if (typeof r.name !== "string" || r.name.length === 0) {
       return `rival '${key}' is missing required field 'name'`;
     }
@@ -193,8 +198,9 @@ function checkReferentialIntegrity(data: unknown): string | null {
   }
 
   // Contracts must carry their references, fee, and resolve those references.
-  for (const [key, contract] of Object.entries(contracts)) {
-    const { id, projectId, talentId, fee } = contract as {
+  for (const key in contracts) {
+    if (!Object.prototype.hasOwnProperty.call(contracts, key)) continue;
+    const { id, projectId, talentId, fee } = contracts[key] as {
       id?: string;
       projectId?: unknown;
       talentId?: unknown;
@@ -223,8 +229,10 @@ function checkReferentialIntegrity(data: unknown): string | null {
     ["contractsByProjectId", entities.contractsByProjectId],
     ["contractsByTalentId", entities.contractsByTalentId],
   ] as const) {
-    for (const [key, ids] of Object.entries(index ?? {})) {
-      for (const id of ids) {
+    const idx = index ?? {};
+    for (const key in idx) {
+      if (!Object.prototype.hasOwnProperty.call(idx, key)) continue;
+      for (const id of idx[key]) {
         if (!(id in contracts)) {
           return `entities.${indexName}['${key}'] references missing contract '${id}'`;
         }
@@ -240,7 +248,7 @@ function checkReferentialIntegrity(data: unknown): string | null {
   }
 
   // studio.internal.projects mirrors entities.projects — no orphan keys.
-  for (const key of Object.keys(state.studio?.internal?.projects ?? {})) {
+  for (const key in state.studio?.internal?.projects ?? {}) {
     if (!(key in projects)) {
       return `studio.internal.projects references missing project '${key}'`;
     }

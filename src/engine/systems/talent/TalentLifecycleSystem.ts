@@ -20,7 +20,9 @@ export const TalentLifecycleSystem = {
     );
 
     // Apply drift changes
-    for (const [talentId, driftResult] of Object.entries(driftResults.driftResults)) {
+    for (const talentId in driftResults.driftResults) {
+      if (!Object.prototype.hasOwnProperty.call(driftResults.driftResults, talentId)) continue;
+      const driftResult = driftResults.driftResults[talentId];
       if (
         driftResult.archetypeChanged ||
         driftResult.personalityChanged ||

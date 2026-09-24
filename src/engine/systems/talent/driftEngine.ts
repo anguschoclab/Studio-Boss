@@ -350,7 +350,9 @@ export const TalentDriftEngine = {
     const updatedTalents: Record<string, Talent> = { ...talents };
     const driftResults: Record<string, DriftResult> = {};
 
-    for (const [id, talent] of Object.entries(talents)) {
+    for (const id in talents) {
+      if (!Object.prototype.hasOwnProperty.call(talents, id)) continue;
+      const talent = talents[id];
       const driftResult = this.processDrift(talent, config, rng);
       if (
         driftResult.archetypeChanged ||

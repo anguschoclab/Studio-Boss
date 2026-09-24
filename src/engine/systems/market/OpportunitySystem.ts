@@ -115,7 +115,6 @@ export const OpportunitySystem = {
 
     if (expired.length > 0 || remainingOpportunities.length < 8) {
       const toGenerate = Math.max(0, 8 - remainingOpportunities.length);
-      const _talentPoolIds = Object.keys(state.entities.talents);
       const newOpps = Array.from({ length: toGenerate }, () =>
         generateOpportunity()
       );

@@ -39,9 +39,16 @@ export function handleRelationshipUpdated(state: GameState, impact: Relationship
   // Partial update by relationshipId (no full relationship object)
   if (relationshipId && update) {
     const relationships = state.relationships?.relationships || {};
-    const existingKey = Object.keys(relationships).find(
-      (k) => relationships[k].id === relationshipId
-    );
+    let existingKey: string | undefined;
+    for (const k in relationships) {
+      if (
+        Object.prototype.hasOwnProperty.call(relationships, k) &&
+        relationships[k].id === relationshipId
+      ) {
+        existingKey = k;
+        break;
+      }
+    }
     if (!existingKey) return state;
     return {
       ...state,

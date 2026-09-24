@@ -160,24 +160,26 @@ export class MetricsCollector {
     // Find Top Genre ROI
     let topGenre = "None";
     let maxROI = 0;
-    Object.entries(this.genreStats).forEach(([genre, stats]) => {
+    for (const genre in this.genreStats) {
+      const stats = this.genreStats[genre];
       const roi = stats.cost > 0 ? stats.revenue / stats.cost : 0;
       if (roi > maxROI) {
         maxROI = roi;
         topGenre = genre;
       }
-    });
+    }
 
     // Find Top TV Genre ROI
     let topTvGenre = "None";
     let maxTvROI = 0;
-    Object.entries(this.tvGenreStats).forEach(([genre, stats]) => {
+    for (const genre in this.tvGenreStats) {
+      const stats = this.tvGenreStats[genre];
       const roi = stats.cost > 0 ? stats.revenue / stats.cost : 0;
       if (roi > maxTvROI) {
         maxTvROI = roi;
         topTvGenre = genre;
       }
-    });
+    }
 
     // Total industry cash (for market share)
     const totalAssets = playerCash + rivalTotalCash + platformTotalCash;

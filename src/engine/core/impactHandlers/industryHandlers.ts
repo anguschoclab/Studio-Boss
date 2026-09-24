@@ -87,7 +87,10 @@ export function handleIndustryUpdate(state: GameState, impact: IndustryUpdateImp
   const update = payload.update;
   if (update && typeof update === "object" && !Array.isArray(update)) {
     const clonedRefs = new Set<unknown>([nextState]);
-    for (const [path, value] of Object.entries(update)) {
+    const updateRecord = asRecord(update);
+    for (const path in updateRecord) {
+      if (!Object.prototype.hasOwnProperty.call(updateRecord, path)) continue;
+      const value = updateRecord[path];
       const parts = path.split(".");
       let current: Record<string, unknown> = asRecord(nextState);
 

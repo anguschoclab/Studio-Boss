@@ -122,7 +122,9 @@ export function checkCliqueCrises(
   }
 
   // Check for clique drama (if toxic clique has 2+ members)
-  for (const [cliqueId, count] of Object.entries(cliquePresence)) {
+  for (const cliqueId in cliquePresence) {
+    if (!Object.prototype.hasOwnProperty.call(cliquePresence, cliqueId)) continue;
+    const count = cliquePresence[cliqueId];
     if (count < 2) continue;
 
     const clique = cliques[cliqueId];
