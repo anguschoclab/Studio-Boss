@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {GameState, StateImpact, Talent, Project} from "../../types";
 import {RandomGenerator} from "../../utils/rng";
 import {getContractsByProjectId} from "../../utils";
@@ -334,12 +333,15 @@ export function getProjectQualityBonus(
   projectId: string,
   state: GameState
 ): { screenplayBonus: number; additionBonus: number; creditSceneBonus: number } {
-  const enhancements = state.relationships?.productionEnhancements || {};
+  const enhancements = state.relationships?.productionEnhancements;
+  const screenplayNotes = enhancements?.screenplayNotes ?? {};
+  const productionAdditions = enhancements?.productionAdditions ?? {};
+  const creditScenes = enhancements?.creditScenes ?? {};
 
   let screenplayBonus = 0;
   // ⚡ The Framerate Fanatic: Replaced Object.values().filter().reduce() with a direct for...in loop
-  for (const nId in enhancements.screenplayNotes || {}) {
-    const n = enhancements.screenplayNotes[nId] as ScreenplayNote;
+  for (const nId in screenplayNotes) {
+    const n = screenplayNotes[nId];
     if (n.projectId === projectId && n.implemented) {
       screenplayBonus += n.qualityBonus;
     }
@@ -347,8 +349,8 @@ export function getProjectQualityBonus(
 
   let additionBonus = 0;
   // ⚡ The Framerate Fanatic: Replaced Object.values().filter().reduce() with a direct for...in loop
-  for (const aId in enhancements.productionAdditions || {}) {
-    const a = enhancements.productionAdditions[aId] as ProductionAddition;
+  for (const aId in productionAdditions) {
+    const a = productionAdditions[aId];
     if (a.projectId === projectId) {
       additionBonus += a.qualityBonus;
     }
@@ -356,8 +358,8 @@ export function getProjectQualityBonus(
 
   let creditSceneBonus = 0;
   // ⚡ The Framerate Fanatic: Replaced Object.values().filter().reduce() with a direct for...in loop
-  for (const cId in enhancements.creditScenes || {}) {
-    const c = enhancements.creditScenes[cId] as CreditScene;
+  for (const cId in creditScenes) {
+    const c = creditScenes[cId];
     if (c.projectId === projectId) {
       creditSceneBonus += c.audienceBonus;
     }
@@ -410,12 +412,8 @@ export function tickProductionEnhancementSystem(
       for (const note of notes) {
         impacts.push({
           type: "SCREENPLAY_NOTE_CREATED",
-          payload: {
-            projectId: project.id,
-            note,
-            notification: `${state.entities.talents?.[note.authorId]?.name} has provided screenplay notes for "${project.title}"`,
-          },
-        } as any);
+          payload: { note },
+        });
       }
     }
 
@@ -425,12 +423,8 @@ export function tickProductionEnhancementSystem(
       for (const addition of additions) {
         impacts.push({
           type: "PRODUCTION_ADDITION_CREATED",
-          payload: {
-            projectId: project.id,
-            addition,
-            notification: `New production addition for "${project.title}": ${addition.description}`,
-          },
-        } as any);
+          payload: { addition },
+        });
 
         // Add cost to project
         impacts.push({
@@ -452,12 +446,8 @@ export function tickProductionEnhancementSystem(
       for (const scene of scenes) {
         impacts.push({
           type: "CREDIT_SCENE_CREATED",
-          payload: {
-            projectId: project.id,
-            scene,
-            notification: `Credit scene planned for "${project.title}"`,
-          },
-        } as any);
+          payload: { scene },
+        });
       }
     }
   }
@@ -474,8 +464,7 @@ export function implementScreenplayNote(
   rng: RandomGenerator
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const enhancements = state.relationships?.productionEnhancements || {};
-  const note = enhancements.screenplayNotes?.[noteId] as ScreenplayNote | undefined;
+  const note = state.relationships?.productionEnhancements?.screenplayNotes?.[noteId];
 
   if (!note || note.implemented) return impacts;
 
@@ -492,7 +481,7 @@ export function implementScreenplayNote(
       noteId,
       note: { ...note, implemented: true, implementedWeek: state.week },
     },
-  } as any);
+  });
 
   // Apply quality bonus to project
   const project = state.entities.projects?.[note.projectId];
@@ -522,8 +511,7 @@ export function spoilCreditScene(
   rng: RandomGenerator
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const enhancements = state.relationships?.productionEnhancements || {};
-  const scene = enhancements.creditScenes?.[sceneId] as CreditScene | undefined;
+  const scene = state.relationships?.productionEnhancements?.creditScenes?.[sceneId];
 
   if (!scene || scene.spoiledByRumors) return impacts;
 
@@ -534,11 +522,8 @@ export function spoilCreditScene(
 
   impacts.push({
     type: "CREDIT_SCENE_UPDATED",
-    payload: {
-      sceneId,
-      scene: updatedScene,
-    },
-  } as any);
+    payload: { scene: updatedScene },
+  });
 
   // News about leak
   const project = state.entities.projects?.[scene.projectId];

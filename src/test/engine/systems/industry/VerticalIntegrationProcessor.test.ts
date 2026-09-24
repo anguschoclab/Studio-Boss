@@ -32,7 +32,7 @@ describe("VerticalIntegrationProcessor", () => {
     expect(financeTx[0].payload.description).toContain("Player Stream");
   });
 
-  it("emits RIVAL_UPDATED for rival-owned platform", () => {
+  it("emits FINANCE_TRANSACTION for rival-owned platform", () => {
     const state = createMockGameState({ week: 10 });
     const rivalPlatform: StreamerPlatform = {
       id: "buy-rival-streamer",
@@ -61,8 +61,11 @@ describe("VerticalIntegrationProcessor", () => {
     const rng = new RandomGenerator(42);
     const impacts = tickVerticalIntegration(state, rng);
 
-    const rivalUpdates = impacts.filter((i) => i.type === "RIVAL_UPDATED");
-    expect(rivalUpdates.length).toBeGreaterThanOrEqual(1);
-    expect(rivalUpdates[0].payload.rivalId).toBe("rival-1");
+    const rivalTx = impacts.filter(
+      (i) =>
+        i.type === "FINANCE_TRANSACTION" &&
+        (i.payload as { targetId?: string }).targetId === "rival-1"
+    );
+    expect(rivalTx.length).toBeGreaterThanOrEqual(1);
   });
 });

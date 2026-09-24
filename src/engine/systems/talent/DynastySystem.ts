@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import {GameState, StateImpact, Talent, Family} from "../../types";import {RandomGenerator} from "../../utils/rng";
+import {GameState, StateImpact, Talent, Family} from "../../types";
+import {RandomGenerator} from "../../utils/rng";
 import {generateTalent} from "../../generators/talent/index";
 import type {DeathEvent} from "./DeathSystem";
 
@@ -44,7 +44,6 @@ const _NEPO_BABY_AGE_ENTRY = 18; // Age when children enter talent pool
  */
 export function checkPregnancies(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const newPregnancies: Pregnancy[] = [];
 
   // Get all public romantic pairs (would come from RelationshipSystem in full implementation)
   // For now, check married/coupled talent with spouseId
@@ -75,17 +74,6 @@ export function checkPregnancies(state: GameState, rng: RandomGenerator): StateI
 
     // Pregnancy check
     if (rng.next() < PREGNANCY_BASE_CHANCE) {
-      const pregnancy: Pregnancy = {
-        id: rng.uuid("PRG"),
-        motherId: mother.id,
-        fatherId: father.id,
-        conceptionWeek: state.week,
-        birthWeek: state.week + 40,
-        isPublic: true, // Public couple = public pregnancy
-      };
-
-      newPregnancies.push(pregnancy);
-
       impacts.push({
         type: "NEWS_ADDED",
         payload: {
@@ -99,16 +87,9 @@ export function checkPregnancies(state: GameState, rng: RandomGenerator): StateI
     }
   }
 
-  // Store pregnancies in state (would be in dynasty state slice)
-  if (newPregnancies.length > 0) {
-    impacts.push({
-      type: "SYSTEM_TICK",
-      payload: {
-        newPregnancies,
-      },
-    } as any);
-  }
-
+  // Pregnancy records are intentionally not persisted: processBirths is a stub
+  // and no handler consumes a pregnancies payload. The announcement news above
+  // is the observable output.
   return impacts;
 }
 
@@ -196,7 +177,7 @@ export function processComingOfAge(state: GameState, rng: RandomGenerator): Stat
 function generateNepoBaby(parent: Talent, state: GameState, rng: RandomGenerator): Talent {
   // Determine child's role (often same as parent, but can differ)
   const roleRoll = rng.next();
-  let childRole = parent.role as any;
+  let childRole: import("../../types").TalentRole = parent.roles?.[0] || "actor";
 
   // 30% chance to choose different role
   if (roleRoll < 0.3) {

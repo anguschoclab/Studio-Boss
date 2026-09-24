@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import {Project, RatingCut} from "@/engine/types";
 import {StateImpact} from "@/engine/types/state.types";
 import {evaluateFilmRating} from "./ratingEvaluation";
@@ -96,7 +96,6 @@ export function releaseDirectorsCut(
   });
 
   if (directorId) {
-    const _director = {} as any; // we only need the update, not the full talent
     impacts.push({
       type: "TALENT_UPDATED",
       payload: {

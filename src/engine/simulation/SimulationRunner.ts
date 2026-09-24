@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {GameState, ArchetypeKey} from "../types";
 import {initializeGame} from "../core/gameInit";
 import {WeekCoordinator} from "../services/WeekCoordinator";
@@ -35,13 +34,14 @@ export class SimulationRunner {
     metrics.record(state, {
       fromWeek: 0,
       toWeek: 1,
-      activeProjects: 0,
-      completedProjects: 0,
-      revenue: 0,
-      expenses: 0,
-      net: 0,
-      headlines: [],
-    } as any);
+      cashBefore: state.finance.cash,
+      cashAfter: state.finance.cash,
+      totalRevenue: 0,
+      totalCosts: 0,
+      projectUpdates: [],
+      events: [],
+      newsEvents: [],
+    });
 
     let cashLast = state.finance.cash || 0;
     const CASH_DEBUG = process.env.CASH_DEBUG === "1";

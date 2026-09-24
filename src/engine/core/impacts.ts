@@ -81,7 +81,7 @@ export const impacts = {
   },
 
   modalTriggered(
-    modalType: string,
+    modalType: import("../types/modal.types").ModalType,
     payload: Record<string, unknown> = {},
     priority: number = 10,
   ): ModalTriggeredImpact {

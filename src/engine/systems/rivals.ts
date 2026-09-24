@@ -52,7 +52,7 @@ export function updateRival(
   realProjectCount?: number
 ): { update: Partial<RivalStudio>; cashDelta: number } {
   const update: Partial<RivalStudio> = {};
-  let cashDelta = 0;
+  let cashDelta: number;
 
   // projectCount reflects the real slate when provided; otherwise it stays honest
   // (no fabricated drift) and is left untouched.

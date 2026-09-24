@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import {Project, IPAsset} from "../../types";
 import {clamp} from "../../utils";import {determineSyndicationTier, getSyndicationImpact} from "./syndicationEngine";
 
@@ -25,7 +25,7 @@ export function calculateInitialIPValue(project: Project): IPAsset {
   }
 
   // Syndication Tiering: Delegate to the logic engine
-  const episodes = (project as any).tvDetails?.episodesAired || 0;
+  const episodes = ("tvDetails" in project ? project.tvDetails?.episodesAired : 0) || 0;
   const syndicationTier = determineSyndicationTier(episodes, project.genre);
   const syndicationStatus = syndicationTier !== "NONE" ? "SYNDICATED" : "NONE";
 

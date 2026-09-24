@@ -22,16 +22,19 @@ export function handleBuyerUpdated(state: GameState, impact: BuyerUpdateImpact):
 
 export function handleOpportunityUpdated(state: GameState, impact: OpportunityUpdateImpact): GameState {
   const payload = impact.payload;
-  if ("action" in payload && payload.action === "EXPIRE") {
-    return {
-      ...state,
-      market: {
-        ...state.market,
-        opportunities: (state.market.opportunities || []).filter(
-          (o) => o.id !== payload.opportunityId
-        ),
-      },
-    };
+  if ("action" in payload) {
+    if (payload.action === "EXPIRE") {
+      return {
+        ...state,
+        market: {
+          ...state.market,
+          opportunities: (state.market.opportunities || []).filter(
+            (o) => o.id !== payload.opportunityId
+          ),
+        },
+      };
+    }
+    return state;
   }
   const { opportunityId, rivalId, bid } = payload;
   const opportunities = (state.market.opportunities || []).map((o) => {

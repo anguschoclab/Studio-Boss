@@ -49,10 +49,7 @@ export function handleSystemTick(state: GameState, impact: SystemTickImpact): Ga
       studio: {
         ...updated.studio,
         identity: {
-          ...((updated.studio as unknown as Record<string, unknown>).identity as Record<
-            string,
-            unknown
-          >),
+          ...updated.studio.identity,
           ...(studioIdentity as Record<string, unknown>),
         },
       },
@@ -61,15 +58,14 @@ export function handleSystemTick(state: GameState, impact: SystemTickImpact): Ga
 
   // New achievement ID unlock
   if (newAchievementId) {
-    const existing: string[] =
-      ((updated.studio as unknown as Record<string, unknown>).achievements as string[]) ?? [];
+    const existing: string[] = updated.studio.achievements ?? [];
     if (!existing.includes(newAchievementId as string)) {
       updated = {
         ...updated,
         studio: {
           ...updated.studio,
           achievements: [...existing, newAchievementId as string],
-        } as unknown as typeof updated.studio,
+        },
       };
     }
   }

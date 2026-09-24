@@ -323,7 +323,12 @@ export interface ScandalUpdatedImpact extends BaseImpact {
 }
 export interface MarketEventUpdateImpact extends BaseImpact {
   type: "MARKET_EVENT_UPDATED";
-  payload: { events?: import("./engine.types").MarketEvent[]; marketState?: MarketState };
+  payload: {
+    events?: import("./engine.types").MarketEvent[];
+    marketState?: MarketState;
+    /** Aggregate industry marketing spend for the week (drives share-of-voice). */
+    marketingIntensity?: number;
+  };
 }
 export interface LedgerImpact extends BaseImpact {
   type: "LEDGER_UPDATED";

@@ -41,7 +41,7 @@ export const NewsFeed = () => {
   const history = selectNewsHistory(gameState);
   const { selectTalent, selectProject, selectRival, setActiveTab } = useUIStore();
 
-  const handleEntityClick = (e: React.MouseEvent, item: NewsEvent) => {
+  const handleEntityClick = (e: React.MouseEvent | React.KeyboardEvent, item: NewsEvent) => {
     e.stopPropagation();
     if (item.talentId) {
       selectTalent(item.talentId);
@@ -124,7 +124,7 @@ export const NewsFeed = () => {
               onKeyDown={isClickable(item) ? (e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
-                  handleEntityClick(e as unknown as React.MouseEvent, item);
+                  handleEntityClick(e, item);
                 }
               } : undefined}
             >

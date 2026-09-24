@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {GameState, StateImpact, Project} from "../../types";import {RandomGenerator} from "../../utils/rng";
 import {TalentRelationship} from "../../types/relationship.types";
-import {Clique} from "../../types/clique.types";
 import {getContractsByProjectId} from "../../utils";
 
 /**
@@ -22,10 +20,7 @@ function getProjectTalentIds(state: GameState, projectId: string): string[] {
 }
 
 function getRelationships(state: GameState): TalentRelationship[] {
-  const relMap =
-    (state as unknown as { relationships?: { relationships?: Record<string, TalentRelationship> } })
-      ?.relationships?.relationships || {};
-  return Object.values(relMap);
+  return Object.values(state.relationships?.relationships || {});
 }
 
 /**
@@ -67,8 +62,7 @@ export function checkRelationshipCrises(
         payload: {
           projectId: project.id,
           crisis: {
-            id: rng.uuid("CRS"),
-            crisisId: "RELATIONSHIP_MELTDOWN",
+            crisisId: `RELATIONSHIP_MELTDOWN-${rng.uuid("CRS")}`,
             triggeredWeek: state.week,
             haltedProduction: severity === "high",
             description: `On-set tension between ${talentA.name} and ${talentB.name} has escalated due to their ongoing feud. The production environment is becoming toxic.`,
@@ -115,8 +109,8 @@ export function checkCliqueCrises(
   const talentIds = getProjectTalentIds(state, project.id);
   if (talentIds.length < 3) return null;
 
-  const cliques = (state as any).relationships?.cliques?.cliques || {};
-  const memberCliqueMap = (state as any).relationships?.cliques?.memberCliqueMap || {};
+  const cliques = state.relationships?.cliques?.cliques || {};
+  const memberCliqueMap = state.relationships?.cliques?.memberCliqueMap || {};
 
   // Find cliques that have multiple members on this project
   const cliquePresence: Record<string, number> = {};
@@ -131,7 +125,7 @@ export function checkCliqueCrises(
   for (const [cliqueId, count] of Object.entries(cliquePresence)) {
     if (count < 2) continue;
 
-    const clique = cliques[cliqueId] as Clique;
+    const clique = cliques[cliqueId];
     if (clique && clique.reputation === "toxic") {
       if (rng.next() < 0.1) {
         // 10% chance
@@ -143,8 +137,8 @@ export function checkCliqueCrises(
             description: `Members of the ${clique?.name || "controversial group"} are reportedly creating tension with other cast members.`,
             category: "talent",
             publication: "Page Six",
-          } as any,
-        } as any;
+          },
+        };
       }
     }
   }
@@ -182,12 +176,8 @@ export function generateRelationshipScandals(
       if (!talentA || !talentB) continue;
 
       // Check if either has a spouse
-      const spouseA = (talentA as any).spouseId
-        ? state.entities.talents?.[(talentA as any).spouseId]
-        : null;
-      const spouseB = (talentB as any).spouseId
-        ? state.entities.talents?.[(talentB as any).spouseId]
-        : null;
+      const spouseA = talentA.spouseId ? state.entities.talents?.[talentA.spouseId] : null;
+      const spouseB = talentB.spouseId ? state.entities.talents?.[talentB.spouseId] : null;
 
       if (spouseA || spouseB) {
         // AFFAIR SCANDAL
@@ -197,15 +187,15 @@ export function generateRelationshipScandals(
             scandal: {
               id: rng.uuid("SND"),
               talentId: romance.talentAId,
-              week: state.week,
-              type: "CONTROVERSY",
+              weekDiscovered: state.week,
+              type: "personal",
               description: `${talentA.name} rumored to be having an affair with ${talentB.name}`,
-              severity: "high",
-              publicAwareness: 70,
-              careerImpact: -8,
-            } as any,
+              severity: 75,
+              weeksRemaining: 4,
+              isPublic: true,
+            },
           },
-        } as any);
+        });
 
         // Also add scandal for other party
         impacts.push({
@@ -214,15 +204,15 @@ export function generateRelationshipScandals(
             scandal: {
               id: rng.uuid("SND"),
               talentId: romance.talentBId,
-              week: state.week,
-              type: "CONTROVERSY",
+              weekDiscovered: state.week,
+              type: "personal",
               description: `${talentB.name} involved in affair scandal with ${talentA.name}`,
-              severity: "high",
-              publicAwareness: 70,
-              careerImpact: -8,
-            } as any,
+              severity: 75,
+              weeksRemaining: 4,
+              isPublic: true,
+            },
           },
-        } as any);
+        });
 
         // Make relationship public
         impacts.push({
@@ -242,8 +232,8 @@ export function generateRelationshipScandals(
             description: `${talentA.name} and ${talentB.name} caught in explosive affair revelation.`,
             category: "talent",
             publication: "TMZ",
-          } as any,
-        } as any);
+          },
+        });
       }
     }
   }
@@ -272,8 +262,8 @@ export function generateRelationshipScandals(
             description: `${talentA.name} and ${talentB.name} have ended their high-profile relationship.`,
             category: "talent",
             publication: "People Magazine",
-          } as any,
-        } as any);
+          },
+        });
       }
     }
   }
@@ -332,12 +322,12 @@ export function calculateSocialCrisisModifier(projectId: string, state: GameStat
   modifier += feudCount * 0.15; // +15% per feud
 
   // Check for toxic cliques
-  const memberCliqueMap = (state as any).relationships?.cliques?.memberCliqueMap || {};
-  const cliques = (state as any).relationships?.cliques?.cliques || {};
+  const memberCliqueMap = state.relationships?.cliques?.memberCliqueMap || {};
+  const cliques = state.relationships?.cliques?.cliques || {};
 
   const toxicCliqueMembers = talentIds.filter((id) => {
     const talentCliques = memberCliqueMap[id] || [];
-    return talentCliques.some((cid: string) => (cliques[cid] as Clique)?.reputation === "toxic");
+    return talentCliques.some((cid: string) => cliques[cid]?.reputation === "toxic");
   });
 
   modifier += toxicCliqueMembers.length * 0.1; // +10% per toxic clique member

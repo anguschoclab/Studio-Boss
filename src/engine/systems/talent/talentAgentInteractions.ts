@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {Talent, Agent, Agency, TalentPersonality, AgentPersonality} from "../../types/talent.types";
 import {AGENCY_ARCHETYPES} from "../../data/archetypes";
 import {RandomGenerator} from "../../utils/rng";
@@ -435,8 +434,8 @@ export const TalentAgentInteractionEngine = {
         // Get agent personality from agent or agency
         let agentPersonality: AgentPersonality = "diplomat"; // default
 
-        if ((agent as any).personality) {
-          agentPersonality = (agent as any).personality;
+        if (agent.personality) {
+          agentPersonality = agent.personality;
         } else if (agent.agencyId && agencies[agent.agencyId]) {
           // Derive from agency archetype
           const agency = agencies[agent.agencyId];

@@ -84,7 +84,7 @@ export function handlePilotGraduated(state: GameState, impact: PilotGraduatedImp
     // Remove stage and update state for graduating pilots
     const updatedProject = { ...project };
     if ("stage" in updatedProject) {
-      delete (updatedProject as unknown as Record<string, unknown>).stage; // stage is pilot-specific, but not in strict Project result
+      delete updatedProject.stage; // stage is pilot-specific, but not in strict Project result
     }
     projects[projectId] = {
       ...updatedProject,

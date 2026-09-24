@@ -61,7 +61,7 @@ describe("HeadlessController.attributeTalent", () => {
     const state = makeState({});
     const impacts = HeadlessController.attributeTalent(
       state,
-      {budget: 10_000_000, marketingBudget: 0, format: "film", type: "FILM"},
+      {budget: 10_000_000, marketingBudget: 0, format: "film", type: "FILM"} as import("@/engine/types").Project,
       20_000_000,
       rng,
       true,
@@ -81,7 +81,7 @@ describe("HeadlessController.attributeTalent", () => {
     const state = makeState(talents);
     const impacts = HeadlessController.attributeTalent(
       state,
-      {budget: 10_000_000, marketingBudget: 0, format: "film", type: "FILM"},
+      {budget: 10_000_000, marketingBudget: 0, format: "film", type: "FILM"} as import("@/engine/types").Project,
       100_000_000,
       rng,
       true,
@@ -96,7 +96,7 @@ describe("HeadlessController.attributeTalent", () => {
     // ROI = 1.0 exactly => no basePrestige branch matches => delta = 0
     const impacts = HeadlessController.attributeTalent(
       state,
-      {budget: 10_000_000, marketingBudget: 0, format: "film", type: "FILM"},
+      {budget: 10_000_000, marketingBudget: 0, format: "film", type: "FILM"} as import("@/engine/types").Project,
       10_000_000,
       rng,
       false,
@@ -115,7 +115,7 @@ describe("HeadlessController.attributeTalent", () => {
     // TV with high rating => basePrestige = 10
     const impacts = HeadlessController.attributeTalent(
       state,
-      {budget: 5_000_000, marketingBudget: 0, format: "tv", type: "SERIES"},
+      {budget: 5_000_000, marketingBudget: 0, format: "tv", type: "SERIES"} as import("@/engine/types").Project,
       0,
       rng,
       true,
@@ -134,7 +134,7 @@ describe("HeadlessController.attributeTalent", () => {
     // TV with very low rating => basePrestige = -3
     const impacts = HeadlessController.attributeTalent(
       state,
-      {budget: 5_000_000, marketingBudget: 0, format: "tv", type: "SERIES"},
+      {budget: 5_000_000, marketingBudget: 0, format: "tv", type: "SERIES"} as import("@/engine/types").Project,
       0,
       rng,
       false,

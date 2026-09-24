@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {GameState, Talent, Project} from "../../../types";import {RandomGenerator} from "../../../utils/rng";
 import {GuestStarBooking} from "../../../types/discovery.types";
 import {getContractsByProjectId} from "../../../utils";
@@ -57,7 +56,7 @@ export function generateGuestStarBooking(
   }
 
   // Get series details
-  const seriesDetails = (series as any).tvSeasonDetails;
+  const seriesDetails = "tvDetails" in series ? series.tvDetails : undefined;
   const seasonNumber = seriesDetails?.currentSeason || 1;
   const episodeNumber = seriesDetails?.episodesOrdered || rng.rangeInt(1, 10);
 

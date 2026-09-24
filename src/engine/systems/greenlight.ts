@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import {Project, Talent, Contract} from "@/engine/types";
 
 export type GreenlightRecommendation =
@@ -32,7 +32,7 @@ export function roleCompletenessScore(
   const attachedRoles = new Set(
     projectContracts
       .map((c) =>
-        (talents[c.talentId]?.role ?? (talents[c.talentId] as any)?.roles?.[0] ?? "").toLowerCase()
+        (talents[c.talentId]?.role ?? "").toLowerCase()
       )
       .filter(Boolean)
   );

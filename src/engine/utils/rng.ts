@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Studio Boss - Seeded Random Number Generator (Mulberry32)
  *
@@ -29,8 +28,9 @@ export class RandomGenerator {
    * Returns a random element from an array.
    */
   pick<T>(arr: T[]): T {
-    if (arr.length === 0) return undefined as any;
-    return arr[Math.floor(this.next() * arr.length)];
+    // Callers must not pass an empty array; returning arr[0] yields undefined
+    // at runtime in that case, matching the historical behavior without a cast.
+    return arr[arr.length === 0 ? 0 : Math.floor(this.next() * arr.length)];
   }
 
   /**

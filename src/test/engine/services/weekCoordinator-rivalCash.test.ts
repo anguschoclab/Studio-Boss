@@ -106,7 +106,7 @@ describe("WeekCoordinator — rival cash deltas survive the whole tick pipeline"
     state.entities.rivals = { r1: seller, r2: buyer };
     state.ip.franchises = {
       f1: { id: "f1", name: "Rambo", ownerId: "r1" },
-    } as GameState["ip"]["franchises"];
+    } as unknown as GameState["ip"]["franchises"];
     state.industry.distressedOffers = [offer];
 
     const result = WeekCoordinator.execute(state);

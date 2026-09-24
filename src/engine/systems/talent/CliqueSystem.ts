@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {GameState, StateImpact, Talent} from "../../types";
 import {RandomGenerator} from "../../utils/rng";
 import {Clique, CliqueReputation, CLIQUE_NAME_PATTERNS} from "../../types/clique.types";
@@ -97,15 +96,7 @@ function findPotentialCliques(state: GameState, _rng: RandomGenerator): string[]
     if (!Object.prototype.hasOwnProperty.call(talentsObj, tId)) continue;
     const talent = talentsObj[tId];
     if (!talent) continue;
-    const relationshipsObj =
-      (
-        state.relationships as unknown as {
-          relationships?: Record<
-            string,
-            { talentAId: string; talentBId: string; type: string; strength: number }
-          >;
-        }
-      )?.relationships || {};
+    const relationshipsObj = state.relationships?.relationships || {};
     const friends = new Set<string>();
     for (const rId in relationshipsObj) {
       if (!Object.prototype.hasOwnProperty.call(relationshipsObj, rId)) continue;
@@ -155,9 +146,7 @@ function findPotentialCliques(state: GameState, _rng: RandomGenerator): string[]
       const sortedIds = mutuallyFriendly.slice(0, MAX_CLIQUE_SIZE).sort();
 
       // Check if this exact clique already exists
-      const cliquesRecord =
-        (state.relationships as unknown as { cliques?: { cliques?: Record<string, Clique> } })
-          ?.cliques?.cliques || {};
+      const cliquesRecord = state.relationships?.cliques?.cliques || {};
       let alreadyExists = false;
       for (const cliqueId in cliquesRecord) {
         if (!Object.prototype.hasOwnProperty.call(cliquesRecord, cliqueId)) continue;
@@ -387,7 +376,7 @@ export function tickCliqueSystem(state: GameState, rng: RandomGenerator): StateI
           cliqueId: clique.id,
           clique,
         },
-      } as any);
+      });
 
       // Update member clique map for each member
       for (const memberId of memberIds) {
@@ -407,7 +396,7 @@ export function tickCliqueSystem(state: GameState, rng: RandomGenerator): StateI
 
   // 2. Evolve existing cliques
   const cliquesRecord =
-    (state.relationships as unknown as { cliques?: { cliques?: Record<string, Clique> } })?.cliques
+    state.relationships?.cliques
       ?.cliques || {};
 
   for (const cliqueId in cliquesRecord) {
@@ -424,7 +413,7 @@ export function tickCliqueSystem(state: GameState, rng: RandomGenerator): StateI
             cliqueId: clique.id,
             clique: updated,
           },
-        } as any);
+        });
       }
 
       impacts.push(...evolutionImpacts);
@@ -439,7 +428,7 @@ export function tickCliqueSystem(state: GameState, rng: RandomGenerator): StateI
  */
 export function getCliqueFameBonus(talentId: string, state: GameState): number {
   const cliquesRecord =
-    (state.relationships as unknown as { cliques?: { cliques?: Record<string, Clique> } })?.cliques
+    state.relationships?.cliques
       ?.cliques || {};
 
   let maxBonus = 0;
@@ -464,7 +453,7 @@ export function getCliqueCastingBonus(
   castTalentIds: string[],
   state: GameState
 ): number {
-  const clique = (state as any).relationships?.cliques?.cliques?.[cliqueId] as Clique | undefined;
+  const clique = state.relationships?.cliques?.cliques?.[cliqueId];
   if (!clique || clique.status !== "active") return 0;
 
   const membersInCast = clique.members.filter((id) => castTalentIds.includes(id)).length;

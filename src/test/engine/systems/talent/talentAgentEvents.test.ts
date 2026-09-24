@@ -308,9 +308,9 @@ describe("createAgentHiringEvent", () => {
     const event = createAgentHiringEvent(talent, agent, 5);
 
     expect(event.id).toBe("hire-TAL-1-AGT-1-5");
-    expect(event.text).toContain("Jane Doe");
-    expect(event.text).toContain("John Smith");
-    expect(event.text).toContain("agent");
+    expect(event.headline).toContain("Jane Doe");
+    expect(event.headline).toContain("John Smith");
+    expect(event.headline).toContain("agent");
     expect(event.week).toBe(5);
     expect(event.category).toBe("talent");
   });
@@ -322,8 +322,8 @@ describe("createAgentFiringEvent", () => {
     const event = createAgentFiringEvent(talent, "AGT-9", 10);
 
     expect(event.id).toBe("fire-TAL-2-AGT-9-10");
-    expect(event.text).toContain("Alice Wang");
-    expect(event.text).toContain("parted ways");
+    expect(event.headline).toContain("Alice Wang");
+    expect(event.headline).toContain("parted ways");
     expect(event.week).toBe(10);
     expect(event.category).toBe("talent");
   });

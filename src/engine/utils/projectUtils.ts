@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {Project, FilmProject, SeriesProject, UnscriptedProject, BudgetTierKey} from "../types/project.types";
 import {Talent} from "../types/talent.types";
 
@@ -78,13 +77,13 @@ export function calculateTalentFitScore(
 
   // --- ANIMATION EXEMPTION ---
   // Animation projects are more flexible with talent fits but focus on different synergies
-  if ((project as any).format === "animation" || project.genre === "Animation") {
+  if (project.genre === "Animation") {
     score += 15; // Baseline boost for "The Animation Loop"
-    if (talent.roles.includes("personality" as never)) score += 10; // Personalities are great for animation
+    if (talent.role === "personality") score += 10; // Personalities are great for animation
   }
 
   // Specific Role Buffs
-  if (targetRole && (talent.roles || []).includes(targetRole as any)) {
+  if (targetRole && (talent.roles || []).some((r) => r === targetRole)) {
     score += 10;
   }
 

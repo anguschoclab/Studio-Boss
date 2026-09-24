@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {GameState, StateImpact, Talent} from "../../types";
 import {RandomGenerator} from "../../utils/rng";
 import {TalentRelationship, RelationshipEvent} from "../../types/relationship.types";import {getRelationshipKey} from "./relationshipCompatibility";
@@ -200,7 +199,7 @@ export function tickRelationshipSystem(state: GameState, rng: RandomGenerator): 
           key,
           relationship,
         },
-      } as any);
+      });
 
       // Update spouseId for public romantic relationships
       if (relationship.type === "romantic" && relationship.isPublic) {
@@ -239,7 +238,7 @@ export function tickRelationshipSystem(state: GameState, rng: RandomGenerator): 
             key,
             relationship: updated,
           },
-        } as any);
+        });
       }
 
       impacts.push(...evolutionImpacts);

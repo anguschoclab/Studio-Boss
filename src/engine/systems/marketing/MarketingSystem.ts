@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {GameState, StateImpact, Project, MarketingCampaign} from "../../types";
 import {RandomGenerator} from "../../utils/rng";
 import {computeCampaignMultiplier} from "../projectHandlers/MarketingHandler";
@@ -53,7 +52,7 @@ export function accrueAwareness(
 
   // Base accrual from effective weekly spend.
   const weeklySpend = spend / Math.max(1, weeksInMarketing);
-  const angleMult = computeCampaignMultiplier(campaign as any, project);
+  const angleMult = computeCampaignMultiplier(campaign, project);
   const efficiency = evaluateMarketingEfficiency(project, campaign).multiplier;
 
   let gain = (weeklySpend / 1_000_000) * AWARENESS_PER_MILLION * angleMult * efficiency;
@@ -133,7 +132,7 @@ export function tickMarketing(
       type: "MARKET_EVENT_UPDATED",
       payload: {
         marketingIntensity: industryIntensity,
-      } as any,
+      },
     });
   }
 

@@ -163,7 +163,7 @@ export function applyReleaseStrategy(
         releaseStrategy: strategy,
         // Store the revenue multiplier on the project so the release system can read it
         releaseStrategyMultiplier: effect.revenueMultiplier,
-      } as unknown as Partial<Project>,
+      },
     },
   });
 

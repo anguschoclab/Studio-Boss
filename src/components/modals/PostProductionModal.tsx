@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
 import {Badge} from "@/components/ui/badge";
@@ -26,17 +26,24 @@ export const PostProductionModal: React.FC = () => {
 
   const [choice, setChoice] = useState<"none" | "rush" | "extended">("none");
 
-  if (!activeModal || activeModal.type !== "POST_PRODUCTION") return null;
-
-  const { projectId, projectTitle } = (activeModal.payload ?? {}) as {
-    projectId: string;
-    projectTitle: string;
-  };
-
-  const project = gameState?.entities?.projects?.[projectId];
+  const payload =
+    activeModal?.type === "POST_PRODUCTION" ? activeModal.payload : undefined;
+  const projectId = payload?.projectId;
+  const projectTitle = payload?.projectTitle;
+  const project = projectId ? gameState?.entities?.projects?.[projectId] : undefined;
   const weeksRemaining: number =
-    (project as Project & { postProductionWeeksRemaining?: number })
+    (project as (Project & { postProductionWeeksRemaining?: number }) | undefined)
       ?.postProductionWeeksRemaining ?? 3;
+
+  // Resolve in an effect — never during render — so a malformed payload or
+  // missing project can't deadlock the queue.
+  useEffect(() => {
+    if (activeModal?.type !== "POST_PRODUCTION") return;
+    if (!projectId || !project) resolveCurrentModal();
+  }, [activeModal, projectId, project, resolveCurrentModal]);
+
+  if (!activeModal || activeModal.type !== "POST_PRODUCTION") return null;
+  if (!projectId || !project) return null;
 
   const handleConfirm = () => {
     if (!projectId || !project) {

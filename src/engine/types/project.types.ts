@@ -589,6 +589,8 @@ export interface ProjectBase {
   postProductionWeeksRemaining?: number;
   // Release strategy (set during marketing phase)
   releaseStrategy?: ReleaseStrategy;
+  /** Revenue multiplier derived from releaseStrategy (written by ReleaseStrategySystem, read at release). */
+  releaseStrategyMultiplier?: number;
   // Morale tracking for on-set talent
   morale?: number; // 0-100
   // Loan tracking
@@ -622,6 +624,9 @@ export interface ProjectBase {
   scriptHeat?: number;
   scriptEvents?: ScriptEvent[];
   activeRoles?: CharacterArchetype[];
+
+  /** Sub-lifecycle stage marker (e.g. "pilot"; read by pilotEvaluator/upfrontsEngine, cleared on graduation). */
+  stage?: string;
 }
 
 export interface ScriptedProject extends ProjectBase {

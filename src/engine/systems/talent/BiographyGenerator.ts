@@ -424,7 +424,7 @@ export function tickBiographyGenerator(state: GameState, rng: RandomGenerator): 
     // Check for triggers that warrant bio update
     const shouldUpdate =
       isDefaultBio ||
-      Boolean((talent as unknown as Record<string, unknown>).isBreakout) ||
+      Boolean(talent.isBreakout) ||
       recentRelTalentIds.has(talent.id) ||
       recentCliqueMemberIds.has(talent.id) ||
       activeScandalTalentIds.has(talent.id);

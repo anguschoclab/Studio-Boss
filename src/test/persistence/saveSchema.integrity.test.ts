@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { validateSaveData } from "../../persistence/saveSchema";
 import { initializeGame } from "../../engine/core/gameInit";
-import type { GameState } from "../../engine/types";
 
 /**
  * Referential-integrity + load-bearing field validation for saves.

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import React, { useMemo } from "react";
 import {useGameStore} from "@/store/gameStore";
 import {Card, CardContent, CardHeader, CardTitle, CardDescription} from "@/components/ui/card";
@@ -12,7 +12,7 @@ import {MarketTrendsHeatmap} from "@/components/industry/MarketTrendsHeatmap";
 export const IndustryPage: React.FC = () => {
   const state = useGameStore((s) => s.gameState);
 
-  const { rivals } = state?.entities || { rivals: {} };
+  const rivals = state?.entities.rivals ?? {};
   const { agencies, agents } = state?.industry || { agencies: [], agents: [] };
   const genrePopularity = state?.studio?.culture?.genrePopularity || {
     Drama: 50,
@@ -23,7 +23,7 @@ export const IndustryPage: React.FC = () => {
     Romance: 50,
   };
 
-  const rivalsList = Object.values(rivals) as any[];
+  const rivalsList = Object.values(rivals);
 
   const marketFatigue = useMemo(() => {
     if (!state) return {};

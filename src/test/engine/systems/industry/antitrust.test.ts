@@ -89,10 +89,14 @@ describe("Antitrust System", () => {
 
       const impacts = tickAntitrust(state);
       const hasIndustryUpdate = impacts.some((i) => i.type === "INDUSTRY_UPDATE");
-      const hasRivalUpdated = impacts.some((i) => i.type === "RIVAL_UPDATED");
+      const hasLeaderDebit = impacts.some(
+        (i) =>
+          i.type === "FINANCE_TRANSACTION" &&
+          (i.payload as { targetId?: string }).targetId === "dominant-1"
+      );
       const hasNews = impacts.some((i) => i.type === "NEWS_ADDED");
       expect(hasIndustryUpdate).toBe(true);
-      expect(hasRivalUpdated).toBe(true);
+      expect(hasLeaderDebit).toBe(true);
       expect(hasNews).toBe(true);
     });
 

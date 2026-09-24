@@ -447,7 +447,7 @@ function chargeOverhead(state: GameState, impacts: StateImpact[]) {
       const rival = state.entities.rivals[s.baseStudioId];
       if (rival) {
         impacts.push(
-          I.financeTransaction(-weekly, `Shingle overhead: ${s.talentName ?? s.id}`, rival.id),
+          I.financeTransaction(-weekly, `Shingle overhead: ${s.name}`, rival.id),
         );
       }
     }

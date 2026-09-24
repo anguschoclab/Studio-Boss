@@ -29,7 +29,7 @@ export type ModalType =
  * further with local casts where the payload carries engine entities.
  */
 export interface ModalPayloadMap {
-  CRISIS: { projectId?: string; crisis?: unknown; id?: string };
+  CRISIS: { projectId?: string; crisis?: import("./engine.types").ActiveCrisis; id?: string };
   AWARDS: { week?: number; year?: number; awards: Award[]; body?: string };
   SUMMARY: WeekSummary;
   GAME_OVER: { reason?: string; cashDeficit?: number };
@@ -42,7 +42,18 @@ export interface ModalPayloadMap {
     week: number;
   };
   FESTIVAL_MARKET: { results: FestivalAuctionResult[]; festivalBody?: string; week?: number };
-  PACKAGE_DEAL_OFFERED: Record<string, unknown>;
+  PACKAGE_DEAL_OFFERED: {
+    agencyId: string;
+    agencyName: string;
+    agencyArchetype: string;
+    agencyDescription: string;
+    leadTalentId: string;
+    leadTalentName: string;
+    bundledTalentId: string;
+    bundledTalentName: string;
+    packageDiscount: number;
+    reason: string;
+  };
   DIRECTORS_CUT_AVAILABLE: { projectId: string; projectTitle?: string };
   UPFRONTS: { results: unknown[]; week?: number };
   BIDDING_WAR: {

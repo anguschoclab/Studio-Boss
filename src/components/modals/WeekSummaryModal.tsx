@@ -2,7 +2,7 @@ import {useUIStore} from "@/store/uiStore";
 import {useGameStore} from "@/store/gameStore";
 import {formatMoney} from "@/engine/utils";
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter} from "@/components/ui/dialog";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {NewsEvent, NarrativeEvent} from "@/engine/types";
 import {NewsStoryModal} from "./NewsStoryModal";
 import {cn} from "@/lib/utils";
@@ -13,9 +13,17 @@ export const WeekSummaryModal = () => {
   const snapshots = useGameStore((s) => s.snapshots);
   const [selectedHeadline, setSelectedHeadline] = useState<NewsEvent | null>(null);
 
-  if (!activeModal || activeModal.type !== "SUMMARY") return null;
+  const weekSummary = activeModal?.type === "SUMMARY" ? activeModal.payload : undefined;
 
-  const weekSummary = activeModal.payload;
+  // Resolve in an effect — never during render — so a malformed SUMMARY
+  // payload can't crash the queue.
+  useEffect(() => {
+    if (activeModal?.type === "SUMMARY" && !weekSummary) resolveCurrentModal();
+  }, [activeModal, weekSummary, resolveCurrentModal]);
+
+  if (!activeModal || activeModal.type !== "SUMMARY") return null;
+  if (!weekSummary) return null;
+
   const {
     toWeek,
     cashBefore,

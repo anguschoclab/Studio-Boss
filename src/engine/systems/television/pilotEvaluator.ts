@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {GameState, StateImpact} from "@/engine/types";
 import {RandomGenerator} from "@/engine/utils/rng";
 
@@ -9,7 +8,7 @@ export function tickPilots(state: GameState, rng: RandomGenerator): StateImpact[
   const impacts: StateImpact[] = [];
   for (const key in state.entities.projects) {
     const project = state.entities.projects[key];
-    if (project.type !== "SERIES" || (project as any).stage !== "pilot") continue;
+    if (project.type !== "SERIES" || project.stage !== "pilot") continue;
 
     const weeksInPilot = (project.weeksInPhase || 0) + 1;
 

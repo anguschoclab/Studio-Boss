@@ -90,12 +90,13 @@ export function handleFinanceTransaction(state: GameState, impact: FinanceTransa
 }
 
 export function handleMarketEventUpdated(state: GameState, impact: MarketEventUpdateImpact): GameState {
-  const { events, marketState } = impact.payload;
+  const { events, marketState, marketingIntensity } = impact.payload;
   return {
     ...state,
     market: {
       ...state.market,
       activeMarketEvents: events || state.market.activeMarketEvents,
+      marketingIntensity: marketingIntensity ?? state.market.marketingIntensity,
     },
     finance: {
       ...state.finance,

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import {Project, TvFormatKey, BudgetTierKey, UnscriptedFormatKey} from "../../types";
 import {secureRandom} from "../../utils";
 
@@ -120,7 +120,7 @@ export function generateSpinoffProposal(
     tvFormat: template.tvFormat,
     unscriptedFormat: template.unscriptedFormat,
     genre: template.genre || sourceProject.genre,
-    budgetTier: template.budgetTier || (sourceProject.budgetTier as any),
+    budgetTier: template.budgetTier || sourceProject.budgetTier,
     buzz: template.buzzBonus,
     flavor: template.flavorTemplate.replace("{title}", sourceProject.title),
     parentProjectId: sourceProject.id,

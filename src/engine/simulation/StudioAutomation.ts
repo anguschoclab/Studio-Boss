@@ -16,7 +16,7 @@ export class StudioAutomation {
    */
   private static getRivalArchetype(rival: RivalStudio): StudioArchetype {
     const archetypeId =
-      rival.archetypeId || ("behaviorId" in rival ? (rival as unknown as Record<string, unknown>).behaviorId as string : undefined);
+      rival.archetypeId || ("behaviorId" in rival ? (rival.behaviorId as string | undefined) : undefined);
     if (archetypeId) {
       const archetype = AI_ARCHETYPES.find((a) => a.id === archetypeId);
       if (archetype) return archetype;
@@ -228,7 +228,7 @@ export class StudioAutomation {
       const rivIsHit = isTv ? roi > 1.1 : roi > 2.0;
       const rivRating = isTv ? Math.round(50 + (roi - 1) * 25) : 0;
       impacts.push(
-        ...HeadlessController.attributeTalent(state, p as unknown as Record<string, unknown>, rivRev, rng, rivIsHit, rivRating)
+        ...HeadlessController.attributeTalent(state, p, rivRev, rng, rivIsHit, rivRating)
       );
     }
   }

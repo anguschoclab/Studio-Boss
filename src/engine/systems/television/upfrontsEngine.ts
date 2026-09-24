@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {GameState, StateImpact, SeriesProject} from "@/engine/types";
 import {RandomGenerator} from "../../utils/rng";
 
@@ -28,7 +27,7 @@ export function runUpfronts(state: GameState, rng: RandomGenerator): StateImpact
     if (
       project.type === "SERIES" &&
       (project.state === "development" || project.state === "needs_greenlight") &&
-      (project as any).stage !== "pilot"
+      project.stage !== "pilot"
     ) {
       const seriesProject = project as SeriesProject;
       const buzz = seriesProject.buzz ?? 50;

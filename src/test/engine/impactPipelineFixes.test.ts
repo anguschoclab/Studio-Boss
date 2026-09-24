@@ -21,7 +21,22 @@ function baseState(): GameState {
 describe("opportunity lifecycle impacts", () => {
   it("OPPORTUNITY_UPDATED action=EXPIRE removes the opportunity", () => {
     const state = baseState();
-    const opp = { id: "opp-x", title: "T", bids: { r1: { amount: 5, terms: "" } } };
+    const opp = {
+      id: "opp-x",
+      type: "script" as const,
+      title: "T",
+      format: "film" as const,
+      genre: "Drama",
+      budgetTier: "low" as const,
+      targetAudience: "general",
+      flavor: "",
+      origin: "open_spec" as const,
+      costToAcquire: 100,
+      weeksUntilExpiry: 2,
+      bids: { r1: { amount: 5, terms: "" } },
+      bidHistory: [],
+      expirationWeek: 1,
+    };
     const withOpp = {
       ...state,
       market: { ...state.market, opportunities: [opp] },

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {GameState, Talent, Project} from "../../../types";
 import {RandomGenerator} from "../../../utils/rng";
 import {BreakoutStar, BreakoutTrigger} from "../../../types/discovery.types";
@@ -16,7 +15,7 @@ export function checkForBreakout(
   rng: RandomGenerator
 ): BreakoutStar | null {
   // Skip if already a breakout or top tier
-  if ((talent as any).isBreakout) return null;
+  if (talent.isBreakout) return null;
   if (talent.tier === "A_LIST") return null;
 
   const currentStarMeter = talent.starMeter || 50;

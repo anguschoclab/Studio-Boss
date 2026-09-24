@@ -1,4 +1,4 @@
-import {GameState, StateImpact, Project, RivalStudio, CampaignData} from "@/engine/types";
+import {GameState, StateImpact, Project, CampaignData} from "@/engine/types";
 import {RandomGenerator} from "../utils/rng";
 import {isPlayerOwner, getPlayerId} from "../utils/ownership";
 import {executeGreenlight, executeMarketing} from "../systems/projects";
@@ -139,9 +139,15 @@ export class HeadlessController {
         if (isTv) {
           // TV premiere: revenue = license fees (per-episode) or streamer subscriber-value proxy.
           // Simpler than box office. Renewal can spawn a season-2 project.
-          const tvDetails =
-            ("tvDetails" in project ? project.tvDetails : undefined) ||
-            ({ episodesOrdered: 10, currentSeason: 1 } as const);
+          const tvDetails: import("../types").TVSeasonDetails =
+            ("tvDetails" in project ? project.tvDetails : undefined) || {
+              episodesOrdered: 10,
+              currentSeason: 1,
+              episodesCompleted: 0,
+              episodesAired: 0,
+              averageRating: 0,
+              status: "ON_AIR",
+            };
           const episodes = tvDetails.episodesOrdered || 10;
           const ownsPlatform = (state.studio?.ownedPlatforms || []).length > 0;
           // License fees must track budget inflation or TV projects become guaranteed losers
@@ -601,7 +607,6 @@ export class HeadlessController {
     let budget = Math.floor(budgetMap[budgetTier] * getBudgetInflation(state.week));
     // TV total budget = episodeCount × perEpisodeBudget (2M indie, 8M cable, 15M+ streamer, 25M+ Sheridan-tier)
     let tvEpisodes = 10;
-    let tvPerEpBudget = 0;
     if (format === "tv") {
       tvEpisodes = rng.rangeInt(6, 13);
       const year = 1975 + Math.floor(state.week / 52);
@@ -612,7 +617,7 @@ export class HeadlessController {
         blockbuster: year >= 2015 ? 25_000_000 : 18_000_000, // Sheridan-tier
         indie: 1_500_000,
       };
-      tvPerEpBudget = Math.floor(perEpByTier[budgetTier] * getBudgetInflation(state.week));
+      const tvPerEpBudget = Math.floor(perEpByTier[budgetTier] * getBudgetInflation(state.week));
       budget = tvEpisodes * tvPerEpBudget;
     }
 

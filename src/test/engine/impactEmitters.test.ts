@@ -90,8 +90,12 @@ describe("impact emitter semantics", () => {
       id: "n1",
       projectId: "p1",
       authorId: "t1",
+      type: "dialogue_rewrite" as const,
+      description: "Tighten act two",
+      quality: 70,
       implemented: true,
       qualityBonus: 7,
+      cost: 0,
     };
     state = {
       ...state,

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {GameState, StateImpact, RivalStudio} from "@/engine/types";
 import {secureRandom, pick} from "../../utils";
 import {getSimMemory} from "../../core/simMemory";
@@ -120,7 +119,7 @@ export function tickAntitrust(state: GameState): StateImpact[] {
       id: `divest-${week}-${Math.floor(secureRandom() * 1e6)}`,
       name: spinoffName,
       motto: "Independence restored.",
-      archetype: "indie" as any,
+      archetype: "indie",
       foundedWeek: week,
       parentBrand: spinoffName.split(" ")[0],
       strength: 40,
@@ -131,14 +130,14 @@ export function tickAntitrust(state: GameState): StateImpact[] {
       contracts: [],
       projectCount: 0,
       motivationProfile: { financial: 50, prestige: 70, legacy: 50, aggression: 50 },
-      currentMotivation: "PRESTIGE_BUILDING" as any,
+      currentMotivation: "AWARD_CHASE",
       ownedPlatforms: [],
     };
     impacts.push({
       type: "INDUSTRY_UPDATE",
       payload: {
         update: {},
-        rival: { rivalId: spinoff.id, update: spinoff as unknown as Partial<RivalStudio> },
+        rival: { rivalId: spinoff.id, update: spinoff },
       },
     });
     // Penalize dominant: lose divested cash.

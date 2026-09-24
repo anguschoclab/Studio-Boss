@@ -144,10 +144,10 @@ describe("Finance System", () => {
       });
       const pendingImpacts: StateImpact[] = [
         // Rival cash deltas must not leak into the player's weekly report
-        { type: "FINANCE_TRANSACTION", payload: { amount: 500000, targetId: "rival-1" } },
-        { type: "FINANCE_TRANSACTION", payload: { amount: -90000, targetId: "rival-1" } },
+        { type: "FINANCE_TRANSACTION", payload: { amount: 500000, description: "syndication", targetId: "rival-1" } },
+        { type: "FINANCE_TRANSACTION", payload: { amount: -90000, description: "overhead", targetId: "rival-1" } },
         // Un-targeted transactions belong to the player
-        { type: "FINANCE_TRANSACTION", payload: { amount: 50000 } },
+        { type: "FINANCE_TRANSACTION", payload: { amount: 50000, description: "player tx" } },
       ];
 
       const { report } = generateWeeklyFinancialReport(state, pendingImpacts);

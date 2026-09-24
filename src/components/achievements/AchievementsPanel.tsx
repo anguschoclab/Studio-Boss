@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useMemo } from "react";
 import {useGameStore} from "@/store/gameStore";
 import {ACHIEVEMENT_CATALOGUE, Achievement} from "@/engine/systems/AchievementsSystem";
@@ -28,7 +27,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 export const AchievementsPanel: React.FC = () => {
    
   const unlockedIds: string[] = useGameStore(
-    (s) => (s.gameState?.studio as any)?.achievements ?? EMPTY_IDS
+    (s) => s.gameState?.studio.achievements ?? EMPTY_IDS
   );
   const [activeCategory, setActiveCategory] = useState<Category>("all");
 

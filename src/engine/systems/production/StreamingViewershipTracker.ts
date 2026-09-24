@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import {Project, Buyer} from "@/engine/types";
 import {StreamingViewershipHistory} from "@/engine/types/project.types";
 import {RandomGenerator} from "../../utils/rng";
@@ -106,7 +106,8 @@ export const StreamingViewershipTracker = {
    */
   calculateStreamingDecay(weeksSinceRelease: number, project: Project): number {
     // Binge releases: sharp drop after week 1-2, then long tail
-    const isBinge = project.type === "SERIES" && (project as any).releaseModel === "binge";
+    const isBinge =
+      project.type === "SERIES" && "releaseModel" in project && project.releaseModel === "binge";
 
     if (weeksSinceRelease === 1) return isBinge ? 0.5 : 0.9; // Aligned with binge test (0.5)
     if (weeksSinceRelease === 2) return isBinge ? 0.3 : 0.85;

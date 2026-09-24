@@ -42,8 +42,12 @@ describe("AI Bidding Engine (Target C2 Refactor)", () => {
 
     expect(bidImpact).toBeDefined();
     expect(bidImpact?.payload.opportunityId).toBe("script-1");
-    expect(bidImpact?.payload.rivalId).toBe("rival-1");
-    expect(bidImpact?.payload.bid.amount).toBeGreaterThan(1_100_000);
+    expect(bidImpact?.payload && "rivalId" in bidImpact.payload && bidImpact.payload.rivalId).toBe(
+      "rival-1"
+    );
+    expect(
+      bidImpact?.payload && "bid" in bidImpact.payload && bidImpact.payload.bid.amount
+    ).toBeGreaterThan(1_100_000);
   });
 
   it("does not bid if the rival is already the highest bidder", () => {

@@ -7,18 +7,9 @@ import {Badge} from "@/components/ui/badge";
 import {Package, AlertTriangle, Users, Percent} from "lucide-react";
 import {TalentNameLink} from "@/components/shared/TalentNameLink";
 
-interface PackageDealPayload {
-  agencyId: string;
-  agencyName: string;
-  agencyArchetype: string;
-  agencyDescription: string;
-  leadTalentId: string;
-  leadTalentName: string;
-  bundledTalentId: string;
-  bundledTalentName: string;
-  packageDiscount: number;
-  reason: string;
-}
+import {ModalPayloadMap} from "@/engine/types/modal.types";
+
+type PackageDealPayload = ModalPayloadMap["PACKAGE_DEAL_OFFERED"];
 
 export const PackageDealOfferedModal = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
@@ -26,7 +17,7 @@ export const PackageDealOfferedModal = () => {
 
   const data =
     activeModal?.type === "PACKAGE_DEAL_OFFERED"
-      ? (activeModal.payload as unknown as PackageDealPayload)
+      ? (activeModal.payload as PackageDealPayload)
       : null;
 
   // Resolve in an effect — never during render — so a missing payload

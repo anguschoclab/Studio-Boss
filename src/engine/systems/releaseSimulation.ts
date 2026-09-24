@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {Project, Talent, ActiveCrisis, MarketingCampaign} from "@/engine/types";import {randRange, clamp} from "../utils";
 import {evaluateMarketingEfficiency} from "./marketing/efficiencyEvaluator";
 import {calculateTerritorySplit} from "./marketing/territoryDistributor";
@@ -111,8 +110,8 @@ export function calculateOpeningWeekend(
   effectiveGross *= 1 - franchiseFatigue; // Apply Fatigue Penalty
 
   // Apply Release Strategy Multiplier if set
-  if ((project as any).releaseStrategyMultiplier) {
-    effectiveGross *= (project as any).releaseStrategyMultiplier;
+  if (project.releaseStrategyMultiplier) {
+    effectiveGross *= project.releaseStrategyMultiplier;
   }
 
   // Macro cycle: industry-wide boom/bust + shocks modulate gross
@@ -163,8 +162,7 @@ export function calculateOpeningWeekend(
     (project.title || "").toLowerCase().includes("2") ||
     (project.title || "").toLowerCase().includes("3") ||
     (project.title || "").toLowerCase().includes("part") ||
-    (project as any).isSequel ||
-    (project as any).franchiseId;
+    project.franchiseId;
 
   if (isSequel) {
     effectiveGross *= 1.3; // 30% bonus for sequels/franchises

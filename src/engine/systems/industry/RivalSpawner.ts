@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {GameState, RivalStudio, StateImpact} from "@/engine/types";
 import {secureRandom, randRange, pick} from "../../utils";
 import {getMarketHeat, getMarketRegime, getBudgetInflation} from "./MacroCycle";
@@ -74,7 +73,7 @@ function makeIndie(state: GameState, usedNames: Set<string>): RivalStudio {
     id: `indie-${state.week}-${Math.floor(secureRandom() * 1e6)}`,
     name,
     motto: "Art over algorithms.",
-    archetype: "indie" as any,
+    archetype: "indie",
     foundedWeek: state.week,
     parentBrand: name.split(" ")[0],
     strength: 25 + Math.floor(secureRandom() * 20),
@@ -85,7 +84,7 @@ function makeIndie(state: GameState, usedNames: Set<string>): RivalStudio {
     contracts: [],
     projectCount: 0,
     motivationProfile: { financial: 30, prestige: 90, legacy: 60, aggression: 40 },
-    currentMotivation: "PRESTIGE_BUILDING" as any,
+    currentMotivation: "AWARD_CHASE",
     ownedPlatforms: [],
   };
 }
@@ -100,7 +99,7 @@ function makeDisruptor(state: GameState, usedNames: Set<string>): RivalStudio {
     id: `disruptor-${state.week}-${Math.floor(secureRandom() * 1e6)}`,
     name,
     motto: "Scale changes everything.",
-    archetype: "mid-tier" as any,
+    archetype: "mid-tier",
     foundedWeek: state.week,
     parentBrand: name.split(" ")[0],
     strength: 55 + Math.floor(secureRandom() * 25),
@@ -111,7 +110,7 @@ function makeDisruptor(state: GameState, usedNames: Set<string>): RivalStudio {
     contracts: [],
     projectCount: 0,
     motivationProfile: { financial: 80, prestige: 40, legacy: 30, aggression: 85 },
-    currentMotivation: "MARKET_DISRUPTION" as any,
+    currentMotivation: "MARKET_DISRUPTION",
     ownedPlatforms: [],
   };
 }

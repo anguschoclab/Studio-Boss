@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import {StateCreator} from "zustand";
 import {GameStore} from "../gameStore";
 import {Contract, Talent, TalentPact, TalentCommitment, TalentRole, RivalStudio, CharacterArchetype, FilmProject, SeriesProject, NewsEvent} from "@/engine/types";
@@ -17,8 +17,13 @@ export interface TalentSlice {
   signBreakoutTalent: (talentId: string, premiumFee: number) => void;
   acquireOpportunity: (oppId: string) => void;
   placeBid: (oppId: string, amount: number) => void;
-  getTalentFilmography: (talentId: string) => any[];
-  getTalentCareerStats: (talentId: string) => any;
+  getTalentFilmography: (talentId: string) => Talent["filmography"];
+  getTalentCareerStats: (talentId: string) => {
+    careerGross: number;
+    highestSalaryMovie?: Talent["highestSalaryMovie"];
+    highestSalaryTv?: Talent["highestSalaryTv"];
+    starMeter: number;
+  } | null;
   calculateStarMeter: (talentId: string) => number;
 }
 
@@ -35,7 +40,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       if (!p) return s;
 
       let finalFee = talent.fee;
-      if (state.deals?.activeDeals?.some((d: any) => d.talentId === talentId)) {
+      if (state.deals?.activeDeals?.some((d) => d.talentId === talentId)) {
         finalFee = talent.fee * 0.5;
       }
 
@@ -43,7 +48,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       if (talent.agentId) {
         const relationship = state.talentAgentRelationships?.[`${talentId}-${talent.agentId}`];
         if (relationship) {
-          relationshipBonus = TalentAgentInteractionEngine.getLoyaltyBonus(relationship as any);
+          relationshipBonus = TalentAgentInteractionEngine.getLoyaltyBonus(relationship);
           finalFee = finalFee * (1 - relationshipBonus / 100);
         }
       }
@@ -83,13 +88,13 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         commitments: [...(talent.commitments || []), commitment],
       };
 
-      const updatedRelationships = { ...state.talentAgentRelationships } as Record<string, any>;
+      const updatedRelationships = { ...state.talentAgentRelationships };
       if (talent.agentId) {
         const relationshipId = `${talentId}-${talent.agentId}`;
         const relationship = updatedRelationships[relationshipId];
         if (relationship) {
           updatedRelationships[relationshipId] = TalentAgentInteractionEngine.updateRelationship(
-            relationship as any,
+            relationship,
             true,
             finalFee
           );
@@ -181,9 +186,10 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
             deals: {
               ...state.deals,
               activeDeals: [...currentDeals, deal],
-            } as any,
+              expiredDeals: state.deals?.expiredDeals ?? [],
+            },
             rngState: rng.getState(),
-          } as any,
+          },
         };
       } else {
         collectedNews.push({
@@ -308,9 +314,13 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
             ...state.entities,
             talents: { ...state.entities.talents, [talentId]: updatedTalent },
           },
-          deals: { ...state.deals, activeDeals: [...currentDeals, deal] } as any,
+          deals: {
+            ...state.deals,
+            activeDeals: [...currentDeals, deal],
+            expiredDeals: state.deals?.expiredDeals ?? [],
+          },
           rngState: rng.getState(),
-        } as any,
+        },
       };
     });
     if (collectedNews.length > 0) {
@@ -323,7 +333,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       const state = s.gameState;
       if (!state) return s;
 
-      const oppIndex = state.market.opportunities.findIndex((o) => (o.id as any) === oppId);
+      const oppIndex = state.market.opportunities.findIndex((o) => o.id === oppId);
       if (oppIndex === -1) return s;
 
       const opp = state.market.opportunities[oppIndex];
@@ -425,7 +435,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       const state = s.gameState;
       if (!state) return s;
 
-      const oppIndex = state.market.opportunities.findIndex((o) => (o.id as any) === oppId);
+      const oppIndex = state.market.opportunities.findIndex((o) => o.id === oppId);
       if (oppIndex === -1) return s;
 
       const opp = state.market.opportunities[oppIndex];
@@ -443,7 +453,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         market: {
           ...state.market,
           opportunities: state.market.opportunities.map((o) =>
-            (o.id as any) === oppId
+            o.id === oppId
               ? { ...o, bids: updatedBids, highestBidderId: studioId, bidHistory }
               : o
           ),

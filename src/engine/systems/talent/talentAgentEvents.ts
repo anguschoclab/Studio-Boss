@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {Talent, Agent, Agency} from "../../types/talent.types";
 import {GameState} from "../../types/studio.types";
 import {TalentAgentRelationship} from "./talentAgentInteractions";
@@ -45,7 +44,7 @@ export function shouldTalentFireAgent(
   if (!talent.agentId) return false;
 
   // No bookings for over a year
-  const commitments = (talent as any).commitments;
+  const commitments = talent.commitments;
   const weeksSinceLastBooking = commitments?.length === 0 ? 53 : 0;
   if (weeksSinceLastBooking >= 52) return true;
 
@@ -113,7 +112,7 @@ export function createAgentHiringEvent(
   talent: Talent,
   agent: Agent,
   week: number
-): { id: string; headline: string; week: number; category: string } {
+): { id: string; headline: string; week: number; category: import("../../types").HeadlineCategory } {
   return {
     id: `hire-${talent.id}-${agent.id}-${week}`,
     headline: `${talent.name} has hired ${agent.name} as their new agent.`,
@@ -129,7 +128,7 @@ export function createAgentFiringEvent(
   talent: Talent,
   agentId: string,
   week: number
-): { id: string; headline: string; week: number; category: string } {
+): { id: string; headline: string; week: number; category: import("../../types").HeadlineCategory } {
   return {
     id: `fire-${talent.id}-${agentId}-${week}`,
     headline: `${talent.name} has parted ways with their agent.`,

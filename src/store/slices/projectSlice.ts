@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import {StateCreator} from "zustand";
 import {GameStore} from "../gameStore";
 import {CreateProjectParams, buildProjectAndContracts, applyStateImpact} from "../storeUtils";
@@ -12,7 +12,7 @@ import {selectFatigueForAsset} from "@/store/selectors";
 import {resolveCrisis} from "@/engine/systems/crises";
 import * as festivalsEngine from "@/engine/systems/festivals";
 import {Project, GameState, AwardBody, ProjectContractType, StateImpact, SeriesProject} from "@/engine/types";
-import {ReleaseStrategy} from "@/engine/types/project.types";
+import {ReleaseStrategy, ProjectStatus} from "@/engine/types/project.types";
 import {RandomGenerator} from "@/engine/utils/rng";
 import {addContractsToIndex, addContractsToTalentIndex} from "@/engine/utils";
 import {type ProjectId} from "@/engine/types/shared.types";
@@ -41,8 +41,8 @@ export interface ProjectSlice {
   acquireAndRebootIP: (ipAssetId: string) => void;
   developFromOwnedIP: (ipAssetId: string) => void;
   submitToFestival: (projectId: string, festivalBody: AwardBody) => void;
-  addProject: (project: any) => void;
-  advanceProjectPhase: (projectId: string, newState: string) => void;
+  addProject: (project: Partial<Project> & { id: string }) => void;
+  advanceProjectPhase: (projectId: string, newState: ProjectStatus) => void;
   updateProject: (projectId: string, update: Partial<Project>) => void;
   setReleaseStrategy: (projectId: string, strategy: ReleaseStrategy) => void;
 }
@@ -57,7 +57,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       const stateAfterFees = applyStateImpact(s.gameState, {
         type: "FUNDS_DEDUCTED",
         payload: { amount: talentFees },
-      }) as any;
+      });
 
       const contracts = { ...stateAfterFees.entities.contracts };
       newContracts.forEach((c) => {
@@ -134,7 +134,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
                   },
                 },
               },
-            ]) as any,
+            ]),
           };
         }
       }
@@ -184,7 +184,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
           ...newState.studio,
           culture: newCulture,
         },
-      } as any,
+      },
     });
   },
 
@@ -362,7 +362,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
             contractsByTalentId: newTalentIndex,
           },
           rngState: rng.getState(),
-        } as any,
+        },
       };
     });
   },
@@ -432,7 +432,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
             contractsByTalentId: newTalentIndex,
           },
           rngState: rng.getState(),
-        } as any,
+        },
       };
     });
   },
@@ -487,7 +487,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
 
     const impact = resolveCrisis(state, project.id, optionIndex);
     const newState = applyStateImpact(state, impact);
-    set({ gameState: newState as any });
+    set({ gameState: newState });
   },
 
   submitToFestival: (projectId, festivalBody) => {
@@ -496,7 +496,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       const impact = festivalsEngine.submitToFestival(s.gameState, projectId, festivalBody);
       if (!impact) return s;
       const newState = applyStateImpact(s.gameState, impact);
-      return { gameState: newState as any };
+      return { gameState: newState };
     });
   },
 
@@ -518,12 +518,15 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
             ...s.gameState.studio,
             internal: {
               ...s.gameState.studio.internal,
-              projects: { ...s.gameState.studio.internal.projects, [project.id]: project },
+              projects: {
+                ...s.gameState.studio.internal.projects,
+                [project.id]: project as Project,
+              },
             },
           },
           entities: {
             ...s.gameState.entities,
-            projects: { ...s.gameState.entities.projects, [project.id]: project },
+            projects: { ...s.gameState.entities.projects, [project.id]: project as Project },
             releasedProjectIds,
           },
         },
@@ -539,9 +542,9 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
           type: "PROJECT_UPDATED",
           payload: {
             projectId,
-            update: { state: newState as any },
+            update: { state: newState },
           },
-        }) as any,
+        }),
       };
     });
   },
@@ -553,7 +556,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
         gameState: applyStateImpact(s.gameState, {
           type: "PROJECT_UPDATED",
           payload: { projectId, update },
-        }) as any,
+        }),
       };
     });
   },
@@ -565,7 +568,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
         gameState: applyStateImpact(s.gameState, {
           type: "PROJECT_UPDATED",
           payload: { projectId, update: { releaseStrategy: strategy } },
-        }) as any,
+        }),
       };
     });
   },

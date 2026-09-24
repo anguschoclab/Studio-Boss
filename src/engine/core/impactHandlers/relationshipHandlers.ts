@@ -31,7 +31,7 @@ export function handleRelationshipUpdated(state: GameState, impact: Relationship
       ...state,
       talentAgentRelationships: {
         ...(state.talentAgentRelationships || {}),
-        [relationshipId]: relationship as unknown as import("../../systems/talent/talentAgentInteractions").TalentAgentRelationship,
+        [relationshipId]: relationship as import("../../systems/talent/talentAgentInteractions").TalentAgentRelationship,
       },
     };
   }
@@ -55,8 +55,9 @@ export function handleRelationshipUpdated(state: GameState, impact: Relationship
     };
   }
 
-  // Talent-talent relationship path
-  if (!key || !relationship) return state;
+  // Talent-talent relationship path (agent relationships take the
+  // relationshipId path above into talentAgentRelationships)
+  if (!key || !relationship || !("talentAId" in relationship)) return state;
   return {
     ...state,
     relationships: {

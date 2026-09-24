@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import {GameState, RivalStudio, StateImpact, StreamerPlatform} from "@/engine/types";import {BrandSystem} from "../../generators/BrandSystem";
 import {secureRandom, randRange} from "../../utils";import {ARCHETYPES} from "../../data/archetypes";
 import {generateMotto} from "../../generators/names";
@@ -35,14 +35,14 @@ export function tickIndustryUpstarts(state: GameState): StateImpact[] {
   if (currentRivals < MIN_RIVALS && secureRandom() < 0.1) {
     const ident = BrandSystem.generateIdentity(usedNames);
     const name = BrandSystem.getStudioName(ident);
-    const archetype = "indie"; // Upstarts usually start small
+    const archetype: import("@/engine/types").ArchetypeKey = "indie"; // Upstarts usually start small
     const archData = ARCHETYPES[archetype];
 
     const newStudio: RivalStudio = {
       id: `upstart-studio-${Math.floor(secureRandom() * 1_000_000_000)}`,
       name,
       motto: generateMotto(),
-      archetype: archetype as any,
+      archetype,
       foundedWeek: state.week,
       parentBrand: ident.core,
       strength: 30 + Math.floor(secureRandom() * 20),

@@ -39,7 +39,7 @@ describe("talentSlice selectors (shape pins)", () => {
     withTalent(t);
     const films = useGameStore.getState().getTalentFilmography("t1");
     expect(films).toHaveLength(2);
-    expect(films[0]).toMatchObject({ title: "Big Hit", gross: 200_000_000 });
+    expect(films?.[0]).toMatchObject({ title: "Big Hit", gross: 200_000_000 });
   });
 
   it("getTalentFilmography returns [] for unknown talent", () => {
@@ -55,7 +55,7 @@ describe("talentSlice selectors (shape pins)", () => {
       careerGross: 200_001_000,
       starMeter: 72,
     });
-    expect(stats.highestSalaryMovie).toMatchObject({ title: "Big Hit" });
+    expect(stats?.highestSalaryMovie).toMatchObject({ title: "Big Hit" });
   });
 
   it("calculateStarMeter derives momentum from recent filmography", () => {

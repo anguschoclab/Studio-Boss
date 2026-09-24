@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import {Project, StateImpact} from "@/engine/types";
+ 
+import {Project, ProjectStatus, StateImpact} from "@/engine/types";
 
 export function handleDevelopmentPhase(p: Project): StateImpact[] {
   const impacts: StateImpact[] = [];
-  let newState: string;
+  let newState: ProjectStatus;
   if (p.format === "tv" || p.format === "unscripted") {
     newState = "pitching";
   } else {
@@ -15,7 +15,7 @@ export function handleDevelopmentPhase(p: Project): StateImpact[] {
     payload: {
       projectId: p.id,
       update: {
-        state: newState as any,
+        state: newState,
         weeksInPhase: 0,
       },
     },

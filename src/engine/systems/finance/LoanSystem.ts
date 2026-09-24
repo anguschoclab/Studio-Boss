@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {GameState, StateImpact} from "@/engine/types";
 import {RandomGenerator} from "@/engine/utils/rng";
 
@@ -75,7 +74,7 @@ export function createLoan(
 // ---------------------------------------------------------------------------
 
 export function tickLoans(state: GameState, _rng: RandomGenerator): StateImpact[] {
-  const loans: Loan[] = (state.studio as any).loans || [];
+  const loans: Loan[] = state.studio.loans || [];
   if (loans.length === 0) return [];
 
   const impacts: StateImpact[] = [];
@@ -103,19 +102,8 @@ export function tickLoans(state: GameState, _rng: RandomGenerator): StateImpact[
       });
     }
 
-    // Decrement weeksRemaining via a "bag" impact (BaseImpact with no type)
-    // WeekCoordinator / impactReducer handles arbitrary studio mutations through
-    // the loan-specific reducer added in loanSlice; here we emit the update so
-    // callers can tick the array themselves.  We piggyback on a typed approach
-    // using a SYSTEM_TICK-adjacent payload that callers recognise:
-    impacts.push({
-      type: "SYSTEM_TICK" as any,
-      payload: {
-        __loanTick: true,
-        loanId: loan.id,
-        weeklyPayment: payment,
-      },
-    } as StateImpact);
+    // weeksRemaining is decremented by WeekCoordinator's studio.loans update;
+    // no loan-tick impact is needed here.
   }
 
   // Bankruptcy check after all payments

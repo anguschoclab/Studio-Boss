@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
 import {Badge} from "@/components/ui/badge";
@@ -73,14 +72,22 @@ export const ReleaseStrategyModal: React.FC = () => {
 
   const [selected, setSelected] = useState<ReleaseStrategy | null>(null);
 
+  const payload =
+    activeModal?.type === "RELEASE_STRATEGY" ? activeModal.payload : undefined;
+  const projectId = payload?.projectId;
+  const projectTitle = payload?.projectTitle;
+  const project = projectId ? gameState?.entities?.projects?.[projectId] : undefined;
+
+  // Resolve in an effect — never during render. This modal is intentionally
+  // undismissable (Escape and outside-click are blocked), so a malformed
+  // payload or missing project must auto-resolve rather than deadlock the queue.
+  useEffect(() => {
+    if (activeModal?.type !== "RELEASE_STRATEGY") return;
+    if (!projectId || !project) resolveCurrentModal();
+  }, [activeModal, projectId, project, resolveCurrentModal]);
+
   if (!activeModal || activeModal.type !== "RELEASE_STRATEGY") return null;
-
-  const { projectId, projectTitle } = (activeModal.payload ?? {}) as {
-    projectId: string;
-    projectTitle: string;
-  };
-
-  const project = gameState?.entities?.projects?.[projectId];
+  if (!projectId || !project) return null;
 
   const handleConfirm = () => {
     if (!selected || !projectId) return;
@@ -202,7 +209,7 @@ export const ReleaseStrategyModal: React.FC = () => {
         {/* Description of selected */}
         {selected && (
           <div className="p-3 rounded-none bg-card/60 border border-border/40 text-xs text-muted-foreground">
-            {getReleaseStrategyEffect(selected, project as any).description}
+            {getReleaseStrategyEffect(selected, project).description}
           </div>
         )}
 

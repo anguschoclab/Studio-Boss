@@ -1,16 +1,18 @@
-import {GameState, StateImpact} from "@/engine/types";
+import {GameState, IndustryUpdateImpact, StateImpact} from "@/engine/types";
 import {getContractsByTalentId} from "../../utils";
 import {isPlayerOwner} from "../../utils/ownership";
 
 const FORBIDDEN_KEYS = new Set(["__proto__", "constructor", "prototype"]);
+
+const asRecord = (value: unknown): Record<string, unknown> => value as Record<string, unknown>;
 
 /**
  * Industry-related impact handlers
  * Pure functions that apply industry-related state impacts
  */
 
-export function handleIndustryUpdate(state: GameState, impact: StateImpact): GameState {
-  const payload = impact.payload as Record<string, unknown>;
+export function handleIndustryUpdate(state: GameState, impact: IndustryUpdateImpact): GameState {
+  const payload = impact.payload;
   if (!payload || typeof payload !== "object") return state;
   let nextState = { ...state };
 
@@ -87,7 +89,7 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
     const clonedRefs = new Set<unknown>([nextState]);
     for (const [path, value] of Object.entries(update)) {
       const parts = path.split(".");
-      let current: Record<string, unknown> = nextState as unknown as Record<string, unknown>;
+      let current: Record<string, unknown> = asRecord(nextState);
 
       for (let i = 0; i < parts.length - 1; i++) {
         const part = parts[i];
@@ -115,7 +117,8 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
   }
 
   // Merger Logic
-  const { mergedRivalId, acquirerId } = payload as { mergedRivalId?: string; acquirerId?: string };
+  const mergedRivalId = typeof payload.mergedRivalId === "string" ? payload.mergedRivalId : undefined;
+  const acquirerId = typeof payload.acquirerId === "string" ? payload.acquirerId : undefined;
   if (mergedRivalId && acquirerId) {
     const target = state.entities.rivals[mergedRivalId];
     if (target) {
@@ -186,16 +189,6 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
       delete rivals[mergedRivalId];
       nextState = { ...nextState, entities: { ...nextState.entities, rivals } };
     }
-  }
-
-  if (payload["market.opportunities"]) {
-    nextState = {
-      ...nextState,
-      market: {
-        ...nextState.market,
-        opportunities: payload["market.opportunities"] as import("@/engine/types").Opportunity[],
-      },
-    };
   }
 
   return nextState;

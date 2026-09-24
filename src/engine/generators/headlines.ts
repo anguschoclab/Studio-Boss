@@ -84,7 +84,14 @@ export function generateHeadlines(
       category = "talent";
     }
 
-    headlines.push({ id: `h-${++counter}-${week}`, headline: text, week, category } as unknown as NewsEvent);
+    headlines.push({
+      id: `h-${++counter}-${week}`,
+      headline: text,
+      description: text,
+      week,
+      category,
+      type: "STUDIO_EVENT",
+    });
   }
 
   return headlines;
