@@ -3,7 +3,7 @@ import {RandomGenerator} from "../../utils/rng";
 import {determineSyndicationTier, getSyndicationImpact, calculateSyndicationProgress} from "../ip/syndicationEngine";
 import {SyndicationTier} from "../../data/syndicationConfig";
 import {getSimMemory} from "../../core/simMemory";
-import {countKeys} from "../../utils";
+import {hasAtLeastKeys} from "../../utils";
 
 /**
  * Utility Scores for each Studio Motivation.
@@ -27,7 +27,7 @@ const MotivationScores: Record<StudioMotivation, (rival: RivalStudio, state: Gam
     },
     // 🎭 The Method Actor Tuning: Cash-rich studios aggressively focus on building franchises to secure long-term revenue.
     FRANCHISE_BUILDING: (rival) => {
-      let score = countKeys(rival.projects) > 3 ? 60 : 20;
+      let score = hasAtLeastKeys(rival.projects, 4) ? 60 : 20;
       if (rival.cash > 10000000) score += 40; // Got cash, want IP
       if (rival.cash > 20000000) score += 30; // Extreme cash makes them hoard IP
       return score;

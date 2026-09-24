@@ -238,3 +238,42 @@ All items previously deferred or marked out-of-scope have been implemented under
 - `GenericImpact` accepts `payload?: any` by design — registered types are still preferred; unregistered literals hit the `console.warn` passthrough.
 - `saveSchema` validates structure, not per-entity record contents.
 - `GEMINI_API_KEY` still recoverable from git history — **user must rotate**.
+
+---
+
+## Round-4 — Residual Debt Elimination (GenericImpact removal, cast sweep, deep save validation)
+
+Executed under strict test-first discipline: Phase-0 pinned characterization and red tests before every behavior change.
+
+| Item | Outcome |
+| ------ | -------- |
+| `GenericImpact` removed | **Done** — `type: string; payload?: any` member deleted; tsc census enumerated every literal that compiled only via the escape hatch; all reshaped into declared `StateImpact` members or fixed as malformed emits |
+| Handler registry typed | **Done** — `handlerRegistry` is a mapped type keyed on all 65 `ImpactType` literals; each slot checked against the declared impact member |
+| `as any` sweep | **Done** — 98 production sites → **0** (test fixtures excluded by policy) |
+| `as unknown as` sweep | **Done** — 58 production sites → **0** |
+| File-level `no-explicit-any` disables | **Done** — all removed from production files |
+| `saveSchema` deep validation | **Done** — load-bearing fields per entity (project `title`/`type`/`state` enums, talent `name`/`tier`, rival `name`/`archetype`/`cash`, contract `projectId`/`talentId`/`fee`) + referential integrity (key↔id, contract refs, ghost indexes, `releasedProjectIds`, `studio.internal.projects` orphans). 21 integrity tests |
+| ModalType | **Done** — `MODAL_TRIGGERED.payload.modalType` narrowed to `ModalType`; `ModalPayloadMap` extended (`PACKAGE_DEAL_OFFERED` real shape) |
+
+### Real bugs found by the census (all pinned by red tests first)
+
+- `STUDIO_CULTURE_UPDATED` emitted but not in `ImpactType` → emitted under dropped `studioCulture` key; now uses consumed `__studioUpdate` shape.
+- `INDUSTRY_UPDATE` bare path-keys → moved under `payload.update` (deep-path walker).
+- Agent hire/fire events emitted `text`; summary renders `headline` → "Unknown Event" in weekly summaries.
+- Crisis modal matched instance id against template ids → every crisis modal auto-closed; now reads `project.activeCrisis` directly.
+- `MarketingPromotionSystem` emitted `severity: "medium"` + invalid `ScandalType` → `severity/5` produced NaN prestige.
+- `RivalSpawner` emitted `payload.rival` (singular); handler only read `payload.rivals` array → **spawned rivals silently never added**.
+- `tickHardBankruptcy` emitted `bankruptRivalId`; no handler consumed it → **insolvent rivals never removed**.
+- `ProductionEnhancementSystem` read `state.productionEnhancements` (root); real path is `state.relationships.productionEnhancements` → screenplay notes gave zero quality bonus.
+- `MARKET_EVENT_UPDATED` emitted `marketingIntensity`; handler dropped it → share-of-voice never saw industry spend.
+- Headless TV builder omitted required `Project` fields + wrote `"ON_AIR"` into lifecycle `state` (belongs to `tvDetails.status`) → corrupted project lifecycle.
+- `GuestStarEngine` read `tvSeasonDetails` (nonexistent) instead of `tvDetails` → always fell back to defaults.
+- `finance.ts` read fictional `studio.level` → declared `StudioState.level?` (defaults 1; behavior preserved).
+- `LoanSystem` emitted dead `SYSTEM_TICK` bag impact; weekly coordinator already ticks loans → emit removed.
+- `CastingConstraintSystem.generateRequirementsFromNotes` read nonexistent `status`/`intensity`/`suggestedTalentIds` fields → aligned to real `ScreenplayNote` (`implemented`/`quality`); still exported-but-uncalled.
+
+### Intentional residuals
+
+- One `as` at the `applySingleImpact` dispatch site — TS cannot correlate a dynamic union key to a mapped handler signature (language limitation).
+- `rivalProduction` uses `as Project`/`as SeriesProject` on freshly-built literals where `type` is a runtime variable — a union-member can't be selected by a union-typed discriminator at literal construction.
+- `GEMINI_API_KEY` still recoverable from git history — **user must rotate**.

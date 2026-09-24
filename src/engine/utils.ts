@@ -341,6 +341,17 @@ export function countKeys(obj: object | null | undefined): number {
   return n;
 }
 
+/** Returns true once n own enumerable keys are found — exits early without counting the rest. */
+export function hasAtLeastKeys(obj: object | null | undefined, n: number): boolean {
+  if (n <= 0) return true;
+  if (obj == null) return false;
+  let count = 0;
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key) && ++count >= n) return true;
+  }
+  return false;
+}
+
 /** Rival's total projects across both stores: rival.projects + entities.projects tagged ownerId === rival.id. */
 export function countRivalProjects(state: GameState, rival: RivalStudio): number {
   let n = countKeys(rival.projects);

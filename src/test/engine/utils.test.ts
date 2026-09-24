@@ -6,6 +6,7 @@ import {
   randRange,
   clamp,
   countKeys,
+  hasAtLeastKeys,
   countRivalProjects,
   countPlayerProjects,
 } from "../../engine/utils";
@@ -115,6 +116,36 @@ describe("utils", () => {
       obj.own1 = 1;
       obj.own2 = 2;
       expect(countKeys(obj)).toBe(2);
+    });
+  });
+
+  describe("hasAtLeastKeys", () => {
+    it("returns true when the record has at least n keys", () => {
+      expect(hasAtLeastKeys({ a: 1, b: 2, c: 3 }, 3)).toBe(true);
+      expect(hasAtLeastKeys({ a: 1, b: 2, c: 3 }, 2)).toBe(true);
+    });
+
+    it("returns false when the record has fewer than n keys", () => {
+      expect(hasAtLeastKeys({ a: 1, b: 2 }, 3)).toBe(false);
+      expect(hasAtLeastKeys({}, 1)).toBe(false);
+    });
+
+    it("returns false for null and undefined when n >= 1", () => {
+      expect(hasAtLeastKeys(null, 1)).toBe(false);
+      expect(hasAtLeastKeys(undefined, 4)).toBe(false);
+    });
+
+    it("returns true for n <= 0 regardless of input", () => {
+      expect(hasAtLeastKeys({}, 0)).toBe(true);
+      expect(hasAtLeastKeys(null, 0)).toBe(true);
+    });
+
+    it("ignores inherited prototype properties", () => {
+      const proto = { inherited: true };
+      const obj = Object.create(proto);
+      obj.own1 = 1;
+      expect(hasAtLeastKeys(obj, 2)).toBe(false);
+      expect(hasAtLeastKeys(obj, 1)).toBe(true);
     });
   });
 

@@ -3,7 +3,7 @@ import {evaluateVaultSynergy} from "./synergyEvaluator";
 import {applyIPDecay} from "./ipValuation";
 import {calculateFranchiseFatigue} from "./fatigueEngine";
 import {determineSyndicationTier} from "./syndicationEngine";
-import {countKeys} from "../../utils";
+import {hasAtLeastKeys} from "../../utils";
 
 /**
  * Weekly IP Vault Tick.
@@ -43,7 +43,7 @@ export function tickIPVault(
     }
   }
 
-  const hasGenreBonus = countKeys(genreFocusBonus) > 0;
+  const hasGenreBonus = hasAtLeastKeys(genreFocusBonus, 1);
 
   const updatedVault = evaluateVaultSynergy(activeProjects, state.ip.vault).map((asset) => {
     let updatedAsset = applyIPDecay(asset);
