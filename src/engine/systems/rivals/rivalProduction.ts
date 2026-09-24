@@ -187,7 +187,7 @@ function advanceRivalProject(project: Project): Project | null {
  */
 export function buildFatigueAwareGenreWeights(
   state: GameState,
-  rival: RivalStudio
+  rival: Pick<RivalStudio, "id" | "archetypeId" | "behaviorId">
 ): Record<string, number> {
   const weights: Record<string, number> = {};
   for (const g of GENRES) {

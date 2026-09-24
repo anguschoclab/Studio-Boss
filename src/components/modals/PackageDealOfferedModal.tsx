@@ -1,3 +1,4 @@
+import {useEffect} from "react";
 import {useUIStore} from "@/store/uiStore";
 import {useGameStore} from "@/store/gameStore";
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter} from "@/components/ui/dialog";
@@ -23,7 +24,18 @@ export const PackageDealOfferedModal = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
   const gameState = useGameStore((s) => s.gameState);
 
-  const data = activeModal?.payload as PackageDealPayload | null;
+  const data =
+    activeModal?.type === "PACKAGE_DEAL_OFFERED"
+      ? (activeModal.payload as unknown as PackageDealPayload)
+      : null;
+
+  // Resolve in an effect — never during render — so a missing payload
+  // can't deadlock the modal queue.
+  useEffect(() => {
+    if (activeModal?.type === "PACKAGE_DEAL_OFFERED" && !data) {
+      resolveCurrentModal();
+    }
+  }, [activeModal, data, resolveCurrentModal]);
 
   const handleDecline = () => {
     resolveCurrentModal();

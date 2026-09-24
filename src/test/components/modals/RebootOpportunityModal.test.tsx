@@ -106,13 +106,14 @@ describe("RebootOpportunityModal", () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it("renders nothing when activeModal.payload is undefined", () => {
+  it("renders nothing and resolves the modal when activeModal.payload is undefined", () => {
     (useUIStore as any).mockImplementation(() => ({
       activeModal: { id: "m1", type: "REBOOT_OPPORTUNITY", payload: undefined },
       resolveCurrentModal: mockResolveCurrentModal,
     }));
     const { container } = render(<RebootOpportunityModal />);
     expect(container.firstChild).toBeNull();
+    expect(mockResolveCurrentModal).toHaveBeenCalled();
   });
 
   it("displays ipTitle from proposal", () => {

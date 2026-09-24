@@ -104,11 +104,12 @@ export function tickConsolidation(state: GameState): StateImpact[] {
     }
 
     // Execute Acquisition
+    impacts.push(I.financeTransaction(-cost, `Acquisition of ${target.name}`, acquirer.id));
     impacts.push({
       type: "RIVAL_UPDATED",
       payload: {
         rivalId: acquirer.id,
-        update: { cash: acquirer.cash - cost, prestige: Math.min(100, acquirer.prestige + 10) },
+        update: { prestige: Math.min(100, acquirer.prestige + 10) },
       },
     });
     impacts.push({
@@ -176,12 +177,14 @@ export function tickConsolidation(state: GameState): StateImpact[] {
       },
     });
 
+    impacts.push(
+      I.financeTransaction(-cost, `Platform acquisition: ${platform.name}`, acquirer.id),
+    );
     impacts.push({
       type: "RIVAL_UPDATED",
       payload: {
         rivalId: acquirer.id,
         update: {
-          cash: acquirer.cash - cost,
           ownedPlatforms: [...(acquirer.ownedPlatforms || []), platform.id],
         },
       },

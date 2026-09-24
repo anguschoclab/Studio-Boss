@@ -334,7 +334,7 @@ export function getProjectQualityBonus(
   projectId: string,
   state: GameState
 ): { screenplayBonus: number; additionBonus: number; creditSceneBonus: number } {
-  const enhancements = (state as any).productionEnhancements || {};
+  const enhancements = state.relationships?.productionEnhancements || {};
 
   let screenplayBonus = 0;
   // ⚡ The Framerate Fanatic: Replaced Object.values().filter().reduce() with a direct for...in loop
@@ -474,7 +474,7 @@ export function implementScreenplayNote(
   rng: RandomGenerator
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const enhancements = (state as any).productionEnhancements || {};
+  const enhancements = state.relationships?.productionEnhancements || {};
   const note = enhancements.screenplayNotes?.[noteId] as ScreenplayNote | undefined;
 
   if (!note || note.implemented) return impacts;
@@ -522,7 +522,7 @@ export function spoilCreditScene(
   rng: RandomGenerator
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const enhancements = (state as any).productionEnhancements || {};
+  const enhancements = state.relationships?.productionEnhancements || {};
   const scene = enhancements.creditScenes?.[sceneId] as CreditScene | undefined;
 
   if (!scene || scene.spoiledByRumors) return impacts;

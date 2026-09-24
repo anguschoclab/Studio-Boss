@@ -21,6 +21,13 @@ describe("initializeGame", () => {
     expect(state.studio.ownedPlatforms).toContain(playerStreamer!.id);
   });
 
+  it("never emits the PLR-STUDIO-1 placeholder on any buyer", () => {
+    const state = initializeGame("My Studio", "major");
+    expect(state.studio.id).not.toBe("PLR-STUDIO-1");
+    const placeholder = state.market.buyers.find((b) => b.ownerId === "PLR-STUDIO-1");
+    expect(placeholder).toBeUndefined();
+  });
+
   it("does not assign a streamer for indie archetype", () => {
     const state = initializeGame("Indie Studio", "indie");
     const playerStreamer = state.market.buyers.find(

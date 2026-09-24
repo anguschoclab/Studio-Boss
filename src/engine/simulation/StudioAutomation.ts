@@ -144,10 +144,11 @@ export class StudioAutomation {
       const rival = state.entities.rivals[studioId];
       if (rival && update.budget) {
         impacts.push({
-          type: "RIVAL_UPDATED",
+          type: "FINANCE_TRANSACTION",
           payload: {
-            rivalId: studioId,
-            update: { cash: (rival.cash || 0) - (update.budget as number) },
+            amount: -(update.budget as number),
+            description: `Greenlit: ${p.title}`,
+            targetId: studioId,
           },
         });
       }
@@ -177,12 +178,11 @@ export class StudioAutomation {
         state.week
       );
 
-      // Status Transition (TV Special Case)
-      let nextStatus = "released";
+      // Status Transition (TV Special Case): state stays "released" —
+      // "ON_AIR" is a tvDetails.status value, not a ProjectStatus.
       let tvUpdate = {};
-      if ((p.format === "tv" || p.type === "SERIES") && (p as unknown as Record<string, unknown>).tvDetails) {
-        nextStatus = "ON_AIR";
-        tvUpdate = { tvDetails: { ...(p as unknown as Record<string, unknown>).tvDetails as object, status: "ON_AIR" } };
+      if (p.type === "SERIES" && "tvDetails" in p && p.tvDetails) {
+        tvUpdate = { tvDetails: { ...p.tvDetails, status: "ON_AIR" } };
       }
 
       // Initialize streaming viewership for streaming distribution
@@ -210,7 +210,7 @@ export class StudioAutomation {
             ...releasedProject,
             ...tvUpdate,
             ...streamingUpdate,
-            state: nextStatus,
+            state: "released",
             weeksInPhase: 0,
             releaseWeek: state.week,
             activeCrisis: null,
@@ -259,12 +259,11 @@ export class StudioAutomation {
     });
 
     impacts.push({
-      type: "RIVAL_UPDATED",
+      type: "FINANCE_TRANSACTION",
       payload: {
-        rivalId: rival.id,
-        update: {
-          cash: (Number(rival.cash) || 0) + bidPrice,
-        },
+        amount: bidPrice,
+        description: `IP liquidation: ${asset.title}`,
+        targetId: rival.id,
       },
     });
 
@@ -297,8 +296,12 @@ export class StudioAutomation {
       },
     });
     impacts.push({
-      type: "RIVAL_UPDATED",
-      payload: { rivalId: rival.id, update: { cash: (Number(rival.cash) || 0) - cost } },
+      type: "FINANCE_TRANSACTION",
+      payload: {
+        amount: -cost,
+        description: "SVOD platform launch",
+        targetId: rival.id,
+      },
     });
   }
 
@@ -332,34 +335,50 @@ export class StudioAutomation {
     const weights = budgetTiers.map((tier) => archetype.budget_tier_weights[tier]);
     const budgetTier = this.weightedRandom(budgetTiers, weights, rng);
 
-    const project: Record<string, unknown> = {
+    const base = {
       id,
       title: `${genre} ${rng.rangeInt(1, 100)}`,
       genre,
       format,
-      type: format === "tv" ? "SERIES" : "FILM",
-      state: "pitching",
+      state: "pitching" as const,
       weeksInPhase: 0,
       budgetTier,
+      budget: 0,
+      weeklyCost: 0,
+      targetAudience: "general",
+      flavor: "",
+      developmentWeeks: 0,
+      productionWeeks: 0,
+      revenue: 0,
+      weeklyRevenue: 0,
+      releaseWeek: null,
+      activeCrisis: null,
+      momentum: 50,
       buzz: rng.rangeInt(20, 50),
       ownerId: rival.id,
       quality: 50,
       scriptHeat: 50,
+      activeRoles: [] as import("@/engine/types").CharacterArchetype[],
+      scriptEvents: [] as import("@/engine/types").ScriptEvent[],
       progress: 0,
       accumulatedCost: 0,
-      weeksInDevelopment: 0,
     };
 
-    if (format === "tv") {
-      project.tvDetails = {
-        status: "IN_DEVELOPMENT",
-        episodesOrdered: rng.rangeInt(8, 13),
-        episodesAired: 0,
-        averageRating: 0,
-        currentSeason: 1,
-        episodesCompleted: 0,
-      };
-    }
+    const project: Project =
+      format === "tv"
+        ? {
+            ...base,
+            type: "SERIES",
+            tvDetails: {
+              status: "IN_DEVELOPMENT",
+              episodesOrdered: rng.rangeInt(8, 13),
+              episodesAired: 0,
+              averageRating: 0,
+              currentSeason: 1,
+              episodesCompleted: 0,
+            },
+          }
+        : { ...base, type: "FILM" };
 
     impacts.push({
       type: "PROJECT_CREATED",

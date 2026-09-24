@@ -138,7 +138,7 @@ describe("DistressCascade impact types", () => {
       expect(transferred?.rightsOwner).toBe("RIVAL");
     });
 
-    it("produces RIVAL_UPDATED for seller with cash and prestige hit", () => {
+    it("produces cash delta and prestige hit for seller", () => {
       const rival = createMockRival({ id: "seller", name: "Seller", cash: 0, prestige: 40 });
       const buyer = createMockRival({ id: "buyer", name: "Buyer", cash: 1_000_000_000 });
       const state = createMockGameState({
@@ -176,10 +176,17 @@ describe("DistressCascade impact types", () => {
       const impacts = completeFireSale(state, offer, "buyer");
       const rivalImpact = findImpact(impacts, "RIVAL_UPDATED");
       expect(rivalImpact).toBeDefined();
-      const payload = rivalImpact!.payload as { rivalId: string; update: { cash: number; prestige: number } };
+      const payload = rivalImpact!.payload as { rivalId: string; update: { prestige: number } };
       expect(payload.rivalId).toBe("seller");
-      expect(payload.update.cash).toBe(120_000_000);
       expect(payload.update.prestige).toBe(35);
+
+      const credit = impacts.find(
+        (i) =>
+          i.type === "FINANCE_TRANSACTION" &&
+          (i.payload as { targetId?: string }).targetId === "seller"
+      );
+      expect(credit).toBeDefined();
+      expect((credit!.payload as { amount: number }).amount).toBe(120_000_000);
     });
 
     it("produces FUNDS_DEDUCTED when player is the buyer", () => {

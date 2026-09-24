@@ -318,12 +318,12 @@ export function tickMarketingPromotionSystem(
               scandal: {
                 id: rng.uuid("SCD"),
                 talentId: talent.id,
-                week: state.week,
-                type: "CONTROVERSY",
+                type: "personal",
+                severity: 60,
+                weeksRemaining: 6,
                 description: `${talent.name} made controversial remarks during their ${appearance.showName} appearance`,
-                severity: "medium",
-                publicAwareness: 60,
-                careerImpact: -5,
+                isPublic: true,
+                weekDiscovered: state.week,
               },
             },
           });

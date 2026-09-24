@@ -21,7 +21,19 @@ export function handleBuyerUpdated(state: GameState, impact: BuyerUpdateImpact):
 }
 
 export function handleOpportunityUpdated(state: GameState, impact: OpportunityUpdateImpact): GameState {
-  const { opportunityId, rivalId, bid } = impact.payload;
+  const payload = impact.payload;
+  if ("action" in payload && payload.action === "EXPIRE") {
+    return {
+      ...state,
+      market: {
+        ...state.market,
+        opportunities: (state.market.opportunities || []).filter(
+          (o) => o.id !== payload.opportunityId
+        ),
+      },
+    };
+  }
+  const { opportunityId, rivalId, bid } = payload;
   const opportunities = (state.market.opportunities || []).map((o) => {
     if (o.id === opportunityId) {
       return {

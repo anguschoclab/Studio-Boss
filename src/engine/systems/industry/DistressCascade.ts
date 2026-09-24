@@ -209,8 +209,8 @@ export function completeFireSale(
   // 2. Credit the seller (and the standard -5 prestige hit for a distressed sale).
   if (seller) {
     impacts.push(
+      I.financeTransaction(offer.price, `Distressed sale: ${offer.assetLabel}`, offer.sellerId),
       I.rivalUpdated(offer.sellerId, {
-        cash: (seller.cash || 0) + offer.price,
         prestige: Math.max(0, (seller.prestige || 0) - 5),
       }),
     );
@@ -222,7 +222,9 @@ export function completeFireSale(
   } else {
     const buyer = state.entities.rivals?.[buyerId];
     if (buyer) {
-      impacts.push(I.rivalUpdated(buyerId, { cash: (buyer.cash || 0) - offer.price }));
+      impacts.push(
+        I.financeTransaction(-offer.price, `Distressed purchase: ${offer.assetLabel}`, buyerId),
+      );
     }
   }
 
@@ -433,8 +435,8 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
       : 500_000_000;
     const newOwned = (seller.ownedPlatforms || []).filter((id) => id !== platformId);
     impacts.push(
+      I.financeTransaction(proceeds, "Platform divestiture", seller.id),
       I.rivalUpdated(seller.id, {
-        cash: (seller.cash || 0) + proceeds,
         ownedPlatforms: newOwned,
       }),
     );
@@ -469,8 +471,8 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
     // Backlot / facility sale — flat one-time, prestige tax.
     const proceeds = Math.round(50_000_000 + secureRandom() * 150_000_000);
     impacts.push(
+      I.financeTransaction(proceeds, "Backlot sale", seller.id),
       I.rivalUpdated(seller.id, {
-        cash: (seller.cash || 0) + proceeds,
         prestige: Math.max(0, (seller.prestige || 0) - 10),
       }),
     );
@@ -527,8 +529,8 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
         I.projectUpdated(target.id, { state: "archived", weeklyCost: 0, weeklyRevenue: 0 }),
       );
       impacts.push(
+        I.financeTransaction(proceeds, `Shelved production: ${target.title}`, seller.id),
         I.rivalUpdated(seller.id, {
-          cash: (seller.cash || 0) + proceeds,
           prestige: Math.max(0, (seller.prestige || 0) - 5),
         }),
       );
@@ -602,13 +604,13 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
       }
       impacts.push(I.industryUpdate({ "ip.vault": newVault }));
       impacts.push(
+        I.financeTransaction(proceeds, "Library sale", seller.id),
         I.rivalUpdated(seller.id, {
-          cash: (seller.cash || 0) + proceeds,
           prestige: Math.max(0, (seller.prestige || 0) - 3),
         }),
       );
       if (buyer) {
-        impacts.push(I.rivalUpdated(buyer.id, { cash: (buyer.cash || 0) - proceeds }));
+        impacts.push(I.financeTransaction(-proceeds, `Library purchase from ${seller.name}`, buyer.id));
       }
       impacts.push(
         I.newsAdded({
@@ -646,7 +648,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
       50_000_000,
       Math.min(300_000_000, Math.round(franchiseProxy * (0.4 + secureRandom() * 0.4)))
     );
-    impacts.push(I.rivalUpdated(seller.id, { cash: (seller.cash || 0) + proceeds }));
+    impacts.push(I.financeTransaction(proceeds, "Slate-backend financing", seller.id));
     impacts.push(
       I.newsAdded({
         headline: `SLATE FINANCING: ${seller.name} sells backend stake on franchise slate for $${(proceeds / 1e6).toFixed(0)}M`,
@@ -673,8 +675,8 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
   // Smaller cash recovery than asset sales, prestige and morale tax.
   const proceeds = Math.round(20_000_000 + secureRandom() * 60_000_000);
   impacts.push(
+    I.financeTransaction(proceeds, "Overhead layoffs", seller.id),
     I.rivalUpdated(seller.id, {
-      cash: (seller.cash || 0) + proceeds,
       prestige: Math.max(0, (seller.prestige || 0) - 5),
     }),
   );
@@ -738,8 +740,8 @@ function stage3DistressedMA(state: GameState, target: RivalStudio, distress?: Di
   const price = Math.round(assetValue * (0.3 + secureRandom() * 0.2));
 
   impacts.push(
+    I.financeTransaction(-price, `Rescue acquisition of ${target.name}`, acquirer.id),
     I.rivalUpdated(acquirer.id, {
-      cash: (acquirer.cash || 0) - price,
       prestige: Math.min(100, (acquirer.prestige || 0) + 5),
     }),
   );

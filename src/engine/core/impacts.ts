@@ -1,5 +1,5 @@
 import type {HeadlineCategory, Project, Talent, RivalStudio, Buyer, Franchise, Award} from '@/engine/types';
-import type {NewsImpact, FundsImpact, FundsDeductedImpact, ProjectUpdateImpact, TalentUpdateImpact, PrestigeChangedImpact, BuyerUpdateImpact, RivalUpdateImpact, IndustryUpdateImpact, ModalTriggeredImpact, FranchiseUpdatedImpact, AwardWonImpact} from '@/engine/types/state.types';
+import type {NewsImpact, FundsImpact, FundsDeductedImpact, ProjectUpdateImpact, TalentUpdateImpact, PrestigeChangedImpact, BuyerUpdateImpact, RivalUpdateImpact, IndustryUpdateImpact, ModalTriggeredImpact, FranchiseUpdatedImpact, AwardWonImpact, FinanceTransactionImpact} from '@/engine/types/state.types';
 
 /**
  * Typed impact constructor functions.
@@ -30,6 +30,14 @@ export const impacts = {
 
   fundsDeducted(amount: number): FundsDeductedImpact {
     return { type: 'FUNDS_DEDUCTED', payload: { amount } };
+  },
+
+  financeTransaction(
+    amount: number,
+    description: string,
+    targetId?: string,
+  ): FinanceTransactionImpact {
+    return { type: 'FINANCE_TRANSACTION', payload: { amount, description, targetId } };
   },
 
   projectUpdated(projectId: string, update: Partial<Project>): ProjectUpdateImpact {

@@ -81,9 +81,9 @@ export function tickRivalAwardsCampaigns(state: GameState, rng: RandomGenerator)
     const metaScore = project.reception?.metaScore || project.reviewScore || 60;
     const hasBacklash = checkCampaignBacklash(metaScore, tier, rng);
 
-    // Deduct cost from rival cash
+    // Deduct cost from rival cash as a delta
     impacts.push(
-      I.rivalUpdated(rival.id, { cash: cash - cost })
+      I.financeTransaction(-cost, `Awards campaign (${tier}): ${project.title}`, rival.id)
     );
 
     // Boost project buzz (capped at 100)

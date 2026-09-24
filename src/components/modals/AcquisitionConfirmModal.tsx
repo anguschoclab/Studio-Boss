@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
 import {useGameStore} from "@/store/gameStore";
@@ -34,14 +34,21 @@ export const AcquisitionConfirmModal: React.FC = () => {
   const previewAcquisition = useGameStore((s) => s.previewAcquisition);
   const acquireRival = useGameStore((s) => s.acquireRival);
 
-  if (!activeModal || activeModal.type !== "ACQUISITION_CONFIRM") return null;
-
-  const targetId = (activeModal.payload as { targetId?: string })?.targetId;
+  const targetId =
+    activeModal?.type === "ACQUISITION_CONFIRM"
+      ? (activeModal.payload as { targetId?: string })?.targetId
+      : undefined;
   const preview = targetId ? previewAcquisition(targetId) : null;
-  if (!preview) {
-    resolveCurrentModal();
-    return null;
-  }
+
+  // Resolve in an effect — never during render — so a missing preview
+  // can't jam the modal queue.
+  useEffect(() => {
+    if (activeModal?.type === "ACQUISITION_CONFIRM" && !preview) {
+      resolveCurrentModal();
+    }
+  }, [activeModal, preview, resolveCurrentModal]);
+
+  if (!activeModal || activeModal.type !== "ACQUISITION_CONFIRM" || !preview) return null;
 
   const risk = RISK_COPY[preview.regulatorRisk];
 

@@ -24,7 +24,7 @@ export const OpportunitySystem = {
       if (bidders.length === 0) {
         // No one bid, just expire it
         impacts.push({
-          type: "OPPORTUNITY_UPDATED", // We'll use this to signal removal in the future or just handle it below
+          type: "OPPORTUNITY_UPDATED",
           payload: { opportunityId: opp.id, action: "EXPIRE" },
         });
         return;
@@ -89,12 +89,11 @@ export const OpportunitySystem = {
             },
           });
           impacts.push({
-            type: "RIVAL_UPDATED",
+            type: "FINANCE_TRANSACTION",
             payload: {
-              rivalId: winnerId,
-              update: {
-                cash: rival.cash - bidData.amount,
-              },
+              amount: -bidData.amount,
+              description: `Won auction for "${opp.title}"`,
+              targetId: winnerId,
             },
           });
           impacts.push({
@@ -123,7 +122,9 @@ export const OpportunitySystem = {
 
       impacts.push({
         type: "INDUSTRY_UPDATE",
-        payload: { "market.opportunities": [...remainingOpportunities, ...newOpps] },
+        payload: {
+          update: { "market.opportunities": [...remainingOpportunities, ...newOpps] },
+        },
       });
     }
 

@@ -113,12 +113,11 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
 
       if (rival.cash > leveragedFee * 2) {
         impacts.push({
-          type: "RIVAL_UPDATED",
+          type: "FINANCE_TRANSACTION",
           payload: {
-            rivalId: rival.id,
-            update: {
-              cash: rival.cash - leveragedFee,
-            },
+            amount: -leveragedFee,
+            description: `First-look deal: ${target.name}`,
+            targetId: rival.id,
           },
         });
 

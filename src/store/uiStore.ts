@@ -1,77 +1,11 @@
 import { create } from "zustand";
-import type { CastingConstraintOption } from "@/engine/types/casting.types";
-import type { WeekSummary } from "@/engine/types/engine.types";
-import type { Award } from "@/engine/types";
-import type { RebootProposal } from "@/engine/systems/ip/ipRebootEngine";
-import type { FestivalAuctionResult } from "@/engine/systems/festivals/festivalAuctionEngine";
+import type {
+  ModalType,
+  ModalPayloadMap,
+  ModalPayload,
+} from "@/engine/types/modal.types";
 
-export type ModalType =
-  | "CRISIS"
-  | "AWARDS"
-  | "SUMMARY"
-  | "GAME_OVER"
-  | "RELEASE_STRATEGY"
-  | "POST_PRODUCTION"
-  | "ACHIEVEMENT_UNLOCKED"
-  | "FESTIVAL_MARKET"
-  | "PACKAGE_DEAL_OFFERED"
-  | "DIRECTORS_CUT_AVAILABLE"
-  | "UPFRONTS"
-  | "BIDDING_WAR"
-  | "BREAKOUT_BIDDING_WAR"
-  | "REBOOT_OPPORTUNITY"
-  | "DISTRESSED_ASSET_OFFER"
-  | "GREENLIGHT_DECISION"
-  | "CASTING_CONSTRAINT"
-  | "ACQUISITION_CONFIRM";
-
-/**
- * Payload shapes emitted for each modal type. Modal components narrow these
- * further with local casts where the payload carries engine entities.
- */
-export interface ModalPayloadMap {
-  CRISIS: { projectId?: string; crisis?: unknown; id?: string };
-  AWARDS: { week?: number; year?: number; awards: Award[]; body?: string };
-  SUMMARY: WeekSummary;
-  GAME_OVER: { reason?: string; cashDeficit?: number };
-  RELEASE_STRATEGY: { projectId: string; projectTitle?: string };
-  POST_PRODUCTION: { projectId?: string; projectTitle?: string };
-  ACHIEVEMENT_UNLOCKED: {
-    achievementId: string;
-    name: string;
-    description: string;
-    week: number;
-  };
-  FESTIVAL_MARKET: { results: FestivalAuctionResult[]; festivalBody?: string; week?: number };
-  PACKAGE_DEAL_OFFERED: Record<string, unknown>;
-  DIRECTORS_CUT_AVAILABLE: { projectId: string; projectTitle?: string };
-  UPFRONTS: { results: unknown[]; week?: number };
-  BIDDING_WAR: {
-    attackerId?: string;
-    attackerName?: string;
-    targetId?: string;
-    targetName?: string;
-    offerAmount?: number;
-    week?: number;
-  };
-  BREAKOUT_BIDDING_WAR: {
-    talentId: string;
-    currentFee?: number;
-    competingStudios?: string[];
-  };
-  REBOOT_OPPORTUNITY: RebootProposal;
-  DISTRESSED_ASSET_OFFER: { offerId: string };
-  GREENLIGHT_DECISION: { projectId: string };
-  CASTING_CONSTRAINT: {
-    violationId: string;
-    projectId: string;
-    talentId: string;
-    options: CastingConstraintOption[];
-  };
-  ACQUISITION_CONFIRM: { targetId: string };
-}
-
-export type ModalPayload = ModalPayloadMap[ModalType];
+export type { ModalType, ModalPayloadMap, ModalPayload };
 
 let modalIdCounter = 0;
 

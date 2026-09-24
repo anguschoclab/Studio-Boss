@@ -2,7 +2,7 @@ import {GameState, StateImpact, Project, RivalStudio, CampaignData} from "@/engi
 import {RandomGenerator} from "../utils/rng";
 import {isPlayerOwner, getPlayerId} from "../utils/ownership";
 import {executeGreenlight, executeMarketing} from "../systems/projects";
-import {BudgetTierKey} from "../types/project.types";
+import {BudgetTierKey, MarketingCampaign} from "../types/project.types";
 import {processFlops} from "../systems/finance/FlopMechanics";
 import {calculateOpeningWeekend} from "../systems/releaseSimulation";
 import {getSimMemory} from "../core/simMemory";
@@ -139,11 +139,9 @@ export class HeadlessController {
         if (isTv) {
           // TV premiere: revenue = license fees (per-episode) or streamer subscriber-value proxy.
           // Simpler than box office. Renewal can spawn a season-2 project.
-          const tvDetails = (
-            project as unknown as {
-              tvDetails?: { episodesOrdered?: number; currentSeason?: number };
-            }
-          ).tvDetails || { episodesOrdered: 10, currentSeason: 1 };
+          const tvDetails =
+            ("tvDetails" in project ? project.tvDetails : undefined) ||
+            ({ episodesOrdered: 10, currentSeason: 1 } as const);
           const episodes = tvDetails.episodesOrdered || 10;
           const ownsPlatform = (state.studio?.ownedPlatforms || []).length > 0;
           // License fees must track budget inflation or TV projects become guaranteed losers
@@ -192,20 +190,19 @@ export class HeadlessController {
                   averageRating: ratingScore,
                   status: renewed ? "RENEWED" : "CANCELLED",
                 },
-                isHit,
               },
             },
-          } as StateImpact);
+          });
           const netCash = revenue - (project.budget || 0) - marketingBudget;
           impacts.push({ type: "FUNDS_CHANGED", payload: { amount: netCash } });
           impacts.push(
-            ...HeadlessController.attributeTalent(state, project as unknown as Record<string, unknown>, revenue, rng, isHit, ratingScore)
+            ...HeadlessController.attributeTalent(state, project, revenue, rng, isHit, ratingScore)
           );
 
           // Renewal spawns a follow-on season project (sequel-equivalent).
           if (renewed && currentSeason < 8) {
             const nextId = rng.uuid("PRJ");
-            const nextProject: Record<string, unknown> = {
+            const nextProject: Project = {
               id: nextId,
               title: `${project.title} S${currentSeason + 1}`,
               genre: project.genre,
@@ -215,15 +212,26 @@ export class HeadlessController {
               weeksInPhase: 0,
               budgetTier: project.budgetTier,
               budget: Math.round((project.budget || 0) * (isHit ? 1.15 : 1.05)),
+              weeklyCost: 0,
+              targetAudience: project.targetAudience,
+              flavor: project.flavor,
+              developmentWeeks: 0,
+              productionWeeks: 0,
+              revenue: 0,
+              weeklyRevenue: 0,
+              releaseWeek: null,
+              activeCrisis: null,
+              momentum: 50,
               buzz: Math.min(95, (project.buzz || 40) + (isHit ? 15 : 5)),
               ownerId: getPlayerId(state),
               quality: 50,
               scriptHeat: 55,
+              activeRoles: [],
+              scriptEvents: [],
               progress: 0,
               accumulatedCost: 0,
-              weeksInDevelopment: 0,
-              parentProjectId: (project as unknown as Record<string, unknown>).parentProjectId || project.id,
-              franchiseId: (project as unknown as Record<string, unknown>).franchiseId,
+              parentProjectId: project.parentProjectId || project.id,
+              franchiseId: project.franchiseId,
               tvDetails: {
                 status: "IN_DEVELOPMENT",
                 episodesOrdered: episodes,
@@ -239,7 +247,7 @@ export class HeadlessController {
             });
 
             // On its 3rd season, promote the line to a franchise (if not already).
-            if (currentSeason + 1 >= 3 && !(project as unknown as Record<string, unknown>).franchiseId) {
+            if (currentSeason + 1 >= 3 && !project.franchiseId) {
               const fid = rng.uuid("FR");
               impacts.push({
                 type: "INDUSTRY_UPDATE",
@@ -249,7 +257,7 @@ export class HeadlessController {
                       id: fid,
                       name: project.title,
                       medium: "TV",
-                      rootProjectId: (project as unknown as Record<string, unknown>).parentProjectId || project.id,
+                      rootProjectId: project.parentProjectId || project.id,
                       creationWeek: state.week,
                       entries: [project.id, nextId],
                       heat: 70,
@@ -266,13 +274,13 @@ export class HeadlessController {
           }
         } else {
           // Film: existing box-office path.
-          const campaign = {
+          const campaign: MarketingCampaign = {
             primaryAngle: "SELL_THE_STORY",
             domesticBudget: project.budget * 0.25,
             foreignBudget: project.budget * 0.15,
             weeksInMarketing: 1,
           };
-          const result = executeMarketing(project, campaign as unknown as Parameters<typeof executeMarketing>[1]);
+          const result = executeMarketing(project, campaign);
           const marketingBudget = campaign.domesticBudget + campaign.foreignBudget;
           const projectWithMarketing = { ...result.project, marketingBudget };
           const { project: releasedProject } = calculateOpeningWeekend(
@@ -303,7 +311,7 @@ export class HeadlessController {
           const filmRev = releasedProject.revenue || 0;
           const filmHit = filmRev > (project.budget || 0) * 2;
           impacts.push(
-            ...HeadlessController.attributeTalent(state, project as unknown as Record<string, unknown>, filmRev, rng, filmHit, 0)
+            ...HeadlessController.attributeTalent(state, project, filmRev, rng, filmHit, 0)
           );
         }
       }
@@ -340,7 +348,7 @@ export class HeadlessController {
       let shouldBid = !isAlreadyBid;
 
       // Persona Overrides
-      const persona = (state as unknown as Record<string, unknown>).persona || "balanced";
+      const persona = state.persona || "balanced";
 
       // Genre Saturation Guard for Player (Limit to 2 same-genre projects)
       const isSaturated = (playerGenreCounts[opportunity.genre] || 0) >= 2;
@@ -438,7 +446,7 @@ export class HeadlessController {
    */
   static attributeTalent(
     state: GameState,
-    project: Record<string, unknown>,
+    project: Project,
     revenue: number,
     rng: RandomGenerator,
     isHit: boolean,
@@ -453,12 +461,12 @@ export class HeadlessController {
       pool.push(talentsObj[key]);
     }
     if (pool.length === 0) return impacts;
-    const totalCost = ((project.budget as number) || 0) + ((project.marketingBudget as number) || 0);
+    const totalCost = (project.budget || 0) + (project.marketingBudget || 0);
     const ROI = totalCost > 0 ? revenue / totalCost : 0;
     const isTv = project.format === "tv" || project.type === "SERIES";
 
     // Budget factor — bigger project = bigger cultural footprint for its talent.
-    const budgetFactor = Math.log10(Math.max(10_000_000, (project.budget as number) || 10_000_000)) / 7.2;
+    const budgetFactor = Math.log10(Math.max(10_000_000, project.budget || 10_000_000)) / 7.2;
 
     let basePrestige = 0;
     if (isTv) {
@@ -533,7 +541,7 @@ export class HeadlessController {
       );
       // Sticky legacy: each hit locks in a fraction of the current peak as a non-decayable
       // floor. Mirrors real Oscar/Emmy/franchise-creator credit — once earned, never lost.
-      const priorLegacy = (t as unknown as Record<string, unknown>).legacyPrestige as number || 0;
+      const priorLegacy = t.legacyPrestige || 0;
       let legacyGain = 0;
       if (isHit) {
         if (ROI > 3.0 && newPrestige >= 60) legacyGain = 3;
@@ -550,9 +558,9 @@ export class HeadlessController {
             momentum: newMomentum,
             lastReleaseWeek: state.week,
             legacyPrestige: newLegacy,
-          } as Record<string, unknown>,
+          },
         },
-      } as StateImpact);
+      });
     }
     return impacts;
   }
@@ -561,7 +569,7 @@ export class HeadlessController {
     const id = rng.uuid("PRJ");
     const genres = ["Action", "Drama", "Comedy", "Sci-Fi", "Horror", "Family"];
     // Fatigue-aware genre selection for player studio
-    const playerRival: RivalStudio = { id: getPlayerId(state), archetypeId: "BALANCED_GIANT" } as unknown as RivalStudio;
+    const playerRival = { id: getPlayerId(state), archetypeId: "BALANCED_GIANT" };
     const genreWeights = buildFatigueAwareGenreWeights(state, playerRival);
     const weightSum = genres.reduce((s, g) => s + (genreWeights[g] ?? 1), 0);
     let roll = rng.next() * weightSum;
@@ -608,39 +616,51 @@ export class HeadlessController {
       budget = tvEpisodes * tvPerEpBudget;
     }
 
-    const project: Record<string, unknown> = {
+    const base = {
       id,
       title: `${genre} ${rng.rangeInt(1, 100)}`,
       genre,
       format,
-      type: format === "tv" ? "SERIES" : "FILM",
-      state: "needs_greenlight",
+      state: "needs_greenlight" as const,
       weeksInPhase: 0,
       budgetTier,
       budget,
+      weeklyCost: 0,
+      targetAudience: "general",
+      flavor: "",
+      developmentWeeks: 0,
+      productionWeeks: 0,
+      revenue: 0,
+      weeklyRevenue: 0,
+      releaseWeek: null,
+      activeCrisis: null,
+      momentum: 50,
       buzz: rng.rangeInt(20, 50),
       ownerId: getPlayerId(state),
       quality: 50,
       scriptHeat: 50,
+      activeRoles: [] as import("@/engine/types").CharacterArchetype[],
+      scriptEvents: [] as import("@/engine/types").ScriptEvent[],
       progress: 0,
       accumulatedCost: 0,
-      weeksInDevelopment: 0,
     };
 
-    if (format === "tv") {
-      project.tvDetails = {
-        status: "IN_DEVELOPMENT",
-        episodesOrdered: tvEpisodes,
-        episodesAired: 0,
-        averageRating: 0,
-        currentSeason: 1,
-        episodesCompleted: 0,
-      };
-      project.perEpisodeBudget = tvPerEpBudget;
-    }
+    const project: Project =
+      format === "tv"
+        ? {
+            ...base,
+            type: "SERIES",
+            tvDetails: {
+              status: "IN_DEVELOPMENT",
+              episodesOrdered: tvEpisodes,
+              episodesAired: 0,
+              averageRating: 0,
+              currentSeason: 1,
+              episodesCompleted: 0,
+            },
+          }
+        : { ...base, type: "FILM" };
 
-    // Use PROJECT_CREATED by directly adding to state via a custom approach
-    // Since INDUSTRY_UPDATE is not supported, we'll use a workaround
     return {
       type: "PROJECT_CREATED",
       payload: { project },

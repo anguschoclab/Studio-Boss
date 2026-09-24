@@ -7,11 +7,6 @@ import {RandomGenerator} from "@/engine/utils/rng";
  * Reads each Contract, finds the associated Talent and Project, applies
  * adjustment rules, clamps to 0-100, and returns TALENT_UPDATED impacts.
  * If morale drops below 20 there is a 1-in-3 chance of a NEWS_ADDED impact.
- *
- * NOTE: Talent.morale is an optional field not yet present on the base Talent
- * type. This system reads it via (talent as any).morale and writes it back
- * through the TALENT_UPDATED impact so it round-trips correctly once the field
- * is added to the type.
  */
 export function tickMorale(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
@@ -27,7 +22,7 @@ export function tickMorale(state: GameState, rng: RandomGenerator): StateImpact[
     if (!talent || !project) continue;
 
     // Read morale with fallback default
-    const currentMorale: number = (talent as unknown as { morale?: number }).morale ?? 50;
+    const currentMorale: number = talent.morale ?? 50;
     let delta = 0;
 
     // --- Rule 1: Active crisis on project — -5
@@ -66,9 +61,9 @@ export function tickMorale(state: GameState, rng: RandomGenerator): StateImpact[
       type: "TALENT_UPDATED",
       payload: {
         talentId: talent.id,
-        update: { morale: newMorale } as unknown as Partial<Talent>,
+        update: { morale: newMorale },
       },
-    } as StateImpact);
+    });
 
     // --- Low morale news event: 1-in-3 chance when morale drops below 20
     if (newMorale < 20 && rng.next() < 1 / 3) {
@@ -80,7 +75,7 @@ export function tickMorale(state: GameState, rng: RandomGenerator): StateImpact[
           description: `Sources close to the production of "${project.title}" report that ${talent.name} has been visibly unhappy on set. Continued unrest could affect production quality and team morale.`,
           category: "talent",
         },
-      } as StateImpact);
+      });
     }
   }
 

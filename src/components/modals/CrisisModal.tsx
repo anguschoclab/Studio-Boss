@@ -1,3 +1,4 @@
+import {useEffect, useMemo} from "react";
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
 import {useGameStore} from "@/store/gameStore";
@@ -10,26 +11,36 @@ export const CrisisModal = () => {
   const gameState = useGameStore((s) => s.gameState);
   const resolveProjectCrisis = useGameStore((s) => s.resolveProjectCrisis);
 
+  const projectId = activeModal?.type === "CRISIS" ? activeModal.payload.projectId : undefined;
+  const project =
+    gameState && projectId
+      ? (gameState.studio.internal?.projects?.[projectId] ??
+        gameState.entities?.projects?.[projectId])
+      : undefined;
+  // Engine crises carry generated instance ids, so the template pool lookup
+  // usually misses — fall back to the crisis data embedded on the project.
+  const activeCrisis = project?.activeCrisis;
+  const crisisDef = useMemo(
+    () =>
+      activeCrisis
+        ? (getCrisisData(activeCrisis.crisisId) ?? {
+            description: activeCrisis.description,
+            options: activeCrisis.options,
+          })
+        : undefined,
+    [activeCrisis]
+  );
+
+  // Resolve in an effect — never call store setters during render — so a
+  // crisis that can't be displayed can't jam the modal queue.
+  useEffect(() => {
+    if (activeModal?.type !== "CRISIS") return;
+    if (activeCrisis && crisisDef?.options?.length) return;
+    resolveCurrentModal();
+  }, [activeModal, activeCrisis, crisisDef, resolveCurrentModal]);
+
   if (!gameState || !activeModal || activeModal.type !== "CRISIS") return null;
-
-  const { projectId } = activeModal.payload;
-  const project = projectId
-    ? (gameState.studio.internal?.projects?.[projectId] ??
-      gameState.entities?.projects?.[projectId])
-    : undefined;
-
-  if (!project || !project.activeCrisis) {
-    resolveCurrentModal();
-    return null;
-  }
-
-  const crisisDef = getCrisisData(project.activeCrisis.crisisId);
-
-  if (!crisisDef) {
-    console.error(`Crisis template not found for ID: ${project.activeCrisis.crisisId}`);
-    resolveCurrentModal();
-    return null;
-  }
+  if (!project || !project.activeCrisis || !crisisDef?.options?.length) return null;
 
   const handleResolve = (index: number) => {
     if (projectId) resolveProjectCrisis(projectId, index);

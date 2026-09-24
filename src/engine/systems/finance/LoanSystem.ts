@@ -86,19 +86,10 @@ export function tickLoans(state: GameState, _rng: RandomGenerator): StateImpact[
     const payment = loan.weeklyPayment;
     const isFinalPayment = loan.weeksRemaining === 1;
 
-    // Deduct payment from cash
+    // Deduct payment from cash — a single debit, not two.
     impacts.push({
       type: "FUNDS_DEDUCTED",
       payload: { amount: payment },
-    });
-
-    // Record in ledger as a finance transaction
-    impacts.push({
-      type: "FINANCE_TRANSACTION",
-      payload: {
-        amount: -payment,
-        description: `Loan payment to ${loan.lenderName}`,
-      },
     });
 
     if (isFinalPayment) {

@@ -22,6 +22,15 @@ export const AchievementUnlockedModal: React.FC<{ payload?: AchievementUnlockedP
     return () => clearTimeout(t);
   }, []);
 
+  // This overlay is not a Radix Dialog, so it owns its Escape handling.
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") resolveCurrentModal();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [resolveCurrentModal]);
+
   const achievement = payload as AchievementUnlockedPayload | undefined;
 
   return (

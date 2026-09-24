@@ -149,7 +149,7 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
     const rival = rivalsObj[rivalId];
     let newMotivation: StudioMotivation = calculateRivalMotivation(rival, state, rng);
 
-    // Fix 3: Prestige decay — rivals that haven't won an award in 2+ years drift toward AWARD_CHASE
+    // Rivals that haven't won an award in 2+ years drift toward AWARD_CHASE
     const lastAwardWin = rival.lastAwardWin;
     const weeksSinceLastAward = lastAwardWin ? state.week - lastAwardWin : 999;
 
@@ -177,8 +177,12 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
     if (newMotivation === "CASH_CRUNCH" && rival.cash < 2_000_000 && rng.next() < 0.12) {
       const loanAmount = rng.range(5_000_000, 15_000_000);
       impacts.push({
-        type: "RIVAL_UPDATED",
-        payload: { rivalId: rival.id, update: { cash: rival.cash + loanAmount } },
+        type: "FINANCE_TRANSACTION",
+        payload: {
+          amount: loanAmount,
+          description: "Emergency credit facility",
+          targetId: rival.id,
+        },
       });
       impacts.push({
         type: "NEWS_ADDED",
@@ -189,47 +193,49 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
       } as import("@/engine/types").StateImpact);
     }
 
-    // Fix 2: FRANCHISE_BUILDING rivals track IP syndication potential
+    // Syndication royalties are passive income — they pay any rival with a
+    // qualifying catalog regardless of current motivation. Tracking the
+    // catalog's syndication potential, however, is motivation-gated.
+    const tvProjects: SeriesProject[] = [];
+    const projectsObj = state.entities.projects || {};
+    for (const projectId in projectsObj) {
+      const p = projectsObj[projectId];
+      if (p.ownerId === rival.id && p.state === "released" && p.format === "tv" && "tvDetails" in p) {
+        tvProjects.push(p as SeriesProject);
+      }
+    }
+
+    const TIER_ORDER: Record<SyndicationTier, number> = { NONE: 0, BRONZE: 1, SILVER: 2, GOLD: 3 };
+    const BASE_SYNDICATION_REVENUE = 150_000;
+
+    let syndicatedCount = 0;
+    let nearSyndicationCount = 0;
+    let bestTier: SyndicationTier = "NONE";
+    let weeklyRevenue = 0;
+    let milestoneShow: { title: string; tier: SyndicationTier } | null = null;
+
+    for (const show of tvProjects) {
+      const episodes = show.tvDetails?.episodesAired ?? 0;
+      const genre = show.genre || "Drama";
+      const tier = determineSyndicationTier(episodes, genre);
+
+      if (tier !== "NONE") {
+        syndicatedCount++;
+        const impact = getSyndicationImpact(tier);
+        weeklyRevenue += Math.round(BASE_SYNDICATION_REVENUE * impact.revenueMultiplier);
+        if (TIER_ORDER[tier] > TIER_ORDER[bestTier]) {
+          bestTier = tier;
+          milestoneShow = { title: show.title, tier };
+        }
+      } else {
+        const progress = calculateSyndicationProgress(episodes, genre);
+        if (progress.progress >= 80) {
+          nearSyndicationCount++;
+        }
+      }
+    }
+
     if (newMotivation === "FRANCHISE_BUILDING") {
-      const tvProjects: SeriesProject[] = [];
-      const projectsObj = state.entities.projects || {};
-      for (const projectId in projectsObj) {
-        const p = projectsObj[projectId];
-        if (p.ownerId === rival.id && p.state === "released" && p.format === "tv" && "tvDetails" in p) {
-          tvProjects.push(p as SeriesProject);
-        }
-      }
-
-      const TIER_ORDER: Record<SyndicationTier, number> = { NONE: 0, BRONZE: 1, SILVER: 2, GOLD: 3 };
-      const BASE_SYNDICATION_REVENUE = 150_000;
-
-      let syndicatedCount = 0;
-      let nearSyndicationCount = 0;
-      let bestTier: SyndicationTier = "NONE";
-      let weeklyRevenue = 0;
-      let milestoneShow: { title: string; tier: SyndicationTier } | null = null;
-
-      for (const show of tvProjects) {
-        const episodes = show.tvDetails?.episodesAired ?? 0;
-        const genre = show.genre || "Drama";
-        const tier = determineSyndicationTier(episodes, genre);
-
-        if (tier !== "NONE") {
-          syndicatedCount++;
-          const impact = getSyndicationImpact(tier);
-          weeklyRevenue += Math.round(BASE_SYNDICATION_REVENUE * impact.revenueMultiplier);
-          if (TIER_ORDER[tier] > TIER_ORDER[bestTier]) {
-            bestTier = tier;
-            milestoneShow = { title: show.title, tier };
-          }
-        } else {
-          const progress = calculateSyndicationProgress(episodes, genre);
-          if (progress.progress >= 80) {
-            nearSyndicationCount++;
-          }
-        }
-      }
-
       const prevPotential = rival.syndicationPotential;
       const isNewMilestone =
         milestoneShow !== null &&
@@ -247,16 +253,6 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
         },
       });
 
-      if (weeklyRevenue > 0) {
-        impacts.push({
-          type: "RIVAL_UPDATED",
-          payload: {
-            rivalId: rival.id,
-            update: { cash: rival.cash + weeklyRevenue },
-          },
-        });
-      }
-
       if (isNewMilestone && milestoneShow) {
         impacts.push({
           type: "NEWS_ADDED",
@@ -266,6 +262,26 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
           },
         } as StateImpact);
       }
+    } else if (rival.syndicationPotential !== undefined) {
+      // Motivation moved on — clear stale tracking while royalties keep paying.
+      impacts.push({
+        type: "RIVAL_UPDATED",
+        payload: {
+          rivalId: rival.id,
+          update: { syndicationPotential: undefined },
+        },
+      });
+    }
+
+    if (weeklyRevenue > 0) {
+      impacts.push({
+        type: "FINANCE_TRANSACTION",
+        payload: {
+          amount: weeklyRevenue,
+          description: "TV syndication royalties",
+          targetId: rival.id,
+        },
+      });
     }
   }
 

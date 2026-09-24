@@ -283,6 +283,7 @@ export type NewsImpact = BaseImpact & {
     projectId?: string;
     rivalId?: string;
     buyerId?: string;
+    week?: number;
   };
 };
 export type TalentUpdateImpact = BaseImpact & { type: "TALENT_UPDATED"; payload: TalentUpdate };
@@ -300,7 +301,9 @@ export interface RivalUpdateImpact extends BaseImpact {
 }
 export interface OpportunityUpdateImpact extends BaseImpact {
   type: "OPPORTUNITY_UPDATED";
-  payload: { opportunityId: string; rivalId: string; bid: { amount: number; terms: string } };
+  payload:
+    | { opportunityId: string; rivalId: string; bid: { amount: number; terms: string } }
+    | { opportunityId: string; action: "EXPIRE" };
 }
 export interface TrendsUpdateImpact extends BaseImpact {
   type: "TRENDS_UPDATED";
@@ -352,15 +355,21 @@ export interface SystemTickImpact extends BaseImpact {
 }
 export interface ModalTriggeredImpact extends BaseImpact {
   type: "MODAL_TRIGGERED";
+  /**
+   * Two emit conventions coexist: nested (`{modalType, payload: {...}}`) and
+   * flat (`{modalType, fieldA, fieldB}`) — gameStore normalizes both into the
+   * ModalPayloadMap shape each renderer expects. The index signature admits
+   * flat per-modal fields (see BREAKOUT_BIDDING_WAR etc.).
+   */
   payload: {
-    modalType: string;
+    modalType: import("./modal.types").ModalType;
     priority?: number;
     payload?: unknown;
     violationId?: string;
     projectId?: string;
     talentId?: string;
     options?: unknown[];
-  };
+  } & Record<string, unknown>;
 }
 export interface PilotGraduatedImpact extends BaseImpact {
   type: "PILOT_GRADUATED";
@@ -442,7 +451,9 @@ export interface RelationshipUpdatedImpact extends BaseImpact {
   type: "RELATIONSHIP_UPDATED";
   payload: {
     key?: string;
-    relationship?: import("./relationship.types").TalentRelationship;
+    relationship?:
+      | import("./relationship.types").TalentRelationship
+      | import("../systems/talent/talentAgentInteractions").TalentAgentRelationship;
     relationshipId?: string;
     update?: Partial<import("./relationship.types").TalentRelationship>;
   };
@@ -477,7 +488,7 @@ export interface CreditSceneUpdatedImpact extends BaseImpact {
 }
 export interface TalkShowAppearanceCreatedImpact extends BaseImpact {
   type: "TALK_SHOW_APPEARANCE_CREATED";
-  payload: { appearance: import("./marketing.types").TalkShowAppearance };
+  payload: { talentId?: string; appearance: import("./marketing.types").TalkShowAppearance };
 }
 export interface PhotoshootCreatedImpact extends BaseImpact {
   type: "PHOTOSHOOT_CREATED";
@@ -505,7 +516,11 @@ export interface BreakoutStarUpdatedImpact extends BaseImpact {
 }
 export interface GuestStarOpportunityImpact extends BaseImpact {
   type: "GUEST_STAR_OPPORTUNITY";
-  payload: { bookingId?: string; booking: import("./discovery.types").GuestStarBooking };
+  payload: {
+    bookingId?: string;
+    booking: import("./discovery.types").GuestStarBooking;
+    notification?: string;
+  };
 }
 export interface GuestStarBookedImpact extends BaseImpact {
   type: "GUEST_STAR_BOOKED";
@@ -583,16 +598,6 @@ export interface IpUpdatedImpact extends BaseImpact {
   payload: { assetId: string; update: Partial<IPAsset> };
 }
 
-/**
- * Escape-hatch impact for emitters whose payload doesn't (yet) have a declared
- * interface in the union. Prefer adding a typed member over relying on this.
- */
-export interface GenericImpact extends BaseImpact {
-  type: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  payload?: any;
-}
-
 export type StateImpact =
   | FundsImpact
   | FundsDeductedImpact
@@ -659,5 +664,4 @@ export type StateImpact =
   | HeadlinePostedImpact
   | IndustryRumorsUpdatedImpact
   | IpUpdatedImpact
-  | GenericImpact
   | (BaseImpact & { type?: undefined }); // The "Bag" impact

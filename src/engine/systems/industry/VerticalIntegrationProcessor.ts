@@ -36,10 +36,11 @@ export function tickVerticalIntegration(state: GameState, rng: RandomGenerator):
       const rival = state.entities.rivals[platform.ownerId];
       if (rival) {
         impacts.push({
-          type: "RIVAL_UPDATED",
+          type: "FINANCE_TRANSACTION",
           payload: {
-            rivalId: rival.id,
-            update: { cash: rival.cash + netProfit },
+            amount: netProfit,
+            description: `Platform P&L: ${platform.name}`,
+            targetId: rival.id,
           },
         });
       }

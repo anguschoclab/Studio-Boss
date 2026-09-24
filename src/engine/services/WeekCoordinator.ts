@@ -485,7 +485,7 @@ export class WeekCoordinator {
     context.impacts.push(...runFestivalMarket(state, context.rng));
 
     // Rival studio status tick
-    context.impacts.push(advanceRivals(state));
+    context.impacts.push(...advanceRivals(state));
 
     // Regulator warnings (ported from dead IndustryFilter)
     context.impacts.push(...RegulatorSystem.tick(state, context.rng));
@@ -531,16 +531,18 @@ export class WeekCoordinator {
         let history = rival.revenueHistory ? [...rival.revenueHistory] : [];
         history.push({ week: context.week, revenue: revenue.total, boxOffice: revenue.boxOffice });
         if (history.length > 52) history = history.slice(-52);
-        context.impacts.push({
-          type: "RIVAL_UPDATED",
-          payload: {
-            rivalId: rival.id,
-            update: {
-              cash: (rival.cash || 0) + net,
-              revenueHistory: history,
+        context.impacts.push(
+          I.financeTransaction(net, "Weekly revenue and overhead", rival.id),
+          {
+            type: "RIVAL_UPDATED",
+            payload: {
+              rivalId: rival.id,
+              update: {
+                revenueHistory: history,
+              },
             },
           },
-        });
+        );
       }
     }
   }

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {GameState, StateImpact, ImpactType} from "@/engine/types";
 import {addContractsToIndex, addContractsToTalentIndex, removeContractsByTalentFromIndex, removeContractsByProjectFromTalentIndex} from "@/engine/utils";
 
@@ -16,12 +15,17 @@ import * as dealHandlers from "./dealHandlers";
 import * as noopHandlers from "./noopHandlers";
 
 /**
- * Handler registry mapping impact types to their handler functions
+ * Handler registry mapping impact types to their handler functions.
+ * Each slot is checked against the matching StateImpact union member, so a
+ * handler whose payload expectation diverges from the declared type fails to
+ * compile here rather than misbehaving at runtime.
  */
-const handlerRegistry: Record<
-  Exclude<ImpactType, undefined>,
-  (state: GameState, impact: any) => GameState
-> = {
+const handlerRegistry: {
+  [K in Exclude<ImpactType, undefined>]: (
+    state: GameState,
+    impact: Extract<StateImpact, { type: K }>
+  ) => GameState;
+} = {
   // Finance handlers
   FUNDS_CHANGED: financeHandlers.handleFundsChanged,
   LEDGER_UPDATED: financeHandlers.handleLedgerUpdated,
@@ -401,8 +405,13 @@ export function applySingleImpact(state: GameState, impact: StateImpact): GameSt
     return newState;
   }
 
-  // Look up handler and apply
-  const handler = handlerRegistry[impact.type as keyof typeof handlerRegistry];
+  // Look up handler and apply. TypeScript cannot correlate a dynamic union
+  // key with the mapped handler signature (each slot wants its own impact
+  // member), so the single documented cast lives here instead of `any` on
+  // every handler.
+  const handler = handlerRegistry[impact.type] as
+    | ((state: GameState, impact: StateImpact) => GameState)
+    | undefined;
   if (handler) {
     return handler(state, impact);
   }

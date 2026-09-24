@@ -95,6 +95,8 @@ export interface GameState {
   game: {
     currentWeek: number;
   };
+  /** Headless-sim bidding persona (set by SimulationRunner; absent in the UI game). */
+  persona?: string;
   finance: FinanceState;
   ip: IPState;
   entities: {

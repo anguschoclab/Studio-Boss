@@ -1,3 +1,4 @@
+import {useEffect} from "react";
 import {useUIStore} from "@/store/uiStore";
 import {useGameStore} from "@/store/gameStore";
 import {evaluateGreenlight} from "@/engine/systems/greenlight";
@@ -19,10 +20,18 @@ export const GreenlightDecisionModal = () => {
   const gameState = useGameStore((s) => s.gameState);
   const greenlightProject = useGameStore((s) => s.greenlightProject);
 
-  if (!activeModal || activeModal.type !== "GREENLIGHT_DECISION") return null;
-
-  const projectId: string | undefined = activeModal.payload?.projectId;
+  const projectId =
+    activeModal?.type === "GREENLIGHT_DECISION" ? activeModal.payload?.projectId : undefined;
   const project = projectId ? gameState?.entities.projects[projectId] : undefined;
+
+  // Resolve in an effect — never during render — so a missing project or
+  // game state can't deadlock the modal queue.
+  useEffect(() => {
+    if (activeModal?.type !== "GREENLIGHT_DECISION") return;
+    if (!gameState || !project) resolveCurrentModal();
+  }, [activeModal, gameState, project, resolveCurrentModal]);
+
+  if (!activeModal || activeModal.type !== "GREENLIGHT_DECISION") return null;
   if (!project || !gameState) return null;
 
   const contracts = gameState.entities.contracts;

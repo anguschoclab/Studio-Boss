@@ -17,7 +17,7 @@ export const DistressedAssetOfferModal: React.FC = () => {
   const { offerId = "" } = (activeModal?.payload || {}) as { offerId: string };
   const offer = gameState && isActive ? selectDistressedOffer(gameState, offerId) : null;
 
-  // Bug 3 fix: resolve in useEffect, not during render.
+  // Resolve in useEffect, not during render — a missing offer can't jam the queue.
   useEffect(() => {
     if (isActive && !offer) {
       resolveCurrentModal();
@@ -29,7 +29,7 @@ export const DistressedAssetOfferModal: React.FC = () => {
   const weeksRemaining = offer.expiresWeek - (gameState?.week ?? 0);
   const canAfford = (gameState?.finance?.cash ?? 0) >= offer.price;
 
-  // Bug 1 fix: slice actions resolve the modal internally — no double-resolve here.
+  // Slice actions resolve the modal internally — don't resolve again here.
   const handleAcquire = () => {
     acquireDistressedAsset(offerId);
   };

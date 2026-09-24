@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
 import {useGameStore} from "@/store/gameStore";
@@ -11,13 +11,19 @@ export const RebootOpportunityModal: React.FC = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
   const developFromOwnedIP = useGameStore((s) => s.developFromOwnedIP);
 
-  if (!activeModal || activeModal.type !== "REBOOT_OPPORTUNITY") return null;
+  const proposal = (
+    activeModal?.type === "REBOOT_OPPORTUNITY" ? activeModal.payload : undefined
+  ) as RebootProposal | undefined;
 
-  const proposal = activeModal.payload as RebootProposal | undefined;
-  if (!proposal) {
-    resolveCurrentModal();
-    return null;
-  }
+  // Resolve in an effect — never during render — so a malformed payload
+  // can't jam the modal queue.
+  useEffect(() => {
+    if (activeModal?.type === "REBOOT_OPPORTUNITY" && !proposal) {
+      resolveCurrentModal();
+    }
+  }, [activeModal, proposal, resolveCurrentModal]);
+
+  if (!activeModal || activeModal.type !== "REBOOT_OPPORTUNITY" || !proposal) return null;
 
   const { ipId, ipTitle, suggestedBudget, estimatedNostalgiaBonus, description } = proposal;
 

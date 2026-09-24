@@ -4,6 +4,7 @@ import {RevenueProcessor} from "./finance/RevenueProcessor";
 import {ExpenseProcessor} from "./finance/ExpenseProcessor";
 import {InterestRateSimulator} from "./market/InterestRateSimulator";
 import {formatMoney, getContractsByProjectId} from "../utils";
+import {isPlayerOwner} from "../utils/ownership";
 
 export function calculateProjectROI(project: Project): number {
   const totalCost = project.budget + (project.marketingBudget || 0);
@@ -185,9 +186,15 @@ export function generateWeeklyFinancialReport(
 
   pendingImpacts.forEach((impact) => {
     if (impact.type === "FINANCE_TRANSACTION" && impact.payload) {
-      const amount = (impact.payload as { amount?: number }).amount || 0;
-      if (amount > 0) otherRevenue += amount;
-      else otherExpenses += Math.abs(amount);
+      const { amount, targetId } = impact.payload as { amount?: number; targetId?: string };
+      // Rival-targeted transactions settle on rival books — only un-targeted or
+      // player-targeted transactions belong in the player's weekly report.
+      const isPlayerTarget =
+        !targetId || targetId === "player" || targetId === "PLAYER" || isPlayerOwner(state, targetId);
+      if (!isPlayerTarget) return;
+      const value = amount || 0;
+      if (value > 0) otherRevenue += value;
+      else otherExpenses += Math.abs(value);
     } else if (impact.cashChange) {
       const change = impact.cashChange as number;
       if (change > 0) otherRevenue += change;

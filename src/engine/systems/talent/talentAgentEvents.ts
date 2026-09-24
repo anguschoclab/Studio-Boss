@@ -113,10 +113,10 @@ export function createAgentHiringEvent(
   talent: Talent,
   agent: Agent,
   week: number
-): { id: string; text: string; week: number; category: string } {
+): { id: string; headline: string; week: number; category: string } {
   return {
     id: `hire-${talent.id}-${agent.id}-${week}`,
-    text: `${talent.name} has hired ${agent.name} as their new agent.`,
+    headline: `${talent.name} has hired ${agent.name} as their new agent.`,
     week,
     category: "talent",
   };
@@ -129,10 +129,10 @@ export function createAgentFiringEvent(
   talent: Talent,
   agentId: string,
   week: number
-): { id: string; text: string; week: number; category: string } {
+): { id: string; headline: string; week: number; category: string } {
   return {
     id: `fire-${talent.id}-${agentId}-${week}`,
-    text: `${talent.name} has parted ways with their agent.`,
+    headline: `${talent.name} has parted ways with their agent.`,
     week,
     category: "talent",
   };

@@ -173,15 +173,14 @@ export function applyFlopPenalties(
 
   if (penalties.writeOffCost > 0) {
     if (isRival) {
+      // Rivals may carry negative cash — distress/bankruptcy systems
+      // read the real balance, so flooring at 0 would hide insolvency.
       impacts.push({
-        type: "RIVAL_UPDATED",
+        type: "FINANCE_TRANSACTION",
         payload: {
-          rivalId: ownerId,
-          update: {
-            // Rivals may carry negative cash — distress/bankruptcy systems
-            // read the real balance, so flooring at 0 would hide insolvency.
-            cash: isRival.cash - penalties.writeOffCost,
-          },
+          amount: -penalties.writeOffCost,
+          description: `Flop write-off: ${project.title}`,
+          targetId: ownerId,
         },
       });
     } else if (isPlayerOwner(state, ownerId)) {

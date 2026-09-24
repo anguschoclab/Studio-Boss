@@ -102,10 +102,11 @@ describe("AcquisitionConfirmModal", () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it("renders nothing when activeModal type is not ACQUISITION_CONFIRM", () => {
+  it("renders nothing and does NOT resolve when activeModal type is not ACQUISITION_CONFIRM", () => {
     setWrongTypeModal();
     const { container } = render(<AcquisitionConfirmModal />);
     expect(container.firstChild).toBeNull();
+    expect(mockResolveCurrentModal).not.toHaveBeenCalled();
   });
 
   it("renders nothing and calls resolveCurrentModal when payload is undefined", () => {

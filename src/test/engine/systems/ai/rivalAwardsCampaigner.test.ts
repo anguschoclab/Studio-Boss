@@ -53,6 +53,13 @@ function findRivalUpdated(impacts: StateImpact[], rivalId: string): StateImpact 
   );
 }
 
+function findCashDelta(impacts: StateImpact[], rivalId: string): number | undefined {
+  const tx = impacts.find(
+    (i) => i.type === "FINANCE_TRANSACTION" && (i.payload as any).targetId === rivalId
+  );
+  return tx ? (tx.payload as any).amount : undefined;
+}
+
 function findProjectUpdated(impacts: StateImpact[], projectId: string): StateImpact | undefined {
   return impacts.find(
     (i) => i.type === "PROJECT_UPDATED" && (i.payload as any).projectId === projectId
@@ -73,9 +80,7 @@ describe("tickRivalAwardsCampaigns", () => {
 
     const impacts = tickRivalAwardsCampaigns(state, rng);
 
-    const rivalUpdate = findRivalUpdated(impacts, rival.id);
-    expect(rivalUpdate).toBeDefined();
-    expect((rivalUpdate!.payload as any).update.cash).toBeLessThan(rival.cash);
+    expect(findCashDelta(impacts, rival.id)).toBeLessThan(0);
 
     const projectUpdate = findProjectUpdated(impacts, "p1");
     expect(projectUpdate).toBeDefined();
@@ -147,10 +152,8 @@ describe("tickRivalAwardsCampaigns", () => {
 
     const impacts = tickRivalAwardsCampaigns(state, rng);
 
-    const rivalUpdate = findRivalUpdated(impacts, rival.id);
-    expect(rivalUpdate).toBeDefined();
     // Blitz costs $5M
-    expect((rivalUpdate!.payload as any).update.cash).toBe(rival.cash - 5_000_000);
+    expect(findCashDelta(impacts, rival.id)).toBe(-5_000_000);
   });
 
   it("selects Trade tier when high awardObsession but cash below $50M", () => {
@@ -167,10 +170,8 @@ describe("tickRivalAwardsCampaigns", () => {
 
     const impacts = tickRivalAwardsCampaigns(state, rng);
 
-    const rivalUpdate = findRivalUpdated(impacts, rival.id);
-    expect(rivalUpdate).toBeDefined();
     // Trade costs $1M
-    expect((rivalUpdate!.payload as any).update.cash).toBe(rival.cash - 1_000_000);
+    expect(findCashDelta(impacts, rival.id)).toBe(-1_000_000);
   });
 
   it("selects Grassroots tier for low awardObsession archetype", () => {
@@ -187,10 +188,8 @@ describe("tickRivalAwardsCampaigns", () => {
 
     const impacts = tickRivalAwardsCampaigns(state, rng);
 
-    const rivalUpdate = findRivalUpdated(impacts, rival.id);
-    expect(rivalUpdate).toBeDefined();
     // Grassroots costs $250K
-    expect((rivalUpdate!.payload as any).update.cash).toBe(rival.cash - 250_000);
+    expect(findCashDelta(impacts, rival.id)).toBe(-250_000);
   });
 
   it("caps buzz at 100", () => {
@@ -225,6 +224,7 @@ describe("tickRivalAwardsCampaigns", () => {
     const impacts = tickRivalAwardsCampaigns(state, rng);
 
     expect(findRivalUpdated(impacts, rival.id)).toBeUndefined();
+    expect(findCashDelta(impacts, rival.id)).toBeUndefined();
   });
 
   it("processes multiple eligible rivals", () => {
@@ -247,7 +247,7 @@ describe("tickRivalAwardsCampaigns", () => {
 
     const impacts = tickRivalAwardsCampaigns(state, rng);
 
-    expect(findRivalUpdated(impacts, "r1")).toBeDefined();
-    expect(findRivalUpdated(impacts, "r2")).toBeDefined();
+    expect(findCashDelta(impacts, "r1")).toBeDefined();
+    expect(findCashDelta(impacts, "r2")).toBeDefined();
   });
 });

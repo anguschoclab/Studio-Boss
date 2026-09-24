@@ -1,5 +1,6 @@
 import {describe, it, expect} from "vitest";
 import {calculateRivalMotivation, calculateMotivationScores, tickAIMinds} from "@/engine/systems/ai/motivationEngine";
+import {applyImpacts} from "@/engine/core/impactReducer";
 import {RandomGenerator} from "@/engine/utils/rng";
 import {createMockGameState, createMockRival} from "../../generators/mockFactory";
 import type {StateImpact, SeriesProject, Project} from "@/engine/types";
@@ -258,13 +259,14 @@ function getNewsImpacts(impacts: StateImpact[]) {
   return impacts.filter((i) => i.type === "NEWS_ADDED");
 }
 
-function getCashFromUpdates(impacts: StateImpact[], rivalId: string): number | undefined {
-  const updates = getRivalUpdates(impacts, rivalId);
-  for (const u of updates) {
-    const cash = (u.payload as { update?: { cash?: number } }).update?.cash;
-    if (cash !== undefined) return cash;
-  }
-  return undefined;
+function getCashDeltas(impacts: StateImpact[], rivalId: string): number[] {
+  return impacts
+    .filter(
+      (i) =>
+        i.type === "FINANCE_TRANSACTION" &&
+        (i.payload as { targetId?: string }).targetId === rivalId
+    )
+    .map((i) => (i.payload as { amount: number }).amount);
 }
 
 function getSyndicationPotential(impacts: StateImpact[], rivalId: string) {
@@ -287,10 +289,8 @@ describe("tickAIMinds — FRANCHISE_BUILDING syndication tracking", () => {
 
     const impacts = tickAIMinds(state, new RandomGenerator(42));
 
-    const cash = getCashFromUpdates(impacts, rival.id);
-    expect(cash).toBeDefined();
-    // $150k base * 1.4 Bronze multiplier = $210k
-    expect(cash).toBe(rival.cash + 210_000);
+    // $150k base * 1.4 Bronze multiplier = $210k, emitted as a cash delta
+    expect(getCashDeltas(impacts, rival.id)).toEqual([210_000]);
   });
 
   it("generates more revenue for Gold (100 eps) than Bronze (65 eps)", () => {
@@ -311,11 +311,8 @@ describe("tickAIMinds — FRANCHISE_BUILDING syndication tracking", () => {
     const impactsBronze = tickAIMinds(stateBronze, new RandomGenerator(42));
     const impactsGold = tickAIMinds(stateGold, new RandomGenerator(42));
 
-    const cashBronze = getCashFromUpdates(impactsBronze, "rb")!;
-    const cashGold = getCashFromUpdates(impactsGold, "rg")!;
-
-    const revBronze = cashBronze - rivalBronze.cash;
-    const revGold = cashGold - rivalGold.cash;
+    const revBronze = getCashDeltas(impactsBronze, "rb").reduce((a, b) => a + b, 0);
+    const revGold = getCashDeltas(impactsGold, "rg").reduce((a, b) => a + b, 0);
     expect(revGold).toBeGreaterThan(revBronze);
     // Gold: $150k * 3.5 = $525k vs Bronze: $150k * 1.4 = $210k
     expect(revGold).toBe(525_000);
@@ -331,11 +328,9 @@ describe("tickAIMinds — FRANCHISE_BUILDING syndication tracking", () => {
 
     const impacts = tickAIMinds(state, new RandomGenerator(42));
 
-    const cash = getCashFromUpdates(impacts, rival.id);
-    expect(cash).toBeDefined();
     // 52 episodes Animation → Bronze (0.8x modifier, ceil(65*0.8)=52)
     // Revenue: $150k * 1.4 = $210k
-    expect(cash).toBe(rival.cash + 210_000);
+    expect(getCashDeltas(impacts, rival.id)).toEqual([210_000]);
   });
 
   it("does not generate syndication revenue for 64-episode Drama (below Bronze)", () => {
@@ -347,8 +342,7 @@ describe("tickAIMinds — FRANCHISE_BUILDING syndication tracking", () => {
 
     const impacts = tickAIMinds(state, new RandomGenerator(42));
 
-    const cash = getCashFromUpdates(impacts, rival.id);
-    expect(cash).toBeUndefined();
+    expect(getCashDeltas(impacts, rival.id)).toEqual([]);
   });
 
   it("tracks near-syndication shows (55 episodes Drama, progress >= 80%)", () => {
@@ -382,8 +376,7 @@ describe("tickAIMinds — FRANCHISE_BUILDING syndication tracking", () => {
 
     const impacts = tickAIMinds(state, new RandomGenerator(42));
 
-    const cash = getCashFromUpdates(impacts, rival.id);
-    expect(cash).toBeUndefined();
+    expect(getCashDeltas(impacts, rival.id)).toEqual([]);
   });
 
   it("excludes non-released TV projects from syndication", () => {
@@ -397,8 +390,7 @@ describe("tickAIMinds — FRANCHISE_BUILDING syndication tracking", () => {
 
     const impacts = tickAIMinds(state, new RandomGenerator(42));
 
-    const cash = getCashFromUpdates(impacts, rival.id);
-    expect(cash).toBeUndefined();
+    expect(getCashDeltas(impacts, rival.id)).toEqual([]);
   });
 
   it("excludes TV projects owned by a different rival", () => {
@@ -410,8 +402,7 @@ describe("tickAIMinds — FRANCHISE_BUILDING syndication tracking", () => {
 
     const impacts = tickAIMinds(state, new RandomGenerator(42));
 
-    const cash = getCashFromUpdates(impacts, rival.id);
-    expect(cash).toBeUndefined();
+    expect(getCashDeltas(impacts, rival.id)).toEqual([]);
   });
 
   it("populates syndicationPotential with multiple shows at different tiers", () => {
@@ -479,7 +470,7 @@ describe("tickAIMinds — FRANCHISE_BUILDING syndication tracking", () => {
     expect(syndicationNews.length).toBe(0);
   });
 
-  it("does not generate syndication impacts for non-FRANCHISE_BUILDING rivals", () => {
+  it("pays syndication revenue but does not track potential for non-FRANCHISE_BUILDING rivals", () => {
     const rival = createStabilityRival();
     const state = createMockGameState();
     state.entities.rivals = { [rival.id]: rival };
@@ -489,12 +480,76 @@ describe("tickAIMinds — FRANCHISE_BUILDING syndication tracking", () => {
 
     const impacts = tickAIMinds(state, new RandomGenerator(42));
 
+    // Tracking is motivation-gated — no syndicationPotential write
     const sp = getSyndicationPotential(impacts, rival.id);
     expect(sp).toBeUndefined();
-    const cash = getCashFromUpdates(impacts, rival.id);
-    // Cash should not include syndication revenue (may include other RIVAL_UPDATED cash though)
-    // The only RIVAL_UPDATED should be the motivation update with no cash
-    expect(cash).toBeUndefined();
+    // But the income itself is passive — paid regardless of motivation ($150k * 3.5 GOLD)
+    expect(getCashDeltas(impacts, rival.id)).toEqual([525_000]);
+  });
+
+  it("clears stale syndicationPotential when a rival leaves FRANCHISE_BUILDING", () => {
+    const rival = createStabilityRival({
+      syndicationPotential: {
+        syndicatedCount: 1,
+        bestTier: "BRONZE",
+        nearSyndicationCount: 0,
+        weeklyRevenue: 210_000,
+      },
+    });
+    const state = createMockGameState();
+    state.entities.rivals = { [rival.id]: rival };
+    state.entities.projects = {
+      tv1: createSeriesProject("tv1", rival.id, 65, "Drama"),
+    };
+
+    const impacts = tickAIMinds(state, new RandomGenerator(42));
+
+    const clearingUpdate = getRivalUpdates(impacts, rival.id).find(
+      (u) =>
+        "syndicationPotential" in
+        ((u.payload as { update?: Record<string, unknown> }).update || {})
+    );
+    expect(clearingUpdate).toBeDefined();
+    expect(
+      (clearingUpdate!.payload as { update: { syndicationPotential?: unknown } }).update
+        .syndicationPotential
+    ).toBeUndefined();
+    // Passive income still lands while tracking is cleared
+    expect(getCashDeltas(impacts, rival.id)).toEqual([210_000]);
+  });
+
+  it("emits separate cash deltas for emergency loan and syndication revenue", () => {
+    const rival = createMockRival({
+      id: "crunch-rival",
+      name: "Crunch Studios",
+      cash: 1_000_000, // CASH_CRUNCH + loan eligible (< $2M)
+      prestige: 50,
+      projects: {},
+      motivationProfile: { financial: 100, prestige: 0, legacy: 0, aggression: 0 },
+      currentMotivation: "STABILITY",
+    });
+    const state = createMockGameState();
+    state.entities.rivals = { [rival.id]: rival };
+    state.entities.projects = {
+      tv1: createSeriesProject("tv1", rival.id, 65, "Drama"),
+    };
+
+    let found = false;
+    for (let seed = 1; seed <= 200; seed++) {
+      const impacts = tickAIMinds(state, new RandomGenerator(seed));
+      const deltas = getCashDeltas(impacts, rival.id);
+      const loan = deltas.find((d) => d >= 5_000_000 && d <= 15_000_000);
+      if (loan !== undefined) {
+        found = true;
+        expect(deltas).toContain(210_000);
+        const finalState = applyImpacts(state, impacts);
+        expect(finalState.entities.rivals[rival.id].cash).toBe(
+          rival.cash + loan + 210_000
+        );
+        break;
+      }
+    }
+    expect(found).toBe(true);
   });
 
   it("sets syndicationPotential with all zeros when rival has no projects", () => {

@@ -272,10 +272,12 @@ function processProjectImpacts(
       projectId: project.id,
       update: {
         activeCrisis: {
-          id: rng.uuid("CRS"),
-          templateId: "TALENT_DEATH",
+          crisisId: rng.uuid("CRS"),
           description: `${state.entities.talents?.[deathEvent.talentId]?.name} tragically died during production`,
           triggeredWeek: state.week,
+          haltedProduction: true,
+          resolved: false,
+          severity: "high" as const,
           options: [
             {
               text: "Recast Role",

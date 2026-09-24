@@ -218,10 +218,11 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
     if (rng.next() < 0.02) {
       const crisisCost = rival.cash * 0.05;
       impacts.push({
-        type: "RIVAL_UPDATED",
+        type: "FINANCE_TRANSACTION",
         payload: {
-          rivalId: rival.id,
-          update: { cash: rival.cash - crisisCost },
+          amount: -crisisCost,
+          description: "Production setback",
+          targetId: rival.id,
         },
       });
       impacts.push({

@@ -7,8 +7,9 @@ import {cn} from "@/lib/utils";
 // ---------------------------------------------------------------------------
 // GameOverModal
 //
-// Rendered directly in App when gameState.studio.isBankrupt === true.
-// It is NOT driven by the modal queue.
+// Rendered by ModalManager for queued "GAME_OVER" modals (enqueued by the
+// loan/bankruptcy system via MODAL_TRIGGERED impacts). Not Escape-dismissable —
+// the only way out is "INITIATE NEW TIMELINE".
 // ---------------------------------------------------------------------------
 
 export const GameOverModal = () => {

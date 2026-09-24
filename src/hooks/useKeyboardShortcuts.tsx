@@ -20,9 +20,6 @@ const KEYBOARD_SHORTCUTS = {
 
   // Quick actions dock
   "cmd+shift+a": { action: "toggleQuickActions", description: "Toggle quick actions dock" },
-
-  // Escape
-  escape: { action: "escape", description: "Close modals/panels" },
 } as const;
 
 type ShortcutKey = keyof typeof KEYBOARD_SHORTCUTS;
@@ -37,7 +34,7 @@ type ShortcutKey = keyof typeof KEYBOARD_SHORTCUTS;
  * - Create project (Cmd+N)
  */
 function useKeyboardShortcuts() {
-  const { setActiveHub, openCreateProject, toggleQuickActions, activeModal, resolveCurrentModal } =
+  const { setActiveHub, openCreateProject, toggleQuickActions } =
     useUIStore();
 
   const handleKeyDown = useCallback(
@@ -76,15 +73,9 @@ function useKeyboardShortcuts() {
         case "toggleQuickActions":
           toggleQuickActions();
           break;
-
-        case "escape":
-          if (activeModal) {
-            resolveCurrentModal();
-          }
-          break;
       }
     },
-    [setActiveHub, openCreateProject, toggleQuickActions, activeModal, resolveCurrentModal]
+    [setActiveHub, openCreateProject, toggleQuickActions]
   );
 
   useEffect(() => {

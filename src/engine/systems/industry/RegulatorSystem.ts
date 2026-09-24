@@ -93,25 +93,19 @@ export class RegulatorSystem {
     // If player is too powerful, regulators issue a headline
     if (playerShare > 30 && rng.next() < 0.05) {
       // 5% chance if > 30% share
+      const headline: import("@/engine/types").NewsEvent = {
+        id: `HL-${state.week}-REG`,
+        week: state.week,
+        category: "industry",
+        headline: `REGULATORY WATCH: Regulators express concern over ${state.studio.name}'s growing market dominance.`,
+        description: "",
+        type: "STUDIO_EVENT",
+      };
       impacts.push({
         type: "HEADLINE_POSTED",
-        payload: {
-          id: `HL-${state.week}-REG`,
-          week: state.week,
-          category: "industry",
-          text: `REGULATORY WATCH: Regulators express concern over ${state.studio.name}'s growing market dominance.`,
-        },
+        payload: { headline },
         // Collected by WeekCoordinator.buildSummary into WeekSummary.newsEvents
-        newsEvents: [
-          {
-            id: `HL-${state.week}-REG`,
-            week: state.week,
-            category: "industry",
-            headline: `REGULATORY WATCH: Regulators express concern over ${state.studio.name}'s growing market dominance.`,
-            description: "",
-            type: "STUDIO_EVENT",
-          },
-        ],
+        newsEvents: [headline],
       });
     }
 

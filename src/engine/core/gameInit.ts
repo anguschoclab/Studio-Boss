@@ -103,6 +103,8 @@ export function initializeGame(
   // Generate initial buyers
   const initialBuyers = generateBuyers({ networks: 4, premium: 4, streamers: 5 });
 
+  const studioId = generateId("PLR");
+
   // Vertical Integration: Assign starting platforms to Majors/Mid-tiers
   const playerOwnedPlatforms: string[] = [];
   if (archetype !== "indie") {
@@ -113,7 +115,7 @@ export function initializeGame(
       archetype: "streamer",
       foundedWeek: 1,
       parentBrand: playerBrand.core,
-      ownerId: "PLR-STUDIO-1",
+      ownerId: studioId,
       subscribers: archetype === "major" ? 25_000_000 : 10_000_000,
       churnRate: 0.05,
       contentLibraryQuality: 60,
@@ -182,14 +184,6 @@ export function initializeGame(
       } as IPAsset);
     }
   });
-
-  const studioId = generateId("PLR");
-
-  // Fix ownerId for player streamer
-  if (playerOwnedPlatforms.length > 0) {
-    const platform = initialBuyers.find((b) => b.id === playerOwnedPlatforms[0]);
-    if (platform) platform.ownerId = studioId;
-  }
 
   return {
     week: 1,

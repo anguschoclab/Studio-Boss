@@ -446,10 +446,9 @@ function chargeOverhead(state: GameState, impacts: StateImpact[]) {
     } else {
       const rival = state.entities.rivals[s.baseStudioId];
       if (rival) {
-        impacts.push({
-          type: "RIVAL_UPDATED",
-          payload: { rivalId: rival.id, update: { cash: (rival.cash || 0) - weekly } },
-        });
+        impacts.push(
+          I.financeTransaction(-weekly, `Shingle overhead: ${s.talentName ?? s.id}`, rival.id),
+        );
       }
     }
   }
@@ -886,16 +885,12 @@ export function cancelHighestOverheadDeal(
   } else {
     const rival = state.entities.rivals[studioId];
     if (rival) {
-      impacts.push({
-        type: "RIVAL_UPDATED",
-        payload: {
-          rivalId: rival.id,
-          update: {
-            cash: (rival.cash || 0) + severance,
-            prestige: Math.max(0, (rival.prestige || 0) - 2),
-          },
-        },
-      });
+      impacts.push(
+        I.financeTransaction(severance, "Shingle deal severance", rival.id),
+        I.rivalUpdated(rival.id, {
+          prestige: Math.max(0, (rival.prestige || 0) - 2),
+        }),
+      );
     }
   }
   // Convert shingle to free-agent (no studio, zero overhead).

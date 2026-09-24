@@ -131,12 +131,14 @@ describe("FlopMechanics", () => {
       const rivalUpdates = impacts.filter((i) => i.type === "RIVAL_UPDATED");
       expect(rivalUpdates.length).toBeGreaterThan(0);
 
-      // Check cash deduction
-      const cashUpdate = rivalUpdates.find(
-        (i) => (i.payload as { update?: { cash?: number } }).update?.cash !== undefined
+      // Check cash deduction — emitted as a targeted finance delta
+      const cashTx = impacts.find(
+        (i) =>
+          i.type === "FINANCE_TRANSACTION" &&
+          (i.payload as { targetId?: string }).targetId === rivalId
       );
-      expect(cashUpdate).toBeDefined();
-      expect((cashUpdate?.payload as { update: { cash: number } }).update.cash).toBe(300000); // 1M - 700k
+      expect(cashTx).toBeDefined();
+      expect((cashTx?.payload as { amount: number }).amount).toBe(-700000);
 
       // Because it's a catastrophic flop, restructuring should be triggered
       // It pushes a RIVAL_UPDATED with strategy update

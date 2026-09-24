@@ -92,6 +92,7 @@ export function handleMarketingPhase(
                 type: "director_speaks_out",
                 talentId: director.id,
                 severity: 70,
+                weeksRemaining: 8,
                 description: `Renowned director ${director.name} has publically disowned the studio's "sanitized" cut of "${p.title}", claiming their creative vision was compromised for commercial gain.`,
                 isPublic: true,
                 weekDiscovered: 0,

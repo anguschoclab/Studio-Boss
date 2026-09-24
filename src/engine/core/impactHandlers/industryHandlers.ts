@@ -43,6 +43,31 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
     nextState = { ...nextState, entities: { ...nextState.entities, rivals: nextRivals } };
   }
 
+  // 2b. Singular rival spawn/update — a full RivalStudio in `update` is inserted
+  // when rivalId is not yet present (RivalSpawner), merged otherwise.
+  const singularRival = payload.rival;
+  if (singularRival && typeof singularRival === "object") {
+    const { rivalId, update } = singularRival as {
+      rivalId?: string;
+      update?: Partial<import("@/engine/types").RivalStudio>;
+    };
+    if (rivalId && update) {
+      const nextRivals = { ...nextState.entities.rivals };
+      nextRivals[rivalId] = nextRivals[rivalId]
+        ? { ...nextRivals[rivalId], ...update }
+        : (update as import("@/engine/types").RivalStudio);
+      nextState = { ...nextState, entities: { ...nextState.entities, rivals: nextRivals } };
+    }
+  }
+
+  // 2c. Hard bankruptcy — remove the liquidated rival entirely.
+  const bankruptRivalId = payload.bankruptRivalId;
+  if (typeof bankruptRivalId === "string" && nextState.entities.rivals[bankruptRivalId]) {
+    const nextRivals = { ...nextState.entities.rivals };
+    delete nextRivals[bankruptRivalId];
+    nextState = { ...nextState, entities: { ...nextState.entities, rivals: nextRivals } };
+  }
+
   // 3. Batch Talent Updates
   if (Array.isArray(payload.talents)) {
     const nextTalents = { ...nextState.entities.talents };

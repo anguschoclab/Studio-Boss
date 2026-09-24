@@ -64,6 +64,9 @@ export interface Scandal {
   severity: number; // 0-100
   type: ScandalType;
   weeksRemaining: number;
+  description?: string;
+  isPublic?: boolean;
+  weekDiscovered?: number;
 }
 
 export type AgencyArchetype =
@@ -249,6 +252,12 @@ export interface Talent {
 
   // Breakout tracking
   isBreakout?: boolean;
+
+  /** Non-decayable prestige floor earned from career hits (0-90). */
+  legacyPrestige?: number;
+
+  /** On-set morale (0-100); read/written by MoraleTick. */
+  morale?: number;
 
   // Casting comfort system
   comfortLevel?: import("./casting.types").TalentComfortLevel;

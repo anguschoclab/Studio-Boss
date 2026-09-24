@@ -143,8 +143,12 @@ export function tickAntitrust(state: GameState): StateImpact[] {
     });
     // Penalize dominant: lose divested cash.
     impacts.push({
-      type: "RIVAL_UPDATED",
-      payload: { rivalId: leader.id, update: { cash: leader.cash - spinoffCash } },
+      type: "FINANCE_TRANSACTION",
+      payload: {
+        amount: -spinoffCash,
+        description: `Court-ordered divestiture: ${spinoffName}`,
+        targetId: leader.id,
+      },
     });
     impacts.push({
       type: "NEWS_ADDED",
@@ -159,8 +163,8 @@ export function tickAntitrust(state: GameState): StateImpact[] {
     const fine = Math.min(500_000_000, leader.cash * 0.03);
     if (leader.id !== "PLAYER") {
       impacts.push({
-        type: "RIVAL_UPDATED",
-        payload: { rivalId: leader.id, update: { cash: leader.cash - fine } },
+        type: "FINANCE_TRANSACTION",
+        payload: { amount: -fine, description: "Antitrust fine", targetId: leader.id },
       });
     } else {
       impacts.push({ type: "FUNDS_CHANGED", payload: { amount: -fine } });

@@ -1,6 +1,6 @@
-import {RivalStudio, GameState, Talent, NewsEvent} from "@/engine/types";
+import {RivalStudio, GameState, Talent} from "@/engine/types";
 type TalentProfile = Talent;
-import {StateImpact, RivalUpdate} from "../types/state.types";
+import {StateImpact} from "../types/state.types";
 import {clamp, pick, rand, generateId} from "../utils";
 
 const INDIE_ACTIVITIES = [
@@ -47,8 +47,12 @@ export function rivalPoachTalent(rival: RivalStudio, stars: TalentProfile[]): st
   return null;
 }
 
-export function updateRival(rival: RivalStudio, realProjectCount?: number): Partial<RivalStudio> {
+export function updateRival(
+  rival: RivalStudio,
+  realProjectCount?: number
+): { update: Partial<RivalStudio>; cashDelta: number } {
   const update: Partial<RivalStudio> = {};
+  let cashDelta = 0;
 
   // projectCount reflects the real slate when provided; otherwise it stays honest
   // (no fabricated drift) and is left untouched.
@@ -57,24 +61,25 @@ export function updateRival(rival: RivalStudio, realProjectCount?: number): Part
   // Natural fluctuation
   update.strength = clamp(rival.strength + (rand() * 6 - 3), 20, 100);
 
-  // Strategy driven behavior
+  // Strategy driven behavior — cash moves are deltas so they compose with
+  // other systems' transactions instead of overwriting them.
   if (rival.archetype === "major") {
-    update.cash = rival.cash + (rand() * 40_000_000 - 10_000_000);
+    cashDelta = rand() * 40_000_000 - 10_000_000;
     if (rand() < 0.25) update.recentActivity = pick(MAJOR_ACTIVITIES);
     update.strategy = "acquirer";
   } else if (rival.archetype === "indie") {
-    update.cash = rival.cash + (rand() * 10_000_000 - 4_000_000);
+    cashDelta = rand() * 10_000_000 - 4_000_000;
     if (rand() < 0.25) update.recentActivity = pick(INDIE_ACTIVITIES);
     update.strategy = "prestige_chaser";
   } else {
     // mid-tier
-    update.cash = rival.cash + (rand() * 20_000_000 - 5_000_000);
+    cashDelta = rand() * 20_000_000 - 5_000_000;
     if (rand() < 0.25) update.recentActivity = pick(MID_ACTIVITIES);
     update.strategy = "genre_specialist";
   }
 
   // Check for M&A vulnerability
-  const finalCash = update.cash !== undefined ? update.cash : rival.cash;
+  const finalCash = rival.cash + cashDelta;
   const finalStrength = update.strength !== undefined ? update.strength : rival.strength;
 
   if (finalCash < 0 && finalStrength < 40) {
@@ -84,12 +89,11 @@ export function updateRival(rival: RivalStudio, realProjectCount?: number): Part
     update.isAcquirable = false;
   }
 
-  return update;
+  return { update, cashDelta };
 }
 
-export function advanceRivals(state: GameState): StateImpact {
-  const rivalUpdates: RivalUpdate[] = [];
-  const newsEvents: NewsEvent[] = [];
+export function advanceRivals(state: GameState): StateImpact[] {
+  const impacts: StateImpact[] = [];
   const uiNotifications: string[] = [];
   const rivalsObj = state.entities.rivals;
 
@@ -101,12 +105,25 @@ export function advanceRivals(state: GameState): StateImpact {
     for (const pid in projectsObj) {
       if (projectsObj[pid].ownerId === rival.id) realProjectCount++;
     }
-    const update = updateRival(rival, realProjectCount);
+    const { update, cashDelta } = updateRival(rival, realProjectCount);
 
-    rivalUpdates.push({
-      rivalId: rival.id,
-      update,
+    impacts.push({
+      type: "RIVAL_UPDATED",
+      payload: {
+        rivalId: rival.id,
+        update,
+      },
     });
+    if (cashDelta !== 0) {
+      impacts.push({
+        type: "FINANCE_TRANSACTION",
+        payload: {
+          amount: cashDelta,
+          description: "Weekly cash drift",
+          targetId: rival.id,
+        },
+      });
+    }
 
     // Log major rival events
     if (update.isAcquirable && !rival.isAcquirable) {
@@ -117,14 +134,16 @@ export function advanceRivals(state: GameState): StateImpact {
             ? "Critically-acclaimed"
             : "Mid-tier";
 
-      newsEvents.push({
-        id: generateId("NWS"),
-        week: state.week,
-        type: "RIVAL",
-        headline: `${archetypeContext} ${rival.name} Vulnerable to Takeover!`,
-        description: `${rival.name} has hit a critical cash shortage. Strategy: ${update.recentActivity || rival.recentActivity}`,
-        impact: "Available for acquisition",
-        rivalId: rival.id,
+      impacts.push({
+        type: "NEWS_ADDED",
+        payload: {
+          id: generateId("NWS"),
+          type: "RIVAL",
+          headline: `${archetypeContext} ${rival.name} Vulnerable to Takeover!`,
+          description: `${rival.name} has hit a critical cash shortage. Strategy: ${update.recentActivity || rival.recentActivity}`,
+          impact: "Available for acquisition",
+          rivalId: rival.id,
+        },
       });
 
       // Add to narrative events for weekly summary
@@ -149,14 +168,16 @@ export function advanceRivals(state: GameState): StateImpact {
     const rival = rivalsObj[id];
     const poakMsg = rivalPoachTalent(rival, stars);
     if (poakMsg) {
-      newsEvents.push({
-        id: generateId("NWS"),
-        week: state.week,
-        type: "RIVAL",
-        headline: `Talent Poached by ${rival.name}`,
-        description: poakMsg,
-        impact: "Pool updated",
-        rivalId: rival.id,
+      impacts.push({
+        type: "NEWS_ADDED",
+        payload: {
+          id: generateId("NWS"),
+          type: "RIVAL",
+          headline: `Talent Poached by ${rival.name}`,
+          description: poakMsg,
+          impact: "Pool updated",
+          rivalId: rival.id,
+        },
       });
 
       // Add to narrative events for weekly summary
@@ -164,9 +185,11 @@ export function advanceRivals(state: GameState): StateImpact {
     }
   }
 
-  return {
-    rivalUpdates,
-    newsEvents,
-    uiNotifications,
-  };
+  // uiNotifications are collected by WeekCoordinator.buildSummary into
+  // WeekSummary.narrativeEvents — emit as a bag impact so they still land there.
+  if (uiNotifications.length > 0) {
+    impacts.push({ uiNotifications });
+  }
+
+  return impacts;
 }

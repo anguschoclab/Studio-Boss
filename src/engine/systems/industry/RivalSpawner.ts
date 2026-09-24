@@ -153,8 +153,8 @@ export function tickRivalSpawner(state: GameState): StateImpact[] {
     type: "INDUSTRY_UPDATE",
     payload: {
       update: {},
-      rival: { rivalId: newRival.id, update: newRival as any },
-    } as any,
+      rival: { rivalId: newRival.id, update: newRival },
+    },
   });
 
   impacts.push({
@@ -191,7 +191,7 @@ export function tickHardBankruptcy(state: GameState): StateImpact[] {
     if (secureRandom() > 0.08) continue;
     impacts.push({
       type: "INDUSTRY_UPDATE",
-      payload: { update: {}, bankruptRivalId: r.id } as any,
+      payload: { update: {}, bankruptRivalId: r.id },
     });
     impacts.push({
       type: "NEWS_ADDED",

@@ -36,14 +36,17 @@ describe("completeFireSale", () => {
     const impacts = completeFireSale(makeState(), baseOffer, "r2");
     const franchise = impacts.find((i) => i.type === "FRANCHISE_UPDATED") as any;
     expect(franchise.payload.update.ownerId).toBe("r2");
-    const buyerDebit = impacts.find(
-      (i) => i.type === "RIVAL_UPDATED" && (i as any).payload.rivalId === "r2"
+    const finTx = impacts.filter((i) => i.type === "FINANCE_TRANSACTION");
+    const buyerDebit = finTx.find(
+      (i) => (i.payload as { targetId?: string }).targetId === "r2"
     ) as any;
-    expect(buyerDebit.payload.update.cash).toBe(800_000_000 - 100_000_000);
-    const sellerCredit = impacts.find(
-      (i) => i.type === "RIVAL_UPDATED" && (i as any).payload.rivalId === "r1"
+    expect(buyerDebit).toBeDefined();
+    expect(buyerDebit.payload.amount).toBe(-100_000_000);
+    const sellerCredit = finTx.find(
+      (i) => (i.payload as { targetId?: string }).targetId === "r1"
     ) as any;
-    expect(sellerCredit.payload.update.cash).toBe(-50_000_000 + 100_000_000);
+    expect(sellerCredit).toBeDefined();
+    expect(sellerCredit.payload.amount).toBe(100_000_000);
     expect(impacts.some((i) => i.type === "NEWS_ADDED")).toBe(true);
     // No player cash impact when the buyer is a rival.
     expect(impacts.some((i) => i.type === "FUNDS_DEDUCTED")).toBe(false);
@@ -56,9 +59,12 @@ describe("completeFireSale", () => {
     const playerDebit = impacts.find((i) => i.type === "FUNDS_DEDUCTED") as any;
     expect(playerDebit.payload.amount).toBe(100_000_000);
     const sellerCredit = impacts.find(
-      (i) => i.type === "RIVAL_UPDATED" && (i as any).payload.rivalId === "r1"
+      (i) =>
+        i.type === "FINANCE_TRANSACTION" &&
+        (i.payload as { targetId?: string }).targetId === "r1"
     ) as any;
-    expect(sellerCredit.payload.update.cash).toBe(-50_000_000 + 100_000_000);
+    expect(sellerCredit).toBeDefined();
+    expect(sellerCredit.payload.amount).toBe(100_000_000);
     // No rival-buyer debit when the buyer is the player.
     expect(
       impacts.some(
@@ -106,9 +112,14 @@ describe("completeFireSale", () => {
     const state = makeState();
     delete (state.entities.rivals as any).r1;
     const impacts = completeFireSale(state, baseOffer, "r2");
-    // No RIVAL_UPDATED for seller (doesn't exist)
+    // No RIVAL_UPDATED or cash delta for seller (doesn't exist)
     expect(
       impacts.some((i) => i.type === "RIVAL_UPDATED" && (i as any).payload.rivalId === "r1")
+    ).toBe(false);
+    expect(
+      impacts.some(
+        (i) => i.type === "FINANCE_TRANSACTION" && (i as any).payload.targetId === "r1"
+      )
     ).toBe(false);
     // Franchise still transfers
     expect(impacts.some((i) => i.type === "FRANCHISE_UPDATED")).toBe(true);
@@ -122,9 +133,14 @@ describe("completeFireSale", () => {
     // Franchise still transfers
     const franchise = impacts.find((i) => i.type === "FRANCHISE_UPDATED") as any;
     expect(franchise.payload.update.ownerId).toBe("nonexistent-rival");
-    // No RIVAL_UPDATED for buyer (doesn't exist)
+    // No RIVAL_UPDATED or cash delta for buyer (doesn't exist)
     expect(
       impacts.some((i) => i.type === "RIVAL_UPDATED" && (i as any).payload.rivalId === "nonexistent-rival")
+    ).toBe(false);
+    expect(
+      impacts.some(
+        (i) => i.type === "FINANCE_TRANSACTION" && (i as any).payload.targetId === "nonexistent-rival"
+      )
     ).toBe(false);
     // No FUNDS_DEDUCTED (not the player)
     expect(impacts.some((i) => i.type === "FUNDS_DEDUCTED")).toBe(false);

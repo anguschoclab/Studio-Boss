@@ -23,11 +23,13 @@ export class SimulationRunner {
     weeks: number,
     seed: number = 42,
     archetype: ArchetypeKey = "major",
-    _persona: string = "balanced",
+    persona: string = "balanced",
     autoPilot: boolean = true
   ): SimulationResult {
     const metrics = new MetricsCollector();
     let state = initializeGame("Headless Studio", archetype, seed);
+    // HeadlessController reads state.persona for bid-style overrides.
+    state.persona = persona;
 
     // Initial record
     metrics.record(state, {

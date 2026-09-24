@@ -84,9 +84,10 @@ describe("tickDistressedOffers", () => {
     expect(tickDistressedOffers(makeState(7, []))).toEqual([]);
   });
 
-  // Bug 7 regression tests: stale state in multi-offer expiry
+  // Multi-offer expiry must fold state forward so cash effects accumulate
+  // rather than each offer writing against the same stale balance.
 
-  it("Bug 7: two expired offers from same seller — seller cash is sum of both credits, not overwritten", () => {
+  it("two expired offers from same seller — seller cash is sum of both credits, not overwritten", () => {
     const offer2: DistressedAssetOffer = {
       ...offer, id: "o2", assetId: "f2", aiBuyerId: "r3",
       aiBuyerName: "MGM",
@@ -100,7 +101,7 @@ describe("tickDistressedOffers", () => {
     expect((finalState.entities.rivals as any).r1.cash).toBe(-60_000_000 + 100_000_000 + 100_000_000);
   });
 
-  it("Bug 7: two expired offers to same AI buyer — buyer cash is correctly debited for both", () => {
+  it("two expired offers to same AI buyer — buyer cash is correctly debited for both", () => {
     const offer2: DistressedAssetOffer = {
       ...offer, id: "o2", assetId: "f2",
     };

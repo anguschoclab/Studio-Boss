@@ -87,9 +87,11 @@ export const AnnualScans = {
     vault.forEach((asset) => {
       const project = projectHistoryMap.get(asset.originalProjectId);
       if (project && !project.isCultClassic && detectCultClassic(project, context.week)) {
+        // Mark the project — project.isCultClassic drives the cult-classic
+        // revenue multiplier (RivalRevenueCalculator/CalculatorModule).
         context.impacts.push({
-          type: "VAULT_ASSET_UPDATED",
-          payload: { assetId: asset.id, update: { tier: "CULT_CLASSIC" } },
+          type: "PROJECT_UPDATED",
+          payload: { projectId: project.id, update: { isCultClassic: true } },
         });
         context.impacts.push({
           type: "NEWS_ADDED",

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useUIStore } from "@/store/uiStore";
 import { useGameStore } from "@/store/gameStore";
 import {
@@ -22,16 +23,22 @@ export const CastingConstraintModal = () => {
   const gameState = useGameStore((s) => s.gameState);
   const resolveCastingConstraint = useGameStore((s) => s.resolveCastingConstraint);
 
-  if (!activeModal || activeModal.type !== "CASTING_CONSTRAINT" || !gameState) return null;
+  const options =
+    activeModal?.type === "CASTING_CONSTRAINT" ? activeModal.payload.options : undefined;
 
-  const { projectId, talentId, options } = activeModal.payload;
+  // Resolve in an effect — never during render — so a malformed payload
+  // can't jam the modal queue.
+  useEffect(() => {
+    if (activeModal?.type !== "CASTING_CONSTRAINT") return;
+    if (!gameState || !options?.length) resolveCurrentModal();
+  }, [activeModal, gameState, options, resolveCurrentModal]);
+
+  if (!activeModal || activeModal.type !== "CASTING_CONSTRAINT" || !gameState) return null;
+  if (!options?.length) return null;
+
+  const { projectId, talentId } = activeModal.payload;
   const project = gameState.entities.projects[projectId];
   const talent = gameState.entities.talents[talentId];
-
-  if (!options?.length) {
-    resolveCurrentModal();
-    return null;
-  }
 
   const handleChoose = (optionId: string) => {
     resolveCastingConstraint(activeModal.payload, optionId);
