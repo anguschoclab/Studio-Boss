@@ -91,12 +91,12 @@ describe("CreateProjectModal", () => {
     );
 
     render(<TooltipProvider><CreateProjectModal /></TooltipProvider>);
-    expect(screen.queryByText("Greenlight New Project")).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Greenlight Project" })).not.toBeInTheDocument();
   });
 
   it("renders correctly when showCreateProject is true", () => {
     render(<TooltipProvider><CreateProjectModal /></TooltipProvider>);
-    expect(screen.getByText("Greenlight New Project")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Greenlight Project" })).toBeInTheDocument();
     expect(screen.getByText("Format")).toBeInTheDocument();
   });
 
@@ -158,7 +158,7 @@ describe("CreateProjectModal", () => {
     const input = screen.getByDisplayValue("Generated Test Title");
     fireEvent.change(input, { target: { value: "" } });
 
-    const greenlightBtn = screen.getByText("Greenlight Project");
+    const greenlightBtn = screen.getByRole("button", { name: "Greenlight Project" });
     expect(greenlightBtn).toBeDisabled();
   });
 
@@ -169,7 +169,7 @@ describe("CreateProjectModal", () => {
     const input = screen.getByDisplayValue("Generated Test Title");
     fireEvent.change(input, { target: { value: "My Awesome Movie" } });
 
-    const greenlightBtn = screen.getByText("Greenlight Project");
+    const greenlightBtn = screen.getByRole("button", { name: "Greenlight Project" });
     fireEvent.click(greenlightBtn);
 
     expect(mockCreateProject).toHaveBeenCalledWith(
@@ -191,7 +191,7 @@ describe("CreateProjectModal", () => {
     const input = screen.getByDisplayValue("Generated Test Title");
     fireEvent.change(input, { target: { value: "Talent Movie" } });
 
-    const greenlightBtn = screen.getByText("Greenlight Project");
+    const greenlightBtn = screen.getByRole("button", { name: "Greenlight Project" });
     fireEvent.click(greenlightBtn);
 
     expect(mockCreateProject).toHaveBeenCalledWith(
@@ -207,10 +207,11 @@ describe("CreateProjectModal", () => {
     expect(titleInput).toHaveAttribute("maxlength", "100");
   });
 
-  it("flavor input has maxLength={200}", () => {
+  it("flavor input has maxLength={500}", () => {
     render(<TooltipProvider><CreateProjectModal /></TooltipProvider>);
-    // The flavor/positioning input has placeholder "A bold reimagining of..."
-    const flavorInput = screen.getByPlaceholderText("A bold reimagining of...");
-    expect(flavorInput).toHaveAttribute("maxlength", "200");
+    const flavorInput = screen.getByPlaceholderText(
+      "Define the unique selling point of this project..."
+    );
+    expect(flavorInput).toHaveAttribute("maxlength", "500");
   });
 });

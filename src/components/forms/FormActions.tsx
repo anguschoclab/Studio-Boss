@@ -12,15 +12,18 @@ interface FormActionsProps {
   isLoading?: boolean;
   isDirty?: boolean;
   className?: string;
-  align?: "left" | "center" | "right";
+  align?: "left" | "center" | "right" | "between";
   submitVariant?: "default" | "secondary" | "destructive";
   submitDisabled?: boolean;
+  /** Tooltip shown on the submit button (e.g. why it's disabled). */
+  submitTooltip?: string;
 }
 
 const alignClasses = {
   left: "justify-start",
   center: "justify-center",
   right: "justify-end",
+  between: "justify-between",
 };
 
 export const FormActions: React.FC<FormActionsProps> = ({
@@ -34,6 +37,7 @@ export const FormActions: React.FC<FormActionsProps> = ({
   align = "right",
   submitVariant = "default",
   submitDisabled,
+  submitTooltip,
 }) => {
   return (
     <div className={cn("flex items-center gap-3 pt-4", alignClasses[align], className)}>
@@ -54,7 +58,8 @@ export const FormActions: React.FC<FormActionsProps> = ({
           type="submit"
           variant={submitVariant}
           onClick={onSubmit}
-          disabled={isLoading || (!isDirty && !submitDisabled)}
+          disabled={isLoading || submitDisabled || !isDirty}
+          tooltip={submitTooltip}
           className={cn("gap-2", tokens.text.label)}
         >
           {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}

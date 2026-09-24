@@ -41,6 +41,7 @@ describe("ProjectDetailModal", () => {
   const _mockExploitFranchise = vi.fn();
   const mockLaunchAwardsCampaign = vi.fn();
   const mockSubmitToFestival = vi.fn();
+  const mockLockMarketingCampaign = vi.fn();
 
   const mockAwardsProfile: AwardsProfile = {
     criticScore: 85,
@@ -246,6 +247,7 @@ describe("ProjectDetailModal", () => {
           finance: { cash: 100_000_000 },
         },
         launchMarketingCampaign: mockLaunchMarketingCampaign,
+        lockMarketingCampaign: mockLockMarketingCampaign,
       };
       return selector(state);
     });
@@ -260,13 +262,108 @@ describe("ProjectDetailModal", () => {
     expect(lockBtn).toBeInTheDocument();
 
     fireEvent.click(lockBtn);
-    expect(mockLaunchMarketingCampaign).toHaveBeenCalledWith(
+    expect(mockLockMarketingCampaign).toHaveBeenCalledWith(
       "P1",
-      "Standard",
+      "basic",
       "SELL_THE_STORY",
-      "four_quadrant"
+      undefined
     );
     expect(mockSelectProject).toHaveBeenCalledWith(null);
+  });
+
+  it("forwards selected primary and secondary marketing angles on lock", () => {
+    const mockProject = generateMockProject("P1", { state: "marketing", budget: 10_000_000 });
+
+    vi.mocked(useUIStore).mockReturnValue({
+      selectedProjectId: "P1",
+      selectProject: mockSelectProject,
+    } as any);
+
+    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+      const state = {
+        gameState: {
+          studio: {
+            internal: {
+              projects: { [mockProject.id]: mockProject },
+              contracts: [],
+            },
+          },
+          entities: {
+            projects: {},
+            releasedProjectIds: [],
+            talents: {},
+            contracts: {},
+            rivals: {},
+            contractsByProjectId: {},
+          },
+          industry: {
+            talentPool: {},
+          },
+          finance: { cash: 100_000_000 },
+        },
+        lockMarketingCampaign: mockLockMarketingCampaign,
+      };
+      return selector(state);
+    });
+
+    render(<ProjectDetailModal />);
+
+    // Pick a primary angle, then a secondary angle
+    fireEvent.click(screen.getByText("Select a primary angle…"));
+    fireEvent.click(screen.getByText("The Spectacle"));
+    fireEvent.click(screen.getByText("No secondary angle selected"));
+    fireEvent.click(screen.getByText("The Story"));
+
+    fireEvent.click(screen.getByText("Targeted Digital"));
+    fireEvent.click(screen.getByText("Authorize Global Release & Dedicate Reserves"));
+
+    expect(mockLockMarketingCampaign).toHaveBeenCalledWith(
+      "P1",
+      "basic",
+      "SELL_THE_SPECTACLE",
+      "SELL_THE_STORY"
+    );
+  });
+
+  it("reads the project from entities.projects when present (canonical fresh copy)", () => {
+    const staleCopy = generateMockProject("P1", { title: "Stale Title" });
+    const freshCopy = generateMockProject("P1", { title: "Fresh Title" });
+
+    vi.mocked(useUIStore).mockReturnValue({
+      selectedProjectId: "P1",
+      selectProject: mockSelectProject,
+    } as any);
+
+    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+      const state = {
+        gameState: {
+          studio: {
+            internal: {
+              projects: { P1: staleCopy },
+              contracts: [],
+            },
+          },
+          entities: {
+            projects: { P1: freshCopy },
+            releasedProjectIds: [],
+            talents: {},
+            contracts: {},
+            rivals: {},
+            contractsByProjectId: {},
+          },
+          industry: {
+            talentPool: {},
+          },
+          finance: { cash: 100_000_000 },
+        },
+      };
+      return selector(state);
+    });
+
+    render(<ProjectDetailModal />);
+
+    expect(screen.getByText("Fresh Title")).toBeInTheDocument();
+    expect(screen.queryByText("Stale Title")).not.toBeInTheDocument();
   });
 
   it("shows renew button for tv project and handles renewal", () => {

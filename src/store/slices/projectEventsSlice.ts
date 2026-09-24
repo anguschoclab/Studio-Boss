@@ -4,9 +4,14 @@ import {applyStateImpact} from "../storeUtils";
 import {releaseDirectorsCut} from "@/engine/systems/ratings/directorsCuts";
 import {RandomGenerator} from "@/engine/utils/rng";
 import {getContractsByProjectId} from "@/engine/utils";
-import {MarketingCampaign} from "@/engine/types";import {type ProjectId, type StudioId} from "@/engine/types/shared.types";
+import {MarketingCampaign, MarketingAngle} from "@/engine/types";import {type ProjectId, type StudioId} from "@/engine/types/shared.types";
 export interface ProjectEventsSlice {
-  lockMarketingCampaign: (projectId: ProjectId, level: "none" | "basic" | "blockbuster") => void;
+  lockMarketingCampaign: (
+    projectId: ProjectId,
+    level: "none" | "basic" | "blockbuster",
+    primaryAngle?: MarketingAngle,
+    secondaryAngle?: MarketingAngle
+  ) => void;
   releaseDirectorsCutAction: (projectId: ProjectId) => void;
   resolveMerger: (
     accept: boolean,
@@ -62,7 +67,7 @@ export const createProjectEventsSlice: StateCreator<GameStore, [], [], ProjectEv
     });
   },
 
-  lockMarketingCampaign: (projectId, level) => {
+  lockMarketingCampaign: (projectId, level, primaryAngle, secondaryAngle) => {
     set((s) => {
       const state = s.gameState;
       if (!state) return s;
@@ -81,8 +86,11 @@ export const createProjectEventsSlice: StateCreator<GameStore, [], [], ProjectEv
         buzzGain = 40;
       }
 
+      if (state.finance.cash < cost) return s;
+
       const campaign: MarketingCampaign = {
-        primaryAngle: "SELL_THE_STORY",
+        primaryAngle: primaryAngle ?? "SELL_THE_STORY",
+        secondaryAngle,
         domesticBudget: cost * 0.6,
         foreignBudget: cost * 0.4,
         weeksInMarketing: 1,
@@ -103,7 +111,6 @@ export const createProjectEventsSlice: StateCreator<GameStore, [], [], ProjectEv
                 marketingBudget: cost,
                 marketingCampaign: campaign,
                 buzz: Math.min(100, project.buzz + buzzGain),
-                state: project.state === "marketing" ? "released" : project.state,
               },
             },
           },
