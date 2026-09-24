@@ -1,9 +1,6 @@
 import { StateCreator } from "zustand";
 import { GameStore } from "../gameStore";
 import { RandomGenerator } from "@/engine/utils/rng";
-import { AudienceQuadrant, MarketingAngle, StateImpact } from "@/engine/types";
-import { calculateAudienceIndex } from "@/engine/systems/demographics";
-import { applyImpacts } from "@/engine/core/impactReducer";
 import { launchAwardsCampaign as launchAwardsCampaignEngine } from "@/engine/systems/awards/AwardsCampaign";
 
 export interface CampaignTier {
@@ -30,12 +27,6 @@ export interface MarketingSlice {
     projectId: string,
     tierKey: "Grassroots" | "Trade" | "Blitz",
     targetCategories?: string[]
-  ) => void;
-  launchMarketingCampaign: (
-    projectId: string,
-    tierKey: "Standard" | "Tentpole" | "Saturation",
-    angle: MarketingAngle,
-    target: AudienceQuadrant
   ) => void;
 }
 
@@ -84,44 +75,5 @@ export const createMarketingSlice: StateCreator<GameStore, [], [], MarketingSlic
     if (newsEvents.length > 0) {
       get().appendNewsEvents(newsEvents);
     }
-  },
-
-  launchMarketingCampaign: (projectId, tierKey, angle, target) => {
-    const tier = CAMPAIGN_TIERS[tierKey];
-    const state = get().gameState;
-    if (!state || !state.entities.projects[projectId]) return;
-
-    if (state.finance.cash < tier.cost) {
-      return;
-    }
-
-    const project = state.entities.projects[projectId];
-    const alignment = calculateAudienceIndex(project, target);
-    const finalBuzzGain = Math.floor(tier.buzz * alignment);
-
-    set((s) => {
-      if (!s.gameState) return s;
-
-      const impact: StateImpact = {
-        type: "PROJECT_UPDATED",
-        payload: {
-          projectId,
-          update: {
-            buzz: Math.min(100, (project.buzz || 0) + finalBuzzGain),
-            targetDemographic: target,
-            marketingBudget: (project.marketingBudget || 0) + tier.cost,
-          },
-        },
-      };
-
-      const fundsImpact: StateImpact = {
-        type: "FUNDS_CHANGED",
-        payload: { amount: -tier.cost },
-      };
-
-      return {
-        gameState: applyImpacts(s.gameState, [impact, fundsImpact]),
-      };
-    });
   },
 });
