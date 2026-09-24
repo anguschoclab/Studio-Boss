@@ -278,14 +278,25 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
             </span>
           </p>
           <div className="relative">
-            <button
-              disabled={isLocked || !activePrimary}
+            <div
+              role="button"
+              tabIndex={isLocked || !activePrimary ? -1 : 0}
+              aria-disabled={isLocked || !activePrimary}
               onClick={() => {
+                if (isLocked || !activePrimary) return;
                 setShowSecondaryPicker((v) => !v);
                 setShowPrimaryPicker(false);
               }}
+              onKeyDown={(e) => {
+                if (isLocked || !activePrimary) return;
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setShowSecondaryPicker((v) => !v);
+                  setShowPrimaryPicker(false);
+                }
+              }}
               className={cn(
-                "w-full flex items-center justify-between p-4 rounded-none border text-left transition-all",
+                "w-full flex items-center justify-between p-4 rounded-none border text-left transition-all cursor-pointer",
                 isLocked || !activePrimary
                   ? "opacity-50 cursor-not-allowed border-white/5 bg-black/40"
                   : "border-white/5 bg-black/40 hover:border-slate-600"
@@ -323,7 +334,7 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
                   )}
                 />
               </div>
-            </button>
+            </div>
 
             {showSecondaryPicker && !isLocked && activePrimary && (
               <div className="absolute z-20 w-full mt-1 border border-slate-700 bg-black rounded-none overflow-hidden shadow-2xl max-h-72 overflow-y-auto">

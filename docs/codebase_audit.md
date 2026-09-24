@@ -38,6 +38,7 @@ Studio Boss is a deterministic, tick-based studio simulation: React 18 + Vite fr
 - **`as any` / `as unknown as` debt: eliminated** in production code. File-level `no-explicit-any` disables are all removed. Remaining `any` usage lives in test fixtures (deliberately partial entities) — out of scope by policy.
 - **`saveSchema` validates load-bearing fields + referential integrity**, not full entity mirrors: optional entity fields stay `unknown`, but required identity/lifecycle fields and all cross-references are enforced (see Persistence above).
 - **Pre-existing dev-mode noise**: framer-motion v12's `PopChild` reads `props.ref` (React-18 warning) on any `AnimatePresence` child — avoided in `tabs.tsx`; other `AnimatePresence` usages may still log it until React 19.
+- **`studio.internal.projects` diverges from `entities.projects` post-creation**: player projects are written to both maps at creation (`projectSlice`), but `handleProjectUpdated` only writes `entities.projects` and no sync exists in `applyImpacts`, `weekAdvance`, or the store — so `internal.projects` goes stale after the first `PROJECT_UPDATED` (e.g., `weeksInPhase` never advances). Components must read `entities.projects[id] ?? internal.projects[id]` (canonical-first); `useProjectDetailData` does this for the detail modal. Other consumers reading `internal.projects` for live fields may still show stale data.
 
 ## Verification commands
 
