@@ -109,7 +109,8 @@ export function tickConsolidation(state: GameState): StateImpact[] {
       type: "RIVAL_UPDATED",
       payload: {
         rivalId: acquirer.id,
-        update: { prestige: Math.min(100, acquirer.prestige + 10) },
+        update: {},
+        deltas: { prestige: 10 },
       },
     });
     impacts.push({

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {Talent} from "@/engine/types/talent.types";
 import {TabsContent} from "@/components/ui/tabs";
 import {Star, DollarSign, TrendingUp} from "lucide-react";
@@ -38,8 +37,8 @@ export const StatsTab = ({ talent, statData }: StatsTabProps) => {
                     fill: "#94a3b8",
                     fontSize: 10,
                     fontWeight: 900,
-                    textTransform: "uppercase",
-                  } as any}
+                    style: { textTransform: "uppercase" },
+                  }}
                   width={90}
                 />
                 <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={24} animationDuration={1500}>

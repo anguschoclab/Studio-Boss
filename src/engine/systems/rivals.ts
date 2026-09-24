@@ -1,7 +1,7 @@
 import {RivalStudio, GameState, Talent} from "@/engine/types";
 type TalentProfile = Talent;
 import {StateImpact} from "../types/state.types";
-import {clamp, pick, rand, generateId} from "../utils";
+import {pick, rand, generateId} from "../utils";
 
 const INDIE_ACTIVITIES = [
   "Quietly developing a prestige drama slate",
@@ -50,7 +50,7 @@ export function rivalPoachTalent(rival: RivalStudio, stars: TalentProfile[]): st
 export function updateRival(
   rival: RivalStudio,
   realProjectCount?: number
-): { update: Partial<RivalStudio>; cashDelta: number } {
+): { update: Partial<RivalStudio>; cashDelta: number; statDeltas: { strength: number } } {
   const update: Partial<RivalStudio> = {};
   let cashDelta: number;
 
@@ -58,8 +58,9 @@ export function updateRival(
   // (no fabricated drift) and is left untouched.
   if (realProjectCount !== undefined) update.projectCount = realProjectCount;
 
-  // Natural fluctuation
-  update.strength = clamp(rival.strength + (rand() * 6 - 3), 20, 100);
+  // Natural fluctuation — emitted as a delta so other systems' strength moves
+  // in the same tick compose instead of overwriting.
+  const statDeltas = { strength: rand() * 6 - 3 };
 
   // Strategy driven behavior — cash moves are deltas so they compose with
   // other systems' transactions instead of overwriting them.
@@ -80,7 +81,7 @@ export function updateRival(
 
   // Check for M&A vulnerability
   const finalCash = rival.cash + cashDelta;
-  const finalStrength = update.strength !== undefined ? update.strength : rival.strength;
+  const finalStrength = rival.strength + statDeltas.strength;
 
   if (finalCash < 0 && finalStrength < 40) {
     update.isAcquirable = true;
@@ -89,7 +90,7 @@ export function updateRival(
     update.isAcquirable = false;
   }
 
-  return { update, cashDelta };
+  return { update, cashDelta, statDeltas };
 }
 
 export function advanceRivals(state: GameState): StateImpact[] {
@@ -105,13 +106,14 @@ export function advanceRivals(state: GameState): StateImpact[] {
     for (const pid in projectsObj) {
       if (projectsObj[pid].ownerId === rival.id) realProjectCount++;
     }
-    const { update, cashDelta } = updateRival(rival, realProjectCount);
+    const { update, cashDelta, statDeltas } = updateRival(rival, realProjectCount);
 
     impacts.push({
       type: "RIVAL_UPDATED",
       payload: {
         rivalId: rival.id,
         update,
+        deltas: statDeltas,
       },
     });
     if (cashDelta !== 0) {

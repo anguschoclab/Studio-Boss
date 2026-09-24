@@ -91,10 +91,7 @@ export class ExpenseProcessor {
       (p) => p.state !== "released" && p.state !== "archived" && p.state !== "completed"
     );
 
-    // Get studio level from archetype
-    const studioLevel = archetype === "major" ? 3 : archetype === "mid-tier" ? 2 : 1;
-
-    const overhead = this.calculateStudioBurn(studioLevel, activeProjects.length);
+    const overhead = this.calculateStudioBurn(1, activeProjects.length);
     const production = this.calculateProductionBurn(projects);
     const marketing = this.calculateMarketingBurn(projects);
     const interest = this.calculateDebtInterest(cash, market.debtRate);

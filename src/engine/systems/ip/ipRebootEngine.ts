@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {IPAsset, Project} from "../../types";
+import type {RandomGenerator} from "../../utils/rng";
 import type {CreateProjectParams} from "@/store/storeUtils";
 
 export interface RebootProposal {
@@ -48,7 +48,7 @@ export function applyRebootNostalgia(project: Project, sourceAsset: IPAsset): Pr
 /**
  * Generates a reboot proposal from a list of internal IP assets.
  */
-export function generateRebootProposal(vault: IPAsset[], rng: any): RebootProposal | null {
+export function generateRebootProposal(vault: IPAsset[], rng: RandomGenerator): RebootProposal | null {
   if (!vault || vault.length === 0) return null;
 
   const candidates = vault.filter((v) => v.rightsOwner === "STUDIO");

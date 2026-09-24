@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import {GameState, Project, StateImpact} from "@/engine/types";
+import {CrisisOption, GameState, Project, StateImpact} from "@/engine/types";
 
 /**
  * Strategy Pattern for Crisis Resolution (Target A3).
  * Each handler processes a specific type of impact from a crisis option.
  */
-const CrisisHandlers: Record<string, (project: Project, option: any) => StateImpact[]> = {
+const CrisisHandlers: Record<string, (project: Project, option: CrisisOption) => StateImpact[]> = {
   CASH: (project, option) =>
     option.cashPenalty ? [{ type: "FUNDS_CHANGED", payload: { amount: -option.cashPenalty } }] : [],
 

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useMemo } from "react";
 import {useGameStore} from "@/store/gameStore";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
@@ -156,9 +155,9 @@ export const ResourceAllocation: React.FC<ResourceAllocationProps> = ({ classNam
                     fontSize: 9,
                     fontWeight: 900,
                     fill: "rgba(255,255,255,0.4)",
-                    textTransform: "uppercase",
                     letterSpacing: "0.1em",
-                  } as any}
+                    style: { textTransform: "uppercase" },
+                  }}
                   axisLine={false}
                   tickLine={false}
                 />

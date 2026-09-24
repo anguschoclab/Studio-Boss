@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import {motion, AnimatePresence} from "framer-motion";
 import {cn} from "@/lib/utils";
@@ -6,7 +5,7 @@ import {cn} from "@/lib/utils";
 import {EmptyState} from "./EmptyState";
 import {SkeletonList} from "./SkeletonCard";
 import {staggerContainer, staggerItem} from "@/lib/animations";
-import {Search, AlertCircle} from "lucide-react";
+import {Search, AlertCircle, LucideIcon} from "lucide-react";
 
 interface DataListProps<T> {
   /** Array of items to display */
@@ -17,11 +16,7 @@ interface DataListProps<T> {
   keyExtractor: (item: T, index: number) => string;
   /** Empty state configuration */
   emptyState?: {
-    icon?: React.ComponentType<{
-      className?: string;
-      size?: number | string;
-      strokeWidth?: number | string;
-    }>;
+    icon?: LucideIcon;
     title: string;
     description?: string;
     action?: {
@@ -95,7 +90,7 @@ export function DataList<T>({
         {header}
         {customEmptyState || (
           <EmptyState
-            icon={(emptyState?.icon || AlertCircle) as any}
+            icon={emptyState?.icon || AlertCircle}
             title={emptyState?.title || "No items found"}
             message={emptyState?.description || ""}
             action={emptyState?.action}

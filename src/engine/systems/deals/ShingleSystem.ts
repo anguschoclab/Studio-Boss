@@ -495,8 +495,7 @@ function handleExpiry(
   // Reopen bidding. Home studio gets a renewal bonus; rival majors may steal with higher overhead.
   const bidders = rankBidders(state);
   const hasHits = (owner.prestige || 0) >= 70 && (owner.momentum || 0) > 40;
-  const medium: ShingleMedium =
-    (s as unknown as { medium?: string }).medium === "TV" ? "TV" : "FILM";
+  const medium: ShingleMedium = s.medium === "TV" ? "TV" : "FILM";
   type Offer = { id: string; dealType: ShingleDealType; overhead: number; score: number };
   const offers: Offer[] = [];
   for (const b of bidders) {
@@ -887,9 +886,7 @@ export function cancelHighestOverheadDeal(
     if (rival) {
       impacts.push(
         I.financeTransaction(severance, "Shingle deal severance", rival.id),
-        I.rivalUpdated(rival.id, {
-          prestige: Math.max(0, (rival.prestige || 0) - 2),
-        }),
+        I.rivalUpdated(rival.id, {}, { prestige: -2 }),
       );
     }
   }

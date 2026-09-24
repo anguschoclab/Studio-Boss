@@ -56,8 +56,12 @@ export const impacts = {
     return { type: 'BUYER_UPDATED', payload: { buyerId, update } };
   },
 
-  rivalUpdated(rivalId: string, update: Partial<RivalStudio>): RivalUpdateImpact {
-    return { type: 'RIVAL_UPDATED', payload: { rivalId, update } };
+  rivalUpdated(
+    rivalId: string,
+    update: Partial<RivalStudio>,
+    deltas?: { prestige?: number; strength?: number },
+  ): RivalUpdateImpact {
+    return { type: 'RIVAL_UPDATED', payload: { rivalId, update, ...(deltas ? { deltas } : {}) } };
   },
 
   franchiseUpdated(

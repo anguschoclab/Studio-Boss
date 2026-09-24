@@ -18,6 +18,7 @@ import {
   ProjectType,
   ProjectFormat,
 } from "@/engine/types";
+import {defaultSimMemory} from "@/engine/core/simMemory";
 
 export const createMockTalent = (overrides: Partial<Talent> = {}): Talent =>
   ({
@@ -183,16 +184,7 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
     eventHistory: [],
     weekSummaries: [],
     saveVersion: 2,
-    simMemory: {
-      antitrust: { lastActionWeek: -9999 },
-      distress: { negativeStreak: {}, lastActionWeek: {}, stageActionCount: {} },
-      flops: {},
-      headlessCashStreaks: {},
-      eventLogs: { antitrust: [], distress: [], consolidation: [], shingle: [], pitch: [] },
-      antitrustBlockList: [],
-      headlineCounter: 0,
-      lastProcessedTickCount: -1,
-    },
+    simMemory: defaultSimMemory(),
     ...overrides,
   }) as unknown as GameState;
 

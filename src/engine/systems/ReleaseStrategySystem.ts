@@ -117,7 +117,7 @@ export function getReleaseStrategyEffect(
   if (strategy === "streaming") {
     const genre: string = (project.genre ?? "").toUpperCase();
     const tvFormat: string = (
-      ((project as unknown as Record<string, unknown>).tvFormat as string) ?? ""
+      ("tvFormat" in project ? project.tvFormat : undefined) ?? ""
     ).toLowerCase();
     const isPrestigeDrama =
       genre.includes("DRAMA") ||

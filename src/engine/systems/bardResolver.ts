@@ -1,8 +1,16 @@
 import archiveData from "../data/narrative/archive.json";
-import {ResolutionRequest, NarrativeArchive, NarrativeDomainKey, NarrativeContext} from "../data/narrative/archive";
+import {
+  ResolutionRequest,
+  NarrativeArchive,
+  NarrativeArchiveSchema,
+  NarrativeDomainKey,
+  NarrativeContext,
+} from "../data/narrative/archive";
 import {RandomGenerator} from "../utils/rng";
 
 const FORBIDDEN_KEYS = new Set(["__proto__", "constructor", "prototype"]);
+
+const archive: NarrativeArchive = NarrativeArchiveSchema.parse(archiveData);
 
 /**
  * The Bard Resolver
@@ -14,7 +22,6 @@ export const BardResolver = {
    */
   resolve<D extends NarrativeDomainKey>(request: ResolutionRequest<D>): string {
     const { domain, subDomain, intensity, context, tone = "Standard", variant } = request;
-    const archive = archiveData as unknown as NarrativeArchive;
 
     const domainData = archive[domain];
     if (!domainData) return `[MISSING DOMAIN: ${domain}]`;
@@ -131,8 +138,7 @@ export const BardResolver = {
    * If a key is missing from context, it checks the Dictionary domain in the archive.
    */
   interpolate(template: string, context: NarrativeContext, rng?: RandomGenerator): string {
-    const archive = archiveData as unknown as NarrativeArchive;
-    const dictionary = (archive["Dictionary"] as unknown as Record<string, string[]>) || {};
+    const dictionary = (archive["Dictionary"] as Record<string, string[]> | undefined) ?? {};
 
     let result = template;
     let limit = 5; // Prevent infinite loops

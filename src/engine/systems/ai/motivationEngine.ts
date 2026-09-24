@@ -236,12 +236,16 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
     }
 
     if (newMotivation === "FRANCHISE_BUILDING") {
-      const prevPotential = rival.syndicationPotential;
+      // Milestones are keyed off simMemory (persists across motivation changes)
+      // rather than rival.syndicationPotential, which is cleared on exit — a
+      // rival re-entering FRANCHISE_BUILDING must not re-announce old news. The
+      // field is kept as a fallback so pre-existing tracked state still counts.
+      const announced = getSimMemory(state).syndication[rival.id] ?? rival.syndicationPotential;
       const isNewMilestone =
         milestoneShow !== null &&
-        (prevPotential === undefined ||
-          syndicatedCount > prevPotential.syndicatedCount ||
-          TIER_ORDER[bestTier] > TIER_ORDER[prevPotential.bestTier]);
+        (announced === undefined ||
+          syndicatedCount > announced.syndicatedCount ||
+          TIER_ORDER[bestTier] > TIER_ORDER[announced.bestTier]);
 
       impacts.push({
         type: "RIVAL_UPDATED",
@@ -259,6 +263,14 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
           payload: {
             headline: `${rival.name.toUpperCase()} IP ENTERS SYNDICATION`,
             description: `${rival.name}'s "${milestoneShow.title}" has reached ${milestoneShow.tier} tier syndication, unlocking passive revenue streams.`,
+          },
+        } as StateImpact);
+        impacts.push({
+          type: "INDUSTRY_UPDATE",
+          payload: {
+            update: {
+              [`simMemory.syndication.${rival.id}`]: { syndicatedCount, bestTier },
+            },
           },
         } as StateImpact);
       }

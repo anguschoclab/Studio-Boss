@@ -43,6 +43,53 @@ function makeMockState(): GameState {
   } as unknown as GameState;
 }
 
+describe("RIVAL_UPDATED deltas", () => {
+  it("accumulates stat deltas across multiple impacts to the same rival", () => {
+    const state = makeMockState();
+    state.entities.rivals["r1"] = {
+      id: "r1",
+      name: "Rival",
+      prestige: 40,
+      strength: 50,
+      cash: 10_000_000,
+    } as GameState["entities"]["rivals"][string];
+
+    let next = applySingleImpact(state, {
+      type: "RIVAL_UPDATED",
+      payload: { rivalId: "r1", update: {}, deltas: { prestige: -5 } },
+    } as StateImpact);
+    next = applySingleImpact(next, {
+      type: "RIVAL_UPDATED",
+      payload: { rivalId: "r1", update: {}, deltas: { prestige: -10, strength: -2 } },
+    } as StateImpact);
+
+    expect(next.entities.rivals["r1"].prestige).toBe(25);
+    expect(next.entities.rivals["r1"].strength).toBe(48);
+  });
+
+  it("applies deltas after update merge and clamps to field bounds", () => {
+    const state = makeMockState();
+    state.entities.rivals["r1"] = {
+      id: "r1",
+      name: "Rival",
+      prestige: 3,
+      strength: 98,
+    } as GameState["entities"]["rivals"][string];
+
+    const next = applySingleImpact(state, {
+      type: "RIVAL_UPDATED",
+      payload: {
+        rivalId: "r1",
+        update: { prestige: 50 },
+        deltas: { prestige: -60, strength: 10 },
+      },
+    } as StateImpact);
+
+    expect(next.entities.rivals["r1"].prestige).toBe(0);
+    expect(next.entities.rivals["r1"].strength).toBe(100);
+  });
+});
+
 describe("bag-impact handler: newContracts", () => {
   it("adds contracts to entities.contracts and contractsByProjectId", () => {
     const state = makeMockState();

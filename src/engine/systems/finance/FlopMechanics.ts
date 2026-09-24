@@ -1,5 +1,4 @@
 import {GameState, Project, StateImpact} from "@/engine/types";
-import {clamp} from "../../utils";
 import {isPlayerOwner} from "../../utils/ownership";
 import type {StudioFlopHistory} from "@/engine/types/state.types";
 import {getSimMemory} from "../../core/simMemory";
@@ -199,9 +198,8 @@ export function applyFlopPenalties(
         type: "RIVAL_UPDATED",
         payload: {
           rivalId: ownerId,
-          update: {
-            prestige: clamp(isRival.prestige + penalties.prestigePenalty, 0, 100),
-          },
+          update: {},
+          deltas: { prestige: penalties.prestigePenalty },
         },
       });
     } else if (isPlayerOwner(state, ownerId)) {

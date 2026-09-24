@@ -284,6 +284,7 @@ export interface Contract {
   role?: TalentRole;
   signedWeek?: number;
   weeksRemaining?: number;
+  isGuestAppearance?: boolean;
 }
 
 export interface TalentPact {

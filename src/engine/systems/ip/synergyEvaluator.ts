@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import {Franchise, IPAsset} from "../../types";
+ 
+import {Franchise, IPAsset, Project} from "../../types";
 
 /**
  * Synergy Logic Engine.
@@ -76,7 +76,7 @@ export function calculateSynergyGains(
  * Evaluates the total synergy multiplier for the entire IP vault.
  * Returns the modified vault assets to be processed by the manager.
  */
-export function evaluateVaultSynergy(activeProjects: any[], vault: IPAsset[]): IPAsset[] {
+export function evaluateVaultSynergy(activeProjects: Project[], vault: IPAsset[]): IPAsset[] {
   if (!vault || vault.length < 2) return vault || [];
 
   // Calculate synergy based on franchise density

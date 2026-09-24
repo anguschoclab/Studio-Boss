@@ -267,14 +267,24 @@ export function handleScandalRemoved(state: GameState, impact: StateImpact): Gam
 }
 
 export function handleRivalUpdated(state: GameState, impact: StateImpact): GameState {
-  const { rivalId, update } = impact.payload as {
+  const { rivalId, update, deltas } = impact.payload as {
     rivalId: string;
     update: Partial<import("@/engine/types").RivalStudio>;
+    deltas?: { prestige?: number; strength?: number };
   };
   if (!state.entities?.rivals) return state;
   const rivals = { ...state.entities.rivals };
   if (rivals[rivalId]) {
-    rivals[rivalId] = { ...rivals[rivalId], ...update };
+    const merged = { ...rivals[rivalId], ...update };
+    if (deltas) {
+      if (typeof deltas.prestige === "number") {
+        merged.prestige = Math.min(100, Math.max(0, merged.prestige + deltas.prestige));
+      }
+      if (typeof deltas.strength === "number") {
+        merged.strength = Math.min(100, Math.max(0, merged.strength + deltas.strength));
+      }
+    }
+    rivals[rivalId] = merged;
   }
   return {
     ...state,

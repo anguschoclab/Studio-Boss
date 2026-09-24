@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 /**
  * Studio Boss - OPFS Save Worker
  *
@@ -25,7 +25,7 @@ self.onmessage = async (e: MessageEvent) => {
   }
 };
 
-async function handleSave(slotId: string | number, state: any) {
+async function handleSave(slotId: string | number, state: unknown) {
   const root = await navigator.storage.getDirectory();
   const fileHandle = await root.getFileHandle(`slot_${slotId}.sb`, { create: true });
 

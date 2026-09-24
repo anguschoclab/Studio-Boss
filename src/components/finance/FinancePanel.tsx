@@ -84,7 +84,19 @@ export const FinancePanel = () => {
       ...h.expenses,
     }));
 
-    const projected = forecast.map((f) => ({
+    interface ChartRow {
+      week: number;
+      isForecast: boolean;
+      histCash?: number;
+      histRevenue?: number;
+      histCosts?: number;
+      projCash?: number;
+      projRevenue?: number;
+      projCosts?: number;
+      [key: string]: number | boolean | undefined;
+    }
+
+    const projected: ChartRow[] = forecast.map((f) => ({
       week: f.week,
       isForecast: true,
       projCash: f.projected,
@@ -100,15 +112,6 @@ export const FinancePanel = () => {
         projRevenue: last.histRevenue,
         projCosts: last.histCosts,
         isForecast: true,
-      } as unknown as {
-        week: number;
-        projCash: number;
-        projRevenue: number;
-        projCosts: number;
-        histCash: number;
-        histRevenue: number;
-        histCosts: number;
-        isForecast: boolean;
       });
     }
 

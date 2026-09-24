@@ -82,7 +82,7 @@ describe("Persistence Layer Race Hardening", () => {
 
     const [res1, res2] = await Promise.all([load1, load2]);
 
-    expect(res1.slotId).toBe(0);
-    expect(res2.slotId).toBe(1);
+    expect((res1 as { slotId: number }).slotId).toBe(0);
+    expect((res2 as { slotId: number }).slotId).toBe(1);
   });
 });

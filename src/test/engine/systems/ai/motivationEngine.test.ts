@@ -470,6 +470,57 @@ describe("tickAIMinds — FRANCHISE_BUILDING syndication tracking", () => {
     expect(syndicationNews.length).toBe(0);
   });
 
+  it("persists announced milestones in simMemory", () => {
+    const rival = createFranchiseBuildingRival();
+    const state = createMockGameState();
+    state.entities.rivals = { [rival.id]: rival };
+    state.entities.projects = {
+      tv1: createSeriesProject("tv1", rival.id, 65, "Drama"),
+    };
+
+    const impacts = tickAIMinds(state, new RandomGenerator(42));
+
+    const memWrite = impacts.find(
+      (i) =>
+        i.type === "INDUSTRY_UPDATE" &&
+        (i.payload as { update?: Record<string, unknown> }).update?.[
+          `simMemory.syndication.${rival.id}`
+        ] !== undefined
+    );
+    expect(memWrite).toBeDefined();
+    const record = (
+      memWrite!.payload as {
+        update: Record<string, { syndicatedCount: number; bestTier: string }>;
+      }
+    ).update[`simMemory.syndication.${rival.id}`];
+    expect(record.syndicatedCount).toBe(1);
+    expect(record.bestTier).toBe("BRONZE");
+  });
+
+  it("does not re-fire milestone news when re-entering FRANCHISE_BUILDING", () => {
+    // The rival left FRANCHISE_BUILDING (syndicationPotential was cleared) and
+    // returns — simMemory still holds the announced milestone, so the headline
+    // must not repeat even though the tracking field is gone.
+    const rival = createFranchiseBuildingRival();
+    const state = createMockGameState();
+    state.entities.rivals = { [rival.id]: rival };
+    state.entities.projects = {
+      tv1: createSeriesProject("tv1", rival.id, 65, "Drama"),
+    };
+    state.simMemory = {
+      ...state.simMemory!,
+      syndication: { [rival.id]: { syndicatedCount: 1, bestTier: "BRONZE" } },
+    };
+
+    const impacts = tickAIMinds(state, new RandomGenerator(42));
+
+    const syndicationNews = getNewsImpacts(impacts).filter((n) => {
+      const h = (n.payload as { headline?: string }).headline || "";
+      return h.includes("SYNDICATION");
+    });
+    expect(syndicationNews.length).toBe(0);
+  });
+
   it("pays syndication revenue but does not track potential for non-FRANCHISE_BUILDING rivals", () => {
     const rival = createStabilityRival();
     const state = createMockGameState();

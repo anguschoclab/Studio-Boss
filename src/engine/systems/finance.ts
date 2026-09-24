@@ -40,7 +40,7 @@ export function generateWeeklyFinancialReport(
   pendingImpacts: StateImpact[] = []
 ): { report: WeeklyFinancialReport; snapshot: FinancialSnapshot } {
   const projects = Object.values(state.studio?.internal?.projects || {});
-  const studioLevel = (state.studio as unknown as { level?: number }).level || 1;
+  const studioLevel = state.studio?.level ?? 1;
   const market = state.finance.marketState || InterestRateSimulator.initialize();
 
   // Track causality for financial changes

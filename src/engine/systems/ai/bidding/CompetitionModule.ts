@@ -1,4 +1,4 @@
-import {GameState, StateImpact, Project} from "@/engine/types";
+import {GameState, StateImpact} from "@/engine/types";
 import {RandomGenerator} from "../../../utils/rng";
 import {AgencyLeverageEngine} from "../AgencyLeverage";
 import {TalentAgentInteractionEngine} from "../../talent/talentAgentInteractions";
@@ -38,17 +38,13 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
     if (rng.next() < 0.1) {
       const target = rng.pick(availableTalent);
 
-      const dummyProject: Project = {
+      const dummyProject = {
         id: "dummy-pact-project",
         title: "First-Look Pact",
         genre: "Drama",
         budget: rival.cash * 0.1,
         buzz: rival.prestige,
-        reviewScore: 70,
-        state: "development",
-        weeksInPhase: 0,
-        ownerId: rival.id,
-      } as unknown as Project;
+      };
 
       const willingnessReport = calculateWillingness(target, dummyProject, state);
 

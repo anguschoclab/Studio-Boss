@@ -78,7 +78,7 @@ export const TalentMoraleSystem = {
       else if (t.psychology.mood < 45) moodChange += 1;
 
       // 2. Project performance
-      const activeContracts = contractsByTalent.get(t.id as unknown as TalentId) || [];
+      const activeContracts = contractsByTalent.get(t.id as TalentId) || [];
       for (const c of activeContracts) {
         const p = projectsDict[c.projectId as ProjectId];
         if (p) {

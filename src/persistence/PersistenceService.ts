@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 /**
  * Studio Boss - Persistence Service (Core API)
  *
@@ -22,7 +22,7 @@ class PersistenceService {
   private pendingPromises: Map<
     number,
     {
-      resolve: (data: any) => void;
+      resolve: (data: unknown) => void;
       reject: (err: Error) => void;
       timer: ReturnType<typeof setTimeout>;
     }
@@ -60,14 +60,18 @@ class PersistenceService {
     }
   }
 
-  private request(type: string, payload: Record<string, unknown>): Promise<any> {
+  private request<T>(type: string, payload: Record<string, unknown>): Promise<T> {
     const requestId = ++this.requestCounter;
-    return new Promise((resolve, reject) => {
+    return new Promise<T>((resolve, reject) => {
       const timer = setTimeout(() => {
         this.pendingPromises.delete(requestId);
         reject(new Error(`[PersistenceService] ${type} request ${requestId} timed out`));
       }, REQUEST_TIMEOUT_MS);
-      this.pendingPromises.set(requestId, { resolve, reject, timer });
+      this.pendingPromises.set(requestId, {
+        resolve: (data) => resolve(data as T),
+        reject,
+        timer,
+      });
       this.worker?.postMessage({ type, requestId, ...payload });
     });
   }
@@ -77,17 +81,17 @@ class PersistenceService {
    * Resolves `true` on success; rejects on worker error/timeout; throws
    * PersistenceUnavailableError when no worker exists.
    */
-  async save(slotId: string | number, state: any): Promise<boolean> {
+  async save(slotId: string | number, state: unknown): Promise<boolean> {
     if (!this.worker) throw new PersistenceUnavailableError();
-    return this.request("SAVE_GAME", { slotId, state });
+    return this.request<boolean>("SAVE_GAME", { slotId, state });
   }
 
   /**
    * Load a game state from a named slot.
    */
-  async load(slotId: string | number): Promise<any | null> {
+  async load(slotId: string | number): Promise<unknown | null> {
     if (!this.worker) return null;
-    return this.request("LOAD_GAME", { slotId });
+    return this.request<unknown | null>("LOAD_GAME", { slotId });
   }
 
   /**

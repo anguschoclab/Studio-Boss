@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import {useState, useEffect} from "react";
 import {useNavigate} from "@tanstack/react-router";
 import {Button} from "@/components/ui/button";
@@ -21,7 +21,7 @@ const TitleScreen = () => {
       const result = await getSaveSlots();
       if (!isMounted) return;
       setSlots(result);
-      setHasSaves(result.some((s: any) => s.exists));
+      setHasSaves(result.some((s) => s.exists));
     };
     fetchSlots();
 

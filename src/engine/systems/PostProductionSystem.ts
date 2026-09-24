@@ -82,7 +82,7 @@ export function tickPostProduction(state: GameState, rng: RandomGenerator): Stat
             state: "marketing",
             postProductionWeeksRemaining: 0,
             weeksInPhase: 0,
-          } as unknown as Partial<import("@/engine/types").Project>,
+          },
         },
       });
 

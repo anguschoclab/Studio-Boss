@@ -32,7 +32,7 @@ export class RegulatorSystem {
     for (let i = 0; i < state.market.buyers.length; i++) {
       const b = state.market.buyers[i];
       if (b.archetype === "streamer") {
-        const platform = b as unknown as import("../../types/studio.types").StreamerPlatform;
+        const platform = b as import("../../types/studio.types").StreamerPlatform;
         const subs = platform.subscribers || 0;
         totalSubs += subs;
         if (b.ownerId === targetOwnerId) {

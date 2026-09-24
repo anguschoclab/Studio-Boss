@@ -14,7 +14,10 @@ export interface WillingnessReport {
 
 export function calculateWillingness(
   talent: Talent,
-  project: Project,
+  project: Pick<Project, "id" | "title" | "genre" | "budget" | "buzz"> & {
+    budgetTier?: Project["budgetTier"];
+    scriptHeat?: number;
+  },
   gameState: GameState
 ): WillingnessReport {
   let score = 60; // Baseline

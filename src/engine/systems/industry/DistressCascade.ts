@@ -210,9 +210,7 @@ export function completeFireSale(
   if (seller) {
     impacts.push(
       I.financeTransaction(offer.price, `Distressed sale: ${offer.assetLabel}`, offer.sellerId),
-      I.rivalUpdated(offer.sellerId, {
-        prestige: Math.max(0, (seller.prestige || 0) - 5),
-      }),
+      I.rivalUpdated(offer.sellerId, {}, { prestige: -5 }),
     );
   }
 
@@ -472,9 +470,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
     const proceeds = Math.round(50_000_000 + secureRandom() * 150_000_000);
     impacts.push(
       I.financeTransaction(proceeds, "Backlot sale", seller.id),
-      I.rivalUpdated(seller.id, {
-        prestige: Math.max(0, (seller.prestige || 0) - 10),
-      }),
+      I.rivalUpdated(seller.id, {}, { prestige: -10 }),
     );
     impacts.push(
       I.newsAdded({
@@ -530,9 +526,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
       );
       impacts.push(
         I.financeTransaction(proceeds, `Shelved production: ${target.title}`, seller.id),
-        I.rivalUpdated(seller.id, {
-          prestige: Math.max(0, (seller.prestige || 0) - 5),
-        }),
+        I.rivalUpdated(seller.id, {}, { prestige: -5 }),
       );
       impacts.push(
         I.newsAdded({
@@ -605,9 +599,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
       impacts.push(I.industryUpdate({ "ip.vault": newVault }));
       impacts.push(
         I.financeTransaction(proceeds, "Library sale", seller.id),
-        I.rivalUpdated(seller.id, {
-          prestige: Math.max(0, (seller.prestige || 0) - 3),
-        }),
+        I.rivalUpdated(seller.id, {}, { prestige: -3 }),
       );
       if (buyer) {
         impacts.push(I.financeTransaction(-proceeds, `Library purchase from ${seller.name}`, buyer.id));
@@ -676,9 +668,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
   const proceeds = Math.round(20_000_000 + secureRandom() * 60_000_000);
   impacts.push(
     I.financeTransaction(proceeds, "Overhead layoffs", seller.id),
-    I.rivalUpdated(seller.id, {
-      prestige: Math.max(0, (seller.prestige || 0) - 5),
-    }),
+    I.rivalUpdated(seller.id, {}, { prestige: -5 }),
   );
   impacts.push(
     I.newsAdded({
@@ -741,9 +731,7 @@ function stage3DistressedMA(state: GameState, target: RivalStudio, distress?: Di
 
   impacts.push(
     I.financeTransaction(-price, `Rescue acquisition of ${target.name}`, acquirer.id),
-    I.rivalUpdated(acquirer.id, {
-      prestige: Math.min(100, (acquirer.prestige || 0) + 5),
-    }),
+    I.rivalUpdated(acquirer.id, {}, { prestige: 5 }),
   );
   impacts.push(
     I.industryUpdate({}, { mergedRivalId: target.id, acquirerId: acquirer.id }),

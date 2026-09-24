@@ -103,9 +103,7 @@ export function runAwardsCeremony(
       if (isPlayer) {
         impacts.push({ type: "PRESTIGE_CHANGED", payload: { amount: prestigeGain } });
       } else if (rival) {
-        const update: Partial<import("@/engine/types").RivalStudio> = {
-          prestige: Math.min(100, rival.prestige + prestigeGain),
-        };
+        const update: Partial<import("@/engine/types").RivalStudio> = {};
         if (isWin) {
           update.lastAwardWin = currentWeek;
         }
@@ -114,6 +112,7 @@ export function runAwardsCeremony(
           payload: {
             rivalId: rival.id,
             update,
+            deltas: { prestige: prestigeGain },
           },
         });
       }

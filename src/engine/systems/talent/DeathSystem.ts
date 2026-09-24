@@ -471,10 +471,10 @@ export function tickDeathSystem(state: GameState, rng: RandomGenerator): StateIm
             payload: {
               rivalId: owner,
               update: {
-                // AI studio loses strength/prestige from talent death
-                strength: Math.max(0, (state.entities.rivals?.[owner]?.strength || 50) - 2),
                 recentActivity: `Mourning the loss of ${talent.name}`,
               },
+              // AI studio loses strength/prestige from talent death
+              deltas: { strength: -2 },
             },
           });
         }

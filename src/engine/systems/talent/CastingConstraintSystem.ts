@@ -207,17 +207,17 @@ export function generateRequirementsFromNotes(
 
   // ⚡ Bolt Optimization: Replaced Object.values() array allocation with direct for...in loop
   for (const id in notes) {
-    const n = notes[id] as unknown as { projectId: string; status: string; type: string; intensity: string; suggestedTalentIds?: string[]; id?: string; description?: string };
-    if (n.projectId !== project.id || n.status !== "implemented") continue;
+    const n = notes[id];
+    if (n.projectId !== project.id || !n.implemented) continue;
 
-    if (n.type === "emotional_beat" && n.intensity === "high") {
+    if (n.type === "emotional_beat" && n.quality >= 80) {
       requirements.push({
         id: rng.uuid("REQ"),
         projectId: project.id,
         type: "emotionally_intense",
         level: "extreme",
         description: `Intense emotional scene requiring deep vulnerability`,
-        requiredTalentIds: n.suggestedTalentIds || [],
+        requiredTalentIds: [],
         premiumBonus: 50000,
         screenplayNoteId: n.id,
       });
@@ -230,7 +230,7 @@ export function generateRequirementsFromNotes(
         type: "intimacy",
         level: "moderate",
         description: `Intimate scene as part of plot twist`,
-        requiredTalentIds: n.suggestedTalentIds || [],
+        requiredTalentIds: [],
         premiumBonus: 75000,
         screenplayNoteId: n.id,
       });

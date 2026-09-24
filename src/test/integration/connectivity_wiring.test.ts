@@ -56,8 +56,9 @@ describe("System Connectivity - Phase 3 Integration", () => {
 
     const hasCultImpact = result.impacts.some(
       (i) =>
-        (i as any).type === "VAULT_ASSET_UPDATED" &&
-        ((i as any).payload as any).update?.tier === "CULT_CLASSIC"
+        i.type === "PROJECT_UPDATED" &&
+        (i.payload as { update?: { isCultClassic?: boolean } }).update
+          ?.isCultClassic === true
     );
     expect(hasCultImpact).toBe(true);
   });

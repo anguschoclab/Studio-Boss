@@ -324,8 +324,9 @@ export function acceptGuestStarBooking(
         projectId: booking.seriesId,
         talentId: booking.talentId,
         fee: booking.cost,
+        backendPercent: 0,
         isGuestAppearance: true,
-      } as unknown as import("../../types").Contract,
+      },
     },
   });
 
@@ -393,7 +394,7 @@ export function signBreakoutStar(
         talentId: talent.id,
         update: {
           fee: offerFee,
-        } as unknown as Partial<Talent>,
+        },
       },
     });
 

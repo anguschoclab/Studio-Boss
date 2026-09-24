@@ -83,6 +83,14 @@ export interface SimMemory {
   };
   flops: Record<string, StudioFlopHistory>;
   headlessCashStreaks: Record<string, number>;
+  /**
+   * Last-announced syndication milestone per rival — persists across motivation
+   * changes so re-entering FRANCHISE_BUILDING doesn't re-fire the headline.
+   */
+  syndication: Record<
+    string,
+    { syndicatedCount: number; bestTier: import("../data/syndicationConfig").SyndicationTier }
+  >;
   eventLogs: {
     antitrust: import("../systems/industry/Antitrust").AntitrustEvent[];
     distress: import("../systems/industry/DistressCascade").DistressEvent[];
@@ -204,6 +212,12 @@ export interface TalentUpdate {
 export interface RivalUpdate {
   rivalId: string;
   update: Partial<import("./studio.types").RivalStudio>;
+  /**
+   * Additive stat adjustments applied to the post-merge rival at apply-time —
+   * order-independent, unlike absolute writes which last-writer-wins. Each
+   * field is clamped to [0, 100] after applying.
+   */
+  deltas?: { prestige?: number; strength?: number };
 }
 export interface BuyerUpdate {
   buyerId: string;

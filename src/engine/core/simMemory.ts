@@ -9,6 +9,7 @@ export function defaultSimMemory(): SimMemory {
     distress: { negativeStreak: {}, lastActionWeek: {}, stageActionCount: {} },
     flops: {},
     headlessCashStreaks: {},
+    syndication: {},
     eventLogs: {
       antitrust: [],
       distress: [],
@@ -23,5 +24,14 @@ export function defaultSimMemory(): SimMemory {
 }
 
 export function getSimMemory(state: GameState): SimMemory {
-  return state.simMemory ?? defaultSimMemory();
+  const mem = state.simMemory;
+  if (!mem) return defaultSimMemory();
+  const defaults = defaultSimMemory();
+  return {
+    ...defaults,
+    ...mem,
+    antitrust: { ...defaults.antitrust, ...mem.antitrust },
+    distress: { ...defaults.distress, ...mem.distress },
+    eventLogs: { ...defaults.eventLogs, ...mem.eventLogs },
+  };
 }

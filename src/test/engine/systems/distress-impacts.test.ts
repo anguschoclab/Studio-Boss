@@ -176,9 +176,12 @@ describe("DistressCascade impact types", () => {
       const impacts = completeFireSale(state, offer, "buyer");
       const rivalImpact = findImpact(impacts, "RIVAL_UPDATED");
       expect(rivalImpact).toBeDefined();
-      const payload = rivalImpact!.payload as { rivalId: string; update: { prestige: number } };
+      const payload = rivalImpact!.payload as {
+        rivalId: string;
+        deltas?: { prestige?: number };
+      };
       expect(payload.rivalId).toBe("seller");
-      expect(payload.update.prestige).toBe(35);
+      expect(payload.deltas?.prestige).toBe(-5);
 
       const credit = impacts.find(
         (i) =>

@@ -10,13 +10,14 @@ describe("rivals system", () => {
   });
 
   describe("updateRival", () => {
-    it("returns partial updates plus a bounded cash delta", () => {
+    it("returns partial updates plus bounded cash and stat deltas", () => {
       const mockRival = createMockRival({ strength: 50, cash: 100_000_000 });
-      const { update, cashDelta } = updateRival(mockRival);
+      const { update, cashDelta, statDeltas } = updateRival(mockRival);
 
       // Seed 777 first rand() -> 0.686378...
-      // 50 + (0.686378 * 6 - 3) = 50 + (4.1182 - 3) = 51.1182
-      expect(update.strength).toBeCloseTo(51.12, 1);
+      // strength drift = 0.686378 * 6 - 3 = 1.1182 — a delta, not an absolute write
+      expect(statDeltas.strength).toBeCloseTo(1.12, 1);
+      expect(update.strength).toBeUndefined();
 
       // Seed 777 second rand() -> 0.03445...
       // mid-tier drift = 0.03445 * 20M - 5M = 0.689M - 5M = -4.311M
@@ -47,6 +48,12 @@ describe("rivals system", () => {
       expect(
         (rivalUpdates[0].payload as { rivalId: string }).rivalId
       ).toBe(mockRival.id);
+      const payload = rivalUpdates[0].payload as {
+        update: { strength?: number };
+        deltas?: { strength?: number };
+      };
+      expect(payload.update.strength).toBeUndefined();
+      expect(typeof payload.deltas?.strength).toBe("number");
 
       const deltas = impacts.filter(
         (i) =>

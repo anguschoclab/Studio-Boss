@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {GameState, RivalStudio, Project, StateImpact, BudgetTierKey, ProjectType} from "@/engine/types";
 import {RandomGenerator} from "@/engine/utils/rng";
 import {BUDGET_TIERS} from "@/engine/data/budgetTiers";
@@ -128,10 +127,10 @@ function buildRivalProject(
     activeRoles: [],
     scriptEvents: [],
     scriptHeat: 50,
-  } as unknown as Project;
+  } as Project;
 
-  if (type === "SERIES") {
-    (base as any).tvDetails = {
+  if (type === "SERIES" && "tvDetails" in base) {
+    base.tvDetails = {
       currentSeason: 1,
       episodesOrdered: 10,
       episodesCompleted: 0,
@@ -171,7 +170,7 @@ function advanceRivalProject(project: Project): Project | null {
           multiplier: 1,
         },
         rating: "PG-13",
-      } as unknown as Project;
+      };
     }
     return { ...project, weeksInPhase };
   }

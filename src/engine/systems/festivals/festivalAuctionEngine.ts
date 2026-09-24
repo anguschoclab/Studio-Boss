@@ -90,7 +90,7 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
 
     // Generate NPC bids from all buyers
     buyers.forEach((buyer) => {
-      const buyerCash = (buyer as unknown as { cash?: number }).cash ?? 50_000_000;
+      const buyerCash = buyer.cash ?? 50_000_000;
       const bid = generateNPCBid(project, buyerCash, rng);
       if (bid) {
         bids.push({ ...bid, bidderId: buyer.id, bidderName: buyer.name });

@@ -69,6 +69,7 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
       distress: { negativeStreak: {}, lastActionWeek: {}, stageActionCount: {} },
       flops: {},
       headlessCashStreaks: {},
+      syndication: {},
       eventLogs: { antitrust: [], distress: [], consolidation: [], shingle: [], pitch: [] },
       antitrustBlockList: [],
       headlineCounter: 0,

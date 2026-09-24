@@ -114,6 +114,8 @@ export interface GameState {
     name: string;
     archetype: ArchetypeKey;
     prestige: number;
+    /** Studio progression level (drives overhead scaling); absent = 1. */
+    level?: number;
     culture?: StudioCulture;
     internal: {
       projectHistory: string[]; // List of project IDs
