@@ -15,16 +15,19 @@ export const createSnapshotSlice: StateCreator<GameStore, [], [], SnapshotSlice>
     if (!state) return;
 
     // Derived counts
-    const projectsArray = Object.values(state.entities.projects || {});
-    // Completed projects are those that have been released (including post-release and archived)
-    const completedProjects = projectsArray.filter(
-      (p) => p.state === "released" || p.state === "post_release" || p.state === "archived"
-    ).length;
-
-    // Active projects are those currently in development, production, or marketing
-    const activeProjects = projectsArray.filter(
-      (p) => p.state !== "released" && p.state !== "post_release" && p.state !== "archived"
-    ).length;
+    // ⚡ Bolt Optimization: Replace Object.values().filter() with a single-pass for...in loop to avoid multiple intermediate array allocations.
+    let completedProjects = 0;
+    let activeProjects = 0;
+    const projects = state.entities.projects || {};
+    for (const key in projects) {
+      if (!Object.prototype.hasOwnProperty.call(projects, key)) continue;
+      const p = projects[key];
+      if (p.state === "released" || p.state === "post_release" || p.state === "archived") {
+        completedProjects++;
+      } else {
+        activeProjects++;
+      }
+    }
 
     const currentYear = Math.floor((state.week - 1) / 52) + 1;
     const currentWeek = ((state.week - 1) % 52) + 1;
