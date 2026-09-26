@@ -1,0 +1,3 @@
+## 2024-05-18 - Avoid Object.values() in High-Frequency Game Loops
+**Learning:** Using `Object.values()` to iterate over objects (like relationships) in high-frequency functions (like `checkRelationshipCrises` checking crises every week) creates unnecessary intermediate array allocations, causing O(N) memory overhead and increasing garbage collection pressure.
+**Action:** Instead of `Object.values(obj).filter(...)` or `for (const x of Object.values(obj))`, use a direct `for...in` loop with a prototype guard (`Object.prototype.hasOwnProperty.call`) to iterate over object values directly without allocating intermediate arrays.

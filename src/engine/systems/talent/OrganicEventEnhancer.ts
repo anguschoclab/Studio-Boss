@@ -19,10 +19,6 @@ function getProjectTalentIds(state: GameState, projectId: string): string[] {
   return contracts.map((c) => c.talentId);
 }
 
-function getRelationships(state: GameState): TalentRelationship[] {
-  return Object.values(state.relationships?.relationships || {});
-}
-
 /**
  * Check for relationship-based crises on a project
  */
@@ -37,7 +33,11 @@ export function checkRelationshipCrises(
   const talentIdSet = new Set(talentIds);
 
   const feuds: TalentRelationship[] = [];
-  for (const r of getRelationships(state)) {
+  // ⚡ Bolt Optimization: Replaced getRelationships()/Object.values() with direct for...in loop
+  const relationships = state.relationships?.relationships || {};
+  for (const key in relationships) {
+    if (!Object.prototype.hasOwnProperty.call(relationships, key)) continue;
+    const r = relationships[key];
     if (talentIdSet.has(r.talentAId) && talentIdSet.has(r.talentBId)) {
       if (r.type === "rival" || r.type === "enemy") feuds.push(r);
     }
@@ -157,12 +157,15 @@ export function generateRelationshipScandals(
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
 
-  const relationships = getRelationships(state);
+  // ⚡ Bolt Optimization: Replaced getRelationships()/Object.values() with direct for...in loop
+  const relationships = state.relationships?.relationships || {};
 
   // Single-pass partition into secret and public romances
   const secretRomances: TalentRelationship[] = [];
   const publicRomances: TalentRelationship[] = [];
-  for (const r of relationships) {
+  for (const key in relationships) {
+    if (!Object.prototype.hasOwnProperty.call(relationships, key)) continue;
+    const r = relationships[key];
     if (r.type === "romantic") {
       if (!r.isPublic && r.strength > 60) secretRomances.push(r);
       else if (r.isPublic) publicRomances.push(r);
@@ -316,7 +319,11 @@ export function calculateSocialCrisisModifier(projectId: string, state: GameStat
   const talentIdSet = new Set(talentIds);
 
   let feudCount = 0;
-  for (const r of getRelationships(state)) {
+  // ⚡ Bolt Optimization: Replaced getRelationships()/Object.values() with direct for...in loop
+  const relationships = state.relationships?.relationships || {};
+  for (const key in relationships) {
+    if (!Object.prototype.hasOwnProperty.call(relationships, key)) continue;
+    const r = relationships[key];
     if (talentIdSet.has(r.talentAId) && talentIdSet.has(r.talentBId)) {
       if (r.type === "rival" || r.type === "enemy") feudCount++;
     }
