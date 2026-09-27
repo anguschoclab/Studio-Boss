@@ -1,0 +1,3 @@
+## 2024-05-18 - Single-Pass Derived State Optimization
+**Learning:** In components that derive multiple UI metrics from a single large list (like `projects`), using separate `.filter()` and `.reduce()` operations per metric causes unnecessary intermediate array allocations, contributing to GC overhead during frequent React re-renders in a simulation.
+**Action:** Always fold multiple `filter/reduce` chains on the same dataset into a single loop pass (e.g., using `for...of`) to compute all required derived aggregates concurrently without creating temporary arrays.
