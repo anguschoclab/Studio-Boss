@@ -42,21 +42,32 @@ export const StudioPulse: React.FC = () => {
     }
 
     const cash = finance.cash;
-    const weeklyBurn = projects
-      .filter((p) => p.state === "production" || p.state === "development")
-      .reduce((sum, p) => sum + (p.weeklyCost || 0), 0);
+
+    // ⚡ Bolt: Combined 3 separate .filter() and .reduce() iterations into a single O(N) loop
+    // to eliminate intermediate array allocations and GC overhead.
+    let weeklyBurn = 0;
+    let activeProjects = 0;
+    let atRiskProjects = 0;
+
+    for (const p of projects) {
+      if (p.state === "production" || p.state === "development") {
+        weeklyBurn += (p.weeklyCost || 0);
+      }
+
+      const isReleasedOrArchived = p.state === "released" || p.state === "archived";
+      if (!isReleasedOrArchived) {
+        activeProjects++;
+
+        // Projects in turnaround or with high accumulated cost vs budget are at risk
+        const isOverBudget = (p.accumulatedCost || 0) > (p.budget || 0) * 1.2;
+        const isTroubled = p.state === "turnaround" || p.state === "needs_greenlight";
+        if (isOverBudget || isTroubled) {
+          atRiskProjects++;
+        }
+      }
+    }
+
     const runway = weeklyBurn > 0 ? cash / weeklyBurn : 999;
-
-    const activeProjects = projects.filter(
-      (p) => p.state !== "released" && p.state !== "archived"
-    ).length;
-
-    const atRiskProjects = projects.filter((p) => {
-      // Projects in turnaround or with high accumulated cost vs budget are at risk
-      const isOverBudget = (p.accumulatedCost || 0) > (p.budget || 0) * 1.2;
-      const isTroubled = p.state === "turnaround" || p.state === "needs_greenlight";
-      return (isOverBudget || isTroubled) && p.state !== "released" && p.state !== "archived";
-    }).length;
 
     const cashHistory = finance.weeklyHistory?.slice(-8).map((h) => h.cash) || [];
     const cashTrend =
