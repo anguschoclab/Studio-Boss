@@ -98,10 +98,12 @@ export function selectFatigueForAsset(state: GameState | null, assetId: string):
     state.studio.internal.projects[asset.originalProjectId];
   const genre = originalProject?.genre || "Action";
 
+  // ⚡ Bolt Optimization: Replace Object.values() with direct for...in loop to avoid array allocation
   let genreSaturation = 0;
-  const allProjects = Object.values(state.entities.projects);
-  for (let i = 0; i < allProjects.length; i++) {
-    if (allProjects[i].genre === genre) genreSaturation++;
+  for (const key in state.entities.projects) {
+    if (Object.prototype.hasOwnProperty.call(state.entities.projects, key)) {
+      if (state.entities.projects[key].genre === genre) genreSaturation++;
+    }
   }
 
   const rawFatigue = calculateFranchiseFatigue(franchise, genreSaturation, genre);
