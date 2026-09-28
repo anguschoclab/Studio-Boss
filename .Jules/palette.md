@@ -1,0 +1,3 @@
+## 2024-05-15 - Decorative Icons Missing Aria-Hidden
+**Learning:** Many interactive components from the UI library (DropdownMenu, ContextMenu, Menubar, RadioGroup, Checkbox) use decorative icons (like Check, Circle, ChevronRight) that are read aloud by screen readers because they lack `aria-hidden="true"`. This creates redundant audio clutter for visually impaired users.
+**Action:** Always add `aria-hidden="true"` to purely decorative `lucide-react` icons inside interactive Radix UI/Shadcn UI wrapper components to prevent redundant screen reader announcements.
