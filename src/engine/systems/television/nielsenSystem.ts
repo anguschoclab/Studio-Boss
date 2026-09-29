@@ -239,23 +239,27 @@ export function calculateNielsenRatings(
 
   // Demographic breakdowns
   const genreAffinity = GENRE_DEMO_AFFINITY[project.genre] || {};
-  const demoRatings: DemoRating[] = (Object.keys(DEMO_LABELS) as NielsenDemographic[]).map(
-    (demo) => {
-      const slotWeight = slotConfig.demographics[demo] || 1.0;
-      const genreWeight = genreAffinity[demo] || 1.0;
-      const demoRating = baseHHRating * slotWeight * genreWeight * (0.9 + rng.next() * 0.2);
-      const demoViewers =
-        (demoRating / 100) *
-        totalHouseholds *
-        (demo === "P2+" ? 2.3 : demo.startsWith("K") ? 0.4 : demo.startsWith("T") ? 0.3 : 0.8);
-      return {
-        demo,
-        label: DEMO_LABELS[demo],
-        rating: Math.round(demoRating * 100) / 100,
-        viewers: Math.round(demoViewers * 100) / 100,
-      };
-    }
-  );
+
+  // ⚡ Bolt Optimization: Replace Object.keys().map() with a direct for...in loop
+  const demoRatings: DemoRating[] = [];
+  for (const key in DEMO_LABELS) {
+    if (!Object.prototype.hasOwnProperty.call(DEMO_LABELS, key)) continue;
+    const demo = key as NielsenDemographic;
+    const slotWeight = slotConfig.demographics[demo] || 1.0;
+    const genreWeight = genreAffinity[demo] || 1.0;
+    const demoRating = baseHHRating * slotWeight * genreWeight * (0.9 + rng.next() * 0.2);
+    const demoViewers =
+      (demoRating / 100) *
+      totalHouseholds *
+      (demo === "P2+" ? 2.3 : demo.startsWith("K") ? 0.4 : demo.startsWith("T") ? 0.3 : 0.8);
+
+    demoRatings.push({
+      demo,
+      label: DEMO_LABELS[demo],
+      rating: Math.round(demoRating * 100) / 100,
+      viewers: Math.round(demoViewers * 100) / 100,
+    });
+  }
 
   const keyDemo = demoRatings.find((d) => d.demo === "A18-49")?.rating || 0;
 
