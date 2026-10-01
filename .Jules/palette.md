@@ -1,0 +1,3 @@
+## 2024-10-01 - Add aria-hidden to decorative state icons
+**Learning:** State indicator icons (like `<Check>` in a Checkbox or `<Circle>` in a RadioGroup) inside Radix/Shadcn UI wrapper components need explicit `aria-hidden="true"`. Without it, screen readers will redundantly announce both the parent component's `aria-checked` state and the icon's generic name, causing audio clutter.
+**Action:** Always apply `aria-hidden="true"` to decorative `lucide-react` icons that are placed inside functional elements where state is managed at a higher DOM level.
