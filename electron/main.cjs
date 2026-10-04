@@ -154,6 +154,7 @@ async function createWindow() {
       preload: path.join(__dirname, "preload.cjs"),
       contextIsolation: true,
       nodeIntegration: false,
+      sandbox: true,
       // Allow localStorage / IndexedDB to persist between launches
       partition: "persist:studio-boss",
     },
