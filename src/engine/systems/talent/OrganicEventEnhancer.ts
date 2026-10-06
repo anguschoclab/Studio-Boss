@@ -1,6 +1,7 @@
-import {GameState, StateImpact, Project} from "../../types";import {RandomGenerator} from "../../utils/rng";
-import {TalentRelationship} from "../../types/relationship.types";
-import {getContractsByProjectId} from "../../utils";
+import { GameState, StateImpact, Project } from "../../types";
+import { RandomGenerator } from "../../utils/rng";
+import { TalentRelationship } from "../../types/relationship.types";
+import { getContractsByProjectId } from "../../utils";
 
 /**
  * Organic Event Enhancer

@@ -1,7 +1,7 @@
-import {useState} from "react";
-import {TabsContent} from "@/components/ui/tabs";
-import {Badge} from "@/components/ui/badge";
-import {Button} from "@/components/ui/button";
+import { useState } from "react";
+import { TabsContent } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -9,14 +9,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {Project, AwardBody} from "@/engine/types";
-import {CampaignData} from "@/engine/types/state.types";
-import {formatMoney} from "@/engine/utils";
-import {Trophy, Package} from "lucide-react";
-import {FESTIVALS} from "@/engine/systems/festivals";
-import {CAMPAIGN_TIERS} from "@/store/slices/marketingSlice";
-import {getCategoriesForFormat} from "@/engine/data/awards.data";
-import {SimpleBarChart} from "@/components/charts/SimpleBarChart";
+import { Project, AwardBody } from "@/engine/types";
+import { CampaignData } from "@/engine/types/state.types";
+import { formatMoney } from "@/engine/utils";
+import { Trophy, Package } from "lucide-react";
+import { FESTIVALS } from "@/engine/systems/festivals";
+import { CAMPAIGN_TIERS } from "@/store/slices/marketingSlice";
+import { getCategoriesForFormat } from "@/engine/data/awards.data";
+import { SimpleBarChart } from "@/components/charts/SimpleBarChart";
 
 interface ProbabilityDatum {
   category: string;
@@ -68,13 +68,8 @@ export const ProjectCampaignsTab = ({
               </SelectTrigger>
               <SelectContent className="bg-black border-white/5 text-slate-200">
                 {FESTIVALS.map((f) => (
-                  <SelectItem
-                    key={f.body}
-                    value={f.body}
-                    className="font-bold flex items-center"
-                  >
-                    {f.name}{" "}
-                    <span className="ml-2 text-emerald-400">({formatMoney(f.cost)})</span>
+                  <SelectItem key={f.body} value={f.body} className="font-bold flex items-center">
+                    {f.name} <span className="ml-2 text-emerald-400">({formatMoney(f.cost)})</span>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -169,9 +164,7 @@ export const ProjectCampaignsTab = ({
               <div className="space-y-2">
                 <div className="flex justify-between items-center text-[10px] font-black tracking-widest uppercase">
                   <span className="text-slate-500">Academy Sentiment</span>
-                  <span className="text-amber-500">
-                    {project.awardsProfile.academyAppeal}%
-                  </span>
+                  <span className="text-amber-500">{project.awardsProfile.academyAppeal}%</span>
                 </div>
                 <div className="h-1.5 bg-slate-800 rounded-none overflow-hidden shadow-inner">
                   <div
@@ -183,9 +176,7 @@ export const ProjectCampaignsTab = ({
               <div className="space-y-2">
                 <div className="flex justify-between items-center text-[10px] font-black tracking-widest uppercase">
                   <span className="text-slate-500">Campaign Force</span>
-                  <span className="text-white">
-                    {project.awardsProfile.campaignStrength}%
-                  </span>
+                  <span className="text-white">{project.awardsProfile.campaignStrength}%</span>
                 </div>
                 <div className="h-1.5 bg-slate-800 rounded-none overflow-hidden shadow-inner">
                   <div

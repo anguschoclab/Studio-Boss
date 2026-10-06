@@ -127,10 +127,13 @@ export const CROSSOVER_AFFINITY: Record<string, string[]> = {
 
 export const CROSSOVER_AFFINITY_LOWER_KEYS: Record<string, string> = Object.keys(
   CROSSOVER_AFFINITY
-).reduce((acc, key) => {
-  acc[key.toLowerCase()] = key;
-  return acc;
-}, {} as Record<string, string>);
+).reduce(
+  (acc, key) => {
+    acc[key.toLowerCase()] = key;
+    return acc;
+  },
+  {} as Record<string, string>
+);
 
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
   Superhero: 0.8,
@@ -156,7 +159,10 @@ export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
 
 export const FRANCHISE_FATIGUE_RISK_LOWER_KEYS: Record<string, string> = Object.keys(
   FRANCHISE_FATIGUE_RISK
-).reduce((acc, key) => {
-  acc[key.toLowerCase()] = key;
-  return acc;
-}, {} as Record<string, string>);
+).reduce(
+  (acc, key) => {
+    acc[key.toLowerCase()] = key;
+    return acc;
+  },
+  {} as Record<string, string>
+);

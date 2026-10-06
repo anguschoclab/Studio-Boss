@@ -1,4 +1,4 @@
-import {Label} from "@/components/ui/label";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -6,9 +6,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {BUDGET_TIERS} from "@/engine/data/budgetTiers";
-import {BudgetTierKey} from "@/engine/types";
-import {formatMoney} from "@/engine/utils";
+import { BUDGET_TIERS } from "@/engine/data/budgetTiers";
+import { BudgetTierKey } from "@/engine/types";
+import { formatMoney } from "@/engine/utils";
 
 interface BudgetEstimates {
   weeklyCost: number;
@@ -68,9 +68,7 @@ export const BudgetTierField = ({ value, onChange, estimates }: BudgetTierFieldP
         </div>
         <div className="flex justify-between border-b border-white/5 pb-1">
           <span className="text-muted-foreground/40">Total Budget</span>
-          <span className="text-primary font-display">
-            {formatMoney(estimates.budget)}
-          </span>
+          <span className="text-primary font-display">{formatMoney(estimates.budget)}</span>
         </div>
         <div className="flex justify-between border-b border-white/5 pb-1">
           <span className="text-muted-foreground/40">Dev Phase</span>

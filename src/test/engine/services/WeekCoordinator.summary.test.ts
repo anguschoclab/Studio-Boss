@@ -1,8 +1,8 @@
-import {describe, it, expect, beforeEach} from "vitest";
-import {WeekCoordinator, TickContext} from "@/engine/services/WeekCoordinator";
-import {GameState, StateImpact} from "@/engine/types";
-import {RandomGenerator} from "@/engine/utils/rng";
-import {createMockGameState} from "@/test/utils/mockFactories";
+import { describe, it, expect, beforeEach } from "vitest";
+import { WeekCoordinator, TickContext } from "@/engine/services/WeekCoordinator";
+import { GameState, StateImpact } from "@/engine/types";
+import { RandomGenerator } from "@/engine/utils/rng";
+import { createMockGameState } from "@/test/utils/mockFactories";
 
 describe("WeekCoordinator.buildSummary", () => {
   let beforeState: GameState;
@@ -44,18 +44,22 @@ describe("WeekCoordinator.buildSummary", () => {
     } as unknown as StateImpact);
 
     // Access private method via reflection
-    const summary = (WeekCoordinator as unknown as {
-      buildSummary: (b: GameState, a: GameState, c: TickContext) => unknown;
-    }).buildSummary(beforeState, afterState, context);
+    const summary = (
+      WeekCoordinator as unknown as {
+        buildSummary: (b: GameState, a: GameState, c: TickContext) => unknown;
+      }
+    ).buildSummary(beforeState, afterState, context);
 
     expect(summary).toHaveProperty("totalRevenue", 1_700_000);
     expect(summary).toHaveProperty("totalCosts", 1_200_000);
   });
 
   it("with no LEDGER_UPDATED impact has totalRevenue=0 and totalCosts=0", () => {
-    const summary = (WeekCoordinator as unknown as {
-      buildSummary: (b: GameState, a: GameState, c: TickContext) => unknown;
-    }).buildSummary(beforeState, afterState, context);
+    const summary = (
+      WeekCoordinator as unknown as {
+        buildSummary: (b: GameState, a: GameState, c: TickContext) => unknown;
+      }
+    ).buildSummary(beforeState, afterState, context);
 
     expect(summary).toHaveProperty("totalRevenue", 0);
     expect(summary).toHaveProperty("totalCosts", 0);
@@ -67,11 +71,17 @@ describe("WeekCoordinator.buildSummary", () => {
       payload: { headline: "Breaking News", category: "general", type: "CRISIS" },
     } as unknown as StateImpact);
 
-    const summary = (WeekCoordinator as unknown as {
-      buildSummary: (b: GameState, a: GameState, c: TickContext) => {
-        newsEvents: { headline: string; type: string }[];
-      };
-    }).buildSummary(beforeState, afterState, context);
+    const summary = (
+      WeekCoordinator as unknown as {
+        buildSummary: (
+          b: GameState,
+          a: GameState,
+          c: TickContext
+        ) => {
+          newsEvents: { headline: string; type: string }[];
+        };
+      }
+    ).buildSummary(beforeState, afterState, context);
 
     expect(summary.newsEvents.length).toBeGreaterThan(0);
     expect(summary.newsEvents[0].headline).toBe("Breaking News");
@@ -92,11 +102,17 @@ describe("WeekCoordinator.buildSummary", () => {
       },
     } as unknown as StateImpact);
 
-    const summary = (WeekCoordinator as unknown as {
-      buildSummary: (b: GameState, a: GameState, c: TickContext) => {
-        newsEvents: { rivalId?: string; talentId?: string; projectId?: string }[];
-      };
-    }).buildSummary(beforeState, afterState, context);
+    const summary = (
+      WeekCoordinator as unknown as {
+        buildSummary: (
+          b: GameState,
+          a: GameState,
+          c: TickContext
+        ) => {
+          newsEvents: { rivalId?: string; talentId?: string; projectId?: string }[];
+        };
+      }
+    ).buildSummary(beforeState, afterState, context);
 
     expect(summary.newsEvents[0].rivalId).toBe("rival-1");
     expect(summary.newsEvents[0].talentId).toBe("talent-1");
@@ -117,14 +133,22 @@ describe("WeekCoordinator.buildSummary", () => {
       ],
     } as unknown as StateImpact);
 
-    const summary = (WeekCoordinator as unknown as {
-      buildSummary: (b: GameState, a: GameState, c: TickContext) => {
-        newsEvents: { headline: string; rivalId?: string }[];
-      };
-    }).buildSummary(beforeState, afterState, context);
+    const summary = (
+      WeekCoordinator as unknown as {
+        buildSummary: (
+          b: GameState,
+          a: GameState,
+          c: TickContext
+        ) => {
+          newsEvents: { headline: string; rivalId?: string }[];
+        };
+      }
+    ).buildSummary(beforeState, afterState, context);
 
     expect(summary.newsEvents.some((e: any) => e.headline === "Compound news")).toBe(true);
-    expect(summary.newsEvents.find((e: any) => e.headline === "Compound news")?.rivalId).toBe("rival-2");
+    expect(summary.newsEvents.find((e: any) => e.headline === "Compound news")?.rivalId).toBe(
+      "rival-2"
+    );
   });
 
   it("collects compound newsEvents from bag impacts into summary newsEvents", () => {
@@ -141,14 +165,22 @@ describe("WeekCoordinator.buildSummary", () => {
       ],
     } as unknown as StateImpact);
 
-    const summary = (WeekCoordinator as unknown as {
-      buildSummary: (b: GameState, a: GameState, c: TickContext) => {
-        newsEvents: { headline: string; category?: string }[];
-      };
-    }).buildSummary(beforeState, afterState, context);
+    const summary = (
+      WeekCoordinator as unknown as {
+        buildSummary: (
+          b: GameState,
+          a: GameState,
+          c: TickContext
+        ) => {
+          newsEvents: { headline: string; category?: string }[];
+        };
+      }
+    ).buildSummary(beforeState, afterState, context);
 
     expect(summary.newsEvents.some((e: any) => e.headline === "Bag headline news")).toBe(true);
-    expect(summary.newsEvents.find((e: any) => e.headline === "Bag headline news")?.category).toBe("market");
+    expect(summary.newsEvents.find((e: any) => e.headline === "Bag headline news")?.category).toBe(
+      "market"
+    );
   });
 
   it("collects PROJECT_UPDATED impacts into projectUpdates", () => {
@@ -161,11 +193,17 @@ describe("WeekCoordinator.buildSummary", () => {
       payload: { projectId: "proj-2", update: { progress: 80 } },
     } as unknown as StateImpact);
 
-    const summary = (WeekCoordinator as unknown as {
-      buildSummary: (b: GameState, a: GameState, c: TickContext) => {
-        projectUpdates: string[];
-      };
-    }).buildSummary(beforeState, afterState, context);
+    const summary = (
+      WeekCoordinator as unknown as {
+        buildSummary: (
+          b: GameState,
+          a: GameState,
+          c: TickContext
+        ) => {
+          projectUpdates: string[];
+        };
+      }
+    ).buildSummary(beforeState, afterState, context);
 
     expect(summary.projectUpdates).toContain("proj-1");
     expect(summary.projectUpdates).toContain("proj-2");
@@ -201,11 +239,17 @@ describe("WeekCoordinator.buildSummary", () => {
       },
     } as unknown as StateImpact);
 
-    const summary = (WeekCoordinator as unknown as {
-      buildSummary: (b: GameState, a: GameState, c: TickContext) => {
-        totalRevenue: number;
-      };
-    }).buildSummary(beforeState, afterState, context);
+    const summary = (
+      WeekCoordinator as unknown as {
+        buildSummary: (
+          b: GameState,
+          a: GameState,
+          c: TickContext
+        ) => {
+          totalRevenue: number;
+        };
+      }
+    ).buildSummary(beforeState, afterState, context);
 
     // Should use the first LEDGER_UPDATED impact (revenue=1_000_000)
     expect(summary.totalRevenue).toBe(1_000_000);
@@ -213,11 +257,17 @@ describe("WeekCoordinator.buildSummary", () => {
 
   it("detects quiet week correctly", () => {
     // No impacts, no events, no revenue/costs
-    const summary = (WeekCoordinator as unknown as {
-      buildSummary: (b: GameState, a: GameState, c: TickContext) => {
-        isQuietWeek: boolean;
-      };
-    }).buildSummary(beforeState, afterState, context);
+    const summary = (
+      WeekCoordinator as unknown as {
+        buildSummary: (
+          b: GameState,
+          a: GameState,
+          c: TickContext
+        ) => {
+          isQuietWeek: boolean;
+        };
+      }
+    ).buildSummary(beforeState, afterState, context);
 
     expect(summary.isQuietWeek).toBe(true);
   });
@@ -228,11 +278,17 @@ describe("WeekCoordinator.buildSummary", () => {
       payload: { projectId: "proj-1", update: { progress: 50 } },
     } as unknown as StateImpact);
 
-    const summary = (WeekCoordinator as unknown as {
-      buildSummary: (b: GameState, a: GameState, c: TickContext) => {
-        isQuietWeek: boolean;
-      };
-    }).buildSummary(beforeState, afterState, context);
+    const summary = (
+      WeekCoordinator as unknown as {
+        buildSummary: (
+          b: GameState,
+          a: GameState,
+          c: TickContext
+        ) => {
+          isQuietWeek: boolean;
+        };
+      }
+    ).buildSummary(beforeState, afterState, context);
 
     expect(summary.isQuietWeek).toBe(false);
   });

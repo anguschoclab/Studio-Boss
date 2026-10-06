@@ -1,6 +1,6 @@
-import {describe, it, expect} from "vitest";
-import {stage1IPFireSale} from "@/engine/systems/industry/DistressCascade";
-import type {GameState} from "@/engine/types";
+import { describe, it, expect } from "vitest";
+import { stage1IPFireSale } from "@/engine/systems/industry/DistressCascade";
+import type { GameState } from "@/engine/types";
 
 // stage1IPFireSale is currently not exported — Step 3 also adds the `export` keyword.
 function makeState(playerCash: number): GameState {
@@ -49,7 +49,9 @@ describe("stage1IPFireSale player offer", () => {
     const state = makeState(2_000_000_000);
     // Remove franchises so it falls through to vault assets
     (state.ip as any).franchises = {};
-    (state.ip as any).vault = [{ id: "v1", title: "The Reckoning", ownerStudioId: "r1", rightsOwner: "RIVAL" }];
+    (state.ip as any).vault = [
+      { id: "v1", title: "The Reckoning", ownerStudioId: "r1", rightsOwner: "RIVAL" },
+    ];
     const seller = state.entities.rivals.r1;
     const impacts = stage1IPFireSale(state, seller as any);
     const upd = impacts.find(

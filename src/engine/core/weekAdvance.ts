@@ -1,5 +1,5 @@
-import {GameState, WeekSummary, StateImpact} from "@/engine/types";
-import {WeekCoordinator} from "../services/WeekCoordinator";
+import { GameState, WeekSummary, StateImpact } from "@/engine/types";
+import { WeekCoordinator } from "../services/WeekCoordinator";
 
 let lastAdvancedStateRef: GameState | null = null;
 let lastResultRef: { newState: GameState; summary: WeekSummary; impacts: StateImpact[] } | null =

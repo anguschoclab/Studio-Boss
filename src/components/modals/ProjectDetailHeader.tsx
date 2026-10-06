@@ -1,8 +1,8 @@
-import {Project, SeriesProject} from "@/engine/types";
-import {DialogHeader, DialogTitle} from "@/components/ui/dialog";
-import {Badge} from "@/components/ui/badge";
-import {Type} from "lucide-react";
-import {formatMoney} from "@/engine/utils";
+import { Project, SeriesProject } from "@/engine/types";
+import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Type } from "lucide-react";
+import { formatMoney } from "@/engine/utils";
 
 interface ProjectDetailHeaderProps {
   project: Project;

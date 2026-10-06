@@ -1,4 +1,4 @@
-import {Label} from "@/components/ui/label";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {GENRES, TARGET_AUDIENCES} from "@/engine/data/genres";
+import { GENRES, TARGET_AUDIENCES } from "@/engine/data/genres";
 
 interface ProjectMetaFieldsProps {
   genre: string;

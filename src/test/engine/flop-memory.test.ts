@@ -1,7 +1,7 @@
-import {describe, it, expect} from "vitest";
-import {applyFlopPenalties} from "@/engine/systems/finance/FlopMechanics";
-import {defaultSimMemory} from "@/engine/core/simMemory";
-import type {GameState, Project} from "@/engine/types";
+import { describe, it, expect } from "vitest";
+import { applyFlopPenalties } from "@/engine/systems/finance/FlopMechanics";
+import { defaultSimMemory } from "@/engine/core/simMemory";
+import type { GameState, Project } from "@/engine/types";
 
 function makeState(week = 10, flops?: Record<string, any>): GameState {
   return {
@@ -10,7 +10,14 @@ function makeState(week = 10, flops?: Record<string, any>): GameState {
     studio: { id: "PLAYER", name: "Player" },
     entities: {
       rivals: {
-        r1: { id: "r1", name: "Rival 1", cash: 50_000_000, prestige: 50, strength: 50, archetype: "mid-tier" },
+        r1: {
+          id: "r1",
+          name: "Rival 1",
+          cash: 50_000_000,
+          prestige: 50,
+          strength: 50,
+          archetype: "mid-tier",
+        },
       },
       projects: {},
       releasedProjectIds: [],
@@ -19,7 +26,7 @@ function makeState(week = 10, flops?: Record<string, any>): GameState {
       contractsByProjectId: {},
       contractsByTalentId: {},
     },
-    industry: {  },
+    industry: {},
     simMemory: { ...defaultSimMemory(), flops: flops ?? {} },
   } as unknown as GameState;
 }

@@ -1,6 +1,6 @@
-import {Project} from "@/engine/types";
-import {Bookmark, BookmarkCheck} from "lucide-react";
-import {cn} from "@/lib/utils";
+import { Project } from "@/engine/types";
+import { Bookmark, BookmarkCheck } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ProjectCardHeaderProps {
   project: Project;

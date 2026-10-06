@@ -1,6 +1,12 @@
-import {describe, it, expect, vi, beforeEach} from "vitest";
-import {calculateReviewScore, simulateWeeklyBoxOffice, calculateBoxOfficeRanks, BoxOfficeEntry, calculateOpeningWeekend} from "../../../engine/systems/releaseSimulation";
-import {Project, Talent, ActiveCrisis} from "../../../engine/types";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import {
+  calculateReviewScore,
+  simulateWeeklyBoxOffice,
+  calculateBoxOfficeRanks,
+  BoxOfficeEntry,
+  calculateOpeningWeekend,
+} from "../../../engine/systems/releaseSimulation";
+import { Project, Talent, ActiveCrisis } from "../../../engine/types";
 import * as utils from "../../../engine/utils";
 
 const mockProject: Project = {

@@ -1,6 +1,6 @@
-import {GameState, FestivalSubmission, AwardBody} from "@/engine/types";
-import {randRange, generateId} from "../utils";
-import {StateImpact} from "../types/state.types";
+import { GameState, FestivalSubmission, AwardBody } from "@/engine/types";
+import { randRange, generateId } from "../utils";
+import { StateImpact } from "../types/state.types";
 
 export interface Festival {
   body: AwardBody;

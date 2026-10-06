@@ -1,4 +1,5 @@
-import {SeriesProject} from "@/engine/types/project.types";import {RandomGenerator} from "../../utils/rng";
+import { SeriesProject } from "@/engine/types/project.types";
+import { RandomGenerator } from "../../utils/rng";
 
 /**
  * Nielsen-style TV Ratings System.

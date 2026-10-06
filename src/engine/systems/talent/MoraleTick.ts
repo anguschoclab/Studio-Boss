@@ -1,5 +1,5 @@
-import {GameState, StateImpact} from "@/engine/types";
-import {RandomGenerator} from "@/engine/utils/rng";
+import { GameState, StateImpact } from "@/engine/types";
+import { RandomGenerator } from "@/engine/utils/rng";
 
 /**
  * MoraleTick — Weekly morale adjustment for contracted talent.

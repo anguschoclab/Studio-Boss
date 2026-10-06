@@ -1,11 +1,11 @@
-import {useState, useEffect, useMemo} from "react";
-import {useGameStore} from "@/store/gameStore";
-import {useUIStore} from "@/store/uiStore";
-import {GENRES, TARGET_AUDIENCES} from "@/engine/data/genres";
-import {BUDGET_TIERS} from "@/engine/data/budgetTiers";
-import {TV_FORMATS} from "@/engine/data/tvFormats";
-import {UNSCRIPTED_FORMATS} from "@/engine/data/unscriptedFormats";
-import {generateProjectTitle} from "@/engine/generators/titles";
+import { useState, useEffect, useMemo } from "react";
+import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
+import { GENRES, TARGET_AUDIENCES } from "@/engine/data/genres";
+import { BUDGET_TIERS } from "@/engine/data/budgetTiers";
+import { TV_FORMATS } from "@/engine/data/tvFormats";
+import { UNSCRIPTED_FORMATS } from "@/engine/data/unscriptedFormats";
+import { generateProjectTitle } from "@/engine/generators/titles";
 import {
   BudgetTierKey,
   ProjectFormat,

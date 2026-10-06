@@ -1,6 +1,6 @@
 import React from "react";
-import {render, screen, fireEvent} from "@testing-library/react";
-import {describe, it, expect, vi, beforeEach} from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 const { mockDevelopFromOwnedIP, mockResolveCurrentModal } = vi.hoisted(() => ({
   mockDevelopFromOwnedIP: vi.fn(),
@@ -24,7 +24,7 @@ vi.mock("@/store/uiStore", () => ({
 }));
 
 vi.mock("@/components/ui/dialog", () => ({
-  Dialog: ({ children, open }: any) => open ? <div>{children}</div> : null,
+  Dialog: ({ children, open }: any) => (open ? <div>{children}</div> : null),
   DialogContent: ({ children }: any) => <div>{children}</div>,
   DialogHeader: ({ children }: any) => <div>{children}</div>,
   DialogTitle: ({ children }: any) => <h2>{children}</h2>,
@@ -33,7 +33,9 @@ vi.mock("@/components/ui/dialog", () => ({
 
 vi.mock("@/components/ui/button", () => ({
   Button: ({ children, onClick }: any) => (
-    <button data-testid="button" onClick={onClick}>{children}</button>
+    <button data-testid="button" onClick={onClick}>
+      {children}
+    </button>
   ),
 }));
 
@@ -53,8 +55,8 @@ vi.mock("@/engine/utils", () => ({
   formatMoney: (n: number) => `$${n.toLocaleString()}`,
 }));
 
-import {RebootOpportunityModal} from "@/components/modals/RebootOpportunityModal";
-import {useUIStore} from "@/store/uiStore";
+import { RebootOpportunityModal } from "@/components/modals/RebootOpportunityModal";
+import { useUIStore } from "@/store/uiStore";
 
 function makeProposal(overrides: any = {}) {
   return {

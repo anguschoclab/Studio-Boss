@@ -1,6 +1,5 @@
- 
-import {Project, TvFormatKey, BudgetTierKey, UnscriptedFormatKey} from "../../types";
-import {secureRandom} from "../../utils";
+import { Project, TvFormatKey, BudgetTierKey, UnscriptedFormatKey } from "../../types";
+import { secureRandom } from "../../utils";
 
 /**
  * Spinoff Factory.

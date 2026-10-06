@@ -1,7 +1,7 @@
-import {FormField} from "../../forms/FormField";
-import {Input} from "@/components/ui/input";
-import {Button} from "@/components/ui/button";
-import {Dices} from "lucide-react";
+import { FormField } from "../../forms/FormField";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Dices } from "lucide-react";
 
 interface ProjectTitleFieldProps {
   value: string;

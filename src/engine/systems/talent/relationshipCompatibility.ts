@@ -1,4 +1,4 @@
-import {Talent} from "../../types";
+import { Talent } from "../../types";
 
 /**
  * Relationship compatibility scoring
@@ -59,7 +59,13 @@ export function calculateCompatibility(talentA: Talent, talentB: Talent): number
     }
   }
 
-  const tierOrder: Record<string, number> = { NEWCOMER: 0, RISING_STAR: 1, C_LIST: 2, B_LIST: 3, A_LIST: 4 };
+  const tierOrder: Record<string, number> = {
+    NEWCOMER: 0,
+    RISING_STAR: 1,
+    C_LIST: 2,
+    B_LIST: 3,
+    A_LIST: 4,
+  };
   const tierA = tierOrder[talentA.tier] ?? 0;
   const tierB = tierOrder[talentB.tier] ?? 0;
 

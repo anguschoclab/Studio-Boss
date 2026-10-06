@@ -1,5 +1,27 @@
-import type {HeadlineCategory, Project, Talent, RivalStudio, Buyer, Franchise, Award} from '@/engine/types';
-import type {NewsImpact, FundsImpact, FundsDeductedImpact, ProjectUpdateImpact, TalentUpdateImpact, PrestigeChangedImpact, BuyerUpdateImpact, RivalUpdateImpact, IndustryUpdateImpact, ModalTriggeredImpact, FranchiseUpdatedImpact, AwardWonImpact, FinanceTransactionImpact} from '@/engine/types/state.types';
+import type {
+  HeadlineCategory,
+  Project,
+  Talent,
+  RivalStudio,
+  Buyer,
+  Franchise,
+  Award,
+} from "@/engine/types";
+import type {
+  NewsImpact,
+  FundsImpact,
+  FundsDeductedImpact,
+  ProjectUpdateImpact,
+  TalentUpdateImpact,
+  PrestigeChangedImpact,
+  BuyerUpdateImpact,
+  RivalUpdateImpact,
+  IndustryUpdateImpact,
+  ModalTriggeredImpact,
+  FranchiseUpdatedImpact,
+  AwardWonImpact,
+  FinanceTransactionImpact,
+} from "@/engine/types/state.types";
 
 /**
  * Typed impact constructor functions.
@@ -21,62 +43,59 @@ export const impacts = {
     rivalId?: string;
     buyerId?: string;
   }): NewsImpact {
-    return { type: 'NEWS_ADDED', payload };
+    return { type: "NEWS_ADDED", payload };
   },
 
   fundsChanged(amount: number): FundsImpact {
-    return { type: 'FUNDS_CHANGED', payload: { amount } };
+    return { type: "FUNDS_CHANGED", payload: { amount } };
   },
 
   fundsDeducted(amount: number): FundsDeductedImpact {
-    return { type: 'FUNDS_DEDUCTED', payload: { amount } };
+    return { type: "FUNDS_DEDUCTED", payload: { amount } };
   },
 
   financeTransaction(
     amount: number,
     description: string,
-    targetId?: string,
+    targetId?: string
   ): FinanceTransactionImpact {
-    return { type: 'FINANCE_TRANSACTION', payload: { amount, description, targetId } };
+    return { type: "FINANCE_TRANSACTION", payload: { amount, description, targetId } };
   },
 
   projectUpdated(projectId: string, update: Partial<Project>): ProjectUpdateImpact {
-    return { type: 'PROJECT_UPDATED', payload: { projectId, update } };
+    return { type: "PROJECT_UPDATED", payload: { projectId, update } };
   },
 
   talentUpdated(talentId: string, update: Partial<Talent>): TalentUpdateImpact {
-    return { type: 'TALENT_UPDATED', payload: { talentId, update } };
+    return { type: "TALENT_UPDATED", payload: { talentId, update } };
   },
 
   prestigeChanged(amount: number): PrestigeChangedImpact {
-    return { type: 'PRESTIGE_CHANGED', payload: { amount } };
+    return { type: "PRESTIGE_CHANGED", payload: { amount } };
   },
 
   buyerUpdated(buyerId: string, update: Partial<Buyer>): BuyerUpdateImpact {
-    return { type: 'BUYER_UPDATED', payload: { buyerId, update } };
+    return { type: "BUYER_UPDATED", payload: { buyerId, update } };
   },
 
   rivalUpdated(
     rivalId: string,
     update: Partial<RivalStudio>,
-    deltas?: { prestige?: number; strength?: number },
+    deltas?: { prestige?: number; strength?: number }
   ): RivalUpdateImpact {
-    return { type: 'RIVAL_UPDATED', payload: { rivalId, update, ...(deltas ? { deltas } : {}) } };
+    return { type: "RIVAL_UPDATED", payload: { rivalId, update, ...(deltas ? { deltas } : {}) } };
   },
 
-  franchiseUpdated(
-    franchiseId: string,
-    update: Partial<Franchise>,
-  ): FranchiseUpdatedImpact {
-    return { type: 'FRANCHISE_UPDATED', payload: { franchiseId, update } };
+  franchiseUpdated(franchiseId: string, update: Partial<Franchise>): FranchiseUpdatedImpact {
+    return { type: "FRANCHISE_UPDATED", payload: { franchiseId, update } };
   },
 
   industryUpdate(
     update: Record<string, unknown>,
-    opts?: { mergedRivalId?: string; acquirerId?: string; bankruptRivalId?: string },
+    opts?: { mergedRivalId?: string; acquirerId?: string; bankruptRivalId?: string }
   ): IndustryUpdateImpact {
     return {
-      type: 'INDUSTRY_UPDATE',
+      type: "INDUSTRY_UPDATE",
       payload: {
         update,
         ...opts,
@@ -87,15 +106,15 @@ export const impacts = {
   modalTriggered(
     modalType: import("../types/modal.types").ModalType,
     payload: Record<string, unknown> = {},
-    priority: number = 10,
+    priority: number = 10
   ): ModalTriggeredImpact {
     return {
-      type: 'MODAL_TRIGGERED',
+      type: "MODAL_TRIGGERED",
       payload: { modalType, priority, payload },
     };
   },
 
   awardWon(projectId: string, award: Award): AwardWonImpact {
-    return { type: 'AWARD_WON', payload: { projectId, award } };
+    return { type: "AWARD_WON", payload: { projectId, award } };
   },
 };

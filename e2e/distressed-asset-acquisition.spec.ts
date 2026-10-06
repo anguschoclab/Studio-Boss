@@ -76,7 +76,10 @@ test("distressed asset acquisition: modal appears, acquire works, decline works"
         createdWeek: state.gameState.week,
         expiresWeek: state.gameState.week + 2,
       };
-      const next = { ...state.gameState, industry: { ...state.gameState.industry, distressedOffers: [offer] } };
+      const next = {
+        ...state.gameState,
+        industry: { ...state.gameState.industry, distressedOffers: [offer] },
+      };
       store.setState({ gameState: next });
     }
     // Enqueue in the same evaluate — a separate call can race the

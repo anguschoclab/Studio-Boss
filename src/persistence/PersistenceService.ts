@@ -1,4 +1,3 @@
- 
 /**
  * Studio Boss - Persistence Service (Core API)
  *

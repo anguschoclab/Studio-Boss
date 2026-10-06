@@ -1,8 +1,8 @@
-import {pick, getContractsByTalentId, countKeys} from "../../utils";
-import {GameState, Scandal, ScandalType} from "@/engine/types";
-import {StateImpact} from "../../types/state.types";
-import {RandomGenerator} from "../../utils/rng";
-import {BardResolver} from "../bardResolver";
+import { pick, getContractsByTalentId, countKeys } from "../../utils";
+import { GameState, Scandal, ScandalType } from "@/engine/types";
+import { StateImpact } from "../../types/state.types";
+import { RandomGenerator } from "../../utils/rng";
+import { BardResolver } from "../bardResolver";
 
 export function generateScandals(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impactsToReturn: StateImpact[] = [];

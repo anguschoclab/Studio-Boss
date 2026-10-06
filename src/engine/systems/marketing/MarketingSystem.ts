@@ -1,7 +1,7 @@
-import {GameState, StateImpact, Project, MarketingCampaign} from "../../types";
-import {RandomGenerator} from "../../utils/rng";
-import {computeCampaignMultiplier} from "../projectHandlers/MarketingHandler";
-import {evaluateMarketingEfficiency} from "./efficiencyEvaluator";
+import { GameState, StateImpact, Project, MarketingCampaign } from "../../types";
+import { RandomGenerator } from "../../utils/rng";
+import { computeCampaignMultiplier } from "../projectHandlers/MarketingHandler";
+import { evaluateMarketingEfficiency } from "./efficiencyEvaluator";
 
 /**
  * MarketingSystem — weekly awareness accrual loop.
@@ -81,6 +81,8 @@ export function accrueAwareness(
  * campaign, accrues awareness, and writes the industry `marketingIntensity`
  * aggregate so release simulation and rivals can read competitive pressure.
  *
+ * @param state - The current game state
+ * @param rng - The deterministic random generator for this tick
  * @param rivalSpend Total rival marketing spend this week (0 until Plan 5 wires
  *   rival campaigns in). Included so player share-of-voice is measured against
  *   the whole industry, not just the player's own campaigns.

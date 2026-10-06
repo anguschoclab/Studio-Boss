@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from "react";
-import {useGameStore} from "@/store/gameStore";
-import {ACHIEVEMENT_CATALOGUE, Achievement} from "@/engine/systems/AchievementsSystem";
-import {Trophy, Lock, CheckCircle2, Star, DollarSign, Users, Globe} from "lucide-react";
-import {cn} from "@/lib/utils";
+import { useGameStore } from "@/store/gameStore";
+import { ACHIEVEMENT_CATALOGUE, Achievement } from "@/engine/systems/AchievementsSystem";
+import { Trophy, Lock, CheckCircle2, Star, DollarSign, Users, Globe } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type Category = "all" | "financial" | "creative" | "talent" | "empire";
 
@@ -25,10 +25,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 export const AchievementsPanel: React.FC = () => {
-   
-  const unlockedIds: string[] = useGameStore(
-    (s) => s.gameState?.studio.achievements ?? EMPTY_IDS
-  );
+  const unlockedIds: string[] = useGameStore((s) => s.gameState?.studio.achievements ?? EMPTY_IDS);
   const [activeCategory, setActiveCategory] = useState<Category>("all");
 
   const enriched: (Achievement & { earned: boolean })[] = useMemo(() => {

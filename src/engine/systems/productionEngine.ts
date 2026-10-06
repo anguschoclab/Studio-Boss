@@ -1,7 +1,7 @@
-import {GameState, Project, StateImpact} from "@/engine/types";
-import {RandomGenerator} from "../utils/rng";
-import {processDirectorDisputes} from "./directors";
-import {getContractsByProjectId} from "@/engine/utils";
+import { GameState, Project, StateImpact } from "@/engine/types";
+import { RandomGenerator } from "../utils/rng";
+import { processDirectorDisputes } from "./directors";
+import { getContractsByProjectId } from "@/engine/utils";
 
 /**
  * Pure function to advance a single project's weekly production logic.
@@ -84,7 +84,12 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
         state.entities.contracts,
         project.id
       );
-      const disputeResult = processDirectorDisputes(project, projectContracts, state.entities.talents, rng);
+      const disputeResult = processDirectorDisputes(
+        project,
+        projectContracts,
+        state.entities.talents,
+        rng
+      );
       disputeResult.newCrises.forEach(({ projectId, crisis }) => {
         allImpacts.push({
           type: "PROJECT_UPDATED",
@@ -94,7 +99,11 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
       if (disputeResult.updates.length > 0) {
         allImpacts.push({
           type: "NEWS_ADDED",
-          payload: { headline: "ON-SET CRISIS", description: disputeResult.updates[0], projectId: project.id },
+          payload: {
+            headline: "ON-SET CRISIS",
+            description: disputeResult.updates[0],
+            projectId: project.id,
+          },
         });
       }
     }

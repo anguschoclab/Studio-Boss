@@ -1,7 +1,7 @@
-import {describe, it, expect, beforeEach, vi} from "vitest";
-import {stage2AssetLiquidation} from "@/engine/systems/industry/DistressCascade";
-import {applyImpacts} from "@/engine/core/impactReducer";
-import type {GameState} from "@/engine/types";
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { stage2AssetLiquidation } from "@/engine/systems/industry/DistressCascade";
+import { applyImpacts } from "@/engine/core/impactReducer";
+import type { GameState } from "@/engine/types";
 import * as utils from "@/engine/utils";
 
 function makeStage2State(): GameState {
@@ -31,9 +31,27 @@ function makeStage2State(): GameState {
     ip: {
       franchises: {},
       vault: [
-        { id: "v1", title: "Old Movie", ownerStudioId: "r1", baseValue: 50_000_000, rightsOwner: "RIVAL" },
-        { id: "v2", title: "Sequel", ownerStudioId: "r1", baseValue: 80_000_000, rightsOwner: "RIVAL" },
-        { id: "v3", title: "Other", ownerStudioId: "r1", baseValue: 100_000_000, rightsOwner: "RIVAL" },
+        {
+          id: "v1",
+          title: "Old Movie",
+          ownerStudioId: "r1",
+          baseValue: 50_000_000,
+          rightsOwner: "RIVAL",
+        },
+        {
+          id: "v2",
+          title: "Sequel",
+          ownerStudioId: "r1",
+          baseValue: 80_000_000,
+          rightsOwner: "RIVAL",
+        },
+        {
+          id: "v3",
+          title: "Other",
+          ownerStudioId: "r1",
+          baseValue: 100_000_000,
+          rightsOwner: "RIVAL",
+        },
       ],
     },
     industry: { distressedOffers: [] },
@@ -44,7 +62,7 @@ function makeStage2State(): GameState {
 describe("stage2AssetLiquidation — library sale rightsOwner", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
-    vi.spyOn(utils, "secureRandom").mockReturnValue(0.60);
+    vi.spyOn(utils, "secureRandom").mockReturnValue(0.6);
   });
 
   it("sets rightsOwner to RIVAL when a rival buyer exists", () => {
@@ -69,9 +87,7 @@ describe("stage2AssetLiquidation — library sale rightsOwner", () => {
     const finalState = applyImpacts(state, impacts);
 
     const vault = (finalState.ip as any).vault;
-    const transferred = vault.filter(
-      (a: any) => a.ownerStudioId === undefined && a.id !== "v3"
-    );
+    const transferred = vault.filter((a: any) => a.ownerStudioId === undefined && a.id !== "v3");
     if (transferred.length > 0) {
       for (const a of transferred) {
         expect(a.rightsOwner).toBe("MARKET");

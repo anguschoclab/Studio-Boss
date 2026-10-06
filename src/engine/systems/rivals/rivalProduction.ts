@@ -1,7 +1,15 @@
-import {GameState, RivalStudio, Project, SeriesProject, StateImpact, BudgetTierKey, ProjectType} from "@/engine/types";
-import {RandomGenerator} from "@/engine/utils/rng";
-import {BUDGET_TIERS} from "@/engine/data/budgetTiers";
-import {getStudioArchetype} from "@/engine/data/aiArchetypes";
+import {
+  GameState,
+  RivalStudio,
+  Project,
+  SeriesProject,
+  StateImpact,
+  BudgetTierKey,
+  ProjectType,
+} from "@/engine/types";
+import { RandomGenerator } from "@/engine/utils/rng";
+import { BUDGET_TIERS } from "@/engine/data/budgetTiers";
+import { getStudioArchetype } from "@/engine/data/aiArchetypes";
 
 const ARCHETYPE_SPAWN_CHANCE: Record<string, number> = {
   major: 0.5,
@@ -237,7 +245,7 @@ export function buildFatigueAwareGenreWeights(
     const asset = vaultMap.get(firstAssetId);
     if (!asset?.originalProjectId) {
       // Genre lookup fails — apply fatigue to fallback "Action"
-      weights["Action"] *= (1 - fatigue);
+      weights["Action"] *= 1 - fatigue;
       continue;
     }
 
@@ -245,7 +253,7 @@ export function buildFatigueAwareGenreWeights(
     const genre = sourceProject?.genre || "Action";
 
     if (weights[genre] !== undefined) {
-      weights[genre] *= (1 - fatigue);
+      weights[genre] *= 1 - fatigue;
     }
   }
 

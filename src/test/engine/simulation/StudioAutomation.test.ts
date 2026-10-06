@@ -1,8 +1,12 @@
-import {describe, it, expect, beforeEach, vi} from "vitest";
-import {StudioAutomation} from "@/engine/simulation/StudioAutomation";
-import {createMockGameState, createMockRival, createMockProject} from "@/test/utils/mockFactories";
-import {RandomGenerator} from "@/engine/utils/rng";
-import {GameState, RivalStudio} from "@/engine/types";
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { StudioAutomation } from "@/engine/simulation/StudioAutomation";
+import {
+  createMockGameState,
+  createMockRival,
+  createMockProject,
+} from "@/test/utils/mockFactories";
+import { RandomGenerator } from "@/engine/utils/rng";
+import { GameState, RivalStudio } from "@/engine/types";
 
 describe("StudioAutomation", () => {
   let state: GameState;
@@ -58,8 +62,9 @@ describe("StudioAutomation", () => {
 
       const impacts = StudioAutomation.tick(state, rng);
       const archiveImpact = impacts.find(
-        (i) => i.type === "PROJECT_UPDATED" &&
-        (i.payload as unknown as { update: { state?: string } }).update?.state === "archived"
+        (i) =>
+          i.type === "PROJECT_UPDATED" &&
+          (i.payload as unknown as { update: { state?: string } }).update?.state === "archived"
       );
       expect(archiveImpact).toBeDefined();
     });
@@ -75,8 +80,10 @@ describe("StudioAutomation", () => {
 
       const impacts = StudioAutomation.tick(state, rng);
       const rivalUpdate = impacts.find(
-        (i) => i.type === "RIVAL_UPDATED" &&
-        (i.payload as unknown as { update: { isAcquirable?: boolean } }).update?.isAcquirable === true
+        (i) =>
+          i.type === "RIVAL_UPDATED" &&
+          (i.payload as unknown as { update: { isAcquirable?: boolean } }).update?.isAcquirable ===
+            true
       );
       expect(rivalUpdate).toBeDefined();
     });

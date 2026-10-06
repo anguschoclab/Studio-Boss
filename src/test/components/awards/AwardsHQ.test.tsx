@@ -1,9 +1,9 @@
-import {describe, it, expect, beforeEach, vi} from "vitest";
-import {render, screen, fireEvent} from "@testing-library/react";
-import {AwardsHQ} from "@/components/awards/AwardsHQ";
-import {useGameStore} from "@/store/gameStore";
-import {useUIStore} from "@/store/uiStore";
-import type {GameState, Project, AwardsProfile, CampaignData} from "@/engine/types";
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { AwardsHQ } from "@/components/awards/AwardsHQ";
+import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
+import type { GameState, Project, AwardsProfile, CampaignData } from "@/engine/types";
 
 // Mock ResizeObserver
 (global as any).ResizeObserver = vi.fn().mockImplementation(() => ({
@@ -74,7 +74,8 @@ const makeProject = (overrides: Partial<Project> & { id: string }): Project =>
     momentum: overrides.momentum || 50,
     progress: overrides.progress || 100,
     accumulatedCost: overrides.accumulatedCost || 10000000,
-    awardsProfile: overrides.awardsProfile !== undefined ? overrides.awardsProfile : mockAwardsProfile,
+    awardsProfile:
+      overrides.awardsProfile !== undefined ? overrides.awardsProfile : mockAwardsProfile,
     reviewScore: overrides.reviewScore || 75,
     reception: overrides.reception || { metaScore: 80 },
     activeRoles: [],
@@ -98,7 +99,18 @@ const makeGameState = (overrides: Partial<GameState> = {}): GameState =>
       contractsByProjectId: {},
       contractsByTalentId: {},
     },
-    finance: { cash: 10_000_000, ledger: [], weeklyHistory: [], marketState: { baseRate: 0.05, debtRate: 0.08, savingsYield: 0.02, loanRate: 0.07, rateHistory: [] } },
+    finance: {
+      cash: 10_000_000,
+      ledger: [],
+      weeklyHistory: [],
+      marketState: {
+        baseRate: 0.05,
+        debtRate: 0.08,
+        savingsYield: 0.02,
+        loanRate: 0.07,
+        rateHistory: [],
+      },
+    },
     news: { headlines: [] },
     ip: { vault: [], franchises: {} },
     studio: {
@@ -163,7 +175,13 @@ describe("AwardsHQ", () => {
     const state = makeGameState({
       entities: {
         projects: {
-          "proj-1": makeProject({ id: "proj-1", title: "Oscar Bait", genre: "Drama", format: "film", releaseWeek: 5 }),
+          "proj-1": makeProject({
+            id: "proj-1",
+            title: "Oscar Bait",
+            genre: "Drama",
+            format: "film",
+            releaseWeek: 5,
+          }),
         },
         releasedProjectIds: ["proj-1"],
         contracts: {},
@@ -226,7 +244,18 @@ describe("AwardsHQ", () => {
 
   it("disables campaign buttons when finance.cash < tier.cost", () => {
     const state = makeGameState({
-      finance: { cash: 100_000, ledger: [], weeklyHistory: [], marketState: { baseRate: 0.05, debtRate: 0.08, savingsYield: 0.02, loanRate: 0.07, rateHistory: [] } } as any,
+      finance: {
+        cash: 100_000,
+        ledger: [],
+        weeklyHistory: [],
+        marketState: {
+          baseRate: 0.05,
+          debtRate: 0.08,
+          savingsYield: 0.02,
+          loanRate: 0.07,
+          rateHistory: [],
+        },
+      } as any,
       entities: {
         projects: {
           "proj-1": makeProject({ id: "proj-1", title: "Oscar Bait" }),
@@ -368,9 +397,33 @@ describe("AwardsHQ", () => {
         agents: [],
         scandals: [],
         awards: [
-          { id: "a1", projectId: "p1", name: "Best Picture", category: "Best Picture", body: "Academy Awards", status: "won", year: currentSeason },
-          { id: "a2", projectId: "p2", name: "Best Director", category: "Best Director", body: "Academy Awards", status: "won", year: currentSeason + 1 },
-          { id: "a3", projectId: "p3", name: "Best Actor", category: "Best Actor", body: "Academy Awards", status: "nominated", year: currentSeason },
+          {
+            id: "a1",
+            projectId: "p1",
+            name: "Best Picture",
+            category: "Best Picture",
+            body: "Academy Awards",
+            status: "won",
+            year: currentSeason,
+          },
+          {
+            id: "a2",
+            projectId: "p2",
+            name: "Best Director",
+            category: "Best Director",
+            body: "Academy Awards",
+            status: "won",
+            year: currentSeason + 1,
+          },
+          {
+            id: "a3",
+            projectId: "p3",
+            name: "Best Actor",
+            category: "Best Actor",
+            body: "Academy Awards",
+            status: "nominated",
+            year: currentSeason,
+          },
         ],
       } as any,
     });

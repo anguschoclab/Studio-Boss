@@ -1,10 +1,10 @@
-import {describe, it, expect} from "vitest";
-import {tickShinglePitchRouter} from "@/engine/systems/deals/ShinglePitchRouter";
-import type {ShinglePitchOutcome} from "@/engine/systems/deals/ShinglePitchRouter";
-import type {StateImpact} from "@/engine/types";
-import {defaultSimMemory} from "@/engine/core/simMemory";
-import {createMockGameState, createMockRival} from "./generators/mockFactory";
-import {RandomGenerator} from "@/engine/utils/rng";
+import { describe, it, expect } from "vitest";
+import { tickShinglePitchRouter } from "@/engine/systems/deals/ShinglePitchRouter";
+import type { ShinglePitchOutcome } from "@/engine/systems/deals/ShinglePitchRouter";
+import type { StateImpact } from "@/engine/types";
+import { defaultSimMemory } from "@/engine/core/simMemory";
+import { createMockGameState, createMockRival } from "./generators/mockFactory";
+import { RandomGenerator } from "@/engine/utils/rng";
 
 function findPitchLogImpact(impacts: StateImpact[]): ShinglePitchOutcome[] | undefined {
   for (const imp of impacts) {
@@ -20,7 +20,6 @@ function findPitchLogImpact(impacts: StateImpact[]): ShinglePitchOutcome[] | und
 }
 
 describe("ShinglePitchRouter simMemory log migration", () => {
-
   it("writes to simMemory.eventLogs.pitch via INDUSTRY_UPDATE impact", () => {
     const rival = createMockRival({
       id: "rival-1",

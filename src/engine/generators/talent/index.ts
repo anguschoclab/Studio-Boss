@@ -1,8 +1,8 @@
-import {Talent, TalentRole, Family, Agency, Agent, TalentTier} from "../../types/talent.types";
-import {generateDemographics} from "./demographicsGenerator";
-import {psychologyGenerator} from "./psychologyGenerator";
-import {generateDemographicName} from "../names";
-import {randRange, pick, rand, generateId} from "../../utils";
+import { Talent, TalentRole, Family, Agency, Agent, TalentTier } from "../../types/talent.types";
+import { generateDemographics } from "./demographicsGenerator";
+import { psychologyGenerator } from "./psychologyGenerator";
+import { generateDemographicName } from "../names";
+import { randRange, pick, rand, generateId } from "../../utils";
 
 const TALENT_QUIRKS = [
   "Refuses to do press",
@@ -102,12 +102,11 @@ export function generateFamilies(count: number): Family[] {
   }));
 }
 
- 
 export function generateTalentPool(
   count: number,
-  _families: Family[] = [],  
-  _agents: Agent[] = [],  
-  _agencies: Agency[] = [],  
+  _families: Family[] = [],
+  _agents: Agent[] = [],
+  _agencies: Agency[] = [],
   localCountry?: string
 ): Talent[] {
   void _families;

@@ -1,4 +1,4 @@
-import {Label} from "@/components/ui/label";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -6,10 +6,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {ProjectFormat, TvFormatKey, UnscriptedFormatKey, ReleaseModelKey} from "@/engine/types";
-import {TV_FORMATS} from "@/engine/data/tvFormats";
-import {UNSCRIPTED_FORMATS} from "@/engine/data/unscriptedFormats";
-import {Tv} from "lucide-react";
+import { ProjectFormat, TvFormatKey, UnscriptedFormatKey, ReleaseModelKey } from "@/engine/types";
+import { TV_FORMATS } from "@/engine/data/tvFormats";
+import { UNSCRIPTED_FORMATS } from "@/engine/data/unscriptedFormats";
+import { Tv } from "lucide-react";
 
 interface SeriesConfigFieldsProps {
   format: ProjectFormat;
@@ -41,9 +41,7 @@ export const SeriesConfigFields = ({
   if (format === "film") return null;
 
   const isUnscripted = format === "unscripted";
-  const formatData = isUnscripted
-    ? UNSCRIPTED_FORMATS[unscriptedFormat]
-    : TV_FORMATS[tvFormat];
+  const formatData = isUnscripted ? UNSCRIPTED_FORMATS[unscriptedFormat] : TV_FORMATS[tvFormat];
 
   return (
     <div className="p-5 bg-white/[0.02] border border-white/5 space-y-6">
@@ -81,10 +79,7 @@ export const SeriesConfigFields = ({
           <Label className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground/40 font-black italic">
             TV Format
           </Label>
-          <Select
-            value={tvFormat}
-            onValueChange={(v) => onTvFormatChange(v as TvFormatKey)}
-          >
+          <Select value={tvFormat} onValueChange={(v) => onTvFormatChange(v as TvFormatKey)}>
             <SelectTrigger
               aria-label="TV Format"
               className="h-12 bg-black/40 border-white/5 rounded-none font-display font-black italic uppercase tracking-tight text-xs"
@@ -112,9 +107,7 @@ export const SeriesConfigFields = ({
           <Label className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground/40 font-black italic">
             Episodes
           </Label>
-          <span className="text-xs font-display font-black italic text-primary">
-            {episodes}
-          </span>
+          <span className="text-xs font-display font-black italic text-primary">{episodes}</span>
         </div>
         <input
           type="range"

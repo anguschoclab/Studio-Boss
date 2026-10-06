@@ -1,10 +1,10 @@
-import {Project, GameState, WeeklyFinancialReport, Buyer} from "@/engine/types";
-import {StateImpact, FinancialSnapshot} from "../types/state.types";
-import {RevenueProcessor} from "./finance/RevenueProcessor";
-import {ExpenseProcessor} from "./finance/ExpenseProcessor";
-import {InterestRateSimulator} from "./market/InterestRateSimulator";
-import {formatMoney, getContractsByProjectId} from "../utils";
-import {isPlayerOwner} from "../utils/ownership";
+import { Project, GameState, WeeklyFinancialReport, Buyer } from "@/engine/types";
+import { StateImpact, FinancialSnapshot } from "../types/state.types";
+import { RevenueProcessor } from "./finance/RevenueProcessor";
+import { ExpenseProcessor } from "./finance/ExpenseProcessor";
+import { InterestRateSimulator } from "./market/InterestRateSimulator";
+import { formatMoney, getContractsByProjectId } from "../utils";
+import { isPlayerOwner } from "../utils/ownership";
 
 export function calculateProjectROI(project: Project): number {
   const totalCost = project.budget + (project.marketingBudget || 0);
@@ -192,7 +192,10 @@ export function generateWeeklyFinancialReport(
       // Rival-targeted transactions settle on rival books — only un-targeted or
       // player-targeted transactions belong in the player's weekly report.
       const isPlayerTarget =
-        !targetId || targetId === "player" || targetId === "PLAYER" || isPlayerOwner(state, targetId);
+        !targetId ||
+        targetId === "player" ||
+        targetId === "PLAYER" ||
+        isPlayerOwner(state, targetId);
       if (!isPlayerTarget) return;
       const value = amount || 0;
       if (value > 0) otherRevenue += value;
@@ -266,7 +269,6 @@ export function calculateWeeklyCosts(projects: Project[]): number {
   return production + marketing + overhead;
 }
 
- 
 export function calculateWeeklyRevenue(
   projects: Project[],
   buyers: Buyer[] = [],

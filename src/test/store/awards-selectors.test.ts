@@ -1,7 +1,7 @@
-import {describe, it, expect} from "vitest";
-import {selectAwardsEligibleProjects, selectAwardsOddsById} from "@/store/selectors";
-import {createMockGameState} from "../mockFactory";
-import type {Project, AwardsProfile} from "@/engine/types";
+import { describe, it, expect } from "vitest";
+import { selectAwardsEligibleProjects, selectAwardsOddsById } from "@/store/selectors";
+import { createMockGameState } from "../mockFactory";
+import type { Project, AwardsProfile } from "@/engine/types";
 
 const mockAwardsProfile: AwardsProfile = {
   criticScore: 85,
@@ -100,11 +100,11 @@ describe("selectAwardsEligibleProjects", () => {
       week: 10,
       entities: {
         projects: {
-          "dev": makeProject({ id: "dev", state: "development" }),
-          "prod": makeProject({ id: "prod", state: "production" }),
-          "post": makeProject({ id: "post", state: "post_production" }),
-          "mkt": makeProject({ id: "mkt", state: "marketing" }),
-          "arch": makeProject({ id: "arch", state: "archived" }),
+          dev: makeProject({ id: "dev", state: "development" }),
+          prod: makeProject({ id: "prod", state: "production" }),
+          post: makeProject({ id: "post", state: "post_production" }),
+          mkt: makeProject({ id: "mkt", state: "marketing" }),
+          arch: makeProject({ id: "arch", state: "archived" }),
         },
         contracts: {},
         talents: {},
@@ -123,7 +123,11 @@ describe("selectAwardsEligibleProjects", () => {
       week: 10,
       entities: {
         projects: {
-          "no-profile": makeProject({ id: "no-profile", state: "released", awardsProfile: undefined }),
+          "no-profile": makeProject({
+            id: "no-profile",
+            state: "released",
+            awardsProfile: undefined,
+          }),
         },
         contracts: {},
         talents: {},
@@ -161,8 +165,8 @@ describe("selectAwardsEligibleProjects", () => {
       week: 100,
       entities: {
         projects: {
-          "old": makeProject({ id: "old", state: "released", releaseWeek: 10 }),
-          "new": makeProject({ id: "new", state: "released", releaseWeek: 90 }),
+          old: makeProject({ id: "old", state: "released", releaseWeek: 10 }),
+          new: makeProject({ id: "new", state: "released", releaseWeek: 90 }),
         },
         contracts: {},
         talents: {},
@@ -182,7 +186,7 @@ describe("selectAwardsEligibleProjects", () => {
       week: 60,
       entities: {
         projects: {
-          "boundary": makeProject({ id: "boundary", state: "released", releaseWeek: 9 }),
+          boundary: makeProject({ id: "boundary", state: "released", releaseWeek: 9 }),
         },
         contracts: {},
         talents: {},

@@ -1,5 +1,5 @@
-import {create} from "zustand";
-import {persist, createJSONStorage, StateStorage} from "zustand/middleware";
+import { create } from "zustand";
+import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
 
 const NOOP_STORAGE: StateStorage = {
   getItem: () => null,

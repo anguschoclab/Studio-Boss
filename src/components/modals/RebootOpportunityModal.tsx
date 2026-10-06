@@ -1,11 +1,17 @@
 import React, { useEffect } from "react";
-import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription} from "@/components/ui/dialog";
-import {Button} from "@/components/ui/button";
-import {useGameStore} from "@/store/gameStore";
-import {useUIStore} from "@/store/uiStore";
-import {Film, Zap, DollarSign, X} from "lucide-react";
-import {formatMoney} from "@/engine/utils";
-import type {RebootProposal} from "@/engine/systems/ip/ipRebootEngine";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
+import { Film, Zap, DollarSign, X } from "lucide-react";
+import { formatMoney } from "@/engine/utils";
+import type { RebootProposal } from "@/engine/systems/ip/ipRebootEngine";
 
 export const RebootOpportunityModal: React.FC = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();

@@ -1,10 +1,14 @@
-import {describe, it, expect} from "vitest";
-import {calculateRivalMotivation, calculateMotivationScores, tickAIMinds} from "@/engine/systems/ai/motivationEngine";
-import {applyImpacts} from "@/engine/core/impactReducer";
-import {RandomGenerator} from "@/engine/utils/rng";
-import {countKeys} from "@/engine/utils";
-import {createMockGameState, createMockRival} from "../../generators/mockFactory";
-import type {StateImpact, SeriesProject, Project} from "@/engine/types";
+import { describe, it, expect } from "vitest";
+import {
+  calculateRivalMotivation,
+  calculateMotivationScores,
+  tickAIMinds,
+} from "@/engine/systems/ai/motivationEngine";
+import { applyImpacts } from "@/engine/core/impactReducer";
+import { RandomGenerator } from "@/engine/utils/rng";
+import { countKeys } from "@/engine/utils";
+import { createMockGameState, createMockRival } from "../../generators/mockFactory";
+import type { StateImpact, SeriesProject, Project } from "@/engine/types";
 
 describe("AI Motivation Engine (Target C1)", () => {
   const rng = new RandomGenerator(999);
@@ -250,9 +254,7 @@ function createStabilityRival(overrides: Partial<ReturnType<typeof createMockRiv
 
 function getRivalUpdates(impacts: StateImpact[], rivalId: string) {
   return impacts.filter(
-    (i) =>
-      i.type === "RIVAL_UPDATED" &&
-      (i.payload as { rivalId?: string }).rivalId === rivalId
+    (i) => i.type === "RIVAL_UPDATED" && (i.payload as { rivalId?: string }).rivalId === rivalId
   );
 }
 
@@ -275,7 +277,13 @@ function getSyndicationPotential(impacts: StateImpact[], rivalId: string) {
   for (const u of updates) {
     const sp = (u.payload as { update?: { syndicationPotential?: unknown } }).update
       ?.syndicationPotential;
-    if (sp !== undefined) return sp as { syndicatedCount: number; bestTier: string; nearSyndicationCount: number; weeklyRevenue: number };
+    if (sp !== undefined)
+      return sp as {
+        syndicatedCount: number;
+        bestTier: string;
+        nearSyndicationCount: number;
+        weeklyRevenue: number;
+      };
   }
   return undefined;
 }
@@ -411,10 +419,10 @@ describe("tickAIMinds — FRANCHISE_BUILDING syndication tracking", () => {
     const state = createMockGameState();
     state.entities.rivals = { [rival.id]: rival };
     state.entities.projects = {
-      tv1: createSeriesProject("tv1", rival.id, 65, "Drama"),   // Bronze
-      tv2: createSeriesProject("tv2", rival.id, 88, "Drama"),   // Silver
-      tv3: createSeriesProject("tv3", rival.id, 100, "Drama"),  // Gold
-      tv4: createSeriesProject("tv4", rival.id, 55, "Drama"),   // Near-syndication
+      tv1: createSeriesProject("tv1", rival.id, 65, "Drama"), // Bronze
+      tv2: createSeriesProject("tv2", rival.id, 88, "Drama"), // Silver
+      tv3: createSeriesProject("tv3", rival.id, 100, "Drama"), // Gold
+      tv4: createSeriesProject("tv4", rival.id, 55, "Drama"), // Near-syndication
     };
 
     const impacts = tickAIMinds(state, new RandomGenerator(42));
@@ -558,8 +566,7 @@ describe("tickAIMinds — FRANCHISE_BUILDING syndication tracking", () => {
 
     const clearingUpdate = getRivalUpdates(impacts, rival.id).find(
       (u) =>
-        "syndicationPotential" in
-        ((u.payload as { update?: Record<string, unknown> }).update || {})
+        "syndicationPotential" in ((u.payload as { update?: Record<string, unknown> }).update || {})
     );
     expect(clearingUpdate).toBeDefined();
     expect(
@@ -595,9 +602,7 @@ describe("tickAIMinds — FRANCHISE_BUILDING syndication tracking", () => {
         found = true;
         expect(deltas).toContain(210_000);
         const finalState = applyImpacts(state, impacts);
-        expect(finalState.entities.rivals[rival.id].cash).toBe(
-          rival.cash + loan + 210_000
-        );
+        expect(finalState.entities.rivals[rival.id].cash).toBe(rival.cash + loan + 210_000);
         break;
       }
     }
@@ -642,7 +647,7 @@ describe("tickAIMinds — FRANCHISE_BUILDING syndication tracking", () => {
 
 // ─── Flop-History-Aware Motivation Tests (Gap 3) ─────────────────────────────
 
-import type {StudioFlopHistory} from "@/engine/types/state.types";
+import type { StudioFlopHistory } from "@/engine/types/state.types";
 
 function createFlopHistory(
   rivalId: string,
@@ -711,10 +716,7 @@ describe("calculateRivalMotivation — flop history influence", () => {
       motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
     });
     const baselineState = getStateWithFlops(rival, null);
-    const flopState = getStateWithFlops(
-      rival,
-      createFlopHistory(rival.id, 1, 0, [50])
-    );
+    const flopState = getStateWithFlops(rival, createFlopHistory(rival.id, 1, 0, [50]));
 
     const baselineScores = getAverageScores(rival, baselineState);
     const flopScores = getAverageScores(rival, flopState);
@@ -730,10 +732,7 @@ describe("calculateRivalMotivation — flop history influence", () => {
       motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
     });
     const baselineState = getStateWithFlops(rival, null);
-    const flopState = getStateWithFlops(
-      rival,
-      createFlopHistory(rival.id, 2, 0, [50, 55])
-    );
+    const flopState = getStateWithFlops(rival, createFlopHistory(rival.id, 2, 0, [50, 55]));
 
     const baselineScores = getAverageScores(rival, baselineState);
     const flopScores = getAverageScores(rival, flopState);
@@ -750,10 +749,7 @@ describe("calculateRivalMotivation — flop history influence", () => {
       motivationProfile: { financial: 0, prestige: 0, legacy: 100, aggression: 0 },
     });
     const baselineState = getStateWithFlops(rival, null);
-    const flopState = getStateWithFlops(
-      rival,
-      createFlopHistory(rival.id, 2, 0, [50, 55])
-    );
+    const flopState = getStateWithFlops(rival, createFlopHistory(rival.id, 2, 0, [50, 55]));
 
     const baselineScores = getAverageScores(rival, baselineState);
     const flopScores = getAverageScores(rival, flopState);
@@ -769,10 +765,7 @@ describe("calculateRivalMotivation — flop history influence", () => {
       motivationProfile: { financial: 0, prestige: 0, legacy: 0, aggression: 100 },
     });
     const baselineState = getStateWithFlops(rival, null);
-    const flopState = getStateWithFlops(
-      rival,
-      createFlopHistory(rival.id, 2, 0, [50, 55])
-    );
+    const flopState = getStateWithFlops(rival, createFlopHistory(rival.id, 2, 0, [50, 55]));
 
     const baselineScores = getAverageScores(rival, baselineState);
     const flopScores = getAverageScores(rival, flopState);
@@ -787,14 +780,8 @@ describe("calculateRivalMotivation — flop history influence", () => {
       prestige: 50,
       motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
     });
-    const majorFlopState = getStateWithFlops(
-      rival,
-      createFlopHistory(rival.id, 1, 0, [50])
-    );
-    const catastrophicFlopState = getStateWithFlops(
-      rival,
-      createFlopHistory(rival.id, 0, 1, [50])
-    );
+    const majorFlopState = getStateWithFlops(rival, createFlopHistory(rival.id, 1, 0, [50]));
+    const catastrophicFlopState = getStateWithFlops(rival, createFlopHistory(rival.id, 0, 1, [50]));
 
     const majorScores = getAverageScores(rival, majorFlopState);
     const catastrophicScores = getAverageScores(rival, catastrophicFlopState);
@@ -811,11 +798,7 @@ describe("calculateRivalMotivation — flop history influence", () => {
       motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
     });
     const baselineState = getStateWithFlops(rival, null, 70);
-    const oldFlopState = getStateWithFlops(
-      rival,
-      createFlopHistory(rival.id, 2, 0, [8, 9]),
-      70
-    );
+    const oldFlopState = getStateWithFlops(rival, createFlopHistory(rival.id, 2, 0, [8, 9]), 70);
 
     const baselineScores = getAverageScores(rival, baselineState);
     const oldFlopScores = getAverageScores(rival, oldFlopState);
@@ -847,14 +830,11 @@ describe("calculateRivalMotivation — flop history influence", () => {
       prestige: 90,
       motivationProfile: { financial: 0, prestige: 100, legacy: 0, aggression: 0 },
     });
-    const flopState = getStateWithFlops(
-      rival,
-      createFlopHistory(rival.id, 2, 0, [50, 55])
-    );
+    const flopState = getStateWithFlops(rival, createFlopHistory(rival.id, 2, 0, [50, 55]));
 
     const scores = getMotivationScores(rival, flopState);
 
     // AWARD_CHASE should still be the dominant motivation despite flop adjustments
-    expect((scores["AWARD_CHASE"] || 0)).toBeGreaterThan((scores["CASH_CRUNCH"] || 0));
+    expect(scores["AWARD_CHASE"] || 0).toBeGreaterThan(scores["CASH_CRUNCH"] || 0);
   });
 });

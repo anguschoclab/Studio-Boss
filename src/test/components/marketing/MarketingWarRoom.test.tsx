@@ -2,8 +2,8 @@
  * @vitest-environment jsdom
  */
 import React from "react";
-import {render} from "@testing-library/react";
-import {describe, it, expect, vi} from "vitest";
+import { render } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
 
 // Mock ResizeObserver
 global.ResizeObserver = vi.fn().mockImplementation(() => ({
@@ -20,7 +20,7 @@ vi.mock("@/store/gameStore", () => ({
         studio: {
           internal: {
             projects: {
-              "p1": { id: "p1", title: "Test Project", marketingCampaign: null },
+              p1: { id: "p1", title: "Test Project", marketingCampaign: null },
             },
           },
         },
@@ -49,13 +49,17 @@ vi.mock("@/components/ui/tooltip-wrapper", () => ({
   TooltipWrapper: ({ children }: any) => <div>{children}</div>,
 }));
 
-import {MarketingWarRoom} from "@/components/marketing/MarketingWarRoom";
-import {useGameStore} from "@/store/gameStore";
-import {TooltipProvider} from "@/components/ui/tooltip";
+import { MarketingWarRoom } from "@/components/marketing/MarketingWarRoom";
+import { useGameStore } from "@/store/gameStore";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 describe("MarketingWarRoom", () => {
   it("renders without crashing when project exists", () => {
-    render(<TooltipProvider><MarketingWarRoom projectId="p1" /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <MarketingWarRoom projectId="p1" />
+      </TooltipProvider>
+    );
     // Component should render — we just verify it doesn't crash
     expect(document.body).toBeDefined();
   });
@@ -74,7 +78,11 @@ describe("MarketingWarRoom", () => {
       return state;
     });
 
-    render(<TooltipProvider><MarketingWarRoom projectId="nonexistent" /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <MarketingWarRoom projectId="nonexistent" />
+      </TooltipProvider>
+    );
     expect(document.body).toBeDefined();
   });
 
@@ -85,7 +93,11 @@ describe("MarketingWarRoom", () => {
       // rather than Object.values().find() which is O(N).
       // After PR #832, the lookup should be: gameState?.studio.internal.projects?.[projectId]
       // We verify the component renders correctly with the project found
-      const { container } = render(<TooltipProvider><MarketingWarRoom projectId="p1" /></TooltipProvider>);
+      const { container } = render(
+        <TooltipProvider>
+          <MarketingWarRoom projectId="p1" />
+        </TooltipProvider>
+      );
       expect(container).toBeDefined();
     });
   });

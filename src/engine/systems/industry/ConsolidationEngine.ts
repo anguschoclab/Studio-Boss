@@ -1,9 +1,9 @@
-import {GameState, StateImpact, StreamerPlatform, RivalStudio} from "@/engine/types";
-import {RegulatorSystem} from "./RegulatorSystem";
-import {pick, secureRandom} from "../../utils";
-import {isAcquirerBlockedByAntitrust} from "./Antitrust";
-import {getSimMemory} from "../../core/simMemory";
-import {impacts as I} from "../../core/impacts";
+import { GameState, StateImpact, StreamerPlatform, RivalStudio } from "@/engine/types";
+import { RegulatorSystem } from "./RegulatorSystem";
+import { pick, secureRandom } from "../../utils";
+import { isAcquirerBlockedByAntitrust } from "./Antitrust";
+import { getSimMemory } from "../../core/simMemory";
+import { impacts as I } from "../../core/impacts";
 
 export interface ConsolidationEvent {
   week: number;
@@ -42,7 +42,9 @@ export function tickConsolidation(state: GameState): StateImpact[] {
 
   // Prefer non-antitrust-frozen acquirers so a single dominant frozen player doesn't
   // starve the whole engine for years.
-  const freeAcquirers = majors.filter((r) => !isAcquirerBlockedByAntitrust(state, r.id, state.week));
+  const freeAcquirers = majors.filter(
+    (r) => !isAcquirerBlockedByAntitrust(state, r.id, state.week)
+  );
   const acquirer = pick(freeAcquirers.length > 0 ? freeAcquirers : majors);
 
   // Antitrust block: dominant players face M&A freeze.
@@ -146,7 +148,9 @@ export function tickConsolidation(state: GameState): StateImpact[] {
       cost,
     };
     const existingLog = getSimMemory(state).eventLogs.consolidation;
-    impacts.push(I.industryUpdate({ "simMemory.eventLogs.consolidation": [...existingLog, newEvent] }));
+    impacts.push(
+      I.industryUpdate({ "simMemory.eventLogs.consolidation": [...existingLog, newEvent] })
+    );
   } else if (platforms.length > 0) {
     // Platform Acquisition (Vertical Integration)
     const platform = pick(platforms);
@@ -179,7 +183,7 @@ export function tickConsolidation(state: GameState): StateImpact[] {
     });
 
     impacts.push(
-      I.financeTransaction(-cost, `Platform acquisition: ${platform.name}`, acquirer.id),
+      I.financeTransaction(-cost, `Platform acquisition: ${platform.name}`, acquirer.id)
     );
     impacts.push({
       type: "RIVAL_UPDATED",
@@ -211,7 +215,9 @@ export function tickConsolidation(state: GameState): StateImpact[] {
       cost,
     };
     const existingLog = getSimMemory(state).eventLogs.consolidation;
-    impacts.push(I.industryUpdate({ "simMemory.eventLogs.consolidation": [...existingLog, newEvent] }));
+    impacts.push(
+      I.industryUpdate({ "simMemory.eventLogs.consolidation": [...existingLog, newEvent] })
+    );
   }
 
   return impacts;

@@ -1,11 +1,11 @@
 import React, { useState, useMemo, useEffect } from "react";
-import {useGameStore} from "@/store/gameStore";
-import {Opportunity} from "@/engine/types";
-import {formatMoney} from "@/engine/utils";
-import {Button} from "@/components/ui/button";
-import {Badge} from "@/components/ui/badge";
-import {Gavel, Clock, History, AlertCircle, Zap, Target, Trophy, Ban} from "lucide-react";
-import {cn} from "@/lib/utils";
+import { useGameStore } from "@/store/gameStore";
+import { Opportunity } from "@/engine/types";
+import { formatMoney } from "@/engine/utils";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Gavel, Clock, History, AlertCircle, Zap, Target, Trophy, Ban } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface LiveAuctionDashboardProps {
   opportunity: Opportunity;
@@ -36,7 +36,9 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({
     opp.highestBidderId === playerStudioId || opp.highestBidderId === "PLAYER";
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const playerBid = opp.bids[(playerStudioId || "PLAYER") as string]?.amount || 0;
-  const highestBidder = isPlayerWinning ? { name: "YOU" } : rivalsMap[opp.highestBidderId as string];
+  const highestBidder = isPlayerWinning
+    ? { name: "YOU" }
+    : rivalsMap[opp.highestBidderId as string];
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [bidAmount, setBidAmount] = useState(currentHighest + 1_000_000);

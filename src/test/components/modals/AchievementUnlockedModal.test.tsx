@@ -1,19 +1,21 @@
 import React from "react";
-import {render, screen, fireEvent} from "@testing-library/react";
-import {describe, it, expect, vi, beforeEach} from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const {mockResolveCurrentModal} = vi.hoisted(() => ({
+const { mockResolveCurrentModal } = vi.hoisted(() => ({
   mockResolveCurrentModal: vi.fn(),
 }));
 
 vi.mock("@/store/uiStore", () => ({
   useUIStore: vi.fn((selector: any) =>
-    typeof selector === "function" ? selector({resolveCurrentModal: mockResolveCurrentModal}) : selector
+    typeof selector === "function"
+      ? selector({ resolveCurrentModal: mockResolveCurrentModal })
+      : selector
   ),
 }));
 
 vi.mock("@/components/ui/button", () => ({
-  Button: ({children, onClick, className}: any) => (
+  Button: ({ children, onClick, className }: any) => (
     <button onClick={onClick} className={className}>
       {children}
     </button>
@@ -25,7 +27,7 @@ vi.mock("lucide-react", () => ({
   Star: () => <div data-testid="icon" />,
 }));
 
-import {AchievementUnlockedModal} from "@/components/modals/AchievementUnlockedModal";
+import { AchievementUnlockedModal } from "@/components/modals/AchievementUnlockedModal";
 
 const payload = {
   achievementId: "a1",
@@ -54,13 +56,13 @@ describe("AchievementUnlockedModal", () => {
 
   it("Escape key dismisses the modal (non-Radix overlay — owns its own listener)", () => {
     render(<AchievementUnlockedModal payload={payload} />);
-    fireEvent.keyDown(window, {key: "Escape"});
+    fireEvent.keyDown(window, { key: "Escape" });
     expect(mockResolveCurrentModal).toHaveBeenCalledTimes(1);
   });
 
   it("non-Escape keys do not resolve the modal", () => {
     render(<AchievementUnlockedModal payload={payload} />);
-    fireEvent.keyDown(window, {key: "Enter"});
+    fireEvent.keyDown(window, { key: "Enter" });
     expect(mockResolveCurrentModal).not.toHaveBeenCalled();
   });
 });

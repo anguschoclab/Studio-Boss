@@ -1,7 +1,7 @@
-import {describe, it, expect} from "vitest";
-import {buildRebootParams, generateRebootProposal} from "@/engine/systems/ip/ipRebootEngine";
-import {IPAsset} from "@/engine/types";
-import {RandomGenerator} from "@/engine/utils/rng";
+import { describe, it, expect } from "vitest";
+import { buildRebootParams, generateRebootProposal } from "@/engine/systems/ip/ipRebootEngine";
+import { IPAsset } from "@/engine/types";
+import { RandomGenerator } from "@/engine/utils/rng";
 
 function makeAsset(overrides: Partial<IPAsset> = {}): IPAsset {
   return {

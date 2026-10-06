@@ -1,6 +1,10 @@
-import {describe, it, expect} from "vitest";
-import {calculateIPValue, advanceIPRights, catalogValue} from "../../../engine/systems/ipRetention";
-import {Project, AwardsProfile} from "../../../engine/types";
+import { describe, it, expect } from "vitest";
+import {
+  calculateIPValue,
+  advanceIPRights,
+  catalogValue,
+} from "../../../engine/systems/ipRetention";
+import { Project, AwardsProfile } from "../../../engine/types";
 
 describe("calculateIPValue", () => {
   const baseProject: Project = {
@@ -120,11 +124,19 @@ describe("catalogValue", () => {
   it("accepts a Record and sums studio-owned catalog values", () => {
     const projects: Record<string, Project> = {
       a: {
-        id: "a", title: "A", state: "released", revenue: 10_000_000, budget: 1_000_000,
+        id: "a",
+        title: "A",
+        state: "released",
+        revenue: 10_000_000,
+        budget: 1_000_000,
         ipRights: { rightsOwner: "studio", catalogValue: 4_000_000 },
       } as unknown as Project,
       b: {
-        id: "b", title: "B", state: "released", revenue: 10_000_000, budget: 1_000_000,
+        id: "b",
+        title: "B",
+        state: "released",
+        revenue: 10_000_000,
+        budget: 1_000_000,
         ipRights: { rightsOwner: "shared", catalogValue: 2_000_000 },
       } as unknown as Project,
       c: { id: "c", title: "C" } as unknown as Project,

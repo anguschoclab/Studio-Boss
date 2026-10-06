@@ -1,6 +1,6 @@
-import {GameState, StateImpact, Talent} from "../../types";
-import {RandomGenerator} from "../../utils/rng";
-import {getContractsByProjectId, getContractsByTalentId} from "../../utils";
+import { GameState, StateImpact, Talent } from "../../types";
+import { RandomGenerator } from "../../utils/rng";
+import { getContractsByProjectId, getContractsByTalentId } from "../../utils";
 
 /**
  * Death System
@@ -332,10 +332,7 @@ function processGriefImpacts(
   const deadTalent = state.entities.talents?.[deathEvent.talentId];
   if (!deadTalent) return impacts;
 
-  const { coStarIds, griefLevel } = calculateGriefImpact(
-    deadTalent,
-    state
-  );
+  const { coStarIds, griefLevel } = calculateGriefImpact(deadTalent, state);
 
   for (const coStarId of coStarIds) {
     const coStar = state.entities.talents?.[coStarId];

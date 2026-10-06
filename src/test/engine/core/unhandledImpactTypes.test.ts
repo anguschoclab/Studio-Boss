@@ -1,6 +1,6 @@
-import {describe, it, expect} from "vitest";
-import {applySingleImpact} from "@/engine/core/impactHandlers";
-import {GameState, StateImpact} from "@/engine/types";
+import { describe, it, expect } from "vitest";
+import { applySingleImpact } from "@/engine/core/impactHandlers";
+import { GameState, StateImpact } from "@/engine/types";
 
 function makeMockState(overrides: Partial<GameState> = {}): GameState {
   return {
@@ -71,9 +71,7 @@ describe("Previously unhandled impact types — now properly handled", () => {
       type: "INDUSTRY_RUMORS_UPDATED",
       payload: {
         rumors: newRumors,
-        headlines: [
-          { id: "HL-2", week: 1, category: "rumor", headline: "RUMOR: Test" },
-        ],
+        headlines: [{ id: "HL-2", week: 1, category: "rumor", headline: "RUMOR: Test" }],
       },
     } as unknown as StateImpact;
 
@@ -85,9 +83,7 @@ describe("Previously unhandled impact types — now properly handled", () => {
   it("IP_UPDATED impact updates the vault asset by assetId", () => {
     const state = makeMockState({
       ip: {
-        vault: [
-          { id: "asset-1", title: "Test IP", rightsOwner: "RIVAL" } as any,
-        ],
+        vault: [{ id: "asset-1", title: "Test IP", rightsOwner: "RIVAL" } as any],
         franchises: {},
       },
     });

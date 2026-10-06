@@ -1,16 +1,13 @@
 import React from "react";
-import {render, screen, fireEvent} from "@testing-library/react";
-import {describe, it, expect, vi, beforeEach} from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const {
-  mockAcquireDistressedAsset,
-  mockDeclineDistressedAsset,
-  mockResolveCurrentModal,
-} = vi.hoisted(() => ({
-  mockAcquireDistressedAsset: vi.fn(),
-  mockDeclineDistressedAsset: vi.fn(),
-  mockResolveCurrentModal: vi.fn(),
-}));
+const { mockAcquireDistressedAsset, mockDeclineDistressedAsset, mockResolveCurrentModal } =
+  vi.hoisted(() => ({
+    mockAcquireDistressedAsset: vi.fn(),
+    mockDeclineDistressedAsset: vi.fn(),
+    mockResolveCurrentModal: vi.fn(),
+  }));
 
 const mockGameState: any = {
   week: 6,
@@ -62,7 +59,11 @@ vi.mock("@/store/selectors", () => ({
 
 vi.mock("@/components/ui/dialog", () => ({
   Dialog: ({ children, open, onOpenChange }: any) =>
-    open ? <div data-testid="dialog" onClick={onOpenChange}>{children}</div> : null,
+    open ? (
+      <div data-testid="dialog" onClick={onOpenChange}>
+        {children}
+      </div>
+    ) : null,
   DialogContent: ({ children }: any) => <div>{children}</div>,
   DialogHeader: ({ children }: any) => <div>{children}</div>,
   DialogTitle: ({ children }: any) => <h2>{children}</h2>,
@@ -88,8 +89,8 @@ vi.mock("@/engine/utils", () => ({
   formatMoney: (n: number) => `$${n.toLocaleString()}`,
 }));
 
-import {DistressedAssetOfferModal} from "@/components/modals/DistressedAssetOfferModal";
-import {useUIStore} from "@/store/uiStore";
+import { DistressedAssetOfferModal } from "@/components/modals/DistressedAssetOfferModal";
+import { useUIStore } from "@/store/uiStore";
 
 function setModal(payload: any) {
   (useUIStore as any).mockImplementation(() => ({

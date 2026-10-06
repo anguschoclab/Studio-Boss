@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Turn the player's "hostile takeover" from a silent one-click state mutation into a real strategic decision: show the price, the combined market share, and the regulator's block risk *before* committing — and let the regulator actually block the deal.
+**Goal:** Turn the player's "hostile takeover" from a silent one-click state mutation into a real strategic decision: show the price, the combined market share, and the regulator's block risk _before_ committing — and let the regulator actually block the deal.
 
 **Architecture:** A pure `evaluatePlayerAcquisition(state, targetId)` in the engine combines the existing `evaluateAcquisitionTarget` (price/affordability) with `RegulatorSystem.getMarketShare` (share preview) into one preview object the UI can render without side effects. `executeAcquisition` gains a regulator gate so a blocked deal costs a filing fee and prestige instead of transferring the studio. The UI replaces the bare dropdown item with a confirmation modal showing all three numbers.
 
@@ -11,6 +11,7 @@
 **Why this matters:** The acquisition machinery is fully built — `executeAcquisition` already transfers the target's projects, contracts, cash and grants prestige — and `RegulatorSystem` already computes a player-aware `getMarketShare(state, 'player')` and an `isBlocked(...)` verdict. But **they are not connected**: today the player clicks "HOSTILE TAKEOVER" and the studio is simply absorbed, with no price shown, no share preview, and no regulator involvement. This is the cheapest available conversion of modeled depth into player agency.
 
 **Verified facts (do not re-derive):**
+
 - `src/engine/systems/mergers.ts:4` — `evaluateAcquisitionTarget(target, buyerCash)` returns `{ viable, price, reason? }`; price = `max(10M, strength*2M + target.cash)`, ×2.0 for `major`, ×1.2 for `indie`.
 - `src/engine/systems/mergers.ts:18` — `executeAcquisition(state, targetId)` returns a new `GameState`: deletes the rival, re-owns its projects (`ownerId: state.studio.id, isAcquired: true`) and contracts, applies `cash - price + target.cash`, raises prestige by `target.strength * 0.2`, and prepends a `STUDIO_EVENT` news entry. **It never consults RegulatorSystem.**
 - `src/engine/systems/industry/RegulatorSystem.ts:13` — `static getMarketShare(state, studioId: string | 'player')`; treats `'player'` and `state.studio.id` as the same entity. Share = `prestigeShare*0.6 + subShare*0.4`.
@@ -23,20 +24,21 @@
 
 ## File Structure
 
-| File | Responsibility | Change |
-|------|---------------|--------|
-| `src/engine/systems/mergers.ts` | Acquisition pricing + execution | Add `evaluatePlayerAcquisition`; gate `executeAcquisition` on the regulator |
-| `src/store/slices/rivalSlice.ts` | Player M&A actions | Consolidate duplicates; add `previewAcquisition` |
-| `src/store/uiStore.ts` | Modal types | Add `'ACQUISITION_CONFIRM'` |
-| `src/components/modals/AcquisitionConfirmModal.tsx` | The decision UI | Create |
-| `src/components/modals/ModalManager.tsx` | Modal routing | Add case |
-| `src/components/rivals/RivalCard.tsx` | Entry point | Open the modal instead of acquiring |
+| File                                                | Responsibility                  | Change                                                                      |
+| --------------------------------------------------- | ------------------------------- | --------------------------------------------------------------------------- |
+| `src/engine/systems/mergers.ts`                     | Acquisition pricing + execution | Add `evaluatePlayerAcquisition`; gate `executeAcquisition` on the regulator |
+| `src/store/slices/rivalSlice.ts`                    | Player M&A actions              | Consolidate duplicates; add `previewAcquisition`                            |
+| `src/store/uiStore.ts`                              | Modal types                     | Add `'ACQUISITION_CONFIRM'`                                                 |
+| `src/components/modals/AcquisitionConfirmModal.tsx` | The decision UI                 | Create                                                                      |
+| `src/components/modals/ModalManager.tsx`            | Modal routing                   | Add case                                                                    |
+| `src/components/rivals/RivalCard.tsx`               | Entry point                     | Open the modal instead of acquiring                                         |
 
 ---
 
 ### Task 1: `evaluatePlayerAcquisition` — one deterministic preview object
 
 **Files:**
+
 - Modify: `src/engine/systems/mergers.ts`
 - Test: `src/test/engine/evaluatePlayerAcquisition.test.ts`
 
@@ -45,19 +47,33 @@
 Create `src/test/engine/evaluatePlayerAcquisition.test.ts`:
 
 ```ts
-import { describe, it, expect } from 'vitest';
-import { evaluatePlayerAcquisition } from '@/engine/systems/mergers';
-import type { GameState } from '@/engine/types';
+import { describe, it, expect } from "vitest";
+import { evaluatePlayerAcquisition } from "@/engine/systems/mergers";
+import type { GameState } from "@/engine/types";
 
 function makeState(playerCash: number, targetCash = 50_000_000): GameState {
   return {
     week: 40,
-    studio: { id: 'PLAYER', name: 'Player Studio', prestige: 50 },
+    studio: { id: "PLAYER", name: "Player Studio", prestige: 50 },
     finance: { cash: playerCash },
     entities: {
       rivals: {
-        r1: { id: 'r1', name: 'Target Co', cash: targetCash, strength: 30, prestige: 30, archetype: 'mid-tier' },
-        r2: { id: 'r2', name: 'Other', cash: 100_000_000, strength: 40, prestige: 40, archetype: 'major' },
+        r1: {
+          id: "r1",
+          name: "Target Co",
+          cash: targetCash,
+          strength: 30,
+          prestige: 30,
+          archetype: "mid-tier",
+        },
+        r2: {
+          id: "r2",
+          name: "Other",
+          cash: 100_000_000,
+          strength: 40,
+          prestige: 40,
+          archetype: "major",
+        },
       },
       projects: {},
       contracts: {},
@@ -67,35 +83,35 @@ function makeState(playerCash: number, targetCash = 50_000_000): GameState {
   } as unknown as GameState;
 }
 
-describe('evaluatePlayerAcquisition', () => {
-  it('returns price, affordability and a deterministic combined-share preview', () => {
-    const r = evaluatePlayerAcquisition(makeState(5_000_000_000), 'r1');
-    expect(r.targetName).toBe('Target Co');
+describe("evaluatePlayerAcquisition", () => {
+  it("returns price, affordability and a deterministic combined-share preview", () => {
+    const r = evaluatePlayerAcquisition(makeState(5_000_000_000), "r1");
+    expect(r.targetName).toBe("Target Co");
     expect(r.price).toBeGreaterThan(0);
     expect(r.affordable).toBe(true);
-    expect(typeof r.combinedShare).toBe('number');
+    expect(typeof r.combinedShare).toBe("number");
     expect(r.combinedShare).toBeGreaterThanOrEqual(0);
   });
 
-  it('flags unaffordable deals with a reason and blocks the action', () => {
-    const r = evaluatePlayerAcquisition(makeState(1), 'r1');
+  it("flags unaffordable deals with a reason and blocks the action", () => {
+    const r = evaluatePlayerAcquisition(makeState(1), "r1");
     expect(r.affordable).toBe(false);
     expect(r.canProceed).toBe(false);
     expect(r.reason).toMatch(/fund/i);
   });
 
-  it('is deterministic — same state gives the same preview twice', () => {
+  it("is deterministic — same state gives the same preview twice", () => {
     const s = makeState(5_000_000_000);
-    expect(evaluatePlayerAcquisition(s, 'r1')).toEqual(evaluatePlayerAcquisition(s, 'r1'));
+    expect(evaluatePlayerAcquisition(s, "r1")).toEqual(evaluatePlayerAcquisition(s, "r1"));
   });
 
-  it('classifies regulator risk by combined share', () => {
-    const r = evaluatePlayerAcquisition(makeState(5_000_000_000), 'r1');
-    expect(['none', 'review', 'high']).toContain(r.regulatorRisk);
+  it("classifies regulator risk by combined share", () => {
+    const r = evaluatePlayerAcquisition(makeState(5_000_000_000), "r1");
+    expect(["none", "review", "high"]).toContain(r.regulatorRisk);
   });
 
-  it('returns a not-found result for an unknown target', () => {
-    const r = evaluatePlayerAcquisition(makeState(5_000_000_000), 'nope');
+  it("returns a not-found result for an unknown target", () => {
+    const r = evaluatePlayerAcquisition(makeState(5_000_000_000), "nope");
     expect(r.canProceed).toBe(false);
     expect(r.reason).toMatch(/not found/i);
   });
@@ -112,7 +128,7 @@ Expected: FAIL — `evaluatePlayerAcquisition` is not exported.
 In `src/engine/systems/mergers.ts`, add the import and the function:
 
 ```ts
-import { RegulatorSystem } from './industry/RegulatorSystem';
+import { RegulatorSystem } from "./industry/RegulatorSystem";
 
 export interface AcquisitionPreview {
   targetId: string;
@@ -123,7 +139,7 @@ export interface AcquisitionPreview {
   /** Player share + target share, deterministic (no RNG) — safe to render. */
   combinedShare: number;
   /** none < 25%, review 25–35%, high > 35% — mirrors RegulatorSystem thresholds. */
-  regulatorRisk: 'none' | 'review' | 'high';
+  regulatorRisk: "none" | "review" | "high";
   /** Approximate probability the regulator blocks, for display only. */
   blockChance: number;
   canProceed: boolean;
@@ -141,23 +157,31 @@ export function evaluatePlayerAcquisition(state: GameState, targetId: string): A
   const target = state.entities.rivals[targetId];
   if (!target) {
     return {
-      targetId, targetName: 'Unknown', price: 0, playerCash: state.finance.cash,
-      affordable: false, combinedShare: 0, regulatorRisk: 'none', blockChance: 0,
-      canProceed: false, reason: 'Target studio not found.',
+      targetId,
+      targetName: "Unknown",
+      price: 0,
+      playerCash: state.finance.cash,
+      affordable: false,
+      combinedShare: 0,
+      regulatorRisk: "none",
+      blockChance: 0,
+      canProceed: false,
+      reason: "Target studio not found.",
     };
   }
 
   const { viable, price, reason } = evaluateAcquisitionTarget(target, state.finance.cash);
   const combinedShare =
-    RegulatorSystem.getMarketShare(state, 'player') + RegulatorSystem.getMarketShare(state, targetId);
+    RegulatorSystem.getMarketShare(state, "player") +
+    RegulatorSystem.getMarketShare(state, targetId);
 
-  let regulatorRisk: AcquisitionPreview['regulatorRisk'] = 'none';
+  let regulatorRisk: AcquisitionPreview["regulatorRisk"] = "none";
   let blockChance = 0;
   if (combinedShare > 35) {
-    regulatorRisk = 'high';
+    regulatorRisk = "high";
     blockChance = 0.9;
   } else if (combinedShare > 25) {
-    regulatorRisk = 'review';
+    regulatorRisk = "review";
     blockChance = 0.4 + (combinedShare - 25) * 0.05;
   }
 
@@ -193,6 +217,7 @@ git commit -m "feat(mergers): deterministic player acquisition preview"
 ### Task 2: Let the regulator actually block a player acquisition
 
 **Files:**
+
 - Modify: `src/engine/systems/mergers.ts` (`executeAcquisition`)
 - Test: `src/test/engine/acquisition-blocked.test.ts`
 
@@ -203,19 +228,30 @@ git commit -m "feat(mergers): deterministic player acquisition preview"
 Create `src/test/engine/acquisition-blocked.test.ts`:
 
 ```ts
-import { describe, it, expect, vi, afterEach } from 'vitest';
-import { executeAcquisition } from '@/engine/systems/mergers';
-import { RegulatorSystem } from '@/engine/systems/industry/RegulatorSystem';
-import type { GameState } from '@/engine/types';
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { executeAcquisition } from "@/engine/systems/mergers";
+import { RegulatorSystem } from "@/engine/systems/industry/RegulatorSystem";
+import type { GameState } from "@/engine/types";
 
 function makeState(): GameState {
   return {
     week: 40,
-    studio: { id: 'PLAYER', name: 'Player Studio', prestige: 50 },
+    studio: { id: "PLAYER", name: "Player Studio", prestige: 50 },
     finance: { cash: 5_000_000_000 },
     entities: {
-      rivals: { r1: { id: 'r1', name: 'Target Co', cash: 50_000_000, strength: 30, prestige: 30, archetype: 'mid-tier' } },
-      projects: {}, contracts: {}, buyers: {},
+      rivals: {
+        r1: {
+          id: "r1",
+          name: "Target Co",
+          cash: 50_000_000,
+          strength: 30,
+          prestige: 30,
+          archetype: "mid-tier",
+        },
+      },
+      projects: {},
+      contracts: {},
+      buyers: {},
     },
     industry: { newsHistory: [] },
   } as unknown as GameState;
@@ -223,26 +259,28 @@ function makeState(): GameState {
 
 afterEach(() => vi.restoreAllMocks());
 
-describe('executeAcquisition regulator gate', () => {
-  it('BLOCKED: target survives, no ownership transfer, fee + prestige penalty applied', () => {
-    vi.spyOn(RegulatorSystem, 'isBlocked').mockReturnValue({
-      blocked: true, sharePreview: 40, reason: 'Severe Concentration of Media Power',
+describe("executeAcquisition regulator gate", () => {
+  it("BLOCKED: target survives, no ownership transfer, fee + prestige penalty applied", () => {
+    vi.spyOn(RegulatorSystem, "isBlocked").mockReturnValue({
+      blocked: true,
+      sharePreview: 40,
+      reason: "Severe Concentration of Media Power",
     });
     const before = makeState();
-    const after = executeAcquisition(before, 'r1');
+    const after = executeAcquisition(before, "r1");
 
-    expect(after.entities.rivals.r1).toBeDefined();           // not absorbed
+    expect(after.entities.rivals.r1).toBeDefined(); // not absorbed
     expect(after.finance.cash).toBeLessThan(before.finance.cash); // filing fee charged
     expect(after.studio.prestige).toBeLessThan(before.studio.prestige);
     expect(after.industry.newsHistory[0].headline).toMatch(/block|reject/i);
   });
 
-  it('ALLOWED: target absorbed and prestige rises', () => {
-    vi.spyOn(RegulatorSystem, 'isBlocked').mockReturnValue({ blocked: false, sharePreview: 10 });
+  it("ALLOWED: target absorbed and prestige rises", () => {
+    vi.spyOn(RegulatorSystem, "isBlocked").mockReturnValue({ blocked: false, sharePreview: 10 });
     const before = makeState();
-    const after = executeAcquisition(before, 'r1');
+    const after = executeAcquisition(before, "r1");
 
-    expect(after.entities.rivals.r1).toBeUndefined();         // absorbed
+    expect(after.entities.rivals.r1).toBeUndefined(); // absorbed
     expect(after.studio.prestige).toBeGreaterThan(before.studio.prestige);
   });
 });
@@ -258,30 +296,30 @@ Expected: FAIL on the BLOCKED case — the rival is absorbed regardless, because
 In `src/engine/systems/mergers.ts`, inside `executeAcquisition`, immediately after the existing viability check (`if (!evalResult.viable) return state;`), insert:
 
 ```ts
-  // Regulator gate. The roll happens exactly once, here — the UI preview is
-  // deterministic and shows the risk; this is where the dice are thrown.
-  const verdict = RegulatorSystem.isBlocked(state, 'player', targetId);
-  if (verdict.blocked) {
-    const filingFee = Math.round(evalResult.price * 0.02);
-    return {
-      ...state,
-      finance: { ...state.finance, cash: state.finance.cash - filingFee },
-      studio: { ...state.studio, prestige: Math.max(0, state.studio.prestige - 3) },
-      industry: {
-        ...state.industry,
-        newsHistory: [
-          {
-            id: generateId('NEWS'),
-            week: state.week,
-            type: 'STUDIO_EVENT' as const,
-            headline: `BLOCKED: Regulators reject ${state.studio.name}'s bid for ${target.name}`,
-            description: `${verdict.reason ?? 'Competition concerns'} — combined share would reach ${verdict.sharePreview.toFixed(1)}%. ${state.studio.name} forfeits $${(filingFee / 1e6).toFixed(1)}M in filing costs.`,
-          },
-          ...state.industry.newsHistory,
-        ].slice(0, 50),
-      },
-    };
-  }
+// Regulator gate. The roll happens exactly once, here — the UI preview is
+// deterministic and shows the risk; this is where the dice are thrown.
+const verdict = RegulatorSystem.isBlocked(state, "player", targetId);
+if (verdict.blocked) {
+  const filingFee = Math.round(evalResult.price * 0.02);
+  return {
+    ...state,
+    finance: { ...state.finance, cash: state.finance.cash - filingFee },
+    studio: { ...state.studio, prestige: Math.max(0, state.studio.prestige - 3) },
+    industry: {
+      ...state.industry,
+      newsHistory: [
+        {
+          id: generateId("NEWS"),
+          week: state.week,
+          type: "STUDIO_EVENT" as const,
+          headline: `BLOCKED: Regulators reject ${state.studio.name}'s bid for ${target.name}`,
+          description: `${verdict.reason ?? "Competition concerns"} — combined share would reach ${verdict.sharePreview.toFixed(1)}%. ${state.studio.name} forfeits $${(filingFee / 1e6).toFixed(1)}M in filing costs.`,
+        },
+        ...state.industry.newsHistory,
+      ].slice(0, 50),
+    },
+  };
+}
 ```
 
 - [ ] **Step 4: Run the test to verify it passes**
@@ -301,6 +339,7 @@ git commit -m "feat(mergers): regulator can block player acquisitions (fee + pre
 ### Task 3: Store — consolidate the duplicate actions and expose the preview
 
 **Files:**
+
 - Modify: `src/store/slices/rivalSlice.ts`
 - Test: `src/test/store/rivalSlice-acquisition.test.ts`
 
@@ -309,18 +348,29 @@ git commit -m "feat(mergers): regulator can block player acquisitions (fee + pre
 Create `src/test/store/rivalSlice-acquisition.test.ts`:
 
 ```ts
-import { describe, it, expect, beforeEach } from 'vitest';
-import { useGameStore } from '@/store/gameStore';
-import type { GameState } from '@/engine/types';
+import { describe, it, expect, beforeEach } from "vitest";
+import { useGameStore } from "@/store/gameStore";
+import type { GameState } from "@/engine/types";
 
 function seed(): GameState {
   return {
     week: 40,
-    studio: { id: 'PLAYER', name: 'Player Studio', prestige: 50 },
+    studio: { id: "PLAYER", name: "Player Studio", prestige: 50 },
     finance: { cash: 5_000_000_000 },
     entities: {
-      rivals: { r1: { id: 'r1', name: 'Target Co', cash: 50_000_000, strength: 30, prestige: 30, archetype: 'mid-tier' } },
-      projects: {}, contracts: {}, buyers: {},
+      rivals: {
+        r1: {
+          id: "r1",
+          name: "Target Co",
+          cash: 50_000_000,
+          strength: 30,
+          prestige: 30,
+          archetype: "mid-tier",
+        },
+      },
+      projects: {},
+      contracts: {},
+      buyers: {},
     },
     industry: { newsHistory: [] },
   } as unknown as GameState;
@@ -328,21 +378,21 @@ function seed(): GameState {
 
 beforeEach(() => useGameStore.setState({ gameState: seed() } as any));
 
-describe('rivalSlice acquisition', () => {
-  it('previewAcquisition returns a preview without mutating state', () => {
+describe("rivalSlice acquisition", () => {
+  it("previewAcquisition returns a preview without mutating state", () => {
     const before = useGameStore.getState().gameState;
-    const preview = useGameStore.getState().previewAcquisition('r1');
-    expect(preview?.targetName).toBe('Target Co');
+    const preview = useGameStore.getState().previewAcquisition("r1");
+    expect(preview?.targetName).toBe("Target Co");
     expect(useGameStore.getState().gameState).toBe(before); // identical reference
   });
 
-  it('previewAcquisition returns null when there is no game', () => {
+  it("previewAcquisition returns null when there is no game", () => {
     useGameStore.setState({ gameState: null } as any);
-    expect(useGameStore.getState().previewAcquisition('r1')).toBeNull();
+    expect(useGameStore.getState().previewAcquisition("r1")).toBeNull();
   });
 
-  it('acquireRival changes state', () => {
-    useGameStore.getState().acquireRival('r1');
+  it("acquireRival changes state", () => {
+    useGameStore.getState().acquireRival("r1");
     expect(useGameStore.getState().gameState).not.toBeNull();
   });
 });
@@ -426,6 +476,7 @@ git commit -m "feat(store): acquisition preview action; drop duplicate attemptTa
 ### Task 4: The confirmation modal
 
 **Files:**
+
 - Modify: `src/store/uiStore.ts` (`ModalType`)
 - Create: `src/components/modals/AcquisitionConfirmModal.tsx`
 - Modify: `src/components/modals/ModalManager.tsx`
@@ -443,12 +494,18 @@ In `src/store/uiStore.ts`, add to the `ModalType` union:
 Create `src/components/modals/AcquisitionConfirmModal.tsx`:
 
 ```tsx
-import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { useGameStore } from '@/store/gameStore';
-import { useUIStore } from '@/store/uiStore';
-import { Building2, ShieldAlert, X } from 'lucide-react';
+import React from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
+import { Building2, ShieldAlert, X } from "lucide-react";
 
 function fmt(n: number): string {
   if (Math.abs(n) >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(2)}B`;
@@ -457,9 +514,21 @@ function fmt(n: number): string {
 }
 
 const RISK_COPY = {
-  none: { label: 'Clear', tone: 'text-emerald-400', note: 'Combined share is below the regulator review threshold.' },
-  review: { label: 'Under Review', tone: 'text-amber-400', note: 'Regulators are likely to scrutinise this deal.' },
-  high: { label: 'High Risk', tone: 'text-rose-400', note: 'Severe concentration — regulators will probably block this.' },
+  none: {
+    label: "Clear",
+    tone: "text-emerald-400",
+    note: "Combined share is below the regulator review threshold.",
+  },
+  review: {
+    label: "Under Review",
+    tone: "text-amber-400",
+    note: "Regulators are likely to scrutinise this deal.",
+  },
+  high: {
+    label: "High Risk",
+    tone: "text-rose-400",
+    note: "Severe concentration — regulators will probably block this.",
+  },
 } as const;
 
 export const AcquisitionConfirmModal: React.FC = () => {
@@ -467,7 +536,7 @@ export const AcquisitionConfirmModal: React.FC = () => {
   const previewAcquisition = useGameStore((s) => s.previewAcquisition);
   const acquireRival = useGameStore((s) => s.acquireRival);
 
-  if (!activeModal || activeModal.type !== 'ACQUISITION_CONFIRM') return null;
+  if (!activeModal || activeModal.type !== "ACQUISITION_CONFIRM") return null;
 
   const targetId = (activeModal.payload as { targetId?: string })?.targetId;
   const preview = targetId ? previewAcquisition(targetId) : null;
@@ -497,18 +566,23 @@ export const AcquisitionConfirmModal: React.FC = () => {
             Acquire {preview.targetName}
           </DialogTitle>
           <DialogDescription className="text-muted-foreground text-sm leading-relaxed">
-            You inherit their slate, contracts and cash reserves. Regulators review the combined entity.
+            You inherit their slate, contracts and cash reserves. Regulators review the combined
+            entity.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-3 mt-2">
           <div className="border border-border bg-muted/30 p-4 flex items-center justify-between">
             <span className="text-sm text-muted-foreground">Purchase Price</span>
-            <span className="font-display text-lg font-bold tabular-nums">{fmt(preview.price)}</span>
+            <span className="font-display text-lg font-bold tabular-nums">
+              {fmt(preview.price)}
+            </span>
           </div>
           <div className="border border-border bg-muted/20 p-4 flex items-center justify-between">
             <span className="text-sm text-muted-foreground">Your Cash</span>
-            <span className={`font-display text-lg font-bold tabular-nums ${preview.affordable ? 'text-foreground' : 'text-rose-400'}`}>
+            <span
+              className={`font-display text-lg font-bold tabular-nums ${preview.affordable ? "text-foreground" : "text-rose-400"}`}
+            >
               {fmt(preview.playerCash)}
             </span>
           </div>
@@ -564,7 +638,9 @@ export const AcquisitionConfirmModal: React.FC = () => {
 Add the lazy import with the others:
 
 ```tsx
-const AcquisitionConfirmModal = React.lazy(() => import('./AcquisitionConfirmModal').then(m => ({ default: m.AcquisitionConfirmModal })));
+const AcquisitionConfirmModal = React.lazy(() =>
+  import("./AcquisitionConfirmModal").then((m) => ({ default: m.AcquisitionConfirmModal }))
+);
 ```
 
 Add the case in the switch:
@@ -591,6 +667,7 @@ git commit -m "feat(ui): acquisition confirmation modal with antitrust preview"
 ### Task 5: Wire the RivalCard entry point
 
 **Files:**
+
 - Modify: `src/components/rivals/RivalCard.tsx` (the takeover dropdown item, ~line 109)
 - Modify: the parent that passes `attemptTakeover` into `RivalCard`
 
@@ -604,7 +681,7 @@ Note every file — the prop is declared in `RivalCard.tsx:29`, destructured at 
 Remove `attemptTakeover` from the props interface (line ~29) and the destructure (line ~37). Add at the top of the component body:
 
 ```tsx
-  const enqueueModal = useUIStore((s) => s.enqueueModal);
+const enqueueModal = useUIStore((s) => s.enqueueModal);
 ```
 
 (with `import { useUIStore } from '@/store/uiStore';` at the top of the file), and change the dropdown item's handler:

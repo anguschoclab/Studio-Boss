@@ -1,25 +1,9 @@
-import {describe, it, expect} from "vitest";
-import {render, screen} from "@testing-library/react";
+import { describe, it, expect } from "vitest";
+import { render, screen } from "@testing-library/react";
 import React from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetTitle,
-} from "@/components/ui/sheet";
-import {
-  Toast,
-  ToastClose,
-  ToastProvider,
-  ToastViewport,
-  ToastTitle,
-} from "@/components/ui/toast";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
+import { Toast, ToastClose, ToastProvider, ToastViewport, ToastTitle } from "@/components/ui/toast";
 
 // Decorative icons inside icon-only close buttons must be aria-hidden so
 // screen readers announce only the button's accessible name once.
@@ -68,9 +52,7 @@ describe("Close buttons — decorative icon accessibility", () => {
     );
     // ToastClose renders an icon-only button (no accessible name) — find it by
     // its svg rather than by name.
-    const closeButton = screen
-      .getAllByRole("button")
-      .find((b) => b.querySelector("svg") !== null);
+    const closeButton = screen.getAllByRole("button").find((b) => b.querySelector("svg") !== null);
     expect(closeButton).not.toBeNull();
     const icon = closeButton!.querySelector("svg");
     expect(icon).not.toBeNull();

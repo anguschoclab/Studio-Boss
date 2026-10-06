@@ -1,9 +1,7 @@
-import {describe, it, expect, vi, beforeEach} from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const {
-  shouldAllowNavigation,
-  installNavigationGuards,
-} = await import("../../../electron/navigationGuards.cjs");
+const { shouldAllowNavigation, installNavigationGuards } =
+  await import("../../../electron/navigationGuards.cjs");
 
 describe("shouldAllowNavigation", () => {
   it("allows app: protocol navigation", () => {

@@ -1,6 +1,6 @@
-import {describe, it, expect} from "vitest";
-import {defaultSimMemory, getSimMemory} from "@/engine/core/simMemory";
-import type {GameState} from "@/engine/types";
+import { describe, it, expect } from "vitest";
+import { defaultSimMemory, getSimMemory } from "@/engine/core/simMemory";
+import type { GameState } from "@/engine/types";
 
 describe("SimMemory extended defaults", () => {
   it("defaultSimMemory returns all new fields with correct empty defaults", () => {
@@ -41,7 +41,18 @@ describe("SimMemory extended defaults", () => {
         headlineCounter: 42,
         eventLogs: {
           ...defaultSimMemory().eventLogs,
-          antitrust: [{ week: 10, year: 1975, kind: "fine", dominantId: "r1", dominantName: "Rival 1", topShare: 0.5, top3Share: 0.8, note: "test" }],
+          antitrust: [
+            {
+              week: 10,
+              year: 1975,
+              kind: "fine",
+              dominantId: "r1",
+              dominantName: "Rival 1",
+              topShare: 0.5,
+              top3Share: 0.8,
+              note: "test",
+            },
+          ],
         },
       },
     } as unknown as GameState;

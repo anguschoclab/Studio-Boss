@@ -1,9 +1,12 @@
-import {describe, it, expect, vi, beforeEach} from "vitest";
-import {tickDistressCascade, stage2AssetLiquidation} from "@/engine/systems/industry/DistressCascade";
-import type {DistressEvent} from "@/engine/systems/industry/DistressCascade";
-import type {StateImpact} from "@/engine/types";
-import {defaultSimMemory} from "@/engine/core/simMemory";
-import {createMockGameState, createMockRival} from "./generators/mockFactory";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import {
+  tickDistressCascade,
+  stage2AssetLiquidation,
+} from "@/engine/systems/industry/DistressCascade";
+import type { DistressEvent } from "@/engine/systems/industry/DistressCascade";
+import type { StateImpact } from "@/engine/types";
+import { defaultSimMemory } from "@/engine/core/simMemory";
+import { createMockGameState, createMockRival } from "./generators/mockFactory";
 import * as utils from "@/engine/utils";
 
 function findDistressLogImpact(impacts: StateImpact[]): DistressEvent[] | undefined {

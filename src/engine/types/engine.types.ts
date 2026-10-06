@@ -1,8 +1,22 @@
 // Types related to the Simulation Engine, News, and Events
 
-export type HeadlineCategory = "rival" | "market" | "talent" | "awards" | "general" | "rumor" | "scandal" | "box_office" | "business" | "industry" | "cancellation" | "festival" | "development";
+export type HeadlineCategory =
+  | "rival"
+  | "market"
+  | "talent"
+  | "awards"
+  | "general"
+  | "rumor"
+  | "scandal"
+  | "box_office"
+  | "business"
+  | "industry"
+  | "cancellation"
+  | "festival"
+  | "development";
 
-export type NewsEventType = "CRISIS" | "AWARD" | "RELEASE" | "STUDIO_EVENT" | "RIVAL" | "SCANDAL" | "MILESTONE";
+export type NewsEventType =
+  "CRISIS" | "AWARD" | "RELEASE" | "STUDIO_EVENT" | "RIVAL" | "SCANDAL" | "MILESTONE";
 
 export interface NewsEvent {
   id: string;

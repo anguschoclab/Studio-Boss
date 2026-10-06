@@ -56,7 +56,8 @@ export type PersonalityArchetype =
   | "legacy_personality";
 export type TalentTier = "A_LIST" | "B_LIST" | "C_LIST" | "RISING_STAR" | "NEWCOMER";
 
-export type ScandalType = "financial" | "personal" | "onset_behavior" | "legal" | "feud" | "director_speaks_out";
+export type ScandalType =
+  "financial" | "personal" | "onset_behavior" | "legal" | "feud" | "director_speaks_out";
 
 export interface Scandal {
   id: string;

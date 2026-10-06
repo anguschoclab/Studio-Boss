@@ -1,15 +1,29 @@
 import React from "react";
-import {motion, AnimatePresence} from "framer-motion";
-import {Plus, Clock, Users, Film, TrendingUp, Settings, ChevronUp, ChevronDown, Zap} from "lucide-react";
-import {cn} from "@/lib/utils";
-import {tokens} from "@/lib/tokens";
-import {useUIStore} from "@/store/uiStore";
-import {useGameStore} from "@/store/gameStore";
-import {transitions} from "@/lib/animations";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Plus,
+  Clock,
+  Users,
+  Film,
+  TrendingUp,
+  Settings,
+  ChevronUp,
+  ChevronDown,
+  Zap,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { tokens } from "@/lib/tokens";
+import { useUIStore } from "@/store/uiStore";
+import { useGameStore } from "@/store/gameStore";
+import { transitions } from "@/lib/animations";
 
 interface QuickAction {
   id: string;
-  icon: React.ComponentType<{ className?: string; size?: number | string; strokeWidth?: string | number }>;
+  icon: React.ComponentType<{
+    className?: string;
+    size?: number | string;
+    strokeWidth?: string | number;
+  }>;
   label: string;
   shortcut?: string;
   action: () => void;

@@ -1,15 +1,15 @@
-import {Project} from "@/engine/types";
-import {useUIStore} from "@/store/uiStore";
-import {useGameStore} from "@/store/gameStore";
-import {BUDGET_TIERS} from "@/engine/data/budgetTiers";
-import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";
-import {Activity, Zap, Target} from "lucide-react";
-import {cn} from "@/lib/utils";
-import {RecoupmentStatus} from "../shared/RecoupmentStatus";
-import {CardMetricBar} from "./project-card/CardMetricBar";
-import {ProjectCardHeader} from "./project-card/ProjectCardHeader";
-import {DistributionDealRow} from "./project-card/DistributionDealRow";
-import {ProjectCardActions} from "./project-card/ProjectCardActions";
+import { Project } from "@/engine/types";
+import { useUIStore } from "@/store/uiStore";
+import { useGameStore } from "@/store/gameStore";
+import { BUDGET_TIERS } from "@/engine/data/budgetTiers";
+import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
+import { Activity, Zap, Target } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { RecoupmentStatus } from "../shared/RecoupmentStatus";
+import { CardMetricBar } from "./project-card/CardMetricBar";
+import { ProjectCardHeader } from "./project-card/ProjectCardHeader";
+import { DistributionDealRow } from "./project-card/DistributionDealRow";
+import { ProjectCardActions } from "./project-card/ProjectCardActions";
 
 /**
  * Props for the ProjectCard component.
@@ -24,7 +24,7 @@ interface ProjectCardProps {
  * Displays project title, genre, budget tier, market buzz, and current production phase progress.
  * Includes executive action buttons for greenlighting projects, pitching, or resolving crises.
  *
- * @param props - Component properties
+ * @param props.project - The project entity to display
  */
 export const ProjectCard = ({ project }: ProjectCardProps) => {
   const { selectProject, openPitchProject, enqueueModal } = useUIStore();

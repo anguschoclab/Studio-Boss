@@ -1,6 +1,11 @@
-import {describe, it, expect} from "vitest";
-import {CROSSOVER_AFFINITY, FRANCHISE_FATIGUE_RISK, CROSSOVER_AFFINITY_LOWER_KEYS, FRANCHISE_FATIGUE_RISK_LOWER_KEYS} from "@/engine/data/genres";
-import {countKeys} from "@/engine/utils";
+import { describe, it, expect } from "vitest";
+import {
+  CROSSOVER_AFFINITY,
+  FRANCHISE_FATIGUE_RISK,
+  CROSSOVER_AFFINITY_LOWER_KEYS,
+  FRANCHISE_FATIGUE_RISK_LOWER_KEYS,
+} from "@/engine/data/genres";
+import { countKeys } from "@/engine/utils";
 
 describe("CROSSOVER_AFFINITY_LOWER_KEYS", () => {
   it("contains all keys from CROSSOVER_AFFINITY", () => {
@@ -33,9 +38,7 @@ describe("CROSSOVER_AFFINITY_LOWER_KEYS", () => {
   });
 
   it("resolves 'video game adaptation' to 'Video Game Adaptation'", () => {
-    expect(CROSSOVER_AFFINITY_LOWER_KEYS["video game adaptation"]).toBe(
-      "Video Game Adaptation"
-    );
+    expect(CROSSOVER_AFFINITY_LOWER_KEYS["video game adaptation"]).toBe("Video Game Adaptation");
   });
 
   it("returns undefined for unknown genre", () => {
@@ -70,9 +73,7 @@ describe("FRANCHISE_FATIGUE_RISK_LOWER_KEYS", () => {
   });
 
   it("resolves 'cinematic universe' to 'Cinematic Universe'", () => {
-    expect(FRANCHISE_FATIGUE_RISK_LOWER_KEYS["cinematic universe"]).toBe(
-      "Cinematic Universe"
-    );
+    expect(FRANCHISE_FATIGUE_RISK_LOWER_KEYS["cinematic universe"]).toBe("Cinematic Universe");
   });
 
   it("returns undefined for unknown genre", () => {

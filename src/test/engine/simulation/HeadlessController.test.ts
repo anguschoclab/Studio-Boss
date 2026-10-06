@@ -1,7 +1,7 @@
-import {describe, it, expect, beforeEach} from "vitest";
-import {HeadlessController} from "@/engine/simulation/HeadlessController";
-import {GameState, Talent} from "@/engine/types";
-import {RandomGenerator} from "@/engine/utils/rng";
+import { describe, it, expect, beforeEach } from "vitest";
+import { HeadlessController } from "@/engine/simulation/HeadlessController";
+import { GameState, Talent } from "@/engine/types";
+import { RandomGenerator } from "@/engine/utils/rng";
 
 const makeTalent = (id: string, prestige: number = 50): Talent =>
   ({
@@ -15,8 +15,8 @@ const makeTalent = (id: string, prestige: number = 50): Talent =>
     draw: 50,
     accessLevel: "outsider",
     momentum: 50,
-    demographics: {age: 30, gender: "MALE", ethnicity: "White", country: "USA"},
-    psychology: {ego: 50, mood: 100, scandalRisk: 0, synergyAffinities: [], synergyConflicts: []},
+    demographics: { age: 30, gender: "MALE", ethnicity: "White", country: "USA" },
+    psychology: { ego: 50, mood: 100, scandalRisk: 0, synergyAffinities: [], synergyConflicts: [] },
   }) as unknown as Talent;
 
 const makeState = (talents: Record<string, Talent> = {}): GameState =>
@@ -24,9 +24,9 @@ const makeState = (talents: Record<string, Talent> = {}): GameState =>
     week: 1,
     gameSeed: 1,
     tickCount: 0,
-    game: {currentWeek: 1},
-    finance: {cash: 1_000_000, ledger: []},
-    ip: {vault: [], franchises: {}},
+    game: { currentWeek: 1 },
+    finance: { cash: 1_000_000, ledger: [] },
+    ip: { vault: [], franchises: {} },
     entities: {
       projects: {},
       releasedProjectIds: [],
@@ -41,11 +41,11 @@ const makeState = (talents: Record<string, Talent> = {}): GameState =>
       name: "Test Studio",
       archetype: "major",
       prestige: 50,
-      internal: {projectHistory: [], projects: {}, contracts: []},
+      internal: { projectHistory: [], projects: {}, contracts: [] },
     },
-    market: {opportunities: [], buyers: []},
-    industry: {families: [], agencies: [], agents: []},
-    culture: {genrePopularity: {}},
+    market: { opportunities: [], buyers: [] },
+    industry: { families: [], agencies: [], agents: [] },
+    culture: { genrePopularity: {} },
     history: [],
     eventHistory: [],
   }) as unknown as GameState;
@@ -61,7 +61,12 @@ describe("HeadlessController.attributeTalent", () => {
     const state = makeState({});
     const impacts = HeadlessController.attributeTalent(
       state,
-      {budget: 10_000_000, marketingBudget: 0, format: "film", type: "FILM"} as import("@/engine/types").Project,
+      {
+        budget: 10_000_000,
+        marketingBudget: 0,
+        format: "film",
+        type: "FILM",
+      } as import("@/engine/types").Project,
       20_000_000,
       rng,
       true,
@@ -81,7 +86,12 @@ describe("HeadlessController.attributeTalent", () => {
     const state = makeState(talents);
     const impacts = HeadlessController.attributeTalent(
       state,
-      {budget: 10_000_000, marketingBudget: 0, format: "film", type: "FILM"} as import("@/engine/types").Project,
+      {
+        budget: 10_000_000,
+        marketingBudget: 0,
+        format: "film",
+        type: "FILM",
+      } as import("@/engine/types").Project,
       100_000_000,
       rng,
       true,
@@ -91,12 +101,17 @@ describe("HeadlessController.attributeTalent", () => {
   });
 
   it("returns empty impacts when delta is zero (neutral ROI film)", () => {
-    const talents = {t1: makeTalent("t1", 50)};
+    const talents = { t1: makeTalent("t1", 50) };
     const state = makeState(talents);
     // ROI = 1.0 exactly => no basePrestige branch matches => delta = 0
     const impacts = HeadlessController.attributeTalent(
       state,
-      {budget: 10_000_000, marketingBudget: 0, format: "film", type: "FILM"} as import("@/engine/types").Project,
+      {
+        budget: 10_000_000,
+        marketingBudget: 0,
+        format: "film",
+        type: "FILM",
+      } as import("@/engine/types").Project,
       10_000_000,
       rng,
       false,
@@ -115,7 +130,12 @@ describe("HeadlessController.attributeTalent", () => {
     // TV with high rating => basePrestige = 10
     const impacts = HeadlessController.attributeTalent(
       state,
-      {budget: 5_000_000, marketingBudget: 0, format: "tv", type: "SERIES"} as import("@/engine/types").Project,
+      {
+        budget: 5_000_000,
+        marketingBudget: 0,
+        format: "tv",
+        type: "SERIES",
+      } as import("@/engine/types").Project,
       0,
       rng,
       true,
@@ -134,7 +154,12 @@ describe("HeadlessController.attributeTalent", () => {
     // TV with very low rating => basePrestige = -3
     const impacts = HeadlessController.attributeTalent(
       state,
-      {budget: 5_000_000, marketingBudget: 0, format: "tv", type: "SERIES"} as import("@/engine/types").Project,
+      {
+        budget: 5_000_000,
+        marketingBudget: 0,
+        format: "tv",
+        type: "SERIES",
+      } as import("@/engine/types").Project,
       0,
       rng,
       false,

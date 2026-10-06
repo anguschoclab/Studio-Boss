@@ -1,10 +1,10 @@
-import {Project, GameState, WeeklyFinancialReport, Contract, TalentPact} from "@/engine/types";
-import {RandomGenerator} from "../../utils/rng";
-import {StateImpact, FinancialSnapshot} from "../../types/state.types";
-import {RevenueProcessor} from "./RevenueProcessor";
-import {ExpenseProcessor} from "./ExpenseProcessor";
-import {InterestRateSimulator} from "../market/InterestRateSimulator";
-import {isPlayerOwner} from "../../utils/ownership";
+import { Project, GameState, WeeklyFinancialReport, Contract, TalentPact } from "@/engine/types";
+import { RandomGenerator } from "../../utils/rng";
+import { StateImpact, FinancialSnapshot } from "../../types/state.types";
+import { RevenueProcessor } from "./RevenueProcessor";
+import { ExpenseProcessor } from "./ExpenseProcessor";
+import { InterestRateSimulator } from "../market/InterestRateSimulator";
+import { isPlayerOwner } from "../../utils/ownership";
 
 export function generateWeeklyFinancialReport(
   state: GameState,
@@ -23,8 +23,13 @@ export function generateWeeklyFinancialReport(
 
   const passive = RevenueProcessor.calculateVaultDividends(state.ip.vault);
 
-  const { boxOffice, distribution, merch, totalRoyalties, projectRecoupment: _projectRecoupment } =
-    RevenueProcessor.calculateActiveRevenue(projects, state, contracts, state.ip.vault, studioId);
+  const {
+    boxOffice,
+    distribution,
+    merch,
+    totalRoyalties,
+    projectRecoupment: _projectRecoupment,
+  } = RevenueProcessor.calculateActiveRevenue(projects, state, contracts, state.ip.vault, studioId);
 
   const expenses = ExpenseProcessor.calculateConsolidatedExpenses(
     projects,
@@ -41,7 +46,8 @@ export function generateWeeklyFinancialReport(
 
   for (let i = 0; i < pendingImpacts.length; i++) {
     const impact = pendingImpacts[i];
-    const isTarget = impact.payload && (impact.payload as Record<string, unknown>).targetId === studioId;
+    const isTarget =
+      impact.payload && (impact.payload as Record<string, unknown>).targetId === studioId;
     const isGenericPlayer =
       (studioId === "player" || isPlayerOwner(state, studioId)) &&
       !(impact.payload as Record<string, unknown>)?.targetId;

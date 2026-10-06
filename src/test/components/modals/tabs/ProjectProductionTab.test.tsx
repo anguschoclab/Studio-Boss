@@ -1,8 +1,8 @@
-import {render, screen, fireEvent} from "@testing-library/react";
-import {describe, it, expect, vi} from "vitest";
-import {ProjectProductionTab} from "@/components/modals/tabs/ProjectProductionTab";
-import {Tabs} from "@/components/ui/tabs";
-import {createMockProject} from "../../../utils/mockFactories";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
+import { ProjectProductionTab } from "@/components/modals/tabs/ProjectProductionTab";
+import { Tabs } from "@/components/ui/tabs";
+import { createMockProject } from "../../../utils/mockFactories";
 
 vi.mock("@/components/modals/DevelopmentLog", () => ({
   DevelopmentLog: () => <div data-testid="development-log" />,

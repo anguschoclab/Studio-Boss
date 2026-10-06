@@ -1,5 +1,5 @@
-import {GameState, Rumor, StateImpact} from "@/engine/types";
-import {RandomGenerator} from "../../utils/rng";
+import { GameState, Rumor, StateImpact } from "@/engine/types";
+import { RandomGenerator } from "../../utils/rng";
 
 /**
  * RumorProcessor handles the lifecycle of industry whispers.

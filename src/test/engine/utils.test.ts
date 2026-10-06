@@ -1,4 +1,4 @@
-import {describe, it, expect} from "vitest";
+import { describe, it, expect } from "vitest";
 import {
   formatMoney,
   getWeekDisplay,
@@ -10,8 +10,8 @@ import {
   countRivalProjects,
   countPlayerProjects,
 } from "../../engine/utils";
-import {RivalStudio, Project} from "../../engine/types";
-import {createMockGameState} from "../utils/mockFactories";
+import { RivalStudio, Project } from "../../engine/types";
+import { createMockGameState } from "../utils/mockFactories";
 
 describe("utils", () => {
   describe("formatMoney", () => {

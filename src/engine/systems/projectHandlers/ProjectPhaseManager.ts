@@ -1,5 +1,4 @@
- 
-import {Project, ProjectStatus, StateImpact} from "@/engine/types";
+import { Project, ProjectStatus, StateImpact } from "@/engine/types";
 
 export function handleDevelopmentPhase(p: Project): StateImpact[] {
   const impacts: StateImpact[] = [];

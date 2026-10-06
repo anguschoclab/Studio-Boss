@@ -1,7 +1,7 @@
-import {describe, it, expect, beforeEach} from "vitest";
-import {useGameStore} from "@/store/gameStore";
-import {createMockGameState, createMockProject} from "../utils/mockFactories";
-import {type ProjectId} from "@/engine/types/shared.types";
+import { describe, it, expect, beforeEach } from "vitest";
+import { useGameStore } from "@/store/gameStore";
+import { createMockGameState, createMockProject } from "../utils/mockFactories";
+import { type ProjectId } from "@/engine/types/shared.types";
 
 /**
  * Covers the extended lockMarketingCampaign action used by the project detail

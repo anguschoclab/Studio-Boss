@@ -1,20 +1,20 @@
-import {useMemo, useState} from "react";
-import {useGameStore} from "@/store/gameStore";
-import {useUIStore} from "@/store/uiStore";
-import {AwardBody, MarketingAngle} from "@/engine/types";
-import {type ProjectId} from "@/engine/types/shared.types";
-import {Dialog, DialogContent} from "@/components/ui/dialog";
-import {ScrollArea} from "@/components/ui/scroll-area";
-import {Tabs, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import {BarChart3, Users, Clapperboard, Trophy, Megaphone} from "lucide-react";
-import {useProjectDetailData} from "@/hooks/useProjectDetailData";
-import {ProjectDetailHeader} from "./ProjectDetailHeader";
-import {ProjectDetailFooter} from "./ProjectDetailFooter";
-import {ProjectOverviewTab} from "./tabs/ProjectOverviewTab";
-import {ProjectProductionTab} from "./tabs/ProjectProductionTab";
-import {ProjectCastingTab} from "./tabs/ProjectCastingTab";
-import {ProjectMarketingTab} from "./tabs/ProjectMarketingTab";
-import {ProjectCampaignsTab} from "./tabs/ProjectCampaignsTab";
+import { useMemo, useState } from "react";
+import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
+import { AwardBody, MarketingAngle } from "@/engine/types";
+import { type ProjectId } from "@/engine/types/shared.types";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BarChart3, Users, Clapperboard, Trophy, Megaphone } from "lucide-react";
+import { useProjectDetailData } from "@/hooks/useProjectDetailData";
+import { ProjectDetailHeader } from "./ProjectDetailHeader";
+import { ProjectDetailFooter } from "./ProjectDetailFooter";
+import { ProjectOverviewTab } from "./tabs/ProjectOverviewTab";
+import { ProjectProductionTab } from "./tabs/ProjectProductionTab";
+import { ProjectCastingTab } from "./tabs/ProjectCastingTab";
+import { ProjectMarketingTab } from "./tabs/ProjectMarketingTab";
+import { ProjectCampaignsTab } from "./tabs/ProjectCampaignsTab";
 
 /**
  * Project dossier modal: header, vertical tab rail (overview, production,

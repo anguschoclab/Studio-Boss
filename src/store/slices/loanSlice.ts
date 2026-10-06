@@ -1,6 +1,6 @@
-import {StateCreator} from "zustand";
-import {GameStore} from "../gameStore";
-import {createLoan} from "@/engine/systems/finance/LoanSystem";
+import { StateCreator } from "zustand";
+import { GameStore } from "../gameStore";
+import { createLoan } from "@/engine/systems/finance/LoanSystem";
 
 // ---------------------------------------------------------------------------
 // Slice interface

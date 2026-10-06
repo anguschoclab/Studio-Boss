@@ -1,7 +1,7 @@
-import {describe, it, expect} from "vitest";
-import {selectFatigueForAsset} from "@/store/selectors";
-import {IPAsset, Franchise} from "@/engine/types";
-import {createMockGameState} from "@/test/mockFactory";
+import { describe, it, expect } from "vitest";
+import { selectFatigueForAsset } from "@/store/selectors";
+import { IPAsset, Franchise } from "@/engine/types";
+import { createMockGameState } from "@/test/mockFactory";
 
 function makeFranchise(overrides: Partial<Franchise> = {}): Franchise {
   return {
@@ -59,7 +59,10 @@ describe("selectFatigueForAsset", () => {
 
   it("returns 0 for asset whose franchiseId doesn't exist in franchises", () => {
     const state = createMockGameState({
-      ip: { vault: [makeAsset({ franchiseId: "FR-MISSING" })], franchises: { "FR-1": makeFranchise() } },
+      ip: {
+        vault: [makeAsset({ franchiseId: "FR-MISSING" })],
+        franchises: { "FR-1": makeFranchise() },
+      },
     });
     expect(selectFatigueForAsset(state, "ip-1")).toBe(0);
   });
@@ -79,7 +82,10 @@ describe("selectFatigueForAsset", () => {
       ip: { vault: [makeAsset()], franchises: { "FR-1": makeFranchise({ activeProjectIds: [] }) } },
     });
     const stateHigh = createMockGameState({
-      ip: { vault: [makeAsset()], franchises: { "FR-1": makeFranchise({ activeProjectIds: ["p1", "p2", "p3"] }) } },
+      ip: {
+        vault: [makeAsset()],
+        franchises: { "FR-1": makeFranchise({ activeProjectIds: ["p1", "p2", "p3"] }) },
+      },
     });
     const low = selectFatigueForAsset(stateLow, "ip-1");
     const high = selectFatigueForAsset(stateHigh, "ip-1");
@@ -88,10 +94,16 @@ describe("selectFatigueForAsset", () => {
 
   it("returns lower fatigue with higher audienceLoyalty", () => {
     const stateLowLoyalty = createMockGameState({
-      ip: { vault: [makeAsset()], franchises: { "FR-1": makeFranchise({ audienceLoyalty: 10, activeProjectIds: ["p1"] }) } },
+      ip: {
+        vault: [makeAsset()],
+        franchises: { "FR-1": makeFranchise({ audienceLoyalty: 10, activeProjectIds: ["p1"] }) },
+      },
     });
     const stateHighLoyalty = createMockGameState({
-      ip: { vault: [makeAsset()], franchises: { "FR-1": makeFranchise({ audienceLoyalty: 100, activeProjectIds: ["p1"] }) } },
+      ip: {
+        vault: [makeAsset()],
+        franchises: { "FR-1": makeFranchise({ audienceLoyalty: 100, activeProjectIds: ["p1"] }) },
+      },
     });
     const low = selectFatigueForAsset(stateLowLoyalty, "ip-1");
     const high = selectFatigueForAsset(stateHighLoyalty, "ip-1");
@@ -100,7 +112,10 @@ describe("selectFatigueForAsset", () => {
 
   it("result is scaled to 0-100 (not 0-1)", () => {
     const state = createMockGameState({
-      ip: { vault: [makeAsset()], franchises: { "FR-1": makeFranchise({ activeProjectIds: ["p1", "p2", "p3"] }) } },
+      ip: {
+        vault: [makeAsset()],
+        franchises: { "FR-1": makeFranchise({ activeProjectIds: ["p1", "p2", "p3"] }) },
+      },
     });
     const result = selectFatigueForAsset(state, "ip-1");
     expect(result).toBeGreaterThan(1);

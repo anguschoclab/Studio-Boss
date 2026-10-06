@@ -1,6 +1,6 @@
-import {GameState, WeekSummary} from "../types";
-import {isPlayerOwner} from "../utils/ownership";
-import {countKeys} from "../utils";
+import { GameState, WeekSummary } from "../types";
+import { isPlayerOwner } from "../utils/ownership";
+import { countKeys } from "../utils";
 
 export interface SimulationMetrics {
   week: number;

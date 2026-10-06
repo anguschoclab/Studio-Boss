@@ -1,7 +1,7 @@
-import {describe, it, expect, vi, beforeEach} from "vitest";
-import {tickDistressCascade} from "@/engine/systems/industry/DistressCascade";
-import {defaultSimMemory} from "@/engine/core/simMemory";
-import type {GameState} from "@/engine/types";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { tickDistressCascade } from "@/engine/systems/industry/DistressCascade";
+import { defaultSimMemory } from "@/engine/core/simMemory";
+import type { GameState } from "@/engine/types";
 import * as utils from "@/engine/utils";
 
 function makeRival(id: string, cash: number) {
@@ -39,7 +39,7 @@ function makeState(simMemory?: unknown): GameState {
       contractsByProjectId: {},
       contractsByTalentId: {},
     },
-    industry: {  },
+    industry: {},
     ip: { vault: [], franchises: {} },
     market: { buyers: [], opportunities: [] },
     simMemory: (simMemory ?? defaultSimMemory()) as any,
@@ -83,7 +83,7 @@ describe("distress cascade simMemory", () => {
     const impacts = tickDistressCascade(state);
     // r1 should be on cooldown — no action
     const r1Impacts = impacts.filter(
-      (i: any) => i.type === "NEWS_ADDED" && i.payload?.headline?.includes("r1"),
+      (i: any) => i.type === "NEWS_ADDED" && i.payload?.headline?.includes("r1")
     );
     expect(r1Impacts).toHaveLength(0);
   });

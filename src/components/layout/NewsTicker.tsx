@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import {Newspaper, Trophy, AlertTriangle, TrendingUp, History, Zap} from "lucide-react";
-import {useGameStore} from "@/store/gameStore";
-import {useUIStore} from "@/store/uiStore";
-import {NewsEvent} from "@/engine/types";
-import {selectNewsHistory} from "@/store/selectors";
-import {cn} from "@/lib/utils";
-import {NewsStoryModal} from "@/components/modals/NewsStoryModal";
+import { Newspaper, Trophy, AlertTriangle, TrendingUp, History, Zap } from "lucide-react";
+import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
+import { NewsEvent } from "@/engine/types";
+import { selectNewsHistory } from "@/store/selectors";
+import { cn } from "@/lib/utils";
+import { NewsStoryModal } from "@/components/modals/NewsStoryModal";
 
 const eventTypeConfig: Record<string, { icon: React.ElementType; color: string; label: string }> = {
   AWARD: { icon: Trophy, color: "text-amber-400", label: "AWARD INTEL" },
@@ -39,7 +39,8 @@ export const NewsTicker: React.FC = () => {
     }
   };
 
-  const isClickable = (item: NewsEvent) => !!(item.talentId || item.projectId || item.rivalId || item.buyerId);
+  const isClickable = (item: NewsEvent) =>
+    !!(item.talentId || item.projectId || item.rivalId || item.buyerId);
 
   if (!headlines || headlines.length === 0) {
     return (

@@ -8,9 +8,10 @@
 
 **Tech Stack:** TypeScript, Zod (save schema), Vitest, the engine's `StateImpact`/`applyImpacts` pipeline.
 
-**Why this matters:** These module variables are *simulation state* — cooldowns, streaks, flop history. Because they live outside `GameState`, every save→reload resets them: an antitrust cooldown vanishes, a rival's 26-week negative-cash streak restarts, flop memory is wiped. The sim behaves differently after every reload, which breaks determinism and makes bugs unreproducible from a save file.
+**Why this matters:** These module variables are _simulation state_ — cooldowns, streaks, flop history. Because they live outside `GameState`, every save→reload resets them: an antitrust cooldown vanishes, a rival's 26-week negative-cash streak restarts, flop memory is wiped. The sim behaves differently after every reload, which breaks determinism and makes bugs unreproducible from a save file.
 
 **Verified facts (do not re-derive):**
+
 - `src/engine/systems/industry/Antitrust.ts:38` — `let lastActionWeek = -9999;` read at `:102` (`if (week - lastActionWeek < ACTION_COOLDOWN_WEEKS) return impacts;`), written at `:106`. `resetAntitrustState()` at `:40` also clears two module arrays (`antitrustEventLog`, `antitrustBlockList`).
 - `src/engine/systems/industry/DistressCascade.ts:46-52` — `negativeStreak`, `lastActionWeek`, `stageActionCount` module records; `resetDistressState()` at `:64`.
 - `src/engine/systems/finance/FlopMechanics.ts:103` — `const flopHistory: Map<string, StudioFlopHistory>`; read in `shouldRestructureStudio(rivalId, currentWeek)` (`:105`), written in `applyFlopPenalties(state, project, ownerId)` (`:137-140`). `StudioFlopHistory` interface is defined at `:96-101`.
@@ -18,30 +19,31 @@
 - Save path: `src/persistence/saveLoad.ts` `loadGame(slot)` returns `state as GameState` with no migration; `src/persistence/saveSchema.ts` has a Zod `SAVE_SCHEMA` (passthrough) with **no version field**; `src/engine/migrations/` directory exists and is **empty**.
 - Initial state is constructed in `src/engine/core/gameInit.ts`.
 
-**Out of scope (documented follow-up, not forgotten):** `antitrustEventLog` and `antitrustBlockList` (Antitrust.ts:36-37) are also module-scope, and `antitrustBlockList` is *functional* (ConsolidationEngine reads it to refuse M&A bids during a freeze — the freeze also evaporates on reload). Moving them requires refactoring ConsolidationEngine's direct import, which deserves its own pass. This plan moves `lastActionWeek` only and leaves the arrays with a `// FOLLOW-UP:` comment pointing at this plan.
+**Out of scope (documented follow-up, not forgotten):** `antitrustEventLog` and `antitrustBlockList` (Antitrust.ts:36-37) are also module-scope, and `antitrustBlockList` is _functional_ (ConsolidationEngine reads it to refuse M&A bids during a freeze — the freeze also evaporates on reload). Moving them requires refactoring ConsolidationEngine's direct import, which deserves its own pass. This plan moves `lastActionWeek` only and leaves the arrays with a `// FOLLOW-UP:` comment pointing at this plan.
 
 ---
 
 ## File Structure
 
-| File | Responsibility | Change |
-|------|---------------|--------|
-| `src/engine/types/state.types.ts` | State types | Add `SimMemory`, move `StudioFlopHistory` here |
-| `src/engine/types/studio.types.ts` | `GameState` | Add `simMemory?`, `saveVersion?` fields |
-| `src/engine/core/simMemory.ts` | Defaults + accessor | Create |
-| `src/engine/migrations/index.ts` | Versioned save migrations | Create |
-| `src/persistence/saveLoad.ts` | Load path | Run `migrateSave` on load |
-| `src/persistence/saveSchema.ts` | Save validation | Allow `saveVersion` |
-| `src/engine/core/gameInit.ts` | New-game state | Initialize the two new fields |
-| `src/engine/systems/industry/Antitrust.ts` | Antitrust cooldown | Read/write via simMemory |
-| `src/engine/systems/industry/DistressCascade.ts` | Distress pacing | Read/write via simMemory |
-| `src/engine/systems/finance/FlopMechanics.ts` | Flop history | Read/write via simMemory |
+| File                                             | Responsibility            | Change                                         |
+| ------------------------------------------------ | ------------------------- | ---------------------------------------------- |
+| `src/engine/types/state.types.ts`                | State types               | Add `SimMemory`, move `StudioFlopHistory` here |
+| `src/engine/types/studio.types.ts`               | `GameState`               | Add `simMemory?`, `saveVersion?` fields        |
+| `src/engine/core/simMemory.ts`                   | Defaults + accessor       | Create                                         |
+| `src/engine/migrations/index.ts`                 | Versioned save migrations | Create                                         |
+| `src/persistence/saveLoad.ts`                    | Load path                 | Run `migrateSave` on load                      |
+| `src/persistence/saveSchema.ts`                  | Save validation           | Allow `saveVersion`                            |
+| `src/engine/core/gameInit.ts`                    | New-game state            | Initialize the two new fields                  |
+| `src/engine/systems/industry/Antitrust.ts`       | Antitrust cooldown        | Read/write via simMemory                       |
+| `src/engine/systems/industry/DistressCascade.ts` | Distress pacing           | Read/write via simMemory                       |
+| `src/engine/systems/finance/FlopMechanics.ts`    | Flop history              | Read/write via simMemory                       |
 
 ---
 
 ### Task 1: `SimMemory` type, defaults, and accessor
 
 **Files:**
+
 - Modify: `src/engine/types/state.types.ts`
 - Modify: `src/engine/types/studio.types.ts` (the `GameState` interface)
 - Create: `src/engine/core/simMemory.ts`
@@ -52,12 +54,12 @@
 Create `src/test/engine/simMemory.test.ts`:
 
 ```ts
-import { describe, it, expect } from 'vitest';
-import { defaultSimMemory, getSimMemory, CURRENT_SAVE_VERSION } from '@/engine/core/simMemory';
-import type { GameState } from '@/engine/types';
+import { describe, it, expect } from "vitest";
+import { defaultSimMemory, getSimMemory, CURRENT_SAVE_VERSION } from "@/engine/core/simMemory";
+import type { GameState } from "@/engine/types";
 
-describe('simMemory', () => {
-  it('defaultSimMemory returns a complete, empty memory', () => {
+describe("simMemory", () => {
+  it("defaultSimMemory returns a complete, empty memory", () => {
     const m = defaultSimMemory();
     expect(m.antitrust.lastActionWeek).toBe(-9999);
     expect(m.distress.negativeStreak).toEqual({});
@@ -66,19 +68,19 @@ describe('simMemory', () => {
     expect(m.flops).toEqual({});
   });
 
-  it('getSimMemory falls back to defaults when state has none (old save)', () => {
+  it("getSimMemory falls back to defaults when state has none (old save)", () => {
     const state = {} as GameState;
     expect(getSimMemory(state).antitrust.lastActionWeek).toBe(-9999);
   });
 
-  it('getSimMemory returns the state-carried memory when present', () => {
+  it("getSimMemory returns the state-carried memory when present", () => {
     const state = {
       simMemory: { ...defaultSimMemory(), antitrust: { lastActionWeek: 42 } },
     } as unknown as GameState;
     expect(getSimMemory(state).antitrust.lastActionWeek).toBe(42);
   });
 
-  it('exposes a numeric save version >= 2', () => {
+  it("exposes a numeric save version >= 2", () => {
     expect(CURRENT_SAVE_VERSION).toBeGreaterThanOrEqual(2);
   });
 });
@@ -132,8 +134,8 @@ In `src/engine/types/studio.types.ts`, inside the `GameState` interface (alongsi
 Create `src/engine/core/simMemory.ts`:
 
 ```ts
-import type { GameState } from '../types';
-import type { SimMemory } from '../types/state.types';
+import type { GameState } from "../types";
+import type { SimMemory } from "../types/state.types";
 
 /** Bump when a migration is added in src/engine/migrations. v1 = pre-versioning saves. */
 export const CURRENT_SAVE_VERSION = 2;
@@ -162,7 +164,7 @@ Expected: PASS (4 passed).
 In `src/engine/systems/finance/FlopMechanics.ts`, delete the local `StudioFlopHistory` interface (lines ~96-101) and add at the top:
 
 ```ts
-import type { StudioFlopHistory } from '../../types/state.types';
+import type { StudioFlopHistory } from "../../types/state.types";
 export type { StudioFlopHistory };
 ```
 
@@ -181,6 +183,7 @@ git commit -m "feat(engine): add SimMemory state type and accessor"
 ### Task 2: Versioned save migrations, wired into load and new-game
 
 **Files:**
+
 - Create: `src/engine/migrations/index.ts`
 - Modify: `src/persistence/saveLoad.ts:20-31` (`loadGame`)
 - Modify: `src/persistence/saveSchema.ts` (SAVE_SCHEMA)
@@ -192,13 +195,13 @@ git commit -m "feat(engine): add SimMemory state type and accessor"
 Create `src/test/persistence/migrations.test.ts`:
 
 ```ts
-import { describe, it, expect } from 'vitest';
-import { migrateSave } from '@/engine/migrations';
-import { CURRENT_SAVE_VERSION } from '@/engine/core/simMemory';
-import type { GameState } from '@/engine/types';
+import { describe, it, expect } from "vitest";
+import { migrateSave } from "@/engine/migrations";
+import { CURRENT_SAVE_VERSION } from "@/engine/core/simMemory";
+import type { GameState } from "@/engine/types";
 
-describe('migrateSave', () => {
-  it('upgrades a v1 save (no saveVersion, no simMemory) to current', () => {
+describe("migrateSave", () => {
+  it("upgrades a v1 save (no saveVersion, no simMemory) to current", () => {
     const oldSave = { week: 30, finance: { cash: 100 } } as unknown as GameState;
     const migrated = migrateSave(oldSave);
     expect(migrated.saveVersion).toBe(CURRENT_SAVE_VERSION);
@@ -207,17 +210,21 @@ describe('migrateSave', () => {
     expect(migrated.week).toBe(30);
   });
 
-  it('leaves a current-version save unchanged (idempotent)', () => {
+  it("leaves a current-version save unchanged (idempotent)", () => {
     const fresh = migrateSave({ week: 1 } as unknown as GameState);
     const again = migrateSave(fresh);
     expect(again).toEqual(fresh);
   });
 
-  it('preserves existing simMemory if a save already has one', () => {
+  it("preserves existing simMemory if a save already has one", () => {
     const save = {
       week: 5,
       saveVersion: 1,
-      simMemory: { antitrust: { lastActionWeek: 7 }, distress: { negativeStreak: {}, lastActionWeek: {}, stageActionCount: {} }, flops: {} },
+      simMemory: {
+        antitrust: { lastActionWeek: 7 },
+        distress: { negativeStreak: {}, lastActionWeek: {}, stageActionCount: {} },
+        flops: {},
+      },
     } as unknown as GameState;
     expect(migrateSave(save).simMemory?.antitrust.lastActionWeek).toBe(7);
   });
@@ -234,8 +241,8 @@ Expected: FAIL — module `@/engine/migrations` not found.
 Create `src/engine/migrations/index.ts`:
 
 ```ts
-import type { GameState } from '../types';
-import { CURRENT_SAVE_VERSION, defaultSimMemory } from '../core/simMemory';
+import type { GameState } from "../types";
+import { CURRENT_SAVE_VERSION, defaultSimMemory } from "../core/simMemory";
 
 /**
  * Ordered, append-only save migrations. Each entry upgrades a save to
@@ -267,7 +274,9 @@ export function migrateSave(raw: GameState): GameState {
   if (state.saveVersion !== version) state = { ...state, saveVersion: version };
   if (version !== CURRENT_SAVE_VERSION) {
     // A migration entry is missing — fail loudly in dev rather than corrupt quietly.
-    console.error(`[migrations] Save migrated to v${version} but current is v${CURRENT_SAVE_VERSION}`);
+    console.error(
+      `[migrations] Save migrated to v${version} but current is v${CURRENT_SAVE_VERSION}`
+    );
   }
   return state;
 }
@@ -289,7 +298,7 @@ import { migrateSave } from "@/engine/migrations";
 and in `loadGame` replace `return state as GameState;` with:
 
 ```ts
-    return migrateSave(state as GameState);
+return migrateSave(state as GameState);
 ```
 
 - [ ] **Step 6: Allow the field in the save schema**
@@ -307,7 +316,7 @@ In `src/persistence/saveSchema.ts`, inside the `SAVE_SCHEMA` object (alongside `
 In `src/engine/core/gameInit.ts`, add the imports:
 
 ```ts
-import { CURRENT_SAVE_VERSION, defaultSimMemory } from './simMemory';
+import { CURRENT_SAVE_VERSION, defaultSimMemory } from "./simMemory";
 ```
 
 then locate the initial `GameState` object literal this file returns (the literal containing `week: 1` / `gameSeed`) and add two fields to it:
@@ -334,6 +343,7 @@ git commit -m "feat(persistence): versioned save migrations; init simMemory on n
 ### Task 3: Antitrust cooldown → simMemory
 
 **Files:**
+
 - Modify: `src/engine/systems/industry/Antitrust.ts:38-44,102-106`
 - Test: `src/test/engine/antitrust-memory.test.ts`
 
@@ -342,10 +352,10 @@ git commit -m "feat(persistence): versioned save migrations; init simMemory on n
 Create `src/test/engine/antitrust-memory.test.ts`:
 
 ```ts
-import { describe, it, expect } from 'vitest';
-import { tickAntitrust } from '@/engine/systems/industry/Antitrust';
-import { defaultSimMemory } from '@/engine/core/simMemory';
-import type { GameState } from '@/engine/types';
+import { describe, it, expect } from "vitest";
+import { tickAntitrust } from "@/engine/systems/industry/Antitrust";
+import { defaultSimMemory } from "@/engine/core/simMemory";
+import type { GameState } from "@/engine/types";
 
 // Minimal state: extremely concentrated industry so an intervention WOULD fire
 // if not for the cooldown carried in simMemory.
@@ -353,29 +363,40 @@ function makeState(lastActionWeek: number): GameState {
   return {
     week: 100,
     finance: { cash: 10_000_000 },
-    studio: { id: 'PLAYER', name: 'Player' },
-    entities: { rivals: { r1: { id: 'r1', name: 'Mega', cash: 100_000_000_000, strength: 90, prestige: 90, archetype: 'major' } } },
+    studio: { id: "PLAYER", name: "Player" },
+    entities: {
+      rivals: {
+        r1: {
+          id: "r1",
+          name: "Mega",
+          cash: 100_000_000_000,
+          strength: 90,
+          prestige: 90,
+          archetype: "major",
+        },
+      },
+    },
     industry: { newsHistory: [] },
     simMemory: { ...defaultSimMemory(), antitrust: { lastActionWeek } },
   } as unknown as GameState;
 }
 
-describe('antitrust cooldown lives in simMemory', () => {
-  it('a recent action week carried in state suppresses new interventions', () => {
+describe("antitrust cooldown lives in simMemory", () => {
+  it("a recent action week carried in state suppresses new interventions", () => {
     // lastActionWeek = 99, current week 100 → inside any sane cooldown → no impacts.
     const impacts = tickAntitrust(makeState(99));
     expect(impacts).toEqual([]);
   });
 
-  it('when an intervention fires, the new lastActionWeek is written back via impact', () => {
+  it("when an intervention fires, the new lastActionWeek is written back via impact", () => {
     const impacts = tickAntitrust(makeState(-9999));
     const memWrite = impacts.find(
-      (i: any) => i.type === 'INDUSTRY_UPDATE' && i.payload?.update?.['simMemory.antitrust']
+      (i: any) => i.type === "INDUSTRY_UPDATE" && i.payload?.update?.["simMemory.antitrust"]
     ) as any;
     // Either an intervention fired (memory write present) or thresholds weren't met —
     // but if ANY other impact fired, the memory write must accompany it.
     if (impacts.length > 0) {
-      expect(memWrite.payload.update['simMemory.antitrust'].lastActionWeek).toBe(100);
+      expect(memWrite.payload.update["simMemory.antitrust"].lastActionWeek).toBe(100);
     }
   });
 });
@@ -393,7 +414,7 @@ In `src/engine/systems/industry/Antitrust.ts`:
 (a) Add the import:
 
 ```ts
-import { getSimMemory } from '../../core/simMemory';
+import { getSimMemory } from "../../core/simMemory";
 ```
 
 (b) Delete line 38 (`let lastActionWeek = -9999;`) and remove `lastActionWeek = -9999;` from `resetAntitrustState()` (keep the function — tests use it for the log arrays). Add above the two remaining module arrays:
@@ -408,23 +429,23 @@ import { getSimMemory } from '../../core/simMemory';
 (c) At the cooldown check (was `:102`), replace:
 
 ```ts
-  if (week - lastActionWeek < ACTION_COOLDOWN_WEEKS) return impacts;
+if (week - lastActionWeek < ACTION_COOLDOWN_WEEKS) return impacts;
 ```
 
 with:
 
 ```ts
-  const mem = getSimMemory(state);
-  if (week - mem.antitrust.lastActionWeek < ACTION_COOLDOWN_WEEKS) return impacts;
+const mem = getSimMemory(state);
+if (week - mem.antitrust.lastActionWeek < ACTION_COOLDOWN_WEEKS) return impacts;
 ```
 
 (d) At the write site (was `:106`, `lastActionWeek = week;`), replace with an impact push (place it with the other impact pushes for the intervention):
 
 ```ts
-  impacts.push({
-    type: 'INDUSTRY_UPDATE',
-    payload: { update: { 'simMemory.antitrust': { lastActionWeek: week } } },
-  } as unknown as StateImpact);
+impacts.push({
+  type: "INDUSTRY_UPDATE",
+  payload: { update: { "simMemory.antitrust": { lastActionWeek: week } } },
+} as unknown as StateImpact);
 ```
 
 - [ ] **Step 4: Run the tests**
@@ -444,6 +465,7 @@ git commit -m "fix(engine): antitrust cooldown persists in GameState.simMemory"
 ### Task 4: DistressCascade records → simMemory
 
 **Files:**
+
 - Modify: `src/engine/systems/industry/DistressCascade.ts:46-70,84-98` (and `tickDistressCascade`)
 - Test: `src/test/engine/distress-memory.test.ts`
 
@@ -452,21 +474,37 @@ git commit -m "fix(engine): antitrust cooldown persists in GameState.simMemory"
 Create `src/test/engine/distress-memory.test.ts`:
 
 ```ts
-import { describe, it, expect } from 'vitest';
-import { tickDistressCascade } from '@/engine/systems/industry/DistressCascade';
-import { defaultSimMemory } from '@/engine/core/simMemory';
-import type { GameState } from '@/engine/types';
+import { describe, it, expect } from "vitest";
+import { tickDistressCascade } from "@/engine/systems/industry/DistressCascade";
+import { defaultSimMemory } from "@/engine/core/simMemory";
+import type { GameState } from "@/engine/types";
 
 function makeState(streakForR1: number): GameState {
   return {
     week: 200,
     finance: { cash: 0 },
-    studio: { id: 'PLAYER', name: 'Player' },
-    entities: { rivals: {
-      r1: { id: 'r1', name: 'Sinking', cash: -60_000_000, prestige: 30, strength: 20, archetype: 'mid-tier' },
-      r2: { id: 'r2', name: 'Rich', cash: 900_000_000, prestige: 50, strength: 60, archetype: 'major' },
-    } },
-    ip: { franchises: { f1: { id: 'f1', name: 'Saga', ownerId: 'r1' } }, vault: [] },
+    studio: { id: "PLAYER", name: "Player" },
+    entities: {
+      rivals: {
+        r1: {
+          id: "r1",
+          name: "Sinking",
+          cash: -60_000_000,
+          prestige: 30,
+          strength: 20,
+          archetype: "mid-tier",
+        },
+        r2: {
+          id: "r2",
+          name: "Rich",
+          cash: 900_000_000,
+          prestige: 50,
+          strength: 60,
+          archetype: "major",
+        },
+      },
+    },
+    ip: { franchises: { f1: { id: "f1", name: "Saga", ownerId: "r1" } }, vault: [] },
     industry: { newsHistory: [], distressedOffers: [] },
     simMemory: {
       ...defaultSimMemory(),
@@ -475,25 +513,25 @@ function makeState(streakForR1: number): GameState {
   } as unknown as GameState;
 }
 
-describe('distress memory lives in simMemory', () => {
-  it('always writes the updated distress memory back as an impact', () => {
+describe("distress memory lives in simMemory", () => {
+  it("always writes the updated distress memory back as an impact", () => {
     const impacts = tickDistressCascade(makeState(0));
     const memWrite = impacts.find(
-      (i: any) => i.type === 'INDUSTRY_UPDATE' && i.payload?.update?.['simMemory.distress']
+      (i: any) => i.type === "INDUSTRY_UPDATE" && i.payload?.update?.["simMemory.distress"]
     ) as any;
     expect(memWrite).toBeTruthy();
     // r1 is negative, so its streak increments from the STATE-carried value.
-    expect(memWrite.payload.update['simMemory.distress'].negativeStreak.r1).toBe(1);
+    expect(memWrite.payload.update["simMemory.distress"].negativeStreak.r1).toBe(1);
   });
 
-  it('a long streak carried in state (as after loading a save) enables stage actions', () => {
+  it("a long streak carried in state (as after loading a save) enables stage actions", () => {
     // 30 weeks negative — past the 26-week stage-1 threshold — carried via state,
     // NOT via module memory. Distress actions become possible this tick.
     const impacts = tickDistressCascade(makeState(30));
     const memWrite = impacts.find(
-      (i: any) => i.type === 'INDUSTRY_UPDATE' && i.payload?.update?.['simMemory.distress']
+      (i: any) => i.type === "INDUSTRY_UPDATE" && i.payload?.update?.["simMemory.distress"]
     ) as any;
-    expect(memWrite.payload.update['simMemory.distress'].negativeStreak.r1).toBe(31);
+    expect(memWrite.payload.update["simMemory.distress"].negativeStreak.r1).toBe(31);
   });
 });
 ```
@@ -510,7 +548,7 @@ In `src/engine/systems/industry/DistressCascade.ts`:
 (a) Add the import:
 
 ```ts
-import { getSimMemory } from '../../core/simMemory';
+import { getSimMemory } from "../../core/simMemory";
 ```
 
 (b) Delete the three module records (lines ~46-52: `negativeStreak`, `lastActionWeek`, `stageActionCount`) and delete `resetDistressState()` (~line 64). Then find its call sites and remove them (state-based memory makes reset unnecessary — a fresh `GameState` carries fresh memory):
@@ -524,31 +562,32 @@ For each caller (sim harness and/or tests), delete the call; test fixtures shoul
 (c) At the top of `tickDistressCascade(state)`, hydrate a **local working copy** from state:
 
 ```ts
-  const mem = getSimMemory(state);
-  const distress = {
-    negativeStreak: { ...mem.distress.negativeStreak },
-    lastActionWeek: { ...mem.distress.lastActionWeek },
-    stageActionCount: Object.fromEntries(
-      Object.entries(mem.distress.stageActionCount).map(([k, v]) => [k, { ...v }])
-    ) as Record<string, { s1: number; s2: number; s3: number }>,
-  };
+const mem = getSimMemory(state);
+const distress = {
+  negativeStreak: { ...mem.distress.negativeStreak },
+  lastActionWeek: { ...mem.distress.lastActionWeek },
+  stageActionCount: Object.fromEntries(
+    Object.entries(mem.distress.stageActionCount).map(([k, v]) => [k, { ...v }])
+  ) as Record<string, { s1: number; s2: number; s3: number }>,
+};
 ```
 
 (d) Replace every read/write of the old module records inside this file's tick path with the local `distress.*` equivalents. The existing helpers change mechanically:
+
 - `counts(id)` (which lazily initialized `stageActionCount[id]`) becomes:
 
 ```ts
-  const counts = (id: string) => {
-    if (!distress.stageActionCount[id]) distress.stageActionCount[id] = { s1: 0, s2: 0, s3: 0 };
-    return distress.stageActionCount[id];
-  };
+const counts = (id: string) => {
+  if (!distress.stageActionCount[id]) distress.stageActionCount[id] = { s1: 0, s2: 0, s3: 0 };
+  return distress.stageActionCount[id];
+};
 ```
 
 (move it inside `tickDistressCascade` or pass `distress` to it), and the streak update loop (was `:91-92`) becomes:
 
 ```ts
-    if ((r.cash || 0) < 0) distress.negativeStreak[id] = (distress.negativeStreak[id] || 0) + 1;
-    else distress.negativeStreak[id] = 0;
+if ((r.cash || 0) < 0) distress.negativeStreak[id] = (distress.negativeStreak[id] || 0) + 1;
+else distress.negativeStreak[id] = 0;
 ```
 
 - The dead-rival cleanup (was `:84`) filters the local copies the same way.
@@ -557,11 +596,11 @@ For each caller (sim harness and/or tests), delete the call; test fixtures shoul
 (e) At the **end** of `tickDistressCascade`, always push the memory write-back:
 
 ```ts
-  impacts.push({
-    type: 'INDUSTRY_UPDATE',
-    payload: { update: { 'simMemory.distress': distress } },
-  } as unknown as StateImpact);
-  return impacts;
+impacts.push({
+  type: "INDUSTRY_UPDATE",
+  payload: { update: { "simMemory.distress": distress } },
+} as unknown as StateImpact);
+return impacts;
 ```
 
 - [ ] **Step 4: Run the tests**
@@ -581,6 +620,7 @@ git commit -m "fix(engine): distress pacing memory persists in GameState.simMemo
 ### Task 5: FlopMechanics history → simMemory
 
 **Files:**
+
 - Modify: `src/engine/systems/finance/FlopMechanics.ts:103-150`
 - Test: `src/test/engine/flop-memory.test.ts`
 
@@ -589,30 +629,32 @@ git commit -m "fix(engine): distress pacing memory persists in GameState.simMemo
 Create `src/test/engine/flop-memory.test.ts`:
 
 ```ts
-import { describe, it, expect } from 'vitest';
-import { shouldRestructureStudio } from '@/engine/systems/finance/FlopMechanics';
-import { defaultSimMemory } from '@/engine/core/simMemory';
-import type { GameState } from '@/engine/types';
+import { describe, it, expect } from "vitest";
+import { shouldRestructureStudio } from "@/engine/systems/finance/FlopMechanics";
+import { defaultSimMemory } from "@/engine/core/simMemory";
+import type { GameState } from "@/engine/types";
 
 function makeState(flopWeeks: number[]): GameState {
   return {
     week: 100,
     simMemory: {
       ...defaultSimMemory(),
-      flops: { r1: { rivalId: 'r1', majorFlops: flopWeeks.length, catastrophicFlops: 0, flopWeeks } },
+      flops: {
+        r1: { rivalId: "r1", majorFlops: flopWeeks.length, catastrophicFlops: 0, flopWeeks },
+      },
     },
   } as unknown as GameState;
 }
 
-describe('flop history lives in simMemory', () => {
-  it('3 major flops within a year (carried in state) → restructure', () => {
-    expect(shouldRestructureStudio(makeState([60, 70, 80]), 'r1', 100)).toBe(true);
+describe("flop history lives in simMemory", () => {
+  it("3 major flops within a year (carried in state) → restructure", () => {
+    expect(shouldRestructureStudio(makeState([60, 70, 80]), "r1", 100)).toBe(true);
   });
-  it('old flops outside the window → no restructure', () => {
-    expect(shouldRestructureStudio(makeState([1, 2, 3]), 'r1', 200)).toBe(false);
+  it("old flops outside the window → no restructure", () => {
+    expect(shouldRestructureStudio(makeState([1, 2, 3]), "r1", 200)).toBe(false);
   });
-  it('unknown rival → no restructure', () => {
-    expect(shouldRestructureStudio(makeState([]), 'nobody', 100)).toBe(false);
+  it("unknown rival → no restructure", () => {
+    expect(shouldRestructureStudio(makeState([]), "nobody", 100)).toBe(false);
   });
 });
 ```
@@ -629,7 +671,7 @@ In `src/engine/systems/finance/FlopMechanics.ts`:
 (a) Add the import:
 
 ```ts
-import { getSimMemory } from '../../core/simMemory';
+import { getSimMemory } from "../../core/simMemory";
 ```
 
 (b) Delete the module Map (line ~103). Change `shouldRestructureStudio` to read from state:
@@ -644,26 +686,31 @@ export function shouldRestructureStudio(state: GameState, rivalId: string, curre
 (c) In `applyFlopPenalties` (already receives `state`), replace the Map get/set block (was `:137-140` and the mutations after it) with a copied record + impact:
 
 ```ts
-  if (isRival) {
-    const flops = { ...getSimMemory(state).flops };
-    const prev = flops[ownerId] ?? { rivalId: ownerId, majorFlops: 0, catastrophicFlops: 0, flopWeeks: [] };
-    const history: StudioFlopHistory = { ...prev, flopWeeks: [...prev.flopWeeks] };
+if (isRival) {
+  const flops = { ...getSimMemory(state).flops };
+  const prev = flops[ownerId] ?? {
+    rivalId: ownerId,
+    majorFlops: 0,
+    catastrophicFlops: 0,
+    flopWeeks: [],
+  };
+  const history: StudioFlopHistory = { ...prev, flopWeeks: [...prev.flopWeeks] };
 
-    if (severity === FlopSeverity.MAJOR) {
-      history.majorFlops++;
-      history.flopWeeks.push(state.week);
-    } else if (severity === FlopSeverity.CATASTROPHIC) {
-      history.catastrophicFlops++;
-      history.flopWeeks.push(state.week);
-    }
-    flops[ownerId] = history;
-
-    impacts.push({
-      type: 'INDUSTRY_UPDATE',
-      payload: { update: { 'simMemory.flops': flops } },
-    } as unknown as StateImpact);
-    // ... (any remaining rival-penalty impacts in the original block stay as-is)
+  if (severity === FlopSeverity.MAJOR) {
+    history.majorFlops++;
+    history.flopWeeks.push(state.week);
+  } else if (severity === FlopSeverity.CATASTROPHIC) {
+    history.catastrophicFlops++;
+    history.flopWeeks.push(state.week);
   }
+  flops[ownerId] = history;
+
+  impacts.push({
+    type: "INDUSTRY_UPDATE",
+    payload: { update: { "simMemory.flops": flops } },
+  } as unknown as StateImpact);
+  // ... (any remaining rival-penalty impacts in the original block stay as-is)
+}
 ```
 
 (d) Update `shouldRestructureStudio` callers to pass `state`:
@@ -720,4 +767,4 @@ git add -A && git commit -m "test: fixture updates for state-carried sim memory"
 - **Coverage:** SimMemory type/accessor (T1), versioned migrations wired into load + new-game (T2), all three ghost-state systems refactored (T3-T5), verification (T6). The functional `antitrustBlockList` is explicitly scoped out with an in-code FOLLOW-UP comment and rationale.
 - **Mechanism consistency:** all write-backs use the proven `INDUSTRY_UPDATE` dot-path (`'simMemory.antitrust' | 'simMemory.distress' | 'simMemory.flops'`); all reads go through `getSimMemory` so pre-migration states can't crash.
 - **Signatures:** `shouldRestructureStudio(state, rivalId, currentWeek)` is the one breaking signature change; Task 5 Step 3(d) locates and updates every caller.
-- **Ordering note:** systems read the *pre-tick* memory and write the post-tick memory, matching how every other system in `WeekCoordinator` treats state. Each system owns its own memory slice, so there are no cross-system write conflicts within a tick.
+- **Ordering note:** systems read the _pre-tick_ memory and write the post-tick memory, matching how every other system in `WeekCoordinator` treats state. Each system owns its own memory slice, so there are no cross-system write conflicts within a tick.

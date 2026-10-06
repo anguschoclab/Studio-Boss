@@ -12,9 +12,7 @@ test.describe("Development Auto-Start Bypass", () => {
     await expect(page.getByText("Fiscal Period")).toBeVisible({ timeout: 15000 });
 
     // Check if Alpha Studios (default dev studio) is mentioned
-    await expect(
-      page.getByRole("heading", { name: "Alpha Studios" })
-    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Alpha Studios" })).toBeVisible();
   });
 
   test("should bypass setup flow from root when ?autoStart=true is present", async ({ page }) => {
@@ -25,8 +23,8 @@ test.describe("Development Auto-Start Bypass", () => {
     await expect(page).toHaveURL(/\/dashboard/, { timeout: 15000 });
 
     // 3. Verify content
-    await expect(
-      page.getByRole("heading", { name: "Alpha Studios" })
-    ).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole("heading", { name: "Alpha Studios" })).toBeVisible({
+      timeout: 15000,
+    });
   });
 });

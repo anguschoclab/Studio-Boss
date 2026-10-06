@@ -1,7 +1,16 @@
 import React from "react";
-import {BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, LabelList} from "recharts";
-import type {TooltipProps} from "recharts";
-import type {AwardProbability} from "@/store/chartSelectors";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+  LabelList,
+} from "recharts";
+import type { TooltipProps } from "recharts";
+import type { AwardProbability } from "@/store/chartSelectors";
 
 interface AwardsProbabilityChartProps {
   data: AwardProbability[];
@@ -14,10 +23,7 @@ export const AwardsProbabilityChart: React.FC<AwardsProbabilityChartProps> = ({
 }) => {
   if (!data || data.length === 0) {
     return (
-      <div
-        className="flex items-center justify-center text-muted-foreground"
-        style={{ height }}
-      >
+      <div className="flex items-center justify-center text-muted-foreground" style={{ height }}>
         No awards data available
       </div>
     );
@@ -62,15 +68,11 @@ export const AwardsProbabilityChart: React.FC<AwardsProbabilityChartProps> = ({
                     color: "#e2e8f0",
                   }}
                 >
-                  <div style={{ fontWeight: 700, marginBottom: 2 }}>
-                    {entry.projectTitle}
-                  </div>
+                  <div style={{ fontWeight: 700, marginBottom: 2 }}>{entry.projectTitle}</div>
                   <div style={{ color: "#94a3b8" }}>
                     {entry.category} — {entry.awardBody}
                   </div>
-                  <div style={{ color: "#f59e0b", fontWeight: 700 }}>
-                    {entry.probability}%
-                  </div>
+                  <div style={{ color: "#f59e0b", fontWeight: 700 }}>{entry.probability}%</div>
                 </div>
               );
             }}

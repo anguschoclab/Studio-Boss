@@ -1,9 +1,9 @@
 import React from "react";
-import {Dialog, DialogContent} from "@/components/ui/dialog";
-import {ScrollArea} from "@/components/ui/scroll-area";
-import {Newspaper, Terminal, ArrowRight} from "lucide-react";
-import {NewsEvent} from "@/engine/types";
-import {cn} from "@/lib/utils";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Newspaper, Terminal, ArrowRight } from "lucide-react";
+import { NewsEvent } from "@/engine/types";
+import { cn } from "@/lib/utils";
 
 interface NewsStoryModalProps {
   headline: NewsEvent | null;

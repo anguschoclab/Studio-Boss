@@ -18,7 +18,7 @@ import {
   ProjectType,
   ProjectFormat,
 } from "@/engine/types";
-import {defaultSimMemory} from "@/engine/core/simMemory";
+import { defaultSimMemory } from "@/engine/core/simMemory";
 
 export const createMockTalent = (overrides: Partial<Talent> = {}): Talent =>
   ({

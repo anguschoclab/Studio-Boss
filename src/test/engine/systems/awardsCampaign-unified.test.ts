@@ -1,8 +1,8 @@
-import {describe, it, expect, vi} from "vitest";
-import {launchAwardsCampaign} from "@/engine/systems/awards/AwardsCampaign";
-import {RandomGenerator} from "@/engine/utils/rng";
-import {GameState, AwardsProfile} from "@/engine/types";
-import {createMockGameState, createMockProject} from "@/test/utils/mockFactories";
+import { describe, it, expect, vi } from "vitest";
+import { launchAwardsCampaign } from "@/engine/systems/awards/AwardsCampaign";
+import { RandomGenerator } from "@/engine/utils/rng";
+import { GameState, AwardsProfile } from "@/engine/types";
+import { createMockGameState, createMockProject } from "@/test/utils/mockFactories";
 
 const mockAwardsProfile: AwardsProfile = {
   criticScore: 85,
@@ -92,7 +92,10 @@ describe("launchAwardsCampaign (engine)", () => {
   it("sets targetCategories from parameter", () => {
     const state = makeState();
     const rng = new RandomGenerator(42);
-    const result = launchAwardsCampaign(state, "proj-1", "Trade", rng, ["Best Director", "Best Actor"]);
+    const result = launchAwardsCampaign(state, "proj-1", "Trade", rng, [
+      "Best Director",
+      "Best Actor",
+    ]);
     expect(result!.campaign.targetCategories).toEqual(["Best Director", "Best Actor"]);
   });
 
@@ -108,7 +111,11 @@ describe("launchAwardsCampaign (engine)", () => {
     const project = state.entities.projects["proj-1"] as any;
     project.reception = { metaScore: 50 };
 
-    const mockRng = { next: vi.fn(() => 0.15), uuid: vi.fn(() => "mock-id"), getState: vi.fn(() => 999) } as unknown as RandomGenerator;
+    const mockRng = {
+      next: vi.fn(() => 0.15),
+      uuid: vi.fn(() => "mock-id"),
+      getState: vi.fn(() => 999),
+    } as unknown as RandomGenerator;
     const result = launchAwardsCampaign(state, "proj-1", "Blitz", mockRng);
     expect(result!.backlash).toBe(true);
   });
@@ -128,7 +135,11 @@ describe("launchAwardsCampaign (engine)", () => {
     const project = state.entities.projects["proj-1"] as any;
     project.reception = { metaScore: 50 };
 
-    const mockRng = { next: vi.fn(() => 0.15), uuid: vi.fn(() => "mock-id"), getState: vi.fn(() => 999) } as unknown as RandomGenerator;
+    const mockRng = {
+      next: vi.fn(() => 0.15),
+      uuid: vi.fn(() => "mock-id"),
+      getState: vi.fn(() => 999),
+    } as unknown as RandomGenerator;
     const result = launchAwardsCampaign(state, "proj-1", "Blitz", mockRng);
     expect(result!.impacts.length).toBeGreaterThan(0);
     const newsImpact = result!.impacts.find((i) => i.type === "NEWS_ADDED");

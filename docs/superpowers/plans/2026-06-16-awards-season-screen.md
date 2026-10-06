@@ -11,6 +11,7 @@
 **Why this matters:** The awards subsystem is one of the most complete in the engine — `runAwardsCeremony` executes weekly against an internal calendar, `processRazzies` runs annually, `CAMPAIGN_TIERS` defines Grassroots/Trade/Blitz spend with buzz and scandal-risk tradeoffs, and `checkCampaignBacklash` punishes over-campaigning a weak film. The player's only touchpoint is a button buried inside `ProjectDetailModal`. Prestige already has mechanical teeth (talent rates, deal leverage), so this converts finished systems into the prestige-strategy player's loop for very little new code.
 
 **Verified facts (do not re-derive):**
+
 - `src/components/awards/AwardsHQ.tsx` exists (~140 lines), renders the header, eligible-project list and campaign-tier buttons, and is **imported by nothing** (`grep -rln "AwardsHQ" src --include="*.tsx"` matches only itself).
 - It imports `selectAwardsEligibleProjects` from `@/store/selectors` — that export **does not exist** (`tsc` error TS2305).
 - `studio.activeCampaigns?: Record<string, unknown>` exists at `src/engine/types/studio.types.ts:139`; `AwardsHQ` reads `.activeCampaigns[project.id]` and fails to typecheck because the value is `unknown` (errors at `AwardsHQ.tsx:53,78`).
@@ -24,20 +25,21 @@
 
 ## File Structure
 
-| File | Responsibility | Change |
-|------|---------------|--------|
-| `src/engine/types/studio.types.ts` | `studio.activeCampaigns` typing | Type as `Record<string, CampaignData>` |
-| `src/store/selectors.ts` | Awards selectors | Add `selectAwardsEligibleProjects`, `selectAwardsOddsById` |
-| `src/store/uiStore.ts` | Tab ids | Add `'awards'` |
-| `src/pages/Dashboard.tsx` | Tab routing | Map `awards` → `AwardsHQ` |
-| `src/components/layout/StudioSidebar.tsx` | Navigation | Add the Awards nav item |
-| `src/components/awards/AwardsHQ.tsx` | The screen | Repair odds display + campaign state |
+| File                                      | Responsibility                  | Change                                                     |
+| ----------------------------------------- | ------------------------------- | ---------------------------------------------------------- |
+| `src/engine/types/studio.types.ts`        | `studio.activeCampaigns` typing | Type as `Record<string, CampaignData>`                     |
+| `src/store/selectors.ts`                  | Awards selectors                | Add `selectAwardsEligibleProjects`, `selectAwardsOddsById` |
+| `src/store/uiStore.ts`                    | Tab ids                         | Add `'awards'`                                             |
+| `src/pages/Dashboard.tsx`                 | Tab routing                     | Map `awards` → `AwardsHQ`                                  |
+| `src/components/layout/StudioSidebar.tsx` | Navigation                      | Add the Awards nav item                                    |
+| `src/components/awards/AwardsHQ.tsx`      | The screen                      | Repair odds display + campaign state                       |
 
 ---
 
 ### Task 1: Type `activeCampaigns` properly
 
 **Files:**
+
 - Modify: `src/engine/types/studio.types.ts:139`
 
 - [ ] **Step 1: Replace the untyped record**
@@ -71,6 +73,7 @@ git commit -m "fix(types): type studio.activeCampaigns as Record<string, Campaig
 ### Task 2: Add the missing awards selectors
 
 **Files:**
+
 - Modify: `src/store/selectors.ts`
 - Test: `src/test/store/awards-selectors.test.ts`
 
@@ -81,41 +84,59 @@ git commit -m "fix(types): type studio.activeCampaigns as Record<string, Campaig
 Create `src/test/store/awards-selectors.test.ts`:
 
 ```ts
-import { describe, it, expect } from 'vitest';
-import { selectAwardsEligibleProjects, selectAwardsOddsById } from '@/store/selectors';
-import type { GameState } from '@/engine/types';
+import { describe, it, expect } from "vitest";
+import { selectAwardsEligibleProjects, selectAwardsOddsById } from "@/store/selectors";
+import type { GameState } from "@/engine/types";
 
 function makeState(): GameState {
   return {
     entities: {
       projects: {
-        p1: { id: 'p1', title: 'Contender', state: 'released', awardsProfile: { criticScore: 80, academyAppeal: 70 }, reception: { metaScore: 85 } },
-        p2: { id: 'p2', title: 'In Production', state: 'production', awardsProfile: { criticScore: 90, academyAppeal: 90 } },
-        p3: { id: 'p3', title: 'No Profile', state: 'released' },
-        p4: { id: 'p4', title: 'Late Run', state: 'post_release', awardsProfile: { criticScore: 60, academyAppeal: 50 } },
+        p1: {
+          id: "p1",
+          title: "Contender",
+          state: "released",
+          awardsProfile: { criticScore: 80, academyAppeal: 70 },
+          reception: { metaScore: 85 },
+        },
+        p2: {
+          id: "p2",
+          title: "In Production",
+          state: "production",
+          awardsProfile: { criticScore: 90, academyAppeal: 90 },
+        },
+        p3: { id: "p3", title: "No Profile", state: "released" },
+        p4: {
+          id: "p4",
+          title: "Late Run",
+          state: "post_release",
+          awardsProfile: { criticScore: 60, academyAppeal: 50 },
+        },
       },
     },
   } as unknown as GameState;
 }
 
-describe('awards selectors', () => {
-  it('selectAwardsEligibleProjects returns released projects that have an awardsProfile', () => {
-    const ids = selectAwardsEligibleProjects(makeState()).map((p) => p.id).sort();
-    expect(ids).toEqual(['p1', 'p4']);
+describe("awards selectors", () => {
+  it("selectAwardsEligibleProjects returns released projects that have an awardsProfile", () => {
+    const ids = selectAwardsEligibleProjects(makeState())
+      .map((p) => p.id)
+      .sort();
+    expect(ids).toEqual(["p1", "p4"]);
   });
 
-  it('excludes unreleased projects even with a strong profile', () => {
-    expect(selectAwardsEligibleProjects(makeState()).some((p) => p.id === 'p2')).toBe(false);
+  it("excludes unreleased projects even with a strong profile", () => {
+    expect(selectAwardsEligibleProjects(makeState()).some((p) => p.id === "p2")).toBe(false);
   });
 
-  it('selectAwardsOddsById maps project id to a 0-100 probability', () => {
+  it("selectAwardsOddsById maps project id to a 0-100 probability", () => {
     const odds = selectAwardsOddsById(makeState());
     expect(odds.p1).toBeGreaterThan(0);
     expect(odds.p1).toBeLessThanOrEqual(100);
     expect(odds.p3).toBeUndefined(); // no awardsProfile
   });
 
-  it('returns an empty list for a null state', () => {
+  it("returns an empty list for a null state", () => {
     expect(selectAwardsEligibleProjects(null)).toEqual([]);
   });
 });
@@ -138,7 +159,7 @@ In `src/store/selectors.ts`, add near the existing `selectAwardsProbability` (ar
  */
 export const selectAwardsEligibleProjects = createSelector([selectProjects], (projects) =>
   projects.filter(
-    (p) => (p.state === 'released' || p.state === 'post_release') && !!p.awardsProfile
+    (p) => (p.state === "released" || p.state === "post_release") && !!p.awardsProfile
   )
 );
 
@@ -179,6 +200,7 @@ git commit -m "feat(store): add awards eligibility and id-keyed odds selectors"
 ### Task 3: Make the Awards tab reachable
 
 **Files:**
+
 - Modify: `src/store/uiStore.ts:30`
 - Modify: `src/pages/Dashboard.tsx`
 - Modify: `src/components/layout/StudioSidebar.tsx`
@@ -188,7 +210,17 @@ git commit -m "feat(store): add awards eligibility and id-keyed odds selectors"
 In `src/store/uiStore.ts`, extend the `TabId` union:
 
 ```ts
-export type TabId = 'command' | 'pipeline' | 'ip' | 'distribution' | 'talent' | 'finance' | 'trades' | 'industry' | 'awards' | 'bookmarks';
+export type TabId =
+  | "command"
+  | "pipeline"
+  | "ip"
+  | "distribution"
+  | "talent"
+  | "finance"
+  | "trades"
+  | "industry"
+  | "awards"
+  | "bookmarks";
 ```
 
 - [ ] **Step 2: Route the tab in `Dashboard.tsx`**
@@ -196,7 +228,7 @@ export type TabId = 'command' | 'pipeline' | 'ip' | 'distribution' | 'talent' | 
 Add the import with the other tab components:
 
 ```tsx
-import { AwardsHQ } from '@/components/awards/AwardsHQ';
+import { AwardsHQ } from "@/components/awards/AwardsHQ";
 ```
 
 and add the entry to the `TAB_CONTENT` map:
@@ -239,6 +271,7 @@ git commit -m "feat(ui): reachable Awards Season tab"
 ### Task 4: Surface odds and campaign state on the screen
 
 **Files:**
+
 - Modify: `src/components/awards/AwardsHQ.tsx`
 
 - [ ] **Step 1: Wire the new selectors in**
@@ -252,8 +285,8 @@ import { selectAwardsEligibleProjects, selectAwardsOddsById } from "@/store/sele
 and inside the component, after `eligibleProjects`, add:
 
 ```tsx
-  const oddsById = useMemo(() => selectAwardsOddsById(gameState), [gameState]);
-  const activeCampaigns = gameState?.studio.activeCampaigns ?? {};
+const oddsById = useMemo(() => selectAwardsOddsById(gameState), [gameState]);
+const activeCampaigns = gameState?.studio.activeCampaigns ?? {};
 ```
 
 - [ ] **Step 2: Render odds and campaign status per project**
@@ -261,46 +294,47 @@ and inside the component, after `eligibleProjects`, add:
 In the eligible-project row, render the odds and either the active campaign or the tier buttons. Use this block as the row's right-hand side:
 
 ```tsx
-              <div className="flex items-center gap-6">
-                <div className="text-right">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground not-italic">
-                    Win Odds
-                  </div>
-                  <div className="font-display text-2xl font-bold not-italic tabular-nums">
-                    {oddsById[project.id] ?? 0}%
-                  </div>
-                </div>
+<div className="flex items-center gap-6">
+  <div className="text-right">
+    <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground not-italic">
+      Win Odds
+    </div>
+    <div className="font-display text-2xl font-bold not-italic tabular-nums">
+      {oddsById[project.id] ?? 0}%
+    </div>
+  </div>
 
-                {activeCampaigns[project.id] ? (
-                  <div className="border border-primary/30 bg-primary/5 px-4 py-2 text-right">
-                    <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary not-italic">
-                      Campaign Active
-                    </div>
-                    <div className="text-xs tabular-nums text-muted-foreground">
-                      {formatMoney(activeCampaigns[project.id].budget)} · +{activeCampaigns[project.id].buzzBonus} buzz
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex gap-2">
-                    {(["Grassroots", "Trade", "Blitz"] as const).map((tierKey) => {
-                      const tier = CAMPAIGN_TIERS[tierKey];
-                      const affordable = (gameState?.finance.cash ?? 0) >= tier.cost;
-                      return (
-                        <Button
-                          key={tierKey}
-                          size="sm"
-                          variant="outline"
-                          disabled={!affordable}
-                          onClick={() => launchAwardsCampaign(project.id, tierKey)}
-                          title={`${formatMoney(tier.cost)} · +${tier.buzz} buzz · ${Math.round(tier.risk * 100)}% backlash risk`}
-                        >
-                          {tierKey}
-                        </Button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
+  {activeCampaigns[project.id] ? (
+    <div className="border border-primary/30 bg-primary/5 px-4 py-2 text-right">
+      <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary not-italic">
+        Campaign Active
+      </div>
+      <div className="text-xs tabular-nums text-muted-foreground">
+        {formatMoney(activeCampaigns[project.id].budget)} · +{activeCampaigns[project.id].buzzBonus}{" "}
+        buzz
+      </div>
+    </div>
+  ) : (
+    <div className="flex gap-2">
+      {(["Grassroots", "Trade", "Blitz"] as const).map((tierKey) => {
+        const tier = CAMPAIGN_TIERS[tierKey];
+        const affordable = (gameState?.finance.cash ?? 0) >= tier.cost;
+        return (
+          <Button
+            key={tierKey}
+            size="sm"
+            variant="outline"
+            disabled={!affordable}
+            onClick={() => launchAwardsCampaign(project.id, tierKey)}
+            title={`${formatMoney(tier.cost)} · +${tier.buzz} buzz · ${Math.round(tier.risk * 100)}% backlash risk`}
+          >
+            {tierKey}
+          </Button>
+        );
+      })}
+    </div>
+  )}
+</div>
 ```
 
 - [ ] **Step 3: Add an honest empty state**

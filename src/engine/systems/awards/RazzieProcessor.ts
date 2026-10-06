@@ -1,7 +1,7 @@
-import {GameState, StateImpact, Talent} from "@/engine/types";
-import {RandomGenerator} from "../../utils/rng";
-import {BardResolver} from "../bardResolver";
-import {impacts as I} from "../../core/impacts";
+import { GameState, StateImpact, Talent } from "@/engine/types";
+import { RandomGenerator } from "../../utils/rng";
+import { BardResolver } from "../bardResolver";
+import { impacts as I } from "../../core/impacts";
 
 export function processRazzies(
   state: GameState,
@@ -48,7 +48,7 @@ export function processRazzies(
       I.projectUpdated(project.id, {
         razzieWinner: true,
         razzieCategory,
-      }),
+      })
     );
 
     if (isPlayer) {
@@ -72,7 +72,7 @@ export function processRazzies(
         }),
         category: "awards",
         projectId: project.id,
-      }),
+      })
     );
 
     if (isAbsurd) {
@@ -82,7 +82,7 @@ export function processRazzies(
           description: `Despite its Razzie nomination, the film has developed a cult following among midnight movie audiences.`,
           category: "general",
           projectId: project.id,
-        }),
+        })
       );
     }
 
@@ -102,9 +102,7 @@ export function processRazzies(
     }
 
     if (worstLeadTalent) {
-      impacts.push(
-        I.talentUpdated(worstLeadTalent.id, { razzieWinner: true }),
-      );
+      impacts.push(I.talentUpdated(worstLeadTalent.id, { razzieWinner: true }));
 
       impacts.push(
         I.newsAdded({
@@ -113,7 +111,7 @@ export function processRazzies(
           category: "awards",
           projectId: project.id,
           talentId: worstLeadTalent.id,
-        }),
+        })
       );
     }
   }

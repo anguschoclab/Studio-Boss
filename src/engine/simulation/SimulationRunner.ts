@@ -1,12 +1,12 @@
-import {GameState, ArchetypeKey} from "../types";
-import {initializeGame} from "../core/gameInit";
-import {WeekCoordinator} from "../services/WeekCoordinator";
-import {TalentLifecycleSystem} from "../systems/talent/TalentLifecycleSystem";
-import {HeadlessController} from "./HeadlessController";
-import {MetricsCollector} from "./MetricsCollector";
-import {RandomGenerator} from "../utils/rng";
-import {applyImpacts} from "../core/impactReducer";
-import {StudioAutomation} from "./StudioAutomation";
+import { GameState, ArchetypeKey } from "../types";
+import { initializeGame } from "../core/gameInit";
+import { WeekCoordinator } from "../services/WeekCoordinator";
+import { TalentLifecycleSystem } from "../systems/talent/TalentLifecycleSystem";
+import { HeadlessController } from "./HeadlessController";
+import { MetricsCollector } from "./MetricsCollector";
+import { RandomGenerator } from "../utils/rng";
+import { applyImpacts } from "../core/impactReducer";
+import { StudioAutomation } from "./StudioAutomation";
 
 export interface SimulationResult {
   finalState: GameState;

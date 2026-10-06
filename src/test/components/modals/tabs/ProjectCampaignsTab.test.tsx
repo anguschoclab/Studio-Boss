@@ -1,9 +1,9 @@
-import {render, screen, fireEvent} from "@testing-library/react";
-import {describe, it, expect, vi} from "vitest";
-import {ProjectCampaignsTab} from "@/components/modals/tabs/ProjectCampaignsTab";
-import {Tabs} from "@/components/ui/tabs";
-import {createMockProject} from "../../../utils/mockFactories";
-import {CampaignData} from "@/engine/types";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
+import { ProjectCampaignsTab } from "@/components/modals/tabs/ProjectCampaignsTab";
+import { Tabs } from "@/components/ui/tabs";
+import { createMockProject } from "../../../utils/mockFactories";
+import { CampaignData } from "@/engine/types";
 
 vi.mock("@/components/charts/SimpleBarChart", () => ({
   SimpleBarChart: () => <div data-testid="probability-chart" />,

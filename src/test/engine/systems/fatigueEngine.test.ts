@@ -1,6 +1,9 @@
-import {describe, it, expect} from "vitest";
-import {calculateFranchiseFatigue, calculateReleaseGapImpact} from "../../../engine/systems/ip/fatigueEngine";
-import {Franchise} from "../../../engine/types";
+import { describe, it, expect } from "vitest";
+import {
+  calculateFranchiseFatigue,
+  calculateReleaseGapImpact,
+} from "../../../engine/systems/ip/fatigueEngine";
+import { Franchise } from "../../../engine/types";
 
 describe("Fatigue Engine", () => {
   const mockFranchise: Franchise = {
@@ -102,7 +105,7 @@ describe("Fatigue Engine", () => {
       // rivalPenalty 0
       // loyaltyShield (50/100 * 0.3) = 0.15
       // 0.45 - 0.15 = 0.30
-      expect(fatigue).toBeCloseTo(0.30, 2);
+      expect(fatigue).toBeCloseTo(0.3, 2);
     });
   });
 });

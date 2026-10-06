@@ -1,5 +1,5 @@
-import {Project} from "@/engine/types";
-import {Button} from "@/components/ui/button";
+import { Project } from "@/engine/types";
+import { Button } from "@/components/ui/button";
 
 interface ProjectDetailFooterProps {
   project: Project;

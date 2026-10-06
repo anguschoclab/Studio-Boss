@@ -1,5 +1,5 @@
-import {Contract, GameState, RivalStudio} from "@/engine/types";
-import {isPlayerOwner} from "./utils/ownership";
+import { Contract, GameState, RivalStudio } from "@/engine/types";
+import { isPlayerOwner } from "./utils/ownership";
 // Shared utilities for the engine layer — no React imports
 
 /**

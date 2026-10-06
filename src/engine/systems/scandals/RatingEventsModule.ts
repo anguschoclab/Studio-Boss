@@ -1,9 +1,9 @@
-import {GameState, StateImpact} from "@/engine/types";
-import {RandomGenerator} from "../../utils/rng";
-import {RatingMarket} from "../../types/project.types";
-import {MARKET_CONFIGS} from "../../data/ratingMarkets";
-import {Project} from "../../types/project.types";
-import {BardResolver} from "../bardResolver";
+import { GameState, StateImpact } from "@/engine/types";
+import { RandomGenerator } from "../../utils/rng";
+import { RatingMarket } from "../../types/project.types";
+import { MARKET_CONFIGS } from "../../data/ratingMarkets";
+import { Project } from "../../types/project.types";
+import { BardResolver } from "../bardResolver";
 
 export type RatingEventType = "rating_controversy" | "foreign_market_cut" | "banned_in_market";
 

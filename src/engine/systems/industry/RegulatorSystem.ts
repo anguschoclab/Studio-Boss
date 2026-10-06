@@ -1,5 +1,5 @@
-import {GameState} from "@/engine/types";
-import {rand} from "../../utils";
+import { GameState } from "@/engine/types";
+import { rand } from "../../utils";
 
 /**
  * Studio Boss - Regulator System (Anti-Trust)

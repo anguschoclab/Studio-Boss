@@ -1,5 +1,5 @@
-import {z} from "zod";
-import {RandomGenerator} from "../../utils/rng";
+import { z } from "zod";
+import { RandomGenerator } from "../../utils/rng";
 
 /**
  * The Bard Engine Archive Schema

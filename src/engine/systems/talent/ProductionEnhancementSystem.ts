@@ -1,7 +1,14 @@
-import {GameState, StateImpact, Talent, Project} from "../../types";
-import {RandomGenerator} from "../../utils/rng";
-import {getContractsByProjectId} from "../../utils";
-import {ScreenplayNote, ScreenplayNoteType, ProductionAddition, ProductionAdditionType, CreditScene, CreditSceneType} from "../../types/production.types";
+import { GameState, StateImpact, Talent, Project } from "../../types";
+import { RandomGenerator } from "../../utils/rng";
+import { getContractsByProjectId } from "../../utils";
+import {
+  ScreenplayNote,
+  ScreenplayNoteType,
+  ProductionAddition,
+  ProductionAdditionType,
+  CreditScene,
+  CreditSceneType,
+} from "../../types/production.types";
 
 /**
  * Production Enhancement System

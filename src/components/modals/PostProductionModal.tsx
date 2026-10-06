@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
-import {Button} from "@/components/ui/button";
-import {Badge} from "@/components/ui/badge";
-import {useUIStore} from "@/store/uiStore";
-import {useGameStore} from "@/store/gameStore";
-import {cn} from "@/lib/utils";
-import {Clapperboard, Clock, Zap, Film, ChevronRight} from "lucide-react";
-import {Project} from "@/engine/types";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { useUIStore } from "@/store/uiStore";
+import { useGameStore } from "@/store/gameStore";
+import { cn } from "@/lib/utils";
+import { Clapperboard, Clock, Zap, Film, ChevronRight } from "lucide-react";
+import { Project } from "@/engine/types";
 
 // ─── Post-production timeline steps ──────────────────────────────────────────
 
@@ -26,8 +26,7 @@ export const PostProductionModal: React.FC = () => {
 
   const [choice, setChoice] = useState<"none" | "rush" | "extended">("none");
 
-  const payload =
-    activeModal?.type === "POST_PRODUCTION" ? activeModal.payload : undefined;
+  const payload = activeModal?.type === "POST_PRODUCTION" ? activeModal.payload : undefined;
   const projectId = payload?.projectId;
   const projectTitle = payload?.projectTitle;
   const project = projectId ? gameState?.entities?.projects?.[projectId] : undefined;

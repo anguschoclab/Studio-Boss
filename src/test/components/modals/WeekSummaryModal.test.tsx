@@ -1,8 +1,8 @@
 import React from "react";
-import {render, screen, fireEvent} from "@testing-library/react";
-import {describe, it, expect, vi, beforeEach} from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const {mockResolveCurrentModal} = vi.hoisted(() => ({
+const { mockResolveCurrentModal } = vi.hoisted(() => ({
   mockResolveCurrentModal: vi.fn(),
 }));
 
@@ -17,7 +17,7 @@ vi.mock("@/store/uiStore", () => ({
 
 vi.mock("@/store/gameStore", () => ({
   useGameStore: vi.fn((selector: any) =>
-    typeof selector === "function" ? selector({snapshots: []}) : selector
+    typeof selector === "function" ? selector({ snapshots: [] }) : selector
   ),
 }));
 
@@ -26,11 +26,11 @@ vi.mock("@/engine/utils", () => ({
 }));
 
 vi.mock("@/components/ui/dialog", () => ({
-  Dialog: ({children, open}: any) => (open ? <div data-testid="dialog">{children}</div> : null),
-  DialogContent: ({children}: any) => <div>{children}</div>,
-  DialogHeader: ({children}: any) => <div>{children}</div>,
-  DialogTitle: ({children}: any) => <h2>{children}</h2>,
-  DialogFooter: ({children}: any) => <div>{children}</div>,
+  Dialog: ({ children, open }: any) => (open ? <div data-testid="dialog">{children}</div> : null),
+  DialogContent: ({ children }: any) => <div>{children}</div>,
+  DialogHeader: ({ children }: any) => <div>{children}</div>,
+  DialogTitle: ({ children }: any) => <h2>{children}</h2>,
+  DialogFooter: ({ children }: any) => <div>{children}</div>,
 }));
 
 vi.mock("@/components/modals/NewsStoryModal", () => ({
@@ -46,7 +46,7 @@ vi.mock("lucide-react", () => ({
   MessageSquare: () => <div data-testid="icon" />,
 }));
 
-import {WeekSummaryModal} from "@/components/modals/WeekSummaryModal";
+import { WeekSummaryModal } from "@/components/modals/WeekSummaryModal";
 
 const validSummary = {
   id: "w10",
@@ -64,7 +64,7 @@ const validSummary = {
 };
 
 function setModal(payload: any) {
-  mockActiveModal = {id: "m1", type: "SUMMARY", payload};
+  mockActiveModal = { id: "m1", type: "SUMMARY", payload };
 }
 
 describe("WeekSummaryModal", () => {
@@ -74,21 +74,21 @@ describe("WeekSummaryModal", () => {
   });
 
   it("renders nothing when activeModal is null", () => {
-    const {container} = render(<WeekSummaryModal />);
+    const { container } = render(<WeekSummaryModal />);
     expect(container.firstChild).toBeNull();
     expect(mockResolveCurrentModal).not.toHaveBeenCalled();
   });
 
   it("renders nothing and does NOT resolve when activeModal type is not SUMMARY", () => {
-    mockActiveModal = {id: "m1", type: "CRISIS", payload: {}};
-    const {container} = render(<WeekSummaryModal />);
+    mockActiveModal = { id: "m1", type: "CRISIS", payload: {} };
+    const { container } = render(<WeekSummaryModal />);
     expect(container.firstChild).toBeNull();
     expect(mockResolveCurrentModal).not.toHaveBeenCalled();
   });
 
   it("resolves via useEffect when the payload is missing (malformed modal must not crash)", () => {
     setModal(undefined);
-    const {container} = render(<WeekSummaryModal />);
+    const { container } = render(<WeekSummaryModal />);
     expect(container.firstChild).toBeNull();
     expect(mockResolveCurrentModal).toHaveBeenCalledTimes(1);
   });
@@ -103,7 +103,7 @@ describe("WeekSummaryModal", () => {
   it("confirm button resolves the modal", () => {
     setModal(validSummary);
     render(<WeekSummaryModal />);
-    fireEvent.click(screen.getByRole("button", {name: /confirm report and continue/i}));
+    fireEvent.click(screen.getByRole("button", { name: /confirm report and continue/i }));
     expect(mockResolveCurrentModal).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,5 +1,10 @@
-import {GameState, StateImpact, ImpactType} from "@/engine/types";
-import {addContractsToIndex, addContractsToTalentIndex, removeContractsByTalentFromIndex, removeContractsByProjectFromTalentIndex} from "@/engine/utils";
+import { GameState, StateImpact, ImpactType } from "@/engine/types";
+import {
+  addContractsToIndex,
+  addContractsToTalentIndex,
+  removeContractsByTalentFromIndex,
+  removeContractsByProjectFromTalentIndex,
+} from "@/engine/utils";
 
 // Import all handler modules
 import * as financeHandlers from "./financeHandlers";
@@ -410,8 +415,7 @@ export function applySingleImpact(state: GameState, impact: StateImpact): GameSt
   // member), so the single documented cast lives here instead of `any` on
   // every handler.
   const handler = handlerRegistry[impact.type] as
-    | ((state: GameState, impact: StateImpact) => GameState)
-    | undefined;
+    ((state: GameState, impact: StateImpact) => GameState) | undefined;
   if (handler) {
     return handler(state, impact);
   }

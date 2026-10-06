@@ -2,9 +2,9 @@
  * @vitest-environment jsdom
  */
 import React from "react";
-import {render} from "@testing-library/react";
-import {describe, it, expect} from "vitest";
-import {Input} from "@/components/ui/input";
+import { render } from "@testing-library/react";
+import { describe, it, expect } from "vitest";
+import { Input } from "@/components/ui/input";
 
 describe("Input", () => {
   it("renders an input element", () => {
@@ -52,9 +52,7 @@ describe("Input", () => {
     });
 
     it("passes through other props correctly alongside maxLength", () => {
-      const { container } = render(
-        <Input maxLength={100} placeholder="Test" disabled />
-      );
+      const { container } = render(<Input maxLength={100} placeholder="Test" disabled />);
       const input = container.querySelector("input");
       expect(input?.getAttribute("maxlength")).toBe("100");
       expect(input?.getAttribute("placeholder")).toBe("Test");

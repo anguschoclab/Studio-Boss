@@ -1,8 +1,8 @@
-import {describe, it, expect, beforeEach} from "vitest";
-import {useGameStore} from "@/store/gameStore";
-import {useUIStore} from "@/store/uiStore";
-import type {GameState} from "@/engine/types";
-import type {DistressedAssetOffer} from "@/engine/types/distress.types";
+import { describe, it, expect, beforeEach } from "vitest";
+import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
+import type { GameState } from "@/engine/types";
+import type { DistressedAssetOffer } from "@/engine/types/distress.types";
 
 const offer: DistressedAssetOffer = {
   id: "o1",
@@ -64,7 +64,10 @@ describe("distress slice", () => {
 
   it("acquire with insufficient cash: modal resolved, no ownership transfer, offer remains", () => {
     useGameStore.setState({
-      gameState: { ...seed(), finance: { cash: 50_000_000, weeklyHistory: [], ledger: [], marketState: {} } } as any,
+      gameState: {
+        ...seed(),
+        finance: { cash: 50_000_000, weeklyHistory: [], ledger: [], marketState: {} },
+      } as any,
     });
     useUIStore.setState({
       activeModal: { id: "m1", type: "DISTRESSED_ASSET_OFFER", payload: { offerId: "o1" } },

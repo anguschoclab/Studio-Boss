@@ -1,7 +1,11 @@
-import {describe, it, expect} from "vitest";
-import {tickTalentCompetition} from "@/engine/systems/ai/bidding/CompetitionModule";
-import {RandomGenerator} from "@/engine/utils/rng";
-import {createMockGameState, createMockRival, createMockTalent} from "../../../utils/mockFactories";
+import { describe, it, expect } from "vitest";
+import { tickTalentCompetition } from "@/engine/systems/ai/bidding/CompetitionModule";
+import { RandomGenerator } from "@/engine/utils/rng";
+import {
+  createMockGameState,
+  createMockRival,
+  createMockTalent,
+} from "../../../utils/mockFactories";
 
 describe("CompetitionModule - tickTalentCompetition", () => {
   it("returns empty array when week is not divisible by 4", () => {
@@ -32,7 +36,7 @@ describe("CompetitionModule - tickTalentCompetition", () => {
       week: 4,
       entities: {
         rivals: {
-          "r1": createMockRival({ id: "r1", cash: 50_000_000 }),
+          r1: createMockRival({ id: "r1", cash: 50_000_000 }),
         },
         talents: {},
         projects: {},
@@ -51,10 +55,10 @@ describe("CompetitionModule - tickTalentCompetition", () => {
       week: 4,
       entities: {
         rivals: {
-          "r1": createMockRival({ id: "r1", cash: 500_000_000, prestige: 50 }),
+          r1: createMockRival({ id: "r1", cash: 500_000_000, prestige: 50 }),
         },
         talents: {
-          "t1": createMockTalent({ id: "t1", prestige: 50 }),
+          t1: createMockTalent({ id: "t1", prestige: 50 }),
         },
         projects: {},
         contracts: {},
@@ -72,10 +76,10 @@ describe("CompetitionModule - tickTalentCompetition", () => {
       week: 4,
       entities: {
         rivals: {
-          "r1": createMockRival({ id: "r1", cash: 500_000_000, prestige: 50, name: "Mega Studio" }),
+          r1: createMockRival({ id: "r1", cash: 500_000_000, prestige: 50, name: "Mega Studio" }),
         },
         talents: {
-          "t1": createMockTalent({
+          t1: createMockTalent({
             id: "t1",
             prestige: 90,
             name: "Star Actor",
@@ -100,11 +104,11 @@ describe("CompetitionModule - tickTalentCompetition", () => {
       week: 4,
       entities: {
         rivals: {
-          "r1": createMockRival({ id: "r1", cash: 99_999_999, prestige: 50 }),
-          "r2": createMockRival({ id: "r2", cash: 100_000_001, prestige: 50 }),
+          r1: createMockRival({ id: "r1", cash: 99_999_999, prestige: 50 }),
+          r2: createMockRival({ id: "r2", cash: 100_000_001, prestige: 50 }),
         },
         talents: {
-          "t1": createMockTalent({ id: "t1", prestige: 90, fee: 1_000_000 }),
+          t1: createMockTalent({ id: "t1", prestige: 90, fee: 1_000_000 }),
         },
         projects: {},
         contracts: {},
@@ -127,12 +131,12 @@ describe("CompetitionModule - tickTalentCompetition", () => {
       week: 4,
       entities: {
         rivals: {
-          "r1": createMockRival({ id: "r1", cash: 500_000_000, prestige: 50, name: "Big Studio" }),
+          r1: createMockRival({ id: "r1", cash: 500_000_000, prestige: 50, name: "Big Studio" }),
         },
         talents: {
-          "t1": createMockTalent({ id: "t1", prestige: 85, fee: 1_000_000 }),
-          "t2": createMockTalent({ id: "t2", prestige: 90, fee: 1_000_000, contractId: "existing" }),
-          "t3": createMockTalent({ id: "t3", prestige: 95, fee: 1_000_000 }),
+          t1: createMockTalent({ id: "t1", prestige: 85, fee: 1_000_000 }),
+          t2: createMockTalent({ id: "t2", prestige: 90, fee: 1_000_000, contractId: "existing" }),
+          t3: createMockTalent({ id: "t3", prestige: 95, fee: 1_000_000 }),
         },
         projects: {},
         contracts: {},

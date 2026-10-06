@@ -1,8 +1,8 @@
-import {TabsContent} from "@/components/ui/tabs";
-import {Project, ScriptedProject} from "@/engine/types";
-import {formatMoney} from "@/engine/utils";
-import {TrendingUp, DollarSign, Brain, Calendar} from "lucide-react";
-import {cn} from "@/lib/utils";
+import { TabsContent } from "@/components/ui/tabs";
+import { Project, ScriptedProject } from "@/engine/types";
+import { formatMoney } from "@/engine/utils";
+import { TrendingUp, DollarSign, Brain, Calendar } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ProjectOverviewTabProps {
   project: Project;

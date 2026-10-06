@@ -1,14 +1,20 @@
-import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter} from "@/components/ui/dialog";
-import {FormActions} from "../forms/FormActions";
-import {generateProjectTitle} from "@/engine/generators/titles";
-import {Sparkles} from "lucide-react";
-import {useCreateProjectForm} from "./create-project/useCreateProjectForm";
-import {ProjectTitleField} from "./create-project/ProjectTitleField";
-import {FormatSelector} from "./create-project/FormatSelector";
-import {SeriesConfigFields} from "./create-project/SeriesConfigFields";
-import {ProjectMetaFields} from "./create-project/ProjectMetaFields";
-import {BudgetTierField} from "./create-project/BudgetTierField";
-import {FlavorField} from "./create-project/FlavorField";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { FormActions } from "../forms/FormActions";
+import { generateProjectTitle } from "@/engine/generators/titles";
+import { Sparkles } from "lucide-react";
+import { useCreateProjectForm } from "./create-project/useCreateProjectForm";
+import { ProjectTitleField } from "./create-project/ProjectTitleField";
+import { FormatSelector } from "./create-project/FormatSelector";
+import { SeriesConfigFields } from "./create-project/SeriesConfigFields";
+import { ProjectMetaFields } from "./create-project/ProjectMetaFields";
+import { BudgetTierField } from "./create-project/BudgetTierField";
+import { FlavorField } from "./create-project/FlavorField";
 
 /**
  * Modal for initiating a new studio project (Film, TV Series, or Unscripted).

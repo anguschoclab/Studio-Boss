@@ -1,10 +1,10 @@
 import React from "react";
-import {render, screen, fireEvent} from "@testing-library/react";
-import {describe, it, expect, vi, beforeEach} from "vitest";
-import {DiscoveryBoard} from "../../../components/discovery/DiscoveryBoard";
-import {useGameStore} from "../../../store/gameStore";
-import {useUIStore} from "../../../store/uiStore";
-import {Opportunity} from "../../../engine/types";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { DiscoveryBoard } from "../../../components/discovery/DiscoveryBoard";
+import { useGameStore } from "../../../store/gameStore";
+import { useUIStore } from "../../../store/uiStore";
+import { Opportunity } from "../../../engine/types";
 
 vi.mock("../../../store/uiStore", () => ({
   useUIStore: vi.fn(),
@@ -25,7 +25,7 @@ describe("DiscoveryBoard", () => {
     useGameStore.setState({
       gameState: {
         market: { opportunities: [], trends: [] },
-        industry: {  },
+        industry: {},
       },
       acquireOpportunity: mockAcquireOpportunity,
     } as any);
@@ -46,7 +46,7 @@ describe("DiscoveryBoard", () => {
     useGameStore.setState({
       gameState: {
         market: { opportunities: [], trends: [] },
-        industry: {  },
+        industry: {},
       },
       acquireOpportunity: mockAcquireOpportunity,
     } as any);
@@ -105,7 +105,7 @@ describe("DiscoveryBoard", () => {
     useGameStore.setState({
       gameState: {
         market: { opportunities: mockOpportunities, trends: [] },
-        industry: {  },
+        industry: {},
       },
       acquireOpportunity: mockAcquireOpportunity,
     } as any);
@@ -142,7 +142,7 @@ describe("DiscoveryBoard", () => {
     useGameStore.setState({
       gameState: {
         market: { opportunities: mockOpportunities, trends: [] },
-        industry: {  },
+        industry: {},
       },
       acquireOpportunity: mockAcquireOpportunity,
     } as any);

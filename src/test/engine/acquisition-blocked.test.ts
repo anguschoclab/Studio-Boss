@@ -1,7 +1,7 @@
-import {describe, it, expect, vi, afterEach} from "vitest";
-import {executeAcquisition, evaluateAcquisitionTarget} from "@/engine/systems/mergers";
-import {RegulatorSystem} from "@/engine/systems/industry/RegulatorSystem";
-import {createMockGameState, createMockRival} from "./generators/mockFactory";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { executeAcquisition, evaluateAcquisitionTarget } from "@/engine/systems/mergers";
+import { RegulatorSystem } from "@/engine/systems/industry/RegulatorSystem";
+import { createMockGameState, createMockRival } from "./generators/mockFactory";
 
 function makeState(playerCash = 5_000_000_000, targetCash = 50_000_000) {
   return createMockGameState({
@@ -85,9 +85,7 @@ describe("executeAcquisition regulator gate", () => {
       reason: "Severe Concentration of Media Power",
     });
     const result = executeAcquisition(makeState(), "r1");
-    expect(result.newsEvents[0].description).toContain(
-      "Severe Concentration of Media Power"
-    );
+    expect(result.newsEvents[0].description).toContain("Severe Concentration of Media Power");
   });
 
   it("BLOCKED: prestige does not go below 0", () => {
@@ -122,9 +120,7 @@ describe("executeAcquisition regulator gate", () => {
     const target = state.entities.rivals["r1"];
     const evalResult = evaluateAcquisitionTarget(target, state.finance.cash);
     const after = executeAcquisition(state, "r1").state;
-    expect(after.finance.cash).toBe(
-      state.finance.cash - evalResult.price + target.cash
-    );
+    expect(after.finance.cash).toBe(state.finance.cash - evalResult.price + target.cash);
   });
 
   it("still returns unmodified state for invalid target ID", () => {

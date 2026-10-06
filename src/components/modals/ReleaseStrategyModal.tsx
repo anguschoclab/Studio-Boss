@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
-import {Button} from "@/components/ui/button";
-import {Badge} from "@/components/ui/badge";
-import {useUIStore} from "@/store/uiStore";
-import {useGameStore} from "@/store/gameStore";
-import {cn} from "@/lib/utils";
-import {ReleaseStrategy, getReleaseStrategyEffect} from "@/engine/systems/ReleaseStrategySystem";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { useUIStore } from "@/store/uiStore";
+import { useGameStore } from "@/store/gameStore";
+import { cn } from "@/lib/utils";
+import { ReleaseStrategy, getReleaseStrategyEffect } from "@/engine/systems/ReleaseStrategySystem";
 
 // ─── Strategy display metadata ────────────────────────────────────────────────
 
@@ -72,8 +72,7 @@ export const ReleaseStrategyModal: React.FC = () => {
 
   const [selected, setSelected] = useState<ReleaseStrategy | null>(null);
 
-  const payload =
-    activeModal?.type === "RELEASE_STRATEGY" ? activeModal.payload : undefined;
+  const payload = activeModal?.type === "RELEASE_STRATEGY" ? activeModal.payload : undefined;
   const projectId = payload?.projectId;
   const projectTitle = payload?.projectTitle;
   const project = projectId ? gameState?.entities?.projects?.[projectId] : undefined;

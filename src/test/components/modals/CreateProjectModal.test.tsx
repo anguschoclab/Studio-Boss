@@ -1,10 +1,10 @@
 import React from "react";
-import {render, screen, fireEvent} from "@testing-library/react";
-import {describe, it, expect, vi, beforeEach} from "vitest";
-import {CreateProjectModal} from "@/components/modals/CreateProjectModal";
-import {TooltipProvider} from "@/components/ui/tooltip";
-import {useUIStore} from "@/store/uiStore";
-import {useGameStore} from "@/store/gameStore";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { CreateProjectModal } from "@/components/modals/CreateProjectModal";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { useUIStore } from "@/store/uiStore";
+import { useGameStore } from "@/store/gameStore";
 
 // Mock the Zustand stores
 vi.mock("@/store/uiStore", () => ({
@@ -90,25 +90,41 @@ describe("CreateProjectModal", () => {
         : { showCreateProject: false, closeCreateProject: mockCloseCreateProject }
     );
 
-    render(<TooltipProvider><CreateProjectModal /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <CreateProjectModal />
+      </TooltipProvider>
+    );
     expect(screen.queryByRole("heading", { name: "Greenlight Project" })).not.toBeInTheDocument();
   });
 
   it("renders correctly when showCreateProject is true", () => {
-    render(<TooltipProvider><CreateProjectModal /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <CreateProjectModal />
+      </TooltipProvider>
+    );
     expect(screen.getByRole("heading", { name: "Greenlight Project" })).toBeInTheDocument();
     expect(screen.getByText("Format")).toBeInTheDocument();
   });
 
   it("generates a title when opening with an empty title", () => {
-    render(<TooltipProvider><CreateProjectModal /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <CreateProjectModal />
+      </TooltipProvider>
+    );
     // Initial render should have triggered the useEffect to generate a title
     const titleInput = screen.getByDisplayValue("Generated Test Title");
     expect(titleInput).toBeInTheDocument();
   });
 
   it("allows clicking Generate Random Title button", () => {
-    render(<TooltipProvider><CreateProjectModal /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <CreateProjectModal />
+      </TooltipProvider>
+    );
 
     // Clear the input first
     const input = screen.getByDisplayValue("Generated Test Title");
@@ -123,7 +139,11 @@ describe("CreateProjectModal", () => {
   });
 
   it("conditionally renders TV fields when TV format is selected", () => {
-    render(<TooltipProvider><CreateProjectModal /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <CreateProjectModal />
+      </TooltipProvider>
+    );
 
     // Should not show TV fields initially
     expect(screen.queryByText("TV Format")).not.toBeInTheDocument();
@@ -139,7 +159,11 @@ describe("CreateProjectModal", () => {
   });
 
   it("conditionally renders Unscripted fields when Unscripted format is selected", () => {
-    render(<TooltipProvider><CreateProjectModal /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <CreateProjectModal />
+      </TooltipProvider>
+    );
 
     expect(screen.queryByText("Unscripted Format")).not.toBeInTheDocument();
 
@@ -153,7 +177,11 @@ describe("CreateProjectModal", () => {
   });
 
   it("disables Greenlight button if title is empty", () => {
-    render(<TooltipProvider><CreateProjectModal /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <CreateProjectModal />
+      </TooltipProvider>
+    );
 
     const input = screen.getByDisplayValue("Generated Test Title");
     fireEvent.change(input, { target: { value: "" } });
@@ -163,7 +191,11 @@ describe("CreateProjectModal", () => {
   });
 
   it("submits the form correctly for a film", () => {
-    render(<TooltipProvider><CreateProjectModal /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <CreateProjectModal />
+      </TooltipProvider>
+    );
 
     // Type a specific title
     const input = screen.getByDisplayValue("Generated Test Title");
@@ -182,7 +214,11 @@ describe("CreateProjectModal", () => {
   });
 
   it("allows selecting talent", () => {
-    render(<TooltipProvider><CreateProjectModal /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <CreateProjectModal />
+      </TooltipProvider>
+    );
 
     const talentCheckbox = document.getElementById("t1");
     if (talentCheckbox) fireEvent.click(talentCheckbox);
@@ -202,13 +238,21 @@ describe("CreateProjectModal", () => {
   });
 
   it("title input has maxLength={100}", () => {
-    render(<TooltipProvider><CreateProjectModal /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <CreateProjectModal />
+      </TooltipProvider>
+    );
     const titleInput = screen.getByDisplayValue("Generated Test Title");
     expect(titleInput).toHaveAttribute("maxlength", "100");
   });
 
   it("flavor input has maxLength={500}", () => {
-    render(<TooltipProvider><CreateProjectModal /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <CreateProjectModal />
+      </TooltipProvider>
+    );
     const flavorInput = screen.getByPlaceholderText(
       "Define the unique selling point of this project..."
     );

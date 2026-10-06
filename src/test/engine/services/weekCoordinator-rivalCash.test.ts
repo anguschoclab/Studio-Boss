@@ -1,8 +1,8 @@
-import {describe, it, expect} from "vitest";
-import {WeekCoordinator} from "@/engine/services/WeekCoordinator";
-import {createMockGameState, createMockRival, createMockProject} from "../../utils/mockFactories";
-import type {GameState, RivalStudio, StateImpact} from "@/engine/types";
-import type {DistressedAssetOffer} from "@/engine/types/distress.types";
+import { describe, it, expect } from "vitest";
+import { WeekCoordinator } from "@/engine/services/WeekCoordinator";
+import { createMockGameState, createMockRival, createMockProject } from "../../utils/mockFactories";
+import type { GameState, RivalStudio, StateImpact } from "@/engine/types";
+import type { DistressedAssetOffer } from "@/engine/types/distress.types";
 
 /**
  * Pipeline-level regression: rival cash writes must be additive deltas.

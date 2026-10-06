@@ -1,10 +1,11 @@
-import {StateCreator} from "zustand";
-import {GameStore} from "../gameStore";
-import {applyStateImpact} from "../storeUtils";
-import {releaseDirectorsCut} from "@/engine/systems/ratings/directorsCuts";
-import {RandomGenerator} from "@/engine/utils/rng";
-import {getContractsByProjectId} from "@/engine/utils";
-import {MarketingCampaign, MarketingAngle} from "@/engine/types";import {type ProjectId, type StudioId} from "@/engine/types/shared.types";
+import { StateCreator } from "zustand";
+import { GameStore } from "../gameStore";
+import { applyStateImpact } from "../storeUtils";
+import { releaseDirectorsCut } from "@/engine/systems/ratings/directorsCuts";
+import { RandomGenerator } from "@/engine/utils/rng";
+import { getContractsByProjectId } from "@/engine/utils";
+import { MarketingCampaign, MarketingAngle } from "@/engine/types";
+import { type ProjectId, type StudioId } from "@/engine/types/shared.types";
 export interface ProjectEventsSlice {
   lockMarketingCampaign: (
     projectId: ProjectId,

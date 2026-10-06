@@ -1,6 +1,6 @@
 import React from "react";
-import {cn} from "@/lib/utils";
-import {Badge} from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 export interface SubNavTab {
   id: string;
@@ -56,7 +56,10 @@ export const SubNav: React.FC<SubNavProps> = ({
   };
 
   return (
-    <div role="tablist" className={cn("flex items-center w-fit", variantStyles[variant], className)}>
+    <div
+      role="tablist"
+      className={cn("flex items-center w-fit", variantStyles[variant], className)}
+    >
       {tabs.map((tab) => {
         const isActive = activeTab === tab.id;
         const hasBadge = tab.badge && tab.badge > 0;

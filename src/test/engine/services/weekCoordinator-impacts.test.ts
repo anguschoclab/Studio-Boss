@@ -1,7 +1,7 @@
-import {describe, it, expect} from "vitest";
-import {WeekCoordinator} from "../../../engine/services/WeekCoordinator";
-import {createMockGameState, createMockProject} from "../../utils/mockFactories";
-import type {StateImpact} from "../../../engine/types";
+import { describe, it, expect } from "vitest";
+import { WeekCoordinator } from "../../../engine/services/WeekCoordinator";
+import { createMockGameState, createMockProject } from "../../utils/mockFactories";
+import type { StateImpact } from "../../../engine/types";
 
 function findImpacts(impacts: StateImpact[], type: string): StateImpact[] {
   return impacts.filter((i) => i.type === type);
@@ -13,7 +13,7 @@ describe("WeekCoordinator impact types", () => {
     const { impacts } = WeekCoordinator.execute(state);
     const modals = findImpacts(impacts, "MODAL_TRIGGERED");
     const summary = modals.find(
-      (i) => (i.payload as { modalType: string }).modalType === "SUMMARY",
+      (i) => (i.payload as { modalType: string }).modalType === "SUMMARY"
     );
     expect(summary).toBeDefined();
   });
@@ -38,7 +38,7 @@ describe("WeekCoordinator impact types", () => {
     const { impacts } = WeekCoordinator.execute(state);
     const modals = findImpacts(impacts, "MODAL_TRIGGERED");
     const greenlight = modals.find(
-      (i) => (i.payload as { modalType: string }).modalType === "GREENLIGHT_DECISION",
+      (i) => (i.payload as { modalType: string }).modalType === "GREENLIGHT_DECISION"
     );
     expect(greenlight).toBeDefined();
     const payload = greenlight!.payload as { modalType: string; payload: { projectId: string } };
@@ -65,7 +65,7 @@ describe("WeekCoordinator impact types", () => {
     const { impacts } = WeekCoordinator.execute(state);
     const projectUpdates = findImpacts(impacts, "PROJECT_UPDATED");
     const devUpdate = projectUpdates.find(
-      (i) => (i.payload as { projectId: string }).projectId === "proj-dev",
+      (i) => (i.payload as { projectId: string }).projectId === "proj-dev"
     );
     expect(devUpdate).toBeDefined();
   });
@@ -95,14 +95,14 @@ describe("WeekCoordinator impact types", () => {
     });
     const { impacts } = WeekCoordinator.execute(state);
     const industryImpacts = findImpacts(impacts, "INDUSTRY_UPDATE");
-    const loansImpact = industryImpacts.find(
-      (i) => {
-        const update = (i.payload as { update?: Record<string, unknown> }).update;
-        return update && update["studio.loans"] !== undefined;
-      },
-    );
+    const loansImpact = industryImpacts.find((i) => {
+      const update = (i.payload as { update?: Record<string, unknown> }).update;
+      return update && update["studio.loans"] !== undefined;
+    });
     expect(loansImpact).toBeDefined();
-    const loans = (loansImpact!.payload as { update: { "studio.loans": unknown[] } }).update["studio.loans"];
+    const loans = (loansImpact!.payload as { update: { "studio.loans": unknown[] } }).update[
+      "studio.loans"
+    ];
     expect(Array.isArray(loans)).toBe(true);
     // The loan with 10 weeks remaining should become 9 after decrement
     expect((loans as { weeksRemaining: number }[]).length).toBe(1);
@@ -134,12 +134,10 @@ describe("WeekCoordinator impact types", () => {
     });
     const { impacts } = WeekCoordinator.execute(state);
     const systemTicks = findImpacts(impacts, "SYSTEM_TICK");
-    const loanSystemTick = systemTicks.find(
-      (i) => {
-        const payload = i.payload as { __studioUpdate?: { loans?: unknown } };
-        return payload.__studioUpdate?.loans !== undefined;
-      },
-    );
+    const loanSystemTick = systemTicks.find((i) => {
+      const payload = i.payload as { __studioUpdate?: { loans?: unknown } };
+      return payload.__studioUpdate?.loans !== undefined;
+    });
     expect(loanSystemTick).toBeUndefined();
   });
 });

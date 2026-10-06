@@ -1,10 +1,10 @@
-import {useGameStore} from "@/store/gameStore";
-import {formatMoney, getWeekDisplay} from "@/engine/utils";
-import {Save, FastForward, Activity, Star} from "lucide-react";
-import {selectActiveProjects} from "@/store/selectors";
-import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";
-import {NewsTicker} from "./NewsTicker";
-import {cn} from "@/lib/utils";
+import { useGameStore } from "@/store/gameStore";
+import { formatMoney, getWeekDisplay } from "@/engine/utils";
+import { Save, FastForward, Activity, Star } from "lucide-react";
+import { selectActiveProjects } from "@/store/selectors";
+import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
+import { NewsTicker } from "./NewsTicker";
+import { cn } from "@/lib/utils";
 
 export const TopBar = () => {
   const gameState = useGameStore((s) => s.gameState);

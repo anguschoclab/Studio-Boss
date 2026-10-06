@@ -1,8 +1,8 @@
-import {describe, it, expect} from "vitest";
-import {selectAwardsProbability} from "@/store/chartSelectors";
-import {createMockGameState, createMockProject} from "@/test/utils/mockFactories";
-import type {AwardsProfile} from "@/engine/types";
-import {AWARD_CONFIGS} from "@/engine/data/awards.data";
+import { describe, it, expect } from "vitest";
+import { selectAwardsProbability } from "@/store/chartSelectors";
+import { createMockGameState, createMockProject } from "@/test/utils/mockFactories";
+import type { AwardsProfile } from "@/engine/types";
+import { AWARD_CONFIGS } from "@/engine/data/awards.data";
 
 const mockAwardsProfile: AwardsProfile = {
   criticScore: 85,
@@ -47,9 +47,7 @@ describe("selectAwardsProbability (chartSelectors)", () => {
     });
     const state = makeState({ "proj-1": project });
     const result = selectAwardsProbability(state);
-    const filmConfigs = AWARD_CONFIGS.filter(
-      (c) => c.format === "film" || c.format === "both"
-    );
+    const filmConfigs = AWARD_CONFIGS.filter((c) => c.format === "film" || c.format === "both");
     expect(result.length).toBe(filmConfigs.length);
   });
 
@@ -82,9 +80,11 @@ describe("selectAwardsProbability (chartSelectors)", () => {
     const state = makeState({ "proj-1": project });
     const result = selectAwardsProbability(state);
     const bodies = [...new Set(result.map((r) => r.awardBody))];
-    const configBodies = [...new Set(
-      AWARD_CONFIGS.filter((c) => c.format === "film" || c.format === "both").map((c) => c.body)
-    )];
+    const configBodies = [
+      ...new Set(
+        AWARD_CONFIGS.filter((c) => c.format === "film" || c.format === "both").map((c) => c.body)
+      ),
+    ];
     expect(bodies.sort()).toEqual(configBodies.sort());
   });
 
@@ -98,9 +98,13 @@ describe("selectAwardsProbability (chartSelectors)", () => {
     const state = makeState({ "proj-1": project });
     const result = selectAwardsProbability(state);
     const categories = [...new Set(result.map((r) => r.category))];
-    const configCategories = [...new Set(
-      AWARD_CONFIGS.filter((c) => c.format === "film" || c.format === "both").map((c) => c.category)
-    )];
+    const configCategories = [
+      ...new Set(
+        AWARD_CONFIGS.filter((c) => c.format === "film" || c.format === "both").map(
+          (c) => c.category
+        )
+      ),
+    ];
     expect(categories.sort()).toEqual(configCategories.sort());
   });
 
@@ -201,14 +205,11 @@ describe("selectAwardsProbability (chartSelectors)", () => {
     });
     const state = makeState({ "proj-1": project });
     const result = selectAwardsProbability(state);
-    const tvConfigs = AWARD_CONFIGS.filter(
-      (c) => c.format === "tv" || c.format === "both"
-    );
+    const tvConfigs = AWARD_CONFIGS.filter((c) => c.format === "tv" || c.format === "both");
     expect(result.length).toBe(tvConfigs.length);
     // Should not include film-only bodies like Cannes, Sundance, etc.
     const filmOnlyBodies = ["Cannes Film Festival", "Sundance Film Festival", "Academy Awards"];
     const filmOnlyEntries = result.filter((r) => filmOnlyBodies.includes(r.awardBody));
     expect(filmOnlyEntries).toHaveLength(0);
   });
-
 });

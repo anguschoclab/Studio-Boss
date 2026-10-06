@@ -1,5 +1,10 @@
-import {GameState} from "@/engine/types";
-import type {ProjectUpdateImpact, ProjectRemovedImpact, AwardWonImpact, PilotGraduatedImpact} from "@/engine/types/state.types";
+import { GameState } from "@/engine/types";
+import type {
+  ProjectUpdateImpact,
+  ProjectRemovedImpact,
+  AwardWonImpact,
+  PilotGraduatedImpact,
+} from "@/engine/types/state.types";
 
 /**
  * Project-related impact handlers

@@ -1,17 +1,23 @@
 import React, { useMemo, useState } from "react";
-import {useGameStore} from "@/store/gameStore";
-import {useUIStore} from "@/store/uiStore";
-import {formatMoney, countKeys} from "@/engine/utils";
-import {selectAwardsEligibleProjects, selectAwardsOddsById} from "@/store/selectors";
-import {selectAwardsProbability} from "@/store/chartSelectors";
-import {Button} from "@/components/ui/button";
-import {Badge} from "@/components/ui/badge";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {Trophy, Sparkles, Filter, Info, Target} from "lucide-react";
-import {cn} from "@/lib/utils";
-import {CAMPAIGN_TIERS} from "@/store/slices/marketingSlice";
-import {getCategoriesForFormat} from "@/engine/data/awards.data";
-import {AwardsProbabilityChart} from "@/components/charts/AwardsProbabilityChart";
+import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
+import { formatMoney, countKeys } from "@/engine/utils";
+import { selectAwardsEligibleProjects, selectAwardsOddsById } from "@/store/selectors";
+import { selectAwardsProbability } from "@/store/chartSelectors";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Trophy, Sparkles, Filter, Info, Target } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { CAMPAIGN_TIERS } from "@/store/slices/marketingSlice";
+import { getCategoriesForFormat } from "@/engine/data/awards.data";
+import { AwardsProbabilityChart } from "@/components/charts/AwardsProbabilityChart";
 
 export const AwardsHQ: React.FC = () => {
   const gameState = useGameStore((s) => s.gameState);
@@ -27,9 +33,7 @@ export const AwardsHQ: React.FC = () => {
   const eligibleProjects = useMemo(() => {
     return selectAwardsEligibleProjects(gameState)
       .filter((p) => formatFilter === "all" || p.format === formatFilter)
-      .sort(
-        (a, b) => (b.reception?.metaScore || 0) - (a.reception?.metaScore || 0)
-      );
+      .sort((a, b) => (b.reception?.metaScore || 0) - (a.reception?.metaScore || 0));
   }, [gameState, formatFilter]);
 
   if (!gameState) return null;
@@ -55,8 +59,14 @@ export const AwardsHQ: React.FC = () => {
         </div>
 
         <div className="flex gap-2">
-          <Select value={formatFilter} onValueChange={(v) => setFormatFilter(v as "all" | "film" | "tv")}>
-            <SelectTrigger aria-label="Filter formats" className="h-10 w-40 border-white/5 bg-black/40 text-slate-400 font-black uppercase text-[10px] tracking-widest flex items-center gap-2">
+          <Select
+            value={formatFilter}
+            onValueChange={(v) => setFormatFilter(v as "all" | "film" | "tv")}
+          >
+            <SelectTrigger
+              aria-label="Filter formats"
+              className="h-10 w-40 border-white/5 bg-black/40 text-slate-400 font-black uppercase text-[10px] tracking-widest flex items-center gap-2"
+            >
               <Filter className="w-3 h-3" aria-hidden="true" /> <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -69,7 +79,11 @@ export const AwardsHQ: React.FC = () => {
             variant="outline"
             className="h-10 px-4 border-white/5 bg-black/40 text-slate-400 font-black uppercase text-[10px] tracking-widest flex items-center gap-2"
           >
-            <Trophy className="w-3 h-3" /> {gameState.industry.awards?.filter((a) => a.status === "won" && a.year === currentSeason).length || 0} WINS
+            <Trophy className="w-3 h-3" />{" "}
+            {gameState.industry.awards?.filter(
+              (a) => a.status === "won" && a.year === currentSeason
+            ).length || 0}{" "}
+            WINS
           </Badge>
         </div>
       </div>
@@ -85,7 +99,10 @@ export const AwardsHQ: React.FC = () => {
           },
           {
             label: "Season Wins",
-            val: gameState.industry.awards?.filter((a) => a.status === "won" && a.year === currentSeason).length || 0,
+            val:
+              gameState.industry.awards?.filter(
+                (a) => a.status === "won" && a.year === currentSeason
+              ).length || 0,
             icon: Sparkles,
             color: "text-amber-400",
           },
@@ -189,7 +206,9 @@ export const AwardsHQ: React.FC = () => {
                         </p>
                       </div>
                       <div className="text-right border-l border-white/5 pl-4">
-                        <div className="text-[9px] font-black uppercase text-slate-600 tracking-widest">Win Odds</div>
+                        <div className="text-[9px] font-black uppercase text-slate-600 tracking-widest">
+                          Win Odds
+                        </div>
                         <div className="text-2xl font-black italic tracking-tighter text-amber-500 tabular-nums">
                           {oddsById[project.id] ?? 0}%
                         </div>
@@ -224,7 +243,10 @@ export const AwardsHQ: React.FC = () => {
                           value={selectedCategories[0]}
                           onValueChange={(v) => setSelectedCategories([v])}
                         >
-                          <SelectTrigger aria-label="Select award category" className="h-9 border-white/5 bg-black/40 text-slate-400 font-black uppercase text-[10px] tracking-widest">
+                          <SelectTrigger
+                            aria-label="Select award category"
+                            className="h-9 border-white/5 bg-black/40 text-slate-400 font-black uppercase text-[10px] tracking-widest"
+                          >
                             <SelectValue placeholder="Select Category" />
                           </SelectTrigger>
                           <SelectContent>

@@ -1,5 +1,4 @@
- 
-import {Franchise, IPAsset, Project} from "../../types";
+import { Franchise, IPAsset, Project } from "../../types";
 
 /**
  * Synergy Logic Engine.

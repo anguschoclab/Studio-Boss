@@ -1,10 +1,19 @@
 // Types related to Studios, Rivals, and Game State
 
-import {Project, Opportunity, GenreTrend, FestivalSubmission, Award} from "./project.types";
-import {Contract, Family, Agency, Agent, Talent, Scandal, MotivationProfile, RivalStrategy} from "./talent.types";
-import {Rumor, MarketEvent} from "./engine.types";
-import {FinanceState, IPState} from "./state.types";
-import {SyndicationTier} from "../data/syndicationConfig";
+import { Project, Opportunity, GenreTrend, FestivalSubmission, Award } from "./project.types";
+import {
+  Contract,
+  Family,
+  Agency,
+  Agent,
+  Talent,
+  Scandal,
+  MotivationProfile,
+  RivalStrategy,
+} from "./talent.types";
+import { Rumor, MarketEvent } from "./engine.types";
+import { FinanceState, IPState } from "./state.types";
+import { SyndicationTier } from "../data/syndicationConfig";
 
 export interface MergerOffer {
   id: string;
@@ -159,8 +168,15 @@ export interface GameState {
   history: StudioSnapshot[];
   eventHistory: GameEvent[];
   weekSummaries: import("./engine.types").WeekSummary[];
-  deals?: { activeDeals: import("./talent.types").TalentPact[]; pendingOffers?: unknown[]; expiredDeals: import("./talent.types").TalentPact[] };
-  talentAgentRelationships?: Record<string, import("../systems/talent/talentAgentInteractions").TalentAgentRelationship>;
+  deals?: {
+    activeDeals: import("./talent.types").TalentPact[];
+    pendingOffers?: unknown[];
+    expiredDeals: import("./talent.types").TalentPact[];
+  };
+  talentAgentRelationships?: Record<
+    string,
+    import("../systems/talent/talentAgentInteractions").TalentAgentRelationship
+  >;
   relationships?: import("./relationship.types").RelationshipsState;
   tvRecommendations?: {
     recommendations?: Record<string, import("./tv-recommendations.types").TVShowRecommendation>;

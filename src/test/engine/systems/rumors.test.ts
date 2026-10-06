@@ -1,10 +1,10 @@
-import {describe, it, expect, vi, beforeEach} from "vitest";
-import {advanceRumors} from "../../../engine/systems/rumors";
-import {Rumor, Talent} from "../../../engine/types";
-import {createMockGameState} from "../../utils/mockFactories";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { advanceRumors } from "../../../engine/systems/rumors";
+import { Rumor, Talent } from "../../../engine/types";
+import { createMockGameState } from "../../utils/mockFactories";
 
 import * as utils from "../../../engine/utils";
-import {secureRandom} from "../../../engine/utils";
+import { secureRandom } from "../../../engine/utils";
 
 describe("advanceRumors", () => {
   beforeEach(() => {

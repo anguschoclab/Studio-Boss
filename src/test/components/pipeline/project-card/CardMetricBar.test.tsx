@@ -1,7 +1,7 @@
-import {render, screen} from "@testing-library/react";
-import {describe, it, expect} from "vitest";
-import {CardMetricBar} from "@/components/pipeline/project-card/CardMetricBar";
-import {Target} from "lucide-react";
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect } from "vitest";
+import { CardMetricBar } from "@/components/pipeline/project-card/CardMetricBar";
+import { Target } from "lucide-react";
 
 function renderBar(overrides: Partial<Parameters<typeof CardMetricBar>[0]> = {}) {
   return render(

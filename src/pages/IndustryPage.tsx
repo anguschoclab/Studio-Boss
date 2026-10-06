@@ -1,13 +1,25 @@
- 
 import React, { useMemo } from "react";
-import {useGameStore} from "@/store/gameStore";
-import {Card, CardContent, CardHeader, CardTitle, CardDescription} from "@/components/ui/card";
-import {Badge} from "@/components/ui/badge";
-import {KPIStatCard} from "@/components/shared/KPIStatCard";
-import {formatMoney, countKeys, countRivalProjects} from "@/engine/utils";
-import {Building2, Users, TrendingDown, Zap, ShieldAlert, Target, Brain, BarChart3, Globe2, Activity, Monitor} from "lucide-react";
-import {m} from "framer-motion";import {cn} from "@/lib/utils";
-import {MarketTrendsHeatmap} from "@/components/industry/MarketTrendsHeatmap";
+import { useGameStore } from "@/store/gameStore";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { KPIStatCard } from "@/components/shared/KPIStatCard";
+import { formatMoney, countKeys, countRivalProjects } from "@/engine/utils";
+import {
+  Building2,
+  Users,
+  TrendingDown,
+  Zap,
+  ShieldAlert,
+  Target,
+  Brain,
+  BarChart3,
+  Globe2,
+  Activity,
+  Monitor,
+} from "lucide-react";
+import { m } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { MarketTrendsHeatmap } from "@/components/industry/MarketTrendsHeatmap";
 
 export const IndustryPage: React.FC = () => {
   const state = useGameStore((s) => s.gameState);
@@ -82,7 +94,10 @@ export const IndustryPage: React.FC = () => {
           value={`${state.finance.marketState?.sentiment || 50}%`}
           subLabel={state.finance.marketState?.cycle || "STABLE"}
           icon={<Activity className="w-4 h-4" />}
-          trend={{ value: (state.finance.marketState?.sentiment || 50) > 50 ? "↑" : "↓", isPositive: (state.finance.marketState?.sentiment || 50) > 50 }}
+          trend={{
+            value: (state.finance.marketState?.sentiment || 50) > 50 ? "↑" : "↓",
+            isPositive: (state.finance.marketState?.sentiment || 50) > 50,
+          }}
           variant="secondary"
         />
         <KPIStatCard

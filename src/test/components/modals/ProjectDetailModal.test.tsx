@@ -1,9 +1,9 @@
-import {render, screen, fireEvent} from "@testing-library/react";
-import {describe, it, expect, vi, beforeEach} from "vitest";
-import {ProjectDetailModal} from "@/components/modals/ProjectDetailModal";
-import {useGameStore} from "@/store/gameStore";
-import {useUIStore} from "@/store/uiStore";
-import {Project, AwardsProfile} from "@/engine/types";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { ProjectDetailModal } from "@/components/modals/ProjectDetailModal";
+import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
+import { Project, AwardsProfile } from "@/engine/types";
 
 // Mock ResizeObserver for Radix UI Slider component
 class MockResizeObserver {
@@ -511,18 +511,21 @@ describe("ProjectDetailModal", () => {
     });
 
     it("renders Active Campaign card with buzz bonus when campaign exists", () => {
-      setupReleasedProject({}, {
-        activeCampaigns: {
-          P1: {
-            id: "camp-1",
-            projectId: "P1",
-            budget: 1_000_000,
-            targetCategories: ["Best Picture"],
-            buzzBonus: 15,
-            scandalRisk: 2,
+      setupReleasedProject(
+        {},
+        {
+          activeCampaigns: {
+            P1: {
+              id: "camp-1",
+              projectId: "P1",
+              budget: 1_000_000,
+              targetCategories: ["Best Picture"],
+              buzzBonus: 15,
+              scandalRisk: 2,
+            },
           },
-        },
-      });
+        }
+      );
       render(<ProjectDetailModal />);
       const campaignsTab = screen.getByRole("tab", { name: /buzz/i });
       fireEvent.mouseDown(campaignsTab);

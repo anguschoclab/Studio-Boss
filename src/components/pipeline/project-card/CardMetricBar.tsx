@@ -1,7 +1,7 @@
 import React from "react";
-import {LucideIcon} from "lucide-react";
-import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";
-import {cn} from "@/lib/utils";
+import { LucideIcon } from "lucide-react";
+import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
+import { cn } from "@/lib/utils";
 
 interface CardMetricBarProps {
   label: string;
@@ -40,10 +40,7 @@ export const CardMetricBar = ({
           {label}
         </span>
         <span
-          className={cn(
-            "font-display font-black italic tracking-tighter text-sm",
-            valueClassName
-          )}
+          className={cn("font-display font-black italic tracking-tighter text-sm", valueClassName)}
         >
           {value}
         </span>

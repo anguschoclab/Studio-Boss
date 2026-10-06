@@ -1,7 +1,18 @@
-import {describe, it, expect, beforeEach} from "vitest";
-import {FlopSeverity, calculateFlopSeverity, calculateFlopPenalties, shouldRestructureStudio, applyFlopPenalties, processFlops} from "../../../../engine/systems/finance/FlopMechanics";
-import {createMockGameState, createMockProject, createMockRival} from "../../../utils/mockFactories";
-import {GameState} from "../../../../engine/types";
+import { describe, it, expect, beforeEach } from "vitest";
+import {
+  FlopSeverity,
+  calculateFlopSeverity,
+  calculateFlopPenalties,
+  shouldRestructureStudio,
+  applyFlopPenalties,
+  processFlops,
+} from "../../../../engine/systems/finance/FlopMechanics";
+import {
+  createMockGameState,
+  createMockProject,
+  createMockRival,
+} from "../../../utils/mockFactories";
+import { GameState } from "../../../../engine/types";
 
 describe("FlopMechanics", () => {
   describe("calculateFlopSeverity", () => {
@@ -164,9 +175,14 @@ describe("FlopMechanics", () => {
       state.entities.rivals[rivalId] = createMockRival({ id: rivalId });
 
       // First trigger a catastrophic flop to populate history — impacts carry the updated flop history
-      const impacts = applyFlopPenalties(state, createMockProject({ revenue: 0, budget: 1000 }), rivalId);
+      const impacts = applyFlopPenalties(
+        state,
+        createMockProject({ revenue: 0, budget: 1000 }),
+        rivalId
+      );
       const memWrite = impacts.find(
-        (i: any) => i.type === "INDUSTRY_UPDATE" && i.payload?.update?.[`simMemory.flops.${rivalId}`]
+        (i: any) =>
+          i.type === "INDUSTRY_UPDATE" && i.payload?.update?.[`simMemory.flops.${rivalId}`]
       ) as any;
       const history = memWrite?.payload?.update?.[`simMemory.flops.${rivalId}`];
 
@@ -182,9 +198,14 @@ describe("FlopMechanics", () => {
       // Add 3 major flops — each call returns impacts with accumulated history
       let lastHistory: any;
       for (let i = 0; i < 3; i++) {
-        const impacts = applyFlopPenalties(state, createMockProject({ revenue: 250, budget: 1000 }), rivalId);
+        const impacts = applyFlopPenalties(
+          state,
+          createMockProject({ revenue: 250, budget: 1000 }),
+          rivalId
+        );
         const memWrite = impacts.find(
-          (i2: any) => i2.type === "INDUSTRY_UPDATE" && i2.payload?.update?.[`simMemory.flops.${rivalId}`]
+          (i2: any) =>
+            i2.type === "INDUSTRY_UPDATE" && i2.payload?.update?.[`simMemory.flops.${rivalId}`]
         ) as any;
         lastHistory = memWrite?.payload?.update?.[`simMemory.flops.${rivalId}`];
         // Update state.simMemory so the next call sees accumulated history

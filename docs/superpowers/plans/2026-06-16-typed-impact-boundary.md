@@ -11,6 +11,7 @@
 **Why this matters:** 230 `as any` / `as unknown as` casts live in `src/engine` (925 across `src/`), overwhelmingly on impact payloads. That cast is precisely the mechanism by which drift ships silently — `MarketState` lost `sentiment`, `selectors.ts` lost three exports, and `RivalStudio` never had `annualRevenue`, yet nothing failed at compile time because the payloads were `any`. Every one of those became a runtime crash instead of a red build.
 
 **Verified facts (do not re-derive):**
+
 - `StateImpact` is a discriminated union declared at `src/engine/types/state.types.ts:491`, with ~45 members (`FundsImpact`, `NewsImpact`, `RivalUpdateImpact`, `IndustryUpdateImpact`, `ModalTriggeredImpact`, …).
 - Payload shapes confirmed: `FundsDeductedImpact` = `{ amount: number }`; `RivalUpdateImpact` = `{ rivalId, update }`; `ModalTriggeredImpact` = `{ modalType: string; priority: number; payload: any }`; `IndustryUpdateImpact` applies `payload.update` as immutable **dot-path sets from the state root**.
 - `NEWS_ADDED` payloads in the wild carry `{ headline, description, category }`.
@@ -24,18 +25,19 @@
 
 ## File Structure
 
-| File | Responsibility | Change |
-|------|---------------|--------|
-| `src/engine/core/impacts.ts` | Typed impact constructors — the single place casts are allowed | Create |
-| `src/engine/systems/industry/DistressCascade.ts` | Highest-cast-density system | Migrate to constructors |
-| `src/engine/services/WeekCoordinator.ts` | Tick pipeline | Migrate its inline casts |
-| `eslint.config.js` | Lint gate | Add `src/engine/**` override |
+| File                                             | Responsibility                                                 | Change                       |
+| ------------------------------------------------ | -------------------------------------------------------------- | ---------------------------- |
+| `src/engine/core/impacts.ts`                     | Typed impact constructors — the single place casts are allowed | Create                       |
+| `src/engine/systems/industry/DistressCascade.ts` | Highest-cast-density system                                    | Migrate to constructors      |
+| `src/engine/services/WeekCoordinator.ts`         | Tick pipeline                                                  | Migrate its inline casts     |
+| `eslint.config.js`                               | Lint gate                                                      | Add `src/engine/**` override |
 
 ---
 
 ### Task 1: Build the typed impact constructors
 
 **Files:**
+
 - Create: `src/engine/core/impacts.ts`
 - Test: `src/test/engine/impacts.test.ts`
 
@@ -44,48 +46,48 @@
 Create `src/test/engine/impacts.test.ts`:
 
 ```ts
-import { describe, it, expect } from 'vitest';
-import { impacts } from '@/engine/core/impacts';
+import { describe, it, expect } from "vitest";
+import { impacts } from "@/engine/core/impacts";
 
-describe('typed impact constructors', () => {
-  it('newsAdded builds a NEWS_ADDED impact', () => {
-    const i = impacts.newsAdded({ headline: 'H', description: 'D', category: 'market' });
-    expect(i.type).toBe('NEWS_ADDED');
-    expect(i.payload.headline).toBe('H');
-    expect(i.payload.category).toBe('market');
+describe("typed impact constructors", () => {
+  it("newsAdded builds a NEWS_ADDED impact", () => {
+    const i = impacts.newsAdded({ headline: "H", description: "D", category: "market" });
+    expect(i.type).toBe("NEWS_ADDED");
+    expect(i.payload.headline).toBe("H");
+    expect(i.payload.category).toBe("market");
   });
 
-  it('fundsDeducted builds a FUNDS_DEDUCTED impact', () => {
+  it("fundsDeducted builds a FUNDS_DEDUCTED impact", () => {
     const i = impacts.fundsDeducted(500);
-    expect(i.type).toBe('FUNDS_DEDUCTED');
+    expect(i.type).toBe("FUNDS_DEDUCTED");
     expect(i.payload.amount).toBe(500);
   });
 
-  it('rivalUpdated carries rivalId and a partial update', () => {
-    const i = impacts.rivalUpdated('r1', { cash: 10 });
-    expect(i.type).toBe('RIVAL_UPDATED');
-    expect(i.payload.rivalId).toBe('r1');
+  it("rivalUpdated carries rivalId and a partial update", () => {
+    const i = impacts.rivalUpdated("r1", { cash: 10 });
+    expect(i.type).toBe("RIVAL_UPDATED");
+    expect(i.payload.rivalId).toBe("r1");
     expect(i.payload.update.cash).toBe(10);
   });
 
-  it('franchiseUpdated carries franchiseId and update', () => {
-    const i = impacts.franchiseUpdated('f1', { ownerId: 'PLAYER' });
-    expect(i.type).toBe('FRANCHISE_UPDATED');
-    expect(i.payload.franchiseId).toBe('f1');
+  it("franchiseUpdated carries franchiseId and update", () => {
+    const i = impacts.franchiseUpdated("f1", { ownerId: "PLAYER" });
+    expect(i.type).toBe("FRANCHISE_UPDATED");
+    expect(i.payload.franchiseId).toBe("f1");
   });
 
-  it('industryUpdate takes dot-path keys from the state root', () => {
-    const i = impacts.industryUpdate({ 'ip.vault': [] });
-    expect(i.type).toBe('INDUSTRY_UPDATE');
-    expect(i.payload.update['ip.vault']).toEqual([]);
+  it("industryUpdate takes dot-path keys from the state root", () => {
+    const i = impacts.industryUpdate({ "ip.vault": [] });
+    expect(i.type).toBe("INDUSTRY_UPDATE");
+    expect(i.payload.update["ip.vault"]).toEqual([]);
   });
 
-  it('modalTriggered defaults priority and passes a payload through', () => {
-    const i = impacts.modalTriggered('CRISIS', { projectId: 'p1' });
-    expect(i.type).toBe('MODAL_TRIGGERED');
-    expect(i.payload.modalType).toBe('CRISIS');
-    expect(typeof i.payload.priority).toBe('number');
-    expect((i.payload.payload as { projectId: string }).projectId).toBe('p1');
+  it("modalTriggered defaults priority and passes a payload through", () => {
+    const i = impacts.modalTriggered("CRISIS", { projectId: "p1" });
+    expect(i.type).toBe("MODAL_TRIGGERED");
+    expect(i.payload.modalType).toBe("CRISIS");
+    expect(typeof i.payload.priority).toBe("number");
+    expect((i.payload.payload as { projectId: string }).projectId).toBe("p1");
   });
 });
 ```
@@ -100,9 +102,9 @@ Expected: FAIL — module `@/engine/core/impacts` not found.
 Create `src/engine/core/impacts.ts`:
 
 ```ts
-import type { StateImpact } from '../types';
-import type { RivalStudio } from '../types';
-import type { Franchise } from '../types/franchise.types';
+import type { StateImpact } from "../types";
+import type { RivalStudio } from "../types";
+import type { Franchise } from "../types/franchise.types";
 
 /**
  * Typed constructors for engine impacts.
@@ -113,7 +115,7 @@ import type { Franchise } from '../types/franchise.types';
  * which is exactly how the selectors/MarketState drift shipped unnoticed.
  */
 
-export type NewsCategory = 'market' | 'general' | 'scandal' | 'talent' | 'awards';
+export type NewsCategory = "market" | "general" | "scandal" | "talent" | "awards";
 
 export interface NewsPayload {
   headline: string;
@@ -122,35 +124,35 @@ export interface NewsPayload {
 }
 
 export const impacts = {
-  newsAdded(payload: NewsPayload): Extract<StateImpact, { type: 'NEWS_ADDED' }> {
-    return { type: 'NEWS_ADDED', payload } as Extract<StateImpact, { type: 'NEWS_ADDED' }>;
+  newsAdded(payload: NewsPayload): Extract<StateImpact, { type: "NEWS_ADDED" }> {
+    return { type: "NEWS_ADDED", payload } as Extract<StateImpact, { type: "NEWS_ADDED" }>;
   },
 
-  fundsDeducted(amount: number): Extract<StateImpact, { type: 'FUNDS_DEDUCTED' }> {
-    return { type: 'FUNDS_DEDUCTED', payload: { amount } };
+  fundsDeducted(amount: number): Extract<StateImpact, { type: "FUNDS_DEDUCTED" }> {
+    return { type: "FUNDS_DEDUCTED", payload: { amount } };
   },
 
-  fundsChanged(amount: number): Extract<StateImpact, { type: 'FUNDS_CHANGED' }> {
-    return { type: 'FUNDS_CHANGED', payload: { amount } };
+  fundsChanged(amount: number): Extract<StateImpact, { type: "FUNDS_CHANGED" }> {
+    return { type: "FUNDS_CHANGED", payload: { amount } };
   },
 
   rivalUpdated(
     rivalId: string,
     update: Partial<RivalStudio>
-  ): Extract<StateImpact, { type: 'RIVAL_UPDATED' }> {
-    return { type: 'RIVAL_UPDATED', payload: { rivalId, update } } as Extract<
+  ): Extract<StateImpact, { type: "RIVAL_UPDATED" }> {
+    return { type: "RIVAL_UPDATED", payload: { rivalId, update } } as Extract<
       StateImpact,
-      { type: 'RIVAL_UPDATED' }
+      { type: "RIVAL_UPDATED" }
     >;
   },
 
   franchiseUpdated(
     franchiseId: string,
     update: Partial<Franchise>
-  ): Extract<StateImpact, { type: 'FRANCHISE_UPDATED' }> {
-    return { type: 'FRANCHISE_UPDATED', payload: { franchiseId, update } } as Extract<
+  ): Extract<StateImpact, { type: "FRANCHISE_UPDATED" }> {
+    return { type: "FRANCHISE_UPDATED", payload: { franchiseId, update } } as Extract<
       StateImpact,
-      { type: 'FRANCHISE_UPDATED' }
+      { type: "FRANCHISE_UPDATED" }
     >;
   },
 
@@ -161,10 +163,10 @@ export const impacts = {
    */
   industryUpdate(
     update: Record<string, unknown>
-  ): Extract<StateImpact, { type: 'INDUSTRY_UPDATE' }> {
-    return { type: 'INDUSTRY_UPDATE', payload: { update } } as Extract<
+  ): Extract<StateImpact, { type: "INDUSTRY_UPDATE" }> {
+    return { type: "INDUSTRY_UPDATE", payload: { update } } as Extract<
       StateImpact,
-      { type: 'INDUSTRY_UPDATE' }
+      { type: "INDUSTRY_UPDATE" }
     >;
   },
 
@@ -172,10 +174,10 @@ export const impacts = {
     modalType: string,
     payload: unknown = {},
     priority = 10
-  ): Extract<StateImpact, { type: 'MODAL_TRIGGERED' }> {
-    return { type: 'MODAL_TRIGGERED', payload: { modalType, priority, payload } } as Extract<
+  ): Extract<StateImpact, { type: "MODAL_TRIGGERED" }> {
+    return { type: "MODAL_TRIGGERED", payload: { modalType, priority, payload } } as Extract<
       StateImpact,
-      { type: 'MODAL_TRIGGERED' }
+      { type: "MODAL_TRIGGERED" }
     >;
   },
 };
@@ -200,6 +202,7 @@ git commit -m "feat(engine): typed impact constructors"
 The highest-density cast site in the engine, and the file the distressed-asset feature also touches.
 
 **Files:**
+
 - Modify: `src/engine/systems/industry/DistressCascade.ts`
 
 - [ ] **Step 1: Record the baseline cast count for this file**
@@ -210,7 +213,7 @@ Record the number (call it `BEFORE_DC`).
 - [ ] **Step 2: Add the import**
 
 ```ts
-import { impacts as I } from '../../core/impacts';
+import { impacts as I } from "../../core/impacts";
 ```
 
 - [ ] **Step 3: Replace impact literals with constructors**
@@ -219,34 +222,37 @@ Apply these mechanical substitutions throughout the file:
 
 ```ts
 // news
-impacts.push({ type: 'NEWS_ADDED', payload: { headline: H, description: D, category: 'market' } });
+impacts.push({ type: "NEWS_ADDED", payload: { headline: H, description: D, category: "market" } });
 // becomes
-impacts.push(I.newsAdded({ headline: H, description: D, category: 'market' }));
+impacts.push(I.newsAdded({ headline: H, description: D, category: "market" }));
 
 // rival cash / prestige
-impacts.push({ type: 'RIVAL_UPDATED', payload: { rivalId: id, update: { cash: c } } } as any);
+impacts.push({ type: "RIVAL_UPDATED", payload: { rivalId: id, update: { cash: c } } } as any);
 // becomes
 impacts.push(I.rivalUpdated(id, { cash: c }));
 
 // franchise ownership transfer
-impacts.push({ type: 'FRANCHISE_UPDATED', payload: { franchiseId: fid, update: { ownerId: b } } } as any);
+impacts.push({
+  type: "FRANCHISE_UPDATED",
+  payload: { franchiseId: fid, update: { ownerId: b } },
+} as any);
 // becomes
 impacts.push(I.franchiseUpdated(fid, { ownerId: b }));
 
 // vault / dot-path writes
-impacts.push({ type: 'INDUSTRY_UPDATE', payload: { update: { 'ip.vault': v } } } as any);
+impacts.push({ type: "INDUSTRY_UPDATE", payload: { update: { "ip.vault": v } } } as any);
 // becomes
-impacts.push(I.industryUpdate({ 'ip.vault': v }));
+impacts.push(I.industryUpdate({ "ip.vault": v }));
 
 // player debit
-impacts.push({ type: 'FUNDS_DEDUCTED', payload: { amount: price } } as any);
+impacts.push({ type: "FUNDS_DEDUCTED", payload: { amount: price } } as any);
 // becomes
 impacts.push(I.fundsDeducted(price));
 
 // modal
-impacts.push({ type: 'MODAL_TRIGGERED', payload: { modalType: 'X', offerId } } as any);
+impacts.push({ type: "MODAL_TRIGGERED", payload: { modalType: "X", offerId } } as any);
 // becomes
-impacts.push(I.modalTriggered('X', { offerId }));
+impacts.push(I.modalTriggered("X", { offerId }));
 ```
 
 > If a call site fails to compile after substitution, that is the point of this task — the payload was wrong and the cast was hiding it. Fix the argument, don't re-add a cast.
@@ -274,12 +280,13 @@ git commit -m "refactor(engine): DistressCascade uses typed impact constructors"
 ### Task 3: Migrate `WeekCoordinator.ts`
 
 **Files:**
+
 - Modify: `src/engine/services/WeekCoordinator.ts`
 
 - [ ] **Step 1: Add the import**
 
 ```ts
-import { impacts as I } from '../core/impacts';
+import { impacts as I } from "../core/impacts";
 ```
 
 - [ ] **Step 2: Replace the two known cast sites**
@@ -287,24 +294,28 @@ import { impacts as I } from '../core/impacts';
 The weekly summary modal trigger:
 
 ```ts
-    context.impacts.push({ type: 'MODAL_TRIGGERED', payload: { modalType: 'SUMMARY' } });
+context.impacts.push({ type: "MODAL_TRIGGERED", payload: { modalType: "SUMMARY" } });
 ```
+
 becomes:
+
 ```ts
-    context.impacts.push(I.modalTriggered('SUMMARY'));
+context.impacts.push(I.modalTriggered("SUMMARY"));
 ```
 
 The loan write-back in `runFinanceFilter` (currently a `SYSTEM_TICK` carrying `__studioUpdate` with a double cast):
 
 ```ts
-      context.impacts.push({
-        type: 'SYSTEM_TICK',
-        payload: { __studioUpdate: { loans: updatedLoans } }
-      } as unknown as import('@/engine/types').StateImpact);
+context.impacts.push({
+  type: "SYSTEM_TICK",
+  payload: { __studioUpdate: { loans: updatedLoans } },
+} as unknown as import("@/engine/types").StateImpact);
 ```
+
 becomes:
+
 ```ts
-      context.impacts.push(I.industryUpdate({ 'studio.loans': updatedLoans }));
+context.impacts.push(I.industryUpdate({ "studio.loans": updatedLoans }));
 ```
 
 > This also fixes a latent oddity: `SYSTEM_TICK`'s declared payload is `{ week?, tickCount? }`, so `__studioUpdate` was never part of its type — the cast was hiding a payload the handler had to special-case. `INDUSTRY_UPDATE`'s dot-path write is the mechanism actually designed for this.
@@ -328,6 +339,7 @@ git commit -m "refactor(engine): WeekCoordinator uses typed impact constructors"
 ### Task 4: Install the lint ratchet
 
 **Files:**
+
 - Modify: `eslint.config.js`
 
 - [ ] **Step 1: Record the current engine cast baseline**
@@ -385,7 +397,7 @@ git commit -m "chore(engine): lint ratchet for impact-boundary typing"
 ## Self-Review Notes
 
 - **Coverage:** typed constructors (T1), two highest-traffic files migrated as proof (T2, T3), ratchet + documented burn-down (T4).
-- **Scope honesty:** the plan explicitly does not claim to remove all 230 casts; it makes the remaining ones *visible and mechanical*. The `warn`→`error` flip is the stated finish line.
+- **Scope honesty:** the plan explicitly does not claim to remove all 230 casts; it makes the remaining ones _visible and mechanical_. The `warn`→`error` flip is the stated finish line.
 - **Type consistency:** `impacts.*` names, argument order (`rivalUpdated(id, update)`, `franchiseUpdated(id, update)`, `industryUpdate(record)`, `modalTriggered(type, payload, priority)`) are identical across Tasks 1–3.
 - **Interaction with other plans:** the distressed-asset plan writes `INDUSTRY_UPDATE` dot-path impacts and the sim-memory plan writes `'simMemory.*'` — both should use `I.industryUpdate({...})` once this lands. If those plans ship first, Task 2's substitutions cover their call sites too.
 - **Cast-inside-constructors caveat:** the constructors themselves still use one `as Extract<...>` per function. That is deliberate — it confines the unavoidable union-narrowing cast to a single reviewed, test-covered file instead of 230 call sites.

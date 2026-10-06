@@ -1,7 +1,7 @@
-import {describe, it, expect} from "vitest";
-import {createMockGameState, createMockRival} from "../generators/mockFactory";
-import {selectStrategicBuyer} from "@/engine/systems/industry/DistressCascade";
-import type {RivalStudio, Franchise, IPAsset, Project} from "@/engine/types";
+import { describe, it, expect } from "vitest";
+import { createMockGameState, createMockRival } from "../generators/mockFactory";
+import { selectStrategicBuyer } from "@/engine/systems/industry/DistressCascade";
+import type { RivalStudio, Franchise, IPAsset, Project } from "@/engine/types";
 
 function createBuyer(overrides: Partial<RivalStudio> = {}): RivalStudio {
   return createMockRival({
@@ -73,9 +73,7 @@ function setupStateWithAsset(
   state.ip.franchises = {
     [assetId]: createFranchise(assetId, sellerId, assetGenre),
   };
-  state.ip.vault = [
-    createIPAsset(`asset-${assetId}`, sellerId, projectId),
-  ];
+  state.ip.vault = [createIPAsset(`asset-${assetId}`, sellerId, projectId)];
 
   return state;
 }
@@ -160,9 +158,7 @@ describe("selectStrategicBuyer", () => {
     // Block buyer1 via antitrust
     state.simMemory = {
       ...state.simMemory!,
-      antitrustBlockList: [
-        { acquirerId: "b1", untilWeek: 200 },
-      ],
+      antitrustBlockList: [{ acquirerId: "b1", untilWeek: 200 }],
     };
 
     const selected = selectStrategicBuyer(state, [buyer1, buyer2], "franchise", "f1");

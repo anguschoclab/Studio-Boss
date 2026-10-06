@@ -15,7 +15,18 @@ const CANONICAL: Record<string, Record<string, unknown>> = {
   PROJECT_CREATED: { project: { id: "p1", title: "Test", state: "development" } },
   PROJECT_UPDATED: { projectId: "p1", update: { buzz: 10 } },
   PROJECT_REMOVED: { projectId: "p1" },
-  AWARD_WON: { projectId: "p1", award: { id: "a1", projectId: "p1", name: "Best Picture", category: "film", body: "Oscar", status: "won", year: 1 } },
+  AWARD_WON: {
+    projectId: "p1",
+    award: {
+      id: "a1",
+      projectId: "p1",
+      name: "Best Picture",
+      category: "film",
+      body: "Oscar",
+      status: "won",
+      year: 1,
+    },
+  },
   PILOT_GRADUATED: { projectId: "p1" },
   NEWS_ADDED: { headline: "H", description: "D", category: "business" },
   TALENT_UPDATED: { talentId: "t1", update: { prestige: 5 } },
@@ -69,8 +80,19 @@ const CANONICAL: Record<string, Record<string, unknown>> = {
   FORMAT_LICENSED: { asset: { id: "fmt1" } },
   DEAL_UPDATED: { action: "expire", deal: { id: "d1" } },
   CASTING_CONSTRAINT_VIOLATION: { violation: {} },
-  CASTING_PREMIUM_DEMAND: { talentId: "t1", projectId: "p1", requirement: {}, requestedPremium: 1, notification: "" },
-  CASTING_ALTERNATIVE_SUGGESTED: { projectId: "p1", originalTalentId: "t1", alternativeTalentIds: [], requirement: {} },
+  CASTING_PREMIUM_DEMAND: {
+    talentId: "t1",
+    projectId: "p1",
+    requirement: {},
+    requestedPremium: 1,
+    notification: "",
+  },
+  CASTING_ALTERNATIVE_SUGGESTED: {
+    projectId: "p1",
+    originalTalentId: "t1",
+    alternativeTalentIds: [],
+    requirement: {},
+  },
   CONTRACT_ADDED: { contract: { id: "ct1", projectId: "p1", talentId: "t1" } },
   HEADLINE_POSTED: { headline: { id: "h1" } },
   INDUSTRY_RUMORS_UPDATED: { rumors: [] },
@@ -89,9 +111,7 @@ describe("impact handler registry completeness", () => {
   it.each(Object.keys(CANONICAL))("handles %s without an unhandled-type warning", (type) => {
     const impact = { type, payload: CANONICAL[type] } as unknown as StateImpact;
     const next = applySingleImpact(state, impact);
-    expect(warnSpy).not.toHaveBeenCalledWith(
-      expect.stringContaining("Unhandled impact type")
-    );
+    expect(warnSpy).not.toHaveBeenCalledWith(expect.stringContaining("Unhandled impact type"));
     expect(next).toBeTruthy();
   });
 
@@ -100,8 +120,6 @@ describe("impact handler registry completeness", () => {
       type: "NOT_A_REAL_TYPE",
       payload: {},
     } as unknown as StateImpact);
-    expect(warnSpy).toHaveBeenCalledWith(
-      expect.stringContaining("NOT_A_REAL_TYPE")
-    );
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("NOT_A_REAL_TYPE"));
   });
 });

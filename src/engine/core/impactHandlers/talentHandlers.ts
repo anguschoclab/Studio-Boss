@@ -1,5 +1,11 @@
-import {GameState} from "@/engine/types";
-import type {TalentUpdateImpact, TalentAddedImpact, TalentRemovedImpact, CastingConstraintCheckedImpact, MedicalLeaveTriggeredImpact} from "@/engine/types/state.types";
+import { GameState } from "@/engine/types";
+import type {
+  TalentUpdateImpact,
+  TalentAddedImpact,
+  TalentRemovedImpact,
+  CastingConstraintCheckedImpact,
+  MedicalLeaveTriggeredImpact,
+} from "@/engine/types/state.types";
 
 /**
  * Talent-related impact handlers
@@ -62,7 +68,10 @@ export function handleTalentRemoved(state: GameState, impact: TalentRemovedImpac
   };
 }
 
-export function handleCastingConstraintChecked(state: GameState, impact: CastingConstraintCheckedImpact): GameState {
+export function handleCastingConstraintChecked(
+  state: GameState,
+  impact: CastingConstraintCheckedImpact
+): GameState {
   if (!impact.payload) return state;
   const { check, comfortLevel, premiumRates } = impact.payload;
   const talentId = (check as { talentId?: string })?.talentId;
@@ -84,7 +93,10 @@ export function handleCastingConstraintChecked(state: GameState, impact: Casting
   };
 }
 
-export function handleMedicalLeaveTriggered(state: GameState, impact: MedicalLeaveTriggeredImpact): GameState {
+export function handleMedicalLeaveTriggered(
+  state: GameState,
+  impact: MedicalLeaveTriggeredImpact
+): GameState {
   const { talentId, weeks } = impact.payload;
   const talents = { ...state.entities.talents };
   const talent = talents[talentId];

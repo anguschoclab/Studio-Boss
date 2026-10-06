@@ -1,10 +1,10 @@
-import {GameState, StateImpact, Talent} from "@/engine/types";
-import {ProducerShingle, ShingleDealType, ShingleMedium} from "@/engine/types/talent.types";
-import {RandomGenerator} from "@/engine/utils/rng";
-import {isPlayerOwner, getPlayerId} from "@/engine/utils/ownership";
-import {getContractsByTalentId} from "@/engine/utils";
-import {getSimMemory} from "../../core/simMemory";
-import {impacts as I} from "../../core/impacts";
+import { GameState, StateImpact, Talent } from "@/engine/types";
+import { ProducerShingle, ShingleDealType, ShingleMedium } from "@/engine/types/talent.types";
+import { RandomGenerator } from "@/engine/utils/rng";
+import { isPlayerOwner, getPlayerId } from "@/engine/utils/ownership";
+import { getContractsByTalentId } from "@/engine/utils";
+import { getSimMemory } from "../../core/simMemory";
+import { impacts as I } from "../../core/impacts";
 
 /**
  * ShingleSystem — models vanity-shingle / production-company deals (Bad Robot,
@@ -446,9 +446,7 @@ function chargeOverhead(state: GameState, impacts: StateImpact[]) {
     } else {
       const rival = state.entities.rivals[s.baseStudioId];
       if (rival) {
-        impacts.push(
-          I.financeTransaction(-weekly, `Shingle overhead: ${s.name}`, rival.id),
-        );
+        impacts.push(I.financeTransaction(-weekly, `Shingle overhead: ${s.name}`, rival.id));
       }
     }
   }
@@ -886,7 +884,7 @@ export function cancelHighestOverheadDeal(
     if (rival) {
       impacts.push(
         I.financeTransaction(severance, "Shingle deal severance", rival.id),
-        I.rivalUpdated(rival.id, {}, { prestige: -2 }),
+        I.rivalUpdated(rival.id, {}, { prestige: -2 })
       );
     }
   }

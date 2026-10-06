@@ -1,5 +1,5 @@
-import {Project} from "@/engine/types";
-import {StateImpact} from "../types/state.types";
+import { Project } from "@/engine/types";
+import { StateImpact } from "../types/state.types";
 
 export function calculateIPValue(project: Project): number {
   if (
@@ -38,7 +38,10 @@ export function checkRightsExpiry(project: Project, currentWeek: number): string
 }
 
 // ⚡ Bolt Optimization: Accept Record instead of array to avoid Object.values allocation
-export function advanceIPRights(projects: Record<string, Project>, currentWeek: number): StateImpact {
+export function advanceIPRights(
+  projects: Record<string, Project>,
+  currentWeek: number
+): StateImpact {
   const impact: StateImpact = {
     projectUpdates: [],
     uiNotifications: [],

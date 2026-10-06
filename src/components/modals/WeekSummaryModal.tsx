@@ -1,12 +1,25 @@
-import {useUIStore} from "@/store/uiStore";
-import {useGameStore} from "@/store/gameStore";
-import {formatMoney} from "@/engine/utils";
-import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter} from "@/components/ui/dialog";
-import {useEffect, useState} from "react";
-import {NewsEvent, NarrativeEvent} from "@/engine/types";
-import {NewsStoryModal} from "./NewsStoryModal";
-import {cn} from "@/lib/utils";
-import {AlertTriangle, DollarSign, ArrowRight, Newspaper, Trophy, MessageSquare} from "lucide-react";
+import { useUIStore } from "@/store/uiStore";
+import { useGameStore } from "@/store/gameStore";
+import { formatMoney } from "@/engine/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { useEffect, useState } from "react";
+import { NewsEvent, NarrativeEvent } from "@/engine/types";
+import { NewsStoryModal } from "./NewsStoryModal";
+import { cn } from "@/lib/utils";
+import {
+  AlertTriangle,
+  DollarSign,
+  ArrowRight,
+  Newspaper,
+  Trophy,
+  MessageSquare,
+} from "lucide-react";
 
 export const WeekSummaryModal = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();

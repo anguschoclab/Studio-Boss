@@ -1,7 +1,7 @@
-import {GameState, StateImpact, Project} from "@/engine/types";
-import {RandomGenerator} from "../../utils/rng";
-import {FestivalSubmission} from "@/engine/types/project.types";
-import {isPlayerOwner} from "../../utils/ownership";
+import { GameState, StateImpact, Project } from "@/engine/types";
+import { RandomGenerator } from "../../utils/rng";
+import { FestivalSubmission } from "@/engine/types/project.types";
+import { isPlayerOwner } from "../../utils/ownership";
 
 // Festival market weeks: Sundance (4), Cannes (20), TIFF (36)
 export const FESTIVAL_MARKET_WEEKS = [4, 20, 36] as const;

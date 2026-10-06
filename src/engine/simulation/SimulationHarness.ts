@@ -1,7 +1,7 @@
-import {GameState, ArchetypeKey} from "../types";
-import {initializeGame} from "../core/gameInit";
-import {advanceWeek} from "../core/weekAdvance";
-import {countKeys} from "../utils";
+import { GameState, ArchetypeKey } from "../types";
+import { initializeGame } from "../core/gameInit";
+import { advanceWeek } from "../core/weekAdvance";
+import { countKeys } from "../utils";
 
 export interface SimulationResult {
   finalState: GameState;

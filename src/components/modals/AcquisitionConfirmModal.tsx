@@ -1,9 +1,15 @@
 import React, { useEffect } from "react";
-import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription} from "@/components/ui/dialog";
-import {Button} from "@/components/ui/button";
-import {useGameStore} from "@/store/gameStore";
-import {useUIStore} from "@/store/uiStore";
-import {Building2, ShieldAlert, X} from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
+import { Building2, ShieldAlert, X } from "lucide-react";
 
 function fmt(n: number): string {
   if (Math.abs(n) >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(2)}B`;
@@ -71,8 +77,8 @@ export const AcquisitionConfirmModal: React.FC = () => {
             Acquire {preview.targetName}
           </DialogTitle>
           <DialogDescription className="text-muted-foreground text-sm leading-relaxed">
-            You inherit their slate, contracts and cash reserves. Regulators
-            review the combined entity.
+            You inherit their slate, contracts and cash reserves. Regulators review the combined
+            entity.
           </DialogDescription>
         </DialogHeader>
 
@@ -98,9 +104,7 @@ export const AcquisitionConfirmModal: React.FC = () => {
               <span className="flex items-center gap-2 text-sm text-muted-foreground">
                 <ShieldAlert className="h-4 w-4" /> Regulator Outlook
               </span>
-              <span
-                className={`font-display text-sm font-bold uppercase not-italic ${risk.tone}`}
-              >
+              <span className={`font-display text-sm font-bold uppercase not-italic ${risk.tone}`}>
                 {risk.label}
               </span>
             </div>
@@ -127,19 +131,11 @@ export const AcquisitionConfirmModal: React.FC = () => {
         </div>
 
         <div className="flex gap-3 mt-4">
-          <Button
-            variant="outline"
-            className="flex-1"
-            onClick={() => resolveCurrentModal()}
-          >
+          <Button variant="outline" className="flex-1" onClick={() => resolveCurrentModal()}>
             <X className="h-4 w-4 mr-2" aria-hidden="true" />
             Walk Away
           </Button>
-          <Button
-            className="flex-1"
-            disabled={!preview.canProceed}
-            onClick={handleConfirm}
-          >
+          <Button className="flex-1" disabled={!preview.canProceed} onClick={handleConfirm}>
             <Building2 className="h-4 w-4 mr-2" />
             Bid {fmt(preview.price)}
           </Button>

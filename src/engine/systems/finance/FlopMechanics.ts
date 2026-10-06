@@ -1,7 +1,7 @@
-import {GameState, Project, StateImpact} from "@/engine/types";
-import {isPlayerOwner} from "../../utils/ownership";
-import type {StudioFlopHistory} from "@/engine/types/state.types";
-import {getSimMemory} from "../../core/simMemory";
+import { GameState, Project, StateImpact } from "@/engine/types";
+import { isPlayerOwner } from "../../utils/ownership";
+import type { StudioFlopHistory } from "@/engine/types/state.types";
+import { getSimMemory } from "../../core/simMemory";
 export type { StudioFlopHistory };
 
 /**
@@ -95,7 +95,10 @@ export function calculateFlopPenalties(project: Project, severity: FlopSeverity)
   };
 }
 
-export function shouldRestructureStudio(history: StudioFlopHistory | undefined, currentWeek: number): boolean {
+export function shouldRestructureStudio(
+  history: StudioFlopHistory | undefined,
+  currentWeek: number
+): boolean {
   if (!history) return false;
 
   const oneYearAgo = currentWeek - 52;

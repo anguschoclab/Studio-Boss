@@ -1,8 +1,8 @@
-import {describe, it, expect} from "vitest";
-import {RandomGenerator} from "@/engine/utils/rng";
-import {createMockGameState, createMockRival} from "../../generators/mockFactory";
-import {tickRivalAwardsCampaigns} from "@/engine/systems/ai/RivalAwardsCampaigner";
-import type {RivalStudio, Project, GameState, StateImpact} from "@/engine/types";
+import { describe, it, expect } from "vitest";
+import { RandomGenerator } from "@/engine/utils/rng";
+import { createMockGameState, createMockRival } from "../../generators/mockFactory";
+import { tickRivalAwardsCampaigns } from "@/engine/systems/ai/RivalAwardsCampaigner";
+import type { RivalStudio, Project, GameState, StateImpact } from "@/engine/types";
 
 function createProject(
   id: string,
@@ -48,9 +48,7 @@ function _findImpact(impacts: StateImpact[], type: string): StateImpact | undefi
 }
 
 function findRivalUpdated(impacts: StateImpact[], rivalId: string): StateImpact | undefined {
-  return impacts.find(
-    (i) => i.type === "RIVAL_UPDATED" && (i.payload as any).rivalId === rivalId
-  );
+  return impacts.find((i) => i.type === "RIVAL_UPDATED" && (i.payload as any).rivalId === rivalId);
 }
 
 function findCashDelta(impacts: StateImpact[], rivalId: string): number | undefined {

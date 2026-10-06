@@ -1,5 +1,5 @@
-import {GameState} from "@/engine/types";
-import type {DealUpdatedImpact} from "@/engine/types/state.types";
+import { GameState } from "@/engine/types";
+import type { DealUpdatedImpact } from "@/engine/types/state.types";
 
 /**
  * Deal-related impact handlers
@@ -18,5 +18,8 @@ export function handleDealUpdated(state: GameState, impact: DealUpdatedImpact): 
     const status = (action === "expire" ? "expired" : "terminated") as "expired" | "terminated";
     expiredDeals = [{ ...deal, status }, ...expiredDeals].slice(0, 50);
   }
-  return { ...state, deals: { ...current, activeDeals, expiredDeals, pendingOffers: current.pendingOffers ?? [] } };
+  return {
+    ...state,
+    deals: { ...current, activeDeals, expiredDeals, pendingOffers: current.pendingOffers ?? [] },
+  };
 }

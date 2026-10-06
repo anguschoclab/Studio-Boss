@@ -1,6 +1,6 @@
-import {describe, it, expect} from "vitest";
-import {computeRadarMetrics} from "@/components/industry/competitorMetrics";
-import {GameState, RivalStudio} from "@/engine/types";
+import { describe, it, expect } from "vitest";
+import { computeRadarMetrics } from "@/components/industry/competitorMetrics";
+import { GameState, RivalStudio } from "@/engine/types";
 
 const makeState = (overrides: Partial<GameState> = {}): GameState =>
   ({

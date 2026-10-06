@@ -1,22 +1,23 @@
-import {create} from "zustand";
-import {GameState, WeekSummary, ArchetypeKey} from "@/engine/types";import {initializeGame} from "@/engine/core/gameInit";
-import {advanceWeek} from "@/engine/core/weekAdvance";
-import {saveGame, loadGame, getSaveSlots, SaveSlotInfo} from "@/persistence/saveLoad";
-import {toast} from "sonner";
-import {useUIStore, ModalType, ModalPayload} from "./uiStore";
-import {useSettingsStore} from "./settingsStore";
+import { create } from "zustand";
+import { GameState, WeekSummary, ArchetypeKey } from "@/engine/types";
+import { initializeGame } from "@/engine/core/gameInit";
+import { advanceWeek } from "@/engine/core/weekAdvance";
+import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from "@/persistence/saveLoad";
+import { toast } from "sonner";
+import { useUIStore, ModalType, ModalPayload } from "./uiStore";
+import { useSettingsStore } from "./settingsStore";
 
-import {createProjectSlice, ProjectSlice} from "./slices/projectSlice";
-import {createFinanceSlice, FinanceSlice} from "./slices/financeSlice";
-import {createTalentSlice, TalentSlice} from "./slices/talentSlice";
-import {createRivalSlice, RivalSlice} from "./slices/rivalSlice";
-import {createNewsSlice, NewsSlice} from "./slices/newsSlice";
-import {createSnapshotSlice, SnapshotSlice} from "./slices/snapshotSlice";
-import {createLoanSlice, LoanSlice} from "./slices/loanSlice";
-import {createBookmarkSlice, BookmarkSlice} from "./slices/bookmarkSlice";
-import {createDistressSlice, DistressSlice} from "./slices/distressSlice";
-import {createMarketingSlice, MarketingSlice} from "./slices/marketingSlice";
-import {createProjectEventsSlice, ProjectEventsSlice} from "./slices/projectEventsSlice";
+import { createProjectSlice, ProjectSlice } from "./slices/projectSlice";
+import { createFinanceSlice, FinanceSlice } from "./slices/financeSlice";
+import { createTalentSlice, TalentSlice } from "./slices/talentSlice";
+import { createRivalSlice, RivalSlice } from "./slices/rivalSlice";
+import { createNewsSlice, NewsSlice } from "./slices/newsSlice";
+import { createSnapshotSlice, SnapshotSlice } from "./slices/snapshotSlice";
+import { createLoanSlice, LoanSlice } from "./slices/loanSlice";
+import { createBookmarkSlice, BookmarkSlice } from "./slices/bookmarkSlice";
+import { createDistressSlice, DistressSlice } from "./slices/distressSlice";
+import { createMarketingSlice, MarketingSlice } from "./slices/marketingSlice";
+import { createProjectEventsSlice, ProjectEventsSlice } from "./slices/projectEventsSlice";
 
 /**
  * The main game store interface, combining multiple slices for state management.
@@ -127,15 +128,18 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     const ui = useUIStore.getState();
     for (const impact of weekImpacts) {
       if (impact.type === "MODAL_TRIGGERED") {
-        const { modalType, payload: innerPayload, ...rest } = impact.payload as {
+        const {
+          modalType,
+          payload: innerPayload,
+          ...rest
+        } = impact.payload as {
           modalType: string;
           payload?: Record<string, unknown>;
           [key: string]: unknown;
         };
         // Two emit conventions exist: nested ({modalType, payload:{...}}) and flat
         // ({modalType, fieldA, fieldB}). Normalize to the flat payload modals expect.
-        const modalPayload =
-          innerPayload && typeof innerPayload === "object" ? innerPayload : rest;
+        const modalPayload = innerPayload && typeof innerPayload === "object" ? innerPayload : rest;
         // SUMMARY is emitted before the week's summary exists — attach the real one.
         ui.enqueueModal(
           modalType as ModalType,

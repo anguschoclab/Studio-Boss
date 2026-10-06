@@ -37,7 +37,14 @@ function insolventRival(id: string): RivalStudio {
     foundedWeek: 1,
     recentActivity: "",
     projectCount: 0,
-    motivationProfile: { greed: 1, prestige: 1, aggression: 1, loyalty: 1, riskTolerance: 1, innovation: 1 },
+    motivationProfile: {
+      greed: 1,
+      prestige: 1,
+      aggression: 1,
+      loyalty: 1,
+      riskTolerance: 1,
+      innovation: 1,
+    },
     currentMotivation: "SURVIVAL",
     projects: {},
     contracts: [],
@@ -128,8 +135,9 @@ describe("impact emitter semantics", () => {
       type: "INDUSTRY_UPDATE",
       payload: { update: { "simMemory.headlessCashStreaks": { r1: 3 } } },
     } as unknown as Parameters<typeof applySingleImpact>[1]);
-    const mem = (next as GameState & { simMemory?: { headlessCashStreaks?: Record<string, number> } })
-      .simMemory;
+    const mem = (
+      next as GameState & { simMemory?: { headlessCashStreaks?: Record<string, number> } }
+    ).simMemory;
     expect(mem?.headlessCashStreaks?.r1).toBe(3);
   });
 });

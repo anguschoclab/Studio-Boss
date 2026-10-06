@@ -1,7 +1,11 @@
-import {describe, it, expect} from "vitest";
-import {generateAwardsProfile, runAwardsCeremony, processRazzies} from "../../../engine/systems/awards/index";
-import {Project, GameState} from "../../../engine/types";
-import {RandomGenerator} from "../../../engine/utils/rng";
+import { describe, it, expect } from "vitest";
+import {
+  generateAwardsProfile,
+  runAwardsCeremony,
+  processRazzies,
+} from "../../../engine/systems/awards/index";
+import { Project, GameState } from "../../../engine/types";
+import { RandomGenerator } from "../../../engine/utils/rng";
 
 describe("awards system", () => {
   const getInitialState = (): GameState =>
@@ -154,9 +158,7 @@ describe("awards system", () => {
       const impacts = runAwardsCeremony(state, 4, 2024, rng);
 
       const rivalUpdate = impacts.find(
-        (i) =>
-          i.type === "RIVAL_UPDATED" &&
-          (i.payload as any).rivalId === "rival-1"
+        (i) => i.type === "RIVAL_UPDATED" && (i.payload as any).rivalId === "rival-1"
       ) as any;
 
       expect(rivalUpdate).toBeDefined();
@@ -216,9 +218,7 @@ describe("awards system", () => {
       const impacts = runAwardsCeremony(state, 4, 2024, rng);
 
       const rivalUpdate = impacts.find(
-        (i) =>
-          i.type === "RIVAL_UPDATED" &&
-          (i.payload as any).rivalId === "rival-1"
+        (i) => i.type === "RIVAL_UPDATED" && (i.payload as any).rivalId === "rival-1"
       ) as any;
 
       // If there is a RIVAL_UPDATED for this rival, it should NOT include lastAwardWin

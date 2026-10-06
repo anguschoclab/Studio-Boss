@@ -1,9 +1,19 @@
-import {GameState, RivalStudio, StudioMotivation, StateImpact, SeriesProject} from "@/engine/types";
-import {RandomGenerator} from "../../utils/rng";
-import {determineSyndicationTier, getSyndicationImpact, calculateSyndicationProgress} from "../ip/syndicationEngine";
-import {SyndicationTier} from "../../data/syndicationConfig";
-import {getSimMemory} from "../../core/simMemory";
-import {hasAtLeastKeys} from "../../utils";
+import {
+  GameState,
+  RivalStudio,
+  StudioMotivation,
+  StateImpact,
+  SeriesProject,
+} from "@/engine/types";
+import { RandomGenerator } from "../../utils/rng";
+import {
+  determineSyndicationTier,
+  getSyndicationImpact,
+  calculateSyndicationProgress,
+} from "../ip/syndicationEngine";
+import { SyndicationTier } from "../../data/syndicationConfig";
+import { getSimMemory } from "../../core/simMemory";
+import { hasAtLeastKeys } from "../../utils";
 
 /**
  * Utility Scores for each Studio Motivation.
@@ -68,8 +78,7 @@ export function calculateMotivationScores(
     : [];
   const recentMajorFlops = recentFlopWeeks.length;
   const hasCatastrophicFlop = flopHistory
-    ? flopHistory.catastrophicFlops > 0 &&
-      flopHistory.flopWeeks.some((w) => state.week - w <= 52)
+    ? flopHistory.catastrophicFlops > 0 && flopHistory.flopWeeks.some((w) => state.week - w <= 52)
     : false;
 
   const flopAdjustments: Partial<Record<StudioMotivation, number>> = {};
@@ -201,7 +210,12 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
     const projectsObj = state.entities.projects || {};
     for (const projectId in projectsObj) {
       const p = projectsObj[projectId];
-      if (p.ownerId === rival.id && p.state === "released" && p.format === "tv" && "tvDetails" in p) {
+      if (
+        p.ownerId === rival.id &&
+        p.state === "released" &&
+        p.format === "tv" &&
+        "tvDetails" in p
+      ) {
         tvProjects.push(p as SeriesProject);
       }
     }
@@ -254,7 +268,12 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
         payload: {
           rivalId: rival.id,
           update: {
-            syndicationPotential: { syndicatedCount, bestTier, nearSyndicationCount, weeklyRevenue },
+            syndicationPotential: {
+              syndicatedCount,
+              bestTier,
+              nearSyndicationCount,
+              weeklyRevenue,
+            },
           },
         },
       });

@@ -1,14 +1,16 @@
 import React from "react";
-import {render, screen, fireEvent} from "@testing-library/react";
-import {describe, it, expect, vi, beforeEach} from "vitest";
-import {IPAssetCard} from "@/components/ip/IPAssetCard";
-import {IPAsset} from "@/engine/types";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { IPAssetCard } from "@/components/ip/IPAssetCard";
+import { IPAsset } from "@/engine/types";
 
-const { mockDevelopFromOwnedIP, mockAcquireAndRebootIP, mockSelectFatigueForAsset } = vi.hoisted(() => ({
-  mockDevelopFromOwnedIP: vi.fn(),
-  mockAcquireAndRebootIP: vi.fn(),
-  mockSelectFatigueForAsset: vi.fn(() => 0),
-}));
+const { mockDevelopFromOwnedIP, mockAcquireAndRebootIP, mockSelectFatigueForAsset } = vi.hoisted(
+  () => ({
+    mockDevelopFromOwnedIP: vi.fn(),
+    mockAcquireAndRebootIP: vi.fn(),
+    mockSelectFatigueForAsset: vi.fn(() => 0),
+  })
+);
 
 vi.mock("@/components/ui/card", () => ({
   Card: ({ children }: any) => <div data-testid="card">{children}</div>,
@@ -17,7 +19,9 @@ vi.mock("@/components/ui/card", () => ({
 
 vi.mock("@/components/ui/button", () => ({
   Button: ({ children, onClick }: any) => (
-    <button data-testid="button" onClick={onClick}>{children}</button>
+    <button data-testid="button" onClick={onClick}>
+      {children}
+    </button>
   ),
 }));
 

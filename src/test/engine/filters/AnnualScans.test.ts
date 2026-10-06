@@ -1,8 +1,8 @@
-import {describe, it, expect, beforeEach} from "vitest";
-import {AnnualScans} from "@/engine/services/filters/AnnualScans";
-import {GameState} from "@/engine/types";
-import {RandomGenerator} from "@/engine/utils/rng";
-import {TickContext} from "@/engine/services/filters/types";
+import { describe, it, expect, beforeEach } from "vitest";
+import { AnnualScans } from "@/engine/services/filters/AnnualScans";
+import { GameState } from "@/engine/types";
+import { RandomGenerator } from "@/engine/utils/rng";
+import { TickContext } from "@/engine/services/filters/types";
 
 describe("AnnualScans", () => {
   let mockState: GameState;
@@ -224,8 +224,7 @@ describe("AnnualScans — reboot proposal", () => {
     // or the rng roll was >= 0.2 (which means no impact, which is also valid behavior)
     AnnualScans.execute(mockState, mockContext);
     const modalImpact = mockContext.impacts.find(
-      (i) => i.type === "MODAL_TRIGGERED" &&
-      (i.payload as any)?.modalType === "REBOOT_OPPORTUNITY"
+      (i) => i.type === "MODAL_TRIGGERED" && (i.payload as any)?.modalType === "REBOOT_OPPORTUNITY"
     );
     // If the rng roll was < 0.2, we should have the impact
     // If not, that's fine — we just skip this assertion
@@ -249,8 +248,7 @@ describe("AnnualScans — reboot proposal", () => {
     AnnualScans.execute(mockState, mockContext);
 
     const modalImpact = mockContext.impacts.find(
-      (i) => i.type === "MODAL_TRIGGERED" &&
-      (i.payload as any)?.modalType === "REBOOT_OPPORTUNITY"
+      (i) => i.type === "MODAL_TRIGGERED" && (i.payload as any)?.modalType === "REBOOT_OPPORTUNITY"
     );
     expect(modalImpact).toBeDefined();
     const payload = modalImpact!.payload as any;
@@ -276,8 +274,7 @@ describe("AnnualScans — reboot proposal", () => {
     AnnualScans.execute(mockState, mockContext);
 
     const modalImpact = mockContext.impacts.find(
-      (i) => i.type === "MODAL_TRIGGERED" &&
-      (i.payload as any)?.modalType === "REBOOT_OPPORTUNITY"
+      (i) => i.type === "MODAL_TRIGGERED" && (i.payload as any)?.modalType === "REBOOT_OPPORTUNITY"
     );
     expect(modalImpact).toBeUndefined();
   });
@@ -295,8 +292,7 @@ describe("AnnualScans — reboot proposal", () => {
     AnnualScans.execute(mockState, mockContext);
 
     const modalImpact = mockContext.impacts.find(
-      (i) => i.type === "MODAL_TRIGGERED" &&
-      (i.payload as any)?.modalType === "REBOOT_OPPORTUNITY"
+      (i) => i.type === "MODAL_TRIGGERED" && (i.payload as any)?.modalType === "REBOOT_OPPORTUNITY"
     );
     expect(modalImpact).toBeUndefined();
   });

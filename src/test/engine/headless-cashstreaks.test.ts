@@ -1,8 +1,8 @@
-import {describe, it, expect} from "vitest";
-import {HeadlessController} from "@/engine/simulation/HeadlessController";
-import {RandomGenerator} from "@/engine/utils/rng";
-import {defaultSimMemory} from "@/engine/core/simMemory";
-import type {GameState} from "@/engine/types";
+import { describe, it, expect } from "vitest";
+import { HeadlessController } from "@/engine/simulation/HeadlessController";
+import { RandomGenerator } from "@/engine/utils/rng";
+import { defaultSimMemory } from "@/engine/core/simMemory";
+import type { GameState } from "@/engine/types";
 
 function makeState(streaks?: Record<string, number>): GameState {
   return {
@@ -11,8 +11,22 @@ function makeState(streaks?: Record<string, number>): GameState {
     studio: { id: "PLAYER", name: "Player" },
     entities: {
       rivals: {
-        r1: { id: "r1", name: "Rival 1", cash: -600_000_000, prestige: 50, strength: 50, archetype: "mid-tier" },
-        r2: { id: "r2", name: "Rival 2", cash: 50_000_000, prestige: 50, strength: 50, archetype: "mid-tier" },
+        r1: {
+          id: "r1",
+          name: "Rival 1",
+          cash: -600_000_000,
+          prestige: 50,
+          strength: 50,
+          archetype: "mid-tier",
+        },
+        r2: {
+          id: "r2",
+          name: "Rival 2",
+          cash: 50_000_000,
+          prestige: 50,
+          strength: 50,
+          archetype: "mid-tier",
+        },
       },
       projects: {},
       releasedProjectIds: [],
@@ -21,7 +35,7 @@ function makeState(streaks?: Record<string, number>): GameState {
       contractsByProjectId: {},
       contractsByTalentId: {},
     },
-    industry: {  },
+    industry: {},
     ip: { vault: [], franchises: {} },
     market: { buyers: [], opportunities: [] },
     simMemory: { ...defaultSimMemory(), headlessCashStreaks: streaks ?? {} },
@@ -34,7 +48,8 @@ describe("headless cash streaks in simMemory", () => {
     const rng = new RandomGenerator(42);
     const impacts = HeadlessController.tick(state, rng);
     const memWrite = impacts.find(
-      (i: any) => i.type === "INDUSTRY_UPDATE" && i.payload?.update?.["simMemory.headlessCashStreaks"]
+      (i: any) =>
+        i.type === "INDUSTRY_UPDATE" && i.payload?.update?.["simMemory.headlessCashStreaks"]
     ) as any;
     expect(memWrite).toBeTruthy();
     const streaks = memWrite.payload.update["simMemory.headlessCashStreaks"];
@@ -47,7 +62,8 @@ describe("headless cash streaks in simMemory", () => {
     const rng = new RandomGenerator(42);
     const impacts = HeadlessController.tick(state, rng);
     const memWrite = impacts.find(
-      (i: any) => i.type === "INDUSTRY_UPDATE" && i.payload?.update?.["simMemory.headlessCashStreaks"]
+      (i: any) =>
+        i.type === "INDUSTRY_UPDATE" && i.payload?.update?.["simMemory.headlessCashStreaks"]
     ) as any;
     const streaks = memWrite.payload.update["simMemory.headlessCashStreaks"];
     // r1 had streak 51, now 52 — should trigger bankruptcy (>= BANKRUPTCY_WEEKS_REQUIRED)

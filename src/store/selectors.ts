@@ -1,7 +1,7 @@
-import {createSelector} from "reselect";
-import {GameState, Project, Talent} from "../engine/types";
-import type {DistressedAssetOffer} from "@/engine/types/distress.types";
-import {calculateFranchiseFatigue} from "@/engine/systems/ip/fatigueEngine";
+import { createSelector } from "reselect";
+import { GameState, Project, Talent } from "../engine/types";
+import type { DistressedAssetOffer } from "@/engine/types/distress.types";
+import { calculateFranchiseFatigue } from "@/engine/systems/ip/fatigueEngine";
 
 const EMPTY_PROJECTS = {};
 const EMPTY_MARKET = { buyers: [], opportunities: [], trends: [], activeMarketEvents: [] };
@@ -112,8 +112,6 @@ export const selectNewsHistory = createSelector(
   [selectGameState],
   (state): import("@/engine/types").NewsEvent[] => {
     if (!state?.weekSummaries) return EMPTY_NEWS_EVENTS;
-    return state.weekSummaries
-      .flatMap((s) => s.newsEvents || [])
-      .sort((a, b) => b.week - a.week);
+    return state.weekSummaries.flatMap((s) => s.newsEvents || []).sort((a, b) => b.week - a.week);
   }
 );

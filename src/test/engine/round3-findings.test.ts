@@ -1,14 +1,14 @@
-import {describe, it, expect, beforeEach} from "vitest";
-import {applyImpacts} from "@/engine/core/impactReducer";
-import {advanceWeek, resetAdvanceWeekCache} from "@/engine/core/weekAdvance";
-import {defaultSimMemory} from "@/engine/core/simMemory";
-import {initializeGame} from "@/engine/core/gameInit";
-import {createMockGameState} from "../mockFactory";
-import {MetricsCollector} from "@/engine/simulation/MetricsCollector";
-import {StudioAutomation} from "@/engine/simulation/StudioAutomation";
-import {RandomGenerator} from "@/engine/utils/rng";
-import {GameState, StateImpact, Talent} from "@/engine/types";
-import type {Clique} from "@/engine/types/clique.types";
+import { describe, it, expect, beforeEach } from "vitest";
+import { applyImpacts } from "@/engine/core/impactReducer";
+import { advanceWeek, resetAdvanceWeekCache } from "@/engine/core/weekAdvance";
+import { defaultSimMemory } from "@/engine/core/simMemory";
+import { initializeGame } from "@/engine/core/gameInit";
+import { createMockGameState } from "../mockFactory";
+import { MetricsCollector } from "@/engine/simulation/MetricsCollector";
+import { StudioAutomation } from "@/engine/simulation/StudioAutomation";
+import { RandomGenerator } from "@/engine/utils/rng";
+import { GameState, StateImpact, Talent } from "@/engine/types";
+import type { Clique } from "@/engine/types/clique.types";
 
 /**
  * Round-3 consolidation regression tests.
@@ -31,9 +31,7 @@ describe("F-069: talent pool replenishment", () => {
     const state = createMockGameState();
     const t1 = fakeTalent("t-new-1");
     const t2 = fakeTalent("t-new-2");
-    const next = applyImpacts(state, [
-      { type: "TALENT_ADDED", payload: { talents: [t1, t2] } },
-    ]);
+    const next = applyImpacts(state, [{ type: "TALENT_ADDED", payload: { talents: [t1, t2] } }]);
     expect(next.entities.talents["t-new-1"]).toBeDefined();
     expect(next.entities.talents["t-new-2"]).toBeDefined();
   });
@@ -152,8 +150,8 @@ describe("F-032/F-033/F-034: PLAYER sentinel vs studio.id", () => {
     const impacts = StudioAutomation.tick(state, rng);
     const ipUpdate = impacts.find((i) => i.type === "IP_UPDATED");
     expect(ipUpdate).toBeDefined();
-    const ownerStudioId = (ipUpdate as { payload: { update: { ownerStudioId: string } } })
-      .payload.update.ownerStudioId;
+    const ownerStudioId = (ipUpdate as { payload: { update: { ownerStudioId: string } } }).payload
+      .update.ownerStudioId;
     expect(ownerStudioId).toBe(state.studio.id);
   });
 

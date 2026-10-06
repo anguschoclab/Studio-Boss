@@ -1,7 +1,7 @@
-import {GameState, StateImpact, Talent, Family} from "../../types";
-import {RandomGenerator} from "../../utils/rng";
-import {generateTalent} from "../../generators/talent/index";
-import type {DeathEvent} from "./DeathSystem";
+import { GameState, StateImpact, Talent, Family } from "../../types";
+import { RandomGenerator } from "../../utils/rng";
+import { generateTalent } from "../../generators/talent/index";
+import type { DeathEvent } from "./DeathSystem";
 
 /**
  * Dynasty System

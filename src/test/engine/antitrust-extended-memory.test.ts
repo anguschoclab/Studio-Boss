@@ -1,9 +1,9 @@
-import {describe, it, expect, vi, beforeEach} from "vitest";
-import {tickAntitrust, isAcquirerBlockedByAntitrust} from "@/engine/systems/industry/Antitrust";
-import type {AntitrustEvent} from "@/engine/systems/industry/Antitrust";
-import type {StateImpact} from "@/engine/types";
-import {defaultSimMemory} from "@/engine/core/simMemory";
-import {createMockGameState, createMockRival} from "./generators/mockFactory";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { tickAntitrust, isAcquirerBlockedByAntitrust } from "@/engine/systems/industry/Antitrust";
+import type { AntitrustEvent } from "@/engine/systems/industry/Antitrust";
+import type { StateImpact } from "@/engine/types";
+import { defaultSimMemory } from "@/engine/core/simMemory";
+import { createMockGameState, createMockRival } from "./generators/mockFactory";
 import * as utils from "@/engine/utils";
 
 function makeRivalDict(count: number, cash: number): Record<string, any> {
@@ -89,8 +89,7 @@ describe("Antitrust simMemory migration", () => {
 
       const impacts = tickAntitrust(state);
       const blockList = findSimMemoryImpact(impacts, "simMemory.antitrustBlockList") as
-        | { acquirerId: string; untilWeek: number }[]
-        | undefined;
+        { acquirerId: string; untilWeek: number }[] | undefined;
 
       expect(blockList).toBeDefined();
       expect(blockList!.length).toBeGreaterThan(0);
@@ -116,8 +115,7 @@ describe("Antitrust simMemory migration", () => {
 
       const impacts = tickAntitrust(state);
       const log = findSimMemoryImpact(impacts, "simMemory.eventLogs.antitrust") as
-        | AntitrustEvent[]
-        | undefined;
+        AntitrustEvent[] | undefined;
 
       expect(log).toBeDefined();
       expect(log!.length).toBe(1);
@@ -161,8 +159,7 @@ describe("Antitrust simMemory migration", () => {
 
       const impacts = tickAntitrust(state);
       const log = findSimMemoryImpact(impacts, "simMemory.eventLogs.antitrust") as
-        | AntitrustEvent[]
-        | undefined;
+        AntitrustEvent[] | undefined;
 
       expect(log).toBeDefined();
       expect(log!.length).toBe(2);
@@ -195,13 +192,14 @@ describe("Antitrust simMemory migration", () => {
 
       const impacts = tickAntitrust(state);
       const blockList = findSimMemoryImpact(impacts, "simMemory.antitrustBlockList") as
-        | { acquirerId: string; untilWeek: number }[]
-        | undefined;
+        { acquirerId: string; untilWeek: number }[] | undefined;
 
       expect(blockList).toBeDefined();
       // Old expired blocks should be gone, only the new block for dominant-1 should remain
       expect(blockList!.some((b) => b.acquirerId === "old-acquirer")).toBe(false);
-      expect(blockList!.some((b) => b.acquirerId === "dominant-1" && b.untilWeek === 404)).toBe(true);
+      expect(blockList!.some((b) => b.acquirerId === "dominant-1" && b.untilWeek === 404)).toBe(
+        true
+      );
     });
   });
 });

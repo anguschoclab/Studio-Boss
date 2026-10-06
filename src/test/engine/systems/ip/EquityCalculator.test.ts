@@ -1,6 +1,6 @@
-import {describe, it, expect} from "vitest";
-import {calculateFranchiseEquity} from "@/engine/systems/ip/EquityCalculator";
-import {Franchise, IPAsset, Project} from "@/engine/types";
+import { describe, it, expect } from "vitest";
+import { calculateFranchiseEquity } from "@/engine/systems/ip/EquityCalculator";
+import { Franchise, IPAsset, Project } from "@/engine/types";
 
 describe("calculateFranchiseEquity", () => {
   const mockFranchise: Franchise = {
@@ -17,7 +17,12 @@ describe("calculateFranchiseEquity", () => {
     creationWeek: 50,
   };
 
-  const makeAsset = (id: string, projectId: string, baseValue = 1_000_000, decayRate = 0.5): IPAsset => ({
+  const makeAsset = (
+    id: string,
+    projectId: string,
+    baseValue = 1_000_000,
+    decayRate = 0.5
+  ): IPAsset => ({
     id,
     originalProjectId: projectId,
     title: `Asset ${id}`,
@@ -196,7 +201,7 @@ describe("calculateFranchiseEquity", () => {
       };
       const equity = calculateFranchiseEquity(mockFranchise, assets, projects);
       // CU + Action are compatible → 1 synergy hit → crossoverBonus = 1.05 + 0.15 = 1.20
-      expect(equity).toBe(Math.floor(1_000_000 * 1.20 * 1.0));
+      expect(equity).toBe(Math.floor(1_000_000 * 1.2 * 1.0));
     });
 
     it("applies synergy bonus for Video Game Adaptation + Sci-Fi (compatible genres)", () => {
@@ -207,7 +212,7 @@ describe("calculateFranchiseEquity", () => {
       };
       const equity = calculateFranchiseEquity(mockFranchise, assets, projects);
       // VGA + Sci-Fi are compatible → 1 synergy hit → crossoverBonus = 1.05 + 0.15 = 1.20
-      expect(equity).toBe(Math.floor(1_000_000 * 1.20 * 1.0));
+      expect(equity).toBe(Math.floor(1_000_000 * 1.2 * 1.0));
     });
   });
 });

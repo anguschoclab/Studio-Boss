@@ -1,9 +1,5 @@
 import { create } from "zustand";
-import type {
-  ModalType,
-  ModalPayloadMap,
-  ModalPayload,
-} from "@/engine/types/modal.types";
+import type { ModalType, ModalPayloadMap, ModalPayload } from "@/engine/types/modal.types";
 
 export type { ModalType, ModalPayloadMap, ModalPayload };
 

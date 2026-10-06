@@ -1,5 +1,5 @@
 // Types related to Projects, Formats, and Markets
-import {ActiveCrisis} from "./engine.types";
+import { ActiveCrisis } from "./engine.types";
 
 export type CharacterArchetype =
   | "protagonist"
@@ -372,7 +372,8 @@ export type ProjectContractType = "upfront" | "deficit" | "standard";
 export type MandateType =
   "sci-fi" | "comedy" | "drama" | "budget_freeze" | "broad_appeal" | "prestige";
 
-export type ProjectRating = "G" | "PG" | "PG-13" | "R" | "NC-17" | "Unrated" | "TV-Y" | "TV-G" | "TV-PG" | "TV-14" | "TV-MA";
+export type ProjectRating =
+  "G" | "PG" | "PG-13" | "R" | "NC-17" | "Unrated" | "TV-Y" | "TV-G" | "TV-PG" | "TV-14" | "TV-MA";
 export type FilmRating = "G" | "PG" | "PG-13" | "R" | "NC-17" | "Unrated";
 export type TvRating = "TV-Y" | "TV-G" | "TV-PG" | "TV-14" | "TV-MA";
 export type ContentFlag =
@@ -387,7 +388,8 @@ export type ContentFlag =
   | "supernatural"
   | "religious"
   | "gambling";
-export type RatingMarket = "us" | "uk" | "europe" | "china" | "india" | "latam" | "middleeast" | "apac";
+export type RatingMarket =
+  "us" | "uk" | "europe" | "china" | "india" | "latam" | "middleeast" | "apac";
 
 export interface RegionalRating {
   market: RatingMarket;
@@ -599,7 +601,14 @@ export interface ProjectBase {
   directorsCutNotified?: boolean;
 
   // Reception & quality
-  reception?: { metaScore: number; criticScore?: number; audienceScore?: number; consensus?: string; isCultPotential?: boolean; status?: string };
+  reception?: {
+    metaScore: number;
+    criticScore?: number;
+    audienceScore?: number;
+    consensus?: string;
+    isCultPotential?: boolean;
+    status?: string;
+  };
   quality?: number;
 
   // Regional ratings

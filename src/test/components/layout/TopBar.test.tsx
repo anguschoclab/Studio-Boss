@@ -2,8 +2,8 @@
  * @vitest-environment jsdom
  */
 import React from "react";
-import {render, screen} from "@testing-library/react";
-import {describe, it, expect, vi} from "vitest";
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
 
 // Mock TooltipWrapper
 vi.mock("@/components/ui/tooltip-wrapper", () => ({
@@ -45,8 +45,7 @@ vi.mock("@/lib/utils", () => ({
 
 // Mock UI store
 vi.mock("@/store/uiStore", () => ({
-  useUIStore: vi.fn(() => ({
-  })),
+  useUIStore: vi.fn(() => ({})),
 }));
 
 // Mock game store
@@ -66,7 +65,7 @@ vi.mock("@/store/gameStore", () => ({
   }),
 }));
 
-import {TopBar} from "@/components/layout/TopBar";
+import { TopBar } from "@/components/layout/TopBar";
 
 describe("TopBar", () => {
   it("renders without crashing", () => {

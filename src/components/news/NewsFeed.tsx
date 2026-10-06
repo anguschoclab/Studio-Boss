@@ -1,10 +1,10 @@
-import {useGameStore} from "@/store/gameStore";
-import {useUIStore} from "@/store/uiStore";
-import {NewsEventType, NewsEvent} from "@/engine/types";
-import {selectNewsHistory} from "@/store/selectors";
-import {Badge} from "@/components/ui/badge";
-import {useState} from "react";
-import {Trophy, AlertTriangle, TrendingUp, Search, History} from "lucide-react";
+import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
+import { NewsEventType, NewsEvent } from "@/engine/types";
+import { selectNewsHistory } from "@/store/selectors";
+import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import { Trophy, AlertTriangle, TrendingUp, Search, History } from "lucide-react";
 
 const eventTypeConfig: Record<
   NewsEventType,
@@ -31,8 +31,16 @@ const eventTypeConfig: Record<
     label: "Studio",
   },
   RIVAL: { icon: History, color: "text-red-400 bg-red-400/10 border-red-400/20", label: "Rival" },
-  SCANDAL: { icon: AlertTriangle, color: "text-fuchsia-400 bg-fuchsia-400/10 border-fuchsia-400/20", label: "Scandal" },
-  MILESTONE: { icon: Trophy, color: "text-cyan-400 bg-cyan-400/10 border-cyan-400/20", label: "Milestone" },
+  SCANDAL: {
+    icon: AlertTriangle,
+    color: "text-fuchsia-400 bg-fuchsia-400/10 border-fuchsia-400/20",
+    label: "Scandal",
+  },
+  MILESTONE: {
+    icon: Trophy,
+    color: "text-cyan-400 bg-cyan-400/10 border-cyan-400/20",
+    label: "Milestone",
+  },
 };
 
 export const NewsFeed = () => {
@@ -54,7 +62,8 @@ export const NewsFeed = () => {
     }
   };
 
-  const isClickable = (item: NewsEvent) => !!(item.talentId || item.projectId || item.rivalId || item.buyerId);
+  const isClickable = (item: NewsEvent) =>
+    !!(item.talentId || item.projectId || item.rivalId || item.buyerId);
 
   const filteredHistory = filter === "ALL" ? history : history.filter((h) => h.type === filter);
 
@@ -121,12 +130,16 @@ export const NewsFeed = () => {
               role={isClickable(item) ? "button" : undefined}
               aria-label={isClickable(item) ? `View details for: ${item.headline}` : undefined}
               tabIndex={isClickable(item) ? 0 : undefined}
-              onKeyDown={isClickable(item) ? (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  handleEntityClick(e, item);
-                }
-              } : undefined}
+              onKeyDown={
+                isClickable(item)
+                  ? (e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        handleEntityClick(e, item);
+                      }
+                    }
+                  : undefined
+              }
             >
               {/* Vertical line connector */}
               {idx !== filteredHistory.length - 1 && (

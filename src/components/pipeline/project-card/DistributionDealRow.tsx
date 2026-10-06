@@ -1,8 +1,8 @@
-import {Project, Buyer} from "@/engine/types";
-import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";
-import {DollarSign} from "lucide-react";
-import {formatMoney} from "@/engine/utils";
-import {DistributionBadge} from "../../shared/DistributionBadge";
+import { Project, Buyer } from "@/engine/types";
+import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
+import { DollarSign } from "lucide-react";
+import { formatMoney } from "@/engine/utils";
+import { DistributionBadge } from "../../shared/DistributionBadge";
 
 interface DistributionDealRowProps {
   project: Project;

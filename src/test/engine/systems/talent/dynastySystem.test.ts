@@ -1,8 +1,13 @@
-import {describe, it, expect} from "vitest";
-import {tickDynastySystem, processComingOfAge, calculateDynastyReputation, processDeathInFamily} from "@/engine/systems/talent/DynastySystem";
-import {RandomGenerator} from "@/engine/utils/rng";
-import {createMockGameState, createMockTalent} from "../../generators/mockFactory";
-import type {DeathEvent} from "@/engine/systems/talent/DeathSystem";
+import { describe, it, expect } from "vitest";
+import {
+  tickDynastySystem,
+  processComingOfAge,
+  calculateDynastyReputation,
+  processDeathInFamily,
+} from "@/engine/systems/talent/DynastySystem";
+import { RandomGenerator } from "@/engine/utils/rng";
+import { createMockGameState, createMockTalent } from "../../generators/mockFactory";
+import type { DeathEvent } from "@/engine/systems/talent/DeathSystem";
 
 const baseEntities = {
   projects: {},

@@ -1,11 +1,11 @@
-import {renderHook, act} from "@testing-library/react";
-import {describe, it, expect, vi, beforeEach} from "vitest";
-import {useCreateProjectForm} from "@/components/modals/create-project/useCreateProjectForm";
-import {useUIStore} from "@/store/uiStore";
-import {useGameStore} from "@/store/gameStore";
-import {BUDGET_TIERS} from "@/engine/data/budgetTiers";
-import {TV_FORMATS} from "@/engine/data/tvFormats";
-import {UNSCRIPTED_FORMATS} from "@/engine/data/unscriptedFormats";
+import { renderHook, act } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { useCreateProjectForm } from "@/components/modals/create-project/useCreateProjectForm";
+import { useUIStore } from "@/store/uiStore";
+import { useGameStore } from "@/store/gameStore";
+import { BUDGET_TIERS } from "@/engine/data/budgetTiers";
+import { TV_FORMATS } from "@/engine/data/tvFormats";
+import { UNSCRIPTED_FORMATS } from "@/engine/data/unscriptedFormats";
 
 vi.mock("@/store/uiStore", () => ({ useUIStore: vi.fn() }));
 vi.mock("@/store/gameStore", () => ({ useGameStore: vi.fn() }));

@@ -1,8 +1,11 @@
-import {describe, it, expect, beforeEach} from "vitest";
-import {completeFireSale, tickDistressCascade} from "../../../engine/systems/industry/DistressCascade";
-import {createMockGameState, createMockIPAsset} from "../../utils/mockFactories";
-import type {RivalStudio, IPAsset, Franchise, StateImpact} from "../../../engine/types";
-import type {DistressedAssetOffer} from "../../../engine/types/distress.types";
+import { describe, it, expect, beforeEach } from "vitest";
+import {
+  completeFireSale,
+  tickDistressCascade,
+} from "../../../engine/systems/industry/DistressCascade";
+import { createMockGameState, createMockIPAsset } from "../../utils/mockFactories";
+import type { RivalStudio, IPAsset, Franchise, StateImpact } from "../../../engine/types";
+import type { DistressedAssetOffer } from "../../../engine/types/distress.types";
 
 function createMockRival(overrides: Partial<RivalStudio> = {}): RivalStudio {
   return {
@@ -46,8 +49,7 @@ function findImpact(impacts: StateImpact[], type: string): StateImpact | undefin
 }
 
 describe("DistressCascade impact types", () => {
-  beforeEach(() => {
-  });
+  beforeEach(() => {});
 
   describe("completeFireSale", () => {
     it("produces FRANCHISE_UPDATED for franchise asset kind", () => {
@@ -70,7 +72,12 @@ describe("DistressCascade impact types", () => {
             "frac-1": createMockFranchise({ id: "frac-1", ownerId: "seller" }),
           },
         },
-        finance: { cash: 500_000_000, ledger: [], weeklyHistory: [], marketState: { trends: {}, buyerActivity: {}, marketEvents: [], heat: 50 } } as any,
+        finance: {
+          cash: 500_000_000,
+          ledger: [],
+          weeklyHistory: [],
+          marketState: { trends: {}, buyerActivity: {}, marketEvents: [], heat: 50 },
+        } as any,
       });
 
       const offer: DistressedAssetOffer = {
@@ -95,7 +102,11 @@ describe("DistressCascade impact types", () => {
     });
 
     it("produces INDUSTRY_UPDATE with ip.vault for vault asset kind", () => {
-      const asset = createMockIPAsset({ id: "asset-1", title: "Test Movie", ownerStudioId: "seller" });
+      const asset = createMockIPAsset({
+        id: "asset-1",
+        title: "Test Movie",
+        ownerStudioId: "seller",
+      });
       const rival = createMockRival({ id: "seller", name: "Seller" });
       const buyer = createMockRival({ id: "buyer", name: "Buyer", cash: 1_000_000_000 });
       const state = createMockGameState({
@@ -110,7 +121,12 @@ describe("DistressCascade impact types", () => {
           contractsByTalentId: {},
         },
         ip: { vault: [asset], franchises: {} },
-        finance: { cash: 500_000_000, ledger: [], weeklyHistory: [], marketState: { trends: {}, buyerActivity: {}, marketEvents: [], heat: 50 } } as any,
+        finance: {
+          cash: 500_000_000,
+          ledger: [],
+          weeklyHistory: [],
+          marketState: { trends: {}, buyerActivity: {}, marketEvents: [], heat: 50 },
+        } as any,
       });
 
       const offer: DistressedAssetOffer = {
@@ -156,7 +172,12 @@ describe("DistressCascade impact types", () => {
           vault: [],
           franchises: { "frac-1": createMockFranchise({ id: "frac-1", ownerId: "seller" }) },
         },
-        finance: { cash: 500_000_000, ledger: [], weeklyHistory: [], marketState: { trends: {}, buyerActivity: {}, marketEvents: [], heat: 50 } } as any,
+        finance: {
+          cash: 500_000_000,
+          ledger: [],
+          weeklyHistory: [],
+          marketState: { trends: {}, buyerActivity: {}, marketEvents: [], heat: 50 },
+        } as any,
       });
 
       const offer: DistressedAssetOffer = {
@@ -209,7 +230,12 @@ describe("DistressCascade impact types", () => {
           vault: [],
           franchises: { "frac-1": createMockFranchise({ id: "frac-1", ownerId: "seller" }) },
         },
-        finance: { cash: 500_000_000, ledger: [], weeklyHistory: [], marketState: { trends: {}, buyerActivity: {}, marketEvents: [], heat: 50 } } as any,
+        finance: {
+          cash: 500_000_000,
+          ledger: [],
+          weeklyHistory: [],
+          marketState: { trends: {}, buyerActivity: {}, marketEvents: [], heat: 50 },
+        } as any,
       });
 
       const offer: DistressedAssetOffer = {
@@ -250,7 +276,12 @@ describe("DistressCascade impact types", () => {
           vault: [],
           franchises: { "frac-1": createMockFranchise({ id: "frac-1", ownerId: "seller" }) },
         },
-        finance: { cash: 500_000_000, ledger: [], weeklyHistory: [], marketState: { trends: {}, buyerActivity: {}, marketEvents: [], heat: 50 } } as any,
+        finance: {
+          cash: 500_000_000,
+          ledger: [],
+          weeklyHistory: [],
+          marketState: { trends: {}, buyerActivity: {}, marketEvents: [], heat: 50 },
+        } as any,
       });
 
       const offer: DistressedAssetOffer = {
@@ -312,12 +343,18 @@ describe("DistressCascade impact types", () => {
           scandals: [],
           distressedOffers: [],
         } as any,
-        finance: { cash: 500_000_000, ledger: [], weeklyHistory: [], marketState: { trends: {}, buyerActivity: {}, marketEvents: [], heat: 50 } } as any,
+        finance: {
+          cash: 500_000_000,
+          ledger: [],
+          weeklyHistory: [],
+          marketState: { trends: {}, buyerActivity: {}, marketEvents: [], heat: 50 },
+        } as any,
       });
 
       const impacts = tickDistressCascade(state);
       const industryImpact = impacts.find(
-        (i) => i.type === "INDUSTRY_UPDATE" && (i.payload as { mergedRivalId?: string }).mergedRivalId,
+        (i) =>
+          i.type === "INDUSTRY_UPDATE" && (i.payload as { mergedRivalId?: string }).mergedRivalId
       );
       expect(industryImpact).toBeDefined();
       const payload = industryImpact!.payload as { mergedRivalId: string; acquirerId: string };
@@ -359,15 +396,24 @@ describe("DistressCascade impact types", () => {
           scandals: [],
           distressedOffers: [],
         } as any,
-        finance: { cash: 500_000_000, ledger: [], weeklyHistory: [], marketState: { trends: {}, buyerActivity: {}, marketEvents: [], heat: 50 } } as any,
+        finance: {
+          cash: 500_000_000,
+          ledger: [],
+          weeklyHistory: [],
+          marketState: { trends: {}, buyerActivity: {}, marketEvents: [], heat: 50 },
+        } as any,
       });
 
       const impacts = tickDistressCascade(state);
       const bankruptcyImpact = impacts.find(
-        (i) => i.type === "INDUSTRY_UPDATE" && (i.payload as { bankruptRivalId?: string }).bankruptRivalId,
+        (i) =>
+          i.type === "INDUSTRY_UPDATE" &&
+          (i.payload as { bankruptRivalId?: string }).bankruptRivalId
       );
       expect(bankruptcyImpact).toBeDefined();
-      expect((bankruptcyImpact!.payload as { bankruptRivalId: string }).bankruptRivalId).toBe("doomed");
+      expect((bankruptcyImpact!.payload as { bankruptRivalId: string }).bankruptRivalId).toBe(
+        "doomed"
+      );
     });
   });
 });

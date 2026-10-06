@@ -1,4 +1,4 @@
-import {Project, MarketingCampaign} from "@/engine/types";
+import { Project, MarketingCampaign } from "@/engine/types";
 
 export function executeMarketing(
   project: Project,

@@ -1,8 +1,12 @@
-import {describe, it, expect, beforeEach} from "vitest";
-import {updateFranchiseHub, updateFranchiseHubs} from "@/engine/systems/ip/franchiseCoordinator";
-import {createMockGameState, createMockProject, createMockIPAsset} from "@/test/utils/mockFactories";
-import {GameState, Franchise} from "@/engine/types";
-import {countKeys} from "@/engine/utils";
+import { describe, it, expect, beforeEach } from "vitest";
+import { updateFranchiseHub, updateFranchiseHubs } from "@/engine/systems/ip/franchiseCoordinator";
+import {
+  createMockGameState,
+  createMockProject,
+  createMockIPAsset,
+} from "@/test/utils/mockFactories";
+import { GameState, Franchise } from "@/engine/types";
+import { countKeys } from "@/engine/utils";
 
 describe("franchiseCoordinator", () => {
   let state: GameState;

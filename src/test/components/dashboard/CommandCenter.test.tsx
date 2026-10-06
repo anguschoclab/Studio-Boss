@@ -1,9 +1,9 @@
 import React from "react";
-import {render, screen} from "@testing-library/react";
-import {describe, it, expect, vi, beforeEach} from "vitest";
-import {CommandCenter} from "@/components/dashboard/CommandCenter";
-import {useGameStore} from "@/store/gameStore";
-import {TooltipProvider} from "@/components/ui/tooltip";
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { CommandCenter } from "@/components/dashboard/CommandCenter";
+import { useGameStore } from "@/store/gameStore";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 vi.mock("@/store/gameStore");
 vi.mock("@/components/dashboard/FinancialOverviewWidget", () => ({
@@ -34,8 +34,7 @@ describe("CommandCenter", () => {
         archetype: "boutique-indie",
         prestige: 42,
       },
-      industry: {
-      },
+      industry: {},
       weekSummaries: [],
       finance: { cash: 1000000 },
       ...overrides,
@@ -103,11 +102,29 @@ describe("CommandCenter", () => {
       const state = mockState({
         weekSummaries: [
           {
-            fromWeek: 12, toWeek: 12, cashBefore: 0, cashAfter: 0, totalRevenue: 0, totalCosts: 0,
-            projectUpdates: [], events: [],
+            fromWeek: 12,
+            toWeek: 12,
+            cashBefore: 0,
+            cashAfter: 0,
+            totalRevenue: 0,
+            totalCosts: 0,
+            projectUpdates: [],
+            events: [],
             newsEvents: [
-              { id: "n1", week: 12, type: "STUDIO_EVENT", headline: "Huge Box Office", description: "A movie made money" },
-              { id: "n2", week: 13, type: "STUDIO_EVENT", headline: "Scandal!", description: "Oh no" },
+              {
+                id: "n1",
+                week: 12,
+                type: "STUDIO_EVENT",
+                headline: "Huge Box Office",
+                description: "A movie made money",
+              },
+              {
+                id: "n2",
+                week: 13,
+                type: "STUDIO_EVENT",
+                headline: "Scandal!",
+                description: "Oh no",
+              },
             ],
           },
         ],

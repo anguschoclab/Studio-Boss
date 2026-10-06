@@ -1,8 +1,8 @@
-import {describe, it, expect, vi, beforeEach} from "vitest";
-import {tickDeathSystem, getDeathStatistics} from "@/engine/systems/talent/DeathSystem";
-import {createMockGameState, createMockTalent} from "@/test/utils/mockFactories";
-import {RandomGenerator} from "@/engine/utils/rng";
-import {GameState, Talent} from "@/engine/types";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { tickDeathSystem, getDeathStatistics } from "@/engine/systems/talent/DeathSystem";
+import { createMockGameState, createMockTalent } from "@/test/utils/mockFactories";
+import { RandomGenerator } from "@/engine/utils/rng";
+import { GameState, Talent } from "@/engine/types";
 
 describe("DeathSystem", () => {
   let state: GameState;
@@ -81,7 +81,9 @@ describe("DeathSystem", () => {
       const impacts = tickDeathSystem(state, rng);
       const systemTick = impacts.find((i) => i.type === "SYSTEM_TICK");
       expect(systemTick).toBeDefined();
-      const payload = (systemTick as unknown as { payload: { deathEvents: unknown[]; deathCount: number } }).payload;
+      const payload = (
+        systemTick as unknown as { payload: { deathEvents: unknown[]; deathCount: number } }
+      ).payload;
       expect(payload.deathEvents).toBeDefined();
       expect(payload.deathCount).toBeGreaterThan(0);
     });

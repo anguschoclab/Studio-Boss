@@ -2,8 +2,8 @@
  * @vitest-environment jsdom
  */
 import React from "react";
-import {render} from "@testing-library/react";
-import {describe, it, expect, vi} from "vitest";
+import { render } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
 
 // Mock stores
 vi.mock("@/store/gameStore", () => ({
@@ -60,7 +60,7 @@ vi.mock("@/store/selectors", () => ({
   }),
 }));
 
-import {NewsFeed} from "@/components/news/NewsFeed";
+import { NewsFeed } from "@/components/news/NewsFeed";
 
 describe("NewsFeed", () => {
   it("renders without crashing", () => {

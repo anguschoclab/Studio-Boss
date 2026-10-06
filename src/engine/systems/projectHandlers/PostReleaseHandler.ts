@@ -1,22 +1,18 @@
-import {Project} from "@/engine/types";
-import {RandomGenerator} from "../../utils/rng";
-import {randRange} from "../../utils";
+import { Project } from "@/engine/types";
+import { RandomGenerator } from "../../utils/rng";
+import { randRange } from "../../utils";
 
 export interface PostReleaseResult {
   update: string | null;
 }
 
-export function handlePostReleasePhase(
-  p: Project,
-  rng?: RandomGenerator
-): PostReleaseResult {
+export function handlePostReleasePhase(p: Project, rng?: RandomGenerator): PostReleaseResult {
   let update: string | null = null;
   let weeklyAncillary = 0;
 
   const isFamilyOrAnim = p.genre === "Family" || p.genre === "Animation";
   const isPrestige = p.genre === "Drama" || p.targetAudience === "Prestige / Critics";
-  const range = (min: number, max: number) =>
-    rng ? rng.range(min, max) : randRange(min, max);
+  const range = (min: number, max: number) => (rng ? rng.range(min, max) : randRange(min, max));
 
   if (p.weeksInPhase === 1) {
     if (isPrestige && (p.reviewScore || 0) > 80) {

@@ -1,6 +1,6 @@
-import {Project} from "@/engine/types";
-import {Button} from "@/components/ui/button";
-import {AlertTriangle, Zap, Target} from "lucide-react";
+import { Project } from "@/engine/types";
+import { Button } from "@/components/ui/button";
+import { AlertTriangle, Zap, Target } from "lucide-react";
 
 interface ProjectCardActionsProps {
   project: Project;

@@ -1,14 +1,37 @@
-
-import {StateCreator} from "zustand";
-import {GameStore} from "../gameStore";
-import {Contract, Talent, TalentPact, TalentCommitment, TalentRole, RivalStudio, CharacterArchetype, FilmProject, SeriesProject, NewsEvent} from "@/engine/types";
-import {type ProjectId, type ContractId, type StudioId, type PactId, type NewsId} from "@/engine/types/shared.types";
-import {buildProjectAndContracts, CreateProjectParams, applyStateImpact} from "../storeUtils";
-import {calculateLiveCounterBid} from "@/engine/systems/ai/biddingEngine";
-import {RandomGenerator} from "@/engine/utils/rng";
-import {addContractToIndex, addContractsToIndex, removeContractsByTalentFromIndex, addContractToTalentIndex, addContractsToTalentIndex, removeContractsByProjectFromTalentIndex} from "@/engine/utils";
-import {TalentAgentInteractionEngine} from "@/engine/systems/talent/talentAgentInteractions";
-import {getPlayerId} from "@/engine/utils/ownership";
+import { StateCreator } from "zustand";
+import { GameStore } from "../gameStore";
+import {
+  Contract,
+  Talent,
+  TalentPact,
+  TalentCommitment,
+  TalentRole,
+  RivalStudio,
+  CharacterArchetype,
+  FilmProject,
+  SeriesProject,
+  NewsEvent,
+} from "@/engine/types";
+import {
+  type ProjectId,
+  type ContractId,
+  type StudioId,
+  type PactId,
+  type NewsId,
+} from "@/engine/types/shared.types";
+import { buildProjectAndContracts, CreateProjectParams, applyStateImpact } from "../storeUtils";
+import { calculateLiveCounterBid } from "@/engine/systems/ai/biddingEngine";
+import { RandomGenerator } from "@/engine/utils/rng";
+import {
+  addContractToIndex,
+  addContractsToIndex,
+  removeContractsByTalentFromIndex,
+  addContractToTalentIndex,
+  addContractsToTalentIndex,
+  removeContractsByProjectFromTalentIndex,
+} from "@/engine/utils";
+import { TalentAgentInteractionEngine } from "@/engine/systems/talent/talentAgentInteractions";
+import { getPlayerId } from "@/engine/utils/ownership";
 
 export interface TalentSlice {
   signContract: (talentId: string, projectId: string) => void;
@@ -453,9 +476,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         market: {
           ...state.market,
           opportunities: state.market.opportunities.map((o) =>
-            o.id === oppId
-              ? { ...o, bids: updatedBids, highestBidderId: studioId, bidHistory }
-              : o
+            o.id === oppId ? { ...o, bids: updatedBids, highestBidderId: studioId, bidHistory } : o
           ),
         },
       };

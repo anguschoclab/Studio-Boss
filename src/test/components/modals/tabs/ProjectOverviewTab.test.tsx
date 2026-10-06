@@ -1,9 +1,9 @@
-import {render, screen} from "@testing-library/react";
-import {describe, it, expect} from "vitest";
-import {ProjectOverviewTab} from "@/components/modals/tabs/ProjectOverviewTab";
-import {Tabs} from "@/components/ui/tabs";
-import {createMockProject} from "../../../utils/mockFactories";
-import {ScriptedProject} from "@/engine/types";
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect } from "vitest";
+import { ProjectOverviewTab } from "@/components/modals/tabs/ProjectOverviewTab";
+import { Tabs } from "@/components/ui/tabs";
+import { createMockProject } from "../../../utils/mockFactories";
+import { ScriptedProject } from "@/engine/types";
 
 function renderTab(
   project = createMockProject(),

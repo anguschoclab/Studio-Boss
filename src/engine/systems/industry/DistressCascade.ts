@@ -1,15 +1,23 @@
-import {GameState, StateImpact, RivalStudio, StreamerPlatform, IPAsset, Franchise, Project} from "@/engine/types";
-import {pick, secureRandom} from "../../utils";
-import {getMarketHeat} from "./MacroCycle";
-import {isAcquirerBlockedByAntitrust} from "./Antitrust";
-import {cancelHighestOverheadDeal} from "../deals/ShingleSystem";
-import type {DistressedAssetOffer} from "@/engine/types/distress.types";
-import {getPlayerId} from "@/engine/utils/ownership";
-import {impacts as I} from "../../core/impacts";
-import {applyImpacts} from "../../core/impactReducer";
-import {getSimMemory} from "../../core/simMemory";
-import type {SimMemory} from "@/engine/types/state.types";
-import {getStudioArchetype} from "../../data/aiArchetypes";
+import {
+  GameState,
+  StateImpact,
+  RivalStudio,
+  StreamerPlatform,
+  IPAsset,
+  Franchise,
+  Project,
+} from "@/engine/types";
+import { pick, secureRandom } from "../../utils";
+import { getMarketHeat } from "./MacroCycle";
+import { isAcquirerBlockedByAntitrust } from "./Antitrust";
+import { cancelHighestOverheadDeal } from "../deals/ShingleSystem";
+import type { DistressedAssetOffer } from "@/engine/types/distress.types";
+import { getPlayerId } from "@/engine/utils/ownership";
+import { impacts as I } from "../../core/impacts";
+import { applyImpacts } from "../../core/impactReducer";
+import { getSimMemory } from "../../core/simMemory";
+import type { SimMemory } from "@/engine/types/state.types";
+import { getStudioArchetype } from "../../data/aiArchetypes";
 
 /**
  * DistressCascade — stepwise collapse ladder for insolvent rivals.
@@ -170,10 +178,17 @@ function classifyStage(r: RivalStudio, distress: DistressMem): 0 | 1 | 2 | 3 | 4
   return 0;
 }
 
-function withLogImpact(state: GameState, impacts: StateImpact[], newEvents: DistressEvent[]): StateImpact[] {
+function withLogImpact(
+  state: GameState,
+  impacts: StateImpact[],
+  newEvents: DistressEvent[]
+): StateImpact[] {
   if (newEvents.length === 0) return impacts;
   const existingLog = getSimMemory(state).eventLogs.distress;
-  return [...impacts, I.industryUpdate({ "simMemory.eventLogs.distress": [...existingLog, ...newEvents] })];
+  return [
+    ...impacts,
+    I.industryUpdate({ "simMemory.eventLogs.distress": [...existingLog, ...newEvents] }),
+  ];
 }
 
 /**
@@ -196,11 +211,11 @@ export function completeFireSale(
   } else {
     const newVault = (state.ip.vault || []).map((a) =>
       a.id === offer.assetId
-        ? {
+        ? ({
             ...a,
             ownerStudioId: buyerId,
             rightsOwner: isPlayerBuyer ? "STUDIO" : "RIVAL",
-          } as IPAsset
+          } as IPAsset)
         : a
     );
     impacts.push(I.industryUpdate({ "ip.vault": newVault }));
@@ -210,7 +225,7 @@ export function completeFireSale(
   if (seller) {
     impacts.push(
       I.financeTransaction(offer.price, `Distressed sale: ${offer.assetLabel}`, offer.sellerId),
-      I.rivalUpdated(offer.sellerId, {}, { prestige: -5 }),
+      I.rivalUpdated(offer.sellerId, {}, { prestige: -5 })
     );
   }
 
@@ -221,7 +236,7 @@ export function completeFireSale(
     const buyer = state.entities.rivals?.[buyerId];
     if (buyer) {
       impacts.push(
-        I.financeTransaction(-offer.price, `Distressed purchase: ${offer.assetLabel}`, buyerId),
+        I.financeTransaction(-offer.price, `Distressed purchase: ${offer.assetLabel}`, buyerId)
       );
     }
   }
@@ -236,7 +251,7 @@ export function completeFireSale(
       description: `Facing sustained losses, ${offer.sellerName} has offloaded ${offer.assetLabel} in a distressed IP sale.`,
       category: "market",
       buyerId,
-    }),
+    })
   );
 
   return impacts;
@@ -266,7 +281,11 @@ export function tickDistressedOffers(state: GameState): StateImpact[] {
   return impacts;
 }
 
-export function stage1IPFireSale(state: GameState, seller: RivalStudio, distress?: DistressMem): StateImpact[] {
+export function stage1IPFireSale(
+  state: GameState,
+  seller: RivalStudio,
+  distress?: DistressMem
+): StateImpact[] {
   const d = distress ?? { negativeStreak: {}, lastActionWeek: {}, stageActionCount: {} };
   const impacts: StateImpact[] = [];
   const newEvents: DistressEvent[] = [];
@@ -391,7 +410,11 @@ export function stage1IPFireSale(state: GameState, seller: RivalStudio, distress
   return withLogImpact(state, impacts, newEvents);
 }
 
-export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, distress?: DistressMem): StateImpact[] {
+export function stage2AssetLiquidation(
+  state: GameState,
+  seller: RivalStudio,
+  distress?: DistressMem
+): StateImpact[] {
   const d = distress ?? { negativeStreak: {}, lastActionWeek: {}, stageActionCount: {} };
   const impacts: StateImpact[] = [];
   const newEvents: DistressEvent[] = [];
@@ -436,12 +459,10 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
       I.financeTransaction(proceeds, "Platform divestiture", seller.id),
       I.rivalUpdated(seller.id, {
         ownedPlatforms: newOwned,
-      }),
+      })
     );
     if (platform) {
-      impacts.push(
-        I.buyerUpdated(platform.id, { ownerId: undefined, parentBrand: undefined }),
-      );
+      impacts.push(I.buyerUpdated(platform.id, { ownerId: undefined, parentBrand: undefined }));
     }
     impacts.push(
       I.newsAdded({
@@ -449,7 +470,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
         description: `${seller.name} has unwound its platform bet to stanch the bleeding.`,
         category: "market",
         rivalId: seller.id,
-      }),
+      })
     );
     newEvents.push({
       week: state.week,
@@ -470,7 +491,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
     const proceeds = Math.round(50_000_000 + secureRandom() * 150_000_000);
     impacts.push(
       I.financeTransaction(proceeds, "Backlot sale", seller.id),
-      I.rivalUpdated(seller.id, {}, { prestige: -10 }),
+      I.rivalUpdated(seller.id, {}, { prestige: -10 })
     );
     impacts.push(
       I.newsAdded({
@@ -478,7 +499,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
         description: `${seller.name} has sold studio real estate and equipment in a distressed asset sale.`,
         category: "market",
         rivalId: seller.id,
-      }),
+      })
     );
     newEvents.push({
       week: state.week,
@@ -522,11 +543,11 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
       const sunk = Math.max(target.accumulatedCost || 0, (target.budget || 0) * 0.4);
       const proceeds = Math.max(20_000_000, Math.round(sunk * 0.4));
       impacts.push(
-        I.projectUpdated(target.id, { state: "archived", weeklyCost: 0, weeklyRevenue: 0 }),
+        I.projectUpdated(target.id, { state: "archived", weeklyCost: 0, weeklyRevenue: 0 })
       );
       impacts.push(
         I.financeTransaction(proceeds, `Shelved production: ${target.title}`, seller.id),
-        I.rivalUpdated(seller.id, {}, { prestige: -5 }),
+        I.rivalUpdated(seller.id, {}, { prestige: -5 })
       );
       impacts.push(
         I.newsAdded({
@@ -535,7 +556,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
           category: "market",
           rivalId: seller.id,
           projectId: target.id,
-        }),
+        })
       );
       newEvents.push({
         week: state.week,
@@ -572,7 +593,10 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
           if (r.id !== seller.id && (r.cash || 0) > 300_000_000) buyers.push(r);
         }
       }
-      const buyer = buyers.length > 0 ? selectStrategicBuyer(state, buyers, "vault", ownedAssets[0]?.id || "") : undefined;
+      const buyer =
+        buyers.length > 0
+          ? selectStrategicBuyer(state, buyers, "vault", ownedAssets[0]?.id || "")
+          : undefined;
       const bundleSize = Math.min(ownedAssets.length, 3 + Math.floor(secureRandom() * 4));
       const bundle = ownedAssets.slice(0, bundleSize);
       const rawValue = bundle.reduce((s, a) => s + (a.baseValue || 50_000_000), 0);
@@ -599,10 +623,12 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
       impacts.push(I.industryUpdate({ "ip.vault": newVault }));
       impacts.push(
         I.financeTransaction(proceeds, "Library sale", seller.id),
-        I.rivalUpdated(seller.id, {}, { prestige: -3 }),
+        I.rivalUpdated(seller.id, {}, { prestige: -3 })
       );
       if (buyer) {
-        impacts.push(I.financeTransaction(-proceeds, `Library purchase from ${seller.name}`, buyer.id));
+        impacts.push(
+          I.financeTransaction(-proceeds, `Library purchase from ${seller.name}`, buyer.id)
+        );
       }
       impacts.push(
         I.newsAdded({
@@ -611,7 +637,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
           category: "market",
           rivalId: seller.id,
           buyerId: buyer?.id,
-        }),
+        })
       );
       newEvents.push({
         week: state.week,
@@ -647,7 +673,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
         description: `${seller.name} has sold a share of future franchise revenue to outside financiers. The studio keeps ownership; backers collect the upside.`,
         category: "market",
         rivalId: seller.id,
-      }),
+      })
     );
     newEvents.push({
       week: state.week,
@@ -668,7 +694,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
   const proceeds = Math.round(20_000_000 + secureRandom() * 60_000_000);
   impacts.push(
     I.financeTransaction(proceeds, "Overhead layoffs", seller.id),
-    I.rivalUpdated(seller.id, {}, { prestige: -5 }),
+    I.rivalUpdated(seller.id, {}, { prestige: -5 })
   );
   impacts.push(
     I.newsAdded({
@@ -676,7 +702,7 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
       description: `${seller.name} has laid off executives, development, and marketing staff in a company-wide restructuring.`,
       category: "market",
       rivalId: seller.id,
-    }),
+    })
   );
   newEvents.push({
     week: state.week,
@@ -692,7 +718,11 @@ export function stage2AssetLiquidation(state: GameState, seller: RivalStudio, di
   return withLogImpact(state, impacts, newEvents);
 }
 
-function stage3DistressedMA(state: GameState, target: RivalStudio, distress?: DistressMem): StateImpact[] {
+function stage3DistressedMA(
+  state: GameState,
+  target: RivalStudio,
+  distress?: DistressMem
+): StateImpact[] {
   const d = distress ?? { negativeStreak: {}, lastActionWeek: {}, stageActionCount: {} };
   const impacts: StateImpact[] = [];
   const newEvents: DistressEvent[] = [];
@@ -731,11 +761,9 @@ function stage3DistressedMA(state: GameState, target: RivalStudio, distress?: Di
 
   impacts.push(
     I.financeTransaction(-price, `Rescue acquisition of ${target.name}`, acquirer.id),
-    I.rivalUpdated(acquirer.id, {}, { prestige: 5 }),
+    I.rivalUpdated(acquirer.id, {}, { prestige: 5 })
   );
-  impacts.push(
-    I.industryUpdate({}, { mergedRivalId: target.id, acquirerId: acquirer.id }),
-  );
+  impacts.push(I.industryUpdate({}, { mergedRivalId: target.id, acquirerId: acquirer.id }));
   impacts.push(
     I.newsAdded({
       headline: `DISTRESSED M&A: ${acquirer.name} absorbs ${target.name} at fire-sale $${(price / 1e6).toFixed(0)}M`,
@@ -743,7 +771,7 @@ function stage3DistressedMA(state: GameState, target: RivalStudio, distress?: Di
       category: "market",
       rivalId: target.id,
       buyerId: acquirer.id,
-    }),
+    })
   );
   newEvents.push({
     week: state.week,
@@ -771,16 +799,14 @@ function stage4Bankruptcy(state: GameState, target: RivalStudio): StateImpact[] 
       ? { ...a, ownerStudioId: undefined, rightsOwner: "MARKET" as const }
       : a
   );
-  impacts.push(
-    I.industryUpdate({ "ip.vault": orphanedVault }, { bankruptRivalId: target.id }),
-  );
+  impacts.push(I.industryUpdate({ "ip.vault": orphanedVault }, { bankruptRivalId: target.id }));
   impacts.push(
     I.newsAdded({
       headline: `BANKRUPTCY: ${target.name} liquidates; catalog reverts to open market`,
       description: `After exhausting asset sales and finding no buyer, ${target.name} has filed Chapter 7.`,
       category: "market",
       rivalId: target.id,
-    }),
+    })
   );
   newEvents.push({
     week: state.week,

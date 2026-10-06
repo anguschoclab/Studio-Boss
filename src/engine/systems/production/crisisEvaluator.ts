@@ -1,4 +1,4 @@
-import {CrisisOption, GameState, Project, StateImpact} from "@/engine/types";
+import { CrisisOption, GameState, Project, StateImpact } from "@/engine/types";
 
 /**
  * Strategy Pattern for Crisis Resolution (Target A3).
@@ -74,7 +74,9 @@ export function resolveCrisisWithHandlers(
   }
 
   // Merge all PROJECT_UPDATED impacts for this specific project into one
-  let mergedUpdate: Partial<Project> = { activeCrisis: { ...project.activeCrisis, resolved: true } };
+  let mergedUpdate: Partial<Project> = {
+    activeCrisis: { ...project.activeCrisis, resolved: true },
+  };
   const otherImpacts: StateImpact[] = [];
 
   for (let i = 0; i < rawImpacts.length; i++) {

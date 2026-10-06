@@ -1,6 +1,6 @@
-import {GameState, IndustryUpdateImpact, StateImpact} from "@/engine/types";
-import {getContractsByTalentId} from "../../utils";
-import {isPlayerOwner} from "../../utils/ownership";
+import { GameState, IndustryUpdateImpact, StateImpact } from "@/engine/types";
+import { getContractsByTalentId } from "../../utils";
+import { isPlayerOwner } from "../../utils/ownership";
 
 const FORBIDDEN_KEYS = new Set(["__proto__", "constructor", "prototype"]);
 
@@ -120,7 +120,8 @@ export function handleIndustryUpdate(state: GameState, impact: IndustryUpdateImp
   }
 
   // Merger Logic
-  const mergedRivalId = typeof payload.mergedRivalId === "string" ? payload.mergedRivalId : undefined;
+  const mergedRivalId =
+    typeof payload.mergedRivalId === "string" ? payload.mergedRivalId : undefined;
   const acquirerId = typeof payload.acquirerId === "string" ? payload.acquirerId : undefined;
   if (mergedRivalId && acquirerId) {
     const target = state.entities.rivals[mergedRivalId];

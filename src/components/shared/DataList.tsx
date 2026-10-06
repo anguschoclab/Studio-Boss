@@ -1,11 +1,11 @@
 import React from "react";
-import {motion, AnimatePresence} from "framer-motion";
-import {cn} from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 
-import {EmptyState} from "./EmptyState";
-import {SkeletonList} from "./SkeletonCard";
-import {staggerContainer, staggerItem} from "@/lib/animations";
-import {Search, AlertCircle, LucideIcon} from "lucide-react";
+import { EmptyState } from "./EmptyState";
+import { SkeletonList } from "./SkeletonCard";
+import { staggerContainer, staggerItem } from "@/lib/animations";
+import { Search, AlertCircle, LucideIcon } from "lucide-react";
 
 interface DataListProps<T> {
   /** Array of items to display */
@@ -196,7 +196,10 @@ export function FilterableDataList<T>({
     <div className="space-y-8">
       {showSearch && onSearchChange && (
         <div className="relative group">
-          <Search aria-hidden="true" className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/20 group-focus-within:text-primary transition-colors" />
+          <Search
+            aria-hidden="true"
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/20 group-focus-within:text-primary transition-colors"
+          />
           <input
             type="text"
             value={searchQuery}

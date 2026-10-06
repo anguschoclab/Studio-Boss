@@ -1,6 +1,6 @@
-import {render, screen} from "@testing-library/react";
-import {describe, it, expect, vi} from "vitest";
-import {YearInReviewChart} from "../../../../src/components/finance/YearInReviewChart";
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
+import { YearInReviewChart } from "../../../../src/components/finance/YearInReviewChart";
 import * as gameStore from "../../../../src/store/gameStore";
 
 // Mock the Zustand store
@@ -36,7 +36,9 @@ describe("YearInReviewChart", () => {
       },
     ];
     vi.spyOn(gameStore, "useGameStore").mockImplementation((selector: unknown) =>
-      (selector as (state: unknown) => unknown)({ gameState: { finance: { ledger: mockLedger, cash: 110 } } })
+      (selector as (state: unknown) => unknown)({
+        gameState: { finance: { ledger: mockLedger, cash: 110 } },
+      })
     );
 
     const { container } = render(<YearInReviewChart />);

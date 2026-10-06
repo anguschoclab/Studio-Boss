@@ -2,21 +2,24 @@
  * @vitest-environment jsdom
  */
 import React from "react";
-import {render} from "@testing-library/react";
-import {describe, it, expect, vi} from "vitest";
+import { render } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
 
 // Mock embla-carousel-react
 vi.mock("embla-carousel-react", () => ({
-  default: () => [{
-    scrollSnaps: () => [0, 1],
-    scrollPrev: () => {},
-    scrollNext: () => {},
-    canScrollPrev: () => false,
-    canScrollNext: () => false,
-    selectedScrollSnap: () => 0,
-    on: () => {},
-    off: () => {},
-  }, undefined],
+  default: () => [
+    {
+      scrollSnaps: () => [0, 1],
+      scrollPrev: () => {},
+      scrollNext: () => {},
+      canScrollPrev: () => false,
+      canScrollNext: () => false,
+      selectedScrollSnap: () => 0,
+      on: () => {},
+      off: () => {},
+    },
+    undefined,
+  ],
 }));
 
 import {

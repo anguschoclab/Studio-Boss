@@ -1,10 +1,8 @@
-import {describe, it, expect} from "vitest";
-import {readFileSync} from "fs";
-import {join} from "path";
+import { describe, it, expect } from "vitest";
+import { readFileSync } from "fs";
+import { join } from "path";
 
-const {
-  shouldAllowNavigation,
-} = await import("../../../electron/navigationGuards.cjs");
+const { shouldAllowNavigation } = await import("../../../electron/navigationGuards.cjs");
 
 const MAIN_SRC = readFileSync(join(__dirname, "../../../electron/main.cjs"), "utf-8");
 
@@ -18,9 +16,7 @@ describe("Electron main process — navigation security", () => {
   // mainWindow.webContents.
 
   it("installs navigation guards globally for every webContents", () => {
-    const createdBlock = MAIN_SRC.match(
-      /app\.on\("web-contents-created"[\s\S]*?\}\);/
-    );
+    const createdBlock = MAIN_SRC.match(/app\.on\("web-contents-created"[\s\S]*?\}\);/);
     expect(createdBlock).not.toBeNull();
     // The global handler must call installNavigationGuards so that ALL
     // webContents (windows, popups, devtools) get the restrictions — not only

@@ -1,5 +1,4 @@
- 
-import {Project, Talent, Contract} from "@/engine/types";
+import { Project, Talent, Contract } from "@/engine/types";
 
 export type GreenlightRecommendation =
   | "Easy Greenlight"
@@ -30,11 +29,7 @@ export function roleCompletenessScore(
   const list = Array.isArray(contracts) ? contracts : Object.values(contracts);
   const projectContracts = list.filter((c) => c.projectId === projectId);
   const attachedRoles = new Set(
-    projectContracts
-      .map((c) =>
-        (talents[c.talentId]?.role ?? "").toLowerCase()
-      )
-      .filter(Boolean)
+    projectContracts.map((c) => (talents[c.talentId]?.role ?? "").toLowerCase()).filter(Boolean)
   );
 
   let filled = 0;

@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { useEffect, useCallback } from "react";
-import {useUIStore} from "@/store/uiStore";
+import { useUIStore } from "@/store/uiStore";
 
 /**
  * Keyboard shortcut definitions
@@ -34,8 +34,7 @@ type ShortcutKey = keyof typeof KEYBOARD_SHORTCUTS;
  * - Create project (Cmd+N)
  */
 function useKeyboardShortcuts() {
-  const { setActiveHub, openCreateProject, toggleQuickActions } =
-    useUIStore();
+  const { setActiveHub, openCreateProject, toggleQuickActions } = useUIStore();
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {

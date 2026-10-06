@@ -1,11 +1,16 @@
-import {describe, it, expect, beforeEach, vi, afterEach} from "vitest";
-import {useGameStore} from "@/store/gameStore";
-import {RegulatorSystem} from "@/engine/systems/industry/RegulatorSystem";
-import {createMockGameState, createMockRival} from "../engine/generators/mockFactory";
+import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
+import { useGameStore } from "@/store/gameStore";
+import { RegulatorSystem } from "@/engine/systems/industry/RegulatorSystem";
+import { createMockGameState, createMockRival } from "../engine/generators/mockFactory";
 
 function seed() {
   return createMockGameState({
-    finance: { cash: 5_000_000_000, ledger: [], weeklyHistory: [], marketState: { week: 1, primeRate: 0.05, sentiment: 50 } } as any,
+    finance: {
+      cash: 5_000_000_000,
+      ledger: [],
+      weeklyHistory: [],
+      marketState: { week: 1, primeRate: 0.05, sentiment: 50 },
+    } as any,
     studio: {
       id: "PLR-1",
       name: "Player Studio",

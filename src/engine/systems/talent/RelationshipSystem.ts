@@ -1,9 +1,16 @@
-import {GameState, StateImpact, Talent} from "../../types";
-import {RandomGenerator} from "../../utils/rng";
-import {TalentRelationship, RelationshipEvent} from "../../types/relationship.types";import {getRelationshipKey} from "./relationshipCompatibility";
-import {getRelationship, haveWorkedTogether, haveCompeted, checkNaturalFormation, formRelationship} from "./relationshipFormation";
+import { GameState, StateImpact, Talent } from "../../types";
+import { RandomGenerator } from "../../utils/rng";
+import { TalentRelationship, RelationshipEvent } from "../../types/relationship.types";
+import { getRelationshipKey } from "./relationshipCompatibility";
+import {
+  getRelationship,
+  haveWorkedTogether,
+  haveCompeted,
+  checkNaturalFormation,
+  formRelationship,
+} from "./relationshipFormation";
 
-export {haveCompeted} from "./relationshipFormation";
+export { haveCompeted } from "./relationshipFormation";
 
 function evolveRelationship(
   relationship: TalentRelationship,
@@ -119,7 +126,7 @@ export function tickRelationshipSystem(state: GameState, rng: RandomGenerator): 
   }
   // ⚡ Bolt: Use direct for...in loop to prevent intermediate array allocations from Object.keys() and .map()
   const projectsDict = state.entities.projects || {};
-  const projects: typeof projectsDict[keyof typeof projectsDict][] = [];
+  const projects: (typeof projectsDict)[keyof typeof projectsDict][] = [];
   for (const pid in projectsDict) {
     if (Object.prototype.hasOwnProperty.call(projectsDict, pid)) {
       projects.push(projectsDict[pid]);

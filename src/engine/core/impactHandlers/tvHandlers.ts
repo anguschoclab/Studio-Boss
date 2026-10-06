@@ -1,12 +1,19 @@
-import {GameState} from "@/engine/types";
-import type {TVRecommendationCreatedImpact, TVRecommendationAcceptedImpact, TVRecommendationStateUpdatedImpact} from "@/engine/types/state.types";
+import { GameState } from "@/engine/types";
+import type {
+  TVRecommendationCreatedImpact,
+  TVRecommendationAcceptedImpact,
+  TVRecommendationStateUpdatedImpact,
+} from "@/engine/types/state.types";
 
 /**
  * TV-related impact handlers
  * Pure functions that apply TV-related state impacts
  */
 
-export function handleTVRecommendationCreated(state: GameState, impact: TVRecommendationCreatedImpact): GameState {
+export function handleTVRecommendationCreated(
+  state: GameState,
+  impact: TVRecommendationCreatedImpact
+): GameState {
   if (!impact.payload) return state;
   const { recommendation } = impact.payload;
   if (!recommendation) return state;
@@ -23,7 +30,10 @@ export function handleTVRecommendationCreated(state: GameState, impact: TVRecomm
   };
 }
 
-export function handleTVRecommendationAccepted(state: GameState, impact: TVRecommendationAcceptedImpact): GameState {
+export function handleTVRecommendationAccepted(
+  state: GameState,
+  impact: TVRecommendationAcceptedImpact
+): GameState {
   if (!impact.payload) return state;
   const { recommendationId } = impact.payload;
   if (!recommendationId) return state;

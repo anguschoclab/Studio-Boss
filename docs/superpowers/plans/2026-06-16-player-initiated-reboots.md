@@ -8,9 +8,10 @@
 
 **Tech Stack:** TypeScript, Zustand, React, Vitest.
 
-**Why this matters:** The IP Vault is currently a museum — owned assets have no action at all (only `MARKET` assets get an "ACQUIRE & REBOOT" button). Meanwhile `ipRebootEngine`, `fatigueEngine` and `spinoffFactory` are all built and the engine already spawns reboot offers *at* the player once a year. Flipping the direction turns the vault into the strategy centrepiece, and it completes the loop with the distressed-asset plan: buy a rival's fire-sale franchise, then actually exploit it.
+**Why this matters:** The IP Vault is currently a museum — owned assets have no action at all (only `MARKET` assets get an "ACQUIRE & REBOOT" button). Meanwhile `ipRebootEngine`, `fatigueEngine` and `spinoffFactory` are all built and the engine already spawns reboot offers _at_ the player once a year. Flipping the direction turns the vault into the strategy centrepiece, and it completes the loop with the distressed-asset plan: buy a rival's fire-sale franchise, then actually exploit it.
 
 **Verified facts (do not re-derive):**
+
 - `src/store/slices/projectSlice.ts:285` — `acquireAndRebootIP(ipAssetId)`: guards `asset.rightsOwner !== "MARKET"`, requires `cash >= asset.baseValue`, builds a `CreateProjectParams`, calls `buildProjectAndContracts(state, params)`, applies `FUNDS_DEDUCTED` + `NEWS_ADDED` via `applyStateImpact`, then merges `newContracts` into `entities.contracts`. **This is the exact pattern to copy.**
 - `CreateProjectParams` (`src/store/storeUtils.ts`) = `{ title, format, genre, budgetTier, targetAudience, flavor, attachedTalentIds?, tvFormat?, unscriptedFormat?, episodes?, releaseModel?, parentProjectId?, isSpinoff?, initialBuzzBonus?, franchiseId? }`.
 - `IPAsset` (`src/engine/types/state.types.ts:79`) = `{ id, originalProjectId, title, franchiseId?, baseValue, decayRate, merchandisingMultiplier, syndicationStatus, syndicationTier, totalEpisodes, rightsExpirationWeek, rightsOwner: "STUDIO"|"MARKET"|"RIVAL", ownerStudioId? }`.
@@ -23,20 +24,21 @@
 
 ## File Structure
 
-| File | Responsibility | Change |
-|------|---------------|--------|
-| `src/engine/systems/ip/ipRebootEngine.ts` | Reboot proposal shape | Export a real `RebootProposal` type; add `buildRebootParams` |
-| `src/store/slices/projectSlice.ts` | Player actions | Add `developFromOwnedIP` |
-| `src/store/selectors.ts` | Fatigue lookup | Add `selectFatigueForAsset` |
-| `src/components/ip/IPAssetCard.tsx` | Vault card | "Develop Sequel" action + fatigue badge for owned assets |
-| `src/components/modals/RebootOpportunityModal.tsx` | Engine-offered reboots | Fix the broken type + payload shape |
-| `src/engine/services/filters/AnnualScans.ts` | Reboot offer emission | Emit a flat payload the modal can read |
+| File                                               | Responsibility         | Change                                                       |
+| -------------------------------------------------- | ---------------------- | ------------------------------------------------------------ |
+| `src/engine/systems/ip/ipRebootEngine.ts`          | Reboot proposal shape  | Export a real `RebootProposal` type; add `buildRebootParams` |
+| `src/store/slices/projectSlice.ts`                 | Player actions         | Add `developFromOwnedIP`                                     |
+| `src/store/selectors.ts`                           | Fatigue lookup         | Add `selectFatigueForAsset`                                  |
+| `src/components/ip/IPAssetCard.tsx`                | Vault card             | "Develop Sequel" action + fatigue badge for owned assets     |
+| `src/components/modals/RebootOpportunityModal.tsx` | Engine-offered reboots | Fix the broken type + payload shape                          |
+| `src/engine/services/filters/AnnualScans.ts`       | Reboot offer emission  | Emit a flat payload the modal can read                       |
 
 ---
 
 ### Task 1: Give the reboot proposal a real type and a params builder
 
 **Files:**
+
 - Modify: `src/engine/systems/ip/ipRebootEngine.ts`
 - Test: `src/test/engine/rebootProposal.test.ts`
 
@@ -45,40 +47,40 @@
 Create `src/test/engine/rebootProposal.test.ts`:
 
 ```ts
-import { describe, it, expect } from 'vitest';
-import { buildRebootParams } from '@/engine/systems/ip/ipRebootEngine';
-import type { IPAsset } from '@/engine/types';
+import { describe, it, expect } from "vitest";
+import { buildRebootParams } from "@/engine/systems/ip/ipRebootEngine";
+import type { IPAsset } from "@/engine/types";
 
 const asset = {
-  id: 'a1',
-  originalProjectId: 'p0',
-  title: 'Nightfall',
-  franchiseId: 'f1',
+  id: "a1",
+  originalProjectId: "p0",
+  title: "Nightfall",
+  franchiseId: "f1",
   baseValue: 200_000_000,
   decayRate: 0.4,
   merchandisingMultiplier: 1,
-  syndicationStatus: 'NONE',
-  syndicationTier: 'NONE',
+  syndicationStatus: "NONE",
+  syndicationTier: "NONE",
   totalEpisodes: 0,
   rightsExpirationWeek: 999,
-  rightsOwner: 'STUDIO',
+  rightsOwner: "STUDIO",
 } as IPAsset;
 
-describe('buildRebootParams', () => {
-  it('carries the asset title, franchise link and marks it a spinoff', () => {
+describe("buildRebootParams", () => {
+  it("carries the asset title, franchise link and marks it a spinoff", () => {
     const p = buildRebootParams(asset, 0);
-    expect(p.title).toContain('Nightfall');
-    expect(p.franchiseId).toBe('f1');
+    expect(p.title).toContain("Nightfall");
+    expect(p.franchiseId).toBe("f1");
     expect(p.isSpinoff).toBe(true);
-    expect(p.parentProjectId).toBe('p0');
+    expect(p.parentProjectId).toBe("p0");
   });
 
-  it('picks a blockbuster tier for a high-value asset and high tier otherwise', () => {
-    expect(buildRebootParams(asset, 0).budgetTier).toBe('blockbuster');
-    expect(buildRebootParams({ ...asset, baseValue: 20_000_000 }, 0).budgetTier).toBe('high');
+  it("picks a blockbuster tier for a high-value asset and high tier otherwise", () => {
+    expect(buildRebootParams(asset, 0).budgetTier).toBe("blockbuster");
+    expect(buildRebootParams({ ...asset, baseValue: 20_000_000 }, 0).budgetTier).toBe("high");
   });
 
-  it('fatigue reduces the starting buzz bonus but never below zero', () => {
+  it("fatigue reduces the starting buzz bonus but never below zero", () => {
     const fresh = buildRebootParams(asset, 0).initialBuzzBonus ?? 0;
     const tired = buildRebootParams(asset, 90).initialBuzzBonus ?? 0;
     expect(tired).toBeLessThan(fresh);
@@ -97,7 +99,7 @@ Expected: FAIL — `buildRebootParams` is not exported.
 In `src/engine/systems/ip/ipRebootEngine.ts`, add:
 
 ```ts
-import type { CreateProjectParams } from '@/store/storeUtils';
+import type { CreateProjectParams } from "@/store/storeUtils";
 
 /**
  * The shape generateRebootProposal actually returns. Previously untyped (`any`),
@@ -122,11 +124,11 @@ export function buildRebootParams(asset: IPAsset, fatigue: number): CreateProjec
   const initialBuzzBonus = Math.max(0, Math.round(baseBuzz * (1 - fatigue / 100)));
   return {
     title: `${asset.title} (Revival)`,
-    format: 'film',
-    genre: 'DRAMA',
-    budgetTier: asset.baseValue > 100_000_000 ? 'blockbuster' : 'high',
-    targetAudience: 'GENERAL',
-    flavor: 'reboot',
+    format: "film",
+    genre: "DRAMA",
+    budgetTier: asset.baseValue > 100_000_000 ? "blockbuster" : "high",
+    targetAudience: "GENERAL",
+    flavor: "reboot",
     franchiseId: asset.franchiseId,
     parentProjectId: asset.originalProjectId,
     isSpinoff: true,
@@ -158,6 +160,7 @@ git commit -m "feat(ip): typed RebootProposal and buildRebootParams"
 ### Task 2: Fatigue selector for a vault asset
 
 **Files:**
+
 - Modify: `src/store/selectors.ts`
 - Test: `src/test/store/fatigue-selector.test.ts`
 
@@ -166,40 +169,40 @@ git commit -m "feat(ip): typed RebootProposal and buildRebootParams"
 Create `src/test/store/fatigue-selector.test.ts`:
 
 ```ts
-import { describe, it, expect } from 'vitest';
-import { selectFatigueForAsset } from '@/store/selectors';
-import type { GameState } from '@/engine/types';
+import { describe, it, expect } from "vitest";
+import { selectFatigueForAsset } from "@/store/selectors";
+import type { GameState } from "@/engine/types";
 
 function makeState(activeProjectIds: string[]): GameState {
   return {
     entities: { projects: {} },
     market: { trends: [] },
     ip: {
-      vault: [{ id: 'a1', title: 'Nightfall', franchiseId: 'f1', rightsOwner: 'STUDIO' }],
-      franchises: { f1: { id: 'f1', name: 'Nightfall', activeProjectIds } },
+      vault: [{ id: "a1", title: "Nightfall", franchiseId: "f1", rightsOwner: "STUDIO" }],
+      franchises: { f1: { id: "f1", name: "Nightfall", activeProjectIds } },
     },
   } as unknown as GameState;
 }
 
-describe('selectFatigueForAsset', () => {
-  it('returns 0 for an asset with no franchise', () => {
+describe("selectFatigueForAsset", () => {
+  it("returns 0 for an asset with no franchise", () => {
     const s = makeState([]);
     (s.ip.vault[0] as any).franchiseId = undefined;
-    expect(selectFatigueForAsset(s, 'a1')).toBe(0);
+    expect(selectFatigueForAsset(s, "a1")).toBe(0);
   });
 
-  it('returns a number for a franchised asset', () => {
-    expect(typeof selectFatigueForAsset(makeState(['p1', 'p2']), 'a1')).toBe('number');
+  it("returns a number for a franchised asset", () => {
+    expect(typeof selectFatigueForAsset(makeState(["p1", "p2"]), "a1")).toBe("number");
   });
 
-  it('more active entries means more fatigue', () => {
-    const few = selectFatigueForAsset(makeState(['p1']), 'a1');
-    const many = selectFatigueForAsset(makeState(['p1', 'p2', 'p3', 'p4', 'p5']), 'a1');
+  it("more active entries means more fatigue", () => {
+    const few = selectFatigueForAsset(makeState(["p1"]), "a1");
+    const many = selectFatigueForAsset(makeState(["p1", "p2", "p3", "p4", "p5"]), "a1");
     expect(many).toBeGreaterThanOrEqual(few);
   });
 
-  it('returns 0 for an unknown asset id', () => {
-    expect(selectFatigueForAsset(makeState([]), 'nope')).toBe(0);
+  it("returns 0 for an unknown asset id", () => {
+    expect(selectFatigueForAsset(makeState([]), "nope")).toBe(0);
   });
 });
 ```
@@ -214,7 +217,7 @@ Expected: FAIL — `selectFatigueForAsset` is not exported.
 In `src/store/selectors.ts`, add:
 
 ```ts
-import { calculateFranchiseFatigue } from '@/engine/systems/ip/fatigueEngine';
+import { calculateFranchiseFatigue } from "@/engine/systems/ip/fatigueEngine";
 
 /**
  * Franchise fatigue (0-100) for a vault asset. Standalone assets have no
@@ -227,9 +230,9 @@ export const selectFatigueForAsset = (state: GameState | null, assetId: string):
   if (!franchise) return 0;
 
   // Genre saturation = how many active rival/studio projects share the genre.
-  const genre = (asset as { genre?: string }).genre ?? 'Action';
+  const genre = (asset as { genre?: string }).genre ?? "Action";
   const saturation = Object.values(state?.entities?.projects ?? {}).filter(
-    (p) => p.genre === genre && p.state !== 'released' && p.state !== 'archived'
+    (p) => p.genre === genre && p.state !== "released" && p.state !== "archived"
   ).length;
 
   return calculateFranchiseFatigue(franchise, saturation, genre);
@@ -253,6 +256,7 @@ git commit -m "feat(store): selectFatigueForAsset"
 ### Task 3: `developFromOwnedIP` store action
 
 **Files:**
+
 - Modify: `src/store/slices/projectSlice.ts`
 - Test: `src/test/store/developFromOwnedIP.test.ts`
 
@@ -261,27 +265,42 @@ git commit -m "feat(store): selectFatigueForAsset"
 Create `src/test/store/developFromOwnedIP.test.ts`:
 
 ```ts
-import { describe, it, expect, beforeEach } from 'vitest';
-import { useGameStore } from '@/store/gameStore';
-import type { GameState } from '@/engine/types';
+import { describe, it, expect, beforeEach } from "vitest";
+import { useGameStore } from "@/store/gameStore";
+import type { GameState } from "@/engine/types";
 
-function seed(rightsOwner: 'STUDIO' | 'MARKET' = 'STUDIO'): GameState {
+function seed(rightsOwner: "STUDIO" | "MARKET" = "STUDIO"): GameState {
   return {
     week: 20,
     gameSeed: 42,
     rngState: 42,
-    studio: { id: 'PLAYER', name: 'Player Studio', prestige: 50, internal: { projectHistory: [], projects: {}, contracts: [] } },
+    studio: {
+      id: "PLAYER",
+      name: "Player Studio",
+      prestige: 50,
+      internal: { projectHistory: [], projects: {}, contracts: [] },
+    },
     finance: { cash: 900_000_000, weeklyHistory: [], ledger: [], marketState: {} },
     entities: { projects: {}, contracts: {}, talents: {}, rivals: {}, buyers: {} },
     market: { trends: [] },
     ip: {
-      vault: [{
-        id: 'a1', originalProjectId: 'p0', title: 'Nightfall', franchiseId: 'f1',
-        baseValue: 200_000_000, decayRate: 0.4, merchandisingMultiplier: 1,
-        syndicationStatus: 'NONE', syndicationTier: 'NONE', totalEpisodes: 0,
-        rightsExpirationWeek: 999, rightsOwner,
-      }],
-      franchises: { f1: { id: 'f1', name: 'Nightfall', activeProjectIds: [] } },
+      vault: [
+        {
+          id: "a1",
+          originalProjectId: "p0",
+          title: "Nightfall",
+          franchiseId: "f1",
+          baseValue: 200_000_000,
+          decayRate: 0.4,
+          merchandisingMultiplier: 1,
+          syndicationStatus: "NONE",
+          syndicationTier: "NONE",
+          totalEpisodes: 0,
+          rightsExpirationWeek: 999,
+          rightsOwner,
+        },
+      ],
+      franchises: { f1: { id: "f1", name: "Nightfall", activeProjectIds: [] } },
     },
     industry: { newsHistory: [] },
     news: { headlines: [] },
@@ -290,31 +309,31 @@ function seed(rightsOwner: 'STUDIO' | 'MARKET' = 'STUDIO'): GameState {
 
 beforeEach(() => useGameStore.setState({ gameState: seed() } as any));
 
-describe('developFromOwnedIP', () => {
-  it('creates a project from an owned asset and announces it', () => {
+describe("developFromOwnedIP", () => {
+  it("creates a project from an owned asset and announces it", () => {
     const before = Object.keys(useGameStore.getState().gameState!.entities.projects).length;
-    useGameStore.getState().developFromOwnedIP('a1');
+    useGameStore.getState().developFromOwnedIP("a1");
     const s = useGameStore.getState().gameState!;
     expect(Object.keys(s.entities.projects).length).toBe(before + 1);
     expect(s.industry.newsHistory[0].headline).toMatch(/Nightfall/i);
   });
 
-  it('does NOT charge an acquisition fee for already-owned IP', () => {
+  it("does NOT charge an acquisition fee for already-owned IP", () => {
     const cashBefore = useGameStore.getState().gameState!.finance.cash;
-    useGameStore.getState().developFromOwnedIP('a1');
+    useGameStore.getState().developFromOwnedIP("a1");
     // Production costs are drawn down weekly by the engine, not at greenlight,
     // so cash is unchanged at creation time for an asset the studio already owns.
     expect(useGameStore.getState().gameState!.finance.cash).toBe(cashBefore);
   });
 
-  it('refuses assets the studio does not own', () => {
-    useGameStore.setState({ gameState: seed('MARKET') } as any);
-    useGameStore.getState().developFromOwnedIP('a1');
+  it("refuses assets the studio does not own", () => {
+    useGameStore.setState({ gameState: seed("MARKET") } as any);
+    useGameStore.getState().developFromOwnedIP("a1");
     expect(Object.keys(useGameStore.getState().gameState!.entities.projects).length).toBe(0);
   });
 
-  it('is a no-op for an unknown asset id', () => {
-    useGameStore.getState().developFromOwnedIP('nope');
+  it("is a no-op for an unknown asset id", () => {
+    useGameStore.getState().developFromOwnedIP("nope");
     expect(Object.keys(useGameStore.getState().gameState!.entities.projects).length).toBe(0);
   });
 });
@@ -412,6 +431,7 @@ git commit -m "feat(ip): developFromOwnedIP player action"
 ### Task 4: Surface the action and fatigue in the IP Vault
 
 **Files:**
+
 - Modify: `src/components/ip/IPAssetCard.tsx`
 
 - [ ] **Step 1: Wire the store and fatigue into the card**
@@ -419,8 +439,8 @@ git commit -m "feat(ip): developFromOwnedIP player action"
 In `IPAssetCard.tsx`, inside the main `IPAssetCard` component, add:
 
 ```tsx
-  const developFromOwnedIP = useGameStore((s) => s.developFromOwnedIP);
-  const fatigue = useGameStore((s) => selectFatigueForAsset(s.gameState, asset.id));
+const developFromOwnedIP = useGameStore((s) => s.developFromOwnedIP);
+const fatigue = useGameStore((s) => selectFatigueForAsset(s.gameState, asset.id));
 ```
 
 with the import:
@@ -442,7 +462,13 @@ interface IPAssetFooterProps {
   fatigue: number;
 }
 
-const IPAssetFooter = ({ asset, isMarket, acquireAndRebootIP, developFromOwnedIP, fatigue }: IPAssetFooterProps) => {
+const IPAssetFooter = ({
+  asset,
+  isMarket,
+  acquireAndRebootIP,
+  developFromOwnedIP,
+  fatigue,
+}: IPAssetFooterProps) => {
   const owned = !isMarket && asset.rightsOwner === "STUDIO";
   const fatigueTone =
     fatigue > 60 ? "text-rose-400" : fatigue > 30 ? "text-amber-400" : "text-emerald-400";
@@ -454,7 +480,9 @@ const IPAssetFooter = ({ asset, isMarket, acquireAndRebootIP, developFromOwnedIP
           EXPIRES WEEK {asset.rightsExpirationWeek}
         </div>
         {owned && (
-          <div className={`text-[10px] font-semibold uppercase tracking-[0.12em] tabular-nums not-italic ${fatigueTone}`}>
+          <div
+            className={`text-[10px] font-semibold uppercase tracking-[0.12em] tabular-nums not-italic ${fatigueTone}`}
+          >
             Fatigue {Math.round(fatigue)}%
           </div>
         )}
@@ -502,13 +530,13 @@ const IPAssetFooter = ({ asset, isMarket, acquireAndRebootIP, developFromOwnedIP
 Where `IPAssetCard` renders `<IPAssetFooter ... />`, add the two new props:
 
 ```tsx
-        <IPAssetFooter
-          asset={asset}
-          isMarket={!!isMarket}
-          acquireAndRebootIP={acquireAndRebootIP}
-          developFromOwnedIP={developFromOwnedIP}
-          fatigue={fatigue}
-        />
+<IPAssetFooter
+  asset={asset}
+  isMarket={!!isMarket}
+  acquireAndRebootIP={acquireAndRebootIP}
+  developFromOwnedIP={developFromOwnedIP}
+  fatigue={fatigue}
+/>
 ```
 
 - [ ] **Step 4: Verify**
@@ -537,6 +565,7 @@ git commit -m "feat(ip): Develop Sequel action and fatigue readout on owned vaul
 The annual reboot offer currently renders a blank modal — the payload is double-nested and the component consumes a shape the engine never produces.
 
 **Files:**
+
 - Modify: `src/engine/services/filters/AnnualScans.ts:105-118`
 - Modify: `src/components/modals/RebootOpportunityModal.tsx`
 
@@ -545,14 +574,14 @@ The annual reboot offer currently renders a blank modal — the payload is doubl
 In `src/engine/services/filters/AnnualScans.ts`, replace the reboot `MODAL_TRIGGERED` push with:
 
 ```ts
-        context.impacts.push({
-          type: "MODAL_TRIGGERED",
-          payload: {
-            modalType: "REBOOT_OPPORTUNITY",
-            priority: 30,
-            proposal,
-          },
-        });
+context.impacts.push({
+  type: "MODAL_TRIGGERED",
+  payload: {
+    modalType: "REBOOT_OPPORTUNITY",
+    priority: 30,
+    proposal,
+  },
+});
 ```
 
 > The `doAdvanceWeek` bridge destructures `{ modalType, ...rest }` and passes `rest` as the modal payload, so the modal will now receive `{ priority, proposal }` — a flat shape it can actually read. The previous nested `payload: proposal` produced `{ priority, payload }`, which the modal silently destructured into `undefined`s.
@@ -562,13 +591,19 @@ In `src/engine/services/filters/AnnualScans.ts`, replace the reboot `MODAL_TRIGG
 Replace `src/components/modals/RebootOpportunityModal.tsx` with:
 
 ```tsx
-import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { useGameStore } from '@/store/gameStore';
-import { useUIStore } from '@/store/uiStore';
-import { Film, X } from 'lucide-react';
-import type { RebootProposal } from '@/engine/systems/ip/ipRebootEngine';
+import React from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
+import { Film, X } from "lucide-react";
+import type { RebootProposal } from "@/engine/systems/ip/ipRebootEngine";
 
 function fmt(n: number): string {
   if (Math.abs(n) >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(2)}B`;
@@ -580,7 +615,7 @@ export const RebootOpportunityModal: React.FC = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
   const developFromOwnedIP = useGameStore((s) => s.developFromOwnedIP);
 
-  if (!activeModal || activeModal.type !== 'REBOOT_OPPORTUNITY') return null;
+  if (!activeModal || activeModal.type !== "REBOOT_OPPORTUNITY") return null;
 
   const proposal = (activeModal.payload as { proposal?: RebootProposal })?.proposal;
   if (!proposal) {
@@ -614,14 +649,19 @@ export const RebootOpportunityModal: React.FC = () => {
         <div className="space-y-3 mt-2">
           <div className="border border-border bg-muted/30 p-4 flex items-center justify-between">
             <span className="text-sm text-muted-foreground">Suggested Budget</span>
-            <span className="font-display text-lg font-bold tabular-nums">{fmt(proposal.suggestedBudget)}</span>
+            <span className="font-display text-lg font-bold tabular-nums">
+              {fmt(proposal.suggestedBudget)}
+            </span>
           </div>
           <div className="border border-border bg-muted/20 p-4 flex items-center justify-between">
             <span className="text-sm text-muted-foreground">Nostalgia Bonus</span>
-            <span className="font-display text-lg font-bold tabular-nums">+{proposal.estimatedNostalgiaBonus}</span>
+            <span className="font-display text-lg font-bold tabular-nums">
+              +{proposal.estimatedNostalgiaBonus}
+            </span>
           </div>
           <p className="text-xs text-muted-foreground">
-            Passing leaves the property on the shelf — you can still develop it later from the IP Vault.
+            Passing leaves the property on the shelf — you can still develop it later from the IP
+            Vault.
           </p>
         </div>
 

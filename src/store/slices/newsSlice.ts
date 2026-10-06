@@ -1,6 +1,6 @@
-import {StateCreator} from "zustand";
-import {NewsEvent} from "@/engine/types";
-import {GameStore} from "../gameStore";
+import { StateCreator } from "zustand";
+import { NewsEvent } from "@/engine/types";
+import { GameStore } from "../gameStore";
 
 export interface NewsSlice {
   appendNewsEvents: (events: NewsEvent[]) => void;
@@ -26,10 +26,7 @@ export const createNewsSlice: StateCreator<GameStore, [], [], NewsSlice> = (set,
       return {
         gameState: {
           ...s.gameState,
-          weekSummaries: [
-            ...(s.gameState.weekSummaries || []),
-            miniSummary,
-          ].slice(-200),
+          weekSummaries: [...(s.gameState.weekSummaries || []), miniSummary].slice(-200),
         },
       };
     });

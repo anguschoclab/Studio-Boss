@@ -1,6 +1,6 @@
-import {useState} from "react";
-import {TabsContent} from "@/components/ui/tabs";
-import {Badge} from "@/components/ui/badge";
+import { useState } from "react";
+import { TabsContent } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -8,11 +8,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {Project, Talent} from "@/engine/types";
-import {formatMoney} from "@/engine/utils";
-import {Users, Brain} from "lucide-react";
-import {cn} from "@/lib/utils";
-import {CastingFeedback} from "../../talent/CastingFeedback";
+import { Project, Talent } from "@/engine/types";
+import { formatMoney } from "@/engine/utils";
+import { Users, Brain } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { CastingFeedback } from "../../talent/CastingFeedback";
 
 interface ProjectCastingTabProps {
   project: Project;
@@ -98,8 +98,7 @@ export const ProjectCastingTab = ({
                       </div>
                     </div>
 
-                    {(project.state === "development" ||
-                      project.state === "needs_greenlight") && (
+                    {(project.state === "development" || project.state === "needs_greenlight") && (
                       <Select
                         onValueChange={(val) => {
                           if (!val) return;

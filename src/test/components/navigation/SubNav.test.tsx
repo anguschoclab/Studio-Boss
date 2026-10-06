@@ -2,9 +2,9 @@
  * @vitest-environment jsdom
  */
 import React from "react";
-import {render, screen} from "@testing-library/react";
-import {describe, it, expect, vi} from "vitest";
-import {SubNav, SubNavTab} from "@/components/navigation/SubNav";
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
+import { SubNav, SubNavTab } from "@/components/navigation/SubNav";
 
 describe("SubNav", () => {
   const tabs: SubNavTab[] = [
@@ -54,9 +54,7 @@ describe("SubNav", () => {
     });
 
     it("parent container has role='tablist'", () => {
-      const { container } = render(
-        <SubNav tabs={tabs} activeTab="tab1" onChange={() => {}} />
-      );
+      const { container } = render(<SubNav tabs={tabs} activeTab="tab1" onChange={() => {}} />);
       // The parent div of the tab buttons should have role="tablist"
       const tablist = container.querySelector('[role="tablist"]');
       expect(tablist).toBeInTheDocument();

@@ -1,12 +1,19 @@
-import {GameState, Franchise, StateImpact} from "@/engine/types";
-import type {FranchiseUpdatedImpact, VaultAssetUpdatedImpact, FormatLicensedImpact} from "@/engine/types/state.types";
+import { GameState, Franchise, StateImpact } from "@/engine/types";
+import type {
+  FranchiseUpdatedImpact,
+  VaultAssetUpdatedImpact,
+  FormatLicensedImpact,
+} from "@/engine/types/state.types";
 
 /**
  * IP-related impact handlers
  * Pure functions that apply IP-related state impacts
  */
 
-export function handleFranchiseUpdated(state: GameState, impact: FranchiseUpdatedImpact): GameState {
+export function handleFranchiseUpdated(
+  state: GameState,
+  impact: FranchiseUpdatedImpact
+): GameState {
   const { franchiseId, update } = impact.payload;
   const franchises = { ...state.ip.franchises };
   const franchise = franchises[franchiseId];
@@ -25,7 +32,10 @@ export function handleFranchiseUpdated(state: GameState, impact: FranchiseUpdate
   };
 }
 
-export function handleVaultAssetUpdated(state: GameState, impact: VaultAssetUpdatedImpact): GameState {
+export function handleVaultAssetUpdated(
+  state: GameState,
+  impact: VaultAssetUpdatedImpact
+): GameState {
   const { assetId, update } = impact.payload;
   const vault = state.ip.vault.map((asset) =>
     asset.id === assetId ? { ...asset, ...update } : asset

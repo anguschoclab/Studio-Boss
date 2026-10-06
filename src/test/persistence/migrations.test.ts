@@ -1,7 +1,7 @@
-import {describe, it, expect} from "vitest";
-import {migrateSave} from "@/engine/migrations";
-import {CURRENT_SAVE_VERSION} from "@/engine/core/simMemory";
-import type {GameState} from "@/engine/types";
+import { describe, it, expect } from "vitest";
+import { migrateSave } from "@/engine/migrations";
+import { CURRENT_SAVE_VERSION } from "@/engine/core/simMemory";
+import type { GameState } from "@/engine/types";
 
 describe("migrateSave (zero-backward-compatibility)", () => {
   it("rejects saves older than the current version", () => {

@@ -1,5 +1,5 @@
-import {FormField} from "../../forms/FormField";
-import {Textarea} from "@/components/ui/textarea";
+import { FormField } from "../../forms/FormField";
+import { Textarea } from "@/components/ui/textarea";
 
 interface FlavorFieldProps {
   value: string;

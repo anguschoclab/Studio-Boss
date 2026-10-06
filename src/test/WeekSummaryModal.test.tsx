@@ -1,10 +1,10 @@
 import React from "react";
-import {render, screen, fireEvent} from "@testing-library/react";
-import {describe, it, expect, vi, beforeEach} from "vitest";
-import {WeekSummaryModal} from "@/components/modals/WeekSummaryModal";
-import {useUIStore} from "@/store/uiStore";
-import {formatMoney} from "@/engine/utils";
-import {WeekSummary} from "@/engine/types";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { WeekSummaryModal } from "@/components/modals/WeekSummaryModal";
+import { useUIStore } from "@/store/uiStore";
+import { formatMoney } from "@/engine/utils";
+import { WeekSummary } from "@/engine/types";
 
 vi.mock("@/store/uiStore", () => ({
   useUIStore: vi.fn(),
@@ -116,7 +116,14 @@ describe("WeekSummaryModal", () => {
           totalCosts: 0,
           projectUpdates: ["Project A advanced to Post-Production"],
           newsEvents: [
-            { id: "1", headline: "Studio hit with major controversy", description: "", week: 2, type: "STUDIO_EVENT", category: "general" },
+            {
+              id: "1",
+              headline: "Studio hit with major controversy",
+              description: "",
+              week: 2,
+              type: "STUDIO_EVENT",
+              category: "general",
+            },
           ],
           events: ["Market crashed"],
         } as WeekSummary,

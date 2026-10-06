@@ -1,10 +1,10 @@
-import {describe, it, expect} from "vitest";
+import { describe, it, expect } from "vitest";
 import {
   haveWorkedTogether,
   haveCompeted,
   getRelationship,
 } from "@/engine/systems/talent/relationshipFormation";
-import {GameState} from "@/engine/types";
+import { GameState } from "@/engine/types";
 
 function makeState(overrides: {
   projects?: Record<string, { id: string; attachedTalentIds?: string[] }>;
@@ -14,9 +14,7 @@ function makeState(overrides: {
   return {
     entities: { projects: overrides.projects ?? {} },
     industry: { awards: overrides.awards ?? [] },
-    relationships: overrides.relationships
-      ? { relationships: overrides.relationships }
-      : undefined,
+    relationships: overrides.relationships ? { relationships: overrides.relationships } : undefined,
   } as unknown as GameState;
 }
 

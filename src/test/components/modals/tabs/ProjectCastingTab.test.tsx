@@ -1,9 +1,9 @@
-import {render, screen} from "@testing-library/react";
-import {describe, it, expect, vi} from "vitest";
-import {ProjectCastingTab} from "@/components/modals/tabs/ProjectCastingTab";
-import {Tabs} from "@/components/ui/tabs";
-import {createMockProject, createMockTalent} from "../../../utils/mockFactories";
-import {Talent} from "@/engine/types";
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
+import { ProjectCastingTab } from "@/components/modals/tabs/ProjectCastingTab";
+import { Tabs } from "@/components/ui/tabs";
+import { createMockProject, createMockTalent } from "../../../utils/mockFactories";
+import { Talent } from "@/engine/types";
 
 vi.mock("@/components/talent/CastingFeedback", () => ({
   CastingFeedback: ({ talent }: { talent: Talent }) => (

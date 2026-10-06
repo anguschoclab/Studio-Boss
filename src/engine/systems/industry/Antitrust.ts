@@ -1,6 +1,6 @@
-import {GameState, StateImpact, RivalStudio} from "@/engine/types";
-import {secureRandom, pick} from "../../utils";
-import {getSimMemory} from "../../core/simMemory";
+import { GameState, StateImpact, RivalStudio } from "@/engine/types";
+import { secureRandom, pick } from "../../utils";
+import { getSimMemory } from "../../core/simMemory";
 
 /**
  * Antitrust — concentration monitor + occasional interventions.
@@ -32,7 +32,6 @@ export interface AntitrustEvent {
   top3Share: number;
   note: string;
 }
-
 
 function computeConcentration(state: GameState) {
   // Replaced Object.values + array methods with single-pass for...in loop
@@ -72,7 +71,11 @@ function computeConcentration(state: GameState) {
   return { top1, top3, leader: entries[0], sorted: entries, total, positiveCount };
 }
 
-export function isAcquirerBlockedByAntitrust(state: GameState, acquirerId: string, week: number): boolean {
+export function isAcquirerBlockedByAntitrust(
+  state: GameState,
+  acquirerId: string,
+  week: number
+): boolean {
   const blockList = getSimMemory(state).antitrustBlockList;
   return blockList.some((b) => b.acquirerId === acquirerId && b.untilWeek > week);
 }

@@ -1,7 +1,7 @@
-import {render, screen} from "@testing-library/react";
-import {describe, it, expect, vi} from "vitest";
-import {AwardsProbabilityChart} from "@/components/charts/AwardsProbabilityChart";
-import type {AwardProbability} from "@/store/chartSelectors";
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
+import { AwardsProbabilityChart } from "@/components/charts/AwardsProbabilityChart";
+import type { AwardProbability } from "@/store/chartSelectors";
 
 // Mock ResizeObserver
 global.ResizeObserver = vi.fn().mockImplementation(() => ({
@@ -27,9 +27,24 @@ vi.mock("recharts", () => ({
 }));
 
 const sampleData: AwardProbability[] = [
-  { projectTitle: "Oscar Bait", awardBody: "Academy Awards", category: "Best Picture", probability: 85 },
-  { projectTitle: "Indie Gem", awardBody: "Sundance Film Festival", category: "Grand Jury Prize", probability: 60 },
-  { projectTitle: "TV Drama", awardBody: "Primetime Emmys", category: "Best Series", probability: 45 },
+  {
+    projectTitle: "Oscar Bait",
+    awardBody: "Academy Awards",
+    category: "Best Picture",
+    probability: 85,
+  },
+  {
+    projectTitle: "Indie Gem",
+    awardBody: "Sundance Film Festival",
+    category: "Grand Jury Prize",
+    probability: 60,
+  },
+  {
+    projectTitle: "TV Drama",
+    awardBody: "Primetime Emmys",
+    category: "Best Series",
+    probability: 45,
+  },
 ];
 
 describe("AwardsProbabilityChart", () => {

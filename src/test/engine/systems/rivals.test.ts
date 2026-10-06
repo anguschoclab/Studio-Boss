@@ -1,7 +1,7 @@
-import {describe, it, expect, beforeEach} from "vitest";
-import {updateRival, advanceRivals} from "../../../engine/systems/rivals";
-import {createMockGameState, createMockRival} from "../generators/mockFactory";
-import {setDeterministicSeed} from "../../../engine/utils";
+import { describe, it, expect, beforeEach } from "vitest";
+import { updateRival, advanceRivals } from "../../../engine/systems/rivals";
+import { createMockGameState, createMockRival } from "../generators/mockFactory";
+import { setDeterministicSeed } from "../../../engine/utils";
 
 describe("rivals system", () => {
   beforeEach(() => {
@@ -45,9 +45,7 @@ describe("rivals system", () => {
 
       const rivalUpdates = impacts.filter((i) => i.type === "RIVAL_UPDATED");
       expect(rivalUpdates).toHaveLength(1);
-      expect(
-        (rivalUpdates[0].payload as { rivalId: string }).rivalId
-      ).toBe(mockRival.id);
+      expect((rivalUpdates[0].payload as { rivalId: string }).rivalId).toBe(mockRival.id);
       const payload = rivalUpdates[0].payload as {
         update: { strength?: number };
         deltas?: { strength?: number };
@@ -77,9 +75,7 @@ describe("rivals system", () => {
 
       const news = impacts.filter((i) => i.type === "NEWS_ADDED");
       expect(
-        news.some((n) =>
-          (n.payload as { headline?: string }).headline?.includes("Vulnerable")
-        )
+        news.some((n) => (n.payload as { headline?: string }).headline?.includes("Vulnerable"))
       ).toBeTruthy();
     });
   });

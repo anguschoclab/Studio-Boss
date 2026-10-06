@@ -1,6 +1,9 @@
-import {describe, it, expect, beforeEach} from "vitest";
-import {simulateMarketingCampaign, calculateAudienceIndex} from "../../../engine/systems/demographics";
-import {GameState, Project, ContentFlag} from "../../../engine/types";
+import { describe, it, expect, beforeEach } from "vitest";
+import {
+  simulateMarketingCampaign,
+  calculateAudienceIndex,
+} from "../../../engine/systems/demographics";
+import { GameState, Project, ContentFlag } from "../../../engine/types";
 
 const mockProject: Project = {
   id: "p1",

@@ -1,11 +1,17 @@
 import React, { useEffect } from "react";
-import {useUIStore} from "@/store/uiStore";
-import {useGameStore} from "@/store/gameStore";
-import {selectDistressedOffer} from "@/store/selectors";
-import {formatMoney} from "@/engine/utils";
-import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription} from "@/components/ui/dialog";
-import {Button} from "@/components/ui/button";
-import {AlertTriangle, DollarSign, Clock, Building2} from "lucide-react";
+import { useUIStore } from "@/store/uiStore";
+import { useGameStore } from "@/store/gameStore";
+import { selectDistressedOffer } from "@/store/selectors";
+import { formatMoney } from "@/engine/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { AlertTriangle, DollarSign, Clock, Building2 } from "lucide-react";
 
 export const DistressedAssetOfferModal: React.FC = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
@@ -56,7 +62,8 @@ export const DistressedAssetOfferModal: React.FC = () => {
             </div>
           </div>
           <DialogDescription>
-            {offer.sellerName} is selling {offer.assetLabel} at a fire-sale price. Acquire it now or let {offer.aiBuyerName} take it.
+            {offer.sellerName} is selling {offer.assetLabel} at a fire-sale price. Acquire it now or
+            let {offer.aiBuyerName} take it.
           </DialogDescription>
         </DialogHeader>
 
@@ -90,7 +97,12 @@ export const DistressedAssetOfferModal: React.FC = () => {
             <Button onClick={handleDecline} variant="outline" className="flex-1">
               Decline
             </Button>
-            <Button onClick={handleAcquire} className="flex-1" disabled={!canAfford} tooltip={!canAfford ? "Insufficient funds" : undefined}>
+            <Button
+              onClick={handleAcquire}
+              className="flex-1"
+              disabled={!canAfford}
+              tooltip={!canAfford ? "Insufficient funds" : undefined}
+            >
               <DollarSign className="h-4 w-4 mr-2" />
               Acquire
             </Button>

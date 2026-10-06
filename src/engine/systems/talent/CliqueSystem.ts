@@ -1,7 +1,7 @@
-import {GameState, StateImpact, Talent} from "../../types";
-import {RandomGenerator} from "../../utils/rng";
-import {Clique, CliqueReputation, CLIQUE_NAME_PATTERNS} from "../../types/clique.types";
-import {areFriends} from "./RelationshipSystem";
+import { GameState, StateImpact, Talent } from "../../types";
+import { RandomGenerator } from "../../utils/rng";
+import { Clique, CliqueReputation, CLIQUE_NAME_PATTERNS } from "../../types/clique.types";
+import { areFriends } from "./RelationshipSystem";
 
 /**
  * Clique System
@@ -395,9 +395,7 @@ export function tickCliqueSystem(state: GameState, rng: RandomGenerator): StateI
   }
 
   // 2. Evolve existing cliques
-  const cliquesRecord =
-    state.relationships?.cliques
-      ?.cliques || {};
+  const cliquesRecord = state.relationships?.cliques?.cliques || {};
 
   for (const cliqueId in cliquesRecord) {
     if (!Object.prototype.hasOwnProperty.call(cliquesRecord, cliqueId)) continue;
@@ -427,9 +425,7 @@ export function tickCliqueSystem(state: GameState, rng: RandomGenerator): StateI
  * Get fame bonus for a talent based on clique membership
  */
 export function getCliqueFameBonus(talentId: string, state: GameState): number {
-  const cliquesRecord =
-    state.relationships?.cliques
-      ?.cliques || {};
+  const cliquesRecord = state.relationships?.cliques?.cliques || {};
 
   let maxBonus = 0;
   for (const cliqueId in cliquesRecord) {

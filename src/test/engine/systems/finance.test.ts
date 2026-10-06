@@ -1,9 +1,13 @@
-import {describe, it, expect} from "vitest";
-import {calculateProjectROI, calculateStudioNetWorth, generateWeeklyFinancialReport} from "../../../engine/systems/finance";
-import {tickFinance} from "../../../engine/systems/finance/financeTick";
-import {Project, StateImpact} from "../../../engine/types";
-import {RandomGenerator} from "../../../engine/utils/rng";
-import {createMockGameState} from "../../mockFactory";
+import { describe, it, expect } from "vitest";
+import {
+  calculateProjectROI,
+  calculateStudioNetWorth,
+  generateWeeklyFinancialReport,
+} from "../../../engine/systems/finance";
+import { tickFinance } from "../../../engine/systems/finance/financeTick";
+import { Project, StateImpact } from "../../../engine/types";
+import { RandomGenerator } from "../../../engine/utils/rng";
+import { createMockGameState } from "../../mockFactory";
 
 const mockProjectDev: import("../../../engine/types").Project = {
   id: "proj-1",
@@ -144,8 +148,14 @@ describe("Finance System", () => {
       });
       const pendingImpacts: StateImpact[] = [
         // Rival cash deltas must not leak into the player's weekly report
-        { type: "FINANCE_TRANSACTION", payload: { amount: 500000, description: "syndication", targetId: "rival-1" } },
-        { type: "FINANCE_TRANSACTION", payload: { amount: -90000, description: "overhead", targetId: "rival-1" } },
+        {
+          type: "FINANCE_TRANSACTION",
+          payload: { amount: 500000, description: "syndication", targetId: "rival-1" },
+        },
+        {
+          type: "FINANCE_TRANSACTION",
+          payload: { amount: -90000, description: "overhead", targetId: "rival-1" },
+        },
         // Un-targeted transactions belong to the player
         { type: "FINANCE_TRANSACTION", payload: { amount: 50000, description: "player tx" } },
       ];

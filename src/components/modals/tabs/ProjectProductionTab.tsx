@@ -1,11 +1,11 @@
-import {TabsContent} from "@/components/ui/tabs";
-import {Button} from "@/components/ui/button";
-import {Project} from "@/engine/types";
-import {GreenlightReport} from "@/engine/systems/greenlight";
-import {formatMoney} from "@/engine/utils";
-import {Activity, Clapperboard, ShieldAlert, CheckCircle2, AlertCircle} from "lucide-react";
-import {cn} from "@/lib/utils";
-import {DevelopmentLog} from "../DevelopmentLog";
+import { TabsContent } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Project } from "@/engine/types";
+import { GreenlightReport } from "@/engine/systems/greenlight";
+import { formatMoney } from "@/engine/utils";
+import { Activity, Clapperboard, ShieldAlert, CheckCircle2, AlertCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { DevelopmentLog } from "../DevelopmentLog";
 
 interface ProjectProductionTabProps {
   project: Project;

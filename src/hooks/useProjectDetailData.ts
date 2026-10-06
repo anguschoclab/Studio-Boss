@@ -1,13 +1,13 @@
-import {useMemo} from "react";
-import {useGameStore} from "@/store/gameStore";
-import {useUIStore} from "@/store/uiStore";
-import {useTalentMap} from "@/hooks/useTalentMap";
-import {getContractsByProjectId} from "@/engine/utils";
-import {BUDGET_TIERS} from "@/engine/data/budgetTiers";
-import {evaluateGreenlight} from "@/engine/systems/greenlight";
-import {selectAwardsProbability} from "@/store/chartSelectors";
-import {Talent, ScriptedProject, SeriesProject, Project} from "@/engine/types";
-import {type ProjectId} from "@/engine/types/shared.types";
+import { useMemo } from "react";
+import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
+import { useTalentMap } from "@/hooks/useTalentMap";
+import { getContractsByProjectId } from "@/engine/utils";
+import { BUDGET_TIERS } from "@/engine/data/budgetTiers";
+import { evaluateGreenlight } from "@/engine/systems/greenlight";
+import { selectAwardsProbability } from "@/store/chartSelectors";
+import { Talent, ScriptedProject, SeriesProject, Project } from "@/engine/types";
+import { type ProjectId } from "@/engine/types/shared.types";
 
 /**
  * All game-state-derived data for ProjectDetailModal.

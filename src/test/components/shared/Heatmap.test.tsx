@@ -1,7 +1,7 @@
 import React from "react";
-import {render, screen, fireEvent} from "@testing-library/react";
-import {describe, it, expect, vi} from "vitest";
-import {Heatmap} from "@/components/shared/Heatmap";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
+import { Heatmap } from "@/components/shared/Heatmap";
 
 // TooltipWrapper is already mocked in setup.ts
 
@@ -40,9 +40,7 @@ describe("Heatmap (shared)", () => {
 
   it("onCellClick fires with correct cell", () => {
     const onCellClick = vi.fn();
-    render(
-      <Heatmap data={mockData} rows={rows} cols={cols} onCellClick={onCellClick} />
-    );
+    render(<Heatmap data={mockData} rows={rows} cols={cols} onCellClick={onCellClick} />);
     const buttons = screen.getAllByRole("button");
     fireEvent.click(buttons[0]);
     expect(onCellClick).toHaveBeenCalledWith({

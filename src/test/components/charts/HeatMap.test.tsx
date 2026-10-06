@@ -1,7 +1,7 @@
 import React from "react";
-import {render, screen, fireEvent} from "@testing-library/react";
-import {describe, it, expect, vi} from "vitest";
-import {HeatMap} from "@/components/charts/HeatMap";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
+import { HeatMap } from "@/components/charts/HeatMap";
 
 describe("HeatMap", () => {
   const mockData = [
@@ -14,30 +14,22 @@ describe("HeatMap", () => {
   const yLabels = ["Action", "Comedy"];
 
   it("renders correct number of cells for given xLabels × yLabels", () => {
-    render(
-      <HeatMap data={mockData} xLabels={xLabels} yLabels={yLabels} />
-    );
+    render(<HeatMap data={mockData} xLabels={xLabels} yLabels={yLabels} />);
     // 2x2 = 4 cell buttons (role="button")
     const cells = screen.getAllByRole("button");
     expect(cells).toHaveLength(4);
   });
 
   it("returns correct value for existing cell", () => {
-    render(
-      <HeatMap data={mockData} xLabels={xLabels} yLabels={yLabels} />
-    );
+    render(<HeatMap data={mockData} xLabels={xLabels} yLabels={yLabels} />);
     // The first cell should be Q1 × Action = 80
     const cells = screen.getAllByRole("button");
     expect(cells[0]).toHaveTextContent("80");
   });
 
   it("returns 0 for missing cell", () => {
-    const partialData = [
-      { x: "Q1", y: "Action", value: 80 },
-    ];
-    render(
-      <HeatMap data={partialData} xLabels={xLabels} yLabels={yLabels} />
-    );
+    const partialData = [{ x: "Q1", y: "Action", value: 80 }];
+    render(<HeatMap data={partialData} xLabels={xLabels} yLabels={yLabels} />);
     const cells = screen.getAllByRole("button");
     // Q2 × Action should be 0, Q1 × Comedy should be 0, Q2 × Comedy should be 0
     expect(cells[1]).toHaveTextContent("0");
@@ -48,12 +40,7 @@ describe("HeatMap", () => {
   it("calls onCellClick with correct cell object when clicked", () => {
     const onCellClick = vi.fn();
     render(
-      <HeatMap
-        data={mockData}
-        xLabels={xLabels}
-        yLabels={yLabels}
-        onCellClick={onCellClick}
-      />
+      <HeatMap data={mockData} xLabels={xLabels} yLabels={yLabels} onCellClick={onCellClick} />
     );
     const cells = screen.getAllByRole("button");
     fireEvent.click(cells[0]);
@@ -62,9 +49,7 @@ describe("HeatMap", () => {
 
   it("does not crash when cell data is missing", () => {
     const emptyData: { x: string; y: string; value: number }[] = [];
-    const { container } = render(
-      <HeatMap data={emptyData} xLabels={xLabels} yLabels={yLabels} />
-    );
+    const { container } = render(<HeatMap data={emptyData} xLabels={xLabels} yLabels={yLabels} />);
     expect(container.textContent).toContain("No data available");
   });
 
@@ -73,9 +58,7 @@ describe("HeatMap", () => {
       { x: "Q1", y: "Action", value: 30 },
       { x: "Q1", y: "Action", value: 90 },
     ];
-    render(
-      <HeatMap data={dupData} xLabels={["Q1"]} yLabels={["Action"]} />
-    );
+    render(<HeatMap data={dupData} xLabels={["Q1"]} yLabels={["Action"]} />);
     const cells = screen.getAllByRole("button");
     expect(cells[0]).toHaveTextContent("90");
   });

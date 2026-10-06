@@ -1,8 +1,8 @@
-import {describe, it, expect} from "vitest";
-import {tickDistressedOffers} from "@/engine/systems/industry/DistressCascade";
-import {applyImpacts} from "@/engine/core/impactReducer";
-import type {GameState} from "@/engine/types";
-import type {DistressedAssetOffer} from "@/engine/types/distress.types";
+import { describe, it, expect } from "vitest";
+import { tickDistressedOffers } from "@/engine/systems/industry/DistressCascade";
+import { applyImpacts } from "@/engine/core/impactReducer";
+import type { GameState } from "@/engine/types";
+import type { DistressedAssetOffer } from "@/engine/types/distress.types";
 
 const offer: DistressedAssetOffer = {
   id: "o1",
@@ -50,7 +50,10 @@ describe("tickDistressedOffers", () => {
 
   it("multiple expired offers: all completed to their AI buyers, all removed", () => {
     const offer2: DistressedAssetOffer = {
-      ...offer, id: "o2", assetId: "f2", aiBuyerId: "r2",
+      ...offer,
+      id: "o2",
+      assetId: "f2",
+      aiBuyerId: "r2",
     };
     const state = makeState(7, [offer, offer2]);
     (state.ip as any).franchises.f2 = { id: "f2", name: "Rocky", ownerId: "r1" };
@@ -89,7 +92,10 @@ describe("tickDistressedOffers", () => {
 
   it("two expired offers from same seller — seller cash is sum of both credits, not overwritten", () => {
     const offer2: DistressedAssetOffer = {
-      ...offer, id: "o2", assetId: "f2", aiBuyerId: "r3",
+      ...offer,
+      id: "o2",
+      assetId: "f2",
+      aiBuyerId: "r3",
       aiBuyerName: "MGM",
     };
     const state = makeState(7, [offer, offer2]);
@@ -98,18 +104,24 @@ describe("tickDistressedOffers", () => {
     const impacts = tickDistressedOffers(state);
     const finalState = applyImpacts(state, impacts);
     // Seller should have: -60M + 100M + 100M = 140M (not -60M + 100M = 40M)
-    expect((finalState.entities.rivals as any).r1.cash).toBe(-60_000_000 + 100_000_000 + 100_000_000);
+    expect((finalState.entities.rivals as any).r1.cash).toBe(
+      -60_000_000 + 100_000_000 + 100_000_000
+    );
   });
 
   it("two expired offers to same AI buyer — buyer cash is correctly debited for both", () => {
     const offer2: DistressedAssetOffer = {
-      ...offer, id: "o2", assetId: "f2",
+      ...offer,
+      id: "o2",
+      assetId: "f2",
     };
     const state = makeState(7, [offer, offer2]);
     (state.ip as any).franchises.f2 = { id: "f2", name: "Rocky", ownerId: "r1" };
     const impacts = tickDistressedOffers(state);
     const finalState = applyImpacts(state, impacts);
     // Buyer r2 should have: 900M - 100M - 100M = 700M (not 900M - 100M = 800M)
-    expect((finalState.entities.rivals as any).r2.cash).toBe(900_000_000 - 100_000_000 - 100_000_000);
+    expect((finalState.entities.rivals as any).r2.cash).toBe(
+      900_000_000 - 100_000_000 - 100_000_000
+    );
   });
 });

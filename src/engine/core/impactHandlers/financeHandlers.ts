@@ -1,6 +1,14 @@
-import {GameState} from "@/engine/types";
-import {isPlayerOwner} from "../../utils/ownership";
-import type {FundsImpact, FundsDeductedImpact, LedgerImpact, FinanceSnapshotImpact, SyncMAFundsImpact, FinanceTransactionImpact, MarketEventUpdateImpact} from "@/engine/types/state.types";
+import { GameState } from "@/engine/types";
+import { isPlayerOwner } from "../../utils/ownership";
+import type {
+  FundsImpact,
+  FundsDeductedImpact,
+  LedgerImpact,
+  FinanceSnapshotImpact,
+  SyncMAFundsImpact,
+  FinanceTransactionImpact,
+  MarketEventUpdateImpact,
+} from "@/engine/types/state.types";
 
 /**
  * Finance-related impact handlers
@@ -29,7 +37,10 @@ export function handleLedgerUpdated(state: GameState, impact: LedgerImpact): Gam
   };
 }
 
-export function handleFinanceSnapshotAdded(state: GameState, impact: FinanceSnapshotImpact): GameState {
+export function handleFinanceSnapshotAdded(
+  state: GameState,
+  impact: FinanceSnapshotImpact
+): GameState {
   const { snapshot } = impact.payload;
   return {
     ...state,
@@ -62,20 +73,19 @@ export function handleFundsDeducted(state: GameState, impact: FundsDeductedImpac
   };
 }
 
-export function handleFinanceTransaction(state: GameState, impact: FinanceTransactionImpact): GameState {
+export function handleFinanceTransaction(
+  state: GameState,
+  impact: FinanceTransactionImpact
+): GameState {
   const { amount, targetId } = impact.payload;
   const isPlayerTarget =
-    !targetId ||
-    targetId === "player" ||
-    targetId === "PLAYER" ||
-    isPlayerOwner(state, targetId);
+    !targetId || targetId === "player" || targetId === "PLAYER" || isPlayerOwner(state, targetId);
   if (!isPlayerTarget) {
     const rival = state.entities.rivals[targetId];
     if (!rival) return state;
     let safeAmount = amount;
     if (isNaN(safeAmount) || safeAmount === null) safeAmount = 0;
-    if (Math.abs(safeAmount) > 10_000_000_000)
-      safeAmount = Math.sign(safeAmount) * 10_000_000_000;
+    if (Math.abs(safeAmount) > 10_000_000_000) safeAmount = Math.sign(safeAmount) * 10_000_000_000;
     const rivals = { ...state.entities.rivals };
     rivals[targetId] = { ...rival, cash: rival.cash + safeAmount };
     return {
@@ -89,7 +99,10 @@ export function handleFinanceTransaction(state: GameState, impact: FinanceTransa
   return handleFundsChanged(state, { type: "FUNDS_CHANGED", payload: { amount } });
 }
 
-export function handleMarketEventUpdated(state: GameState, impact: MarketEventUpdateImpact): GameState {
+export function handleMarketEventUpdated(
+  state: GameState,
+  impact: MarketEventUpdateImpact
+): GameState {
   const { events, marketState, marketingIntensity } = impact.payload;
   return {
     ...state,

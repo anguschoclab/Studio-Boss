@@ -1,11 +1,33 @@
-import {GameState} from "@/engine/types";import type {RelationshipFormedImpact, RelationshipUpdatedImpact, CliqueFormedImpact, CliqueUpdatedImpact, ScreenplayNoteCreatedImpact, ScreenplayNoteImplementedImpact, ProductionAdditionCreatedImpact, CreditSceneCreatedImpact, CreditSceneUpdatedImpact, TalkShowAppearanceCreatedImpact, PhotoshootCreatedImpact, PressTourCreatedImpact, BreakoutStarCreatedImpact, BreakoutStarUpdatedImpact, GuestStarOpportunityImpact, GuestStarBookedImpact, DiscoveryStateUpdatedImpact} from "@/engine/types/state.types";
+import { GameState } from "@/engine/types";
+import type {
+  RelationshipFormedImpact,
+  RelationshipUpdatedImpact,
+  CliqueFormedImpact,
+  CliqueUpdatedImpact,
+  ScreenplayNoteCreatedImpact,
+  ScreenplayNoteImplementedImpact,
+  ProductionAdditionCreatedImpact,
+  CreditSceneCreatedImpact,
+  CreditSceneUpdatedImpact,
+  TalkShowAppearanceCreatedImpact,
+  PhotoshootCreatedImpact,
+  PressTourCreatedImpact,
+  BreakoutStarCreatedImpact,
+  BreakoutStarUpdatedImpact,
+  GuestStarOpportunityImpact,
+  GuestStarBookedImpact,
+  DiscoveryStateUpdatedImpact,
+} from "@/engine/types/state.types";
 
 /**
  * Relationship-related impact handlers
  * Pure functions that apply relationship-related state impacts
  */
 
-export function handleRelationshipFormed(state: GameState, impact: RelationshipFormedImpact): GameState {
+export function handleRelationshipFormed(
+  state: GameState,
+  impact: RelationshipFormedImpact
+): GameState {
   if (!impact.payload) return state;
   const { key, relationship } = impact.payload;
   if (!key || !relationship) return state;
@@ -21,7 +43,10 @@ export function handleRelationshipFormed(state: GameState, impact: RelationshipF
   };
 }
 
-export function handleRelationshipUpdated(state: GameState, impact: RelationshipUpdatedImpact): GameState {
+export function handleRelationshipUpdated(
+  state: GameState,
+  impact: RelationshipUpdatedImpact
+): GameState {
   if (!impact.payload) return state;
   const { key, relationship, relationshipId, update } = impact.payload;
 
@@ -31,7 +56,8 @@ export function handleRelationshipUpdated(state: GameState, impact: Relationship
       ...state,
       talentAgentRelationships: {
         ...(state.talentAgentRelationships || {}),
-        [relationshipId]: relationship as import("../../systems/talent/talentAgentInteractions").TalentAgentRelationship,
+        [relationshipId]:
+          relationship as import("../../systems/talent/talentAgentInteractions").TalentAgentRelationship,
       },
     };
   }
@@ -139,7 +165,10 @@ export function handleCliqueUpdated(state: GameState, impact: CliqueUpdatedImpac
   };
 }
 
-export function handleScreenplayNoteCreated(state: GameState, impact: ScreenplayNoteCreatedImpact): GameState {
+export function handleScreenplayNoteCreated(
+  state: GameState,
+  impact: ScreenplayNoteCreatedImpact
+): GameState {
   if (!impact.payload) return state;
   const { note } = impact.payload;
   if (!note) return state;
@@ -163,7 +192,10 @@ export function handleScreenplayNoteCreated(state: GameState, impact: Screenplay
   };
 }
 
-export function handleScreenplayNoteImplemented(state: GameState, impact: ScreenplayNoteImplementedImpact): GameState {
+export function handleScreenplayNoteImplemented(
+  state: GameState,
+  impact: ScreenplayNoteImplementedImpact
+): GameState {
   if (!impact.payload) return state;
   const { noteId, note } = impact.payload;
   if (!noteId || !note) return state;
@@ -187,7 +219,10 @@ export function handleScreenplayNoteImplemented(state: GameState, impact: Screen
   };
 }
 
-export function handleProductionAdditionCreated(state: GameState, impact: ProductionAdditionCreatedImpact): GameState {
+export function handleProductionAdditionCreated(
+  state: GameState,
+  impact: ProductionAdditionCreatedImpact
+): GameState {
   if (!impact.payload) return state;
   const { addition } = impact.payload;
   if (!addition) return state;
@@ -238,7 +273,10 @@ export function handleCreditSceneCreatedOrUpdated(
   };
 }
 
-export function handleTalkShowAppearanceCreated(state: GameState, impact: TalkShowAppearanceCreatedImpact): GameState {
+export function handleTalkShowAppearanceCreated(
+  state: GameState,
+  impact: TalkShowAppearanceCreatedImpact
+): GameState {
   if (!impact.payload) return state;
   const { appearance } = impact.payload;
   if (!appearance) return state;
@@ -262,7 +300,10 @@ export function handleTalkShowAppearanceCreated(state: GameState, impact: TalkSh
   };
 }
 
-export function handlePhotoshootCreated(state: GameState, impact: PhotoshootCreatedImpact): GameState {
+export function handlePhotoshootCreated(
+  state: GameState,
+  impact: PhotoshootCreatedImpact
+): GameState {
   if (!impact.payload) return state;
   const { photoshoot } = impact.payload;
   if (!photoshoot) return state;
@@ -286,7 +327,10 @@ export function handlePhotoshootCreated(state: GameState, impact: PhotoshootCrea
   };
 }
 
-export function handlePressTourCreated(state: GameState, impact: PressTourCreatedImpact): GameState {
+export function handlePressTourCreated(
+  state: GameState,
+  impact: PressTourCreatedImpact
+): GameState {
   if (!impact.payload) return state;
   const { tour } = impact.payload;
   if (!tour) return state;
@@ -368,7 +412,10 @@ export function handleGuestStarOpportunityOrBooked(
   };
 }
 
-export function handleDiscoveryStateUpdated(state: GameState, impact: DiscoveryStateUpdatedImpact): GameState {
+export function handleDiscoveryStateUpdated(
+  state: GameState,
+  impact: DiscoveryStateUpdatedImpact
+): GameState {
   if (!impact.payload) return state;
   const { discovery } = impact.payload;
   if (!discovery) return state;

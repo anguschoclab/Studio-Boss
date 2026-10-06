@@ -1,5 +1,9 @@
-import {GameState, Buyer} from "@/engine/types";
-import type {BuyerUpdateImpact, OpportunityUpdateImpact, TrendsUpdateImpact} from "@/engine/types/state.types";
+import { GameState, Buyer } from "@/engine/types";
+import type {
+  BuyerUpdateImpact,
+  OpportunityUpdateImpact,
+  TrendsUpdateImpact,
+} from "@/engine/types/state.types";
 
 /**
  * Market-related impact handlers
@@ -20,7 +24,10 @@ export function handleBuyerUpdated(state: GameState, impact: BuyerUpdateImpact):
   };
 }
 
-export function handleOpportunityUpdated(state: GameState, impact: OpportunityUpdateImpact): GameState {
+export function handleOpportunityUpdated(
+  state: GameState,
+  impact: OpportunityUpdateImpact
+): GameState {
   const payload = impact.payload;
   if ("action" in payload) {
     if (payload.action === "EXPIRE") {

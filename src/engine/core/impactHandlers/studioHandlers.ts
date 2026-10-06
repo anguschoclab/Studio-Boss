@@ -1,5 +1,9 @@
-import {GameState} from "@/engine/types";
-import type {PrestigeChangedImpact, NewsImpact, SystemTickImpact} from "@/engine/types/state.types";
+import { GameState } from "@/engine/types";
+import type {
+  PrestigeChangedImpact,
+  NewsImpact,
+  SystemTickImpact,
+} from "@/engine/types/state.types";
 
 /**
  * Studio-related impact handlers

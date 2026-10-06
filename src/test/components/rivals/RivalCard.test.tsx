@@ -2,8 +2,8 @@
  * @vitest-environment jsdom
  */
 import React from "react";
-import {render, screen} from "@testing-library/react";
-import {describe, it, expect, vi} from "vitest";
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
 
 // Mock TooltipWrapper
 vi.mock("@/components/ui/tooltip-wrapper", () => ({
@@ -58,7 +58,7 @@ vi.mock("@/lib/utils", () => ({
   cn: (...classes: string[]) => classes.filter(Boolean).join(" "),
 }));
 
-import {RivalCard} from "@/components/rivals/RivalCard";
+import { RivalCard } from "@/components/rivals/RivalCard";
 
 const mockRival = {
   id: "r1",

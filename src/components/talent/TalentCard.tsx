@@ -1,15 +1,15 @@
 import React from "react";
-import {Package, Bookmark, BookmarkCheck} from "lucide-react";
-import {Talent} from "@/engine/types";
-import {formatMoney} from "@/engine/utils";
-import {AGENCY_ARCHETYPES} from "@/engine/data/archetypes";
-import {cn} from "@/lib/utils";
-import {useGameStore} from "@/store/gameStore";
-import {useUIStore} from "@/store/uiStore";
-import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";
-import {TalentAvatar} from "./TalentAvatar";
-import {getTalentVisualAge} from "@/engine/generators/avatarGenerator";
-import {useAgencyMap} from "@/hooks/useTalentMap";
+import { Package, Bookmark, BookmarkCheck } from "lucide-react";
+import { Talent } from "@/engine/types";
+import { formatMoney } from "@/engine/utils";
+import { AGENCY_ARCHETYPES } from "@/engine/data/archetypes";
+import { cn } from "@/lib/utils";
+import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
+import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
+import { TalentAvatar } from "./TalentAvatar";
+import { getTalentVisualAge } from "@/engine/generators/avatarGenerator";
+import { useAgencyMap } from "@/hooks/useTalentMap";
 
 /**
  * Props for the TalentCard component.
@@ -29,7 +29,10 @@ interface TalentCardProps {
  * A highly stylized card component for displaying a talent's key metrics and portrait.
  * Features a vertical star power bar, prestige indicators, and market ask details.
  *
- * @param props - Component properties
+ * @param props.talent - The talent entity to display
+ * @param props.className - Optional additional CSS classes
+ * @param props.onClick - Optional click handler; defaults to selecting the talent
+ * @param props.tooltip - Optional tooltip text shown on hover
  */
 export const TalentCard: React.FC<TalentCardProps> = ({ talent, className, onClick, tooltip }) => {
   const { selectTalent } = useUIStore();

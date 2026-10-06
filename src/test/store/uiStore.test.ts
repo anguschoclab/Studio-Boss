@@ -1,5 +1,5 @@
-import {describe, it, expect, beforeEach} from "vitest";
-import {useUIStore} from "../../store/uiStore";
+import { describe, it, expect, beforeEach } from "vitest";
+import { useUIStore } from "../../store/uiStore";
 
 describe("uiStore", () => {
   beforeEach(() => {
@@ -36,5 +36,4 @@ describe("uiStore", () => {
     useUIStore.getState().selectProject(null);
     expect(useUIStore.getState().selectedProjectId).toBeNull();
   });
-
 });

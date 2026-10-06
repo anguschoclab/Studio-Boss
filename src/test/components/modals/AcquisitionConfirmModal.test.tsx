@@ -1,13 +1,12 @@
 import React from "react";
-import {render, screen, fireEvent} from "@testing-library/react";
-import {describe, it, expect, vi, beforeEach} from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const { mockPreviewAcquisition, mockAcquireRival, mockResolveCurrentModal } =
-  vi.hoisted(() => ({
-    mockPreviewAcquisition: vi.fn(),
-    mockAcquireRival: vi.fn(),
-    mockResolveCurrentModal: vi.fn(),
-  }));
+const { mockPreviewAcquisition, mockAcquireRival, mockResolveCurrentModal } = vi.hoisted(() => ({
+  mockPreviewAcquisition: vi.fn(),
+  mockAcquireRival: vi.fn(),
+  mockResolveCurrentModal: vi.fn(),
+}));
 
 vi.mock("@/store/gameStore", () => ({
   useGameStore: vi.fn((selector: any) => {
@@ -50,8 +49,8 @@ vi.mock("lucide-react", () => ({
   X: () => <div data-testid="icon" />,
 }));
 
-import {AcquisitionConfirmModal} from "@/components/modals/AcquisitionConfirmModal";
-import {useUIStore} from "@/store/uiStore";
+import { AcquisitionConfirmModal } from "@/components/modals/AcquisitionConfirmModal";
+import { useUIStore } from "@/store/uiStore";
 
 function makePreview(overrides: any = {}) {
   return {
@@ -156,9 +155,7 @@ describe("AcquisitionConfirmModal", () => {
   });
 
   it("Bid button is disabled when !canProceed", () => {
-    mockPreviewAcquisition.mockReturnValue(
-      makePreview({ canProceed: false, affordable: false })
-    );
+    mockPreviewAcquisition.mockReturnValue(makePreview({ canProceed: false, affordable: false }));
     setModal({ targetId: "r1" });
     render(<AcquisitionConfirmModal />);
     const bidBtn = screen.getByText(/Bid/i).closest("button")!;

@@ -1,7 +1,7 @@
-import {RivalStudio, GameState, Talent} from "@/engine/types";
+import { RivalStudio, GameState, Talent } from "@/engine/types";
 type TalentProfile = Talent;
-import {StateImpact} from "../types/state.types";
-import {pick, rand, generateId, countRivalProjects} from "../utils";
+import { StateImpact } from "../types/state.types";
+import { pick, rand, generateId, countRivalProjects } from "../utils";
 
 const INDIE_ACTIVITIES = [
   "Quietly developing a prestige drama slate",

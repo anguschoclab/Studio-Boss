@@ -1,9 +1,9 @@
-import {describe, it, expect, vi, beforeAll} from "vitest";
-import {render, screen, fireEvent} from "@testing-library/react";
+import { describe, it, expect, vi, beforeAll } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
 import React from "react";
-import {ProjectMarketingTab} from "@/components/modals/tabs/ProjectMarketingTab";
-import {Tabs} from "@/components/ui/tabs";
-import {Project} from "@/engine/types";
+import { ProjectMarketingTab } from "@/components/modals/tabs/ProjectMarketingTab";
+import { Tabs } from "@/components/ui/tabs";
+import { Project } from "@/engine/types";
 
 beforeAll(() => {
   // recharts requires ResizeObserver which jsdom does not provide
@@ -69,8 +69,6 @@ describe("ProjectMarketingTab — secondary angle clear button", () => {
       selectedPrimaryAngle: "AWARDS_PUSH",
       selectedSecondaryAngle: null,
     });
-    expect(
-      screen.queryByRole("button", { name: /clear secondary/i })
-    ).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /clear secondary/i })).not.toBeInTheDocument();
   });
 });

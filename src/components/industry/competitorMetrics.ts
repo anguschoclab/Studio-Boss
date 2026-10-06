@@ -1,5 +1,5 @@
-import {countPlayerProjects, countRivalProjects} from "@/engine/utils";
-import {GameState, RivalStudio} from "@/engine/types";
+import { countPlayerProjects, countRivalProjects } from "@/engine/utils";
+import { GameState, RivalStudio } from "@/engine/types";
 
 export function computeRadarMetrics(
   gameState: GameState,
@@ -16,8 +16,7 @@ export function computeRadarMetrics(
     {
       metric: "Cash",
       player: (gameState.finance.cash / maxCash) * 100,
-      avgRival:
-        (rivals.reduce((sum, r) => sum + r.cash, 0) / (rivals.length || 1) / maxCash) * 100,
+      avgRival: (rivals.reduce((sum, r) => sum + r.cash, 0) / (rivals.length || 1) / maxCash) * 100,
     },
     {
       metric: "Prestige",

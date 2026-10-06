@@ -1,14 +1,19 @@
-import {GameState, StateImpact, Project, CampaignData} from "@/engine/types";
-import {RandomGenerator} from "../utils/rng";
-import {isPlayerOwner, getPlayerId} from "../utils/ownership";
-import {executeGreenlight, executeMarketing} from "../systems/projects";
-import {BudgetTierKey, MarketingCampaign} from "../types/project.types";
-import {processFlops} from "../systems/finance/FlopMechanics";
-import {calculateOpeningWeekend} from "../systems/releaseSimulation";
-import {getSimMemory} from "../core/simMemory";
-import {getMarketHeat, getBudgetInflation, BANKRUPTCY_CASH_FLOOR, BANKRUPTCY_WEEKS_REQUIRED} from "../systems/industry/MacroCycle";
-import {buildFatigueAwareGenreWeights} from "../systems/rivals/rivalProduction";
-import {checkCampaignBacklash} from "../systems/awards/NominationCalculator";
+import { GameState, StateImpact, Project, CampaignData } from "@/engine/types";
+import { RandomGenerator } from "../utils/rng";
+import { isPlayerOwner, getPlayerId } from "../utils/ownership";
+import { executeGreenlight, executeMarketing } from "../systems/projects";
+import { BudgetTierKey, MarketingCampaign } from "../types/project.types";
+import { processFlops } from "../systems/finance/FlopMechanics";
+import { calculateOpeningWeekend } from "../systems/releaseSimulation";
+import { getSimMemory } from "../core/simMemory";
+import {
+  getMarketHeat,
+  getBudgetInflation,
+  BANKRUPTCY_CASH_FLOOR,
+  BANKRUPTCY_WEEKS_REQUIRED,
+} from "../systems/industry/MacroCycle";
+import { buildFatigueAwareGenreWeights } from "../systems/rivals/rivalProduction";
+import { checkCampaignBacklash } from "../systems/awards/NominationCalculator";
 
 /**
  * Headless Controller (AI for the Player Studio)
@@ -139,15 +144,16 @@ export class HeadlessController {
         if (isTv) {
           // TV premiere: revenue = license fees (per-episode) or streamer subscriber-value proxy.
           // Simpler than box office. Renewal can spawn a season-2 project.
-          const tvDetails: import("../types").TVSeasonDetails =
-            ("tvDetails" in project ? project.tvDetails : undefined) || {
-              episodesOrdered: 10,
-              currentSeason: 1,
-              episodesCompleted: 0,
-              episodesAired: 0,
-              averageRating: 0,
-              status: "ON_AIR",
-            };
+          const tvDetails: import("../types").TVSeasonDetails = ("tvDetails" in project
+            ? project.tvDetails
+            : undefined) || {
+            episodesOrdered: 10,
+            currentSeason: 1,
+            episodesCompleted: 0,
+            episodesAired: 0,
+            averageRating: 0,
+            status: "ON_AIR",
+          };
           const episodes = tvDetails.episodesOrdered || 10;
           const ownsPlatform = (state.studio?.ownedPlatforms || []).length > 0;
           // License fees must track budget inflation or TV projects become guaranteed losers
@@ -462,7 +468,7 @@ export class HeadlessController {
   ): StateImpact[] {
     const impacts: StateImpact[] = [];
     // ⚡ Bolt Optimization: Replace Object.values() with direct for...in loop to avoid array allocation
-    const pool: typeof state.entities.talents[keyof typeof state.entities.talents][] = [];
+    const pool: (typeof state.entities.talents)[keyof typeof state.entities.talents][] = [];
     const talentsObj = state.entities.talents || {};
     for (const key in talentsObj) {
       if (!Object.prototype.hasOwnProperty.call(talentsObj, key)) continue;
@@ -583,8 +589,11 @@ export class HeadlessController {
     let roll = rng.next() * weightSum;
     let genre = genres[0];
     for (const g of genres) {
-      roll -= (genreWeights[g] ?? 1);
-      if (roll <= 0) { genre = g; break; }
+      roll -= genreWeights[g] ?? 1;
+      if (roll <= 0) {
+        genre = g;
+        break;
+      }
     }
     const formats = ["film", "tv"];
     const format = formats[Math.floor(rng.next() * formats.length)] as "film" | "tv";

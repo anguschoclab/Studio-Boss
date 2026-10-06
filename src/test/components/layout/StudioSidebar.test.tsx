@@ -1,10 +1,10 @@
-import {render, screen} from "@testing-library/react";
-import {describe, it, expect, vi, beforeEach} from "vitest";
-import {StudioSidebar} from "@/components/layout/StudioSidebar";
-import {TooltipProvider} from "@/components/ui/tooltip";
-import {useGameStore} from "@/store/gameStore";
-import {useUIStore} from "@/store/uiStore";
-import {createRootRoute, createRouter, RouterProvider} from "@tanstack/react-router";
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { StudioSidebar } from "@/components/layout/StudioSidebar";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
+import { createRootRoute, createRouter, RouterProvider } from "@tanstack/react-router";
 import React from "react";
 
 // Mock ResizeObserver
@@ -145,7 +145,7 @@ describe("StudioSidebar", () => {
 
       renderSidebar();
       // The collapse/expand button should have an aria-label
-      const collapseBtn = document.querySelector('button[aria-label]');
+      const collapseBtn = document.querySelector("button[aria-label]");
       expect(collapseBtn).toBeInTheDocument();
     });
 
@@ -167,10 +167,8 @@ describe("StudioSidebar", () => {
 
       renderSidebar();
       // Chevron icons (decorative) should have aria-hidden="true"
-      const svgs = document.querySelectorAll('svg');
-      const chevronSvgs = Array.from(svgs).filter((s) =>
-        s.closest('button[aria-label]')
-      );
+      const svgs = document.querySelectorAll("svg");
+      const chevronSvgs = Array.from(svgs).filter((s) => s.closest("button[aria-label]"));
       // At least one chevron should exist and have aria-hidden
       if (chevronSvgs.length > 0) {
         expect(chevronSvgs[0].getAttribute("aria-hidden")).toBe("true");

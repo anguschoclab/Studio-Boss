@@ -1,9 +1,9 @@
 import React from "react";
-import {Search, X} from "lucide-react";
-import {cn} from "@/lib/utils";
+import { Search, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-import {Button} from "@/components/ui/button";
-import {Stack, HorizontalStack} from "@/components/layout/Stack";
+import { Button } from "@/components/ui/button";
+import { Stack, HorizontalStack } from "@/components/layout/Stack";
 
 interface FilterOption {
   value: string;
@@ -81,7 +81,10 @@ export const FilterBar: React.FC<FilterBarProps> = ({
       {/* Search */}
       {onSearchChange && (
         <div className="relative flex-1 min-w-[200px] group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/20 group-focus-within:text-primary transition-colors pointer-events-none" aria-hidden="true" />
+          <Search
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/20 group-focus-within:text-primary transition-colors pointer-events-none"
+            aria-hidden="true"
+          />
           <input
             type="text"
             value={searchValue || ""}

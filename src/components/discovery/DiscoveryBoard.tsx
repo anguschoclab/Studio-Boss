@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import {useGameStore} from "@/store/gameStore";
-import {useUIStore} from "@/store/uiStore";
-import {Button} from "@/components/ui/button";
-import {Plus, Search, Newspaper, Sparkles, TrendingUp} from "lucide-react";
-import {Opportunity} from "@/engine/types";
-import {selectOpportunities} from "@/store/selectors";
-import {TrendBoard} from "@/components/trends/TrendBoard";
-import {NewsFeed} from "@/components/news/NewsFeed";
-import {ScrollArea} from "@/components/ui/scroll-area";
-import {Input} from "@/components/ui/input";
-import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";
-import {LiveAuctionDashboard} from "@/components/talent/LiveAuctionDashboard";
-import {OpportunityCard} from "./OpportunityCard";
+import { useGameStore } from "@/store/gameStore";
+import { useUIStore } from "@/store/uiStore";
+import { Button } from "@/components/ui/button";
+import { Plus, Search, Newspaper, Sparkles, TrendingUp } from "lucide-react";
+import { Opportunity } from "@/engine/types";
+import { selectOpportunities } from "@/store/selectors";
+import { TrendBoard } from "@/components/trends/TrendBoard";
+import { NewsFeed } from "@/components/news/NewsFeed";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Input } from "@/components/ui/input";
+import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
+import { LiveAuctionDashboard } from "@/components/talent/LiveAuctionDashboard";
+import { OpportunityCard } from "./OpportunityCard";
 
 const DiscoveryHeader = ({ openCreateProject }: { openCreateProject: () => void }) => (
   <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 bg-white/[0.02] p-10 rounded-none border border-white/5 backdrop-blur-3xl relative overflow-hidden group shadow-2xl">
@@ -37,7 +37,10 @@ const DiscoveryHeader = ({ openCreateProject }: { openCreateProject: () => void 
 
     <div className="flex items-center gap-6 relative z-10">
       <div className="relative w-64 hidden xl:block">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/20" aria-hidden="true" />
+        <Search
+          className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/20"
+          aria-hidden="true"
+        />
         <TooltipWrapper tooltip="FILTER LISTINGS BY PROPERTY NAME, WRITER, OR GENRE" side="bottom">
           <Input
             disabled

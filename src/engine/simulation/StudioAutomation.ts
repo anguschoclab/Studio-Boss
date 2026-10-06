@@ -1,13 +1,13 @@
-import {GameState, StateImpact, Project, RivalStudio} from "@/engine/types";
-import {BudgetTierKey} from "@/engine/types/project.types";
-import {RandomGenerator} from "../utils/rng";
-import {calculateOpeningWeekend} from "../systems/releaseSimulation";
-import {StreamingViewershipTracker} from "../systems/production/StreamingViewershipTracker";
-import {StudioArchetype, AI_ARCHETYPES} from "../data/aiArchetypes";
-import {getBudgetInflation} from "../systems/industry/MacroCycle";
-import {isPlayerOwner, getPlayerId} from "../utils/ownership";
-import {HeadlessController} from "./HeadlessController";
-import {buildFatigueAwareGenreWeights} from "../systems/rivals/rivalProduction";
+import { GameState, StateImpact, Project, RivalStudio } from "@/engine/types";
+import { BudgetTierKey } from "@/engine/types/project.types";
+import { RandomGenerator } from "../utils/rng";
+import { calculateOpeningWeekend } from "../systems/releaseSimulation";
+import { StreamingViewershipTracker } from "../systems/production/StreamingViewershipTracker";
+import { StudioArchetype, AI_ARCHETYPES } from "../data/aiArchetypes";
+import { getBudgetInflation } from "../systems/industry/MacroCycle";
+import { isPlayerOwner, getPlayerId } from "../utils/ownership";
+import { HeadlessController } from "./HeadlessController";
+import { buildFatigueAwareGenreWeights } from "../systems/rivals/rivalProduction";
 
 export class StudioAutomation {
   /**
@@ -16,7 +16,8 @@ export class StudioAutomation {
    */
   private static getRivalArchetype(rival: RivalStudio): StudioArchetype {
     const archetypeId =
-      rival.archetypeId || ("behaviorId" in rival ? (rival.behaviorId as string | undefined) : undefined);
+      rival.archetypeId ||
+      ("behaviorId" in rival ? (rival.behaviorId as string | undefined) : undefined);
     if (archetypeId) {
       const archetype = AI_ARCHETYPES.find((a) => a.id === archetypeId);
       if (archetype) return archetype;
@@ -47,7 +48,7 @@ export class StudioAutomation {
         (!rival.ownedPlatforms || rival.ownedPlatforms.length === 0)
       ) {
         const archetype = this.getRivalArchetype(rival);
-      if (rng.next() < 0.05 * archetype.ma_willingness) {
+        if (rng.next() < 0.05 * archetype.ma_willingness) {
           this.triggerPlatformLaunch(rival, state, rng, impacts);
         }
       }
@@ -329,7 +330,11 @@ export class StudioAutomation {
     for (const g of baseGenres) {
       relevantWeights[g] = genreWeights[g] ?? 1;
     }
-    const genre = this.weightedRandom(baseGenres, baseGenres.map((g) => relevantWeights[g]), rng);
+    const genre = this.weightedRandom(
+      baseGenres,
+      baseGenres.map((g) => relevantWeights[g]),
+      rng
+    );
 
     const budgetTiers: BudgetTierKey[] = ["indie", "low", "mid", "high", "blockbuster"];
     const weights = budgetTiers.map((tier) => archetype.budget_tier_weights[tier]);
@@ -426,7 +431,6 @@ export class StudioAutomation {
     return { update, subImpacts };
   }
 
-   
   private static createUpdateImpact(
     _studioId: string,
     projectId: string,

@@ -1,0 +1,18 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+dist-ssr
+dev-dist
+release
+
+# Test/coverage output
+coverage
+playwright-report
+test-results
+sim-reports
+
+# Misc
+*.log
+bun.lock

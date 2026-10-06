@@ -1,14 +1,14 @@
 import React from "react";
-import {Card, CardContent} from "@/components/ui/card";
-import {Button} from "@/components/ui/button";
-import {TooltipWrapper} from "@/components/ui/tooltip-wrapper";
-import {useGameStore} from "@/store/gameStore";
-import {selectFatigueForAsset} from "@/store/selectors";
-import {TrendingUp, DollarSign, History, Globe, Lock} from "lucide-react";
-import {formatMoney} from "@/engine/utils";
-import {IPAsset} from "@/engine/types";
-import {SYNDICATION_TIERS} from "@/engine/data/syndicationConfig";
-import {cn} from "@/lib/utils";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
+import { useGameStore } from "@/store/gameStore";
+import { selectFatigueForAsset } from "@/store/selectors";
+import { TrendingUp, DollarSign, History, Globe, Lock } from "lucide-react";
+import { formatMoney } from "@/engine/utils";
+import { IPAsset } from "@/engine/types";
+import { SYNDICATION_TIERS } from "@/engine/data/syndicationConfig";
+import { cn } from "@/lib/utils";
 
 interface IPAssetTagsProps {
   asset: IPAsset;
@@ -158,7 +158,13 @@ interface IPAssetFooterProps {
   fatigue?: number;
 }
 
-const IPAssetFooter = ({ asset, isMarket, acquireAndRebootIP, developFromOwnedIP, fatigue }: IPAssetFooterProps) => {
+const IPAssetFooter = ({
+  asset,
+  isMarket,
+  acquireAndRebootIP,
+  developFromOwnedIP,
+  fatigue,
+}: IPAssetFooterProps) => {
   const fatigueColorClass =
     (fatigue ?? 0) > 60
       ? "text-rose-400 border-rose-500/30 bg-rose-500/5"

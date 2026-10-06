@@ -1,6 +1,6 @@
-import {describe, it, expect} from "vitest";
-import {evaluatePlayerAcquisition, evaluateAcquisitionTarget} from "@/engine/systems/mergers";
-import {createMockGameState, createMockRival} from "./generators/mockFactory";
+import { describe, it, expect } from "vitest";
+import { evaluatePlayerAcquisition, evaluateAcquisitionTarget } from "@/engine/systems/mergers";
+import { createMockGameState, createMockRival } from "./generators/mockFactory";
 
 function makeState(opts: {
   playerCash?: number;
@@ -17,7 +17,14 @@ function makeState(opts: {
   const playerPrestige = opts.playerPrestige ?? 50;
   const rivals: Record<string, ReturnType<typeof createMockRival>> = {};
   for (const r of opts.rivals ?? [
-    { id: "r1", name: "Target Co", cash: 50_000_000, strength: 30, prestige: 30, archetype: "mid-tier" },
+    {
+      id: "r1",
+      name: "Target Co",
+      cash: 50_000_000,
+      strength: 30,
+      prestige: 30,
+      archetype: "mid-tier",
+    },
   ]) {
     rivals[r.id] = createMockRival({
       id: r.id,

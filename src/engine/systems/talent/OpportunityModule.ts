@@ -1,7 +1,7 @@
-import {GameState, Opportunity} from "@/engine/types";
-import {RandomGenerator} from "../../utils/rng";
-import {generateOpportunity} from "../../generators/opportunities";
-import {getContractsByTalentId} from "../../utils";
+import { GameState, Opportunity } from "@/engine/types";
+import { RandomGenerator } from "../../utils/rng";
+import { generateOpportunity } from "../../generators/opportunities";
+import { getContractsByTalentId } from "../../utils";
 
 export function advanceOpportunityLifecycle(
   state: GameState,
@@ -54,17 +54,11 @@ export function advanceOpportunityLifecycle(
   }
 
   if (rng.next() < 0.2) {
-    tryAddOpp(
-      generateOpportunity(),
-      `A new script is doing the rounds in town.`
-    );
+    tryAddOpp(generateOpportunity(), `A new script is doing the rounds in town.`);
   }
 
   if (rng.next() < 0.15) {
-    tryAddOpp(
-      generateOpportunity(),
-      `New opportunities have hit the market!`
-    );
+    tryAddOpp(generateOpportunity(), `New opportunities have hit the market!`);
   }
 
   if (updatedOpportunities.length < 4 && rng.next() < 0.3) {

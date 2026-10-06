@@ -1,7 +1,16 @@
-import {pick} from "../utils";
-import {BrandSystem} from "./BrandSystem";
-import {ProjectFormat} from "@/engine/types";
-import {MOTTOS, MALE_FIRST_NAMES, FEMALE_FIRST_NAMES, LAST_NAMES, DICTIONARIES, PREFIX_PATTERNS, CONNECTORS, LOCATIONS} from "../data/names.data";
+import { pick } from "../utils";
+import { BrandSystem } from "./BrandSystem";
+import { ProjectFormat } from "@/engine/types";
+import {
+  MOTTOS,
+  MALE_FIRST_NAMES,
+  FEMALE_FIRST_NAMES,
+  LAST_NAMES,
+  DICTIONARIES,
+  PREFIX_PATTERNS,
+  CONNECTORS,
+  LOCATIONS,
+} from "../data/names.data";
 
 export function generateStudioName(existing: string[]): string {
   const existingSet = new Set(existing);
@@ -162,7 +171,6 @@ const REGIONAL_NAMES: Record<string, { firstM: string[]; firstF: string[]; last:
   },
 };
 
- 
 export function generateDemographicName(
   gender: "MALE" | "FEMALE" | "NON_BINARY",
   country: string,

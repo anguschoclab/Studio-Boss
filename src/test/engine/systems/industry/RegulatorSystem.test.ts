@@ -1,6 +1,6 @@
-import {describe, it, expect} from "vitest";
-import {RegulatorSystem} from "@/engine/systems/industry/RegulatorSystem";
-import {GameState} from "@/engine/types";
+import { describe, it, expect } from "vitest";
+import { RegulatorSystem } from "@/engine/systems/industry/RegulatorSystem";
+import { GameState } from "@/engine/types";
 
 function makeState(overrides: {
   playerPrestige?: number;
@@ -14,7 +14,11 @@ function makeState(overrides: {
   }
   return {
     week: 10,
-    studio: { id: "PLAYER", name: overrides.studioName ?? "Test Studio", prestige: overrides.playerPrestige ?? 50 },
+    studio: {
+      id: "PLAYER",
+      name: overrides.studioName ?? "Test Studio",
+      prestige: overrides.playerPrestige ?? 50,
+    },
     entities: { rivals },
     market: { buyers: overrides.buyers ?? [], opportunities: [] },
     industry: {},

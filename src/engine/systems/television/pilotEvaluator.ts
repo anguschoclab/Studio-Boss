@@ -1,5 +1,5 @@
-import {GameState, StateImpact} from "@/engine/types";
-import {RandomGenerator} from "@/engine/utils/rng";
+import { GameState, StateImpact } from "@/engine/types";
+import { RandomGenerator } from "@/engine/utils/rng";
 
 const PILOT_MAX_WEEKS = 2;
 const PILOT_BURN_RATE = 0.3;
