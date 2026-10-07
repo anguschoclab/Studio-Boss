@@ -69,9 +69,18 @@ export const RivalRevenueCalculator = {
 
   calculateAnnualRevenue(rival: RivalStudio, currentWeek: number) {
     const history = rival.revenueHistory || [];
-    const yearHistory = history.filter((h) => h.week <= currentWeek && currentWeek - h.week <= 52);
-    const boxOfficeTotal = yearHistory.reduce((sum, h) => sum + h.boxOffice, 0);
-    const annualRevenue = yearHistory.reduce((sum, h) => sum + h.revenue, 0);
+    let boxOfficeTotal = 0;
+    let annualRevenue = 0;
+
+    // ⚡ Bolt Optimization: Replaced .filter() and double .reduce() with a single loop
+    for (let i = 0; i < history.length; i++) {
+      const h = history[i];
+      if (h.week <= currentWeek && currentWeek - h.week <= 52) {
+        boxOfficeTotal += h.boxOffice;
+        annualRevenue += h.revenue;
+      }
+    }
+
     return { boxOfficeTotal, annualRevenue };
   },
 
