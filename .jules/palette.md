@@ -1,0 +1,3 @@
+## 2024-10-08 - Add aria-hidden to decorative icons in Calendar
+**Learning:** In UI components like Calendars, purely decorative icons acting as visual-only navigation controls (e.g., `<ChevronLeft>`, `<ChevronRight>`) must include `aria-hidden="true"` to prevent redundant screen reader announcements when the parent element already manages the ARIA state.
+**Action:** Always ensure `aria-hidden="true"` is explicitly added to decorative SVG icons within Shadcn or Radix UI wrapper components to prevent confusing accessibility experiences.
