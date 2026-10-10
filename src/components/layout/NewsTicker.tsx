@@ -82,7 +82,7 @@ export const NewsTicker: React.FC = () => {
                   className={`flex items-center gap-6 group/item hover:opacity-100 transition-opacity focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm ${isClickable(item) ? "cursor-pointer" : "cursor-pointer"}`}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon className={cn("h-3.5 w-3.5", config.color)} />
+                    <Icon className={cn("h-3.5 w-3.5", config.color)} aria-hidden="true" />
                     <span className="text-[11px] font-black text-muted-foreground/30 group-hover/item:text-foreground transition-all duration-700 italic tracking-tight">
                       <span
                         className={cn(
