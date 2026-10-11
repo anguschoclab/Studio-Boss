@@ -79,7 +79,13 @@ export function evaluateVaultSynergy(activeProjects: Project[], vault: IPAsset[]
   if (!vault || vault.length < 2) return vault || [];
 
   // Calculate synergy based on franchise density
-  const franchiseGroups = new Set(vault.map((v) => v.franchiseId).filter(Boolean));
+  // ⚡ Bolt Optimization: Replaced array.map().filter() with a single-pass for loop to avoid intermediate array allocations and GC pressure
+  const franchiseGroups = new Set<string>();
+  for (let i = 0; i < vault.length; i++) {
+    if (vault[i].franchiseId) {
+      franchiseGroups.add(vault[i].franchiseId as string);
+    }
+  }
 
   // Base 1.0 + 5% per unique franchise + 1% per unique asset
   const multiplier = 1.0 + franchiseGroups.size * 0.05 + vault.length * 0.01;

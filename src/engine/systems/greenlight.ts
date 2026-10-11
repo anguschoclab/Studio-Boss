@@ -28,9 +28,14 @@ export function roleCompletenessScore(
 ): number {
   const list = Array.isArray(contracts) ? contracts : Object.values(contracts);
   const projectContracts = list.filter((c) => c.projectId === projectId);
-  const attachedRoles = new Set(
-    projectContracts.map((c) => (talents[c.talentId]?.role ?? "").toLowerCase()).filter(Boolean)
-  );
+  // ⚡ Bolt Optimization: Replaced array.map().filter() with a single-pass for loop to avoid intermediate array allocations and GC pressure
+  const attachedRoles = new Set<string>();
+  for (let i = 0; i < projectContracts.length; i++) {
+    const role = (talents[projectContracts[i].talentId]?.role ?? "").toLowerCase();
+    if (role) {
+      attachedRoles.add(role);
+    }
+  }
 
   let filled = 0;
   if (attachedRoles.has("director")) filled += 1;
