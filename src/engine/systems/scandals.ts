@@ -103,13 +103,29 @@ export function advanceScandals(state: GameState): StateImpact[] {
   const currentScandals = state.industry.scandals || [];
   const activeScandalTalent = new Set<string>();
 
-  // Collect updates for scandals that are continuing
-  const scandalUpdates = currentScandals
-    .filter((s) => s.weeksRemaining > 1)
-    .map((s) => ({
-      scandalId: s.id,
-      update: { weeksRemaining: s.weeksRemaining - 1 },
-    }));
+  // ⚡ Bolt Optimization: Replace multiple .filter(), .map(), and .forEach() passes with a single O(N) loop
+  // to avoid redundant iterations and intermediate array allocations during the weekly tick.
+  const scandalUpdates: { scandalId: string; update: { weeksRemaining: number } }[] = [];
+  const removedImpacts: StateImpact[] = [];
+
+  for (let i = 0; i < currentScandals.length; i++) {
+    const s = currentScandals[i];
+
+    // Active scandals for project penalties include both continuing AND just finishing this week
+    activeScandalTalent.add(s.talentId);
+
+    if (s.weeksRemaining > 1) {
+      scandalUpdates.push({
+        scandalId: s.id,
+        update: { weeksRemaining: s.weeksRemaining - 1 },
+      });
+    } else {
+      removedImpacts.push({
+        type: "SCANDAL_REMOVED",
+        payload: { scandalId: s.id },
+      });
+    }
+  }
 
   if (scandalUpdates.length > 0) {
     impacts.push({
@@ -118,19 +134,9 @@ export function advanceScandals(state: GameState): StateImpact[] {
     });
   }
 
-  // Remove scandals that have finished their duration
-  const expiredScandals = currentScandals.filter((s) => s.weeksRemaining <= 1);
-  expiredScandals.forEach((s) => {
-    impacts.push({
-      type: "SCANDAL_REMOVED",
-      payload: { scandalId: s.id },
-    });
-  });
-
-  // Active scandals for project penalties include both continuing AND just finishing this week
-  currentScandals.forEach((s) => {
-    activeScandalTalent.add(s.talentId);
-  });
+  for (let i = 0; i < removedImpacts.length; i++) {
+    impacts.push(removedImpacts[i]);
+  }
 
   const contracts = state.studio.internal.contracts || [];
   const penalizedProjectIds = new Set<string>();
