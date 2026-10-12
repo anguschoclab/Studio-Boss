@@ -156,6 +156,13 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({
                       variant="outline"
                       onClick={() => handleBid(btn.amount)}
                       disabled={isExpired || (gameState?.finance.cash || 0) < btn.amount}
+                      tooltip={
+                        isExpired
+                          ? "Auction has ended"
+                          : (gameState?.finance.cash || 0) < btn.amount
+                            ? "Insufficient funds"
+                            : undefined
+                      }
                       className={cn(
                         "h-12 flex flex-col items-center justify-center gap-0.5 border-white/5 group/btn transition-all active:scale-95",
                         btn.color
