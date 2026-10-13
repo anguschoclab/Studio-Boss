@@ -29,15 +29,24 @@ export function calculateReviewScore(
   let baseScore = project.quality || project.momentum || randRange(40, 70);
 
   // 1. Talent Prestige Bonus & Director Modifier
+  // ⚡ Bolt: Replaced multiple array traversals (.reduce, .find) with a single for loop pass
   if (attachedTalent.length > 0) {
-    const talentBonus =
-      (attachedTalent.reduce((sum, t) => sum + t.prestige, 0) / attachedTalent.length) * 0.3;
+    let prestigeSum = 0;
+    let director = undefined;
+
+    for (let i = 0; i < attachedTalent.length; i++) {
+      const t = attachedTalent[i];
+      prestigeSum += t.prestige;
+
+      if (!director && (t.roles?.includes("director") || t.role === "director")) {
+        director = t;
+      }
+    }
+
+    const talentBonus = (prestigeSum / attachedTalent.length) * 0.3;
     baseScore += talentBonus;
 
     // Director Modifier
-    const director = attachedTalent.find(
-      (t) => t.roles?.includes("director") || t.role === "director"
-    );
     if (director) {
       baseScore += (director.prestige - 50) / 5;
     }
@@ -98,8 +107,12 @@ export function calculateOpeningWeekend(
     } as MarketingCampaign);
 
   // 1. Calculate Base Potential (based on Buzz and Talent Draw)
-  const talentDraw =
-    attachedTalent.reduce((sum, t) => sum + t.draw, 0) / (attachedTalent.length || 1);
+  // ⚡ Bolt: Replaced .reduce() callback iteration with direct for loop
+  let drawSum = 0;
+  for (let i = 0; i < attachedTalent.length; i++) {
+    drawSum += attachedTalent[i].draw;
+  }
+  const talentDraw = drawSum / (attachedTalent.length || 1);
   const buzzFactor = project.buzz / 50;
   const prestigeFactor = 0.8 + studioPrestige / 200;
 
