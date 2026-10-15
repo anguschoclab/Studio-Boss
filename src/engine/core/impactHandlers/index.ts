@@ -277,6 +277,7 @@ export function applySingleImpact(state: GameState, impact: StateImpact): GameSt
             projectId: e.projectId,
             rivalId: e.rivalId,
             buyerId: e.buyerId,
+            week: e.week,
           },
         });
       });
@@ -405,6 +406,61 @@ export function applySingleImpact(state: GameState, impact: StateImpact): GameSt
         payload: {
           scandalUpdates: impact.scandalUpdates,
         },
+      });
+    }
+    if (impact.talentUpdates) {
+      impact.talentUpdates.forEach((u) => {
+        newState = applySingleImpact(newState, { type: "TALENT_UPDATED", payload: u });
+      });
+    }
+    if (impact.buyerUpdates) {
+      impact.buyerUpdates.forEach((u) => {
+        newState = applySingleImpact(newState, { type: "BUYER_UPDATED", payload: u });
+      });
+    }
+    if (impact.newRumors) {
+      newState = applySingleImpact(newState, {
+        type: "INDUSTRY_RUMORS_UPDATED",
+        payload: { rumors: impact.newRumors },
+      });
+    }
+    if (impact.newFestivalSubmissions) {
+      newState = {
+        ...newState,
+        industry: {
+          ...newState.industry,
+          festivalSubmissions: impact.newFestivalSubmissions,
+        },
+      };
+    }
+    if (impact.newScandals && impact.newScandals.length > 0) {
+      newState = {
+        ...newState,
+        industry: {
+          ...newState.industry,
+          scandals: [...(newState.industry.scandals || []), ...impact.newScandals],
+        },
+      };
+    }
+    if (impact.newOpportunities) {
+      newState = {
+        ...newState,
+        market: {
+          ...newState.market,
+          opportunities: impact.newOpportunities,
+        },
+      };
+    }
+    if (impact.newTrends) {
+      newState = applySingleImpact(newState, {
+        type: "TRENDS_UPDATED",
+        payload: { trends: impact.newTrends },
+      });
+    }
+    if (impact.newMarketEvents) {
+      newState = applySingleImpact(newState, {
+        type: "MARKET_EVENT_UPDATED",
+        payload: { events: impact.newMarketEvents },
       });
     }
     return newState;
