@@ -142,13 +142,9 @@ describe("ProjectDetailModal", () => {
       const state = {
         gameState: {
           studio: {
-            internal: {
-              projects: { [mockProject.id]: mockProject },
-              contracts: [],
             },
-          },
           entities: {
-            projects: {},
+            projects: { [mockProject.id]: mockProject },
             releasedProjectIds: [],
             talents: {},
             contracts: {},
@@ -183,13 +179,9 @@ describe("ProjectDetailModal", () => {
       const state = {
         gameState: {
           studio: {
-            internal: {
-              projects: { [mockProject.id]: mockProject },
-              contracts: [],
             },
-          },
           entities: {
-            projects: {},
+            projects: { [mockProject.id]: mockProject },
             releasedProjectIds: [],
             talents: {},
             contracts: {},
@@ -228,13 +220,9 @@ describe("ProjectDetailModal", () => {
       const state = {
         gameState: {
           studio: {
-            internal: {
-              projects: { [mockProject.id]: mockProject },
-              contracts: [],
             },
-          },
           entities: {
-            projects: {},
+            projects: { [mockProject.id]: mockProject },
             releasedProjectIds: [],
             talents: {},
             contracts: {},
@@ -283,13 +271,9 @@ describe("ProjectDetailModal", () => {
       const state = {
         gameState: {
           studio: {
-            internal: {
-              projects: { [mockProject.id]: mockProject },
-              contracts: [],
             },
-          },
           entities: {
-            projects: {},
+            projects: { [mockProject.id]: mockProject },
             releasedProjectIds: [],
             talents: {},
             contracts: {},
@@ -390,13 +374,9 @@ describe("ProjectDetailModal", () => {
       const state = {
         gameState: {
           studio: {
-            internal: {
-              projects: { [mockProject.id]: mockProject },
-              contracts: [],
             },
-          },
           entities: {
-            projects: {},
+            projects: { [mockProject.id]: mockProject },
             releasedProjectIds: [],
             talents: {},
             contracts: {},

@@ -51,7 +51,7 @@ export const NewsTicker: React.FC = () => {
         />
         <span className="text-[10px] font-black text-muted-foreground/20 italic tracking-[0.2em] uppercase truncate">
           <span className="text-primary font-black mr-4">THE TRADES:</span>
-          ESTABLISHING UPLINK TO INDUSTRY DATABASE...
+          Loading industry headlines...
         </span>
       </div>
     );

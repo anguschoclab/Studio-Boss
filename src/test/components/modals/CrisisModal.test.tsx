@@ -60,10 +60,8 @@ describe("CrisisModal", () => {
   } as any;
 
   const mockGameState = {
-    studio: {
-      internal: {
-        projects: { [mockProject.id]: mockProject },
-      },
+    entities: {
+      projects: { [mockProject.id]: mockProject },
     },
   } as any;
 
@@ -158,10 +156,8 @@ describe("CrisisModal", () => {
     (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          studio: {
-            internal: {
-              projects: { [projectWithoutCrisis.id]: projectWithoutCrisis },
-            },
+          entities: {
+            projects: { [projectWithoutCrisis.id]: projectWithoutCrisis },
           },
         },
         resolveProjectCrisis: mockResolveProjectCrisis,

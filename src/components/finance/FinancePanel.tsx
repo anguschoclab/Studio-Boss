@@ -184,7 +184,7 @@ export const FinancePanel = () => {
                 STUDIO LEDGER
               </SheetTitle>
               <SheetDescription className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/20 italic mt-6">
-                HISTORICAL BENCHMARK DATA // SECURE EXECUTIVE ACCESS
+                HISTORICAL BENCHMARK DATA
               </SheetDescription>
             </SheetHeader>
             <div className="mt-16 space-y-10 overflow-y-auto max-h-[calc(100vh-350px)] pr-8 custom-scrollbar">

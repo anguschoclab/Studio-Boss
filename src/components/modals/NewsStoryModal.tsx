@@ -95,7 +95,7 @@ export const NewsStoryModal: React.FC<NewsStoryModalProps> = ({ headline, open, 
               </div>
               <div className="h-4 w-px bg-white/10" />
               <span className="text-[10px] font-black font-mono text-muted-foreground/40 italic tracking-widest uppercase">
-                CYCLE W{headline.week} UPLINK
+                WEEK {headline.week}
               </span>
             </div>
             <Newspaper className="h-5 w-5 text-primary/20" />
@@ -108,7 +108,7 @@ export const NewsStoryModal: React.FC<NewsStoryModalProps> = ({ headline, open, 
           <div className="flex items-center gap-3">
             <div className="w-2 h-2 bg-primary rotate-45 shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
             <p className="text-[11px] font-black uppercase tracking-[0.3em] text-primary italic">
-              THE TRADES // EXCLUSIVE INTEL STREAM
+              THE TRADES // INDUSTRY REPORT
             </p>
           </div>
         </div>
@@ -131,7 +131,7 @@ export const NewsStoryModal: React.FC<NewsStoryModalProps> = ({ headline, open, 
             <div className="pt-8 border-t border-white/5 flex items-center gap-4">
               <Terminal className="h-4 w-4 text-primary/20" />
               <p className="text-[10px] text-muted-foreground/20 italic uppercase tracking-[0.3em] font-black">
-                STATUS: DATA UPLINK ONGOING... REMAIN STATIONARY FOR UPDATES...
+                END OF REPORT
               </p>
             </div>
           </div>

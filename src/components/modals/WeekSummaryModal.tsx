@@ -98,7 +98,7 @@ export const WeekSummaryModal = () => {
                   {isYearEnd ? "ANNUAL FISCAL REPORT" : `CYCLE W${toWeek} REPORT`}
                 </DialogTitle>
                 <div className="px-4 py-2 bg-white/5 border border-white/10 text-[10px] font-black tracking-[0.4em] uppercase italic text-muted-foreground/40">
-                  {isYearEnd ? "YEAR COMPLETED" : "UPLINK STABLE"}
+                  {isYearEnd ? "YEAR COMPLETED" : "WEEK COMPLETE"}
                 </div>
               </div>
             </DialogHeader>

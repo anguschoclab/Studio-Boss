@@ -84,7 +84,7 @@ export const GameOverModal = () => {
 
           <div className="max-w-2xl mx-auto space-y-4">
             <p className="text-[11px] font-black uppercase tracking-[0.5em] text-rose-500/60 italic">
-              CRITICAL FISCAL FAILURE // UPLINK OFFLINE
+              CRITICAL FISCAL FAILURE
             </p>
             <p className="text-sm font-medium text-muted-foreground/40 italic leading-relaxed uppercase tracking-tight">
               THE CREDITORS HAVE SEIZED ALL ASSETS. PRODUCTION SLATE DISSOLVED. THE HOLLYWOOD DREAM

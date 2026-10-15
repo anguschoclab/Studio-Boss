@@ -31,6 +31,7 @@ function seed() {
           strength: 30,
           prestige: 30,
           archetype: "mid-tier",
+          isAcquirable: true,
         }),
       },
       contractsByProjectId: {},

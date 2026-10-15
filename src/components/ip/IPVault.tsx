@@ -158,7 +158,7 @@ const EmptyVault = ({ message }: { message: string }) => (
     </div>
     <div className="space-y-4 px-12">
       <p className="text-sm font-black text-muted-foreground uppercase tracking-[0.6em] italic">
-        SECURE VAULT EMPTY
+        VAULT EMPTY
       </p>
       <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.3em] max-w-[400px] mx-auto leading-relaxed italic">
         {message}
