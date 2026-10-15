@@ -6,8 +6,13 @@ import { useGameStore } from "@/store/gameStore";
 import { Opportunity } from "@/engine/types";
 
 vi.mock("@/components/ui/button", () => ({
-  Button: ({ children, onClick, disabled, ..._rest }: any) => (
-    <button onClick={onClick} disabled={disabled} data-testid="button">
+  Button: ({ children, onClick, disabled, tooltip, ..._rest }: any) => (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      data-testid="button"
+      data-tooltip={tooltip}
+    >
       {children}
     </button>
   ),
@@ -95,5 +100,47 @@ describe("talent/LiveAuctionDashboard — currentMaxBid", () => {
     });
     render(<LiveAuctionDashboard opportunity={opp} onClose={vi.fn()} />);
     expect(screen.getByText("$20,000,000")).toBeInTheDocument();
+  });
+});
+
+describe("talent/LiveAuctionDashboard — disabled bid tooltip", () => {
+  const bidButton = () => screen.getByText("Place Binding Counter-Bid").closest("button")!;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    useGameStore.setState({
+      gameState: { finance: { cash: 100_000_000 } },
+      placeBid: vi.fn(),
+    } as any);
+  });
+
+  it("explains when the proposed bid does not exceed the current highest bid", () => {
+    // getLiveCounterBid mocked to 1.1M; currentMaxBid = 15M → playerBid <= max
+    const opp = makeOpp({
+      costToAcquire: 1_000_000,
+      bids: { "rival-1": { amount: 15_000_000, terms: "standard" } },
+    });
+    render(<LiveAuctionDashboard opportunity={opp} onClose={vi.fn()} />);
+    expect(bidButton()).toBeDisabled();
+    expect(bidButton().getAttribute("data-tooltip")).toMatch(/exceed/i);
+  });
+
+  it("explains insufficient funds when cash < proposed bid", () => {
+    useGameStore.setState({
+      gameState: { finance: { cash: 100 } },
+      placeBid: vi.fn(),
+    } as any);
+    const opp = makeOpp({ costToAcquire: 1_000_000, bids: {} });
+    render(<LiveAuctionDashboard opportunity={opp} onClose={vi.fn()} />);
+    expect(bidButton()).toBeDisabled();
+    expect(bidButton().getAttribute("data-tooltip")).toMatch(/insufficient/i);
+  });
+
+  it("offers no blocking tooltip when the bid is legal", () => {
+    // recommendedBid 1.1M > costToAcquire 1M, cash 100M → enabled
+    const opp = makeOpp({ costToAcquire: 1_000_000, bids: {} });
+    render(<LiveAuctionDashboard opportunity={opp} onClose={vi.fn()} />);
+    expect(bidButton()).not.toBeDisabled();
+    expect(bidButton().getAttribute("data-tooltip")).toBeNull();
   });
 });
