@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { GameState, WeekSummary, ArchetypeKey } from "@/engine/types";
 import { initializeGame } from "@/engine/core/gameInit";
-import { advanceWeek } from "@/engine/core/weekAdvance";
+import { advanceWeek, resetAdvanceWeekCache } from "@/engine/core/weekAdvance";
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from "@/persistence/saveLoad";
 import { toast } from "sonner";
 import { useUIStore, ModalType, ModalPayload } from "./uiStore";
@@ -56,21 +56,40 @@ export interface GameStore
 
 // The Tech Supervisor: Background autosave — coalesced to the latest queued state.
 // Consecutive queued autosaves all target slot 0, so only the newest matters.
-let pendingAutosave: GameState | null = null;
+// `autosaveEpoch` identifies the active game session; bumping it on
+// newGame/loadFromSlot/clearGame invalidates every queued write so a stale
+// autosave can never overwrite a freshly started or loaded game.
+let autosaveEpoch = 0;
+let pendingAutosave: { state: GameState; epoch: number } | null = null;
 let isSaving = false;
-const processSaveQueue = async () => {
+let saveRun: Promise<void> = Promise.resolve();
+const processSaveQueue = () => {
   if (isSaving) return;
   isSaving = true;
-  while (pendingAutosave) {
-    const stateToSave = pendingAutosave;
-    pendingAutosave = null;
+  saveRun = (async () => {
     try {
-      await saveGame(0, stateToSave);
-    } catch (err) {
-      console.error("[GameStore] Background autosave failed:", err);
+      while (pendingAutosave) {
+        const { state: stateToSave, epoch } = pendingAutosave;
+        pendingAutosave = null;
+        if (epoch !== autosaveEpoch) continue; // superseded — drop stale save
+        try {
+          await saveGame(0, stateToSave);
+        } catch (err) {
+          console.error("[GameStore] Background autosave failed:", err);
+        }
+      }
+    } finally {
+      isSaving = false;
     }
-  }
-  isSaving = false;
+  })();
+};
+const invalidateAutosaves = () => {
+  autosaveEpoch++;
+  pendingAutosave = null;
+};
+const queueAutosave = (stateToSave: GameState) => {
+  pendingAutosave = { state: stateToSave, epoch: autosaveEpoch };
+  processSaveQueue();
 };
 
 export const useGameStore = create<GameStore>((set, get, ...args) => ({
@@ -89,36 +108,34 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   ...createProjectEventsSlice(set, get, ...args),
 
   newGame: async (studioName, archetype) => {
+    invalidateAutosaves();
+    resetAdvanceWeekCache();
+    await saveRun; // let any in-flight stale write settle before overwriting slot 0
     const gameState = initializeGame(studioName, archetype, Date.now()); // Added seed
     await saveGame(0, gameState);
-    set({ gameState });
+    set({ gameState, snapshots: [] });
   },
 
   doAdvanceWeek: () => {
-    let summary: WeekSummary | null = null;
-    let nextState: GameState | null = null;
-    let weekImpacts: import("@/engine/types").StateImpact[] = [];
+    // Simulation runs OUTSIDE the Zustand updater — set() updaters must be pure
+    // (they can be re-invoked) and advanceWeek performs heavy sim work plus
+    // queued side effects.
+    const current = get().gameState;
+    if (!current) throw new Error("No game in progress");
+    const result = advanceWeek(current);
+    const summary = result.summary;
+    const nextState = result.newState;
+    const weekImpacts = result.impacts;
 
-    set((state) => {
-      if (!state.gameState) throw new Error("No game in progress");
-      const result = advanceWeek(state.gameState);
-      summary = result.summary;
-      nextState = result.newState;
-      weekImpacts = result.impacts;
+    if (nextState === current) throw new Error("Failed to advance week");
 
-      if (state.gameState === result.newState) return state;
+    set({ gameState: nextState });
 
-      // The Tech Supervisor: Queue the save in the decoupled while-loop worker
-      // (unless autosave is disabled via settings — Plan 4).
-      if (useSettingsStore.getState().autosaveFrequency !== "off") {
-        pendingAutosave = result.newState;
-        processSaveQueue();
-      }
-
-      return { gameState: result.newState };
-    });
-
-    if (!summary || !nextState) throw new Error("Failed to advance week");
+    // The Tech Supervisor: Queue the save in the decoupled while-loop worker
+    // (unless autosave is disabled via settings — Plan 4).
+    if (useSettingsStore.getState().autosaveFrequency !== "off") {
+      queueAutosave(nextState);
+    }
 
     // --- Modal Queue Integration ---
     // Route all MODAL_TRIGGERED impacts from the engine pipeline to the UI modal queue.
@@ -171,9 +188,12 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   },
 
   loadFromSlot: async (slot) => {
+    invalidateAutosaves();
+    resetAdvanceWeekCache();
+    await saveRun;
     const state = await loadGame(slot);
     if (state) {
-      set({ gameState: state });
+      set({ gameState: state, snapshots: [] });
       return true;
     }
     return false;
@@ -181,14 +201,19 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
 
   getSaveSlots: async () => await getSaveSlots(),
 
-  clearGame: () =>
+  clearGame: () => {
+    invalidateAutosaves();
+    resetAdvanceWeekCache();
     set((state) => {
       if (state.gameState === null) return state;
-      return { gameState: null };
-    }),
+      return { gameState: null, snapshots: [] };
+    });
+  },
 
   devAutoInit: (archetype = "major") => {
+    invalidateAutosaves();
+    resetAdvanceWeekCache();
     const gameState = initializeGame("Alpha Studios", archetype);
-    set({ gameState });
+    set({ gameState, snapshots: [] });
   },
 }));

@@ -10,7 +10,10 @@ export function calculateFranchiseEquity(
   assets: IPAsset[],
   sourceProjects?: Record<string, Project>
 ): number {
-  const baseEquity = assets.reduce((sum, a) => sum + a.baseValue * a.decayRate, 0);
+  const baseEquity = assets.reduce(
+    (sum, a) => sum + a.baseValue * (a.synergyBoost ?? 1) * a.decayRate,
+    0
+  );
 
   // 1. Shared Universe Premium
   let crossoverBonus = assets.length >= 3 ? 1.2 : 1.05;

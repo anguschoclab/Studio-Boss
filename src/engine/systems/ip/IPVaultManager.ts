@@ -15,12 +15,6 @@ export function tickIPVault(
   archetype?: import("../../data/aiArchetypes").StudioArchetype
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
-  // ⚡ The Framerate Fanatic: Eliminate intermediate array allocation
-  const activeProjects: import("../../types").Project[] = [];
-  for (const id in state.entities.projects) {
-    activeProjects.push(state.entities.projects[id]);
-  }
-
   let decayMultiplier = 1.0;
   const genreFocusBonus: Record<string, number> = {};
   let festivalPrestigeBonus = 0;
@@ -45,7 +39,7 @@ export function tickIPVault(
 
   const hasGenreBonus = hasAtLeastKeys(genreFocusBonus, 1);
 
-  const updatedVault = evaluateVaultSynergy(activeProjects, state.ip.vault).map((asset) => {
+  const updatedVault = evaluateVaultSynergy(state.ip.vault).map((asset) => {
     let updatedAsset = applyIPDecay(asset);
 
     if (decayMultiplier !== 1.0) {

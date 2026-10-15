@@ -119,6 +119,8 @@ export interface IPAsset {
   title: string;
   franchiseId?: string; // New field for Shared Universe grouping
   baseValue: number; // Based on box office / ratings success
+  /** Non-compounding franchise-density multiplier recomputed each tick; applied at consume-time alongside baseValue. */
+  synergyBoost?: number;
   decayRate: number; // Drops every week
   merchandisingMultiplier: number;
   syndicationStatus: "NONE" | "SYNDICATED";

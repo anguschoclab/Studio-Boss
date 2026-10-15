@@ -12,9 +12,12 @@ import type {
 
 export function handleBuyerUpdated(state: GameState, impact: BuyerUpdateImpact): GameState {
   const { buyerId, update } = impact.payload;
-  const buyers = (state.market.buyers || []).map((b) =>
-    b.id === buyerId ? ({ ...b, ...update } as Buyer) : b
-  );
+  const existing = state.market.buyers || [];
+  // Insert when the buyerId isn't present — streamer-upstart spawns
+  // (IndustryUpstarts) emit a full Buyer as `update` for a new id.
+  const buyers = existing.some((b) => b.id === buyerId)
+    ? existing.map((b) => (b.id === buyerId ? ({ ...b, ...update } as Buyer) : b))
+    : [...existing, { id: buyerId, ...update } as Buyer];
   return {
     ...state,
     market: {

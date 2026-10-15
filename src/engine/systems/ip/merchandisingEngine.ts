@@ -9,7 +9,8 @@ export function calculateWeeklyIPRevenue(asset: IPAsset): number {
   if (asset.decayRate <= 0.05) return 0; // Culturally "dead" IP
 
   // Base merchandising logic: (Value * Multiplier) scaled by current relevance (decayRate)
-  let merchRevenue = asset.baseValue * asset.merchandisingMultiplier * asset.decayRate;
+  let merchRevenue =
+    asset.baseValue * (asset.synergyBoost ?? 1) * asset.merchandisingMultiplier * asset.decayRate;
 
   // Syndication Logic: Tiered multipliers replace binary check
   // Gold = 3.5x, Silver = 2.2x, Bronze = 1.4x
@@ -17,7 +18,8 @@ export function calculateWeeklyIPRevenue(asset: IPAsset): number {
 
   if (asset.syndicationTier !== "NONE") {
     // Syndication provides a high floor of revenue (percentage of base value)
-    const syndicationFloor = asset.baseValue * 0.05 * impact.revenueMultiplier;
+    const syndicationFloor =
+      asset.baseValue * (asset.synergyBoost ?? 1) * 0.05 * impact.revenueMultiplier;
     merchRevenue = merchRevenue * impact.revenueMultiplier + syndicationFloor;
   }
 

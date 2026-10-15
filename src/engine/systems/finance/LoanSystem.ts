@@ -75,14 +75,15 @@ export function createLoan(
 
 export function tickLoans(state: GameState, _rng: RandomGenerator): StateImpact[] {
   const loans: Loan[] = state.studio.loans || [];
-  if (loans.length === 0) return [];
 
   const impacts: StateImpact[] = [];
+  let totalPayments = 0;
 
   for (const loan of loans) {
     if (loan.weeksRemaining <= 0) continue;
 
     const payment = loan.weeklyPayment;
+    totalPayments += payment;
     const isFinalPayment = loan.weeksRemaining === 1;
 
     // Deduct payment from cash — a single debit, not two.
@@ -106,8 +107,9 @@ export function tickLoans(state: GameState, _rng: RandomGenerator): StateImpact[
     // no loan-tick impact is needed here.
   }
 
-  // Bankruptcy check after all payments
-  const bankruptcyImpact = checkBankruptcy(state);
+  // Bankruptcy runs even with no outstanding loans and accounts for this
+  // tick's payments so a debit that pushes cash under the floor is caught now.
+  const bankruptcyImpact = checkBankruptcy(state, totalPayments);
   if (bankruptcyImpact) {
     impacts.push(bankruptcyImpact);
   }
@@ -119,8 +121,8 @@ export function tickLoans(state: GameState, _rng: RandomGenerator): StateImpact[
 // checkBankruptcy – returns MODAL_TRIGGERED impact or null
 // ---------------------------------------------------------------------------
 
-export function checkBankruptcy(state: GameState): StateImpact | null {
-  const cash = state.finance.cash;
+export function checkBankruptcy(state: GameState, pendingPayments = 0): StateImpact | null {
+  const cash = state.finance.cash - pendingPayments;
 
   if (cash >= -500_000) return null;
 

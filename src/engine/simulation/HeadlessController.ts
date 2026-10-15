@@ -50,6 +50,9 @@ export class HeadlessController {
       allProjects.push(newlyPitchedProject);
     }
     allProjects.forEach((project) => {
+      // Only process player projects — rival-owned projects in entities carry
+      // their rival's ownerId; player projects may have ownerId undefined.
+      if (project.ownerId !== undefined && !isPlayerOwner(state, project.ownerId)) return;
       // 1. Auto-Greenlight
       if (project.state === "needs_greenlight") {
         // In headless simulation, always greenlight projects

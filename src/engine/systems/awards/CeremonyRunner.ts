@@ -84,19 +84,23 @@ export function runAwardsCeremony(
       const rival = bestProject.ownerId ? rivalsMap[bestProject.ownerId] || null : null;
       const isPlayer = bestProject.ownerId === state.studio.id;
 
+      const award = {
+        id: rng.uuid("AWD"),
+        projectId: bestProject.id,
+        name: config.category,
+        category: config.category,
+        body: config.body,
+        status: isWin ? "won" : "nominated",
+        year,
+      };
       impacts.push({
         type: "INDUSTRY_UPDATE",
         payload: {
           update: {
-            [`industry.awards.${rng.uuid("AWD")}`]: {
-              id: rng.uuid("AWD"),
-              projectId: bestProject.id,
-              name: config.category,
-              category: config.category,
-              body: config.body,
-              status: isWin ? "won" : "nominated",
-              year,
-            },
+            // industry.awards is Award[] — write the appended array wholesale;
+            // a `industry.awards.<id>` deep path would set a named prop on the
+            // array, which JSON.stringify drops on save and .filter() skips.
+            "industry.awards": [...(state.industry.awards || []), award],
           },
         },
       });

@@ -1,4 +1,4 @@
-import { Franchise, IPAsset, Project } from "../../types";
+import { Franchise, IPAsset } from "../../types";
 
 /**
  * Synergy Logic Engine.
@@ -75,7 +75,7 @@ export function calculateSynergyGains(
  * Evaluates the total synergy multiplier for the entire IP vault.
  * Returns the modified vault assets to be processed by the manager.
  */
-export function evaluateVaultSynergy(activeProjects: Project[], vault: IPAsset[]): IPAsset[] {
+export function evaluateVaultSynergy(vault: IPAsset[]): IPAsset[] {
   if (!vault || vault.length < 2) return vault || [];
 
   // Calculate synergy based on franchise density
@@ -87,11 +87,13 @@ export function evaluateVaultSynergy(activeProjects: Project[], vault: IPAsset[]
     }
   }
 
-  // Base 1.0 + 5% per unique franchise + 1% per unique asset
+  // Base 1.0 + 5% per unique franchise + 1% per unique asset.
+  // Persisted as synergyBoost (not multiplied into baseValue) — folding it into
+  // baseValue each tick compounds exponentially.
   const multiplier = 1.0 + franchiseGroups.size * 0.05 + vault.length * 0.01;
 
   return vault.map((asset) => ({
     ...asset,
-    baseValue: Math.floor(asset.baseValue * multiplier),
+    synergyBoost: multiplier,
   }));
 }
