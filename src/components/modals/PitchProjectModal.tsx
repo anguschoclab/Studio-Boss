@@ -34,7 +34,7 @@ export const PitchProjectModal = () => {
 
   if (!gameState || !pitchingProjectId) return null;
 
-  const project = gameState.studio.internal.projects[pitchingProjectId];
+  const project = gameState.entities.projects[pitchingProjectId];
   if (!project) return null;
 
   const handlePitch = async () => {

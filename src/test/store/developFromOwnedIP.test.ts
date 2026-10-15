@@ -172,12 +172,12 @@ describe("developFromOwnedIP", () => {
     expect(state.entities.projects["new-proj-1"]).toBeDefined();
   });
 
-  it("creates a project in studio.internal.projects", () => {
+  it("creates a project in entities.projects (canonical store)", () => {
     useGameStore.setState({ gameState: makeState() } as any);
     const store = useGameStore.getState() as any;
     store.developFromOwnedIP("ip-1");
     const state = useGameStore.getState().gameState as any;
-    expect(state.studio.internal.projects["new-proj-1"]).toBeDefined();
+    expect(state.entities.projects["new-proj-1"]).toBeDefined();
   });
 
   it("adds a news headline containing the asset title", () => {

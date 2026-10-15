@@ -246,13 +246,6 @@ function checkReferentialIntegrity(data: unknown): string | null {
     }
   }
 
-  // studio.internal.projects mirrors entities.projects — no orphan keys.
-  for (const key in state.studio?.internal?.projects ?? {}) {
-    if (!(key in projects)) {
-      return `studio.internal.projects references missing project '${key}'`;
-    }
-  }
-
   return null;
 }
 

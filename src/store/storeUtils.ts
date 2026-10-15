@@ -96,6 +96,7 @@ export function buildProjectAndContracts(
 
   const projectBase = {
     id: projectId,
+    ownerId: state.studio.id,
     title: params.title,
     genre: params.genre,
     budgetTier: params.budgetTier,

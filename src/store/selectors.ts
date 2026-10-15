@@ -93,9 +93,7 @@ export function selectFatigueForAsset(state: GameState | null, assetId: string):
   const franchise = state.ip.franchises[asset.franchiseId];
   if (!franchise) return 0;
 
-  const originalProject =
-    state.entities.projects[asset.originalProjectId] ||
-    state.studio.internal.projects[asset.originalProjectId];
+  const originalProject = state.entities.projects[asset.originalProjectId];
   const genre = originalProject?.genre || "Action";
 
   let genreSaturation = 0;

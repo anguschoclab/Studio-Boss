@@ -16,16 +16,14 @@ import { type ProjectId } from "@/engine/types/shared.types";
  * PROJECT_UPDATED impacts; studio.internal.projects is only written at
  * creation and can go stale) with the internal map as a fallback.
  */
+
 export function useProjectDetailData() {
   const { selectedProjectId } = useUIStore();
   const gameState = useGameStore((s) => s.gameState);
 
   const project: Project | undefined = useMemo(() => {
     if (!gameState || !selectedProjectId) return undefined;
-    return (
-      gameState.entities.projects[selectedProjectId as ProjectId] ??
-      gameState.studio.internal.projects[selectedProjectId as ProjectId]
-    );
+    return gameState.entities.projects[selectedProjectId as ProjectId];
   }, [gameState, selectedProjectId]);
 
   const activeCampaign = useMemo(
@@ -43,8 +41,8 @@ export function useProjectDetailData() {
     [gameState?.entities?.talents]
   );
   const contracts = useMemo(
-    () => gameState?.studio.internal.contracts || [],
-    [gameState?.studio.internal.contracts]
+    () => Object.values(gameState?.entities?.contracts || {}),
+    [gameState?.entities?.contracts]
   );
   const talentMap = useTalentMap(talentPool);
 

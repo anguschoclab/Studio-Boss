@@ -1,5 +1,6 @@
 import React from "react";
 import { useGameStore } from "@/store/gameStore";
+import { playerProjectsList } from "@/engine/utils/ownership";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -22,7 +23,9 @@ import { NielsenProfile } from "@/engine/systems/television/nielsenSystem";
 
 export const TelevisionDashboard = () => {
   const activeProjects = useGameStore(
-    useShallow((s) => Object.values(s.gameState?.studio.internal.projects || {}))
+    useShallow((s) =>
+      s.gameState ? playerProjectsList(s.gameState, s.gameState.entities.projects || {}) : []
+    )
   );
 
   const tvShows = React.useMemo(

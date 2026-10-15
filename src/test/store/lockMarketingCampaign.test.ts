@@ -19,7 +19,6 @@ describe("projectEventsSlice — lockMarketingCampaign", () => {
     });
     const gameState = createMockGameState();
     gameState.entities.projects = { p1: project } as never;
-    gameState.studio.internal.projects = { p1: project };
     gameState.finance.cash = cash;
     useGameStore.setState({ gameState });
     return project;

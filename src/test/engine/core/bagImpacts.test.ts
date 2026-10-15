@@ -47,7 +47,9 @@ describe("bag impacts (untyped BaseImpact fields)", () => {
   it("applies newRumors as a full-list replace of industry.rumors", () => {
     const state = makeMockState();
     const next = applySingleImpact(state, {
-      newRumors: [{ id: "r1", subject: "x" }],
+      newRumors: [
+        { id: "r1", text: "x", week: 1, truthful: true, category: "talent", resolved: false },
+      ],
     } as StateImpact);
     expect(next.industry.rumors).toHaveLength(1);
   });
@@ -129,6 +131,7 @@ describe("bag impacts (untyped BaseImpact fields)", () => {
     const next = applySingleImpact(state, {
       newsEvents: [{ id: "n1", headline: "h", week: 42, type: "CRISIS" }],
     } as unknown as StateImpact);
-    expect(next.news.headlines).toEqual([]);
+    // NEWS_ADDED handler is a documented no-op: state is returned unchanged.
+    expect(next).toBe(state);
   });
 });

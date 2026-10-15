@@ -31,7 +31,7 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
 
   const project = useMemo(
     // ⚡ Bolt: Replaced O(N) Object.values().find() with direct O(1) property access to eliminate array allocation and GC overhead
-    () => gameState?.studio.internal.projects?.[projectId],
+    () => gameState?.entities.projects?.[projectId],
     [gameState, projectId]
   );
 

@@ -9,6 +9,7 @@ import { calculateFranchiseFatigue } from "@/engine/systems/ip/fatigueEngine";
 import { buildRebootParams } from "@/engine/systems/ip/ipRebootEngine";
 import { selectFatigueForAsset } from "@/store/selectors";
 import { resolveCrisis } from "@/engine/systems/crises";
+import { applyReleaseStrategy } from "@/engine/systems/ReleaseStrategySystem";
 import * as festivalsEngine from "@/engine/systems/festivals";
 import {
   Project,
@@ -82,14 +83,6 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       return {
         gameState: {
           ...stateAfterFees,
-          studio: {
-            ...stateAfterFees.studio,
-            internal: {
-              ...stateAfterFees.studio.internal,
-              projects: { ...stateAfterFees.studio.internal.projects, [project.id]: project },
-              contracts: [...(stateAfterFees.studio.internal.contracts || []), ...newContracts],
-            },
-          },
           entities: {
             ...stateAfterFees.entities,
             projects: { ...stateAfterFees.entities.projects, [project.id]: project },
@@ -198,7 +191,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     const state = get().gameState;
     if (!state) return;
 
-    const project = state.studio.internal.projects[projectId];
+    const project = state.entities.projects[projectId];
     if (!project) return;
 
     if (project.state !== "needs_greenlight") return;
@@ -212,7 +205,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     const state = get().gameState;
     if (!state) return false;
 
-    const project = state.studio.internal.projects[projectId];
+    const project = state.entities.projects[projectId];
     const buyer = state.market.buyers.find((b) => b.id === buyerId);
 
     if (!project || !buyer) return false;
@@ -352,14 +345,6 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
               a.id === ipAssetId ? { ...a, rightsOwner: "STUDIO" as const } : a
             ),
           },
-          studio: {
-            ...intermediateState.studio,
-            internal: {
-              ...intermediateState.studio.internal,
-              projects: { ...intermediateState.studio.internal.projects, [project.id]: project },
-              contracts: [...intermediateState.studio.internal.contracts, ...newContracts],
-            },
-          },
           entities: {
             ...intermediateState.entities,
             projects: { ...intermediateState.entities.projects, [project.id]: project },
@@ -422,14 +407,6 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       return {
         gameState: {
           ...intermediateState,
-          studio: {
-            ...intermediateState.studio,
-            internal: {
-              ...intermediateState.studio.internal,
-              projects: { ...intermediateState.studio.internal.projects, [project.id]: project },
-              contracts: [...intermediateState.studio.internal.contracts, ...newContracts],
-            },
-          },
           entities: {
             ...intermediateState.entities,
             projects: { ...intermediateState.entities.projects, [project.id]: project },
@@ -490,7 +467,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     const state = get().gameState;
     if (!state) return;
 
-    const project = state.studio.internal.projects[projectId];
+    const project = state.entities.projects[projectId];
     if (!project) return;
 
     const impact = resolveCrisis(state, project.id, optionIndex);
@@ -522,16 +499,6 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       return {
         gameState: {
           ...s.gameState,
-          studio: {
-            ...s.gameState.studio,
-            internal: {
-              ...s.gameState.studio.internal,
-              projects: {
-                ...s.gameState.studio.internal.projects,
-                [project.id]: project as Project,
-              },
-            },
-          },
           entities: {
             ...s.gameState.entities,
             projects: { ...s.gameState.entities.projects, [project.id]: project as Project },
@@ -572,11 +539,12 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
   setReleaseStrategy: (projectId, strategy) => {
     set((s) => {
       if (!s.gameState) return s;
+      // Route through the system so the releaseStrategyMultiplier plus any
+      // immediate fee/prestige effects actually land (F-005).
+      const impacts = applyReleaseStrategy(s.gameState, projectId, strategy);
+      if (impacts.length === 0) return s;
       return {
-        gameState: applyStateImpact(s.gameState, {
-          type: "PROJECT_UPDATED",
-          payload: { projectId, update: { releaseStrategy: strategy } },
-        }),
+        gameState: applyStateImpact(s.gameState, impacts),
       };
     });
   },

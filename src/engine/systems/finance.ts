@@ -4,7 +4,7 @@ import { RevenueProcessor } from "./finance/RevenueProcessor";
 import { ExpenseProcessor } from "./finance/ExpenseProcessor";
 import { InterestRateSimulator } from "./market/InterestRateSimulator";
 import { formatMoney, getContractsByProjectId } from "../utils";
-import { isPlayerOwner } from "../utils/ownership";
+import { isPlayerOwner, playerProjectsList } from "../utils/ownership";
 
 export function calculateProjectROI(project: Project): number {
   const totalCost = project.budget + (project.marketingBudget || 0);
@@ -41,7 +41,7 @@ export function generateWeeklyFinancialReport(
   state: GameState,
   pendingImpacts: StateImpact[] = []
 ): { report: WeeklyFinancialReport; snapshot: FinancialSnapshot } {
-  const projects = Object.values(state.studio?.internal?.projects || {});
+  const projects = playerProjectsList(state, state.entities?.projects || {});
   const studioLevel = state.studio?.level ?? 1;
   const market = state.finance.marketState || InterestRateSimulator.initialize();
 
@@ -301,13 +301,7 @@ export function generateCashflowForecast(
   state: GameState,
   weeks: number = 12
 ): { week: number; projected: number }[] {
-  const projectsMap = state.studio.internal.projects || {};
-  const projects: Project[] = [];
-  for (const key in projectsMap) {
-    if (Object.prototype.hasOwnProperty.call(projectsMap, key)) {
-      projects.push(projectsMap[key]);
-    }
-  }
+  const projects = playerProjectsList(state, state.entities?.projects || {});
   const weeklyCosts = calculateWeeklyCosts(projects);
   const weeklyRevenue = calculateWeeklyRevenue(projects, state.market.buyers);
   const netPerWeek = weeklyRevenue - weeklyCosts;

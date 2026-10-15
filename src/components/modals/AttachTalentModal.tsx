@@ -1,7 +1,13 @@
 import { useState, useMemo } from "react";
 import { useGameStore } from "@/store/gameStore";
 import { Project, TalentRole } from "@/engine/types";
-import { formatMoney, getContractsByProjectId, generateId } from "@/engine/utils";
+import {
+  formatMoney,
+  getContractsByProjectId,
+  generateId,
+  addContractsToIndex,
+  addContractsToTalentIndex,
+} from "@/engine/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TalentAvatar } from "@/components/talent/TalentAvatar";
@@ -49,11 +55,6 @@ export const TalentAttachmentPanel: React.FC<{ project: Project }> = ({ project 
     () => Object.values(gameState?.entities?.talents || {}),
     [gameState?.entities?.talents]
   );
-  const _contracts = useMemo(
-    () => gameState?.studio.internal.contracts || [],
-    [gameState?.studio.internal.contracts]
-  );
-
   const attachedTalentIds = useMemo(() => {
     if (!gameState) return new Set<string>();
     const projectContracts = getContractsByProjectId(
@@ -98,15 +99,25 @@ export const TalentAttachmentPanel: React.FC<{ project: Project }> = ({ project 
       };
       useGameStore.setState((s) => {
         if (!s.gameState) return s;
+        // Write the canonical contract + both lookup indices so the engine
+        // (scandals, willingness, crises) actually sees the attachment.
+        const contracts = { ...s.gameState.entities.contracts, [newContract.id]: newContract };
+        const contractsByProjectId = addContractsToIndex(
+          s.gameState.entities.contractsByProjectId,
+          [newContract as import("@/engine/types").Contract]
+        );
+        const contractsByTalentId = addContractsToTalentIndex(
+          s.gameState.entities.contractsByTalentId,
+          [newContract as import("@/engine/types").Contract]
+        );
         return {
           gameState: {
             ...s.gameState,
-            studio: {
-              ...s.gameState.studio,
-              internal: {
-                ...s.gameState.studio.internal,
-                contracts: [...s.gameState.studio.internal.contracts, newContract],
-              },
+            entities: {
+              ...s.gameState.entities,
+              contracts,
+              contractsByProjectId,
+              contractsByTalentId,
             },
             finance: {
               ...s.gameState.finance,

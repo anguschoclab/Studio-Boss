@@ -1,5 +1,6 @@
 import React from "react";
 import { useGameStore } from "@/store/gameStore";
+import { playerProjectsList } from "@/engine/utils/ownership";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -40,7 +41,9 @@ const DEMO_COLORS: Record<NielsenDemographic, string> = {
 
 export const NielsenDashboard = () => {
   const projects = useGameStore(
-    useShallow((s) => Object.values(s.gameState?.studio.internal.projects || {}))
+    useShallow((s) =>
+      s.gameState ? playerProjectsList(s.gameState, s.gameState.entities.projects || {}) : []
+    )
   );
   const week = useGameStore((s) => s.gameState?.week || 0);
 

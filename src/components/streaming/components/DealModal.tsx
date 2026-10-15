@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Handshake, Film, CheckCircle2, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { calculateFitScore } from "@/engine/systems/buyers";
+import { playerProjectsList } from "@/engine/utils/ownership";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 
 const DEAL_TYPE_TOOLTIPS = {
@@ -38,7 +39,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
 
   const eligibleProjects = useMemo(() => {
     if (!gameState) return [];
-    return Object.values(gameState.studio.internal.projects).filter(
+    return playerProjectsList(gameState, gameState.entities.projects || {}).filter(
       (p: Project) =>
         p.state === "development" || p.state === "production" || p.state === "needs_greenlight"
     );
@@ -55,7 +56,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
       selectedProjectObj,
       buyer,
       gameState.week,
-      Object.values(gameState.studio.internal.projects)
+      playerProjectsList(gameState, gameState.entities.projects || {})
     );
   }, [selectedProjectObj, buyer, gameState]);
 

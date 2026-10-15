@@ -5,6 +5,7 @@ import { TickContext } from "./types";
 import { detectCultClassic } from "../../systems/ip/ipValuation";
 import { shouldAttemptHostileTakeover } from "../../systems/ai/BehaviorEngine";
 import { generateRebootProposal } from "../../systems/ip/ipRebootEngine";
+import { isPlayerProject } from "../../utils/ownership";
 
 /**
  * Annual Scans
@@ -75,18 +76,18 @@ export const AnnualScans = {
     // 1. Cult Classic Scan
     const vault = state.ip.vault || [];
 
-    // ⚡ The Framerate Fanatic: Refactored array .find() inside map to a Map lookup, improving performance from O(n^2) to O(n).
-    const projectHistoryMap = new Map();
-    const history = state.studio.internal.projectHistory || [];
-    const allProjects = state.studio.internal.projects || {};
-    for (let i = 0; i < history.length; i++) {
-      const pid = history[i];
-      if (allProjects[pid]) projectHistoryMap.set(pid, allProjects[pid]);
-    }
+    // internal.projectHistory was never appended to — resolve vault assets
+    // against the canonical player-owned project map instead.
+    const allProjects = state.entities.projects || {};
 
     vault.forEach((asset) => {
-      const project = projectHistoryMap.get(asset.originalProjectId);
-      if (project && !project.isCultClassic && detectCultClassic(project, context.week)) {
+      const project = allProjects[asset.originalProjectId];
+      if (
+        project &&
+        isPlayerProject(state, project) &&
+        !project.isCultClassic &&
+        detectCultClassic(project, context.week)
+      ) {
         // Mark the project — project.isCultClassic drives the cult-classic
         // revenue multiplier (RivalRevenueCalculator/CalculatorModule).
         context.impacts.push({

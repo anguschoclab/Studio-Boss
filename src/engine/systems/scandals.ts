@@ -1,5 +1,6 @@
 import { GameState, Scandal, ScandalType } from "@/engine/types";
 import { secureRandom, generateId } from "../utils";
+import { isPlayerProject } from "../utils/ownership";
 import { StateImpact } from "../types/state.types";
 
 /**
@@ -9,13 +10,24 @@ import { StateImpact } from "../types/state.types";
 export function generateScandals(state: GameState): StateImpact[] {
   const impacts: StateImpact[] = [];
 
-  const contracts = state.studio.internal.contracts || [];
+  const projectsMap = state.entities.projects || {};
   const talentToProjectMap = new Map<string, string>();
-  for (const c of contracts) {
-    talentToProjectMap.set(c.talentId, c.projectId);
+  const contractsMap = state.entities.contracts || {};
+  for (const cid in contractsMap) {
+    if (!Object.prototype.hasOwnProperty.call(contractsMap, cid)) continue;
+    const c = contractsMap[cid];
+    const proj = projectsMap[c.projectId];
+    // Only player-project attachments generate player-facing crises.
+    if (proj && isPlayerProject(state, proj)) {
+      talentToProjectMap.set(c.talentId, c.projectId);
+    }
   }
 
-  const studioProjects = state.studio.internal.projects || {};
+  const studioProjects: Record<string, (typeof projectsMap)[string]> = {};
+  for (const pid in projectsMap) {
+    if (!Object.prototype.hasOwnProperty.call(projectsMap, pid)) continue;
+    if (isPlayerProject(state, projectsMap[pid])) studioProjects[pid] = projectsMap[pid];
+  }
 
   const talentsMap = state.entities.talents || {};
   for (const talentId in talentsMap) {
@@ -138,16 +150,20 @@ export function advanceScandals(state: GameState): StateImpact[] {
     impacts.push(removedImpacts[i]);
   }
 
-  const contracts = state.studio.internal.contracts || [];
+  const projectsMap = state.entities.projects || {};
+  const contractsMap = state.entities.contracts || {};
   const penalizedProjectIds = new Set<string>();
-  for (const c of contracts) {
-    if (activeScandalTalent.has(c.talentId)) {
+  for (const cid in contractsMap) {
+    if (!Object.prototype.hasOwnProperty.call(contractsMap, cid)) continue;
+    const c = contractsMap[cid];
+    const proj = projectsMap[c.projectId];
+    if (activeScandalTalent.has(c.talentId) && proj && isPlayerProject(state, proj)) {
       penalizedProjectIds.add(c.projectId);
     }
   }
 
   for (const projectId of penalizedProjectIds) {
-    const p = state.studio.internal.projects[projectId];
+    const p = projectsMap[projectId];
     if (p) {
       impacts.push({
         type: "PROJECT_UPDATED",

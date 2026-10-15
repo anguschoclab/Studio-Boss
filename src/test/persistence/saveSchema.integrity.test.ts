@@ -126,7 +126,7 @@ describe("saveSchema integrity", () => {
     expect(validateSaveData(state).success).toBe(false);
   });
 
-  it("rejects studio.internal.projects referencing missing entities.projects keys", () => {
+  it("accepts saves with legacy studio.internal.projects ghost keys (mirror is no longer canonical)", () => {
     const state = {
       ...validState,
       studio: {
@@ -139,7 +139,7 @@ describe("saveSchema integrity", () => {
         },
       },
     };
-    expect(validateSaveData(state).success).toBe(false);
+    expect(validateSaveData(state).success).toBe(true);
   });
 
   it("rejects record key / entity.id mismatch", () => {
