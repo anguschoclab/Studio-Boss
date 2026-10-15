@@ -294,11 +294,14 @@ export class WeekCoordinator {
     const awardsImpacts = runAwardsCeremony(state, context.week, awardsYear, context.rng);
     context.impacts.push(...awardsImpacts);
 
-    // 6a. Awards modal trigger (ported from dead IndustryFilter)
+    // 6a. Awards modal trigger — CeremonyRunner attaches the ceremony's
+    // `newAwards` to its INDUSTRY_UPDATE payload so we don't have to reverse-
+    // engineer awards out of arbitrary deep-path state updates.
     const allNewAwards = awardsImpacts
-      .filter((i) => i.type === "INDUSTRY_UPDATE" && i.payload?.update)
-      .flatMap((i) =>
-        Object.values((i.payload as Record<string, unknown>).update as Record<string, unknown>)
+      .filter((i) => i.type === "INDUSTRY_UPDATE")
+      .flatMap(
+        (i) =>
+          ((i.payload as Record<string, unknown>).newAwards as unknown[] | undefined) ?? []
       );
     if (allNewAwards.length > 0) {
       context.impacts.push({

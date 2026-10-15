@@ -1,19 +1,39 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { useUIStore } from "@/store/uiStore";
+import { useGameStore } from "@/store/gameStore";
+import { useSettingsStore } from "@/store/settingsStore";
+import { advanceWeek } from "@/engine/core/weekAdvance";
 
-// The doAdvanceWeek bridge does: for MODAL_TRIGGERED impacts,
-// const { modalType, ...rest } = impact.payload; ui.enqueueModal(modalType, rest);
-// This test replicates that bridge for a DISTRESSED_ASSET_OFFER impact.
-describe("distress flow: modal bridge", () => {
-  beforeEach(() => useUIStore.setState({ activeModal: null, modalQueue: [] } as any));
+// Mock only the heavy engine tick — the modal routing bridge inside
+// doAdvanceWeek (MODAL_TRIGGERED -> ui.enqueueModal) runs for real.
+vi.mock("@/engine/core/weekAdvance", () => ({
+  advanceWeek: vi.fn(),
+  resetAdvanceWeekCache: vi.fn(),
+}));
+vi.mock("@/persistence/autosave", () => ({
+  queueAutosave: vi.fn(),
+  invalidateAutosaves: vi.fn(),
+}));
+
+describe("distress flow: modal bridge (real doAdvanceWeek)", () => {
+  beforeEach(() => {
+    vi.mocked(advanceWeek).mockReturnValue({
+      newState: { week: 2, entities: { rivals: {} } } as any,
+      summary: { fromWeek: 1, toWeek: 2 } as any,
+      impacts: [
+        {
+          type: "MODAL_TRIGGERED",
+          payload: { modalType: "DISTRESSED_ASSET_OFFER", offerId: "o1" },
+        },
+      ],
+    } as any);
+    useUIStore.setState({ activeModal: null, modalQueue: [] } as any);
+    useGameStore.setState({ gameState: { week: 1 } } as any);
+    useSettingsStore.setState({ autosaveFrequency: "off" } as any);
+  });
 
   it("a MODAL_TRIGGERED impact enqueues the offer modal with offerId in payload", () => {
-    const impact = {
-      type: "MODAL_TRIGGERED",
-      payload: { modalType: "DISTRESSED_ASSET_OFFER", offerId: "o1" },
-    } as any;
-    const { modalType, ...rest } = impact.payload;
-    useUIStore.getState().enqueueModal(modalType, rest);
+    useGameStore.getState().doAdvanceWeek();
 
     const active = useUIStore.getState().activeModal;
     expect(active?.type).toBe("DISTRESSED_ASSET_OFFER");

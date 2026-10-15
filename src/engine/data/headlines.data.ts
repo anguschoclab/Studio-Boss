@@ -29,7 +29,6 @@ export const MARKET_HEADLINES = [
   "Gen Z ignores traditional marketing, {pct}% of tracking data deemed useless",
   "International regulators threaten {pct}% tax on algorithmic content",
   "Studios rely on legacy IP for {pct}% of their upcoming release slate",
-
   "Tech giant acquires legacy studio solely for its vast library of reality TV IP",
   "Theater chains threaten boycott as studios announce day-and-date streaming releases",
   'Analysts predict the "superhero fatigue" bubble will finally burst this quarter',
@@ -62,8 +61,6 @@ export const MARKET_HEADLINES = [
   "Deepfake technology used to dub {pct}% of international releases, saving millions in localization",
   'The "Tomatoes" aggregate score proven to impact opening weekend box office by up to {pct}%',
   "Merchandising for adult-oriented animated series outpaces kids' shows by {pct}% this quarter",
-
-  // Scribe Additions
   "Major theater chain threatens bankruptcy as concession prices hit all-time high",
   'Streaming platforms introduce new "Premium Basic" tier with unskippable ads',
   "Focus group unanimously rejects third-act twist, resulting in a rushed reshoot",
@@ -86,7 +83,6 @@ export const MARKET_HEADLINES = [
   "Streaming services aggressively bundle together, effectively reinventing cable television",
   "Market research shows {pct}% of audiences cannot distinguish between rival cinematic universes",
   "Focus groups demand {pct}% more screen time for marketable mascot characters",
-
   "Private equity firm acquires beloved indie studio, immediately pivots to true-crime podcasts",
   "Focus groups demand protagonist be {pct}% more relatable, studio adds scenes of them eating cereal",
   "Box office numbers artificially inflated by studio buying out {pct}% of its own theaters",
@@ -107,7 +103,6 @@ export const MARKET_HEADLINES = [
   "Indie distributor buys rights to a popular Reddit thread for an undisclosed seven-figure sum",
   "Streaming platform algorithm accidentally recommends highly disturbing psychological horror to kids' profiles",
   "Studios panic as {pct}% of tracking data shows Gen Z prefers watching YouTube video essays about movies instead of movies",
-
   "Box office numbers down {pct}% as audiences collectively decide they are tired of sequels.",
   'Analysts predict {pct}% growth in the "nostalgia-bait" sector for Q4.',
   "Studio stock drops {pct}% following disastrous earnings call full of buzzwords.",
@@ -128,7 +123,6 @@ export const MARKET_HEADLINES = [
   "Merger talks stall after one studio demands {pct}% control of a useless legacy IP.",
   "Wall Street panics as {pct}% of consumers realize they can just go outside instead of watching TV.",
   'AI predictive models claim with {pct}% certainty that the next big genre is "Underwater Cyberpunk".',
-
   'Streaming platform raises subscription price by {pct}%, claims it is to "better serve the community"',
   "Studio executives admit they haven't watched a movie in theaters since 2018",
   "A.I. generated extra sues studio for unpaid digital residuals, confusing everyone",
@@ -149,7 +143,6 @@ export const MARKET_HEADLINES = [
   "Studio stock rises {pct}% after laying off entire creative department to fund executive bonuses",
   "Independent cinema saved by unhinged viral marketing campaign orchestrated by teenagers",
   'Major studio insists their upcoming slate is "diverse" because it features a female CGI alien',
-
   "Wall Street panics as major studios pivot entirely to AI-generated screenplays",
   'Focus groups reject "originality" in latest demographic tracking report',
   "Analysts predict streaming bubble will burst just as Q4 earnings drop",
@@ -170,20 +163,7 @@ export const MARKET_HEADLINES = [
   "Studio executives insist the theatrical experience is thriving while actively closing theaters",
   "Merchandise sales for {projectName} surpass box office gross in opening weekend",
   'Ticket prices surge to $30 as theaters implement "dynamic pricing" for popular showtimes',
-  'Audiences walk out of {projectName} complaining about "unrelatable poor people"',
-  "Theater chains consider charging extra for seats with good sightlines",
-  "Indie cinema declared officially dead for the fourth time this year",
-  "Quarterly earnings report reveals studio makes more from merchandise than actual films",
-  "Box office plunges as audiences demand more legacy franchise reboots",
-  'Venture capitalists pour millions into new startup promising "algorithm-perfect pacing"',
-  'Studios quietly lobby government to classify background actors as "digital assets"',
-  "Mergers and acquisitions heat up as tech giants look to swallow remaining studios",
-  "Consumer spending on streaming overtakes basic utilities in several major cities",
-  "Market reacts poorly to studio's decision to release a film under 2 hours long",
-  "Shareholders demand answers after major tentpole grosses only triple its budget",
-  "Box office unexpectedly saved by {projectName}, confusing every executive in town",
-  "Nostalgia bait proves highly lucrative yet again in Q3 financial breakdown",
-];
+]
 
 export const TALENT_HEADLINES = [
   "A-list director reportedly shopping a passion project around town",
@@ -216,10 +196,8 @@ export const TALENT_HEADLINES = [
   'Focus group describes {projectName} as "content", {directorName} reportedly devastated.',
   "Star of {projectName} caught using a body double for emotionally demanding scenes.",
   "{directorName}'s passion project {projectName} sent straight to ad-supported streaming tier.",
-
   "A-list star of {projectName} caught in PR nightmare after leaked audio of on-set meltdown.",
   "{directorName} demands name removed from {projectName} after studio completely recuts third act.",
-  "Viral TikTok campaign accidentally saves {projectName} from being a total tax write-off.",
   "Lead actor of {projectName} launches competing lifestyle brand mid-press tour, infuriating studio.",
   "Studio accidentally leaks entire plot of {projectName} in a branded fast-food tie-in toy.",
   '{directorName} insists {projectName} requires an unprecedented $100M marketing budget for "awareness".',
@@ -228,9 +206,7 @@ export const TALENT_HEADLINES = [
   "{directorName}'s passion project {projectName} sent straight to ad-supported streaming tier to die.",
   "Nepo-baby star of {projectName} gives tone-deaf interview comparing acting to manual labor.",
   'Crew of {projectName} threatens strike over {directorName}\'s grueling, "visionary" 18-hour shoot days.',
-  '{directorName} walks away from {projectName} citing "creative differences" and "a hostile algorithm".',
   "Fans petition to digitally replace lead in {projectName}, studio surprisingly open to the cost-saving idea.",
-  '{directorName} claims {projectName} is a "four-hour masterpiece", studio demands a tight 90 minutes.',
   "Sources claim {directorName} used AI to write the emotional climax of {projectName}.",
   "Method actor refuses to break character on set of {projectName}, terrorizes craft services staff.",
   "Production on {projectName} halted after lead actor refuses to leave their luxury trailer over a wardrobe dispute.",
@@ -255,8 +231,6 @@ export const TALENT_HEADLINES = [
   '{directorName} blames "woke critics" for the spectacular failure of {projectName} at Cannes.',
   "{projectName} marketing team desperately trying to manufacture a TikTok dance trend.",
   'Veteran script doctor brought in to "fix" {projectName} immediately quits and checks into rehab.',
-
-  // Scribe Additions
   "{directorName} caught using a deepfake body double for the lead actor in {projectName} without their permission.",
   "{projectName} is heavily criticized for containing $20M worth of indistinguishable CGI mush in the third act.",
   "Lead actor of {projectName} caught running a multi-level marketing scheme out of their on-set trailer.",
@@ -277,7 +251,6 @@ export const TALENT_HEADLINES = [
   "Studio uses AI to analyze {projectName} script; it recommends adding a sassy robot sidekick.",
   '{directorName} leaks an "early cut" of {projectName} to force the studio\'s hand on edits.',
   'Crew on {projectName} complains that the "revolutionary" new lighting rig is just an overpriced ring light.',
-
   "{directorName} claims {projectName} isn't a movie, it's a 'six-part feature-length experience'.",
   "Lead actor in {projectName} demands CGI abs added in post-production.",
   "Director {directorName} reportedly communicating with cast entirely via cryptic voice notes.",
@@ -298,12 +271,10 @@ export const TALENT_HEADLINES = [
   "{directorName} demands the removal of all dialogue from the final 20 minutes of {projectName}.",
   "Fans petition to recast the lead in {projectName} with a moderately popular Twitch streamer.",
   "The press tour for {projectName} derails entirely after the stars admit they didn't understand the plot.",
-
   '{directorName} insists the heavily criticized CGI in {projectName} was actually an "intentional stylistic choice".',
   "Lead actor of {projectName} demands the script be rewritten to ensure their character never loses a fight or looks uncool.",
   'Studio executives reportedly fell asleep during the 4-hour "visionary" cut of {projectName} by {directorName}.',
   "{directorName} fired from {projectName} after refusing to include a blatant product placement for a crypto exchange.",
-  "Fans petition to recast the lead in {projectName} with a moderately popular Twitch streamer.",
   "The PR team for {projectName} desperately attempts to manufacture a celebrity feud to drive engagement.",
   '{directorName} defends the confusing, ambiguous ending of {projectName} as "challenging the viewer".',
   "Lead actress in {projectName} refuses to do press, sending her spiritual advisor in her place.",
@@ -319,7 +290,6 @@ export const TALENT_HEADLINES = [
   'Studio head forced to apologize after calling {projectName} a "glorified two-hour toy commercial" on a hot mic.',
   "Fans launch a GoFundMe to remake {projectName} without the involvement of {directorName} or the studio.",
   "The press tour for {projectName} derails entirely after the stars admit they didn't understand the plot either.",
-
   "{actorName} refuses to break character, demands to be paid entirely in crypto for {projectName}.",
   '{actorName} fired from {projectName} after refusing to say the words "synergy" and "algorithm" on camera.',
   "Child star from 90s sitcom re-emerges as a spiritual guru offering $10k retreats for {directorName}.",
@@ -339,7 +309,6 @@ export const TALENT_HEADLINES = [
   "Influencer cast in {projectName} asks {directorName} what their motivation is; is ignored.",
   "{actorName} demands a percentage of the merchandising for an indie drama about terminal illness.",
   "{actressName} undergoes dramatic physical transformation, gains 50 lbs to play an accountant in {projectName}.",
-
   '{directorName} insists the boom mic visible in every shot of {projectName} is a "post-modern commentary"',
   "Lead actor of {projectName} demands their character be digitally inserted into real historical events",
   'Studio forces {directorName} to apologize for calling Marvel movies "theme park rides" during press tour',
@@ -360,22 +329,7 @@ export const TALENT_HEADLINES = [
   "{actressName} goes viral for mispronouncing the name of her own character in {projectName}",
   'Studio hires a "social media whisperer" to help {actorName} navigate the press tour for {projectName}',
   "{directorName} accused of using {projectName} to launder money for an international crime syndicate",
-  '{directorName} insists the boom mic visible in every shot of {projectName} is a "post-modern commentary"',
-  "Lead actor of {projectName} demands their character be digitally inserted into real historical events",
-  'Studio forces {directorName} to apologize for calling Marvel movies "theme park rides" during press tour',
-  "{actorName} goes method for {projectName}, refuses to shower for three months",
-  'Crew of {projectName} reports the "intimacy coordinator" is just an HR rep with a clipboard',
-  "{actressName} drops out of {projectName} after realizing she plays a mother to an actor only two years younger",
-  "Publicist for {actorName} denies rumors of an on-set feud, threatens journalists who ask about it",
-  "{directorName} spends $10M of the {projectName} budget on acquiring the rights to a single pop song",
-  "Test audiences for {projectName} confused why {actorName} is attempting a British accent",
-  "Star of {projectName} claims they were abducted by aliens to avoid doing the morning talk show circuit",
-  "{directorName} fired from {projectName} after insisting the film needs to be shot entirely on 70mm film",
-  "{actorName} launches a line of overpriced wellness gummies on the red carpet for {projectName}",
-  'Studio panics after test audiences for {projectName} declare the villain "was actually completely right"',
-  '{actressName} insists on a "no eye contact" clause in her contract for {projectName}',
-  "{directorName} demands a 10-minute standing ovation at Cannes for {projectName}, hires extras to clap",
-];
+]
 
 export const RIVAL_TEMPLATES = [
   "{rival} greenlights ambitious ${budget}M {genre} project",
@@ -404,13 +358,11 @@ export const RIVAL_TEMPLATES = [
   "{rival} blames toxic fandom for the underperformance of their ${budget}M {genre} reboot",
   "{rival} greenlights a gritty, dark reboot of a beloved family {genre} property",
   "{rival} caught artificially inflating box office numbers for their ${budget}M {genre} release",
-
   "{rival} attempts to launch a {genre} franchise, but focus groups hate the protagonist",
   "{rival} pivots entirely to {genre} content, citing algorithmic trends and ignoring creative instinct",
   "{rival} CEO promises their new ${budget}M {genre} film will save cinema, analysts remain skeptical",
   "{rival} writes off a completed ${budget}M {genre} project for tax purposes, angering creators",
   "{rival} buys rights to a viral tweet, adapting it into a ${budget}M {genre} movie no one asked for",
-  '{rival} insists their upcoming {genre} slate is "not just content, it\'s cinema"',
   "{rival} aggressively poaches TikTok influencers for new {genre} initiative, confusing core demographic",
   "{rival} stock plummets after disastrous test screening of their highly anticipated ${budget}M {genre} tentpole",
   "{rival} reboots a classic {genre} franchise, fans immediately revolt online and demand the original director",
@@ -419,7 +371,6 @@ export const RIVAL_TEMPLATES = [
   "{rival} desperately trying to artificially create a viral trend for their new {genre} release on TikTok",
   "{rival} acquires struggling indie studio solely to harvest their {genre} IP for future reboots",
   "{rival} announces they will use AI to generate all future {genre} scripts to cut production costs",
-  "{rival} spends ${budget}M on Super Bowl ad for {genre} movie everyone forgot existed",
   "{rival} heavily leans into nostalgia bait for their upcoming {genre} sequel, bringing back entire original cast",
   "{rival} blames toxic fandom for the underperformance of their heavily marketed ${budget}M {genre} reboot",
   "{rival} greenlights a gritty, dark reboot of a beloved family friendly {genre} property, baffling parents",
@@ -436,8 +387,6 @@ export const RIVAL_TEMPLATES = [
   "{rival} forces a cinematic universe crossover between a {genre} film and a fast-food mascot",
   "{rival} replaces striking writers with generative AI for their upcoming ${budget}M {genre} slate",
   '{rival} blames the "algorithm" for their ${budget}M {genre} flop missing its target demographic entirely',
-
-  // Scribe Additions
   "{rival} abruptly shelves highly anticipated ${budget}M {genre} sequel for a tax write-off",
   '{rival} CEO mocked online after calling their new ${budget}M {genre} project "the pinnacle of human content"',
   "{rival} announces a 10-year release schedule for a ${budget}M {genre} cinematic universe that no one wants",
@@ -454,7 +403,6 @@ export const RIVAL_TEMPLATES = [
   "{rival} CEO steps down amidst disastrous rollout of their new ${budget}M {genre} streaming service",
   "{rival} shamelessly copies competitor's successful {genre} film, adding a ${budget}M CGI budget",
   '{rival} aggressively monetizes their back catalog, releasing "demastered" versions of classic {genre} films',
-
   "{rival} greenlights a grimdark reboot of a beloved childhood franchise, scarring millennials.",
   "{rival} CEO defends the use of generative AI scripts for their upcoming {genre} slate.",
   "{rival} acquires the film rights to a Wikipedia article for ${budget}M.",
@@ -475,13 +423,10 @@ export const RIVAL_TEMPLATES = [
   "{rival} aggressively monetizes their back catalog, releasing 'demastered' versions of classic {genre} films.",
   "{rival} CEO caught calling their core demographic 'walking wallets' on a hot mic.",
   "{rival} relies entirely on algorithmic generation for their upcoming ${budget}M {genre} slate.",
-
   "{rival} abruptly shelves highly anticipated ${budget}M {genre} sequel solely for a tax write-off",
-  '{rival} CEO mocked online after calling their new ${budget}M {genre} project "the pinnacle of human content"',
   "{rival} announces a sprawling 10-year release schedule for a ${budget}M {genre} cinematic universe that no one asked for",
   "{rival} hit with class-action lawsuit over highly misleading trailer for their disappointing ${budget}M {genre} film",
   "{rival} forces an unnecessary romantic subplot into their ${budget}M {genre} film to appease a demographic algorithm",
-  "{rival} creates an entirely A.I. generated ${budget}M {genre} film; it bombs spectacularly at the box office",
   "{rival} aggressively acquires legacy IP just to prevent competitors from making their own ${budget}M {genre} reboots",
   '{rival} releases a 4-hour "Director\'s Cut" of their ${budget}M {genre} flop in a desperate, final cash grab',
   "{rival} spends half the budget of their ${budget}M {genre} film on focus testing and aggressive demographic research",
@@ -496,15 +441,12 @@ export const RIVAL_TEMPLATES = [
   "{rival} CEO vehemently defends the use of generative AI scripts for their upcoming ${budget}M {genre} slate",
   "{rival} acquires the film rights to a mildly interesting Wikipedia article for an astonishing ${budget}M",
   "{rival} spends ${budget}M marketing a highly anticipated {genre} film that was quietly cancelled last month",
-
   '{rival} insists their widely-panned ${budget}M {genre} film is "actually a satire of the genre"',
   "{rival} buys out an entire theater to make their ${budget}M {genre} film look like a hit opening weekend",
   '{rival} fires director of ${budget}M {genre} tentpole three days before wrap, citing "creative differences"',
   "{rival} launches a ${budget}M {genre} cinematic universe based on a line of discontinued toys from the 80s",
   "{rival} tries to astroturf a viral trend for their new ${budget}M {genre} release; gets exposed by teenagers",
   "{rival} completely re-shoots the third act of their ${budget}M {genre} film based on a single focus group comment",
-
-  // Showbiz Scribe Rival Additions
   "{rival} greenlights a ${budget}M {genre} film based entirely on a 15-second TikTok trend",
   '{rival} CEO caught on hot mic calling the fans of their ${budget}M {genre} franchise "absolute suckers"',
   "{rival} announces their new ${budget}M {genre} cinematic universe will skip theaters and go straight to ad-supported streaming",
@@ -525,19 +467,4 @@ export const RIVAL_TEMPLATES = [
   "{rival} announces a gritty, grounded reboot of their ${budget}M {genre} franchise that was already gritty and grounded",
   "{rival} fires their entire PR team after a disastrous press tour for their ${budget}M {genre} film",
   '{rival} writes off a completed ${budget}M {genre} film for tax purposes, claiming it "did not meet quality standards"',
-  "{rival} greenlights a ${budget}M {genre} film based entirely on a 15-second TikTok trend",
-  '{rival} CEO caught on hot mic calling the fans of their ${budget}M {genre} franchise "absolute suckers"',
-  "{rival} announces their new ${budget}M {genre} cinematic universe will skip theaters and go straight to ad-supported streaming",
-  "{rival} fires the director of their ${budget}M {genre} film, replacing them with a boardroom committee",
-  "{rival} attempts to launch a ${budget}M {genre} franchise, but forgets to secure the trademark",
-  "{rival} spends more on the marketing for their ${budget}M {genre} film than the actual production budget",
-  '{rival} desperately tries to convince audiences their ${budget}M {genre} reboot is "not like the other reboots"',
-  '{rival} blames the catastrophic failure of their ${budget}M {genre} film on "superhero fatigue"',
-  "{rival} caught paying for positive reviews on Letterboxd for their critically panned ${budget}M {genre} film",
-  "{rival} announces a ${budget}M {genre} sequel to a film that hasn't even finished shooting yet",
-  '{rival} insists the unfinished CGI in their ${budget}M {genre} trailer is just "a stylistic choice"',
-  "{rival} greenlights a ${budget}M {genre} origin story for a character nobody remembers",
-  "{rival} stock plummets after their ${budget}M {genre} tentpole grosses less than an indie horror movie",
-  "{rival} forces their actors to perform a humiliating TikTok dance to promote their ${budget}M {genre} film",
-  "{rival} accidentally leaks the entire plot of their ${budget}M {genre} film through a fast-food tie-in",
-];
+]

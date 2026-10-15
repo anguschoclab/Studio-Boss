@@ -37,6 +37,8 @@ export function runAwardsCeremony(
 
   if (eligibleFilm.length === 0 && eligibleTv.length === 0) return [];
 
+  const newAwards: import("@/engine/types").Award[] = [];
+
   for (const config of configsThisWeek) {
     let candidates: Project[];
     const isTvCategory =
@@ -90,20 +92,13 @@ export function runAwardsCeremony(
         name: config.category,
         category: config.category,
         body: config.body,
-        status: isWin ? "won" : "nominated",
+        status: (isWin ? "won" : "nominated") as import("@/engine/types").AwardStatus,
         year,
       };
-      impacts.push({
-        type: "INDUSTRY_UPDATE",
-        payload: {
-          update: {
-            // industry.awards is Award[] — write the appended array wholesale;
-            // a `industry.awards.<id>` deep path would set a named prop on the
-            // array, which JSON.stringify drops on save and .filter() skips.
-            "industry.awards": [...(state.industry.awards || []), award],
-          },
-        },
-      });
+      // Collected here and written once after the loop — per-award impacts
+      // would each write `[...base, award]` against the same base state and
+      // overwrite each other when applied, dropping all but the last award.
+      newAwards.push(award);
 
       if (isPlayer) {
         impacts.push({ type: "PRESTIGE_CHANGED", payload: { amount: prestigeGain } });
@@ -140,6 +135,22 @@ export function runAwardsCeremony(
         });
       }
     }
+  }
+
+  if (newAwards.length > 0) {
+    impacts.push({
+      type: "INDUSTRY_UPDATE",
+      payload: {
+        update: {
+          // industry.awards is Award[] — single appended write for the whole
+          // ceremony batch.
+          "industry.awards": [...(state.industry.awards || []), ...newAwards],
+        },
+        // New-ceremony awards ride along for the modal bridge — the state
+        // handler ignores payload fields outside `update`.
+        newAwards,
+      } as unknown as import("@/engine/types").IndustryUpdateImpact["payload"],
+    });
   }
 
   return impacts;

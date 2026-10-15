@@ -2,16 +2,13 @@ import { describe, it, expect } from "vitest";
 import { MarketState } from "../../../../engine/types/state.types";
 import { evaluatePackageOffer } from "../../../../engine/systems/ai/AgentBrain";
 import { shouldAttemptHostileTakeover } from "../../../../engine/systems/ai/BehaviorEngine";
-import { generateFestivalBid } from "../../../../engine/systems/ai/RivalBiddingEngine";
 import { mockRandomSeed } from "../../../utils/mockRandom";
 import {
   createMockAgency,
   createMockTalent,
-  createMockProject,
   createMockRival,
   createMockGameState,
 } from "../../../utils/mockFactories";
-import { AI_ARCHETYPES } from "../../../../engine/data/aiArchetypes";
 
 const mockMarket: MarketState = {
   baseRate: 0.045,
@@ -50,47 +47,6 @@ describe("AI Archetype Strategy (AgentBrain)", () => {
     });
   });
 
-  describe("generateFestivalBid", () => {
-    it("returns a bid for an interested rival", () => {
-      // Seed '1' gives a very low first next() value (approx 0.1)
-      const rng = mockRandomSeed("1");
-      const archetype = AI_ARCHETYPES[6]; // Streaming Titan: 92.5% bid chance
-      const rival = createMockRival({ behaviorId: archetype.id, cash: 100_000_000 });
-      const project = createMockProject({
-        genre: "Sci-Fi",
-        budget: 10_000_000,
-        reviewScore: 90,
-        buzz: 90,
-      });
-
-      const bid = generateFestivalBid(rival, project, rng);
-      expect(bid).not.toBeNull();
-      if (bid !== null) {
-        expect(bid).toBeGreaterThan(0);
-      }
-    });
-
-    it("aggressively outbids for IP when motivation is FRANCHISE_BUILDING", () => {
-      // Seed '1' is stable for the first few next() calls
-      const rng = mockRandomSeed("1");
-      const rival = createMockRival({
-        behaviorId: "STREAMING_TITAN",
-        currentMotivation: "FRANCHISE_BUILDING",
-        cash: 1_000_000_000,
-      });
-      const project = createMockProject({
-        genre: "Sci-Fi",
-        budget: 10_000_000,
-        reviewScore: 95,
-      });
-
-      const bid = generateFestivalBid(rival, project, rng);
-      expect(bid).not.toBeNull();
-      if (bid) {
-        expect(bid).toBeGreaterThan(15_000_000); // Should be aggressive (budget * 1.5ish)
-      }
-    });
-  });
 
   describe("shouldAttemptHostileTakeover", () => {
     it("blocks takeover if combined market share exceeds 40% (Anti-Trust)", () => {

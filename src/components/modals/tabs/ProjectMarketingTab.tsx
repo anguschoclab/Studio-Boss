@@ -198,7 +198,7 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
             )}
           >
             {selectedTier === tier.id && (
-              <div className="absolute top-0 right-0 w-8 h-8 bg-primary rounded-none-2xl flex items-center justify-center">
+              <div className="absolute top-0 right-0 w-8 h-8 bg-primary rounded-none flex items-center justify-center">
                 <CheckCircle2 className="w-4 h-4 text-black" />
               </div>
             )}
