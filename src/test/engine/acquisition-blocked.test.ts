@@ -26,6 +26,7 @@ function makeState(playerCash = 5_000_000_000, targetCash = 50_000_000) {
           strength: 30,
           prestige: 30,
           archetype: "mid-tier",
+          isAcquirable: true,
         }),
       },
       contractsByProjectId: {},

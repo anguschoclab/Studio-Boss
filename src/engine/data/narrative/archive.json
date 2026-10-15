@@ -5,7 +5,7 @@
         "Acclaimed": [
           "{{project}} is a landmark achievement in contemporary cinema and a lock for awards consideration.",
           "A tour de force that reaffirms the director's status at the top of the A-list.",
-          "Exquisitely crafted and deepy resonant, {{project}} is the gold standard for the genre.",
+          "Exquisitely crafted and deeply resonant, {{project}} is the gold standard for the genre.",
           "They actually pulled it off. {{project}} is more than just a win; it's a masterclass. {{actor}} finally got a script worthy of their talent, and {{target}} is going to be milking this {{genre}} triumph all the way to the {{body}} bank.",
           "Consider our cynical hearts warmed, slightly. {{project}} lands on {{platform}} with a resounding thud – the *good* kind. A genuine, {{pct}} fresh entry that proves even {{target}} can stumble into greatness. Go figure.",
           "Forget the whispers, {{project}} just dropped like a mic. This isn't just {{genre}}; it's a cultural reset, with {{actor}} delivering a performance for the ages. Expect {{amount}} nominations and {{target}} to suddenly remember who made it.",
@@ -69,7 +69,7 @@
     "Critic": {
       "Acclaimed": [
         "A tour de force that reaffirms the director's status at the top of the A-list.",
-        "Exquisitely crafted and deepy resonant, {{project}} is the gold standard for the genre.",
+        "Exquisitely crafted and deeply resonant, {{project}} is the gold standard for the genre.",
         "{{project}} is a landmark achievement in contemporary cinema and a lock for awards consideration."
       ],
       "Mixed": [

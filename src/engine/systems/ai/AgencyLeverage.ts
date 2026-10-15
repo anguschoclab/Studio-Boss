@@ -1,6 +1,7 @@
 import { Agency, Agent, Talent, MarketState } from "../../types";
 import { clamp } from "../../utils";
 import { AGENCY_ARCHETYPES } from "../../data/archetypes";
+import { getMarketHeat } from "../industry/MacroCycle";
 
 /**
  * Phase 7: Agency Leverage Engine.
@@ -20,11 +21,20 @@ export interface LeverageResult {
 }
 
 const TALENT_TIER_EFFECTS: Record<string, { effect: number; explanation: string }> = {
-  1: { effect: 0.4, explanation: "A-List status provides maximum leverage." },
-  2: { effect: 0.2, explanation: "B-List status provides solid bargaining ground." },
-  3: { effect: 0.15, explanation: "Rising star momentum increases leverage." },
-  4: { effect: -0.1, explanation: "C-List status limits negotiation power." },
+  A_LIST: { effect: 0.4, explanation: "A-List status provides maximum leverage." },
+  B_LIST: { effect: 0.2, explanation: "B-List status provides solid bargaining ground." },
+  RISING_STAR: { effect: 0.15, explanation: "Rising star momentum increases leverage." },
+  C_LIST: { effect: -0.1, explanation: "C-List status limits negotiation power." },
 };
+
+/** Map the macro heat multiplier (~[0.55, 1.45]) onto a named market cycle. */
+function cycleFromHeat(heat: number): string {
+  if (heat >= 1.15) return "BOOM";
+  if (heat >= 1.0) return "RECOVERY";
+  if (heat >= 0.85) return "STABLE";
+  if (heat >= 0.7) return "BEAR";
+  return "RECESSION";
+}
 
 const MARKET_CYCLE_EFFECTS: Record<string, { effect: number; explanation: string }> = {
   BOOM: { effect: 0.2, explanation: "Market boom: Talent has the upper hand." },
@@ -37,6 +47,7 @@ const MARKET_CYCLE_EFFECTS: Record<string, { effect: number; explanation: string
 const AGENCY_TIER_EFFECTS: Record<string, { effect: number; explanation?: string }> = {
   powerhouse: { effect: 0.15, explanation: "powerhouse status adds significant weight." },
   major: { effect: 0.1 },
+  "mid-tier": { effect: 0.05 },
   specialist: { effect: 0.05 },
   boutique: { effect: -0.05 },
 };
@@ -78,7 +89,8 @@ export const AgencyLeverageEngine = {
     agency: Agency | undefined,
     agent: Agent | undefined,
     market: MarketState,
-    projectContext?: { buzz: number; budgetTier: string }
+    projectContext?: { buzz: number; budgetTier: string },
+    currentWeek?: number
   ): LeverageResult {
     const _buzz = projectContext?.buzz || 0;
     const explanation: string[] = [];
@@ -99,8 +111,13 @@ export const AgencyLeverageEngine = {
       explanation.push("Newcomers have minimal standing.");
     }
 
-    // 2. Market Cycle Effect
-    const cycleImpact = MARKET_CYCLE_EFFECTS[market.cycle as string];
+    // 2. Market Cycle Effect — derive the cycle from the deterministic macro
+    // heat index when no explicit cycle string is present (nothing writes
+    // market.cycle; without this fallback the table was dead code).
+    const cycle =
+      market.cycle ??
+      (currentWeek !== undefined ? cycleFromHeat(getMarketHeat(currentWeek)) : undefined);
+    const cycleImpact = cycle ? MARKET_CYCLE_EFFECTS[cycle] : undefined;
     let marketEffect = 0;
     if (cycleImpact) {
       marketEffect = cycleImpact.effect;
@@ -110,8 +127,8 @@ export const AgencyLeverageEngine = {
     // 3. Agency & Agent Effect
     let agencyEffect = 0;
     if (agency) {
-      const archetype = agency.culture
-        ? AGENCY_ARCHETYPES[agency.culture as keyof typeof AGENCY_ARCHETYPES]
+      const archetype = agency.archetype
+        ? AGENCY_ARCHETYPES[agency.archetype]
         : undefined;
       if (archetype) {
         const leverageBonus = (archetype.leverage_base / 100) * 0.2;
@@ -132,8 +149,8 @@ export const AgencyLeverageEngine = {
     // 4. Agent Tactic
     let tacticEffect = 0;
     if (agent) {
-      const archetype = agency?.culture
-        ? AGENCY_ARCHETYPES[agency.culture as keyof typeof AGENCY_ARCHETYPES]
+      const archetype = agency?.archetype
+        ? AGENCY_ARCHETYPES[agency.archetype]
         : undefined;
       const tacticMatchesArchetype = archetype?.negotiation_tactic_preferences.includes(
         agent.negotiationTactic?.toUpperCase() ?? ""

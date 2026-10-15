@@ -48,20 +48,17 @@ export function accrueAwareness(
   rng: RandomGenerator
 ): { awareness: number; shareOfVoice: number } {
   const spend = totalSpend(campaign);
-  const weeksInMarketing = campaign.weeksInMarketing || project.weeksInPhase || 0;
+  // `||` dropped 0 as a valid weeksInMarketing value — use `??`.
+  const weeksInMarketing = campaign.weeksInMarketing ?? project.weeksInPhase ?? 0;
 
   // Base accrual from effective weekly spend.
   const weeklySpend = spend / Math.max(1, weeksInMarketing);
   const angleMult = computeCampaignMultiplier(campaign, project);
   const efficiency = evaluateMarketingEfficiency(project, campaign).multiplier;
 
+  // Hype decay lives solely in evaluateMarketingEfficiency — applying it here
+  // too double-decayed gains (0.95^overdue squared).
   let gain = (weeklySpend / 1_000_000) * AWARENESS_PER_MILLION * angleMult * efficiency;
-
-  // Diminishing returns after week 4 (mirrors efficiencyEvaluator decay rule).
-  if (weeksInMarketing > 4) {
-    const overdue = weeksInMarketing - 4;
-    gain *= Math.pow(0.95, overdue);
-  }
 
   // Competitive share-of-voice.
   const share = computeShareOfVoice(spend, industryIntensity);
@@ -116,7 +113,6 @@ export function tickMarketing(
         projectId: p.id,
         update: {
           awareness,
-          shareOfVoice,
           marketingCampaign: {
             ...campaign,
             weeksInMarketing: (campaign.weeksInMarketing || 0) + 1,
@@ -128,15 +124,14 @@ export function tickMarketing(
     });
   }
 
-  // 3. Publish the aggregate for this week.
-  if (industryIntensity > 0) {
-    impacts.push({
-      type: "MARKET_EVENT_UPDATED",
-      payload: {
-        marketingIntensity: industryIntensity,
-      },
-    });
-  }
+  // 3. Publish the aggregate for this week — always, so a finished final
+  // campaign clears the intensity to 0 instead of leaving a stale value.
+  impacts.push({
+    type: "MARKET_EVENT_UPDATED",
+    payload: {
+      marketingIntensity: industryIntensity,
+    },
+  });
 
   return impacts;
 }

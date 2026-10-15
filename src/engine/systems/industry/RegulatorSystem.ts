@@ -41,7 +41,7 @@ export class RegulatorSystem {
       }
     }
 
-    const prestigeShare = (studioPrestige / totalPrestige) * 100;
+    const prestigeShare = totalPrestige > 0 ? (studioPrestige / totalPrestige) * 100 : 0;
     const subShare = totalSubs > 0 ? (studioSubs / totalSubs) * 100 : 0;
 
     // Weighted share: 60% prestige, 40% audience reach

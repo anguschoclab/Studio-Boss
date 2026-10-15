@@ -49,13 +49,19 @@ export function handleOpportunityUpdated(
   const { opportunityId, rivalId, bid } = payload;
   const opportunities = (state.market.opportunities || []).map((o) => {
     if (o.id === opportunityId) {
-      return {
-        ...o,
-        bids: {
-          ...(o.bids || {}),
-          [rivalId]: bid,
-        },
-      };
+      const bids = { ...(o.bids || {}), [rivalId]: bid };
+      // Keep highestBidderId in sync — stale leadership drove wrong
+      // aggression/spite-bid branches in the rival bidding engine.
+      let highestBidderId = o.highestBidderId;
+      let max = -1;
+      for (const id in bids) {
+        if (!Object.prototype.hasOwnProperty.call(bids, id)) continue;
+        if (bids[id].amount > max) {
+          max = bids[id].amount;
+          highestBidderId = id;
+        }
+      }
+      return { ...o, bids, highestBidderId };
     }
     return o;
   });

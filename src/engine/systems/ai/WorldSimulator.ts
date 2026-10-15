@@ -13,7 +13,13 @@ export function tickWorldEvents(state: GameState, rng: RandomGenerator): StateIm
   for (const id in projectsDict) {
     if (Object.prototype.hasOwnProperty.call(projectsDict, id)) {
       const project = projectsDict[id];
-      if (project.state === "released" && project.weeksInPhase === 1) {
+      // "Just released" = released last week; weeksInPhase never advances past
+      // release so the old check was unreachable.
+      if (
+        project.state === "released" &&
+        project.releaseWeek != null &&
+        state.week - project.releaseWeek === 1
+      ) {
         if (rng.next() < 0.25) {
           impacts.push({
             type: "NEWS_ADDED",

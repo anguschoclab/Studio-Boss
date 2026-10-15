@@ -69,7 +69,7 @@ export function tickScriptDevelopment(project: Project, rng: RandomGenerator): S
           heatGain: 5,
         };
         p.scriptEvents.push(event);
-        p.buzz += 10;
+        p.buzz = Math.min(100, p.buzz + 10);
       }
     }
     // PLOT TWIST / DIALOGUE POLISH
@@ -88,7 +88,7 @@ export function tickScriptDevelopment(project: Project, rng: RandomGenerator): S
         heatGain: type === "PLOT_TWIST_ADDED" ? 8 : 3,
       };
       p.scriptEvents.push(event);
-      p.buzz += impact;
+      p.buzz = Math.min(100, p.buzz + impact);
     }
   }
 

@@ -493,7 +493,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       if (aggressiveRivals.length > 0) {
         const rivalIdx = Math.floor(rng.next() * aggressiveRivals.length);
         const rival = aggressiveRivals[rivalIdx];
-        const counterImpact = calculateLiveCounterBid(opp, amount, rival, rng, state.week);
+        const counterImpact = calculateLiveCounterBid(opp, amount, rival, rng);
 
         if (counterImpact) {
           nextState = applyStateImpact(nextState, [counterImpact]);

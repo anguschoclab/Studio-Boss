@@ -69,7 +69,7 @@ describe("TV Awards Filtering & Taxonomy", () => {
     // New CeremonyRunner emits INDUSTRY_UPDATE impacts with award data in update
     const awardImpacts = impacts.filter((i) => i.type === "INDUSTRY_UPDATE");
     const allAwards = awardImpacts
-      .map((i) => Object.values((i.payload as any).update || {}))
+      .map((i) => (i.payload as any).update?.["industry.awards"] || [])
       .flat();
     const bestSeries = allAwards.find((a: any) => a?.category === "Best Series") as any;
 
@@ -85,7 +85,7 @@ describe("TV Awards Filtering & Taxonomy", () => {
 
     const awardImpacts = impacts.filter((i) => i.type === "INDUSTRY_UPDATE");
     const allAwards = awardImpacts
-      .map((i) => Object.values((i.payload as any).update || {}))
+      .map((i) => (i.payload as any).update?.["industry.awards"] || [])
       .flat();
     const bestSeries = allAwards.find((a: any) => a?.category === "Best Series") as any;
 

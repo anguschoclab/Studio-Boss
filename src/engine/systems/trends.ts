@@ -17,7 +17,12 @@ export const ALL_GENRES = [
 
 export function initializeTrends(): GenreTrend[] {
   // Pick 3 random genres to be the starting trends
-  const shuffled = [...ALL_GENRES].sort(() => 0.5 - secureRandom());
+  // Fisher–Yates: sort(() => 0.5 - rand()) is a biased shuffle.
+  const shuffled = [...ALL_GENRES];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(secureRandom() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
   return [
     {
       genre: shuffled[0],

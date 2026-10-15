@@ -758,11 +758,17 @@ export function generateProjectTitle(): string {
   return `${pick(PROJECT_ADJECTIVES)} ${pick(PROJECT_NOUNS)}`;
 }
 
-export function generateOpportunity(_weekOrTalentIds?: number | string[]): Opportunity {
-  // Support both old signature (week, prestige) and new (talentIds)
+export function generateOpportunity(
+  weekOrTalentIds?: number | string[],
+  currentWeek = 0
+): Opportunity {
+  // First arg accepts either the current week (number) or a talent-id list.
   let talentIds: string[] | undefined;
-  if (Array.isArray(_weekOrTalentIds)) {
-    talentIds = _weekOrTalentIds;
+  let week = currentWeek;
+  if (Array.isArray(weekOrTalentIds)) {
+    talentIds = weekOrTalentIds;
+  } else if (typeof weekOrTalentIds === "number") {
+    week = weekOrTalentIds;
   }
   const isFilm = rand() > 0.4;
   const genre: string = pick([...GENRES]);
@@ -795,7 +801,7 @@ export function generateOpportunity(_weekOrTalentIds?: number | string[]): Oppor
       talentIds && talentIds.length > 0 && rand() > 0.5 ? [pick(talentIds)] : undefined,
     bids: {},
     bidHistory: [],
-    expirationWeek: weeksUntilExpiry,
+    expirationWeek: week + weeksUntilExpiry,
   };
 
   if (!isFilm) {

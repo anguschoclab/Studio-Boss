@@ -33,7 +33,7 @@ export function getTvStats(
       ? 9.0
       : tier.budget >= 100_000_000
         ? 6.0
-        : tier.budget > 50_000_000
+        : tier.budget >= 50_000_000
           ? 4.0
           : 1.2; // The Studio Comptroller: Geometrically penalized large TV budgets and increased base scale multiplier.
   const weeklyCost = tier.weeklyCost * tvFormatData.productionCostMultiplier * scaleMultiplier;

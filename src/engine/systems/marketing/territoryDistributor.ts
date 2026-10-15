@@ -9,7 +9,6 @@ export function calculateTerritorySplit(
   const totalBudget = domesticBudget + foreignBudget;
 
   const domesticWeight = domesticBudget / Math.max(1, totalBudget);
-  const _foreignWeight = foreignBudget / Math.max(1, totalBudget);
 
   // Genre skews (e.g., Action/Sci-Fi performs better foreign, Drama/Comedy domestic)
   let genreDomesticSkew = 0.5;

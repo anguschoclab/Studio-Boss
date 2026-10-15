@@ -49,20 +49,20 @@ export function advanceOpportunityLifecycle(
   }
 
   if (rng.next() < 0.25 && availableTalentIds.length > 0) {
-    const newOpp = generateOpportunity();
+    const newOpp = generateOpportunity(state.week);
     tryAddOpp(newOpp, `A new package "${newOpp.title}" hit the market.`);
   }
 
   if (rng.next() < 0.2) {
-    tryAddOpp(generateOpportunity(), `A new script is doing the rounds in town.`);
+    tryAddOpp(generateOpportunity(state.week), `A new script is doing the rounds in town.`);
   }
 
   if (rng.next() < 0.15) {
-    tryAddOpp(generateOpportunity(), `New opportunities have hit the market!`);
+    tryAddOpp(generateOpportunity(state.week), `New opportunities have hit the market!`);
   }
 
   if (updatedOpportunities.length < 4 && rng.next() < 0.3) {
-    tryAddOpp(generateOpportunity());
+    tryAddOpp(generateOpportunity(state.week));
   }
 
   return { updatedOpportunities, uiNotifications };

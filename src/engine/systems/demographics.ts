@@ -25,7 +25,13 @@ export function calculateAudienceIndex(project: Project, target: AudienceQuadran
     // Check specific quadrant affinities
     for (const quadrant in GENRE_AFFINITIES) {
       const affinities = GENRE_AFFINITIES[quadrant];
-      if (target === quadrant || target.includes(quadrant)) {
+      // Segment match: "female_over_25" hits female+over_25 without "female"
+      // substring-matching the "male" row (includes() was matching both).
+      if (
+        target === quadrant ||
+        target.startsWith(quadrant + "_") ||
+        target.endsWith("_" + quadrant)
+      ) {
         const affinity = affinities[genre];
         if (affinity !== undefined) {
           index += affinity;

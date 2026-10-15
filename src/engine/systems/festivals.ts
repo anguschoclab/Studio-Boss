@@ -110,7 +110,7 @@ export function resolveFestivals(state: GameState): StateImpact {
       continue;
     }
 
-    if (fest.weeks.includes(state.week % 52)) {
+    if (fest.weeks.includes(state.week % 52 || 52)) {
       const project = state.entities.projects[sub.projectId];
       if (!project) {
         updatedSubmissions.push(sub);

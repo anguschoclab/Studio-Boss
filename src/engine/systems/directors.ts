@@ -48,8 +48,13 @@ export function processDirectorDisputes(
 
   if (project.state !== "production") return { updates, newCrises };
 
-  // Find the director using pre-filtered contracts for this specific project (O(1) instead of O(N) scan)
-  const dirContract = projectContracts.find((c) => c.projectId === project.id);
+  // Find the DIRECTOR's contract — the first contract for the project may be
+  // any role, which previously early-returned and skipped dispute checks.
+  const dirContract = projectContracts.find(
+    (c) =>
+      c.projectId === project.id &&
+      talentPoolMap[c.talentId]?.roles.includes("director")
+  );
   if (!dirContract) return { updates, newCrises };
 
   // O(1) Record lookup instead of full array .find()

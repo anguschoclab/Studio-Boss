@@ -62,21 +62,22 @@ export const OpportunitySystem = {
 
       const { project, newContracts } = buildProjectAndContracts(state, params);
 
-      // Update project with auction specific data
+      // Acquisition cost is paid via FUNDS_DEDUCTED/FINANCE_TRANSACTION only —
+      // not folded into project.budget (would skew ROI).
       const winnerProject = {
         ...project,
-        budget: project.budget + bidData.amount, // Acquisition cost added to budget? Or just paid from cash?
         isAcquired: true,
       };
 
       // 3. Apply Impacts based on Winner
-      if (winnerId === state.studio.id) {
+      const isPlayerWinner = winnerId === state.studio.id || winnerId === "PLAYER";
+      if (isPlayerWinner) {
         impacts.push({
           type: "FUNDS_DEDUCTED",
           payload: { amount: bidData.amount },
         });
         impacts.push({
-          newProjects: [winnerProject],
+          newProjects: [{ ...winnerProject, ownerId: state.studio.id }],
           newContracts: newContracts,
         } as StateImpact);
         impacts.push({
@@ -91,13 +92,12 @@ export const OpportunitySystem = {
         // Rival Winner
         const rival = state.entities.rivals[winnerId];
         if (rival) {
+          // PROJECT_UPDATED cannot insert — the project must arrive via the
+          // newProjects bag field or the rival is charged for nothing.
           impacts.push({
-            type: "PROJECT_UPDATED",
-            payload: {
-              projectId: winnerProject.id,
-              update: { ...winnerProject, ownerId: rival.id },
-            },
-          });
+            newProjects: [{ ...winnerProject, ownerId: rival.id }],
+            newContracts,
+          } as StateImpact);
           impacts.push({
             type: "FINANCE_TRANSACTION",
             payload: {
@@ -125,7 +125,7 @@ export const OpportunitySystem = {
 
     if (expired.length > 0 || remainingOpportunities.length < 8) {
       const toGenerate = Math.max(0, 8 - remainingOpportunities.length);
-      const newOpps = Array.from({ length: toGenerate }, () => generateOpportunity());
+      const newOpps = Array.from({ length: toGenerate }, () => generateOpportunity(state.week));
 
       impacts.push({
         type: "INDUSTRY_UPDATE",

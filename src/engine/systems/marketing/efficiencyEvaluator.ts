@@ -5,7 +5,7 @@ export function evaluateMarketingEfficiency(
   campaign: MarketingCampaign
 ): { multiplier: number; feedbackText: string } {
   let multiplier = 1.0;
-  let feedbackText: string;
+  let feedbackText = "";
 
   const { primaryAngle, domesticBudget, foreignBudget, weeksInMarketing = 0 } = campaign;
   const totalBudget = domesticBudget + foreignBudget;
@@ -16,21 +16,32 @@ export function evaluateMarketingEfficiency(
   const matches: Record<string, string[]> = {
     ACTION: ["SELL_THE_SPECTACLE", "SELL_THE_STARS"],
     "SCI-FI": ["SELL_THE_SPECTACLE", "SELL_THE_STORY"],
+    FANTASY: ["SELL_THE_SPECTACLE", "SELL_THE_STORY"],
     DRAMA: ["SELL_THE_STORY", "AWARDS_PUSH"],
     ANIMATION: ["FAMILY_ADVENTURE", "SELL_THE_SPECTACLE"],
     FAMILY: ["FAMILY_ADVENTURE"],
     COMEDY: ["SELL_THE_STARS", "SELL_THE_STORY"],
+    MUSICAL: ["SELL_THE_STARS", "SELL_THE_SPECTACLE"],
     HORROR: ["SELL_THE_SPECTACLE", "SELL_THE_STORY"],
     ROMANCE: ["SELL_THE_STARS", "SELL_THE_STORY"],
+    THRILLER: ["SELL_THE_STORY", "SELL_THE_SPECTACLE"],
+    MYSTERY: ["SELL_THE_STORY"],
+    CRIME: ["SELL_THE_STORY", "SELL_THE_STARS"],
+    WESTERN: ["SELL_THE_SPECTACLE", "SELL_THE_STARS"],
+    DOCUMENTARY: ["SELL_THE_STORY", "AWARDS_PUSH"],
+    HISTORICAL: ["SELL_THE_STORY", "AWARDS_PUSH"],
   };
 
-  if (matches[genre]?.includes(primaryAngle)) {
-    multiplier += 0.2;
-    feedbackText = `The ${primaryAngle} angle resonates perfectly with the ${project.genre} audience.`;
-  } else {
-    multiplier -= 0.15;
-    feedbackText = `Audience research suggests the ${primaryAngle} angle feels misleading for a ${project.genre} and has wasted some of the budget.`;
+  if (matches[genre]) {
+    if (matches[genre].includes(primaryAngle)) {
+      multiplier += 0.2;
+      feedbackText = `The ${primaryAngle} angle resonates perfectly with the ${project.genre} audience.`;
+    } else {
+      multiplier -= 0.15;
+      feedbackText = `Audience research suggests the ${primaryAngle} angle feels misleading for a ${project.genre} and has wasted some of the budget.`;
+    }
   }
+  // Unknown genres get a neutral read rather than the misleading-angle penalty.
 
   // 2. Budget Scale Logic
   if (totalBudget > project.budget * 0.8) {

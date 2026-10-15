@@ -95,7 +95,9 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
         target,
         agency,
         agent,
-        state.finance.marketState
+        state.finance.marketState,
+        undefined,
+        state.week
       );
       let leveragedFee = AgencyLeverageEngine.getRequiredFee(lockFee, leverage);
 

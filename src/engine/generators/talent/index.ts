@@ -1,4 +1,4 @@
-import { Talent, TalentRole, Family, Agency, Agent, TalentTier } from "../../types/talent.types";
+import { Talent, TalentRole, Family, Agency, Agent, TalentTier, DirectorArchetype } from "../../types/talent.types";
 import { generateDemographics } from "./demographicsGenerator";
 import { psychologyGenerator } from "./psychologyGenerator";
 import { generateDemographicName } from "../names";
@@ -73,10 +73,14 @@ export function generateTalent(params: {
     draw: Math.min(100, draw),
 
     accessLevel: isNepo ? "legacy" : "outsider",
+    directorArchetype:
+      params.role === "director"
+        ? pick(["auteur", "journeyman", "visionary", "commercial_hack"] as DirectorArchetype[])
+        : undefined,
     momentum: 50,
     perks,
 
-    starMeter: Math.floor(prestige * 0.4 + draw * 0.4 + prestige * 0.2),
+    starMeter: Math.floor(prestige * 0.4 + draw * 0.4 + 50 * 0.2),
     bio: `${name} is a ${params.tier} ${params.role}.`,
     motivationProfile: {
       financial: Math.floor(randRange(20, 80)),
@@ -118,9 +122,7 @@ export function generateTalentPool(
     const role = pick(roles);
     const tierRoll = rand();
     let tier: TalentTier = "C_LIST";
-    if (tierRoll > 0.98)
-      tier = "A_LIST"; // Simplified for simulation start
-    else if (tierRoll > 0.9) tier = "A_LIST";
+    if (tierRoll > 0.9) tier = "A_LIST";
     else if (tierRoll > 0.7) tier = "B_LIST";
     else if (tierRoll < 0.2) tier = "NEWCOMER";
 

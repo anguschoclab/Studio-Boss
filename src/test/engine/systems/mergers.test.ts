@@ -21,6 +21,7 @@ describe("Mergers and Sabotage System", () => {
       cash: 5_000_000,
       prestige: 20,
       strength: 10,
+      isAcquirable: true,
     });
 
     mockState = createMockGameState({

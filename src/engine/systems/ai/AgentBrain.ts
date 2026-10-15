@@ -216,7 +216,7 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
     if (rival.currentMotivation === "CASH_CRUNCH") continue;
 
     if (rng.next() < 0.02) {
-      const crisisCost = rival.cash * 0.05;
+      const crisisCost = Math.max(0, rival.cash) * 0.05;
       impacts.push({
         type: "FINANCE_TRANSACTION",
         payload: {
@@ -229,7 +229,7 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
         type: "NEWS_ADDED",
         payload: {
           headline: `${rival.name} faces production setback, sources say costs have escalated.`,
-          description: `Industry sources confirm ${rival.name} is dealing with an unexpected production issue that has impacted their Q${Math.floor(state.week / 13) + 1} budget.`,
+          description: `Industry sources confirm ${rival.name} is dealing with an unexpected production issue that has impacted their Q${(Math.floor((state.week - 1) / 13) % 4) + 1} budget.`,
         },
       });
     }

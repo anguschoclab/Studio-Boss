@@ -15,8 +15,6 @@ const ArchetypeMultipliers: Record<string, (genre: string) => number> = {
   indie: (genre) => (genre === "Drama" || genre === "Horror" ? 1.4 : 0.8),
   major: (genre) => (genre === "Sci-Fi" || genre === "Action" ? 1.6 : 0.6),
   "mid-tier": () => 1.15,
-  boutique: (genre) => (genre === "Drama" || genre === "Art House" ? 1.5 : 0.7),
-  streamer: (genre) => (genre === "Sci-Fi" || genre === "Fantasy" ? 1.4 : 0.9),
 };
 
 interface MotivationBias {
@@ -106,11 +104,20 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
         multiplier = 1.8;
       }
 
-      if (myBid < currentHighest && rival.cash > currentHighest * cashThreshold) {
+      // Open bidding against the ask price when no bids exist yet — otherwise
+      // unbid auctions are permanent no-ops and rivals can never be outbid.
+      const referenceBid = currentHighest > 0 ? currentHighest : opportunity.costToAcquire || 0;
+      const isOpeningBid = currentHighest === 0 && myBid === 0;
+      if (
+        referenceBid > 0 &&
+        myBid < referenceBid &&
+        rival.cash > referenceBid * cashThreshold &&
+        (!isOpeningBid || rng.next() < 0.3)
+      ) {
         const archetypeFactor =
           ArchetypeMultipliers[rival.archetype as ArchetypeKey]?.(opportunity.genre) || 1.0;
         const totalMultiplier = archetypeFactor * aggressionFactor * multiplier;
-        const newBid = Math.floor(currentHighest * (1 + rng.range(0.05, 0.2) * totalMultiplier));
+        const newBid = Math.floor(referenceBid * (1 + rng.range(0.05, 0.2) * totalMultiplier));
 
         let trendMultiplier = 1.0;
         const genreTrend = opportunity.genre
@@ -153,9 +160,7 @@ export function calculateLiveCounterBid(
   opportunity: Opportunity,
   playerBid: number,
   rival: RivalStudio,
-  rng: RandomGenerator,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  week: number
+  rng: RandomGenerator
 ): StateImpact | null {
   if (rival.cash < playerBid * 2 || rival.prestige < 60) return null;
 

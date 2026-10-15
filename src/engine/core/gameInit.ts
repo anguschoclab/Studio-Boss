@@ -230,7 +230,9 @@ export function initializeGame(
       bookmarks: [],
     },
     market: {
-      opportunities: Array.from({ length: 4 }, () => generateOpportunity(Object.keys(talentPool))),
+      opportunities: Array.from({ length: 4 }, () =>
+        generateOpportunity(Object.keys(talentPool), 1)
+      ),
       buyers: initialBuyers,
     },
     industry: {

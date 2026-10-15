@@ -9,19 +9,24 @@ import { pick, randRange, generateId, rand } from "../utils";
 import { PREMIUM_PREFIXES, PREMIUM_SUFFIXES } from "../data/names.data";
 import { BrandSystem } from "./BrandSystem";
 
-function generateBuyerName(archetype: BuyerArchetype, existing: Set<string>): string {
-  const identity = BrandSystem.generateIdentity(existing);
-  switch (archetype) {
-    case "network":
-      return BrandSystem.getNetworkName(identity);
-    case "premium": {
-      const prefix = pick(PREMIUM_PREFIXES);
-      const suffix = pick(PREMIUM_SUFFIXES);
-      return `${prefix} ${suffix}`;
+function generateBuyerName(
+  archetype: BuyerArchetype,
+  existing: Set<string>
+): { name: string; core?: string } {
+  if (archetype === "premium") {
+    // Premium names ignore the brand identity — dedupe on the full name.
+    for (let attempt = 0; attempt < 50; attempt++) {
+      const name = `${pick(PREMIUM_PREFIXES)} ${pick(PREMIUM_SUFFIXES)}`;
+      if (!existing.has(name)) return { name };
     }
-    case "streamer":
-      return BrandSystem.getStreamingName(identity);
+    return { name: `${pick(PREMIUM_PREFIXES)} ${pick(PREMIUM_SUFFIXES)}` };
   }
+  const identity = BrandSystem.generateIdentity(existing);
+  const name =
+    archetype === "network"
+      ? BrandSystem.getNetworkName(identity)
+      : BrandSystem.getStreamingName(identity);
+  return { name, core: identity.core };
 }
 
 export function generateBuyers(config?: {
@@ -35,8 +40,9 @@ export function generateBuyers(config?: {
 
   // Generate networks
   for (let i = 0; i < networks; i++) {
-    const name = generateBuyerName("network", usedNames);
+    const { name, core } = generateBuyerName("network", usedNames);
     usedNames.add(name);
+    if (core) usedNames.add(core);
     const buyer: NetworkPlatform = {
       id: generateId("BUY"),
       name,
@@ -50,7 +56,7 @@ export function generateBuyers(config?: {
 
   // Generate premium platforms
   for (let i = 0; i < premium; i++) {
-    const name = generateBuyerName("premium", usedNames);
+    const { name } = generateBuyerName("premium", usedNames);
     usedNames.add(name);
     const buyer: PremiumPlatform = {
       id: generateId("BUY"),
@@ -66,8 +72,9 @@ export function generateBuyers(config?: {
 
   // Generate streamers
   for (let i = 0; i < streamers; i++) {
-    const name = generateBuyerName("streamer", usedNames);
+    const { name, core } = generateBuyerName("streamer", usedNames);
     usedNames.add(name);
+    if (core) usedNames.add(core);
     const buyer: StreamerPlatform = {
       id: generateId("BUY"),
       name,

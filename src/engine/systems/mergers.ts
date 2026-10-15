@@ -83,6 +83,23 @@ export function evaluateAcquisitionTarget(
 export function executeAcquisition(state: GameState, targetId: string): MergerResult {
   const target = state.entities.rivals[targetId];
   if (!target) return { state, newsEvents: [] };
+  // The isAcquirable flag is the intended gate — a distressed/valued rival
+  // can be bought; a healthy one rejects outright takeover attempts.
+  if (!target.isAcquirable) {
+    return {
+      state,
+      newsEvents: [
+        {
+          id: generateId("NEWS"),
+          week: state.week,
+          type: "STUDIO_EVENT" as const,
+          headline: `${target.name} REJECTS TAKEOVER`,
+          description: `${target.name} is not interested in acquisition talks. Only distressed rivals can be bought outright.`,
+          category: "general" as const,
+        },
+      ],
+    };
+  }
   const evalResult = evaluateAcquisitionTarget(target, state.finance.cash);
   if (!evalResult.viable) return { state, newsEvents: [] };
 

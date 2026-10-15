@@ -29,7 +29,7 @@ export const SchedulingEngine = {
           payload: {
             projectId: project.id,
             update: {
-              weeksInPhase: Math.max(0, project.weeksInPhase - 1), // Delay progress
+              weeksInPhase: Math.max(0, (project.weeksInPhase || 0) - 1), // Delay progress
             },
           },
         });

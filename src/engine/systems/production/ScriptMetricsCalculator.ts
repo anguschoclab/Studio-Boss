@@ -101,7 +101,7 @@ export const ScriptMetricsCalculator = {
    * Event density also contributes.
    */
   calculatePacingScore(project: ScriptedProject, events: ScriptEvent[], heat: number): number {
-    const eventDensity = events.length / Math.max(1, project.budgetTier === "blockbuster" ? 10 : 5);
+    const eventDensity = events.length / (project.budgetTier === "blockbuster" ? 10 : 5);
     const score = heat * 0.7 + eventDensity * 30;
     return Math.max(0, Math.min(100, score));
   },

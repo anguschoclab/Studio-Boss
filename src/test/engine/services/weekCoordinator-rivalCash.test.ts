@@ -32,7 +32,9 @@ function expectCashConserved(
   const before = state.entities.rivals[rivalId].cash;
   const after = result.newState.entities.rivals[rivalId].cash;
   const deltaSum = cashDeltas(result.impacts, rivalId).reduce((a, b) => a + b, 0);
-  expect(after).toBe(before + deltaSum);
+  // Float-grouping differs between sequential application and summed deltas —
+  // assert conservation within sub-cent precision rather than bit-equality.
+  expect(after).toBeCloseTo(before + deltaSum, 6);
 }
 
 describe("WeekCoordinator — rival cash deltas survive the whole tick pipeline", () => {

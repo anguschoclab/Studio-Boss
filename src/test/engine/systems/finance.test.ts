@@ -112,15 +112,12 @@ describe("Finance System", () => {
       const state = createMockGameState({
         week: 1,
         finance: { ...createMockGameState().finance, cash: 1000000 },
-        studio: {
-          ...createMockGameState().studio,
-          internal: {
-            ...createMockGameState().studio.internal,
-            projects: {
-              dev: mockProjectDev,
-              prod: mockProjectProd,
-              rel: releasedWithDist,
-            },
+        entities: {
+          ...createMockGameState().entities,
+          projects: {
+            dev: mockProjectDev,
+            prod: mockProjectProd,
+            rel: releasedWithDist,
           },
         },
       });
@@ -176,14 +173,11 @@ describe("Finance System", () => {
       const state = createMockGameState({
         week: 1,
         finance: { ...createMockGameState().finance, cash: 1000000 },
-        studio: {
-          ...createMockGameState().studio,
-          internal: {
-            ...createMockGameState().studio.internal,
-            projects: {
-              prod: mockProjectProd,
-              rel: releasedWithDist,
-            },
+        entities: {
+          ...createMockGameState().entities,
+          projects: {
+            prod: mockProjectProd,
+            rel: releasedWithDist,
           },
         },
       });
