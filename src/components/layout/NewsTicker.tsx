@@ -45,7 +45,10 @@ export const NewsTicker: React.FC = () => {
   if (!headlines || headlines.length === 0) {
     return (
       <div className="flex-1 flex items-center gap-4 px-6 py-2 bg-white/[0.01] rounded-none border border-white/5 overflow-hidden backdrop-blur-3xl">
-        <Newspaper className="h-4 w-4 text-primary shrink-0 drop-shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
+        <Newspaper
+          className="h-4 w-4 text-primary shrink-0 drop-shadow-[0_0_10px_rgba(var(--primary),0.5)]"
+          aria-hidden="true"
+        />
         <span className="text-[10px] font-black text-muted-foreground/20 italic tracking-[0.2em] uppercase truncate">
           <span className="text-primary font-black mr-4">THE TRADES:</span>
           ESTABLISHING UPLINK TO INDUSTRY DATABASE...
@@ -61,7 +64,7 @@ export const NewsTicker: React.FC = () => {
     <>
       <div className="flex-1 max-w-2xl hidden xl:flex items-center gap-6 px-0 py-0 bg-white/[0.01] rounded-none border border-white/5 overflow-hidden group relative backdrop-blur-3xl h-10 shadow-2xl">
         <div className="flex items-center gap-3 bg-black/90 px-6 z-20 border-r border-white/10 h-full shrink-0">
-          <Newspaper className="h-4 w-4 text-primary shrink-0" />
+          <Newspaper className="h-4 w-4 text-primary shrink-0" aria-hidden="true" />
           <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary italic drop-shadow-[0_0_15px_rgba(var(--primary),0.6)]">
             THE TRADES
           </span>
@@ -79,10 +82,10 @@ export const NewsTicker: React.FC = () => {
                   key={`${item.id}-${idx}`}
                   onClick={(e) => handleItemClick(e, item)}
                   aria-label={`Read more about: ${item.headline}`}
-                  className={`flex items-center gap-6 group/item hover:opacity-100 transition-opacity focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm ${isClickable(item) ? "cursor-pointer" : "cursor-pointer"}`}
+                  className={`flex items-center gap-6 group/item hover:opacity-100 transition-opacity focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm ${isClickable(item) ? "cursor-pointer" : "cursor-default"}`}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon className={cn("h-3.5 w-3.5", config.color)} />
+                    <Icon className={cn("h-3.5 w-3.5", config.color)} aria-hidden="true" />
                     <span className="text-[11px] font-black text-muted-foreground/30 group-hover/item:text-foreground transition-all duration-700 italic tracking-tight">
                       <span
                         className={cn(

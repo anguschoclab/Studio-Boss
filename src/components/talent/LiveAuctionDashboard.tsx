@@ -197,6 +197,13 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({
                     playerBid <= currentMaxBid ||
                     (gameState ? gameState.finance.cash < playerBid : true)
                   }
+                  tooltip={
+                    playerBid <= currentMaxBid
+                      ? "Bid must exceed the current highest bid"
+                      : !gameState || gameState.finance.cash < playerBid
+                        ? "Insufficient funds"
+                        : undefined
+                  }
                 >
                   Place Binding Counter-Bid
                 </Button>

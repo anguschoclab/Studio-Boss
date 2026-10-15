@@ -20,8 +20,20 @@ export const OpportunitySystem = {
 
     expired.forEach((opp) => {
       // 1. Resolve Highest Bidder
-      const bidders = Object.entries(opp.bids);
-      if (bidders.length === 0) {
+      // ⚡ Bolt Optimization: Replaced Object.entries().sort() with a single-pass for...in loop to find the highest bidder
+      let winnerId: string | null = null;
+      let maxBidAmount = -1;
+
+      for (const bidderId in opp.bids) {
+        if (!Object.prototype.hasOwnProperty.call(opp.bids, bidderId)) continue;
+        const bid = opp.bids[bidderId];
+        if (bid.amount > maxBidAmount) {
+          maxBidAmount = bid.amount;
+          winnerId = bidderId;
+        }
+      }
+
+      if (!winnerId) {
         // No one bid, just expire it
         impacts.push({
           type: "OPPORTUNITY_UPDATED",
@@ -30,9 +42,7 @@ export const OpportunitySystem = {
         return;
       }
 
-      // Find winner
-      const sortedBids = bidders.sort((a, b) => b[1].amount - a[1].amount);
-      const [winnerId, bidData] = sortedBids[0];
+      const bidData = opp.bids[winnerId];
 
       // 2. Build Project
       const params: CreateProjectParams = {
