@@ -277,3 +277,97 @@ Executed under strict test-first discipline: Phase-0 pinned characterization and
 - One `as` at the `applySingleImpact` dispatch site — TS cannot correlate a dynamic union key to a mapped handler signature (language limitation).
 - `rivalProduction` uses `as Project`/`as SeriesProject` on freshly-built literals where `type` is a runtime variable — a union-member can't be selected by a union-typed discriminator at literal construction.
 - `GEMINI_API_KEY` still recoverable from git history — **user must rotate**.
+
+---
+
+## Round 4 (2026-XX-XX) — Exhaustive Audit & Consolidation
+
+**Integration branch:** `consolidation/integration-r4` → merged to `main`
+**Baseline (measured at start):** typecheck 0 err · lint 0 problems · 1958/1958 tests · build green
+**Remote cleanup:** 31 PRs (#893–#926) triaged with verdict comments and closed; all remote branches deleted.
+
+### Per-PR Verdict Table
+
+| PR                                    | Cluster                       | Verdict                  | Rationale                                                                                                |
+| ------------------------------------- | ----------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------- |
+| #900                                  | bolt snapshotSlice            | **Integrated**           | Winning variant: project counting via `for...in`.                                                        |
+| #893                                  | bolt snapshotSlice            | **Rejected**             | Identical intent but diff polluted with 16 junk `patch_*.js` artifacts.                                  |
+| #916                                  | bolt selectFatigueForAsset    | **Integrated**           | Single-pass selector, no array allocation.                                                               |
+| #897, #902                            | bolt selectFatigueForAsset    | **Superseded**           | Byte-identical to #916.                                                                                  |
+| #914                                  | bolt greenlight completeness  | **Integrated**           | Strict superset — covers #911 and the greenlight hunk of #920.                                           |
+| #911, #920 (greenlight hunk)          | bolt greenlight completeness  | **Superseded**           | Subsumed by #914.                                                                                        |
+| #920 (synergy hunk)                   | bolt                          | **Integrated**           | Vault synergy Set-init without `.map().filter()` chains; the non-greenlight half landed.                 |
+| #917                                  | bolt RivalRevenueCalculator   | **Integrated**           | Fused reduce loops.                                                                                      |
+| #913                                  | bolt RivalRevenueCalculator   | **Superseded**           | Byte-identical to #917.                                                                                  |
+| #905 + #926 + #923 (breadcrumb hunk)  | palette aria-hidden           | **Integrated (union)**   | Per-file hash comparison proved the union covers all 9 files; #923 uniquely covers `MoreHorizontal`.     |
+| #901, #904, #909, #910, #912, #915, #919, #923 (non-breadcrumb) | palette aria-hidden | **Superseded**           | Subsets of the union — verified byte-identical on shared files.                                          |
+| #894, #895, #898, #922, #924, #925    | bolt singles                  | **Integrated**           | All verified behavior-preserving (#898 adapted — one hunk failed against diverged NielsenDashboard).     |
+| #921                                  | palette tooltips              | **Integrated (adapted)** | PR targeted dead `discovery/LiveAuctionDashboard.tsx`; intent applied to live `talent/` component.       |
+| #918                                  | palette                       | **Integrated**           | NewsTicker decorative icon aria-hidden.                                                                  |
+| #903, #906                            | sentinel sandbox              | **Moot — closed**        | `sandbox: true` already on main via #908; both PRs no-ops.                                               |
+
+**Totals: 11 integrated (incl. adapted), 20 superseded/rejected/moot, 0 unresolved.**
+
+### Validation Findings (approve/disprove record)
+
+| Claim                                             | Verdict               | Outcome                                                                                                    |
+| ------------------------------------------------- | --------------------- | ---------------------------------------------------------------------------------------------------------- |
+| #921 lands on the live auction component          | **Disproven**         | It patched a dead `discovery/` duplicate; adapted to `talent/LiveAuctionDashboard.tsx`; dead copy deleted. |
+| Palette union = #905 + #926                       | **Disproven**         | #926 misses breadcrumb `MoreHorizontal`; correct union adds #923's breadcrumb hunk.                        |
+| BehaviorEngine compares 0–100 share vs 0.4        | **Disproven**         | `RivalStudio.marketShare` is written on a 0–1.0 scale everywhere; the comparison is correct — only the type comment (0–100) was wrong. |
+| `.Jules`/`.jules` case collision                  | **Approved**          | Normalized to `.Jules/`; learning files restored from history.                                             |
+| Empty vestigial `src/routes/`                     | **Approved**          | Removed.                                                                                                    |
+| NewsTicker dead `cursor-pointer : cursor-pointer` | **Approved**          | Replaced with intent: non-linked headlines get `cursor-default`; fallback Newspaper icon hidden.           |
+| Baseline lint ≤66 warnings                        | **Disproven (stale)** | Measured baseline was 0 problems.                                                                          |
+
+### Engine Correctness Bugs Found & Fixed (test-first where applicable)
+
+| Bug                                                                                    | Fix                                                                                              |
+| -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Bag impacts silently dropped `buyerUpdates`, `newRumors`, `newFestivalSubmissions`, `newScandals`, `talentUpdates`; `newsEvents.week` not forwarded | `applySingleImpact` bag branch now dispatches every supported field; week forwarded (red→green verified, `bagImpacts.test.ts`) |
+| `handleBuyerUpdated` only mapped existing buyers — new buyers never inserted             | Merge + insert path added                                                                          |
+| Ceremony awards written as named props on `Award[]` (invisible to `.filter`, dropped by `JSON.stringify`) | Single appended-array write per ceremony batch; **also fixed per-award overwrite** — each impact previously wrote `[...base, award]` against the same base, dropping all but the last award |
+| LoanSystem bankruptcy check unreachable / mis-ordered                                   | Pre-payment and post-payment checks                                                              |
+| IP vault synergy compounded `baseValue` every tick                                       | `synergyBoost` field recomputed non-destructively; valuation/revenue sites apply it              |
+| `studio.internal.projects/contracts` were stale mirrors                                 | All readers/writers moved to canonical `entities.*`; field now optional+deprecated; `gameInit` no longer initializes it |
+| `doAdvanceWeek` ran side effects inside the Zustand setter                              | Pure compute → `set` → side effects; autosave epoch guards stale writes across `newGame`         |
+| Headless sim processed rival projects as player projects                                 | `isPlayerOwner` filter (tolerant of missing `ownerId`); new projects get `ownerId: studio.id`    |
+| `generateOpportunity` stored duration as absolute `expirationWeek` — post-week-12 offers born expired | Accepts current week; stores `currentWeek + weeksUntilExpiry`                                   |
+| Rival auction winners emitted `PROJECT_UPDATED` for nonexistent projects                 | Creates/inserts owned project instead                                                            |
+| `TALENT_TIER_EFFECTS` keyed by numeric strings; `AGENCY_ARCHETYPES` indexed by `culture` | Rekeyed to real `TalentTier`/`archetype`; `mid-tier` row added                                   |
+| `MARKET_CYCLE_EFFECTS` unreachable — nothing writes `market.cycle`                       | Cycle derived from deterministic `getMarketHeat(week)`                                           |
+| Rival bidding: `myBid < currentHighest` with 0 bids → rivals could never open auctions   | Opening bids reference `costToAcquire` at 30% gate; `handleOpportunityUpdated` now syncs `highestBidderId` (was stale → wrong spite-bid branches) |
+| `executeAcquisition` bypassed the distress gate                                          | `isAcquirable` gate — healthy rivals reject outright takeovers                                   |
+| `AgentBrain` quarter `Q5+` off-by-one; crisis cost could pay rivals with negative cash   | `(week-1)/13 % 4 + 1`; `Math.max(0, cash)` clamp                                                 |
+| `directorArchetype` declared & consumed but never assigned                               | Generated for director-role talent                                                               |
+| `buyers.ts` name dedupe added full names but not cores; premium path ignored `existing`  | Core tracking + bounded retry loop                                                               |
+| `CeremonyRunner` modal extraction reverse-engineered awards from arbitrary `Object.values(update)` | `newAwards` rides the impact payload explicitly                                                  |
+| Script buzz unbounded; `starMeter` read a phantom `momentum` var; dead tier branch        | `Math.min(100, …)` caps; correct momentum term; branch removed                                   |
+| Marketing: awareness accrual / share-of-voice / efficiency evaluator                     | Reworked: `||` → `??`, single hype-decay site, SoV multiplier, seeded jitter                     |
+| `schedulingEngine` NaN path; non-seeded `.sort(() => rand)` shuffle; stats boundary; festivals week-52; demographics quadrant-vs-segment matching; directors picked non-director contracts | Fixed respectively                                                                               |
+
+### Dead Code & Data Hygiene
+
+- **Deleted 70+ files / ~12.7k LOC:** 57 unmounted components (dead views, panels, tabs, charts, modals absent from `ModalManager`) + orphan tests; `engine.worker.ts`, `SimulationHarness`, `talentHelpers`, `ReviewSystem`, `RivalBiddingEngine` (duplicate of `biddingEngine`), 5 unused `projectHandlers`, `OpportunityModule`, `unscriptedTaxonomy`, `worldEvents.data`, `talentStatsSlice`, `progressCalculator`, `crisisEvaluator`, `useFinanceHistory`. All verified zero non-test references before deletion.
+- **`headlines.data.ts`:** 51 exact-duplicate entries removed.
+- **`archive.json`:** `"deepy resonant"` → `"deeply resonant"`.
+- **`awards.data.ts`:** `p.buzz` NaN-safe.
+- **Tailwind:** corrupted `rounded-none-*` compound classes (botched no-rounding sweep produced invalid classes) normalized to `rounded-none`.
+- **UI honesty:** fabricated chrome removed — `ESTABLISHING UPLINK TO INDUSTRY DATABASE`, `UPLINK STABLE`, `UPLINK OFFLINE`, `SECURE EXECUTIVE ACCESS`, `EXCLUSIVE INTEL STREAM`, `DATA UPLINK ONGOING`, `SECURE VAULT EMPTY`; week badge now shows the real week.
+- **Vacuous `distress-flow` test** rewritten to drive the real `doAdvanceWeek` `MODAL_TRIGGERED → enqueueModal` bridge (heavy tick mocked).
+
+### Architectural Choices Approved / Disproven
+
+- **Canonical `entities.*` as the single store** — **Approved & enforced.** The `studio.internal` mirror is deprecated (optional, never written); save schema accepts legacy ghost keys for load tolerance.
+- **Bag-impact compatibility layer** — **Approved with enforcement.** Kept for legacy emitters, but every declared bag field is now dispatched; silent drops treated as bugs.
+- **Player-ownership via `isPlayerOwner`/`ownerId`** — **Approved.** Fixtures without `ownerId` treated as player-owned for tolerance; all new creations tag `ownerId`.
+- **`handleNewsAdded` no-op** — **Approved as designed.** `WeekCoordinator.buildSummary()` collects news from impacts; double-writing would duplicate.
+- **Determinism** — **Approved & maintained.** No new `Math.random()`/`Date.now()` in engine paths; remaining randomness flows through seeded `RandomGenerator`.
+- **`MERGER_OFFERED`/`MERGER_RESOLVED` impact types** — **Documented dead.** Zero emitters; registry entries retained as reserved vocabulary, no handlers required.
+
+### Final Gates (post-integration)
+
+- `bun run typecheck` — **0 errors**
+- `bun run lint` — **0 problems**
+- Fast suite (`vitest run` minus 52-week snapshot/determinism slow files, per instruction) — **green** (1868+ tests; slow suite deferred to ad-hoc runs)
+- `bun run build` — **green**
