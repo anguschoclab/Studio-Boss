@@ -238,7 +238,7 @@ export const StudioSidebar = () => {
               </span>
               <span className="text-lg font-display font-black text-foreground italic leading-none">
                 {
-                  Object.values(gameState.studio.internal?.projects || {}).filter(
+                  Object.values(gameState.entities?.projects || {}).filter(
                     (p) =>
                       p.state !== "released" && p.state !== "post_release" && p.state !== "archived"
                   ).length

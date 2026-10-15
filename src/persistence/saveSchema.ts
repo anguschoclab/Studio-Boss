@@ -40,7 +40,8 @@ export const SAVE_SCHEMA = z
             projects: z.record(z.string(), z.unknown()),
             contracts: z.array(z.unknown()),
           })
-          .passthrough(),
+          .passthrough()
+          .optional(),
       })
       .passthrough(),
     entities: z

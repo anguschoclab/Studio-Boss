@@ -89,12 +89,9 @@ describe("Finance System", () => {
       } as unknown as Project;
       const state = createMockGameState({
         finance: { ...createMockGameState().finance, cash: 500000 },
-        studio: {
-          ...createMockGameState().studio,
-          internal: {
-            ...createMockGameState().studio.internal,
-            projects: { p1: p1 },
-          },
+        entities: {
+          ...createMockGameState().entities,
+          projects: { p1: p1 },
         },
       });
       // Cash (500k)
@@ -135,12 +132,9 @@ describe("Finance System", () => {
       const state = createMockGameState({
         week: 1,
         finance: { ...createMockGameState().finance, cash: 1000000 },
-        studio: {
-          ...createMockGameState().studio,
-          internal: {
-            ...createMockGameState().studio.internal,
-            projects: {},
-          },
+        entities: {
+          ...createMockGameState().entities,
+          projects: {},
         },
       });
       const pendingImpacts: StateImpact[] = [

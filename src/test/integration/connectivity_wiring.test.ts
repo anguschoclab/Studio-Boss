@@ -14,7 +14,6 @@ describe("System Connectivity - Phase 3 Integration", () => {
 
   test("WeekCoordinator annual tick triggers IP scan", () => {
     const projId = "proj-seed" as ProjectId;
-    state.studio.internal.projectHistory = [projId];
     state.entities.projects = {
       [projId]: {
         id: projId,
@@ -28,9 +27,6 @@ describe("System Connectivity - Phase 3 Integration", () => {
         isCultClassic: false,
         ownerId: state.studio.id,
       } as any,
-    };
-    (state.studio.internal as any).projects = {
-      [projId]: state.entities.projects[projId],
     };
 
     state.ip.vault = [
@@ -84,7 +80,6 @@ describe("System Connectivity - Phase 3 Integration", () => {
     } as unknown as Project;
 
     state.entities.projects = { ["p1" as ProjectId]: project };
-    (state.studio.internal as any).projects = { ["p1"]: project };
 
     const result = WeekCoordinator.execute(state);
     expect(result.summary.totalRevenue).toBeGreaterThan(0);

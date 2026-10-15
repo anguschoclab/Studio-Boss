@@ -132,7 +132,8 @@ describe("saveSchema integrity", () => {
       studio: {
         ...validState.studio,
         internal: {
-          ...validState.studio.internal,
+          projectHistory: [],
+          contracts: [],
           projects: {
             "ghost-proj": { id: "ghost-proj", title: "G", type: "FILM", state: "development" },
           },

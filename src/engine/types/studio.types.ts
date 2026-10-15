@@ -126,7 +126,12 @@ export interface GameState {
     /** Studio progression level (drives overhead scaling); absent = 1. */
     level?: number;
     culture?: StudioCulture;
-    internal: {
+    /**
+     * @deprecated Stale mirror — canonical storage is `entities.projects` /
+     * `entities.contracts`. Retained only for save-schema compatibility; no
+     * runtime code reads or writes it.
+     */
+    internal?: {
       projectHistory: string[]; // List of project IDs
       projects: Record<string, Project>;
       contracts: Contract[];

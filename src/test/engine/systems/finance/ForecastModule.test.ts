@@ -30,7 +30,7 @@ describe("ForecastModule - generateCashflowForecast", () => {
 
   it("handles empty projects state without crashing", () => {
     const state = createMockGameState({ week: 1 });
-    state.studio.internal.projects = {};
+    state.entities.projects = {};
     const forecast = generateCashflowForecast(state, 4);
     expect(forecast).toHaveLength(4);
   });

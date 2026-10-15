@@ -22,7 +22,7 @@ export function calculateStudioNetWorth(state: GameState): number {
 
   // 2. Active Projects Inventory (Work in Progress value)
   // We value "Inventory" as 50% of the budget already spent
-  const wipProjects = state.studio?.internal?.projects || {};
+  const wipProjects = state.entities?.projects || {};
   for (const pid in wipProjects) {
     const p = wipProjects[pid];
     if (p.state !== "released" && p.state !== "archived") {

@@ -221,11 +221,6 @@ export function initializeGame(
       name: studioName,
       archetype,
       prestige: arch.startingPrestige,
-      internal: {
-        projectHistory: [],
-        projects: {},
-        contracts: [],
-      },
       ownedPlatforms: playerOwnedPlatforms,
       bookmarks: [],
     },

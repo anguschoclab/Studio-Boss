@@ -24,13 +24,6 @@ describe("Week Advance Pipeline (Target A4)", () => {
   it("handles extreme edge case: advancing weeks with an empty pipeline", () => {
     const emptyState = createMockGameState({
       week: 1,
-      studio: {
-        ...createMockGameState().studio,
-        internal: {
-          ...createMockGameState().studio.internal,
-          projects: {}, // Empty pipeline
-        },
-      },
       entities: {
         projects: {},
         releasedProjectIds: [],
@@ -47,6 +40,6 @@ describe("Week Advance Pipeline (Target A4)", () => {
     expect(newState.week).toBe(2);
     expect(summary.fromWeek).toBe(1);
     expect(summary.toWeek).toBe(2);
-    expect(newState.studio.internal.projects).toEqual({});
+    expect(newState.entities.projects).toEqual({});
   });
 });
