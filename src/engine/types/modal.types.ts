@@ -22,7 +22,8 @@ export type ModalType =
   | "DISTRESSED_ASSET_OFFER"
   | "GREENLIGHT_DECISION"
   | "CASTING_CONSTRAINT"
-  | "ACQUISITION_CONFIRM";
+  | "ACQUISITION_CONFIRM"
+  | "RIVAL_INTEL";
 
 /**
  * Payload shapes emitted for each modal type. Modal components narrow these
@@ -79,6 +80,7 @@ export interface ModalPayloadMap {
     options: CastingConstraintOption[];
   };
   ACQUISITION_CONFIRM: { targetId: string };
+  RIVAL_INTEL: { rivalId: string };
 }
 
 export type ModalPayload = ModalPayloadMap[ModalType];

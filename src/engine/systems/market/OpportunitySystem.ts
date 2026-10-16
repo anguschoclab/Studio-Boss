@@ -2,6 +2,7 @@ import { GameState, StateImpact } from "@/engine/types";
 import { RandomGenerator } from "../../utils/rng";
 import { buildProjectAndContracts } from "../../../store/storeUtils";
 import { generateOpportunity } from "../../generators/opportunities";
+import { getSimMemory } from "../../core/simMemory";
 
 /**
  * Opportunity System
@@ -88,6 +89,33 @@ export const OpportunitySystem = {
             category: "general",
           },
         });
+
+        // Relations ledger: every rival who bid and lost to the player
+        // remembers the outbid — feeds stance/spite in RivalBrain.
+        const relations = getSimMemory(state).rivalRelations || {};
+        for (const bidderId in opp.bids) {
+          if (bidderId === winnerId || bidderId === state.studio.id || bidderId === "PLAYER") {
+            continue;
+          }
+          if (!state.entities.rivals?.[bidderId]) continue;
+          const rel = relations[bidderId] || {
+            playerOutbids: 0,
+            playerPoaches: 0,
+            lastHostileWeek: 0,
+          };
+          impacts.push({
+            type: "INDUSTRY_UPDATE",
+            payload: {
+              update: {
+                [`simMemory.rivalRelations.${bidderId}`]: {
+                  ...rel,
+                  playerOutbids: rel.playerOutbids + 1,
+                  lastHostileWeek: state.week,
+                },
+              },
+            },
+          } as StateImpact);
+        }
       } else {
         // Rival Winner
         const rival = state.entities.rivals[winnerId];

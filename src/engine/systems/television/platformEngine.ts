@@ -63,24 +63,8 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
     }
   }
 
-  for (const rivalId in state.entities?.rivals || {}) {
-    const rival = state.entities.rivals[rivalId];
-    for (const pid in rival.projects || {}) {
-      const p = rival.projects[pid];
-      if (
-        p.type === "SERIES" &&
-        p.buyerId &&
-        (p as SeriesProject).nielsenProfile?.audienceRetention !== undefined
-      ) {
-        if (!platformRetentionStats[p.buyerId])
-          platformRetentionStats[p.buyerId] = { count: 0, sum: 0 };
-        platformRetentionStats[p.buyerId].count++;
-        platformRetentionStats[p.buyerId].sum += (
-          p as SeriesProject
-        ).nielsenProfile!.audienceRetention;
-      }
-    }
-  }
+  // Rival series live in entities.projects alongside the player's — the single
+  // census above already covers them (rival.projects is a dead parallel map).
 
   state.market.buyers.forEach((buyer) => {
     if (buyer.archetype === "streamer") {

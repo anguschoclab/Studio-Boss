@@ -43,4 +43,21 @@ describe("Simulation Determinism", () => {
     expect(stateA.finance).toEqual(stateB.finance);
     expect(stateA.studio).toEqual(stateB.studio);
   });
+
+  it("should produce bit-identical rival AI state after 12 weeks", { timeout: 240000 }, () => {
+    let stateA = initializeGame(STUDIO_NAME, ARCHETYPE, SEED);
+    let stateB = initializeGame(STUDIO_NAME, ARCHETYPE, SEED);
+
+    for (let i = 0; i < 12; i++) {
+      stateA = advanceWeek(stateA).newState;
+      stateB = advanceWeek(stateB).newState;
+    }
+
+    // The planner writes rival.intel and simMemory.rivalRelations — these are
+    // the AI-layer outputs that must replay identically across runs.
+    expect(stateA.entities.rivals).toEqual(stateB.entities.rivals);
+    expect(stateA.simMemory?.rivalRelations).toEqual(stateB.simMemory?.rivalRelations);
+    expect(stateA.simMemory?.buyerMemory).toEqual(stateB.simMemory?.buyerMemory);
+    expect(stateA.entities.projects).toEqual(stateB.entities.projects);
+  });
 });

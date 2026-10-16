@@ -1,5 +1,6 @@
-import { GameState, RivalStudio, NewsEvent } from "@/engine/types";
+import { GameState, RivalStudio, NewsEvent, RivalRelation } from "@/engine/types";
 import { generateId } from "../utils";
+import { getSimMemory } from "../core/simMemory";
 import { RegulatorSystem } from "./industry/RegulatorSystem";
 
 export interface MergerResult {
@@ -185,10 +186,31 @@ export function executeAcquisition(state: GameState, targetId: string): MergerRe
   };
 }
 
+/** Ledger write shared by player-vs-rival hostile actions. */
+function recordPlayerHostility(state: GameState, targetId: string): GameState {
+  const mem = getSimMemory(state);
+  const rel: RivalRelation = mem.rivalRelations[targetId] ?? {
+    playerOutbids: 0,
+    playerPoaches: 0,
+    lastHostileWeek: -9999,
+  };
+  return {
+    ...state,
+    simMemory: {
+      ...mem,
+      rivalRelations: {
+        ...mem.rivalRelations,
+        [targetId]: { ...rel, lastHostileWeek: state.week },
+      },
+    },
+  };
+}
+
 export function executeSabotage(state: GameState, targetId: string): GameState {
   const target = state.entities.rivals[targetId];
   if (!target || state.finance.cash < 1_000_000) return state;
 
+  state = recordPlayerHostility(state, targetId);
   return {
     ...state,
     finance: { ...state.finance, cash: state.finance.cash - 1_000_000 },
@@ -214,6 +236,20 @@ export function executePoach(state: GameState, targetId: string): MergerResult {
   if (!target || state.finance.cash < 3_000_000) return { state, newsEvents: [] };
 
   const stealAmount = Math.min(5, target.strength);
+  state = recordPlayerHostility(state, targetId);
+  // Poaching is the hostile action the ledger specifically counts.
+  const mem = getSimMemory(state);
+  const rel = mem.rivalRelations[targetId];
+  state = {
+    ...state,
+    simMemory: {
+      ...mem,
+      rivalRelations: {
+        ...mem.rivalRelations,
+        [targetId]: { ...rel, playerPoaches: rel.playerPoaches + 1 },
+      },
+    },
+  };
   const updatedRivals = {
     ...state.entities.rivals,
     [targetId]: { ...target, strength: target.strength - stealAmount },

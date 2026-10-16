@@ -74,6 +74,22 @@ export interface StudioFlopHistory {
   flopWeeks: number[];
 }
 
+/** How a rival studio currently regards the player's studio. */
+export type RivalStance = "hostile" | "rivalrous" | "neutral" | "deferential";
+
+/** Persistent memory of a rival's interactions with the player. */
+export interface RivalRelation {
+  playerOutbids: number; // times the player beat this rival in an auction
+  playerPoaches: number; // exec/talent assets the player took from this rival
+  lastHostileWeek: number; // most recent week of player-vs-rival hostility
+}
+
+/** Persistent memory of a buyer/platform's dealings with the player. */
+export interface BuyerMemory {
+  lastMandateWeek: number;
+  passesOnPlayer: number; // times this buyer passed on a player pitch
+}
+
 export interface SimMemory {
   antitrust: { lastActionWeek: number };
   distress: {
@@ -83,6 +99,13 @@ export interface SimMemory {
   };
   flops: Record<string, StudioFlopHistory>;
   headlessCashStreaks: Record<string, number>;
+  /**
+   * Player-vs-rival relationship ledger. Written by auction resolution,
+   * poach/acquisition paths; read by RivalBrain (spite/deference) and BuyerBrain.
+   */
+  rivalRelations: Record<string, RivalRelation>;
+  /** Buyer/platform memory of player interactions. */
+  buyerMemory: Record<string, BuyerMemory>;
   /**
    * Last-announced syndication milestone per rival — persists across motivation
    * changes so re-entering FRANCHISE_BUILDING doesn't re-fire the headline.

@@ -1,4 +1,5 @@
 import { GameState, StateImpact, Project } from "@/engine/types";
+import { isPlayerProject } from "../utils/ownership";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -78,7 +79,8 @@ export function tickReleaseStrategy(state: GameState): StateImpact[] {
   // to avoid O(N) array allocation overhead every tick for high-frequency state records.
   for (const projectId in state.entities.projects) {
     const project = state.entities.projects[projectId];
-    if (project.state === "marketing" && !project.releaseStrategy) {
+    // Player decision only — rival projects self-direct via their weekly plan.
+    if (project.state === "marketing" && !project.releaseStrategy && isPlayerProject(state, project)) {
       impacts.push({
         type: "MODAL_TRIGGERED",
         payload: {

@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { MoreVertical, Zap, UserPlus, ShieldAlert } from "lucide-react";
+import { MoreVertical, Zap, UserPlus, ShieldAlert, Eye } from "lucide-react";
 import { ARCHETYPES } from "@/engine/data/archetypes";
 import {
   DropdownMenu,
@@ -20,6 +20,21 @@ const strengthColor = (s: number) => {
   if (s >= 70) return "bg-destructive shadow-[0_0_15px_hsl(var(--destructive)/0.4)]";
   if (s >= 45) return "bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]";
   return "bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.4)]";
+};
+
+const STANCE_STYLE: Record<string, string> = {
+  hostile: "text-destructive border-destructive/40 bg-destructive/10",
+  rivalrous: "text-amber-500 border-amber-500/40 bg-amber-500/10",
+  neutral: "text-muted-foreground/60 border-white/10 bg-white/5",
+  deferential: "text-blue-400 border-blue-400/40 bg-blue-400/10",
+};
+
+const MOTIVATION_LABEL: Record<string, string> = {
+  CASH_CRUNCH: "Cash Crunch",
+  AWARD_CHASE: "Award Chase",
+  FRANCHISE_BUILDING: "Franchise Building",
+  MARKET_DISRUPTION: "Market Disruption",
+  STABILITY: "Stability",
 };
 
 interface RivalCardProps {
@@ -107,6 +122,23 @@ export const RivalCard: React.FC<RivalCardProps> = ({
             <DropdownMenuSeparator className="bg-white/5" />
 
             <DropdownMenuItem
+              onClick={() => enqueueModal("RIVAL_INTEL", { rivalId: rival.id })}
+              className="p-4 gap-4 cursor-pointer focus:bg-white/10"
+            >
+              <Eye className="h-4 w-4 text-primary" />
+              <div className="flex flex-col">
+                <span className="text-[11px] font-black uppercase tracking-widest text-foreground">
+                  INTEL DOSSIER
+                </span>
+                <span className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest mt-1">
+                  WHY THEY MOVE
+                </span>
+              </div>
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator className="bg-white/5" />
+
+            <DropdownMenuItem
               onClick={() => enqueueModal("ACQUISITION_CONFIRM", { targetId: rival.id })}
               className="p-4 gap-4 cursor-pointer bg-destructive/10 focus:bg-destructive"
             >
@@ -127,6 +159,36 @@ export const RivalCard: React.FC<RivalCardProps> = ({
       <p className="text-[11px] font-medium text-muted-foreground/60 italic leading-relaxed border-l border-white/10 pl-6 relative z-10 group-hover:border-destructive/30 transition-colors py-1">
         {rival.recentActivity}
       </p>
+
+      {/* Intelligence strip — driven by rival.intel written each tick by RivalBrain. */}
+      <div className="relative z-10 flex flex-wrap items-center gap-2">
+        <span className="text-[9px] font-black uppercase tracking-[0.2em] px-2 py-1 border border-white/10 bg-white/5 text-foreground/80">
+          {MOTIVATION_LABEL[rival.intel?.motivation ?? rival.currentMotivation ?? "STABILITY"] ??
+            "Stability"}
+        </span>
+        {rival.intel?.stance && (
+          <span
+            className={cn(
+              "text-[9px] font-black uppercase tracking-[0.2em] px-2 py-1 border",
+              STANCE_STYLE[rival.intel.stance]
+            )}
+          >
+            {rival.intel.stance}
+          </span>
+        )}
+      </div>
+      {rival.intel?.planSummary && rival.intel.planSummary.length > 0 && (
+        <div className="relative z-10 space-y-1">
+          {rival.intel.planSummary.slice(0, 3).map((line, i) => (
+            <p
+              key={i}
+              className="text-[10px] font-medium text-muted-foreground/70 uppercase tracking-widest"
+            >
+              ▸ {line}
+            </p>
+          ))}
+        </div>
+      )}
 
       <div className="space-y-3 relative z-10">
         <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground/40">

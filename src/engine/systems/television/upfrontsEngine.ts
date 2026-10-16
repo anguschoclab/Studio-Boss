@@ -1,5 +1,6 @@
 import { GameState, StateImpact, SeriesProject } from "@/engine/types";
 import { RandomGenerator } from "../../utils/rng";
+import { isPlayerProject } from "../../utils/ownership";
 
 export interface UpfrontResult {
   projectId: string;
@@ -27,7 +28,9 @@ export function runUpfronts(state: GameState, rng: RandomGenerator): StateImpact
     if (
       project.type === "SERIES" &&
       (project.state === "development" || project.state === "needs_greenlight") &&
-      project.stage !== "pilot"
+      project.stage !== "pilot" &&
+      // Player-facing event: rival-owned series are decided by their own plans.
+      isPlayerProject(state, project)
     ) {
       const seriesProject = project as SeriesProject;
       const buzz = seriesProject.buzz ?? 50;

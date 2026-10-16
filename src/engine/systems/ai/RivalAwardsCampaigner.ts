@@ -3,6 +3,7 @@ import { RandomGenerator } from "../../utils/rng";
 import { getStudioArchetype } from "../../data/aiArchetypes";
 import { checkCampaignBacklash } from "../awards/NominationCalculator";
 import { impacts as I } from "../../core/impacts";
+import { RivalPlan } from "./rival/plan.types";
 
 type CampaignTier = "Grassroots" | "Trade" | "Blitz";
 
@@ -24,10 +25,57 @@ const TIER_BUZZ: Record<CampaignTier, number> = {
  * CeremonyRunner uses p.buzz * 0.1 as campaignBuzz) and deducts cost from
  * rival cash.
  */
-export function tickRivalAwardsCampaigns(state: GameState, rng: RandomGenerator): StateImpact[] {
+export function tickRivalAwardsCampaigns(
+  state: GameState,
+  rng: RandomGenerator,
+  plans?: Record<string, RivalPlan>
+): StateImpact[] {
   const impacts: StateImpact[] = [];
   const rivalsObj = state.entities?.rivals || {};
   const projectsObj = state.entities?.projects || {};
+
+  // Plan-driven path: execute declared awardsPush intents.
+  if (plans) {
+    for (const rid in plans) {
+      const rival = rivalsObj[rid];
+      if (!rival) continue;
+      for (const push of plans[rid].strategic.awardsPush) {
+        const project = projectsObj[push.projectId];
+        if (!project || rival.cash < push.spend) continue;
+        const tier: CampaignTier =
+          push.spend >= TIER_COSTS.Blitz
+            ? "Blitz"
+            : push.spend >= TIER_COSTS.Trade
+              ? "Trade"
+              : "Grassroots";
+        const cost = TIER_COSTS[tier];
+        const metaScore = project.reception?.metaScore || project.reviewScore || 60;
+        const hasBacklash = checkCampaignBacklash(metaScore, tier, rng);
+        impacts.push(
+          I.financeTransaction(-cost, `Awards campaign (${tier}): ${project.title}`, rival.id)
+        );
+        impacts.push({
+          type: "PROJECT_UPDATED",
+          payload: {
+            projectId: project.id,
+            update: { buzz: Math.min(100, (project.buzz ?? 50) + TIER_BUZZ[tier]) },
+          },
+        });
+        if (hasBacklash) {
+          impacts.push(
+            I.newsAdded({
+              headline: `BACKLASH: ${rival.name}'s aggressive awards campaigning for "${project.title}" sparks industry outcry!`,
+              description: `Critics question the sincerity of the campaign given the project's reception.`,
+              category: "scandal",
+              rivalId: rival.id,
+              projectId: project.id,
+            })
+          );
+        }
+      }
+    }
+    return impacts;
+  }
 
   for (const rid in rivalsObj) {
     const rival = rivalsObj[rid];

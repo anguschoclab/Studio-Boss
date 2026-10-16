@@ -63,12 +63,14 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
     history: [],
     eventHistory: [],
     weekSummaries: [],
-    saveVersion: 2,
+    saveVersion: 3,
     simMemory: {
       antitrust: { lastActionWeek: -9999 },
       distress: { negativeStreak: {}, lastActionWeek: {}, stageActionCount: {} },
       flops: {},
       headlessCashStreaks: {},
+      rivalRelations: {},
+      buyerMemory: {},
       syndication: {},
       eventLogs: { antitrust: [], distress: [], consolidation: [], shingle: [], pitch: [] },
       antitrustBlockList: [],
@@ -81,6 +83,7 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
 };
 
 import { RandomGenerator } from "../../../engine/utils/rng";
+import { buildWorldAssessment } from "../../../engine/systems/ai/WorldAssessment";
 
 export const createMockTickContext = (
   overrides: Partial<import("../../../engine/services/WeekCoordinator").TickContext> = {}
@@ -92,6 +95,8 @@ export const createMockTickContext = (
     timestamp: Date.now(),
     impacts: [],
     events: [],
+    world: overrides.world ?? buildWorldAssessment(createMockGameState()),
+    rivalPlans: {},
     ...overrides,
   };
 };

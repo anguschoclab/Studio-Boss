@@ -1,7 +1,7 @@
 import type { GameState } from "../types";
 import type { SimMemory } from "../types/state.types";
 
-export const CURRENT_SAVE_VERSION = 2;
+export const CURRENT_SAVE_VERSION = 3;
 
 export function defaultSimMemory(): SimMemory {
   return {
@@ -9,6 +9,8 @@ export function defaultSimMemory(): SimMemory {
     distress: { negativeStreak: {}, lastActionWeek: {}, stageActionCount: {} },
     flops: {},
     headlessCashStreaks: {},
+    rivalRelations: {},
+    buyerMemory: {},
     syndication: {},
     eventLogs: {
       antitrust: [],
@@ -32,6 +34,8 @@ export function getSimMemory(state: GameState): SimMemory {
     ...mem,
     antitrust: { ...defaults.antitrust, ...mem.antitrust },
     distress: { ...defaults.distress, ...mem.distress },
+    rivalRelations: mem.rivalRelations ?? defaults.rivalRelations,
+    buyerMemory: mem.buyerMemory ?? defaults.buyerMemory,
     syndication: mem.syndication ?? defaults.syndication,
     eventLogs: { ...defaults.eventLogs, ...mem.eventLogs },
   };

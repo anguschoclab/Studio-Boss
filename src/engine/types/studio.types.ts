@@ -77,6 +77,19 @@ export interface RivalStudio {
   annualRevenue?: number;
   boxOfficeTotal?: number;
   lastAwardWin?: number;
+  /**
+   * Explainability payload written each tick by the AI planner. Every field is
+   * derived from real decision state — the UI renders this verbatim, so it must
+   * never be populated with decorative/fabricated values.
+   */
+  intel?: {
+    motivation: StudioMotivation;
+    strategyLabel: string; // archetype strategy id, e.g. "acquirer"
+    stance: import("./state.types").RivalStance;
+    planSummary: string[]; // compact human-readable action lines
+    reasons: string[]; // full "why" trail from the plan
+    updatedWeek: number;
+  };
   syndicationPotential?: {
     syndicatedCount: number;
     bestTier: SyndicationTier;

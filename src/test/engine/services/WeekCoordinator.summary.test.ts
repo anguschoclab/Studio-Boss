@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { WeekCoordinator, TickContext } from "@/engine/services/WeekCoordinator";
 import { GameState, StateImpact } from "@/engine/types";
 import { RandomGenerator } from "@/engine/utils/rng";
+import { buildWorldAssessment } from "@/engine/systems/ai/WorldAssessment";
 import { createMockGameState } from "@/test/utils/mockFactories";
 
 describe("WeekCoordinator.buildSummary", () => {
@@ -24,6 +25,8 @@ describe("WeekCoordinator.buildSummary", () => {
       timestamp: 2000,
       impacts: [],
       events: [],
+      world: buildWorldAssessment(beforeState),
+      rivalPlans: {},
     };
   });
 

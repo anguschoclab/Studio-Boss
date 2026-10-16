@@ -3,11 +3,34 @@ import { RandomGenerator } from "../../../utils/rng";
 import { AgencyLeverageEngine } from "../AgencyLeverage";
 import { TalentAgentInteractionEngine } from "../../talent/talentAgentInteractions";
 import { calculateWillingness } from "../../talent/willingnessEngine";
+import { RivalPlan } from "../rival/plan.types";
 
-export function tickTalentCompetition(state: GameState, rng: RandomGenerator): StateImpact[] {
+export function tickTalentCompetition(
+  state: GameState,
+  rng: RandomGenerator,
+  plans?: Record<string, RivalPlan>
+): StateImpact[] {
   const impacts: StateImpact[] = [];
 
   if (state.week % 4 !== 0) return [];
+
+  // Plan-driven path: execute declared talent intents (poach-on-delay,
+  // first-look holds) instead of the generic weekly roll.
+  if (plans) {
+    for (const rivalId in plans) {
+      const rival = state.entities.rivals?.[rivalId];
+      const plan = plans[rivalId];
+      if (!rival || plan.talent.length === 0) continue;
+      for (const intent of plan.talent) {
+        const target = state.entities.talents[intent.talentId];
+        if (!target || target.retired) continue;
+        // Poaching costs more than a cold hold — the talent is attached.
+        const premium = intent.approach === "poach" ? 1.4 : 1.0;
+        executeFirstLook(rival, target, state, rng, impacts, premium, intent.approach === "poach");
+      }
+    }
+    return impacts;
+  }
 
   // ⚡ Bolt Optimization: Replaced Object.values().filter() with a single-pass for...in loop to avoid intermediate array allocation and GC overhead
   const eligibleRivals: NonNullable<typeof state.entities.rivals>[string][] = [];
@@ -37,101 +60,119 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
   eligibleRivals.forEach((rival) => {
     if (rng.next() < 0.1) {
       const target = rng.pick(availableTalent);
-
-      const dummyProject = {
-        id: "dummy-pact-project",
-        title: "First-Look Pact",
-        genre: "Drama",
-        budget: rival.cash * 0.1,
-        buzz: rival.prestige,
-      };
-
-      const willingnessReport = calculateWillingness(target, dummyProject, state);
-
-      if (willingnessReport.finalVerdict === "unwilling") {
-        return;
-      }
-
-      const isAuteur = target.prestige > 85;
-      const prestigeDelta = target.prestige - rival.prestige;
-      const isMoneyGrabber = target.currentMotivation === "MONEY_GRABBER";
-
-      if (isAuteur && prestigeDelta > 20 && !isMoneyGrabber) {
-        return;
-      }
-
-      let prestigePenalty = 0;
-      if (isAuteur && !isMoneyGrabber) {
-        if (prestigeDelta > 10) {
-          prestigePenalty = prestigeDelta * 0.4;
-        } else if (prestigeDelta < -10) {
-          prestigePenalty = -0.6;
-        } else if (prestigeDelta > 0) {
-          prestigePenalty = prestigeDelta * 0.1;
-        }
-      }
-
-      let lockFeeMultiplier = 1.5;
-      if (isMoneyGrabber) {
-        lockFeeMultiplier = 2.0;
-        // 🎭 The Method Actor Tuning: Money grabbers will extort low-prestige rivals for massive lock fees.
-        if (rival.prestige < 50) {
-          lockFeeMultiplier = 3.0;
-        }
-      } else if (isAuteur && rival.prestige > 80) {
-        // 🎭 The Method Actor Tuning: Auteurs will offer a discount to high-prestige rivals to work on prestige projects.
-        lockFeeMultiplier = 1.0;
-      }
-
-      const lockFee = target.fee * (lockFeeMultiplier + rng.next() + prestigePenalty);
-
-      const agency = target.agencyId
-        ? state.industry.agencies.find((a) => a.id === target.agencyId)
-        : undefined;
-      const agent = target.agentId
-        ? state.industry.agents.find((a) => a.id === target.agentId)
-        : undefined;
-      const leverage = AgencyLeverageEngine.calculateNegotiationLeverage(
-        target,
-        agency,
-        agent,
-        state.finance.marketState,
-        undefined,
-        state.week
-      );
-      let leveragedFee = AgencyLeverageEngine.getRequiredFee(lockFee, leverage);
-
-      if (target.agentId) {
-        const relationship = state.talentAgentRelationships?.[`${target.id}-${target.agentId}`];
-        if (relationship) {
-          const relationshipBonus = TalentAgentInteractionEngine.getLoyaltyBonus(relationship);
-          leveragedFee = leveragedFee * (1 - relationshipBonus / 100);
-        }
-      }
-
-      if (rival.cash > leveragedFee * 2) {
-        impacts.push({
-          type: "FINANCE_TRANSACTION",
-          payload: {
-            amount: -leveragedFee,
-            description: `First-look deal: ${target.name}`,
-            targetId: rival.id,
-          },
-        });
-
-        impacts.push({
-          type: "NEWS_ADDED",
-          payload: {
-            id: rng.uuid("NWS"),
-            headline: `BIDDING WAR: ${rival.name} locks down ${target.name}`,
-            description: `In a major coup, ${rival.name} has signed ${target.name} to an exclusive first-look deal worth an estimated $${(lockFee / 1000000).toFixed(1)}M.`,
-            category: "talent",
-            week: state.week,
-          },
-        });
-      }
+      executeFirstLook(rival, target, state, rng, impacts, 1.0, false);
     }
   });
 
   return impacts;
+}
+
+/**
+ * Shared first-look/poach execution: willingness check, prestige-delta gate,
+ * leverage-adjusted lock fee, then finance + news impacts on success.
+ * `premium` scales the fee (poaching attached talent costs more); `isPoach`
+ * switches the news framing to a raid on another studio's package.
+ */
+function executeFirstLook(
+  rival: NonNullable<GameState["entities"]["rivals"]>[string],
+  target: NonNullable<GameState["entities"]["talents"]>[string],
+  state: GameState,
+  rng: RandomGenerator,
+  impacts: StateImpact[],
+  premium: number,
+  isPoach: boolean
+): void {
+  const dummyProject = {
+    id: "dummy-pact-project",
+    title: "First-Look Pact",
+    genre: "Drama",
+    budget: rival.cash * 0.1,
+    buzz: rival.prestige,
+  };
+
+  const willingnessReport = calculateWillingness(target, dummyProject, state);
+  if (willingnessReport.finalVerdict === "unwilling") return;
+
+  const isAuteur = target.prestige > 85;
+  const prestigeDelta = target.prestige - rival.prestige;
+  const isMoneyGrabber = target.currentMotivation === "MONEY_GRABBER";
+
+  if (isAuteur && prestigeDelta > 20 && !isMoneyGrabber) return;
+
+  let prestigePenalty = 0;
+  if (isAuteur && !isMoneyGrabber) {
+    if (prestigeDelta > 10) {
+      prestigePenalty = prestigeDelta * 0.4;
+    } else if (prestigeDelta < -10) {
+      prestigePenalty = -0.6;
+    } else if (prestigeDelta > 0) {
+      prestigePenalty = prestigeDelta * 0.1;
+    }
+  }
+
+  let lockFeeMultiplier = 1.5;
+  if (isMoneyGrabber) {
+    lockFeeMultiplier = 2.0;
+    // 🎭 The Method Actor Tuning: Money grabbers will extort low-prestige rivals for massive lock fees.
+    if (rival.prestige < 50) {
+      lockFeeMultiplier = 3.0;
+    }
+  } else if (isAuteur && rival.prestige > 80) {
+    // 🎭 The Method Actor Tuning: Auteurs will offer a discount to high-prestige rivals to work on prestige projects.
+    lockFeeMultiplier = 1.0;
+  }
+
+  const lockFee = target.fee * (lockFeeMultiplier + rng.next() + prestigePenalty) * premium;
+
+  const agency = target.agencyId
+    ? state.industry.agencies.find((a) => a.id === target.agencyId)
+    : undefined;
+  const agent = target.agentId
+    ? state.industry.agents.find((a) => a.id === target.agentId)
+    : undefined;
+  const leverage = AgencyLeverageEngine.calculateNegotiationLeverage(
+    target,
+    agency,
+    agent,
+    state.finance.marketState,
+    undefined,
+    state.week
+  );
+  let leveragedFee = AgencyLeverageEngine.getRequiredFee(lockFee, leverage);
+
+  if (target.agentId) {
+    const relationship = state.talentAgentRelationships?.[`${target.id}-${target.agentId}`];
+    if (relationship) {
+      const relationshipBonus = TalentAgentInteractionEngine.getLoyaltyBonus(relationship);
+      leveragedFee = leveragedFee * (1 - relationshipBonus / 100);
+    }
+  }
+
+  if (rival.cash > leveragedFee * 2) {
+    impacts.push({
+      type: "FINANCE_TRANSACTION",
+      payload: {
+        amount: -leveragedFee,
+        description: `First-look deal: ${target.name}`,
+        targetId: rival.id,
+      },
+    });
+
+    impacts.push({
+      type: "NEWS_ADDED",
+      payload: {
+        id: rng.uuid("NWS"),
+        headline: isPoach
+          ? `POACH ATTEMPT: ${rival.name} raids for ${target.name}`
+          : `BIDDING WAR: ${rival.name} locks down ${target.name}`,
+        description: isPoach
+          ? `${rival.name} has moved to sign ${target.name} away from a stalled rival package, paying an estimated $${(lockFee / 1000000).toFixed(1)}M.`
+          : `In a major coup, ${rival.name} has signed ${target.name} to an exclusive first-look deal worth an estimated $${(lockFee / 1000000).toFixed(1)}M.`,
+        category: "talent",
+        week: state.week,
+        rivalId: rival.id,
+        talentId: target.id,
+      },
+    });
+  }
 }

@@ -7,6 +7,7 @@ import {
   StudioMotivation,
 } from "@/engine/types";
 import { RandomGenerator } from "../../utils/rng";
+import { RivalPlan } from "./rival/plan.types";
 
 /**
  * AI Decision Multipliers.
@@ -59,13 +60,52 @@ const MOTIVATION_BIASES: Record<StudioMotivation, (genre?: string) => Motivation
 
 /**
  * AI Auction Tick.
+ * When weekly rival plans are supplied, each rival's declared bid intents are
+ * executed verbatim (the brain already priced them, including spite boosts);
+ * rivals without a plan fall back to the legacy inline bidding roll.
  */
-export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpact[] {
+export function tickAuctions(
+  state: GameState,
+  rng: RandomGenerator,
+  plans?: Record<string, RivalPlan>
+): StateImpact[] {
   const impacts: StateImpact[] = [];
   const currWeek = state.week;
   const opportunities = state.market.opportunities.filter(
     (o) => (o.expirationWeek || 0) >= currWeek
   );
+
+  if (plans) {
+    const oppById = new Map(opportunities.map((o) => [o.id, o]));
+    for (const rivalId in plans) {
+      const plan = plans[rivalId];
+      const rival = state.entities.rivals?.[rivalId];
+      if (!rival) continue;
+      for (const intent of plan.bids) {
+        const opportunity = oppById.get(intent.opportunityId);
+        if (!opportunity) continue;
+        impacts.push({
+          type: "OPPORTUNITY_UPDATED",
+          payload: {
+            opportunityId: opportunity.id,
+            rivalId: rival.id,
+            bid: { amount: intent.amount, terms: "aggressive" },
+          },
+        });
+        if (intent.amount > 10_000_000 && (intent.spiteBoost > 1.2 || rng.next() < 0.2)) {
+          impacts.push({
+            type: "NEWS_ADDED",
+            payload: {
+              headline: `STREET TALK: ${rival.name} desperate for "${opportunity.title}"?`,
+              description: `${rival.name} has escalated the bidding for "${opportunity.title}", signaling they might view it as a cornerstone asset for their next slate.`,
+              rivalId: rival.id,
+            },
+          });
+        }
+      }
+    }
+    return impacts;
+  }
   // ⚡ Bolt: Removed ALL_RIVALS Object.values allocation
 
   // Genre-trend lookup map — O(1) per opportunity instead of a .find() scan.

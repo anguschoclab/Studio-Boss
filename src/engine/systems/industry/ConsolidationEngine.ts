@@ -4,6 +4,7 @@ import { pick, secureRandom } from "../../utils";
 import { isAcquirerBlockedByAntitrust } from "./Antitrust";
 import { getSimMemory } from "../../core/simMemory";
 import { impacts as I } from "../../core/impacts";
+import { RivalPlan } from "../ai/rival/plan.types";
 
 export interface ConsolidationEvent {
   week: number;
@@ -20,10 +21,45 @@ export interface ConsolidationEvent {
  * Studio Boss - Consolidation Engine
  * Automates the mergers and acquisitions process for Rival Studios and Platforms.
  */
-export function tickConsolidation(state: GameState): StateImpact[] {
+export function tickConsolidation(
+  state: GameState,
+  plans?: Record<string, RivalPlan>
+): StateImpact[] {
   const impacts: StateImpact[] = [];
   const rivalsDict = state.entities.rivals || {};
   const buyers = state.market.buyers;
+
+  // Plan-declared M&A intents take priority over the random weekly roll —
+  // an acquirer that decided to circle a target executes its own decision.
+  if (plans) {
+    for (const rid in plans) {
+      const plan = plans[rid];
+      const acquirer = rivalsDict[rid];
+      if (!acquirer || plan.strategic.mna.length === 0) continue;
+      if (isAcquirerBlockedByAntitrust(state, rid, state.week)) continue;
+      const intent = plan.strategic.mna[0];
+      const target = rivalsDict[intent.targetId];
+      if (!target) continue;
+      const cost = target.cash + target.strength * 2_000_000;
+      if (cost <= 0 || cost > Math.max(intent.maxBid, acquirer.cash * 0.5)) continue;
+      const reg = RegulatorSystem.isBlocked(state, acquirer.id, target.id);
+      if (reg.blocked) {
+        impacts.push({
+          type: "NEWS_ADDED",
+          payload: {
+            headline: `REGULATOR BLOCK: ${acquirer.name}'s bid for ${target.name} rejected on ${reg.reason}`,
+            description: `The proposed acquisition of ${target.name} by ${acquirer.name} has been blocked by federal regulators citing ${reg.reason}.`,
+            category: "market",
+            rivalId: target.id,
+            buyerId: acquirer.id,
+          },
+        });
+        continue;
+      }
+      emitStudioAcquisition(impacts, state, acquirer, target, cost, intent.kind);
+      return impacts; // one M&A event per week
+    }
+  }
 
   // Replace Object.values().filter() chains with single for...in loop
   const majors: RivalStudio[] = [];
@@ -105,51 +141,13 @@ export function tickConsolidation(state: GameState): StateImpact[] {
       return impacts;
     }
 
-    // Execute Acquisition
-    impacts.push(I.financeTransaction(-cost, `Acquisition of ${target.name}`, acquirer.id));
-    impacts.push({
-      type: "RIVAL_UPDATED",
-      payload: {
-        rivalId: acquirer.id,
-        update: {},
-        deltas: { prestige: 10 },
-      },
-    });
-    impacts.push({
-      type: "INDUSTRY_UPDATE",
-      payload: {
-        update: {},
-        mergedRivalId: target.id,
-        acquirerId: acquirer.id,
-      },
-    });
-
-    const motive: "strategic" | "distressed" =
-      target.cash < 100_000_000 ? "distressed" : "strategic";
-    const motiveLabel = motive === "distressed" ? "DISTRESSED M&A" : "STRATEGIC M&A";
-    impacts.push({
-      type: "NEWS_ADDED",
-      payload: {
-        headline: `${motiveLabel}: ${acquirer.name} acquires ${target.name} for $${(cost / 1_000_000).toFixed(1)}M`,
-        description: `In a major industry move, ${acquirer.name} today finalized the acquisition of ${target.name}, further consolidating the ${acquirer.archetype} tier.`,
-        category: "market",
-        rivalId: target.id,
-        buyerId: acquirer.id,
-      },
-    });
-    const newEvent: ConsolidationEvent = {
-      week: state.week,
-      year: Math.floor(state.week / 52) + 1975,
-      motive,
-      acquirerId: acquirer.id,
-      acquirerName: acquirer.name,
-      targetId: target.id,
-      targetName: target.name,
+    emitStudioAcquisition(
+      impacts,
+      state,
+      acquirer,
+      target,
       cost,
-    };
-    const existingLog = getSimMemory(state).eventLogs.consolidation;
-    impacts.push(
-      I.industryUpdate({ "simMemory.eventLogs.consolidation": [...existingLog, newEvent] })
+      target.cash < 100_000_000 ? "opportunistic" : "strategic"
     );
   } else if (platforms.length > 0) {
     // Platform Acquisition (Vertical Integration)
@@ -221,4 +219,65 @@ export function tickConsolidation(state: GameState): StateImpact[] {
   }
 
   return impacts;
+}
+
+/**
+ * Shared studio-acquisition impact block — used by both the random weekly
+ * roll and plan-declared M&A intents. Emits the cash transfer, prestige bump,
+ * mergedRivalId merge directive (handled by INDUSTRY_UPDATE), news, and the
+ * consolidation event log.
+ */
+function emitStudioAcquisition(
+  impacts: StateImpact[],
+  state: GameState,
+  acquirer: RivalStudio,
+  target: RivalStudio,
+  cost: number,
+  kind: "strategic" | "opportunistic"
+): void {
+  impacts.push(I.financeTransaction(-cost, `Acquisition of ${target.name}`, acquirer.id));
+  impacts.push({
+    type: "RIVAL_UPDATED",
+    payload: {
+      rivalId: acquirer.id,
+      update: {},
+      deltas: { prestige: 10 },
+    },
+  });
+  impacts.push({
+    type: "INDUSTRY_UPDATE",
+    payload: {
+      update: {},
+      mergedRivalId: target.id,
+      acquirerId: acquirer.id,
+    },
+  });
+
+  const motive: "strategic" | "distressed" =
+    kind === "opportunistic" || target.cash < 100_000_000 ? "distressed" : "strategic";
+  const motiveLabel = motive === "distressed" ? "DISTRESSED M&A" : "STRATEGIC M&A";
+  impacts.push({
+    type: "NEWS_ADDED",
+    payload: {
+      headline: `${motiveLabel}: ${acquirer.name} acquires ${target.name} for $${(cost / 1_000_000).toFixed(1)}M`,
+      description: `In a major industry move, ${acquirer.name} today finalized the acquisition of ${target.name}, further consolidating the ${acquirer.archetype} tier.`,
+      category: "market",
+      rivalId: target.id,
+      buyerId: acquirer.id,
+    },
+  });
+  const newEvent: ConsolidationEvent = {
+    week: state.week,
+    year: Math.floor(state.week / 52) + 1975,
+    motive,
+    acquirerId: acquirer.id,
+    acquirerName: acquirer.name,
+    targetId: target.id,
+    targetName: target.name,
+    cost,
+  };
+  const existingLog = getSimMemory(state).eventLogs.consolidation;
+  impacts.push(
+    I.industryUpdate({ "simMemory.eventLogs.consolidation": [...existingLog, newEvent] })
+  );
 }

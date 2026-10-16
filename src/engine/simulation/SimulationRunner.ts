@@ -6,7 +6,6 @@ import { HeadlessController } from "./HeadlessController";
 import { MetricsCollector } from "./MetricsCollector";
 import { RandomGenerator } from "../utils/rng";
 import { applyImpacts } from "../core/impactReducer";
-import { StudioAutomation } from "./StudioAutomation";
 
 export interface SimulationResult {
   finalState: GameState;
@@ -52,9 +51,8 @@ export class SimulationRunner {
       const { newState: steppedState, summary } = WeekCoordinator.execute(state);
       state = steppedState;
 
-      // 3. Studio Automation (Greenlights, Pitches, Releases)
-      // Note: called ONCE; StudioAutomation.tick iterates every rival internally.
-      const automationImpacts = StudioAutomation.tick(state, rng);
+      // Rival production now runs INSIDE WeekCoordinator.execute (unified
+      // pipeline: tickRivalPlans → tickRivalSlate) — no second automation pass.
 
       // 4. Headless Bidding/Buying for Player
       const playerBidding = autoPilot ? HeadlessController.tick(state, rng) : [];
@@ -65,8 +63,8 @@ export class SimulationRunner {
       const lifecycleImpacts = TalentLifecycleSystem.tick(state, rng);
 
       // 6. Consolidate and Apply side-effect impacts ONLY
-      // Order: automation -> lifecycle -> player bidding (so attribution survives year-end decay).
-      const allImpacts = [...automationImpacts, ...lifecycleImpacts, ...playerBidding];
+      // Order: lifecycle -> player bidding (so attribution survives year-end decay).
+      const allImpacts = [...lifecycleImpacts, ...playerBidding];
       state = applyImpacts(state, allImpacts);
       if (CASH_DEBUG) {
         const now = state.finance.cash || 0;

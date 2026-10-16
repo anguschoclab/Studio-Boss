@@ -20,6 +20,8 @@ import { advanceTrends } from "../systems/trends";
 import { advanceMarketEvents } from "../systems/marketEvents";
 import { advanceScandals, generateScandals } from "../systems/scandals";
 import { advanceBuyers } from "../systems/buyerMergers";
+import { tickBuyerMandates } from "../systems/ai/BuyerBrain";
+import { tickTalentMinds } from "../systems/ai/TalentMind";
 
 // New Industry Systems
 import { tickVerticalIntegration } from "../systems/industry/VerticalIntegrationProcessor";
@@ -56,7 +58,6 @@ import { tickTVRecommendationSystem } from "../systems/talent/TVRecommendationSy
 // Production Support Systems
 import { checkAndTriggerCrisis } from "../systems/crises";
 import { advanceRivals } from "../systems/rivals";
-import { tickRivalProduction } from "../systems/rivals/rivalProduction";
 import { runAwardsCeremony } from "../systems/awards/CeremonyRunner";
 import { processRazzies } from "../systems/awards/RazzieProcessor";
 import { tickPilots } from "../systems/television/pilotEvaluator";
@@ -65,6 +66,10 @@ import { runUpfronts } from "../systems/television/upfrontsEngine";
 // AI Competition Systems
 import { tickTalentCompetition } from "../systems/ai/bidding/CompetitionModule";
 import { runFestivalMarket } from "../systems/festivals/festivalAuctionEngine";
+import { WorldAssessment, buildWorldAssessment } from "../systems/ai/WorldAssessment";
+import { tickRivalPlans } from "../systems/ai/rival/RivalBrain";
+import { tickRivalSlate } from "../systems/ai/rival/RivalSlateExecutor";
+import { RivalPlan } from "../systems/ai/rival/plan.types";
 
 // IP Systems
 import { tickIPVault } from "../systems/ip/IPVaultManager";
@@ -110,6 +115,10 @@ export interface TickContext {
   timestamp: number;
   impacts: StateImpact[];
   events: GameEvent[];
+  /** Shared per-tick world facts read by every AI brain. */
+  world: WorldAssessment;
+  /** Per-rival weekly plans; executors consume these rather than re-deciding. */
+  rivalPlans: Record<string, RivalPlan>;
 }
 
 /**
@@ -136,7 +145,14 @@ export class WeekCoordinator {
       timestamp: 1713552000000 + state.week * 604800000, // Deterministic: 2024-04-20 + weeks
       impacts: [],
       events: [],
+      world: buildWorldAssessment(state),
+      rivalPlans: {},
     };
+
+    // Rival planning happens once, before any filter runs: the slate executor
+    // (production filter) and the auction/awards/talent executors (AI filter)
+    // all consume the same plans so a rival's week is coherent.
+    context.rivalPlans = tickRivalPlans(state, context);
 
     // 2. The Filter Pipeline
     this.runMarketFilter(state, context);
@@ -217,11 +233,12 @@ export class WeekCoordinator {
     context.impacts.push(...advanceTrends(state.market.trends || []));
     context.impacts.push(...advanceMarketEvents(state));
     context.impacts.push(advanceBuyers(state));
+    context.impacts.push(...tickBuyerMandates(state, context.rng, context.world));
 
     // New Industry Filters
     context.impacts.push(...tickVerticalIntegration(state, context.rng));
     context.impacts.push(...tickIndustryUpstarts(state));
-    context.impacts.push(...tickConsolidation(state));
+    context.impacts.push(...tickConsolidation(state, context.rivalPlans));
     context.impacts.push(...tickRivalSpawner(state));
     context.impacts.push(...tickDistressCascade(state));
     context.impacts.push(...tickDistressedOffers(state));
@@ -240,14 +257,19 @@ export class WeekCoordinator {
   }
 
   private static runProductionFilter(state: GameState, context: TickContext) {
-    // 0. Rival production — spawn/advance rival-owned projects so they feed
-    // revenue, market share, and (below) marketing intensity.
-    context.impacts.push(...tickRivalProduction(state, context.rng));
+    // 0. Rival production — the single unified slate lifecycle (pitching →
+    // buyer → greenlight → production → marketing → release), driven by this
+    // week's rival plans. Replaces tickRivalProduction; there is no second
+    // headless pipeline.
+    context.impacts.push(...tickRivalSlate(state, context.rng, context.rivalPlans));
 
     // 0.5 Marketing awareness accrual — runs before core production so released
     // projects carry up-to-date awareness into release simulation. Rival spend
-    // contributes to industry marketing intensity (share-of-voice pressure).
-    const rivalSpend = this.estimateRivalMarketingSpend(state);
+    // is the plan-declared campaign spend (share-of-voice pressure).
+    let rivalSpend = 0;
+    for (const rid in context.rivalPlans) {
+      rivalSpend += context.rivalPlans[rid].rivalSpend;
+    }
     context.impacts.push(...tickMarketing(state, context.rng, rivalSpend));
 
     // 0. Production Enhancement (on-set chemistry bonuses) — runs before core production
@@ -276,7 +298,7 @@ export class WeekCoordinator {
       }
     }
 
-    context.impacts.push(...tickTelevision(state, context.rng));
+    context.impacts.push(...tickTelevision(state, context.rng, context.rivalPlans));
 
     // 3. Pilot Evaluator
     context.impacts.push(...tickPilots(state, context.rng));
@@ -332,6 +354,10 @@ export class WeekCoordinator {
   }
 
   private static runTalentFilter(state: GameState, context: TickContext) {
+    // Talent motivation layer — activates the dormant currentMotivation/
+    // motivationImpulse fields that willingness/poach systems already read.
+    context.impacts.push(...tickTalentMinds(state, context.rng, context.world));
+
     // Talent lifecycle systems — all follow (state, rng) → StateImpact[] pattern
     context.impacts.push(...tickRelationshipSystem(state, context.rng));
     context.impacts.push(...tickCliqueSystem(state, context.rng));
@@ -485,13 +511,17 @@ export class WeekCoordinator {
   }
 
   private static runAIFilter(state: GameState, context: TickContext) {
-    context.impacts.push(...tickAIMinds(state, context.rng));
-    context.impacts.push(...tickRivalAwardsCampaigns(state, context.rng));
+    context.impacts.push(...tickAIMinds(state, context.rng, context.rivalPlans));
+    context.impacts.push(
+      ...tickRivalAwardsCampaigns(state, context.rng, context.rivalPlans)
+    );
     context.impacts.push(...tickAgencies(state, context.rng));
-    context.impacts.push(...tickAuctions(state, context.rng));
+    context.impacts.push(...tickAuctions(state, context.rng, context.rivalPlans));
 
-    // Talent competition between rivals
-    context.impacts.push(...tickTalentCompetition(state, context.rng));
+    // Talent competition between rivals (plan intents + legacy fallback)
+    context.impacts.push(
+      ...tickTalentCompetition(state, context.rng, context.rivalPlans)
+    );
 
     // Festival market
     context.impacts.push(...runFestivalMarket(state, context.rng));
@@ -554,22 +584,6 @@ export class WeekCoordinator {
         });
       }
     }
-  }
-
-  /**
-   * Rough estimate of total rival marketing spend this week, used to feed
-   * industry marketing intensity (share-of-voice pressure) into tickMarketing.
-   */
-  private static estimateRivalMarketingSpend(state: GameState): number {
-    const rivalsMap = state.entities?.rivals || {};
-    let total = 0;
-    for (const id in rivalsMap) {
-      const rival = rivalsMap[id];
-      const archetypeMult =
-        rival.archetype === "major" ? 2.2 : rival.archetype === "mid-tier" ? 1.0 : 0.4;
-      total += 5_000_000 * archetypeMult;
-    }
-    return total;
   }
 
   private static buildSummary(

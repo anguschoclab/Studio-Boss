@@ -138,11 +138,20 @@ export function handleIndustryUpdate(state: GameState, impact: IndustryUpdateImp
           return asset;
         });
 
-        // Transfer the absorbed rival's slate and platforms to the player
+        // Transfer the absorbed rival's slate and platforms to the player.
+        // Live slates live in entities.projects (ownerId = rival id) — the
+        // target.projects parallel map is dead and often empty.
         const playerId = state.studio.id;
         const transferredProjects = { ...nextState.entities.projects };
+        for (const pid in transferredProjects) {
+          if (transferredProjects[pid].ownerId === mergedRivalId) {
+            transferredProjects[pid] = { ...transferredProjects[pid], ownerId: playerId };
+          }
+        }
         for (const pid in target.projects) {
-          transferredProjects[pid] = { ...target.projects[pid], ownerId: playerId };
+          if (!transferredProjects[pid]) {
+            transferredProjects[pid] = { ...target.projects[pid], ownerId: playerId };
+          }
         }
 
         nextState = {
@@ -159,11 +168,21 @@ export function handleIndustryUpdate(state: GameState, impact: IndustryUpdateImp
         };
       } else {
         const rivals = { ...nextState.entities.rivals };
+        // Transfer the absorbed slate in canonical storage: flip ownerId on
+        // every project the target owned (rival.projects is a dead map).
+        const transferredProjects = { ...nextState.entities.projects };
+        let slateCount = 0;
+        for (const pid in transferredProjects) {
+          if (transferredProjects[pid].ownerId === mergedRivalId) {
+            transferredProjects[pid] = { ...transferredProjects[pid], ownerId: acquirerId };
+            slateCount++;
+          }
+        }
         if (rivals[acquirerId]) {
           const acquirer = rivals[acquirerId];
           rivals[acquirerId] = {
             ...acquirer,
-            projects: { ...acquirer.projects, ...target.projects },
+            projectCount: (acquirer.projectCount || 0) + slateCount,
             ownedPlatforms: [...(acquirer.ownedPlatforms || []), ...(target.ownedPlatforms || [])],
           };
         }
@@ -183,6 +202,7 @@ export function handleIndustryUpdate(state: GameState, impact: IndustryUpdateImp
           ...nextState,
           entities: {
             ...nextState.entities,
+            projects: transferredProjects,
             rivals,
           },
           ip: { ...nextState.ip, vault: mergedVault },

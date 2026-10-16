@@ -15,8 +15,15 @@ export type TVStatus =
 
 /**
  * Weekly TV Tick with integrated Nielsen ratings system.
+ * `plans` carries rival series intents (renew/cancel temperament) produced by
+ * RivalBrain — rival-owned shows obey the plan's declared decision instead of
+ * the bare ratings threshold when a decision was declared.
  */
-export function tickTelevision(state: GameState, rng: RandomGenerator): StateImpact[] {
+export function tickTelevision(
+  state: GameState,
+  rng: RandomGenerator,
+  plans?: Record<string, import("../ai/rival/plan.types").RivalPlan>
+): StateImpact[] {
   const impacts: StateImpact[] = [];
 
   // ⚡ The Framerate Fanatic: Replaced Object.values().filter() with a direct for...in loop
@@ -63,10 +70,25 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
       project.tvDetails.averageRating * (project.tvDetails.episodesAired || 0) + newRating;
     const nextAverageRating = Math.round((totalRatingSum / aired) * 10) / 10;
 
-    // Renewal logic
+    // Renewal logic — plan-declared rival intents override the raw threshold:
+    // prestige studios over-renew vanity shows, cash-crunched studios axe early,
+    // genre specialists protect commercial anchors.
     let nextStatus: TVStatus = project.tvDetails.status;
     if (aired >= project.tvDetails.episodesOrdered) {
       nextStatus = evaluateRenewal(project, nextAverageRating) as TVStatus;
+      const ownerPlan = project.ownerId ? plans?.[project.ownerId] : undefined;
+      const intent = ownerPlan?.series.find((s) => s.projectId === project.id);
+      if (intent) {
+        if (intent.decision === "renew" && nextStatus !== "RENEWED") {
+          nextStatus = "RENEWED";
+        } else if (
+          intent.decision === "cancel" &&
+          nextStatus !== "CANCELLED" &&
+          nextAverageRating < 60
+        ) {
+          nextStatus = "CANCELLED";
+        }
+      }
     }
 
     // Build updated Nielsen profile

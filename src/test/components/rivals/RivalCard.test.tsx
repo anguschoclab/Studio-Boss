@@ -37,6 +37,7 @@ vi.mock("lucide-react", () => ({
   Zap: (props: any) => <svg {...props} />,
   UserPlus: (props: any) => <svg {...props} />,
   ShieldAlert: (props: any) => <svg {...props} />,
+  Eye: (props: any) => <svg {...props} />,
 }));
 
 // Mock engine utils

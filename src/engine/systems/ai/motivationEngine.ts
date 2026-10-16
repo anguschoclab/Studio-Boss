@@ -13,7 +13,7 @@ import {
 } from "../ip/syndicationEngine";
 import { SyndicationTier } from "../../data/syndicationConfig";
 import { getSimMemory } from "../../core/simMemory";
-import { hasAtLeastKeys } from "../../utils";
+import { countRivalProjects } from "../../utils";
 
 /**
  * Utility Scores for each Studio Motivation.
@@ -31,27 +31,28 @@ const MotivationScores: Record<StudioMotivation, (rival: RivalStudio, state: Gam
     // 🎭 The Method Actor Tuning: Wealthy or highly prestigious studios chase awards, but so do aggressive upstarts looking for credibility.
     AWARD_CHASE: (rival) => {
       let score = rival.prestige > 75 ? 85 : 30;
-      if (rival.prestige < 40 && rival.motivationProfile.aggression > 60) score += 40; // Desperate for credibility
+      if (rival.prestige < 40 && rival.motivationProfile?.aggression > 60) score += 40; // Desperate for credibility
       if (rival.cash > 15000000 && rival.prestige > 70) score += 40; // Rich studios pivot to awards
       return score;
     },
     // 🎭 The Method Actor Tuning: Cash-rich studios aggressively focus on building franchises to secure long-term revenue.
-    FRANCHISE_BUILDING: (rival) => {
-      let score = hasAtLeastKeys(rival.projects, 4) ? 60 : 20;
+    FRANCHISE_BUILDING: (rival, state) => {
+      // Canonical project census — rival.projects is a dead parallel map.
+      let score = countRivalProjects(state, rival) >= 4 ? 60 : 20;
       if (rival.cash > 10000000) score += 40; // Got cash, want IP
       if (rival.cash > 20000000) score += 30; // Extreme cash makes them hoard IP
       return score;
     },
     // 🎭 The Method Actor Tuning: Highly aggressive studios naturally lean towards market disruption, especially if they have cash to burn.
     MARKET_DISRUPTION: (rival) => {
-      let score = rival.motivationProfile.aggression > 70 ? 75 : 10;
+      let score = rival.motivationProfile?.aggression > 70 ? 75 : 10;
       if (rival.cash > 15000000) score += 20; // Enough cash to cause trouble
-      if (rival.prestige > 75 && rival.motivationProfile.aggression > 70) score += 40; // Prestige bullies
+      if (rival.prestige > 75 && rival.motivationProfile?.aggression > 70) score += 40; // Prestige bullies
       return score;
     },
     // 🎭 The Method Actor Tuning: Stability is the fallback for wealthy, low-aggression studios.
     STABILITY: (rival) =>
-      rival.cash > 5000000 && rival.motivationProfile.aggression < 50 ? 80 : 20,
+      rival.cash > 5000000 && rival.motivationProfile?.aggression < 50 ? 80 : 20,
   };
 
 /**
@@ -116,7 +117,7 @@ export function calculateMotivationScores(
     const baseScore = scorer(rival, state);
     const profileKey = profileMap[motivation];
     const bias =
-      Number(rival.motivationProfile[profileKey as keyof typeof rival.motivationProfile]) || 0;
+      Number(rival.motivationProfile?.[profileKey as keyof typeof rival.motivationProfile]) || 0;
     const flopAdj = flopAdjustments[motivation] || 0;
     const variance = rng.range(-5, 5);
     scores[motivation] = baseScore + bias + flopAdj + variance;
@@ -151,37 +152,46 @@ export function calculateRivalMotivation(
 /**
  * Weekly tick to update AI mindsets across the industry.
  */
-export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact[] {
+export function tickAIMinds(
+  state: GameState,
+  rng: RandomGenerator,
+  plans?: Record<string, { motivation: StudioMotivation }>
+): StateImpact[] {
   const impacts: StateImpact[] = [];
 
   const rivalsObj = state.entities.rivals || {};
   for (const rivalId in rivalsObj) {
     const rival = rivalsObj[rivalId];
-    let newMotivation: StudioMotivation = calculateRivalMotivation(rival, state, rng);
+    // When the weekly planner ran, it already derived motivation (including the
+    // award-starved override) and wrote it via RIVAL_UPDATED — consume its
+    // decision rather than re-deriving a possibly divergent one.
+    let newMotivation: StudioMotivation;
+    if (plans && plans[rivalId]) {
+      newMotivation = plans[rivalId].motivation;
+    } else {
+      newMotivation = calculateRivalMotivation(rival, state, rng);
 
-    // Rivals that haven't won an award in 2+ years drift toward AWARD_CHASE
-    const lastAwardWin = rival.lastAwardWin;
-    const weeksSinceLastAward = lastAwardWin ? state.week - lastAwardWin : 999;
+      // Rivals that haven't won an award in 2+ years drift toward AWARD_CHASE
+      const lastAwardWin = rival.lastAwardWin;
+      const weeksSinceLastAward = lastAwardWin ? state.week - lastAwardWin : 999;
+      const awardStarvedThreshold = rival.prestige > 75 ? 52 : 104;
 
-    // 🎭 The Method Actor Tuning: Prestige studios panic and pivot to chasing awards much faster (1 year vs 2 years) if they are starved.
-    const awardStarvedThreshold = rival.prestige > 75 ? 52 : 104;
+      if (
+        weeksSinceLastAward > awardStarvedThreshold &&
+        newMotivation !== "AWARD_CHASE" &&
+        rng.next() < 0.15
+      ) {
+        newMotivation = "AWARD_CHASE";
+      }
 
-    if (
-      weeksSinceLastAward > awardStarvedThreshold &&
-      newMotivation !== "AWARD_CHASE" &&
-      rng.next() < 0.15
-    ) {
-      // 15% chance per week to switch to AWARD_CHASE if award-starved
-      newMotivation = "AWARD_CHASE";
+      impacts.push({
+        type: "RIVAL_UPDATED",
+        payload: {
+          rivalId: rival.id,
+          update: { currentMotivation: newMotivation },
+        },
+      });
     }
-
-    impacts.push({
-      type: "RIVAL_UPDATED",
-      payload: {
-        rivalId: rival.id,
-        update: { currentMotivation: newMotivation },
-      },
-    });
 
     // CASH_CRUNCH rivals seek emergency financing when nearly broke
     if (newMotivation === "CASH_CRUNCH" && rival.cash < 2_000_000 && rng.next() < 0.12) {

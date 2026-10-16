@@ -2,6 +2,7 @@ import { Agency, Agent, Talent, MarketState } from "../../types";
 import { clamp } from "../../utils";
 import { AGENCY_ARCHETYPES } from "../../data/archetypes";
 import { getMarketHeat } from "../industry/MacroCycle";
+import { cycleFromHeat } from "./WorldAssessment";
 
 /**
  * Phase 7: Agency Leverage Engine.
@@ -27,14 +28,7 @@ const TALENT_TIER_EFFECTS: Record<string, { effect: number; explanation: string 
   C_LIST: { effect: -0.1, explanation: "C-List status limits negotiation power." },
 };
 
-/** Map the macro heat multiplier (~[0.55, 1.45]) onto a named market cycle. */
-function cycleFromHeat(heat: number): string {
-  if (heat >= 1.15) return "BOOM";
-  if (heat >= 1.0) return "RECOVERY";
-  if (heat >= 0.85) return "STABLE";
-  if (heat >= 0.7) return "BEAR";
-  return "RECESSION";
-}
+/** Market-cycle labels now live in WorldAssessment (shared blackboard). */
 
 const MARKET_CYCLE_EFFECTS: Record<string, { effect: number; explanation: string }> = {
   BOOM: { effect: 0.2, explanation: "Market boom: Talent has the upper hand." },

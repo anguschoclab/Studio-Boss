@@ -1,4 +1,5 @@
 import { pick } from "../utils";
+import type { RandomGenerator } from "../utils/rng";
 
 const GENRE_PATTERNS: Record<string, string[][]> = {
   Action: [
@@ -765,14 +766,15 @@ const WORDS: Record<string, string[]> = {
   ],
 };
 
-export function generateProjectTitle(genre: string): string {
+export function generateProjectTitle(genre: string, rng?: RandomGenerator): string {
+  const pickOne = rng ? <T>(arr: T[]): T => rng.pick(arr) : pick;
   const patterns = GENRE_PATTERNS[genre] || GENRE_PATTERNS["Drama"];
-  const pattern = pick(patterns);
+  const pattern = pickOne(patterns);
 
   return pattern
     .map((part) => {
       if (WORDS[part]) {
-        return pick(WORDS[part]);
+        return pickOne(WORDS[part]);
       }
       return part;
     })

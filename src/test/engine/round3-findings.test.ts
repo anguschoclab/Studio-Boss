@@ -146,7 +146,7 @@ describe("F-032/F-033/F-034: PLAYER sentinel vs studio.id", () => {
       },
     } as Partial<GameState>);
 
-    const rng = new RandomGenerator(7); // first next() < 0.1 → triggers liquidation
+    const rng = new RandomGenerator(10); // liquidation roll fires under the unified planner+executor rng sequence
     const impacts = StudioAutomation.tick(state, rng);
     const ipUpdate = impacts.find((i) => i.type === "IP_UPDATED");
     expect(ipUpdate).toBeDefined();

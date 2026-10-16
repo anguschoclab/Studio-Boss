@@ -337,4 +337,15 @@ export interface ProducerShingle {
   // (Shondaland/Netflix, Ryan Murphy/Netflix). TV deals spawn around writer/producer
   // talent with prestige > 70 and draw much larger overhead from streamers post-2010.
   medium?: ShingleMedium;
+  /**
+   * Partner behavior traits (Design Bible §29.23), 0-100. Drive pitch rate,
+   * studio-hopping, deal renewal bias, and spending behavior in ShingleMind.
+   */
+  traits?: {
+    tasteCoherence: number;
+    opportunism: number;
+    loyalty: number;
+    spendingDiscipline: number;
+    prestigeInstinct: number;
+  };
 }
