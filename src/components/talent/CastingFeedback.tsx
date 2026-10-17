@@ -48,6 +48,7 @@ export const CastingFeedback: React.FC<CastingFeedbackProps> = ({ talent, projec
               <ChevronRight
                 className="w-3 h-3 text-primary/40 group-hover:text-primary transition-colors"
                 strokeWidth={3}
+                aria-hidden="true"
               />
             </div>
             <p className="text-[11px] font-black text-muted-foreground/60 leading-relaxed italic group-hover:text-foreground transition-colors uppercase tracking-tight">

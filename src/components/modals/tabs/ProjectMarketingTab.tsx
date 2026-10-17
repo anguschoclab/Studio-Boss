@@ -254,6 +254,7 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
                   "w-4 h-4 text-muted-foreground shrink-0 transition-transform",
                   showPrimaryPicker && "rotate-180"
                 )}
+                aria-hidden="true"
               />
             </button>
 
@@ -340,6 +341,7 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
                     "w-4 h-4 text-muted-foreground transition-transform",
                     showSecondaryPicker && "rotate-180"
                   )}
+                  aria-hidden="true"
                 />
               </div>
             </div>
