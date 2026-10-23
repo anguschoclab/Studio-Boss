@@ -118,9 +118,8 @@ export function tickRivalSlate(
         }
         break;
       case "marketing": {
-        const targetWeek = plan?.releaseIntent?.projectId === p.id
-          ? plan.releaseIntent.targetWeek
-          : null;
+        const targetWeek =
+          plan?.releaseIntent?.projectId === p.id ? plan.releaseIntent.targetWeek : null;
         const ready =
           (p.weeksInPhase ?? 0) + 1 >= MARKETING_WEEKS &&
           (targetWeek === null || state.week >= targetWeek);

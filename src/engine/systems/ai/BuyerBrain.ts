@@ -28,8 +28,7 @@ const MANDATE_HEADLINES: Record<MandateType, string> = {
   drama: "New mandate at {name}: high-stakes drama is the priority.",
   budget_freeze:
     "Austerity hits {name}! Execs are instituting a sudden budget freeze on new pitches.",
-  broad_appeal:
-    "{name} pivots to four-quadrant, broad appeal projects after subscriber churn.",
+  broad_appeal: "{name} pivots to four-quadrant, broad appeal projects after subscriber churn.",
   prestige: "Awards chase: {name} announces a massive fund specifically for prestige projects.",
 };
 
@@ -41,16 +40,18 @@ const ARCHETYPE_AFFINITY: Record<string, Partial<Record<MandateType, number>>> =
 };
 
 /** Score a candidate mandate for this buyer against the world assessment. */
-export function scoreMandate(
-  buyer: Buyer,
-  mandate: MandateType,
-  world: WorldAssessment
-): number {
+export function scoreMandate(buyer: Buyer, mandate: MandateType, world: WorldAssessment): number {
   let score = 50 * (ARCHETYPE_AFFINITY[buyer.archetype]?.[mandate] ?? 1.0);
 
   // Genre mandates track real trend heat minus saturation.
   const genreKey =
-    mandate === "sci-fi" ? "Sci-Fi" : mandate === "comedy" ? "Comedy" : mandate === "drama" ? "Drama" : null;
+    mandate === "sci-fi"
+      ? "Sci-Fi"
+      : mandate === "comedy"
+        ? "Comedy"
+        : mandate === "drama"
+          ? "Drama"
+          : null;
   if (genreKey) {
     const g = world.genreHeat[genreKey];
     if (g) {
@@ -131,8 +132,7 @@ export function tickBuyerMandates(
 
   for (const buyer of buyers) {
     if (buyer.acquiredBy) continue;
-    const expired =
-      !buyer.currentMandate || buyer.currentMandate.activeUntilWeek <= state.week;
+    const expired = !buyer.currentMandate || buyer.currentMandate.activeUntilWeek <= state.week;
     const drift = rng.next() < 0.04; // occasional early pivot
     if (!expired && !drift) continue;
 

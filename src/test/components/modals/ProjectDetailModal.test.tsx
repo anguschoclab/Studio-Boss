@@ -141,8 +141,7 @@ describe("ProjectDetailModal", () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          studio: {
-            },
+          studio: {},
           entities: {
             projects: { [mockProject.id]: mockProject },
             releasedProjectIds: [],
@@ -178,8 +177,7 @@ describe("ProjectDetailModal", () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          studio: {
-            },
+          studio: {},
           entities: {
             projects: { [mockProject.id]: mockProject },
             releasedProjectIds: [],
@@ -219,8 +217,7 @@ describe("ProjectDetailModal", () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          studio: {
-            },
+          studio: {},
           entities: {
             projects: { [mockProject.id]: mockProject },
             releasedProjectIds: [],
@@ -270,8 +267,7 @@ describe("ProjectDetailModal", () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          studio: {
-            },
+          studio: {},
           entities: {
             projects: { [mockProject.id]: mockProject },
             releasedProjectIds: [],
@@ -373,8 +369,7 @@ describe("ProjectDetailModal", () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          studio: {
-            },
+          studio: {},
           entities: {
             projects: { [mockProject.id]: mockProject },
             releasedProjectIds: [],

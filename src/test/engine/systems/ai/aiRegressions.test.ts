@@ -146,7 +146,10 @@ describe("BuyerBrain — deterministic mandates", () => {
   it("rarely disturbs an active mandate (drift is ~4%)", () => {
     const state = createMockGameState({ week: 10 });
     state.market.buyers = [
-      createMockBuyer({ id: "b1", currentMandate: { type: "PRESTIGE", activeUntilWeek: 99 } } as never),
+      createMockBuyer({
+        id: "b1",
+        currentMandate: { type: "PRESTIGE", activeUntilWeek: 99 },
+      } as never),
     ];
     const world = buildWorldAssessment(state);
     let rotations = 0;

@@ -4,7 +4,10 @@ import { isPlayerProject } from "../utils/ownership";
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type ReleaseStrategy =
-  "theatrical" | "streaming" | "platform_exclusive" | "limited_prestige";
+  | "theatrical"
+  | "streaming"
+  | "platform_exclusive"
+  | "limited_prestige";
 
 export interface ReleaseStrategyEffect {
   revenueMultiplier: number;
@@ -80,7 +83,11 @@ export function tickReleaseStrategy(state: GameState): StateImpact[] {
   for (const projectId in state.entities.projects) {
     const project = state.entities.projects[projectId];
     // Player decision only — rival projects self-direct via their weekly plan.
-    if (project.state === "marketing" && !project.releaseStrategy && isPlayerProject(state, project)) {
+    if (
+      project.state === "marketing" &&
+      !project.releaseStrategy &&
+      isPlayerProject(state, project)
+    ) {
       impacts.push({
         type: "MODAL_TRIGGERED",
         payload: {

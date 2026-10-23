@@ -68,7 +68,9 @@ export function acceptProbabilityDelta(
   let delta = (traits.tasteCoherence - 50) / 500; // ±0.1
   const studio = state.entities.rivals[studioId];
   const prestigeStudio =
-    studioId === state.studio.id ? (state.studio.prestige ?? 50) > 60 : (studio?.prestige ?? 50) > 60;
+    studioId === state.studio.id
+      ? (state.studio.prestige ?? 50) > 60
+      : (studio?.prestige ?? 50) > 60;
   delta += ((traits.prestigeInstinct - 50) / 500) * (prestigeStudio ? 1 : -1);
   return delta;
 }

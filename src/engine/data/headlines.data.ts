@@ -163,7 +163,7 @@ export const MARKET_HEADLINES = [
   "Studio executives insist the theatrical experience is thriving while actively closing theaters",
   "Merchandise sales for {projectName} surpass box office gross in opening weekend",
   'Ticket prices surge to $30 as theaters implement "dynamic pricing" for popular showtimes',
-]
+];
 
 export const TALENT_HEADLINES = [
   "A-list director reportedly shopping a passion project around town",
@@ -329,7 +329,7 @@ export const TALENT_HEADLINES = [
   "{actressName} goes viral for mispronouncing the name of her own character in {projectName}",
   'Studio hires a "social media whisperer" to help {actorName} navigate the press tour for {projectName}',
   "{directorName} accused of using {projectName} to launder money for an international crime syndicate",
-]
+];
 
 export const RIVAL_TEMPLATES = [
   "{rival} greenlights ambitious ${budget}M {genre} project",
@@ -467,4 +467,4 @@ export const RIVAL_TEMPLATES = [
   "{rival} announces a gritty, grounded reboot of their ${budget}M {genre} franchise that was already gritty and grounded",
   "{rival} fires their entire PR team after a disastrous press tour for their ${budget}M {genre} film",
   '{rival} writes off a completed ${budget}M {genre} film for tax purposes, claiming it "did not meet quality standards"',
-]
+];

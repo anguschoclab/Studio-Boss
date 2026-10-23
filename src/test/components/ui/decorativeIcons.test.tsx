@@ -14,11 +14,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Calendar } from "@/components/ui/calendar";
 import { InputOTPSeparator } from "@/components/ui/input-otp";
-import {
-  ResizablePanelGroup,
-  ResizablePanel,
-  ResizableHandle,
-} from "@/components/ui/resizable";
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
@@ -145,9 +141,7 @@ describe("Decorative icons — aria-hidden coverage", () => {
       join(__dirname, "../../../components/ui/context-menu.tsx"),
       "utf-8"
     );
-    const iconLines = source
-      .split("\n")
-      .filter((l) => /<(ChevronRight|Check|Circle)\b/.test(l));
+    const iconLines = source.split("\n").filter((l) => /<(ChevronRight|Check|Circle)\b/.test(l));
     expect(iconLines.length).toBeGreaterThanOrEqual(3);
     iconLines.forEach((l) => expect(l).toContain('aria-hidden="true"'));
   });

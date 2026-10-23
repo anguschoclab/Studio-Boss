@@ -2,7 +2,13 @@ import { TalentDemographics } from "../../types/talent.types";
 import { rand } from "../../utils";
 
 export type Ethnicity =
-  "Caucasian" | "Black" | "Hispanic" | "Asian" | "South Asian" | "Middle Eastern" | "Mixed";
+  | "Caucasian"
+  | "Black"
+  | "Hispanic"
+  | "Asian"
+  | "South Asian"
+  | "Middle Eastern"
+  | "Mixed";
 
 interface CountryProfile {
   ethnicities: { type: Ethnicity; weight: number }[];

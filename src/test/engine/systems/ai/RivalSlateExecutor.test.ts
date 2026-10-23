@@ -4,7 +4,11 @@ import { RivalPlan } from "@/engine/systems/ai/rival/plan.types";
 import { RivalRevenueCalculator } from "@/engine/systems/rivals/RivalRevenueCalculator";
 import { applyImpacts } from "@/engine/core/impactReducer";
 import { RandomGenerator } from "@/engine/utils/rng";
-import { createMockGameState, createMockRival, createMockProject } from "../../generators/mockFactory";
+import {
+  createMockGameState,
+  createMockRival,
+  createMockProject,
+} from "../../generators/mockFactory";
 import type { Project } from "@/engine/types";
 
 function emptyPlan(rivalId: string, week: number): RivalPlan {
@@ -70,7 +74,12 @@ describe("RivalSlateExecutor — unified rival lifecycle", () => {
         genre: "Action",
         buzz: 80,
         scriptHeat: 80,
-        marketingCampaign: { domesticBudget: 10_000_000, foreignBudget: 5_000_000, primaryAngle: "SELL_THE_SPECTACLE", weeksInMarketing: 2 },
+        marketingCampaign: {
+          domesticBudget: 10_000_000,
+          foreignBudget: 5_000_000,
+          primaryAngle: "SELL_THE_SPECTACLE",
+          weeksInMarketing: 2,
+        },
       } as Partial<Project>),
     };
 
@@ -86,7 +95,12 @@ describe("RivalSlateExecutor — unified rival lifecycle", () => {
     expect(released.boxOffice?.openingWeekendDomestic ?? 0).toBeGreaterThan(0);
 
     // The live revenue pipeline attributes this release to the rival.
-    const rev = RivalRevenueCalculator.calculateWeeklyRevenue(rival, 10, new RandomGenerator(1), next);
+    const rev = RivalRevenueCalculator.calculateWeeklyRevenue(
+      rival,
+      10,
+      new RandomGenerator(1),
+      next
+    );
     expect(rev.boxOffice).toBeGreaterThan(0);
     expect(rev.total).toBeGreaterThan(0);
 

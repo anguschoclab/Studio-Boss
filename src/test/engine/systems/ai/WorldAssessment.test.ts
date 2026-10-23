@@ -4,7 +4,11 @@ import {
   cycleFromHeat,
   stanceFor,
 } from "@/engine/systems/ai/WorldAssessment";
-import { createMockGameState, createMockRival, createMockProject } from "../../generators/mockFactory";
+import {
+  createMockGameState,
+  createMockRival,
+  createMockProject,
+} from "../../generators/mockFactory";
 
 describe("WorldAssessment — shared AI blackboard", () => {
   it("is a pure function of state (no RNG, deterministic)", () => {
@@ -19,7 +23,12 @@ describe("WorldAssessment — shared AI blackboard", () => {
     const state = createMockGameState({ week: 10 });
     state.entities.rivals = { "riv-1": rival };
     state.entities.projects = {
-      p1: createMockProject({ id: "p1", ownerId: "riv-1", state: "production", weeklyCost: 1_000_000 }),
+      p1: createMockProject({
+        id: "p1",
+        ownerId: "riv-1",
+        state: "production",
+        weeklyCost: 1_000_000,
+      }),
       p2: createMockProject({ id: "p2", ownerId: "riv-1", state: "marketing" }),
       p3: createMockProject({ id: "p3", ownerId: "riv-1", state: "released" }),
     };
@@ -69,7 +78,11 @@ describe("stanceFor — relations ledger → posture", () => {
     recentHostilityByRival: {},
   };
 
-  function stateWith(rel?: { playerOutbids: number; playerPoaches: number; lastHostileWeek: number }) {
+  function stateWith(rel?: {
+    playerOutbids: number;
+    playerPoaches: number;
+    lastHostileWeek: number;
+  }) {
     const state = createMockGameState({ week: 100 });
     if (rel) {
       state.simMemory = {
@@ -100,11 +113,9 @@ describe("stanceFor — relations ledger → posture", () => {
   });
 
   it("deferential when the player dominates the market", () => {
-    expect(
-      stanceFor(stateWith(), "riv-1", { ...baseThreat, marketShare: 0.6 })
-    ).toBe("deferential");
-    expect(
-      stanceFor(stateWith(), "riv-1", { ...baseThreat, recentWins: 3 })
-    ).toBe("deferential");
+    expect(stanceFor(stateWith(), "riv-1", { ...baseThreat, marketShare: 0.6 })).toBe(
+      "deferential"
+    );
+    expect(stanceFor(stateWith(), "riv-1", { ...baseThreat, recentWins: 3 })).toBe("deferential");
   });
 });

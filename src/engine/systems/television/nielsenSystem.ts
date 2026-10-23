@@ -118,7 +118,14 @@ export const TIME_SLOTS: Record<TimeSlot, TimeSlotConfig> = {
 
 // --- Demographic System ---
 export type NielsenDemographic =
-  "P2+" | "A18-49" | "A25-54" | "A18-34" | "W18-49" | "M18-49" | "K2-11" | "T12-17";
+  | "P2+"
+  | "A18-49"
+  | "A25-54"
+  | "A18-34"
+  | "W18-49"
+  | "M18-49"
+  | "K2-11"
+  | "T12-17";
 
 export interface DemoRating {
   demo: NielsenDemographic;

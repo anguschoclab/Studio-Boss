@@ -450,7 +450,8 @@ export function stage2AssetLiquidation(
     // Sell platform stake — large one-time injection, strips owned platform.
     const platformId = (seller.ownedPlatforms || [])[0];
     const platform = state.market.buyers.find((b) => b.id === platformId) as
-      StreamerPlatform | undefined;
+      | StreamerPlatform
+      | undefined;
     const proceeds = platform
       ? Math.max(500_000_000, Math.min(2_000_000_000, (platform.subscribers || 0) * 8))
       : 500_000_000;

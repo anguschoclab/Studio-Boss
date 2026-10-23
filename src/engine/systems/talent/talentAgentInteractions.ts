@@ -445,9 +445,7 @@ export const TalentAgentInteractionEngine = {
         } else if (agent.agencyId && agencies[agent.agencyId]) {
           // Derive from agency archetype
           const agency = agencies[agent.agencyId];
-          const archetype = agency.archetype
-            ? AGENCY_ARCHETYPES[agency.archetype]
-            : null;
+          const archetype = agency.archetype ? AGENCY_ARCHETYPES[agency.archetype] : null;
           if (archetype) {
             agentPersonality = this.mapArchetypeToPersonality(archetype.key);
           }

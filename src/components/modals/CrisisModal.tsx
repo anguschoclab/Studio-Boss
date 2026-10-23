@@ -18,10 +18,7 @@ export const CrisisModal = () => {
   const resolveProjectCrisis = useGameStore((s) => s.resolveProjectCrisis);
 
   const projectId = activeModal?.type === "CRISIS" ? activeModal.payload.projectId : undefined;
-  const project =
-    gameState && projectId
-      ? gameState.entities?.projects?.[projectId]
-      : undefined;
+  const project = gameState && projectId ? gameState.entities?.projects?.[projectId] : undefined;
   // Engine crises carry generated instance ids, so the template pool lookup
   // usually misses — fall back to the crisis data embedded on the project.
   const activeCrisis = project?.activeCrisis;

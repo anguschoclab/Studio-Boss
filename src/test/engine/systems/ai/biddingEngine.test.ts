@@ -38,7 +38,8 @@ describe("AI Bidding Engine (Target C2 Refactor)", () => {
 
     const impacts = tickAuctions(state, rng);
     const bidImpact = impacts.find((i) => i.type === "OPPORTUNITY_UPDATED") as
-      OpportunityUpdateImpact | undefined;
+      | OpportunityUpdateImpact
+      | undefined;
 
     expect(bidImpact).toBeDefined();
     expect(bidImpact?.payload.opportunityId).toBe("script-1");

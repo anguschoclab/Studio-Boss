@@ -79,9 +79,7 @@ describe("bag impacts (untyped BaseImpact fields)", () => {
       { id: "s0", talentId: "t0", severity: 10, type: "personal", weeksRemaining: 2 },
     ] as never;
     const next = applySingleImpact(state, {
-      newScandals: [
-        { id: "s1", talentId: "t1", severity: 50, type: "legal", weeksRemaining: 6 },
-      ],
+      newScandals: [{ id: "s1", talentId: "t1", severity: 50, type: "legal", weeksRemaining: 6 }],
     } as StateImpact);
     expect(next.industry.scandals).toHaveLength(2);
     expect(next.industry.scandals![1].id).toBe("s1");

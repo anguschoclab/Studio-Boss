@@ -101,14 +101,18 @@ export const AWARD_CONFIGS: AwardConfig[] = [
     category: "Best Picture",
     format: "film",
     evaluator: (p) =>
-      (p.awardsProfile?.populistAppeal || 0) + (p.awardsProfile?.culturalHeat || 0) + (p.buzz || 0) / 2,
+      (p.awardsProfile?.populistAppeal || 0) +
+      (p.awardsProfile?.culturalHeat || 0) +
+      (p.buzz || 0) / 2,
   },
   {
     body: "Golden Globes",
     category: "Best Series",
     format: "tv",
     evaluator: (p) =>
-      (p.awardsProfile?.populistAppeal || 0) + (p.awardsProfile?.culturalHeat || 0) + (p.buzz || 0) / 2,
+      (p.awardsProfile?.populistAppeal || 0) +
+      (p.awardsProfile?.culturalHeat || 0) +
+      (p.buzz || 0) / 2,
   },
 
   // --- INDEPENDENT SPIRIT AWARDS ---

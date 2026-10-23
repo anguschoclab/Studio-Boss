@@ -48,11 +48,7 @@ export function deriveTalentMotivation(
   if (prestige > financial + 20 && prestige > 65) return "PRESTIGE_HUNTER";
 
   // Rising, aggressive, low-prestige talent chases fame.
-  if (
-    talent.careerTrajectory === "rising" &&
-    aggression > 60 &&
-    (talent.prestige ?? 50) < 70
-  ) {
+  if (talent.careerTrajectory === "rising" && aggression > 60 && (talent.prestige ?? 50) < 70) {
     return "FAME_SEEKER";
   }
 

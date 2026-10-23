@@ -2,7 +2,12 @@
 // Talk shows, magazine photoshoots, press tours
 
 export type TalkShowType =
-  "late_night" | "morning_show" | "podcast" | "variety" | "comedy_central" | "serious_interview";
+  | "late_night"
+  | "morning_show"
+  | "podcast"
+  | "variety"
+  | "comedy_central"
+  | "serious_interview";
 
 export interface TalkShowAppearance {
   id: string;

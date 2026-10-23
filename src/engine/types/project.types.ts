@@ -78,7 +78,10 @@ export type MarketingAngle =
   | "BROAD_FOUR_QUADRANT_MARKETING";
 
 export type ReleaseStrategy =
-  "theatrical" | "streaming" | "platform_exclusive" | "limited_prestige";
+  | "theatrical"
+  | "streaming"
+  | "platform_exclusive"
+  | "limited_prestige";
 
 export interface MarketingCampaign {
   domesticBudget: number;
@@ -370,10 +373,25 @@ export type UnscriptedFormatKey =
 export type ReleaseModelKey = "weekly" | "binge" | "split";
 export type ProjectContractType = "upfront" | "deficit" | "standard";
 export type MandateType =
-  "sci-fi" | "comedy" | "drama" | "budget_freeze" | "broad_appeal" | "prestige";
+  | "sci-fi"
+  | "comedy"
+  | "drama"
+  | "budget_freeze"
+  | "broad_appeal"
+  | "prestige";
 
 export type ProjectRating =
-  "G" | "PG" | "PG-13" | "R" | "NC-17" | "Unrated" | "TV-Y" | "TV-G" | "TV-PG" | "TV-14" | "TV-MA";
+  | "G"
+  | "PG"
+  | "PG-13"
+  | "R"
+  | "NC-17"
+  | "Unrated"
+  | "TV-Y"
+  | "TV-G"
+  | "TV-PG"
+  | "TV-14"
+  | "TV-MA";
 export type FilmRating = "G" | "PG" | "PG-13" | "R" | "NC-17" | "Unrated";
 export type TvRating = "TV-Y" | "TV-G" | "TV-PG" | "TV-14" | "TV-MA";
 export type ContentFlag =
@@ -389,7 +407,14 @@ export type ContentFlag =
   | "religious"
   | "gambling";
 export type RatingMarket =
-  "us" | "uk" | "europe" | "china" | "india" | "latam" | "middleeast" | "apac";
+  | "us"
+  | "uk"
+  | "europe"
+  | "china"
+  | "india"
+  | "latam"
+  | "middleeast"
+  | "apac";
 
 export interface RegionalRating {
   market: RatingMarket;
@@ -431,7 +456,11 @@ export interface Review {
 
 export type DemographicGroup = "gen-z" | "millennial" | "gen-x" | "boomer";
 export type AudienceQuadrant =
-  "male_under_25" | "female_under_25" | "male_over_25" | "female_over_25" | "four_quadrant";
+  | "male_under_25"
+  | "female_under_25"
+  | "male_over_25"
+  | "female_over_25"
+  | "four_quadrant";
 
 export interface AwardsProfile {
   criticScore: number;
@@ -706,7 +735,11 @@ export interface GenreTrend {
 }
 
 export type FestivalSubmissionStatus =
-  "submitted" | "selected" | "rejected" | "won" | "special_mention";
+  | "submitted"
+  | "selected"
+  | "rejected"
+  | "won"
+  | "special_mention";
 
 export interface FestivalSubmission {
   id: string;

@@ -1,4 +1,12 @@
-import { Talent, TalentRole, Family, Agency, Agent, TalentTier, DirectorArchetype } from "../../types/talent.types";
+import {
+  Talent,
+  TalentRole,
+  Family,
+  Agency,
+  Agent,
+  TalentTier,
+  DirectorArchetype,
+} from "../../types/talent.types";
 import { generateDemographics } from "./demographicsGenerator";
 import { psychologyGenerator } from "./psychologyGenerator";
 import { generateDemographicName } from "../names";

@@ -50,7 +50,9 @@ describe("gameStore", () => {
     await useGameStore.getState().newGame("My Studio", "major");
     const state = useGameStore.getState().gameState!;
     // Ensure the necessary structures are present
-    state.entities.contracts = {}; state.entities.contractsByProjectId = {}; state.entities.contractsByTalentId = {};
+    state.entities.contracts = {};
+    state.entities.contractsByProjectId = {};
+    state.entities.contractsByTalentId = {};
     state.entities.talents = {};
 
     useGameStore.setState({ gameState: state });
@@ -64,7 +66,9 @@ describe("gameStore", () => {
     const { useUIStore } = await import("../../store/uiStore");
     await useGameStore.getState().newGame("My Studio", "major");
     const state = useGameStore.getState().gameState!;
-    state.entities.contracts = {}; state.entities.contractsByProjectId = {}; state.entities.contractsByTalentId = {};
+    state.entities.contracts = {};
+    state.entities.contractsByProjectId = {};
+    state.entities.contractsByTalentId = {};
     state.entities.talents = {};
     useGameStore.setState({ gameState: state });
     useUIStore.setState({ activeModal: null, modalQueue: [] });

@@ -16,7 +16,13 @@ export type HeadlineCategory =
   | "development";
 
 export type NewsEventType =
-  "CRISIS" | "AWARD" | "RELEASE" | "STUDIO_EVENT" | "RIVAL" | "SCANDAL" | "MILESTONE";
+  | "CRISIS"
+  | "AWARD"
+  | "RELEASE"
+  | "STUDIO_EVENT"
+  | "RIVAL"
+  | "SCANDAL"
+  | "MILESTONE";
 
 export interface NewsEvent {
   id: string;

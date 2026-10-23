@@ -47,7 +47,6 @@ describe("AI Archetype Strategy (AgentBrain)", () => {
     });
   });
 
-
   describe("shouldAttemptHostileTakeover", () => {
     it("blocks takeover if combined market share exceeds 40% (Anti-Trust)", () => {
       const state = createMockGameState();

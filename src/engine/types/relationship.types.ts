@@ -2,7 +2,13 @@
 // Defines talent-talent relationships: friendships, rivalries, romance, mentorship
 
 export type RelationshipType =
-  "friend" | "rival" | "romantic" | "ex" | "mentor" | "enemy" | "frenemy";
+  | "friend"
+  | "rival"
+  | "romantic"
+  | "ex"
+  | "mentor"
+  | "enemy"
+  | "frenemy";
 
 export interface RelationshipEvent {
   week: number;

@@ -51,9 +51,7 @@ export function processDirectorDisputes(
   // Find the DIRECTOR's contract — the first contract for the project may be
   // any role, which previously early-returned and skipped dispute checks.
   const dirContract = projectContracts.find(
-    (c) =>
-      c.projectId === project.id &&
-      talentPoolMap[c.talentId]?.roles.includes("director")
+    (c) => c.projectId === project.id && talentPoolMap[c.talentId]?.roles.includes("director")
   );
   if (!dirContract) return { updates, newCrises };
 

@@ -121,9 +121,7 @@ export const AgencyLeverageEngine = {
     // 3. Agency & Agent Effect
     let agencyEffect = 0;
     if (agency) {
-      const archetype = agency.archetype
-        ? AGENCY_ARCHETYPES[agency.archetype]
-        : undefined;
+      const archetype = agency.archetype ? AGENCY_ARCHETYPES[agency.archetype] : undefined;
       if (archetype) {
         const leverageBonus = (archetype.leverage_base / 100) * 0.2;
         agencyEffect += leverageBonus;
@@ -143,9 +141,7 @@ export const AgencyLeverageEngine = {
     // 4. Agent Tactic
     let tacticEffect = 0;
     if (agent) {
-      const archetype = agency?.archetype
-        ? AGENCY_ARCHETYPES[agency.archetype]
-        : undefined;
+      const archetype = agency?.archetype ? AGENCY_ARCHETYPES[agency.archetype] : undefined;
       const tacticMatchesArchetype = archetype?.negotiation_tactic_preferences.includes(
         agent.negotiationTactic?.toUpperCase() ?? ""
       );
