@@ -10,9 +10,7 @@ describe("Repository hygiene", () => {
     // On case-insensitive filesystems .Jules and .jules collapse into one
     // directory; the git index must not contain the lowercase variants.
     const tracked = execSync("git ls-files", { cwd: ROOT, encoding: "utf-8" });
-    const lowerJules = tracked
-      .split("\n")
-      .filter((p) => p.startsWith(".jules/"));
+    const lowerJules = tracked.split("\n").filter((p) => p.startsWith(".jules/"));
     expect(lowerJules).toEqual([]);
   });
 
@@ -30,9 +28,7 @@ describe("Repository hygiene", () => {
   it("no duplicate component implementations under discovery/ and talent/", () => {
     // discovery/LiveAuctionDashboard was dead code shadowing the live
     // talent/ variant imported by DiscoveryBoard.
-    expect(
-      existsSync(join(ROOT, "src/components/discovery/LiveAuctionDashboard.tsx"))
-    ).toBe(false);
+    expect(existsSync(join(ROOT, "src/components/discovery/LiveAuctionDashboard.tsx"))).toBe(false);
     expect(
       existsSync(join(ROOT, "src/test/components/discovery/LiveAuctionDashboard.test.tsx"))
     ).toBe(false);

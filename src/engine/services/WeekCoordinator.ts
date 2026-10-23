@@ -322,8 +322,7 @@ export class WeekCoordinator {
     const allNewAwards = awardsImpacts
       .filter((i) => i.type === "INDUSTRY_UPDATE")
       .flatMap(
-        (i) =>
-          ((i.payload as Record<string, unknown>).newAwards as unknown[] | undefined) ?? []
+        (i) => ((i.payload as Record<string, unknown>).newAwards as unknown[] | undefined) ?? []
       );
     if (allNewAwards.length > 0) {
       context.impacts.push({
@@ -512,16 +511,12 @@ export class WeekCoordinator {
 
   private static runAIFilter(state: GameState, context: TickContext) {
     context.impacts.push(...tickAIMinds(state, context.rng, context.rivalPlans));
-    context.impacts.push(
-      ...tickRivalAwardsCampaigns(state, context.rng, context.rivalPlans)
-    );
+    context.impacts.push(...tickRivalAwardsCampaigns(state, context.rng, context.rivalPlans));
     context.impacts.push(...tickAgencies(state, context.rng));
     context.impacts.push(...tickAuctions(state, context.rng, context.rivalPlans));
 
     // Talent competition between rivals (plan intents + legacy fallback)
-    context.impacts.push(
-      ...tickTalentCompetition(state, context.rng, context.rivalPlans)
-    );
+    context.impacts.push(...tickTalentCompetition(state, context.rng, context.rivalPlans));
 
     // Festival market
     context.impacts.push(...runFestivalMarket(state, context.rng));

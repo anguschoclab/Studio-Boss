@@ -84,13 +84,7 @@ const ACTIVE_STATES: ReadonlySet<string> = new Set([
   "marketing",
 ]);
 
-const TALENT_TIERS: TalentTier[] = [
-  "A_LIST",
-  "B_LIST",
-  "C_LIST",
-  "RISING_STAR",
-  "NEWCOMER",
-];
+const TALENT_TIERS: TalentTier[] = ["A_LIST", "B_LIST", "C_LIST", "RISING_STAR", "NEWCOMER"];
 
 function cashTierFor(cash: number): CashTier {
   if (cash < 0) return "distressed";
@@ -139,8 +133,7 @@ export function buildWorldAssessment(state: GameState): WorldAssessment {
       if (isPlayerProject(state, p)) playerActive++;
     }
     if (p.state === "released" && p.releaseWeek && week - p.releaseWeek <= 52) {
-      const gross =
-        (p.boxOffice?.totalDomestic || 0) + (p.boxOffice?.totalForeign || 0);
+      const gross = (p.boxOffice?.totalDomestic || 0) + (p.boxOffice?.totalForeign || 0);
       industryBoxOffice += gross;
       if (isPlayerProject(state, p)) {
         playerBoxOffice += gross;
@@ -205,8 +198,7 @@ export function buildWorldAssessment(state: GameState): WorldAssessment {
     recentHostilityByRival[rid] = (rel.playerOutbids + rel.playerPoaches) * recency;
   }
   const playerThreat: PlayerThreatProfile = {
-    marketShare:
-      industryBoxOffice > 0 ? Math.min(1, playerBoxOffice / industryBoxOffice) : 0,
+    marketShare: industryBoxOffice > 0 ? Math.min(1, playerBoxOffice / industryBoxOffice) : 0,
     prestige: state.studio.prestige,
     activeProjects: playerActive,
     recentWins: playerRecentWins,

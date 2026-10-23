@@ -44,7 +44,11 @@ export interface ProductionAddition {
 }
 
 export type CreditSceneType =
-  "mid_credits" | "post_credits" | "teaser" | "joke" | "emotional_button";
+  | "mid_credits"
+  | "post_credits"
+  | "teaser"
+  | "joke"
+  | "emotional_button";
 
 export interface CreditScene {
   id: string;

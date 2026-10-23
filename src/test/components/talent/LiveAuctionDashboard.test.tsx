@@ -7,12 +7,7 @@ import { Opportunity } from "@/engine/types";
 
 vi.mock("@/components/ui/button", () => ({
   Button: ({ children, onClick, disabled, tooltip, ..._rest }: any) => (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      data-testid="button"
-      data-tooltip={tooltip}
-    >
+    <button onClick={onClick} disabled={disabled} data-testid="button" data-tooltip={tooltip}>
       {children}
     </button>
   ),

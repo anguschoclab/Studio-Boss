@@ -1,10 +1,4 @@
-import {
-  GameState,
-  RivalStudio,
-  SeriesProject,
-  BudgetTierKey,
-  StateImpact,
-} from "../../../types";
+import { GameState, RivalStudio, SeriesProject, BudgetTierKey, StateImpact } from "../../../types";
 import { RandomGenerator } from "../../../utils/rng";
 import { isPlayerProject } from "../../../utils/ownership";
 import { WorldAssessment, buildWorldAssessment, stanceFor } from "../WorldAssessment";
@@ -61,8 +55,7 @@ export function planRivalWeek(
   // --- 1. Motivation (single source: planner derives, tickAIMinds consumes) ---
   plan.motivation = calculateRivalMotivation(rival, state, rng);
   const lastAwardWin = rival.lastAwardWin;
-  const awardStarved =
-    world.week - (lastAwardWin ?? -999) > (rival.prestige > 75 ? 52 : 104);
+  const awardStarved = world.week - (lastAwardWin ?? -999) > (rival.prestige > 75 ? 52 : 104);
   if (awardStarved && plan.motivation !== "AWARD_CHASE" && rng.next() < 0.15) {
     plan.motivation = "AWARD_CHASE";
     reasons.push("Award-starved for over a year — pivoting to AWARD_CHASE.");
@@ -94,7 +87,12 @@ export function planRivalWeek(
     if (standing && standing.runwayWeeks < 26) rate *= 0.5;
     slateCount = rng.next() < Math.min(0.9, rate) ? 1 : 0;
     // Acquirers/franchise builders keep their pipeline fuller.
-    if (slateCount === 1 && active + 2 < slotCap && archetype.riskAppetite > 60 && rng.next() < 0.25) {
+    if (
+      slateCount === 1 &&
+      active + 2 < slotCap &&
+      archetype.riskAppetite > 60 &&
+      rng.next() < 0.25
+    ) {
       slateCount = 2;
     }
   }
@@ -186,7 +184,9 @@ export function planRivalWeek(
 
     plan.bids.push({ opportunityId: opp.id, amount, spiteBoost });
     if (spiteBoost > 1.2) {
-      reasons.push(`Spite-bidding "${opp.title}" to deny the player (+${Math.round((spiteBoost - 1) * 100)}%).`);
+      reasons.push(
+        `Spite-bidding "${opp.title}" to deny the player (+${Math.round((spiteBoost - 1) * 100)}%).`
+      );
     }
   }
 
@@ -204,8 +204,7 @@ export function planRivalWeek(
     const p = projects[pid];
     if (p.ownerId !== rival.id) continue;
     if (p.state !== "marketing" && p.state !== "post_production") continue;
-    const pct =
-      p.budgetTier === "blockbuster" ? 0.3 : p.budgetTier === "high" ? 0.25 : 0.15;
+    const pct = p.budgetTier === "blockbuster" ? 0.3 : p.budgetTier === "high" ? 0.25 : 0.15;
     let spend = Math.floor((p.budget || BUDGET_TIERS[p.budgetTier || "mid"].budget) * pct);
     if (plan.motivation === "AWARD_CHASE" && p.format !== "tv") {
       spend = Math.floor(spend * 1.3);
@@ -237,8 +236,7 @@ export function planRivalWeek(
   plan.rivalSpend = marketingTotal + Math.floor(5_000_000 * archetypeMult);
 
   // --- 6. Strategic: M&A ---
-  const wantsMA =
-    archetype.strategy === "acquirer" || archetype.ma_willingness > 0.5;
+  const wantsMA = archetype.strategy === "acquirer" || archetype.ma_willingness > 0.5;
   if (wantsMA && !distressed && rival.cash > 100_000_000) {
     for (const tid in state.entities.rivals) {
       if (tid === rival.id) continue;
@@ -384,8 +382,7 @@ export function tickRivalPlans(
           currentMotivation: plan.motivation,
           intel: {
             motivation: plan.motivation,
-            strategyLabel:
-              getStudioArchetype(rival.archetypeId || rival.behaviorId || "").strategy,
+            strategyLabel: getStudioArchetype(rival.archetypeId || rival.behaviorId || "").strategy,
             stance: plan.stance,
             planSummary: summarizePlan(plan),
             reasons: plan.reasons.slice(0, 12),
@@ -405,7 +402,10 @@ function summarizePlan(plan: RivalPlan): string[] {
       `Developing ${plan.slate.count}x ${plan.slate.preferTv ? "series" : "film"} (${plan.slate.budgetTiers.join(", ")})`
     );
   }
-  if (plan.bids.length > 0) out.push(`Bidding on ${plan.bids.length} market opportunit${plan.bids.length === 1 ? "y" : "ies"}`);
+  if (plan.bids.length > 0)
+    out.push(
+      `Bidding on ${plan.bids.length} market opportunit${plan.bids.length === 1 ? "y" : "ies"}`
+    );
   for (const m of plan.strategic.mna) {
     out.push(`${m.kind === "opportunistic" ? "Circling distressed" : "Targeting"} ${m.targetId}`);
   }

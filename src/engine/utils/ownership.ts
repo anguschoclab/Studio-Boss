@@ -16,10 +16,7 @@ export function isPlayerOwner(state: GameState, ownerId: string | undefined | nu
  * lack `ownerId` (legacy paths never stamped it); rival projects always
  * carry their rival's id.
  */
-export function isPlayerProject(
-  state: GameState,
-  project: { ownerId?: string | null }
-): boolean {
+export function isPlayerProject(state: GameState, project: { ownerId?: string | null }): boolean {
   return project.ownerId === undefined || isPlayerOwner(state, project.ownerId);
 }
 

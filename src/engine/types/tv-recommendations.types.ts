@@ -2,7 +2,12 @@
 // Provides intelligent TV role recommendations for talents based on their attributes
 
 export type TVRoleType =
-  "guest_star" | "recurring" | "series_regular" | "lead" | "showrunner" | "creator";
+  | "guest_star"
+  | "recurring"
+  | "series_regular"
+  | "lead"
+  | "showrunner"
+  | "creator";
 export type TVGenre =
   | "drama"
   | "comedy"

@@ -11,7 +11,12 @@ import {
 } from "./nielsenSystem";
 
 export type TVStatus =
-  "IN_DEVELOPMENT" | "ON_AIR" | "ON_BUBBLE" | "RENEWED" | "CANCELLED" | "SYNDICATED";
+  | "IN_DEVELOPMENT"
+  | "ON_AIR"
+  | "ON_BUBBLE"
+  | "RENEWED"
+  | "CANCELLED"
+  | "SYNDICATED";
 
 /**
  * Weekly TV Tick with integrated Nielsen ratings system.

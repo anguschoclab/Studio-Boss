@@ -8,7 +8,8 @@ import { migrateSave } from "@/engine/migrations";
  */
 
 export type SaveResult =
-  { ok: true } | { ok: false; reason: "worker-unavailable" | "error"; error?: unknown };
+  | { ok: true }
+  | { ok: false; reason: "worker-unavailable" | "error"; error?: unknown };
 
 export async function saveGame(slot: number, state: GameState): Promise<SaveResult> {
   try {

@@ -42,7 +42,11 @@ export interface GameEvent {
 export type ArchetypeKey = "major" | "mid-tier" | "indie";
 
 export type StudioMotivation =
-  "CASH_CRUNCH" | "AWARD_CHASE" | "FRANCHISE_BUILDING" | "MARKET_DISRUPTION" | "STABILITY";
+  | "CASH_CRUNCH"
+  | "AWARD_CHASE"
+  | "FRANCHISE_BUILDING"
+  | "MARKET_DISRUPTION"
+  | "STABILITY";
 
 export interface RivalStudio {
   id: string;

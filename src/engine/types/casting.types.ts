@@ -20,7 +20,11 @@ export interface ComfortPremiumRates {
 }
 
 export type ScriptRequirementType =
-  "nudity" | "stunts" | "intimacy" | "physical_risk" | "emotionally_intense";
+  | "nudity"
+  | "stunts"
+  | "intimacy"
+  | "physical_risk"
+  | "emotionally_intense";
 export type ScriptRequirementLevel = "mild" | "moderate" | "extreme";
 
 export interface ScriptRequirement {

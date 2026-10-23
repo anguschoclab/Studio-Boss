@@ -63,9 +63,8 @@ Print what changed and what was kept, so you can eyeball the decision.
 
 These bite every time:
 
-- **Numeric separators** (`1_000_000_000`) look like snake_case to a regex. A
-  letterless token must never be transformed. (Real incident: a `[A-Z0-9]+(_[A-Z0-9]+)+`
-  pattern turned `1_000_000_000` into `1 000 000 000` — invalid JS — across ~15
+- **Numeric separators** (`1_000_000_000`) look like snake*case to a regex. A
+  letterless token must never be transformed. (Real incident: a `[A-Z0-9]+(*[A-Z0-9]+)+`pattern turned`1_000_000_000`into`1 000 000 000` — invalid JS — across ~15
   files.)
 - **Enum / status / modal-type string literals** (`'ON_AIR'`, `'BIDDING_WAR'`)
   compared with `===` or in `case`. Changing the display but not the comparison (or

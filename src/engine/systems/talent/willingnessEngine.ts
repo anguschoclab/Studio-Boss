@@ -96,8 +96,7 @@ export function calculateWillingness(
   const projectContractIds = gameState.entities.contractsByProjectId?.[project.id] || [];
   const attachedDirectorId = projectContractIds
     .map((id) => gameState.entities.contracts[id])
-    .find((c) => c && gameState.entities.talents[c.talentId]?.roles.includes("director"))
-    ?.talentId;
+    .find((c) => c && gameState.entities.talents[c.talentId]?.roles.includes("director"))?.talentId;
   if (attachedDirectorId) {
     const directorId = attachedDirectorId;
     const director = gameState.entities.talents[directorId];

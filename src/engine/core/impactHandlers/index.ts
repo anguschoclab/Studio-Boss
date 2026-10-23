@@ -471,7 +471,8 @@ export function applySingleImpact(state: GameState, impact: StateImpact): GameSt
   // member), so the single documented cast lives here instead of `any` on
   // every handler.
   const handler = handlerRegistry[impact.type] as
-    ((state: GameState, impact: StateImpact) => GameState) | undefined;
+    | ((state: GameState, impact: StateImpact) => GameState)
+    | undefined;
   if (handler) {
     return handler(state, impact);
   }

@@ -64,7 +64,8 @@ describe("Market Events System", () => {
 
       const impacts = advanceMarketEvents(mockGameState);
       const marketImpact = impacts.find((i) => i.type === "MARKET_EVENT_UPDATED") as
-        MarketEventUpdateImpact | undefined;
+        | MarketEventUpdateImpact
+        | undefined;
 
       expect(marketImpact).toBeDefined();
       expect(marketImpact?.payload.events?.length).toBe(1);
@@ -88,7 +89,8 @@ describe("Market Events System", () => {
 
       const impacts = advanceMarketEvents(mockGameState);
       const marketImpact = impacts.find((i) => i.type === "MARKET_EVENT_UPDATED") as
-        MarketEventUpdateImpact | undefined;
+        | MarketEventUpdateImpact
+        | undefined;
 
       expect(marketImpact?.payload.events?.length).toBe(0);
     });

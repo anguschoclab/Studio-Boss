@@ -51,7 +51,9 @@ export class RumorProcessor {
       const isTrue = rng.next() > 0.5;
       const subjects = ["talent", "rival", "project"];
       const category = subjects[Math.floor(rng.next() * subjects.length)] as
-        "talent" | "rival" | "project";
+        | "talent"
+        | "rival"
+        | "project";
 
       let text = "Unnamed studio in talks for a massive merger.";
 

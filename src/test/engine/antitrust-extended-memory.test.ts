@@ -89,7 +89,8 @@ describe("Antitrust simMemory migration", () => {
 
       const impacts = tickAntitrust(state);
       const blockList = findSimMemoryImpact(impacts, "simMemory.antitrustBlockList") as
-        { acquirerId: string; untilWeek: number }[] | undefined;
+        | { acquirerId: string; untilWeek: number }[]
+        | undefined;
 
       expect(blockList).toBeDefined();
       expect(blockList!.length).toBeGreaterThan(0);
@@ -115,7 +116,8 @@ describe("Antitrust simMemory migration", () => {
 
       const impacts = tickAntitrust(state);
       const log = findSimMemoryImpact(impacts, "simMemory.eventLogs.antitrust") as
-        AntitrustEvent[] | undefined;
+        | AntitrustEvent[]
+        | undefined;
 
       expect(log).toBeDefined();
       expect(log!.length).toBe(1);
@@ -159,7 +161,8 @@ describe("Antitrust simMemory migration", () => {
 
       const impacts = tickAntitrust(state);
       const log = findSimMemoryImpact(impacts, "simMemory.eventLogs.antitrust") as
-        AntitrustEvent[] | undefined;
+        | AntitrustEvent[]
+        | undefined;
 
       expect(log).toBeDefined();
       expect(log!.length).toBe(2);
@@ -192,7 +195,8 @@ describe("Antitrust simMemory migration", () => {
 
       const impacts = tickAntitrust(state);
       const blockList = findSimMemoryImpact(impacts, "simMemory.antitrustBlockList") as
-        { acquirerId: string; untilWeek: number }[] | undefined;
+        | { acquirerId: string; untilWeek: number }[]
+        | undefined;
 
       expect(blockList).toBeDefined();
       // Old expired blocks should be gone, only the new block for dominant-1 should remain

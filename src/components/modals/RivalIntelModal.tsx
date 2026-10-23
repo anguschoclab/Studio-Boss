@@ -169,8 +169,7 @@ export const RivalIntelModal: React.FC = () => {
 
           {!intel && (
             <p className="text-xs text-muted-foreground/60 italic">
-              No field intelligence on file yet — this studio's planning cycle hasn't been
-              observed.
+              No field intelligence on file yet — this studio's planning cycle hasn't been observed.
             </p>
           )}
         </div>

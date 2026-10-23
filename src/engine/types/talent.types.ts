@@ -8,9 +8,18 @@ export interface MotivationProfile {
 }
 
 export type TalentMotivation =
-  "FAME_SEEKER" | "PRESTIGE_HUNTER" | "MONEY_GRABBER" | "REHAB_ARC" | "CREATIVE_FREEDOM" | "NONE";
+  | "FAME_SEEKER"
+  | "PRESTIGE_HUNTER"
+  | "MONEY_GRABBER"
+  | "REHAB_ARC"
+  | "CREATIVE_FREEDOM"
+  | "NONE";
 export type AgencyMotivation =
-  "THE_PACKAGER" | "THE_CLIMBER" | "THE_PROTECTOR" | "THE_SHARK" | "VOLUME_RETAIL";
+  | "THE_PACKAGER"
+  | "THE_CLIMBER"
+  | "THE_PROTECTOR"
+  | "THE_SHARK"
+  | "VOLUME_RETAIL";
 export type RivalStrategy =
   | "blockbuster_focused"
   | "prestige_chaser"
@@ -57,7 +66,12 @@ export type PersonalityArchetype =
 export type TalentTier = "A_LIST" | "B_LIST" | "C_LIST" | "RISING_STAR" | "NEWCOMER";
 
 export type ScandalType =
-  "financial" | "personal" | "onset_behavior" | "legal" | "feud" | "director_speaks_out";
+  | "financial"
+  | "personal"
+  | "onset_behavior"
+  | "legal"
+  | "feud"
+  | "director_speaks_out";
 
 export interface Scandal {
   id: string;
@@ -83,7 +97,12 @@ export type AgencyArchetype =
   | "international_broker";
 
 export type AgentPersonality =
-  "shark" | "diplomat" | "prestige" | "volume" | "protector" | "visionary";
+  | "shark"
+  | "diplomat"
+  | "prestige"
+  | "volume"
+  | "protector"
+  | "visionary";
 
 export type TalentPersonality =
   | "perfectionist"
@@ -104,7 +123,12 @@ export type TalentRole = "actor" | "director" | "writer" | "producer";
 export type AgencyTier = "powerhouse" | "major" | "mid-tier" | "boutique" | "specialist";
 export type AgencyCulture = "shark" | "family" | "volume" | "prestige";
 export type AgentSpecialty =
-  "film_packaging" | "tv_packaging" | "literary" | "talent" | "comedy" | "unscripted";
+  | "film_packaging"
+  | "tv_packaging"
+  | "literary"
+  | "talent"
+  | "comedy"
+  | "unscripted";
 
 export interface Agency {
   id: string;
