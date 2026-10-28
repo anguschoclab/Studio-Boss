@@ -46,7 +46,11 @@ export function initializeTrends(): GenreTrend[] {
 }
 
 export function advanceTrends(trends: GenreTrend[]): StateImpact[] {
-  let updated = (trends || []).map((t) => {
+  // ⚡ Bolt: Consolidated .map() and .filter() into a single for loop to avoid intermediate array allocations
+  const updated: GenreTrend[] = [];
+  const len = trends ? trends.length : 0;
+  for (let i = 0; i < len; i++) {
+    const t = trends[i];
     let newHeat = t.heat;
     if (t.direction === "rising") newHeat = Math.min(100, newHeat + 5);
     if (t.direction === "cooling") newHeat = Math.max(0, newHeat - 5);
@@ -56,16 +60,18 @@ export function advanceTrends(trends: GenreTrend[]): StateImpact[] {
     if (newHeat >= 100) newDirection = "stable";
     if (newHeat <= 0) newDirection = "dead";
 
-    return {
-      ...t,
-      heat: newHeat,
-      direction: newDirection,
-      weeksRemaining: (t.weeksRemaining || 0) - 1,
-    };
-  });
+    const remaining = (t.weeksRemaining || 0) - 1;
 
-  // Remove dead trends or those out of time
-  updated = updated.filter((t) => t.weeksRemaining > 0 && t.heat > 0);
+    // Remove dead trends or those out of time
+    if (remaining > 0 && newHeat > 0) {
+      updated.push({
+        ...t,
+        heat: newHeat,
+        direction: newDirection,
+        weeksRemaining: remaining,
+      });
+    }
+  }
 
   // Randomly spawn new trends if we are low
   if (updated.length < 5 && secureRandom() < 0.1) {
