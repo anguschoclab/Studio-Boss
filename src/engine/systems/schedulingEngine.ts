@@ -86,9 +86,17 @@ export const SchedulingEngine = {
   },
 
   processPacts(pacts: TalentPact[]): TalentPact[] {
-    return (pacts || [])
-      .map((p) => ({ ...p, weeksRemaining: (p.weeksRemaining ?? 0) - 1 }))
-      .filter((p) => (p.weeksRemaining ?? 0) > 0);
+    // ⚡ Bolt: Consolidated .map() and .filter() into a single for loop to avoid intermediate array allocations
+    const validPacts: TalentPact[] = [];
+    const len = pacts ? pacts.length : 0;
+    for (let i = 0; i < len; i++) {
+      const p = pacts[i];
+      const remaining = (p.weeksRemaining ?? 0) - 1;
+      if (remaining > 0) {
+        validPacts.push({ ...p, weeksRemaining: remaining });
+      }
+    }
+    return validPacts;
   },
 
   updateTalentFatigue(talent: Talent, isWorking: boolean): number {
