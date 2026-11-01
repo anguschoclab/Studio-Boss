@@ -410,11 +410,21 @@ export function getTVRecommendationsForTalent(
   talentId: string,
   state: GameState
 ): TVShowRecommendation[] {
+  // ⚡ Bolt Optimization: Replace Object.values().filter() with a single-pass for...in loop
   const recommendations: Record<string, TVShowRecommendation> =
     state.tvRecommendations?.recommendations || {};
-  return Object.values(recommendations).filter(
-    (r) => r.talentId === talentId && r.expiresWeek > state.week
-  );
+
+  const result: TVShowRecommendation[] = [];
+  for (const id in recommendations) {
+    if (Object.prototype.hasOwnProperty.call(recommendations, id)) {
+      const r = recommendations[id];
+      if (r.talentId === talentId && r.expiresWeek > state.week) {
+        result.push(r);
+      }
+    }
+  }
+
+  return result;
 }
 
 /**
