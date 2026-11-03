@@ -203,7 +203,7 @@ export const StudioSidebar = () => {
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/20 italic">
               <span className="flex items-center gap-2">
-                <DollarSign className="h-3 w-3" /> CASH RESERVES
+                <DollarSign aria-hidden="true" className="h-3 w-3" /> CASH RESERVES
               </span>
               <span
                 className={cn(
@@ -226,7 +226,7 @@ export const StudioSidebar = () => {
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-1">
               <span className="text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground/20 italic flex items-center gap-2">
-                <Star className="h-2.5 w-2.5" /> PRESTIGE
+                <Star aria-hidden="true" className="h-2.5 w-2.5" /> PRESTIGE
               </span>
               <span className="text-lg font-display font-black text-secondary italic leading-none">
                 {gameState.studio.prestige}
@@ -234,7 +234,7 @@ export const StudioSidebar = () => {
             </div>
             <div className="flex flex-col gap-1 text-right">
               <span className="text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground/20 italic flex items-center justify-end gap-2">
-                SLATE <Clapperboard className="h-2.5 w-2.5" />
+                SLATE <Clapperboard aria-hidden="true" className="h-2.5 w-2.5" />
               </span>
               <span className="text-lg font-display font-black text-foreground italic leading-none">
                 {
