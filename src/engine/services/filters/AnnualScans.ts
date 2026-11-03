@@ -98,7 +98,7 @@ export const AnnualScans = {
         detectCultClassic(project, context.week)
       ) {
         // Mark the project — project.isCultClassic drives the cult-classic
-        // revenue multiplier (RivalRevenueCalculator/CalculatorModule).
+        // revenue multiplier (RivalRevenueCalculator/finance.ts theatrical decay).
         context.impacts.push({
           type: "PROJECT_UPDATED",
           payload: { projectId: project.id, update: { isCultClassic: true } },
