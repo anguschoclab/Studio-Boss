@@ -471,3 +471,5 @@ Executed under strict test-first discipline: Phase-0 pinned characterization and
 - [x] `main` pushed; all PRs closed; all remote branches deleted — verified: `gh pr list --state open` excludes the 14; `git ls-remote --heads origin` = main + dependabot branches only
 
 **Post-script:** within hours of the dependabot ecosystem fix landing, Dependabot opened 5 fresh PRs (#941–#945: vite 5→8, electron 33→45, @types/node 22→26, react-resizable-panels, globals) — proof the ecosystem fix works. These are breaking major bumps requiring dedicated migration evaluation; **deliberately out of scope for this round** and recorded here for the next triage.
+
+**Incident (resolved):** the amend/AA sequence left `<<<<<<<` conflict markers in `decorativeIcons.app.test.tsx` on `main` — caught by Dependabot-PR CI (`TS1185`). Resolved to the HEAD side in `9e4b6b3c`; file verified green. Dependabot CI failures were main-side, not bump-side; the 5 bumps remain deferred as breaking majors (#941–#945 closed, branches deleted).
