@@ -90,3 +90,39 @@ describe("SchedulingEngine Hardening Tests", () => {
     expect(projectUpdate.payload.update.weeksInPhase).toBe(0); // 1 - 1 = 0
   });
 });
+
+// Characterization lock for the Bolt fused-loop rewrite — pins processPacts'
+// decrement/filter semantics and null tolerance. Green before AND after.
+describe("processPacts", () => {
+  const pact = (id: string, weeksRemaining?: number) =>
+    ({ id, talentId: "t1", studioId: "s1", weeksRemaining }) as any;
+
+  it("decrements weeksRemaining by 1 and keeps surviving pacts", () => {
+    const result = SchedulingEngine.processPacts([pact("p1", 5), pact("p2", 2)]);
+    expect(result.map((p: any) => [p.id, p.weeksRemaining])).toEqual([
+      ["p1", 4],
+      ["p2", 1],
+    ]);
+  });
+
+  it("drops pacts whose remaining weeks reach 0 (and treats missing as 0)", () => {
+    const result = SchedulingEngine.processPacts([
+      pact("kept", 2),
+      pact("expired", 1),
+      pact("neverSet", undefined),
+    ]);
+    expect(result.map((p: any) => p.id)).toEqual(["kept"]);
+  });
+
+  it("returns [] for null/undefined input", () => {
+    expect(SchedulingEngine.processPacts(undefined as any)).toEqual([]);
+    expect(SchedulingEngine.processPacts(null as any)).toEqual([]);
+  });
+
+  it("produces new objects for surviving pacts (does not mutate input)", () => {
+    const input = [pact("p1", 3)];
+    const result = SchedulingEngine.processPacts(input);
+    expect(result[0]).not.toBe(input[0]);
+    expect(input[0].weeksRemaining).toBe(3);
+  });
+});
