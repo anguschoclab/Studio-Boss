@@ -60,11 +60,15 @@ export const TalentAvatar: React.FC<TalentAvatarProps> = React.memo(
     const effectiveWeek = week ?? currentWeek;
     const pixelSize = SIZE_MAP[size];
 
-    const svgMarkup = useMemo(() => {
-      // Sanitize the procedural SVG to prevent XSS attacks
-      return DOMPurify.sanitize(generateAvatarSVG(talent, effectiveWeek), {
+    const svgDataUri = useMemo(() => {
+      // Sanitize the procedural SVG, then render it via an <img> data URI
+      // instead of inline markup. SVGs loaded through <img> run in a secure
+      // non-scripting context, so script execution is impossible even if the
+      // sanitizer or generator were compromised.
+      const sanitized = DOMPurify.sanitize(generateAvatarSVG(talent, effectiveWeek), {
         USE_PROFILES: { svg: true, svgFilters: true },
       });
+      return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(sanitized)}`;
     }, [talent, effectiveWeek]);
 
     const primaryRole = (talent.roles?.[0] || talent.role || "").toLowerCase();
@@ -87,9 +91,12 @@ export const TalentAvatar: React.FC<TalentAvatarProps> = React.memo(
         style={{ width: pixelSize, height: pixelSize }}
         aria-label={`Avatar for ${talent.name}`}
       >
-        <div
-          className="w-full h-full rounded-none overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700"
-          dangerouslySetInnerHTML={{ __html: svgMarkup }}
+        <img
+          src={svgDataUri}
+          alt=""
+          aria-hidden="true"
+          draggable={false}
+          className="w-full h-full rounded-none grayscale group-hover:grayscale-0 transition-all duration-700"
         />
         {showBadge && (
           <div
