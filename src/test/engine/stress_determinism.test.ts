@@ -9,7 +9,9 @@ const ARCHETYPE = "major";
 describe("52-Week Determinism Stress Test", () => {
   test(
     "should produce bit-identical results after 52 weeks of simulation",
-    { timeout: 300_000 },
+    // Two interleaved 52-week sims take ~5min on slower machines — the
+    // previous 300s bound timed out on Windows while still passing on CI.
+    { timeout: 600_000 },
     async () => {
       const stateA = initializeGame(STUDIO_NAME, ARCHETYPE, SEED);
       const stateB = initializeGame(STUDIO_NAME, ARCHETYPE, SEED);

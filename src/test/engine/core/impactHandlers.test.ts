@@ -193,3 +193,41 @@ describe("bag-impact handler: removeContracts", () => {
     expect(result.entities.contractsByProjectId["p1"]).toContain("c1");
   });
 });
+
+// Characterization lock for the Bolt early-exit rewrite — pins
+// handleFormatLicensed dedupe + append semantics. Green before AND after.
+describe("FORMAT_LICENSED vault dedupe", () => {
+  const asset = (id: string) =>
+    ({ id, originalProjectId: "p0", title: `Asset ${id}`, baseValue: 100, decayRate: 0.1 }) as any;
+
+  it("appends a novel asset to the vault", () => {
+    const state = makeMockState();
+    state.ip.vault = [asset("a1")];
+    const result = applySingleImpact(state, {
+      type: "FORMAT_LICENSED",
+      payload: { asset: asset("a2") },
+    } as StateImpact);
+    expect(result.ip.vault.map((a: any) => a.id)).toEqual(["a1", "a2"]);
+  });
+
+  it("returns identical state when the asset id already exists", () => {
+    const state = makeMockState();
+    state.ip.vault = [asset("a1"), asset("a2")];
+    const result = applySingleImpact(state, {
+      type: "FORMAT_LICENSED",
+      payload: { asset: asset("a2") },
+    } as StateImpact);
+    expect(result).toBe(state);
+    expect(result.ip.vault).toHaveLength(2);
+  });
+
+  it("dedupes against any position in the vault (not just the tail)", () => {
+    const state = makeMockState();
+    state.ip.vault = [asset("a1"), asset("a2"), asset("a3")];
+    const result = applySingleImpact(state, {
+      type: "FORMAT_LICENSED",
+      payload: { asset: asset("a1") },
+    } as StateImpact);
+    expect(result.ip.vault).toHaveLength(3);
+  });
+});

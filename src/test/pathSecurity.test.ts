@@ -8,7 +8,25 @@ import * as fs from "fs";
 import * as os from "os";
 import { resolveSafePath } from "../../electron/pathSecurity.cjs";
 
-describe("resolveSafePath", () => {
+// Windows requires Developer Mode or an elevated token to create *file*
+// symlinks (directory junctions are not a substitute — the cases below
+// symlink files). On unprivileged Windows the setup throws EPERM. Probe
+// once at module load and skip the suite when symlinks can't be made —
+// resolveSafePath itself is platform-agnostic and covered on POSIX CI.
+function canCreateSymlinks(): boolean {
+  try {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "pathsec-probe-"));
+    const target = path.join(dir, "t.txt");
+    fs.writeFileSync(target, "x");
+    fs.symlinkSync(target, path.join(dir, "l.txt"));
+    fs.rmSync(dir, { recursive: true, force: true });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+describe.skipIf(!canCreateSymlinks())("resolveSafePath", () => {
   let tmpDir: string;
   let distDir: string;
 

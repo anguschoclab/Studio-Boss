@@ -1,5 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { tickTVRecommendationSystem } from "@/engine/systems/talent/TVRecommendationSystem";
+import {
+  tickTVRecommendationSystem,
+  getTVRecommendationsForTalent,
+} from "@/engine/systems/talent/TVRecommendationSystem";
 import { createMockGameState, createMockTalent } from "@/test/utils/mockFactories";
 import { RandomGenerator } from "@/engine/utils/rng";
 import { GameState, Talent } from "@/engine/types";
@@ -108,6 +111,50 @@ describe("TVRecommendationSystem", () => {
       vi.spyOn(rng, "next").mockReturnValue(0.5);
       const impacts = tickTVRecommendationSystem(state, undefined as never, rng);
       expect(impacts).toEqual([]);
+    });
+  });
+
+  // Characterization lock for the Bolt single-pass rewrite — pins the exact
+  // filter semantics of getTVRecommendationsForTalent (talentId match, strict
+  // expiresWeek > week, insertion-order preservation). Green before AND after.
+  describe("getTVRecommendationsForTalent", () => {
+    const rec = (id: string, talentId: string, expiresWeek: number) =>
+      ({ id, talentId, expiresWeek }) as any;
+
+    it("returns only this talent's unexpired recommendations", () => {
+      state.week = 10;
+      (state as any).tvRecommendations = {
+        recommendations: {
+          r1: rec("r1", "t1", 20),
+          r2: rec("r2", "t2", 20),
+          r3: rec("r3", "t1", 5),
+          r4: rec("r4", "t1", 30),
+        },
+      };
+      const result = getTVRecommendationsForTalent("t1", state);
+      expect(result.map((r) => r.id)).toEqual(["r1", "r4"]);
+    });
+
+    it("excludes recommendations expiring this week (strict >)", () => {
+      state.week = 10;
+      (state as any).tvRecommendations = {
+        recommendations: { r1: rec("r1", "t1", 10), r2: rec("r2", "t1", 11) },
+      };
+      const result = getTVRecommendationsForTalent("t1", state);
+      expect(result.map((r) => r.id)).toEqual(["r2"]);
+    });
+
+    it("returns [] when tvRecommendations state is missing", () => {
+      delete (state as any).tvRecommendations;
+      expect(getTVRecommendationsForTalent("t1", state)).toEqual([]);
+    });
+
+    it("returns [] when the talent has no recommendations", () => {
+      state.week = 1;
+      (state as any).tvRecommendations = {
+        recommendations: { r1: rec("r1", "other", 20) },
+      };
+      expect(getTVRecommendationsForTalent("t1", state)).toEqual([]);
     });
   });
 });

@@ -36,6 +36,38 @@ describe("Electron main process — navigation security", () => {
   });
 });
 
+describe("Electron main process — permission handlers", () => {
+  // Sentinel hardening: a local game needs no web permissions (camera, mic,
+  // geolocation, etc.), so every session must deny permission requests and
+  // permission checks outright. Asserted by source inspection for the same
+  // reason as the navigation-guard wiring above.
+  it("denies all permission requests on the default session", () => {
+    expect(MAIN_SRC).toMatch(
+      /session\.defaultSession\.setPermissionRequestHandler\([^)]*\)/
+    );
+  });
+
+  it("denies all permission requests on the persist:studio-boss partition", () => {
+    // The main BrowserWindow runs on this custom partition — its session is
+    // distinct from defaultSession and must get its own handler.
+    expect(MAIN_SRC).toMatch(
+      /session\.fromPartition\("persist:studio-boss"\)[\s\S]*?setPermissionRequestHandler/
+    );
+  });
+
+  it("denies all permission checks on both sessions", () => {
+    // setPermissionCheckHandler governs navigator.permissions.query and
+    // synchronous checks — deny-all is consistent with the request handler.
+    const checks = MAIN_SRC.match(/setPermissionCheckHandler\(/g);
+    expect(checks?.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("permission handlers grant nothing (deny-all callbacks)", () => {
+    expect(MAIN_SRC).not.toMatch(/PermissionRequestHandler[\s\S]{0,200}callback\(true\)/);
+    expect(MAIN_SRC).not.toMatch(/PermissionCheckHandler[\s\S]{0,200}return true/);
+  });
+});
+
 describe("shouldAllowNavigation (production predicate)", () => {
   it("preventDefault-equivalent: blocks non-localhost URLs in production", () => {
     expect(shouldAllowNavigation("https://evil.com", false)).toBe(false);

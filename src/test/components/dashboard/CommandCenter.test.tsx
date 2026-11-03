@@ -158,4 +158,64 @@ describe("CommandCenter", () => {
       screen.getByText("No industry activity yet. Advance the week to generate headlines.")
     ).toBeInTheDocument();
   });
+
+  // Characterization lock for the Bolt single-pass derivation rewrite — pins
+  // market-standing output: rank counts rivals with cash > player cash,
+  // share divides clamped-positive player cash by clamped-positive total.
+  describe("market standing derivation", () => {
+    const withRivals = (cash: number, rivalCashes: number[]) => ({
+      gameState: {
+        week: 1,
+        entities: {
+          projects: {},
+          talents: {},
+          contracts: {},
+          rivals: Object.fromEntries(
+            rivalCashes.map((c, i) => [`r${i}`, { id: `r${i}`, cash: c }])
+          ),
+        },
+        studio: { name: "Acme Studios", archetype: "major", prestige: 42 },
+        industry: {},
+        weekSummaries: [],
+        finance: { cash },
+      },
+    });
+
+    it("ranks 3rd of 4 and labels Major Player when two rivals out-capitalize", () => {
+      // player 1M; rivals 2M, -500k (clamped), 5M → rank 3, share 12.5%
+      vi.mocked(useGameStore).mockImplementation((selector: any) =>
+        selector(withRivals(1_000_000, [2_000_000, -500_000, 5_000_000]))
+      );
+      render(
+        <TooltipProvider>
+          <CommandCenter />
+        </TooltipProvider>
+      );
+      expect(screen.getByText("Major Player")).toBeInTheDocument();
+    });
+
+    it("labels Market Leader when all rival cash is non-positive", () => {
+      vi.mocked(useGameStore).mockImplementation((selector: any) =>
+        selector(withRivals(1_000_000, [-1_000_000, 0]))
+      );
+      render(
+        <TooltipProvider>
+          <CommandCenter />
+        </TooltipProvider>
+      );
+      expect(screen.getByText("Market Leader")).toBeInTheDocument();
+    });
+
+    it("labels Sole Studio when there are no rivals", () => {
+      vi.mocked(useGameStore).mockImplementation((selector: any) =>
+        selector(withRivals(500_000, []))
+      );
+      render(
+        <TooltipProvider>
+          <CommandCenter />
+        </TooltipProvider>
+      );
+      expect(screen.getByText("Sole Studio")).toBeInTheDocument();
+    });
+  });
 });

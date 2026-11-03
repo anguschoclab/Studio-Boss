@@ -37,4 +37,15 @@ describe("Repository hygiene", () => {
       existsSync(join(ROOT, "src/test/components/discovery/LiveAuctionDashboard.test.tsx"))
     ).toBe(false);
   });
+
+  it("tracks no bot scratch files at the repo root", () => {
+    // PR branches have repeatedly carried scratch artifacts (plan.md,
+    // patch_*.js, vitest.out, test-grep.cjs, test_script.sh) that must never
+    // land — this guard makes the exclusion rule executable.
+    const tracked = execSync("git ls-files", { cwd: ROOT, encoding: "utf-8" });
+    const scratch = tracked
+      .split("\n")
+      .filter((p) => /^(plan\.md|patch_.*\.js|.*\.out|test-grep\.cjs|test_script\.sh)$/.test(p));
+    expect(scratch).toEqual([]);
+  });
 });
