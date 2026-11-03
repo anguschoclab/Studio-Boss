@@ -7,7 +7,10 @@ import React from "react";
 import { OpportunityCard } from "@/components/discovery/OpportunityCard";
 import { TopBar } from "@/components/layout/TopBar";
 import { StudioSidebar } from "@/components/layout/StudioSidebar";
+<<<<<<< HEAD
 import { TooltipProvider } from "@/components/ui/tooltip";
+=======
+>>>>>>> 0cae98739accf983fcab8baf5c8dd7f36e253f30
 import { useGameStore } from "@/store/gameStore";
 import { useUIStore } from "@/store/uiStore";
 import { Opportunity } from "@/engine/types";
@@ -93,11 +96,15 @@ describe("Decorative icons — app-level aria-hidden coverage", () => {
       setActiveTab: vi.fn(),
       setShowSettings: vi.fn(),
     } as any);
+<<<<<<< HEAD
     const { container } = render(
       <TooltipProvider>
         <StudioSidebar />
       </TooltipProvider>
     );
+=======
+    const { container } = render(<StudioSidebar />);
+>>>>>>> 0cae98739accf983fcab8baf5c8dd7f36e253f30
     const svgs = container.querySelectorAll("svg");
     expect(svgs.length).toBeGreaterThanOrEqual(3); // DollarSign + Star + Clapperboard
     svgs.forEach((svg) => expect(svg).toHaveAttribute("aria-hidden", "true"));

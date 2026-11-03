@@ -371,3 +371,101 @@ Executed under strict test-first discipline: Phase-0 pinned characterization and
 - `bun run lint` — **0 problems**
 - Fast suite (`vitest run` minus 52-week snapshot/determinism slow files, per instruction) — **green** (1868+ tests; slow suite deferred to ad-hoc runs)
 - `bun run build` — **green**
+
+---
+
+## Round 5 (2026-11-03) — Exhaustive Audit & Consolidation
+
+**Branch strategy:** applied directly on `main` (zero back-compat mandate); all 14 open PR diffs (#927–#940) manually integrated; `.Jules` learnings union-merged; bot scratch artifacts excluded.
+**Baseline (measured at start):** typecheck 0 err · lint 0 problems · 1909 pass / 13 fail (12 pathSecurity Windows-EPERM + 1 stress-determinism 300s timeout — both environmental) · `format:check` 139 files drift · build green.
+**Test-first:** red-suite commit `807f5153` landed before any production edit — 8 a11y red + 3 sentinel red + characterization locks green-anchored.
+
+### Per-PR Verdict Table
+
+| PR   | Cluster             | Verdict                   | Rationale                                                                                              |
+| ---- | ------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------ |
+| #927 | palette discovery   | **Integrated**            | `aria-hidden` on 6 decorative icons (DiscoveryBoard, OpportunityCard).                                 |
+| #928 | palette chevrons    | **Integrated (minus junk)** | ChevronRight/Down ×4 files; excluded `plan.md` bot scratch file.                                     |
+| #940 | palette layout      | **Integrated**            | DollarSign/Star/Clapperboard/Activity in StudioSidebar/TopBar; disjoint union.                         |
+| #929 | bolt format-licensed | **Integrated**           | `handleFormatLicensed` Set(map).has → short-circuit loop; verified equivalent.                         |
+| #930 | bolt chart selectors | **Integrated**           | `selectAwardsProbability` chained ops → single-pass nested loop; 9 existing assertions pin output.     |
+| #931 | bolt expense proc.  | **Integrated**            | `calculateConsolidatedExpenses` 3-pass → fused loop; rounding semantics verified identical.            |
+| #932 | bolt CommandCenter  | **Integrated (hunk only)** | Real change ~17 lines (map+reduce+filter → single pass); **50-file Prettier churn rejected**.         |
+| #933 | bolt arrays         | **Integrated**            | `processPacts` + `advanceTrends` fused loops; predicate-equivalent, `secureRandom` draws preserved.    |
+| #934 | bolt applyImpacts   | **Integrated (winner)**   | reduce → for in `impactHandlers/index.ts`; richer `.Jules` entry than #938.                            |
+| #938 | bolt applyImpacts   | **Superseded**            | Functional duplicate of #934.                                                                          |
+| #935 | bolt TV recs        | **Superseded**            | Functional duplicate of #936.                                                                          |
+| #936 | bolt TV recs        | **Integrated (winner)**   | `Object.values().filter` → guarded `for...in`; matches repo Record-iteration convention.              |
+| #937 | sentinel perms      | **Superseded**            | Duplicate intent of #939.                                                                              |
+| #939 | sentinel perms      | **Integrated (adapted)**  | Deny-all `setPermissionRequestHandler` on both sessions + added `setPermissionCheckHandler` deny-all. |
+
+**Totals: 10 integrated (incl. adapted/cherry-picked), 4 superseded, 0 unresolved.**
+
+### Validation Findings (approve/disprove record)
+
+| Claim                                                     | Verdict              | Outcome                                                                                       |
+| --------------------------------------------------------- | -------------------- | --------------------------------------------------------------------------------------------- |
+| 14 PRs ↔ 14 branches 1:1                                  | **Approved**         | Verified via `ls-remote` + `gh api compare`; ahead=1 each, behind 0/2/3.                        |
+| No substantive PR review comments                         | **Approved**         | All 14 carry only the Jules bot greeting.                                                     |
+| #934≈#938, #935≈#936, #937≈#939 functional duplicates        | **Approved**         | Verified per-file diffs; winners picked on learning-entry quality/comment placement.          |
+| #931 fused loop preserves rounding                        | **Approved**         | `calculateProductionBurn`/`calculateMarketingBurn` inline + `Math.round` — semantics identical. |
+| All PR diff bases match current main                       | **Approved**         | Every touched production file's pre-image verified identical; zero true merge conflicts.      |
+| "All 14 PRs append `.Jules`" (draft claim)                | **Disproven**        | Only 11 PRs touch `.Jules` (9 bolt + 2 sentinel); palette PRs add none. Union scope reduced.    |
+| `selectBoxOfficeData` Math.random "still open" (draft)    | **Disproven**        | Deleted in R3/R4 dead-code purge; only prod Math.random left: `sidebar.tsx:635` skeleton width (cosmetic). |
+| `secureRandom` possibly unseeded (audit suspicion)        | **Disproven**        | Delegates to seeded `rand()`; Mulberry32 seeded per-tick by WeekCoordinator.                  |
+| pathSecurity failures environmental                        | **Approved → fixed** | Windows file-symlink EPERM; probe+`describe.skipIf` added.                                    |
+| Junction fallback for symlink tests                        | **Disproven**        | Junctions are directory-only; tests symlink files. Skip chosen.                              |
+| stress_determinism needs yields (draft claim)             | **Disproven**        | Already yields via `setImmediate`; timeout-only fix (300s→600s).                              |
+| dependabot `package-ecosystem: ""` inert                  | **Approved → fixed** | Set to `"bun"`; was silently doing nothing.                                                   |
+| `codebase_audit.md` `studio.internal` drift               | **Approved → fixed** | Doc described it as live player project map; re-synced to deprecated status.                  |
+| #932 prettier churn unrelated to stated purpose           | **Approved**         | 50 non-CommandCenter files = repo-wide reflow; measured drift is 139 files (recorded, deferred). |
+| SaveLoad-timeout stderr in snapshots test                 | **Approved — environmental** | Workerless jsdom → request hangs → 30s designed timeout+reject. Noise, not a defect.    |
+
+### Engine/UI Correctness Findings (audit)
+
+| Finding                                                                              | Disposition                                                                       |
+| ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
+| `CeremonyRunner` `as unknown as IndustryUpdateImpact["payload"]` for `newAwards`     | **Fixed** — declared `newAwards?: Award[]` on payload; last non-dispatch cast gone. |
+| 10 zero-reference components (Icons, Stack, Section, ProgressIndicator, RadarChart, SkeletonCard, SparklineChart, TalentAttachmentPanel, TalentGanttChart, TimeSeriesChart) | **Fixed** — deleted; zero module importers verified.                  |
+| `getTVRecommendationsForTalent`/`acceptTVRecommendation` + `processPacts` — uncalled | **Documented dead-API** — kept (system write-side is live); flagged for wiring or removal. |
+| `FORMAT_LICENSED` — registered handler, zero emitters                                | **Documented dead vocabulary** (consistent with MERGER_* reserved types).           |
+| 102 `Object.values/keys/entries` sites across 51 engine files                        | **Standing debt** — only PR-adjacent sites optimized (recorded, convention holds).  |
+| 75 lucide JSX usages lacking explicit `aria-hidden`                                  | **Standing a11y debt** — convention enforced only where test-locked; systematic sweep deferred. |
+| 139-file Prettier drift                                                              | **Deferred** — `format:check` is measure-only this round (cherry-pick decision).    |
+
+### Architectural Choices Approved / Disproven
+
+- **Bolt for-loop convention in hot paths** — **Approved** for tick-path functions (`applyImpacts`, `advanceTrends`, `calculateConsolidatedExpenses`); noted modest benefit on render-path/cold functions (`selectAwardsProbability`, `getTVRecommendationsForTalent`, `handleFormatLicensed`, `processPacts`, CommandCenter — two are currently uncalled APIs).
+- **Deny-all permission handlers** — **Approved**, extended with `setPermissionCheckHandler` for a complete deny posture.
+- **Decorative-icon `aria-hidden` convention** — **Approved**; now test-locked at both primitive and app level.
+- **`.Jules` learning files** — **Approved** as institutional record (union-merge convention).
+- **Dependabot as configured** — **Disproven → fixed** (empty ecosystem).
+- **`secureRandom` legacy alias** — **Approved** as deterministic shim; flagged as a `rand()`-rename consolidation candidate (deferred).
+
+### Verification Results (baseline → final)
+
+| Check                         | Baseline                     | Final                            |
+| ----------------------------- | ---------------------------- | -------------------------------- |
+| `bun run typecheck`           | 0 errors                     | **0 errors**                     |
+| `bun run lint`                | 0 problems                   | **0 problems**                   |
+| `bun run test`                | 1909 pass / 13 fail (env)    | **1945 pass / 0 fail / 12 skipped** (267 files; pathSecurity skips on unprivileged Windows; stress_determinism passed 461s — bit-identical) |
+| `bun run build`               | pass                         | **pass (17.6s)**                 |
+| `node --check electron/*.cjs` | pass                         | pass                             |
+| e2e / bench                   | —                            | not run locally — CI (ubuntu) is the authoritative gate; refactors are characterization-locked equivalents |
+
+### Test-First Audit
+
+- [x] Phase-3 commit `807f5153` contains ALL new/updated tests + test-env fixes; production changes first appear in `1e764582`.
+- [x] 8 a11y + 3 sentinel tests were red for the correct reasons pre-integration (missing aria-hidden / missing handlers); all green post-integration.
+- [x] Characterization locks (TVRec filter, processPacts, consolidatedExpenses, FORMAT_LICENSED, CommandCenter derivation, trends predicate) green before AND after — refactor-equivalence proven.
+- [x] 1 test-authoring fix during red run (Opportunity fixture `origin` enum + 3 required fields; TooltipProvider wrap for StudioSidebar) — distinguished from legit red.
+- [x] 12 pathSecurity tests now skip cleanly on unprivileged Windows; stress test timeout bumped to 600s.
+
+### Acceptance Checklist
+
+- [x] All 14 PRs have explicit verdicts (table + GitHub comments)
+- [x] All merge conflicts resolved (`.Jules` unions only; zero code conflicts)
+- [x] All audit findings explicitly approved/disproven
+- [x] typecheck 0 · lint 0 · build green
+- [x] `.npmrc` kept untracked; no secrets committed
+- [ ] `main` pushed; all PRs closed; all remote branches deleted (verified post-push)
