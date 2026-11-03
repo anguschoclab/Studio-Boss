@@ -20,7 +20,7 @@ const DiscoveryHeader = ({ openCreateProject }: { openCreateProject: () => void 
     <div className="relative z-10">
       <div className="flex items-center gap-6 mb-3">
         <div className="w-16 h-16 rounded-none bg-secondary/5 border border-secondary/20 flex items-center justify-center shadow-xl group-hover:bg-secondary/10 transition-all duration-700">
-          <Newspaper className="h-8 w-8 text-secondary animate-pulse-slow" strokeWidth={1} />
+          <Newspaper className="h-8 w-8 text-secondary animate-pulse-slow" strokeWidth={1} aria-hidden="true" />
         </div>
         <div>
           <h2 className="text-5xl font-display font-black tracking-tighter uppercase italic leading-none mb-3 drop-shadow-[0_0_30px_rgba(var(--secondary),0.1)]">
@@ -55,7 +55,7 @@ const DiscoveryHeader = ({ openCreateProject }: { openCreateProject: () => void 
         onClick={openCreateProject}
         className="h-12 px-8 text-[10px] font-black uppercase tracking-[0.3em] gap-4 bg-primary text-black hover:bg-primary/90 shadow-2xl shadow-primary/10 transition-all duration-700 rounded-none italic active:scale-95"
       >
-        <Plus className="h-4 w-4" strokeWidth={3} />
+        <Plus className="h-4 w-4" strokeWidth={3} aria-hidden="true" />
         ORIGINAL IP CONCEPT
       </Button>
     </div>
@@ -65,7 +65,7 @@ const DiscoveryHeader = ({ openCreateProject }: { openCreateProject: () => void 
 const DiscoveryEmptyState = () => (
   <div className="col-span-full py-48 text-center glass-card border border-white/5 rounded-none flex flex-col items-center justify-center space-y-8 bg-white/[0.01]">
     <div className="w-24 h-24 rounded-none bg-white/5 flex items-center justify-center text-muted-foreground/10 animate-pulse border border-white/5">
-      <Sparkles className="h-12 w-12" strokeWidth={1} />
+      <Sparkles className="h-12 w-12" strokeWidth={1} aria-hidden="true" />
     </div>
     <div className="space-y-3">
       <p className="text-xl font-display font-black uppercase tracking-[0.4em] text-muted-foreground/20 italic">
@@ -84,7 +84,7 @@ const DiscoverySidebar = () => (
       <div className="flex items-center gap-4 px-2 mb-6">
         <div className="w-2 h-6 rounded-none bg-secondary shadow-[0_0_15px_rgba(var(--secondary),0.5)]" />
         <h3 className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic flex items-center gap-3">
-          <TrendingUp className="w-4 h-4" /> MARKET TRENDS
+          <TrendingUp className="w-4 h-4" aria-hidden="true" /> MARKET TRENDS
         </h3>
       </div>
       <TrendBoard />

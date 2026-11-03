@@ -111,6 +111,7 @@ export const TopBar = () => {
             </span>
             <div className="flex items-center gap-3">
               <Star
+                aria-hidden="true"
                 className="h-4 w-4 text-secondary/40 group-hover:text-secondary transition-colors"
                 fill="currentColor"
               />
@@ -128,7 +129,7 @@ export const TopBar = () => {
               ACTIVE SLATE
             </span>
             <div className="flex items-center gap-3">
-              <Activity className="h-4 w-4 text-muted-foreground/20 group-hover:text-foreground transition-colors" />
+              <Activity aria-hidden="true" className="h-4 w-4 text-muted-foreground/20 group-hover:text-foreground transition-colors" />
               <span className="font-display font-black text-2xl text-foreground tracking-tighter italic">
                 {activeProjectsList.length}
               </span>

@@ -172,7 +172,7 @@ export const AwardsCeremonyModal = () => {
                   className="text-amber-500 hover:text-amber-400 hover:bg-stone-900 border border-amber-900/30 font-black uppercase tracking-widest px-8 group"
                 >
                   {currentAwardIdx < awards.length - 1 ? "Next Category" : "Discard the Envelope"}
-                  <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
                 </Button>
               </motion.div>
             </motion.div>

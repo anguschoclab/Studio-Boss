@@ -240,7 +240,7 @@ export const PostProductionModal: React.FC = () => {
               onClick={handleConfirm}
             >
               Confirm
-              <ChevronRight className="h-4 w-4 ml-1" />
+              <ChevronRight className="h-4 w-4 ml-1" aria-hidden="true" />
             </Button>
           </div>
         </div>

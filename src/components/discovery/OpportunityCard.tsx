@@ -30,7 +30,7 @@ export const OpportunityCard = ({ opportunity: opp, onEnterAuction }: Opportunit
     <TooltipWrapper tooltip="VIEW OPPORTUNITY DETAILS & BID HISTORY" side="top">
       <div className="glass-card p-10 rounded-none group relative overflow-hidden flex flex-col justify-between h-full border border-white/5 hover:border-secondary/40 hover:bg-secondary/[0.02] transition-all duration-700 cursor-pointer active:scale-[0.99] bg-white/[0.01] shadow-2xl">
         <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-100 transition-all duration-700">
-          <Gavel className="w-8 h-8 text-secondary" strokeWidth={1} />
+          <Gavel className="w-8 h-8 text-secondary" strokeWidth={1} aria-hidden="true" />
         </div>
 
         <div className="space-y-8 relative z-10">
@@ -98,6 +98,7 @@ export const OpportunityCard = ({ opportunity: opp, onEnterAuction }: Opportunit
                   opp.weeksUntilExpiry <= 1 ? "text-red-500 animate-pulse" : "text-secondary/20"
                 )}
                 strokeWidth={3}
+                aria-hidden="true"
               />
               CLOSING SOON
             </div>
@@ -122,6 +123,7 @@ export const OpportunityCard = ({ opportunity: opp, onEnterAuction }: Opportunit
             <Gavel
               className="h-4 w-4 mr-3 group-hover/btn:rotate-[-45deg] transition-transform duration-700"
               strokeWidth={3}
+              aria-hidden="true"
             />
             ENTER WAR
           </Button>
