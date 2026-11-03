@@ -149,7 +149,7 @@ export function runAwardsCeremony(
         // New-ceremony awards ride along for the modal bridge — the state
         // handler ignores payload fields outside `update`.
         newAwards,
-      } as unknown as import("@/engine/types").IndustryUpdateImpact["payload"],
+      },
     });
   }
 
