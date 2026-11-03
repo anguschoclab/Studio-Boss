@@ -2,11 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!--
+      Content Security Policy.
+      script-src: 'self' + sha256 of the Vite dev react-refresh preamble —
+      no 'unsafe-inline', so injected inline scripts cannot execute.
+      If @vitejs/plugin-react-swc is upgraded and the preamble changes, dev
+      mode will report a CSP violation and this hash must be regenerated.
+      style-src keeps 'unsafe-inline' (required: Vite injects <style> tags in
+      dev, Tailwind/Radix emit inline styles). fonts.googleapis.com is needed
+      for the @import in index.css; font files come from fonts.gstatic.com.
+      connect-src allows ws:/wss: for dev HMR.
+      frame-ancestors cannot be set via <meta>; add it as an HTTP response
+      header ('frame-ancestors 'none'') at the hosting layer.
+    -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; img-src 'self' data: blob:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'self';"
+      content="default-src 'self'; script-src 'self' 'sha256-Z2/iFzh9VMlVkEOar1f/oSHWwQk3ve1qk/C2WdsC4Xk='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' ws: wss:; worker-src 'self' blob:; manifest-src 'self'; media-src 'self' data:; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self';"
     />
-    <!-- Test commit verification -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Studio Boss</title>
     <meta
