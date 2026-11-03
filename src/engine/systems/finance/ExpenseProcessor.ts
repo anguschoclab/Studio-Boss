@@ -86,21 +86,37 @@ export class ExpenseProcessor {
     prestige: number,
     pacts: import("../../types").TalentPact[]
   ) {
-    // Determine active projects for overhead (exclude released/archived/completed)
-    const activeProjects = projects.filter(
-      (p) => p.state !== "released" && p.state !== "archived" && p.state !== "completed"
-    );
+    let activeProjectsCount = 0;
+    let production = 0;
+    let marketing = 0;
 
-    const overhead = this.calculateStudioBurn(state.studio?.level ?? 1, activeProjects.length);
-    const production = this.calculateProductionBurn(projects);
-    const marketing = this.calculateMarketingBurn(projects);
+    // ⚡ Bolt Optimization: Combined .filter() and multiple .forEach() iterations into a single O(N) loop to eliminate intermediate array allocations
+    for (let i = 0; i < projects.length; i++) {
+      const p = projects[i];
+      if (p.state !== "released" && p.state !== "archived" && p.state !== "completed") {
+        activeProjectsCount++;
+      }
+      if (p.state === "production") {
+        production += p.weeklyCost;
+      }
+      if (p.state === "marketing" && p.marketingBudget) {
+        marketing += p.marketingBudget / 6;
+      }
+    }
+
+    const overhead = this.calculateStudioBurn(state.studio?.level ?? 1, activeProjectsCount);
     const interest = this.calculateDebtInterest(cash, market.debtRate);
-    const pactsCost = pacts.reduce((acc, p) => acc + (p.weeklyFee || 0), 0);
+
+    // ⚡ Bolt Optimization: Replaced .reduce() with a direct for loop to eliminate callback overhead
+    let pactsCost = 0;
+    for (let i = 0; i < pacts.length; i++) {
+      pactsCost += pacts[i].weeklyFee || 0;
+    }
 
     return {
       overhead,
-      production,
-      marketing,
+      production: Math.round(production),
+      marketing: Math.round(marketing),
       interest,
       pacts: pactsCost,
     };

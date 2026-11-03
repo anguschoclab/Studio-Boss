@@ -485,7 +485,11 @@ export function applySingleImpact(state: GameState, impact: StateImpact): GameSt
  * Pure reducer that processes an array of impacts without mutating original state.
  */
 export function applyImpacts(state: GameState, impacts: StateImpact[]): GameState {
-  return impacts.reduce((currentState, impact) => applySingleImpact(currentState, impact), state);
+  let currentState = state;
+  for (let i = 0; i < impacts.length; i++) {
+    currentState = applySingleImpact(currentState, impacts[i]);
+  }
+  return currentState;
 }
 
 // Re-export all handlers for testing purposes

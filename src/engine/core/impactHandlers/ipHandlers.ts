@@ -51,8 +51,10 @@ export function handleVaultAssetUpdated(
 
 export function handleFormatLicensed(state: GameState, impact: FormatLicensedImpact): GameState {
   const { asset } = impact.payload;
-  const existingIds = new Set(state.ip.vault.map((a) => a.id));
-  if (existingIds.has(asset.id)) return state;
+  // ⚡ Bolt: Replaced O(N) array allocation and Set initialization with a short-circuiting loop
+  for (let i = 0; i < state.ip.vault.length; i++) {
+    if (state.ip.vault[i].id === asset.id) return state;
+  }
   return {
     ...state,
     ip: { ...state.ip, vault: [...state.ip.vault, asset] },

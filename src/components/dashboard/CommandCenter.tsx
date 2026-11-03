@@ -46,11 +46,22 @@ export const CommandCenter: React.FC = () => {
   // Real market standing — replaces the old hardcoded "MAJOR CHALLENGER".
   // Ranked by capital, matching the engine's own Antitrust concentration metric
   // (which measures dominance by top-1 / top-3 share of industry cash).
-  const rivalCash = rivals.map((r) => r.cash || 0);
   const totalStudios = rivals.length + 1;
-  const positiveCapital = Math.max(0, cash) + rivalCash.reduce((sum, c) => sum + Math.max(0, c), 0);
+  let totalRivalCapital = 0;
+  let rivalsAhead = 0;
+
+  // ⚡ Bolt Optimization: Use a single pass for deriving UI metrics to prevent GC overhead
+  for (const r of rivals) {
+    const rCash = r.cash || 0;
+    totalRivalCapital += Math.max(0, rCash);
+    if (rCash > cash) {
+      rivalsAhead++;
+    }
+  }
+
+  const positiveCapital = Math.max(0, cash) + totalRivalCapital;
   const myShare = positiveCapital > 0 ? (Math.max(0, cash) / positiveCapital) * 100 : 0;
-  const myRank = 1 + rivalCash.filter((c) => c > cash).length;
+  const myRank = 1 + rivalsAhead;
   const positionLabel = marketPositionLabel(myRank, totalStudios, myShare);
 
   return (
