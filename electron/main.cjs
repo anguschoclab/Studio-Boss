@@ -11,6 +11,7 @@ const {
   Notification,
   dialog,
   Tray,
+  session,
 } = require("electron");
 const path = require("path");
 const fs = require("fs").promises;
@@ -517,6 +518,20 @@ ipcMain.handle("get-platform", () => {
 
 app.whenReady().then(async () => {
   try {
+    // Explicitly deny unhandled permission requests by default
+    const permissionHandler = (webContents, permission, callback) => {
+      // Deny everything by default for security
+      callback(false);
+    };
+
+    session.defaultSession.setPermissionRequestHandler(permissionHandler);
+
+    // Also apply to our custom partition
+    const customSession = session.fromPartition("persist:studio-boss");
+    if (customSession) {
+      customSession.setPermissionRequestHandler(permissionHandler);
+    }
+
     // Note: no custom protocol client is registered — deep links would need
     // second-instance/open-url handlers, which don't exist.
 
