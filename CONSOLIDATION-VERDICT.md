@@ -468,4 +468,6 @@ Executed under strict test-first discipline: Phase-0 pinned characterization and
 - [x] All audit findings explicitly approved/disproven
 - [x] typecheck 0 · lint 0 · build green
 - [x] `.npmrc` kept untracked; no secrets committed
-- [ ] `main` pushed; all PRs closed; all remote branches deleted (verified post-push)
+- [x] `main` pushed; all PRs closed; all remote branches deleted — verified: `gh pr list --state open` excludes the 14; `git ls-remote --heads origin` = main + dependabot branches only
+
+**Post-script:** within hours of the dependabot ecosystem fix landing, Dependabot opened 5 fresh PRs (#941–#945: vite 5→8, electron 33→45, @types/node 22→26, react-resizable-panels, globals) — proof the ecosystem fix works. These are breaking major bumps requiring dedicated migration evaluation; **deliberately out of scope for this round** and recorded here for the next triage.
