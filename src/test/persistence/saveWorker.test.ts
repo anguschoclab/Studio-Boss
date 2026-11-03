@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { initializeGame } from "../../engine/core/gameInit";
 
 // Mock the OPFS APIs that saveWorker uses
@@ -26,6 +26,23 @@ function createMockRoot(fileContent: string) {
       createSyncAccessHandle: vi.fn().mockResolvedValue(createMockAccessHandle(fileContent)),
     }),
   };
+}
+
+function createMockWriteRoot() {
+  const accessHandle = {
+    getSize: () => 0,
+    read: vi.fn(),
+    write: vi.fn(),
+    truncate: vi.fn(),
+    flush: vi.fn(),
+    close: vi.fn(),
+  };
+  const root = {
+    getFileHandle: vi.fn().mockResolvedValue({
+      createSyncAccessHandle: vi.fn().mockResolvedValue(accessHandle),
+    }),
+  };
+  return { root, accessHandle };
 }
 
 describe("saveWorker handleLoad with validation", () => {
@@ -100,5 +117,93 @@ describe("saveWorker handleLoad with validation", () => {
     } finally {
       delete (navigator as any).storage;
     }
+  });
+});
+
+describe("saveWorker onmessage dispatch", () => {
+  let postMessage: ReturnType<typeof vi.fn>;
+  let consoleSpy: ReturnType<typeof vi.spyOn>;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.resetModules();
+    postMessage = vi.fn();
+    (self as any).postMessage = postMessage;
+    // The handler console.errors on failures — silence expected noise.
+    consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    delete (navigator as any).storage;
+    delete (self as any).postMessage;
+    consoleSpy.mockRestore();
+  });
+
+  it("responds SAVE_SUCCESS after writing state to OPFS", async () => {
+    const { root, accessHandle } = createMockWriteRoot();
+    (navigator as any).storage = { getDirectory: vi.fn().mockResolvedValue(root) };
+
+    await import("../../persistence/saveWorker");
+    const state = initializeGame("Dispatch Studio", "indie");
+    await (self as any).onmessage({
+      data: { type: "SAVE_GAME", slotId: 0, state, requestId: "req-1" },
+    });
+
+    expect(root.getFileHandle).toHaveBeenCalledWith("slot_0.sb", { create: true });
+    expect(accessHandle.truncate).toHaveBeenCalledWith(0);
+    expect(accessHandle.write).toHaveBeenCalled();
+    expect(accessHandle.flush).toHaveBeenCalled();
+    expect(accessHandle.close).toHaveBeenCalled();
+    expect(postMessage).toHaveBeenCalledWith({
+      type: "SAVE_SUCCESS",
+      slotId: 0,
+      requestId: "req-1",
+    });
+  });
+
+  it("responds ERROR when OPFS is unavailable during save", async () => {
+    (navigator as any).storage = {
+      getDirectory: vi.fn().mockRejectedValue(new Error("OPFS down")),
+    };
+
+    await import("../../persistence/saveWorker");
+    await (self as any).onmessage({
+      data: { type: "SAVE_GAME", slotId: 0, state: {}, requestId: "req-2" },
+    });
+
+    expect(postMessage).toHaveBeenCalledWith(
+      expect.objectContaining({ type: "ERROR", requestId: "req-2" })
+    );
+  });
+
+  it("responds LOAD_SUCCESS with parsed state for a valid save file", async () => {
+    const validState = initializeGame("Load Studio", "indie");
+    const mockRoot = createMockRoot(JSON.stringify(validState));
+    (navigator as any).storage = { getDirectory: vi.fn().mockResolvedValue(mockRoot) };
+
+    await import("../../persistence/saveWorker");
+    await (self as any).onmessage({
+      data: { type: "LOAD_GAME", slotId: 1, requestId: "req-3" },
+    });
+
+    expect(postMessage).toHaveBeenCalledWith(
+      expect.objectContaining({ type: "LOAD_SUCCESS", slotId: 1, requestId: "req-3" })
+    );
+    const payload = postMessage.mock.calls[0][0];
+    expect(payload.state.studio.name).toBe("Load Studio");
+  });
+
+  it("responds ERROR when loading a corrupt save file", async () => {
+    const mockRoot = createMockRoot("{corrupt json!!!");
+    (navigator as any).storage = { getDirectory: vi.fn().mockResolvedValue(mockRoot) };
+
+    await import("../../persistence/saveWorker");
+    await (self as any).onmessage({
+      data: { type: "LOAD_GAME", slotId: 0, requestId: "req-4" },
+    });
+
+    expect(postMessage).toHaveBeenCalledWith(
+      expect.objectContaining({ type: "ERROR", requestId: "req-4" })
+    );
   });
 });

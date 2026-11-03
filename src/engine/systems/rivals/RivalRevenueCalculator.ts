@@ -134,6 +134,6 @@ export const RivalRevenueCalculator = {
 
   getRatingMerchMultiplier(rating: string): number {
     const r = rating.toUpperCase();
-    return RATING_MERCH_MULTIPLIERS[r] || 1.0;
+    return RATING_MERCH_MULTIPLIERS[r] ?? 1.0;
   },
 };

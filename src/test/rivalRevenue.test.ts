@@ -152,6 +152,83 @@ describe("RivalRevenueCalculator", () => {
     expect(revenue.merch).toBe(0);
   });
 
+  it("returns zeros when called without game state", () => {
+    const rival = { id: RIVAL_ID } as RivalStudio;
+    const revenue = RivalRevenueCalculator.calculateWeeklyRevenue(rival, 1, MOCK_RNG);
+    expect(revenue).toEqual({ boxOffice: 0, streaming: 0, merch: 0, total: 0 });
+  });
+
+  it("returns zero theatrical revenue before the release week", () => {
+    const future = {
+      id: "p1",
+      releaseWeek: 10,
+      boxOffice: { openingWeekendDomestic: 10_000_000 },
+      reviewScore: 80,
+    } as any;
+    expect(RivalRevenueCalculator.calculateTheatricalRevenue(future, 5)).toBe(0);
+  });
+
+  it("floors cult classics at 100k weekly regardless of decay", () => {
+    const cult = {
+      id: "p1",
+      releaseWeek: 1,
+      boxOffice: { openingWeekendDomestic: 10_000 },
+      reviewScore: 10,
+      isCultClassic: true,
+    } as any;
+    // 10_000 * 0.2^4 * 2 = 32 → floored at 100_000
+    expect(RivalRevenueCalculator.calculateTheatricalRevenue(cult, 5)).toBe(100_000);
+  });
+
+  it("picks the theatrical decay factor from review-score bands", () => {
+    const base = { id: "p1", releaseWeek: 1, boxOffice: { openingWeekendDomestic: 1_000_000 } };
+    const acclaimed = RivalRevenueCalculator.calculateTheatricalRevenue(
+      { ...base, reviewScore: 90 } as any,
+      2
+    );
+    const middling = RivalRevenueCalculator.calculateTheatricalRevenue(
+      { ...base, reviewScore: 50 } as any,
+      2
+    );
+    const panned = RivalRevenueCalculator.calculateTheatricalRevenue(
+      { ...base, reviewScore: 30 } as any,
+      2
+    );
+    expect(acclaimed).toBe(350_000); // 0.35 decay
+    expect(middling).toBe(280_000); // 0.28 default
+    expect(panned).toBe(200_000); // 0.20 for <40
+  });
+
+  it("maps streaming rating premiums case-insensitively and defaults to zero", () => {
+    expect(RivalRevenueCalculator.getRatingStreamingPremium("TV-MA")).toBe(0.15);
+    expect(RivalRevenueCalculator.getRatingStreamingPremium("r")).toBe(0.1);
+    expect(RivalRevenueCalculator.getRatingStreamingPremium("G")).toBe(0);
+    expect(RivalRevenueCalculator.getRatingStreamingPremium(undefined)).toBe(0);
+    expect(RivalRevenueCalculator.getRatingStreamingPremium("BOGUS")).toBe(0);
+  });
+
+  it("maps merch rating multipliers with UNRATED at zero and unknown at 1.0", () => {
+    expect(RivalRevenueCalculator.getRatingMerchMultiplier("UNRATED")).toBe(0);
+    expect(RivalRevenueCalculator.getRatingMerchMultiplier("G")).toBe(1.3);
+    expect(RivalRevenueCalculator.getRatingMerchMultiplier("NC-17")).toBe(0.3);
+    expect(RivalRevenueCalculator.getRatingMerchMultiplier("BOGUS")).toBe(1.0);
+  });
+
+  it("includes revenue history exactly 52 weeks back but not 53", () => {
+    const rival = {
+      revenueHistory: [
+        { week: 1, revenue: 100, boxOffice: 10, streaming: 0, merch: 0 },
+        { week: 2, revenue: 200, boxOffice: 20, streaming: 0, merch: 0 },
+      ],
+    } as unknown as RivalStudio;
+    // currentWeek 53: week 1 is 52 back (in), week 2 is 51 back (in)
+    const at53 = RivalRevenueCalculator.calculateAnnualRevenue(rival, 53);
+    expect(at53.annualRevenue).toBe(300);
+    // currentWeek 54: week 1 is 53 back (out), week 2 is 52 back (in)
+    const at54 = RivalRevenueCalculator.calculateAnnualRevenue(rival, 54);
+    expect(at54.annualRevenue).toBe(200);
+  });
+
   it("applies rating premium to streaming revenue", () => {
     const rivalTVMA = { id: RIVAL_ID } as RivalStudio;
     const stateTVMA = makeState({

@@ -30,6 +30,32 @@ describe("saveLoad", () => {
     expect(result).toBeNull();
   });
 
+  it("returns null when the loaded save fails version migration", async () => {
+    const staleState = { ...initializeGame("Stale Studio", "indie"), saveVersion: 0 };
+    vi.mocked(persistenceService.load).mockResolvedValue(staleState);
+
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const result = await loadGame(1);
+
+    expect(result).toBeNull();
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining("Failed to load game state"),
+      expect.any(Error)
+    );
+    consoleSpy.mockRestore();
+  });
+
+  it("backfills simMemory when loading a save that lacks it", async () => {
+    const state = initializeGame("Backfill Studio", "indie");
+    const { simMemory: _dropped, ...withoutSimMemory } = state;
+    vi.mocked(persistenceService.load).mockResolvedValue(withoutSimMemory);
+
+    const result = await loadGame(1);
+
+    expect(result).not.toBeNull();
+    expect(result?.simMemory).toBeDefined();
+  });
+
   it("saves and loads game state correctly", async () => {
     const mockState = initializeGame("Save Studio", "major");
     vi.mocked(persistenceService.save).mockResolvedValue(true);

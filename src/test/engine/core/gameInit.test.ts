@@ -50,4 +50,32 @@ describe("initializeGame", () => {
     expect(state.weekSummaries[0].newsEvents.length).toBeGreaterThan(0);
     expect(state.weekSummaries[0].newsEvents[0].headline).toContain("My Studio");
   });
+
+  it("produces identical state for the same explicit seed", () => {
+    const a = initializeGame("Seeded Studio", "major", 42);
+    const b = initializeGame("Seeded Studio", "major", 42);
+    expect(a).toEqual(b);
+  });
+
+  it("produces different worlds for different seeds", () => {
+    const a = initializeGame("Seeded Studio", "major", 42);
+    const b = initializeGame("Seeded Studio", "major", 1337);
+    expect(a.gameSeed).toBe(42);
+    expect(b.gameSeed).toBe(1337);
+    expect(a).not.toEqual(b);
+  });
+
+  it.each(["major", "mid-tier", "indie"] as const)(
+    "initializes cleanly for the %s archetype",
+    (archetype) => {
+      const state = initializeGame(`${archetype} studio`, archetype, 7);
+      expect(state.studio.archetype).toBe(archetype);
+      expect(state.entities.rivals).toBeDefined();
+    }
+  );
+
+  it("fails fast on an unknown archetype instead of silently misconfiguring", () => {
+    // ARCHETYPES[archetype] is undefined → accessing startingCash throws.
+    expect(() => initializeGame("Bogus", "megacorp" as never, 1)).toThrow();
+  });
 });

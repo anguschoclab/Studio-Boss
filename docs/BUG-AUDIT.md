@@ -42,6 +42,25 @@ _Consolidated from the Round-5 exhaustive audit (2026-11-03) + Rounds 1–4 ledg
 | BUG-015 | **Snapshots test emits SaveLoad-timeout stderr** | `snapshots.test.ts` workerless jsdom → 30 s request timeout → console.error | Benign noise; optionally mock `persistenceService` in the test to silence + speed it up | OPEN (cosmetic) |
 | BUG-016 | **Untracked `.npmrc` in working dir** | `git status` — local registry config | Keep untracked (never commit); optionally add to `.gitignore` to make it explicit | OPEN |
 
+## Resolved — external test-coverage findings (sweep 2026-11-03)
+
+Twelve test-coverage findings from an external review (targeting commit `09f4594`) were audited against the current tree. Most were stale — every flagged file already had a test file — the genuine gaps were filled and one real defect was found and fixed.
+
+| External finding | Disposition | Evidence |
+|---|---|---|
+| `saveLoad.load` — no corrupt-save fallback test | **COVERED** — added `migrateSave` version-mismatch → `null` + `console.error`, and `simMemory` backfill | `src/test/persistence/saveLoad.test.ts` |
+| `RelationshipSystem` — no zero-compatibility formation test | **COVERED** — new `relationshipCompatibility.test.ts` (scoring incl. exact-zero fixture) + `checkNaturalFormation` zero-compat/null, ±20 threshold, and compat-independent mentor path | `src/test/engine/systems/talent/` |
+| `saveWorker` — no error-handling test for message handler | **COVERED** — `onmessage` dispatch: `SAVE_SUCCESS`, `LOAD_SUCCESS`, and `ERROR` on OPFS failure / corrupt file | `src/test/persistence/saveWorker.test.ts` |
+| `settingsStore` — no partial/invalid update test | **COVERED** — `setPolicy` isolation, `setAutosaveFrequency`, persist rehydration of partial and corrupt payloads | `src/test/store/settingsStore.test.ts` |
+| `efficiencyEvaluator` — untested | **STALE + EXTENDED** — file was already tested; added under-marketed penalty, unknown-genre neutral, 0.1 floor clamp | `src/test/engine/systems/marketing/efficiencyEvaluator.test.ts` |
+| `ratingsEvaluator` — no extreme-input coverage | **COVERED** — buzz=0 floor, 10 cap, water-cooler >85 boundary, 20-episode decay, missing `tvDetails` | `src/test/engine/systems/television/ratingsEvaluator.test.ts` |
+| `CrisisModal` — no tests | **STALE** — already covered (render, four self-resolution paths, embedded-crisis fallback, option dispatch) | `src/test/components/modals/CrisisModal.test.tsx` |
+| `impactReducer` — no tests for all action types | **COVERED (shim)** — it's a 17-line delegation shim; per-type handlers already covered by `impactHandlers`/`impactPipeline`/`impactRegistry`. Added thin contract test: same-ref empty list, non-mutation, NaN sanitize | `src/test/engine/core/impactReducer.test.ts` |
+| `RivalRevenueCalculator` — untested | **STALE + EXTENDED** — already tested; added no-state, theatrical edges (future release, cult-classic floor, decay bands), rating tables, 52-week boundary. **Real bug found + fixed:** `getRatingMerchMultiplier` used `||`, making the `UNRATED → 0` entry dead (returned 1.0) — switched to `??` (`RivalRevenueCalculator.ts:138`) | `src/test/rivalRevenue.test.ts` |
+| `AwardsHQ` — no test file | **STALE** — 15 tests already cover eligibility, cash-gating, campaigns, season wins | `src/test/components/awards/AwardsHQ.test.tsx` |
+| `weekAdvance` — no tests | **STALE** — covered by `weekAdvance.test.ts` and the `WeekCoordinator.*` suites incl. recurring events | `src/test/engine/core/`, `src/test/engine/services/` |
+| `gameInit` — no edge-case tests | **COVERED** — explicit-seed determinism, all three archetypes, invalid archetype fail-fast | `src/test/engine/core/gameInit.test.ts` |
+
 ## Process notes (non-code)
 
 - **Bots still active:** Jules re-pushed a branch after Round-5 cleanup; dependabot now proposes weekly bumps post-ecosystem-fix. Recurring branch/PR cleanup or bot deactivation may be desired.

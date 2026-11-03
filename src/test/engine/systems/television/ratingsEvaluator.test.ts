@@ -57,4 +57,58 @@ describe("Ratings Evaluator (Target B2)", () => {
 
     expect(rating2).toBeLessThan(rating1);
   });
+
+  // Stub rng.next() = 0.5 → variance factor is exactly 1.0, making the
+  // deterministic parts of the formula directly assertable.
+  const flatRng = { next: () => 0.5 } as unknown as RandomGenerator;
+
+  it("floors the rating at 0.1 when buzz collapses to zero", () => {
+    expect(calculateWeeklyRating(mockSeries, 0, flatRng)).toBe(0.1);
+  });
+
+  it("caps the rating at 10 for maximum buzz and quality", () => {
+    const hit = { ...mockSeries, reviewScore: 100 } as SeriesProject;
+    expect(calculateWeeklyRating(hit, 100, flatRng)).toBe(10);
+  });
+
+  it("applies the water-cooler bonus only above buzz 85", () => {
+    const neutralQuality = {
+      ...mockSeries,
+      reviewScore: 50,
+      tvDetails: { ...mockSeries.tvDetails, episodesAired: 1 },
+    } as SeriesProject;
+    // buzz 85: 8.5 * 1.0 * 1.0 * 1.0 * 1.0 = 8.5
+    expect(calculateWeeklyRating(neutralQuality, 85, flatRng)).toBe(8.5);
+    // buzz 86: 8.6 * 1.0 * 1.0 * 1.2 * 1.0 = 10.32 → capped at 10
+    expect(calculateWeeklyRating(neutralQuality, 86, flatRng)).toBe(10);
+  });
+
+  it("decays steeply by the 20th aired episode", () => {
+    const lateSeries = {
+      ...mockSeries,
+      reviewScore: 50,
+      tvDetails: { ...mockSeries.tvDetails, episodesAired: 20 },
+    } as SeriesProject;
+    const earlySeries = {
+      ...mockSeries,
+      reviewScore: 50,
+      tvDetails: { ...mockSeries.tvDetails, episodesAired: 1 },
+    } as SeriesProject;
+
+    const late = calculateWeeklyRating(lateSeries, 50, flatRng);
+    const early = calculateWeeklyRating(earlySeries, 50, flatRng);
+
+    // ep1: 5 * 1.0 = 5.0; ep20: 5 * 0.95^19 ≈ 1.9
+    expect(early).toBe(5);
+    expect(late).toBeLessThan(early / 2);
+  });
+
+  it("treats a missing tvDetails block as episode 1 without decay", () => {
+    const series = {
+      ...mockSeries,
+      reviewScore: 50,
+      tvDetails: undefined,
+    } as unknown as SeriesProject;
+    expect(calculateWeeklyRating(series, 50, flatRng)).toBe(5);
+  });
 });

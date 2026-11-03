@@ -59,6 +59,46 @@ describe("evaluateMarketingEfficiency", () => {
     expect(result.multiplier).toBeGreaterThan(1.1);
   });
 
+  it("penalizes under-marketed campaigns (total spend < 10% of film budget)", () => {
+    const project = createMockProject("Action", 100_000_000);
+    const campaign: MarketingCampaign = {
+      domesticBudget: 5_000_000,
+      foreignBudget: 0,
+      primaryAngle: "SELL_THE_SPECTACLE",
+    };
+
+    const result = evaluateMarketingEfficiency(project, campaign);
+    // Base 1.0 + 0.2 (angle match) - 0.1 (under-marketed) = 1.1
+    expect(result.multiplier).toBeCloseTo(1.1);
+  });
+
+  it("treats unknown genres as neutral — no angle bonus or penalty", () => {
+    const project = createMockProject("Experimental", 50_000_000);
+    const campaign: MarketingCampaign = {
+      domesticBudget: 20_000_000,
+      foreignBudget: 0,
+      primaryAngle: "SELL_THE_SPECTACLE",
+    };
+
+    const result = evaluateMarketingEfficiency(project, campaign);
+    // Base 1.0 + no angle adjustment + no budget adjustment (20M is 40% of 50M)
+    expect(result.multiplier).toBe(1.0);
+  });
+
+  it("clamps the multiplier at the 0.1 floor in the worst-case stack", () => {
+    const project = createMockProject("Drama", 100_000_000);
+    const campaign: MarketingCampaign = {
+      domesticBudget: 1_000_000,
+      foreignBudget: 0,
+      primaryAngle: "SELL_THE_SPECTACLE",
+      weeksInMarketing: 44,
+    };
+
+    const result = evaluateMarketingEfficiency(project, campaign);
+    // 1.0 - 0.15 (mismatch) - 0.1 (under-marketed) = 0.75, then * 0.95^40 ≈ 0.096 → clamped
+    expect(result.multiplier).toBe(0.1);
+  });
+
   it("applies decay if marketing phase lasts too long (e.g., 6 weeks)", () => {
     const project = createMockProject("Action", 100_000_000);
     const campaign: MarketingCampaign = {
