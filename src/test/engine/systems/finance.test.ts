@@ -112,10 +112,11 @@ describe("Finance System", () => {
         entities: {
           ...createMockGameState().entities,
           projects: {
-            dev: mockProjectDev,
-            prod: mockProjectProd,
-            rel: releasedWithDist,
+            "proj-1": mockProjectDev,
+            "proj-2": mockProjectProd,
+            "proj-3": releasedWithDist,
           },
+          releasedProjectIds: ["proj-3"],
         },
       });
 
@@ -154,6 +155,39 @@ describe("Finance System", () => {
       const { report } = generateWeeklyFinancialReport(state, pendingImpacts);
       expect(report.revenue.other).toBe(50000);
     });
+
+    it("only earns released revenue for indexed, player-owned released projects", () => {
+      const unindexedReleased = {
+        ...mockProjectReleased,
+        id: "proj-9",
+        distributionStatus: "theatrical" as const,
+        weeklyRevenue: 100000,
+      };
+      const rivalReleased = {
+        ...mockProjectReleased,
+        id: "rival-1",
+        ownerId: "RIV-1",
+        distributionStatus: "theatrical" as const,
+        weeklyRevenue: 100000,
+      };
+      const state = createMockGameState({
+        week: 1,
+        finance: { ...createMockGameState().finance, cash: 1000000 },
+        entities: {
+          ...createMockGameState().entities,
+          projects: {
+            "proj-9": unindexedReleased,
+            "rival-1": rivalReleased,
+          },
+          // proj-9 is released but absent from the index (invariant violation)
+          // rival-1 is indexed but rival-owned — neither should earn player revenue
+          releasedProjectIds: ["rival-1"],
+        },
+      });
+
+      const { report } = generateWeeklyFinancialReport(state);
+      expect(report.revenue.boxOffice).toBe(0);
+    });
   });
 
   describe("tickFinance", () => {
@@ -170,9 +204,10 @@ describe("Finance System", () => {
         entities: {
           ...createMockGameState().entities,
           projects: {
-            prod: mockProjectProd,
-            rel: releasedWithDist,
+            "proj-2": mockProjectProd,
+            "proj-3": releasedWithDist,
           },
+          releasedProjectIds: ["proj-3"],
         },
       });
 

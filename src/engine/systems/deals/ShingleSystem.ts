@@ -140,55 +140,53 @@ function makeShingleName(ownerName: string, rng: RandomGenerator): string {
   return `${rng.pick(prefixes)} ${rng.pick(prefixes)} ${rng.pick(suffixes)}`;
 }
 
-function getTVEligibleTalent(state: GameState): Talent[] {
-  // TV showrunner deals go to writers/producers with prestige > 70 who don't already
-  // have a shingle. Real-world comps: Shonda Rhimes, Ryan Murphy, Taylor Sheridan, Kenya Barris.
-  // ⚡ The Framerate Fanatic: Extracted Set creation and used for...in loops to avoid O(N) array allocation overhead
-  const ownedBy = new Set<string>();
-  const shingles = state.entities.shingles || {};
-  for (const id in shingles) {
-    ownedBy.add(shingles[id].ownerTalentId);
-  }
-
-  const results: Talent[] = [];
-  const talents = state.entities.talents || {};
-  for (const id in talents) {
-    const t = talents[id];
-    if (ownedBy.has(t.id)) continue;
-    if ((t.prestige || 0) < 40) continue;
-    const roles = t.roles || [t.role];
-    if (roles.some((r) => r === "writer" || r === "producer")) {
-      results.push(t);
-    }
-  }
-  return results;
+interface ShingleEligibilityPools {
+  tvEligible: Talent[];
+  filmEligible: Talent[];
+  lowProspect: Talent[];
+  podEligible: Talent[];
 }
 
-function getEligibleTalent(state: GameState): Talent[] {
-  // ⚡ The Framerate Fanatic: Extracted Set creation and used for...in loops to avoid O(N) array allocation overhead
-  const ownedBy = new Set<string>();
-  const shingles = state.entities.shingles || {};
-  for (const id in shingles) {
-    ownedBy.add(shingles[id].ownerTalentId);
-  }
-
-  const results: Talent[] = [];
+/**
+ * Single-pass census over the talent pool feeding every spawn bucket.
+ * Predicates mirror the former per-pool scans exactly (a talent may land in
+ * multiple pools — e.g., a director/writer can be both film- and TV-eligible);
+ * per-bucket ordering matches for...in iteration order so rng.pick stays
+ * deterministic. `ownedBy` is precomputed by the caller.
+ */
+function collectEligibilityPools(state: GameState, ownedBy: Set<string>): ShingleEligibilityPools {
+  const pools: ShingleEligibilityPools = {
+    tvEligible: [],
+    filmEligible: [],
+    lowProspect: [],
+    podEligible: [],
+  };
   const talents = state.entities.talents || {};
   for (const id in talents) {
     const t = talents[id];
     if (ownedBy.has(t.id)) continue;
+    const p = t.prestige || 0;
+    const roles = t.roles || [t.role];
+    const hasWriter = roles.some((r) => r === "writer");
+    const hasProducer = roles.some((r) => r === "producer");
+    const hasDirOrActor = roles.some((r) => r === "director" || r === "actor");
+    // TV showrunner deals go to writers/producers with prestige > 70 who don't already
+    // have a shingle. Real-world comps: Shonda Rhimes, Ryan Murphy, Taylor Sheridan, Kenya Barris.
+    if (p >= 40 && (hasWriter || hasProducer)) pools.tvEligible.push(t);
     // Gate on "top tier of current field": the real A-list cutoff is ~75 but a developing sim-industry
     // rarely grows talent that high, so we accept >= 65 prestige and require a director/producer/actor role.
-    if ((t.prestige || 0) < 45) continue;
-    const roles = t.roles || [t.role];
     // Pure writer-only or producer-only talents are reserved for TV showrunner deals —
     // exclude them from the film pool so TV has a supply post-2010.
-    const hasDirOrActor = roles.some((r) => r === "director" || r === "actor");
-    if (hasDirOrActor) {
-      results.push(t);
+    if (p >= 45 && hasDirOrActor) pools.filmEligible.push(t);
+    // Housekeeping-tier pool: a lower-prestige eligibility path so the
+    // fallback D3 housekeeping bids get a supply of sub-A-list owners.
+    if (p >= 30 && p < 50 && (hasDirOrActor || hasProducer || hasWriter)) {
+      pools.lowProspect.push(t);
     }
+    // POD pool — writer-specialty mid-prestige talent for cheap exclusive dev deals.
+    if (p >= 50 && p <= 75 && hasWriter) pools.podEligible.push(t);
   }
-  return results;
+  return pools;
 }
 
 function rankBidders(
@@ -623,19 +621,27 @@ function spawnShingles(state: GameState, rng: RandomGenerator, impacts: StateImp
   // ⚡ The Framerate Fanatic: Replaced Object.values().filter() with a single for...in loop for active counts
   let activeTotal = 0;
   let activeTV = 0;
+  const ownedBy = new Set<string>();
   const shingles = state.entities.shingles || {};
   for (const id in shingles) {
     const s = shingles[id];
+    ownedBy.add(s.ownerTalentId);
     if (s.baseStudioId) {
       activeTotal++;
       if (s.medium === "TV") activeTV++;
     }
   }
 
+  // ⚡ The Framerate Fanatic: one talents scan feeds all four spawn pools —
+  // previously each pool rebuilt the ownedBy set and re-scanned every talent.
+  const { tvEligible, filmEligible, lowProspect, podEligible } = collectEligibilityPools(
+    state,
+    ownedBy
+  );
+
   // TV showrunner overall deals first so writer/producer prestige talent has a shot at TV
   // before the film spawn claims them. Clustered post-2000 when streaming era unlocks
   // aggressive streamer bidding (Shondaland/Netflix, Murphy/Netflix, Sheridan/Paramount).
-  const tvEligible = getTVEligibleTalent(state);
   const year = 1975 + Math.floor(state.week / 52);
   let tvGate = 0.0005;
   if (year >= 2010) tvGate = 0.008;
@@ -650,37 +656,14 @@ function spawnShingles(state: GameState, rng: RandomGenerator, impacts: StateImp
   }
 
   // Film shingles: spawn target ~8-20 over 50 years.
-  const eligible = getEligibleTalent(state);
-  if (eligible.length > 0 && activeTotal < 12 && rng.next() < 0.008) {
-    const owner = rng.pick(eligible);
+  if (filmEligible.length > 0 && activeTotal < 12 && rng.next() < 0.008) {
+    const owner = rng.pick(filmEligible);
     if (owner) createShingle(state, owner, rng, impacts, "FILM");
   }
   // Housekeeping-tier spawn: a lower-prestige eligibility path runs occasionally so the
   // fallback D3 housekeeping bids actually get a supply of sub-A-list owners. This keeps
   // 3-6 HOUSEKEEPING formations across a 50-year run (realistic Carsey-Werner-style
   // backlot dev-deal presence).
-  // ⚡ The Framerate Fanatic: Extracted Set creation and used for...in loop
-  const ownedBy = new Set<string>();
-  for (const id in shingles) {
-    ownedBy.add(shingles[id].ownerTalentId);
-  }
-
-  const lowProspect: Talent[] = [];
-  const talents = state.entities.talents || {};
-  for (const id in talents) {
-    const t = talents[id];
-    if (ownedBy.has(t.id)) continue;
-    const p = t.prestige || 0;
-    if (p >= 30 && p < 50) {
-      const roles = t.roles || [t.role];
-      if (
-        roles.some((r) => r === "director" || r === "actor" || r === "producer" || r === "writer")
-      ) {
-        lowProspect.push(t);
-      }
-    }
-  }
-
   if (lowProspect.length > 0 && activeTotal < 14 && rng.next() < 0.004) {
     const owner = rng.pick(lowProspect);
     if (owner) createHousekeepingShingle(state, owner, rng, impacts);
@@ -688,19 +671,6 @@ function spawnShingles(state: GameState, rng: RandomGenerator, impacts: StateImp
 
   // POD (Producer-On-Deal) path — writer-specialty mid-prestige talent get cheap
   // exclusive dev deals. Targets 1-3 per decade (~0.0006/wk baseline).
-  // ⚡ The Framerate Fanatic: Extracted Set creation and used for...in loop (reusing ownedBy set)
-  const podEligible: Talent[] = [];
-  for (const id in talents) {
-    const t = talents[id];
-    if (ownedBy.has(t.id)) continue;
-    const p = t.prestige || 0;
-    if (p < 50 || p > 75) continue;
-    const roles = t.roles || [t.role];
-    if (roles.some((r) => r === "writer")) {
-      podEligible.push(t);
-    }
-  }
-
   if (podEligible.length > 0 && activeTotal < 16 && rng.next() < 0.0008) {
     const owner = rng.pick(podEligible);
     if (owner) createPodShingle(state, owner, rng, impacts);

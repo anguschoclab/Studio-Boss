@@ -68,6 +68,25 @@ describe("Nielsen System (Guild Auditor)", () => {
       expect(Number.isNaN(snapshot.totalViewers)).toBe(false);
     });
 
+    it("produces demoRatings for all 8 demographics in canonical order", () => {
+      const rng = new RandomGenerator(42);
+      const snapshot = calculateNielsenRatings(mockSeries, 1, 10, rng);
+
+      expect(snapshot.demoRatings).toHaveLength(8);
+      expect(snapshot.demoRatings.map((d) => d.demo)).toEqual([
+        "P2+",
+        "A18-49",
+        "A25-54",
+        "A18-34",
+        "W18-49",
+        "M18-49",
+        "K2-11",
+        "T12-17",
+      ]);
+      expect(snapshot.demoRatings[0].label).toBe("Total Viewers");
+      expect(snapshot.demoRatings[1].label).toBe("Adults 18-49");
+    });
+
     it("calculates ratings safely when there are 0 total shows (division by zero prevention)", () => {
       const rng = new RandomGenerator(42);
       const snapshot = calculateNielsenRatings(mockSeries, 1, 0, rng);

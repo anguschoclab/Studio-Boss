@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { MarketState } from "../../../../engine/types/state.types";
 import { evaluatePackageOffer } from "../../../../engine/systems/ai/AgentBrain";
+import * as BehaviorEngine from "../../../../engine/systems/ai/BehaviorEngine";
 import { shouldAttemptHostileTakeover } from "../../../../engine/systems/ai/BehaviorEngine";
 import { mockRandomSeed } from "../../../utils/mockRandom";
 import {
@@ -90,6 +91,65 @@ describe("AI Archetype Strategy (AgentBrain)", () => {
       // Note: This depends on the predator archetype in data.
       // If predator isn't an 'acquirer' or 'poacher', it reflects logic correctness.
       expect(typeof allowed).toBe("boolean");
+    });
+  });
+
+  describe("isEligibleAcquirer", () => {
+    const isEligibleAcquirer = (attacker: ReturnType<typeof createMockRival>): boolean =>
+      (
+        BehaviorEngine as unknown as {
+          isEligibleAcquirer: (a: ReturnType<typeof createMockRival>) => boolean;
+        }
+      ).isEligibleAcquirer(attacker);
+
+    it("returns true for an acquirer-strategy rival with hostile motivation", () => {
+      const attacker = createMockRival({
+        behaviorId: "THE_ACQUIRER",
+        currentMotivation: "FRANCHISE_BUILDING",
+      });
+      expect(isEligibleAcquirer(attacker)).toBe(true);
+    });
+
+    it("returns true for a poacher-strategy rival with disruption motivation", () => {
+      const attacker = createMockRival({
+        behaviorId: "SILENT_POACHER",
+        currentMotivation: "MARKET_DISRUPTION",
+      });
+      expect(isEligibleAcquirer(attacker)).toBe(true);
+    });
+
+    it("returns false when the rival lacks hostile motivation", () => {
+      const attacker = createMockRival({
+        behaviorId: "THE_ACQUIRER",
+        currentMotivation: "STABILITY",
+      });
+      expect(isEligibleAcquirer(attacker)).toBe(false);
+    });
+
+    it("returns false for an acquirer archetype below the aggression threshold", () => {
+      // RETRO_REVOLUTIONARY is strategy "acquirer" but biddingAggression 65 < 70
+      const attacker = createMockRival({
+        behaviorId: "RETRO_REVOLUTIONARY",
+        currentMotivation: "FRANCHISE_BUILDING",
+      });
+      expect(isEligibleAcquirer(attacker)).toBe(false);
+    });
+
+    it("returns false for a non-acquirer strategy despite high aggression", () => {
+      // STREAMING_TITAN has biddingAggression 95 but strategy "blockbuster_focused"
+      const attacker = createMockRival({
+        behaviorId: "STREAMING_TITAN",
+        currentMotivation: "MARKET_DISRUPTION",
+      });
+      expect(isEligibleAcquirer(attacker)).toBe(false);
+    });
+
+    it("returns false for unknown behavior ids via the BALANCED_GIANT fallback", () => {
+      const attacker = createMockRival({
+        behaviorId: "does-not-exist",
+        currentMotivation: "MARKET_DISRUPTION",
+      });
+      expect(isEligibleAcquirer(attacker)).toBe(false);
     });
   });
 });

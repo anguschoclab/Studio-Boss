@@ -133,6 +133,81 @@ describe("AnnualScans", () => {
     mockState.week = 52;
     expect(() => AnnualScans.execute(mockState, mockContext)).not.toThrow();
   });
+
+  it("emits BIDDING_WAR once for an eligible attacker against the first acquirable target", () => {
+    mockContext.week = 52;
+    mockState.week = 52;
+    mockState.entities.rivals = {
+      "attacker-1": {
+        id: "attacker-1",
+        name: "Shark Co",
+        archetype: "major",
+        cash: 500_000_000,
+        prestige: 60,
+        strength: 70,
+        behaviorId: "THE_ACQUIRER",
+        currentMotivation: "FRANCHISE_BUILDING",
+        marketShare: 0.1,
+        isAcquirable: false,
+      },
+      "target-na": {
+        id: "target-na",
+        name: "Locked Inc",
+        archetype: "minor",
+        cash: 10_000_000,
+        prestige: 30,
+        strength: 30,
+        currentMotivation: "STABILITY",
+        isAcquirable: false,
+      },
+      "target-yes": {
+        id: "target-yes",
+        name: "Prey LLC",
+        archetype: "minor",
+        cash: 10_000_000,
+        prestige: 30,
+        strength: 30,
+        currentMotivation: "STABILITY",
+        isAcquirable: true,
+      },
+    } as any;
+
+    AnnualScans.execute(mockState, mockContext);
+
+    const wars = mockContext.impacts.filter(
+      (i) => i.type === "MODAL_TRIGGERED" && (i.payload as any)?.modalType === "BIDDING_WAR"
+    );
+    expect(wars).toHaveLength(1);
+    const inner = (wars[0].payload as any).payload;
+    expect(inner.attackerId).toBe("attacker-1");
+    expect(inner.targetId).toBe("target-yes");
+
+    const news = mockContext.impacts.filter((i) => i.type === "NEWS_ADDED");
+    expect(news).toHaveLength(1);
+  });
+
+  it("emits no M&A impacts when no rival is acquirable", () => {
+    mockContext.week = 52;
+    mockState.week = 52;
+    mockState.entities.rivals = {
+      "attacker-1": {
+        id: "attacker-1",
+        name: "Shark Co",
+        archetype: "major",
+        cash: 500_000_000,
+        prestige: 60,
+        strength: 70,
+        behaviorId: "THE_ACQUIRER",
+        currentMotivation: "FRANCHISE_BUILDING",
+        marketShare: 0.1,
+        isAcquirable: false,
+      },
+    } as any;
+
+    AnnualScans.execute(mockState, mockContext);
+
+    expect(mockContext.impacts).toHaveLength(0);
+  });
 });
 
 describe("AnnualScans — reboot proposal", () => {

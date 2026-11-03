@@ -66,38 +66,37 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
   // Rival series live in entities.projects alongside the player's — the single
   // census above already covers them (rival.projects is a dead parallel map).
 
-  state.market.buyers.forEach((buyer) => {
-    if (buyer.archetype === "streamer") {
-      const platform = buyer as StreamerPlatform;
+  for (const buyer of state.market.buyers) {
+    if (buyer.archetype !== "streamer") continue;
+    const platform = buyer as StreamerPlatform;
 
-      const stats = platformRetentionStats[platform.id];
-      let averageRetention = 60;
-      if (stats && stats.count > 0) {
-        averageRetention = stats.sum / stats.count;
-      }
-
-      const subChange = calculateSubChange(platform, rng, averageRetention);
-      const newSubCount = Math.max(0, platform.subscribers + subChange);
-
-      // Update subscribers and history
-      const history = [...(platform.subscriberHistory || [])];
-      history.push({ week: currWeek, count: newSubCount });
-
-      // Keep only 52 weeks of history
-      const trimmedHistory = history.slice(-52);
-
-      impacts.push({
-        type: "BUYER_UPDATED",
-        payload: {
-          buyerId: platform.id,
-          update: {
-            subscribers: newSubCount,
-            subscriberHistory: trimmedHistory,
-          },
-        },
-      });
+    const stats = platformRetentionStats[platform.id];
+    let averageRetention = 60;
+    if (stats && stats.count > 0) {
+      averageRetention = stats.sum / stats.count;
     }
-  });
+
+    const subChange = calculateSubChange(platform, rng, averageRetention);
+    const newSubCount = Math.max(0, platform.subscribers + subChange);
+
+    // Append this week, keep only the last 52 entries
+    const history = (platform.subscriberHistory || []).concat({
+      week: currWeek,
+      count: newSubCount,
+    });
+    const trimmedHistory = history.length > 52 ? history.slice(-52) : history;
+
+    impacts.push({
+      type: "BUYER_UPDATED",
+      payload: {
+        buyerId: platform.id,
+        update: {
+          subscribers: newSubCount,
+          subscriberHistory: trimmedHistory,
+        },
+      },
+    });
+  }
 
   return impacts;
 }

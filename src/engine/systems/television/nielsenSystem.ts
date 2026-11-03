@@ -165,6 +165,10 @@ const DEMO_LABELS: Record<NielsenDemographic, string> = {
   "T12-17": "Teens 12-17",
 };
 
+// ⚡ The Framerate Fanatic: static key list — computed once at module load,
+// avoids for...in + hasOwnProperty checks inside the per-episode rating loop.
+const DEMO_KEYS = Object.keys(DEMO_LABELS) as NielsenDemographic[];
+
 // --- Genre to Demographic Affinity ---
 const GENRE_DEMO_AFFINITY: Record<string, Partial<Record<NielsenDemographic, number>>> = {
   Drama: { "A25-54": 1.3, "W18-49": 1.2 },
@@ -240,14 +244,10 @@ export function calculateNielsenRatings(
 
   // Demographic breakdowns
   const genreAffinity = GENRE_DEMO_AFFINITY[project.genre] || {};
-  // ⚡ Bolt Optimization: Replace Object.keys().map() and subsequent .find() with a single-pass for...in loop
   const demoRatings: DemoRating[] = [];
   let keyDemo = 0;
 
-  for (const key in DEMO_LABELS) {
-    if (!Object.prototype.hasOwnProperty.call(DEMO_LABELS, key)) continue;
-    const demo = key as NielsenDemographic;
-
+  for (const demo of DEMO_KEYS) {
     const slotWeight = slotConfig.demographics[demo] || 1.0;
     const genreWeight = genreAffinity[demo] || 1.0;
     const demoRating = baseHHRating * slotWeight * genreWeight * (0.9 + rng.next() * 0.2);

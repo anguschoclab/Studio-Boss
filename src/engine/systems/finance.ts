@@ -4,7 +4,7 @@ import { RevenueProcessor } from "./finance/RevenueProcessor";
 import { ExpenseProcessor } from "./finance/ExpenseProcessor";
 import { InterestRateSimulator } from "./market/InterestRateSimulator";
 import { formatMoney, getContractsByProjectId } from "../utils";
-import { isPlayerOwner, playerProjectsList } from "../utils/ownership";
+import { isPlayerOwner, isPlayerProject, playerProjectsList } from "../utils/ownership";
 
 export function calculateProjectROI(project: Project): number {
   const totalCost = project.budget + (project.marketingBudget || 0);
@@ -70,8 +70,16 @@ export function generateWeeklyFinancialReport(
     }
   });
 
-  projects.forEach((p) => {
-    if (p.state === "released") {
+  // ⚡ The Framerate Fanatic: iterate the maintained releasedProjectIds index
+  // (covers released/post_release/archived, incl. rival-owned entries) instead
+  // of scanning the whole player project list — O(released) per tick.
+  const releasedIds = state.entities?.releasedProjectIds || [];
+  const projectsById = state.entities?.projects || {};
+  let releasedCount = 0;
+  for (const pid of releasedIds) {
+    const p = projectsById[pid];
+    if (p && p.state === "released" && isPlayerProject(state, p)) {
+      releasedCount++;
       let weeklyGross = 0;
       let trendMultiplier = 1.0;
 
@@ -95,7 +103,7 @@ export function generateWeeklyFinancialReport(
       // Theatrical vs Streaming
       if (p.distributionStatus === "theatrical") {
         weeklyGross =
-          RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.35) * trendMultiplier; // The Studio Comptroller: Severely increased theatrical decay to 0.35 to accurately model modern front-loaded box office drops.
+          RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.35, p.isCultClassic) * trendMultiplier; // The Studio Comptroller: Severely increased theatrical decay to 0.35 to accurately model modern front-loaded box office drops.
         boxOffice += weeklyGross;
 
         // Track theatrical decay causality
@@ -152,14 +160,14 @@ export function generateWeeklyFinancialReport(
         projectContracts
       );
     }
-  });
+  }
 
   // 3. Calculate Operational Expenses
   const production = ExpenseProcessor.calculateProductionBurn(projects);
   const marketing = ExpenseProcessor.calculateMarketingBurn(projects);
   const overhead = ExpenseProcessor.calculateStudioBurn(
     studioLevel,
-    projects.filter((p) => p.state !== "released").length
+    projects.length - releasedCount
   );
 
   // 4. Calculate Interest (Debt or Savings)
@@ -262,10 +270,11 @@ export function generateWeeklyFinancialReport(
 export function calculateWeeklyCosts(projects: Project[]): number {
   const production = ExpenseProcessor.calculateProductionBurn(projects);
   const marketing = ExpenseProcessor.calculateMarketingBurn(projects);
-  const overhead = ExpenseProcessor.calculateStudioBurn(
-    1,
-    projects.filter((p) => p.state !== "released").length
-  );
+  let unreleasedCount = 0;
+  for (const p of projects) {
+    if (p.state !== "released") unreleasedCount++;
+  }
+  const overhead = ExpenseProcessor.calculateStudioBurn(1, unreleasedCount);
   return production + marketing + overhead;
 }
 
@@ -281,10 +290,10 @@ export function calculateWeeklyRevenue(
   const buyerMap = new Map<string, Buyer>();
   buyers?.forEach((b) => buyerMap.set(b.id, b));
 
-  projects.forEach((p) => {
+  for (const p of projects) {
     if (p.state === "released") {
       if (p.distributionStatus === "theatrical") {
-        boxOffice += RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.35); // The Studio Comptroller: Severely increased theatrical decay to 0.35 to accurately model modern front-loaded box office drops.
+        boxOffice += RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.35, p.isCultClassic); // The Studio Comptroller: Severely increased theatrical decay to 0.35 to accurately model modern front-loaded box office drops.
       } else if (p.distributionStatus === "streaming") {
         const platform = p.buyerId ? buyerMap.get(p.buyerId) : undefined;
         if (platform) {
@@ -292,7 +301,7 @@ export function calculateWeeklyRevenue(
         }
       }
     }
-  });
+  }
 
   return boxOffice + distribution;
 }

@@ -3,7 +3,7 @@ import { TickContext } from "./types";
 
 // System Imports
 import { detectCultClassic } from "../../systems/ip/ipValuation";
-import { shouldAttemptHostileTakeover } from "../../systems/ai/BehaviorEngine";
+import { isEligibleAcquirer, shouldAttemptHostileTakeover } from "../../systems/ai/BehaviorEngine";
 import { generateRebootProposal } from "../../systems/ip/ipRebootEngine";
 import { isPlayerProject } from "../../utils/ownership";
 
@@ -33,12 +33,21 @@ export const AnnualScans = {
   runAnnualMAScan(state: GameState, context: TickContext) {
     const rivalsObj = state.entities.rivals || {};
     const rivalKeys = Object.keys(rivalsObj);
+
+    // ⚡ The Framerate Fanatic: pre-filter acquirable targets and ineligible
+    // attackers so the inner loop runs over a fraction of the O(N^2) space.
+    const acquirableKeys: string[] = [];
     for (let i = 0; i < rivalKeys.length; i++) {
-      for (let j = 0; j < rivalKeys.length; j++) {
-        if (i === j) continue;
-        const attacker = rivalsObj[rivalKeys[i]];
-        const target = rivalsObj[rivalKeys[j]];
-        if (!target.isAcquirable) continue;
+      if (rivalsObj[rivalKeys[i]].isAcquirable) acquirableKeys.push(rivalKeys[i]);
+    }
+    if (acquirableKeys.length === 0) return;
+
+    for (let i = 0; i < rivalKeys.length; i++) {
+      const attacker = rivalsObj[rivalKeys[i]];
+      if (!isEligibleAcquirer(attacker)) continue;
+      for (let j = 0; j < acquirableKeys.length; j++) {
+        if (acquirableKeys[j] === rivalKeys[i]) continue;
+        const target = rivalsObj[acquirableKeys[j]];
         if (shouldAttemptHostileTakeover(attacker, target, state)) {
           context.impacts.push({
             type: "MODAL_TRIGGERED",

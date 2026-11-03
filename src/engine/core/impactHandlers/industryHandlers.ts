@@ -88,13 +88,13 @@ export function handleIndustryUpdate(state: GameState, impact: IndustryUpdateImp
   if (update && typeof update === "object" && !Array.isArray(update)) {
     const clonedRefs = new Set<unknown>([nextState]);
     const updateRecord = asRecord(update);
-    for (const path in updateRecord) {
-      if (!Object.prototype.hasOwnProperty.call(updateRecord, path)) continue;
+    for (const path of Object.keys(updateRecord)) {
       const value = updateRecord[path];
       const parts = path.split(".");
+      const lastIdx = parts.length - 1;
       let current: Record<string, unknown> = asRecord(nextState);
 
-      for (let i = 0; i < parts.length - 1; i++) {
+      for (let i = 0; i < lastIdx; i++) {
         const part = parts[i];
         if (FORBIDDEN_KEYS.has(part)) break;
 
@@ -112,7 +112,7 @@ export function handleIndustryUpdate(state: GameState, impact: IndustryUpdateImp
         current = current[part] as Record<string, unknown>;
       }
 
-      const lastPart = parts[parts.length - 1];
+      const lastPart = parts[lastIdx];
       if (!FORBIDDEN_KEYS.has(lastPart)) {
         current[lastPart] = value;
       }

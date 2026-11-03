@@ -81,4 +81,70 @@ describe("Platform Engine (Target B1)", () => {
     expect(nextSubs).toBeDefined();
     expect(nextSubs).not.toBe(10_000_000);
   });
+
+  it("appends the current week to subscriberHistory and trims to 52 entries", () => {
+    const history52 = Array.from({ length: 52 }, (_, i) => ({ week: i + 1, count: 1000 + i }));
+    const streamer: StreamerPlatform = {
+      id: "s1",
+      name: "Netflex",
+      archetype: "streamer",
+      subscribers: 10_000_000,
+      churnRate: 0.05,
+      contentLibraryQuality: 70,
+      marketingSpend: 500_000,
+      prestige: 50,
+      isMajor: true,
+      currentMandate: { type: "prestige", activeUntilWeek: 10 },
+      isGlobal: true,
+      territories: ["USA", "UK"],
+      ratingHistory: [],
+      subscriberHistory: history52,
+    } as any;
+
+    const state = getInitialState([streamer]);
+    const impacts = tickPlatforms(state, rng);
+
+    const buyerImpact = impacts.find(
+      (i): i is BuyerUpdateImpact => i.type === "BUYER_UPDATED" && i.payload.buyerId === "s1"
+    );
+    const history = (buyerImpact?.payload.update as Partial<StreamerPlatform> | undefined)
+      ?.subscriberHistory;
+
+    expect(history).toBeDefined();
+    expect(history).toHaveLength(52);
+    expect(history![0]).toEqual(history52[1]); // oldest entry dropped
+    expect(history![51].week).toBe(state.week); // newest entry appended
+  });
+
+  it("appends to subscriberHistory without trimming when under 52 entries", () => {
+    const streamer: StreamerPlatform = {
+      id: "s1",
+      name: "Netflex",
+      archetype: "streamer",
+      subscribers: 10_000_000,
+      churnRate: 0.05,
+      contentLibraryQuality: 70,
+      marketingSpend: 500_000,
+      prestige: 50,
+      isMajor: true,
+      currentMandate: { type: "prestige", activeUntilWeek: 10 },
+      isGlobal: true,
+      territories: ["USA", "UK"],
+      ratingHistory: [],
+      subscriberHistory: [{ week: 0, count: 9_000_000 }],
+    } as any;
+
+    const state = getInitialState([streamer]);
+    const impacts = tickPlatforms(state, rng);
+
+    const buyerImpact = impacts.find(
+      (i): i is BuyerUpdateImpact => i.type === "BUYER_UPDATED" && i.payload.buyerId === "s1"
+    );
+    const history = (buyerImpact?.payload.update as Partial<StreamerPlatform> | undefined)
+      ?.subscriberHistory;
+
+    expect(history).toHaveLength(2);
+    expect(history![0]).toEqual({ week: 0, count: 9_000_000 });
+    expect(history![1].week).toBe(state.week);
+  });
 });
