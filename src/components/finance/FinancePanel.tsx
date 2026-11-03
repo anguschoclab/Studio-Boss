@@ -46,6 +46,7 @@ import { MarketRatesWidget } from "@/components/finance/MarketRatesWidget";
 import { useMemo } from "react";
 import { useGameStore } from "@/store/gameStore";
 import { formatMoney } from "@/engine/utils";
+import { isPlayerProject } from "@/engine/utils/ownership";
 import { KPIStatCard } from "@/components/shared/KPIStatCard";
 import { CausalityTooltip } from "@/components/shared/CausalityTooltip";
 import { cn } from "@/lib/utils";
@@ -60,10 +61,13 @@ export const FinancePanel = () => {
   const projectsMemo = useMemo(() => {
     const arr: (typeof projectsObj)[string][] = [];
     for (const pid in projectsObj) {
-      arr.push(projectsObj[pid]);
+      const p = projectsObj[pid];
+      // Player finance panel counts player-owned projects only — rival
+      // slates share entities.projects and must not inflate the figures.
+      if (!gameState || isPlayerProject(gameState, p)) arr.push(p);
     }
     return arr;
-  }, [projectsObj]);
+  }, [projectsObj, gameState]);
 
   const weeklyCosts = useMemo(() => calculateWeeklyCosts(projectsMemo), [projectsMemo]);
   const weeklyRevenue = useMemo(() => calculateWeeklyRevenue(projectsMemo), [projectsMemo]);

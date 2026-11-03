@@ -1,8 +1,10 @@
 import { describe, it, expect } from "vitest";
 import { MarketState } from "../../../../engine/types/state.types";
 import { evaluatePackageOffer } from "../../../../engine/systems/ai/AgentBrain";
-import * as BehaviorEngine from "../../../../engine/systems/ai/BehaviorEngine";
-import { shouldAttemptHostileTakeover } from "../../../../engine/systems/ai/BehaviorEngine";
+import {
+  isEligibleAcquirer,
+  shouldAttemptHostileTakeover,
+} from "../../../../engine/systems/ai/BehaviorEngine";
 import { mockRandomSeed } from "../../../utils/mockRandom";
 import {
   createMockAgency,
@@ -95,12 +97,6 @@ describe("AI Archetype Strategy (AgentBrain)", () => {
   });
 
   describe("isEligibleAcquirer", () => {
-    const isEligibleAcquirer = (attacker: ReturnType<typeof createMockRival>): boolean =>
-      (
-        BehaviorEngine as unknown as {
-          isEligibleAcquirer: (a: ReturnType<typeof createMockRival>) => boolean;
-        }
-      ).isEligibleAcquirer(attacker);
 
     it("returns true for an acquirer-strategy rival with hostile motivation", () => {
       const attacker = createMockRival({
