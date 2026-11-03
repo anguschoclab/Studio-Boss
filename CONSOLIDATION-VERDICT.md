@@ -378,7 +378,7 @@ Executed under strict test-first discipline: Phase-0 pinned characterization and
 
 **Branch strategy:** applied directly on `main` (zero back-compat mandate); all 14 open PR diffs (#927–#940) manually integrated; `.Jules` learnings union-merged; bot scratch artifacts excluded.
 **Baseline (measured at start):** typecheck 0 err · lint 0 problems · 1909 pass / 13 fail (12 pathSecurity Windows-EPERM + 1 stress-determinism 300s timeout — both environmental) · `format:check` 139 files drift · build green.
-**Test-first:** red-suite commit `807f5153` landed before any production edit — 8 a11y red + 3 sentinel red + characterization locks green-anchored.
+**Test-first:** red-suite commits `0cae9873`+`807f5153` (amend produced a duplicate pair incl. the staged dead-code deletions) landed before any production edit — 8 a11y red + 3 sentinel red + characterization locks green-anchored.
 
 ### Per-PR Verdict Table
 
@@ -455,7 +455,7 @@ Executed under strict test-first discipline: Phase-0 pinned characterization and
 
 ### Test-First Audit
 
-- [x] Phase-3 commit `807f5153` contains ALL new/updated tests + test-env fixes; production changes first appear in `1e764582`.
+- [x] Phase-3 commits `0cae9873`+`807f5153` contain ALL new/updated tests + test-env fixes; production changes first appear in `1e764582`.
 - [x] 8 a11y + 3 sentinel tests were red for the correct reasons pre-integration (missing aria-hidden / missing handlers); all green post-integration.
 - [x] Characterization locks (TVRec filter, processPacts, consolidatedExpenses, FORMAT_LICENSED, CommandCenter derivation, trends predicate) green before AND after — refactor-equivalence proven.
 - [x] 1 test-authoring fix during red run (Opportunity fixture `origin` enum + 3 required fields; TooltipProvider wrap for StudioSidebar) — distinguished from legit red.
