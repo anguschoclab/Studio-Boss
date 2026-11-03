@@ -115,11 +115,35 @@ describe("impact handler registry completeness", () => {
     expect(next).toBeTruthy();
   });
 
-  it("warns on an unregistered type string", () => {
-    applySingleImpact(state, {
-      type: "NOT_A_REAL_TYPE",
-      payload: {},
-    } as unknown as StateImpact);
-    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("NOT_A_REAL_TYPE"));
+  it("throws on an unregistered type string outside production", () => {
+    expect(() =>
+      applySingleImpact(state, {
+        type: "NOT_A_REAL_TYPE",
+        payload: {},
+      } as unknown as StateImpact)
+    ).toThrowError(/NOT_A_REAL_TYPE/);
+  });
+
+  it("warns and returns state unchanged when MODE=production", () => {
+    vi.stubEnv("MODE", "production");
+    try {
+      const next = applySingleImpact(state, {
+        type: "NOT_A_REAL_TYPE",
+        payload: {},
+      } as unknown as StateImpact);
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("NOT_A_REAL_TYPE"));
+      expect(next).toBe(state);
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
+
+  it("throws a clean error (not TypeError) for prototype-chain type keys", () => {
+    expect(() =>
+      applySingleImpact(state, {
+        type: "__proto__",
+        payload: {},
+      } as unknown as StateImpact)
+    ).toThrowError(/Unhandled impact type/);
   });
 });

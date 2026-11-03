@@ -472,11 +472,20 @@ export function applySingleImpact(state: GameState, impact: StateImpact): GameSt
   // every handler.
   const handler = handlerRegistry[impact.type] as
     ((state: GameState, impact: StateImpact) => GameState) | undefined;
-  if (handler) {
+  // typeof guard, not truthiness: "__proto__"/"constructor"/"hasOwnProperty"
+  // resolve truthy non-functions through the prototype chain.
+  if (typeof handler === "function") {
     return handler(state, impact);
   }
 
-  // Unregistered impact types are a bug (see F-069: silent drops hide whole systems)
+  // Unregistered impact types are a bug (see F-069: silent drops hide whole
+  // systems). Fail fast everywhere except a production build — dev server,
+  // vitest, and bun headless sims abort so the bug surfaces at the emitter;
+  // production keeps warn-and-drop so one bad impact can't kill a player's
+  // week. Evaluated per call so tests can vi.stubEnv("MODE", "production").
+  if (import.meta.env?.MODE !== "production") {
+    throw new Error(`[impactReducer] Unhandled impact type: ${String(impact.type)}`);
+  }
   console.warn(`[impactReducer] Unhandled impact type: ${String(impact.type)}`);
   return state;
 }
