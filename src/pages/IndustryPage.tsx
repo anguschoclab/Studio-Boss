@@ -40,15 +40,37 @@ export const IndustryPage: React.FC = () => {
   const marketFatigue = useMemo(() => {
     if (!state) return {};
     const saturation: Record<string, number> = {};
-    [
-      ...Object.values(state.entities.projects),
-      ...Object.values(state.entities.rivals).flatMap((r) => Object.values(r.projects || {})),
-    ].forEach((p) => {
-      if (p.genre) {
-        const g = p.genre.toUpperCase();
-        saturation[g] = (saturation[g] || 0) + 1;
+
+    // ⚡ Bolt Optimization: Replace Object.values().flatMap() and array spreads with direct for...in loops
+    const projects = state.entities.projects;
+    for (const id in projects) {
+      if (Object.prototype.hasOwnProperty.call(projects, id)) {
+        const p = projects[id];
+        if (p.genre) {
+          const g = p.genre.toUpperCase();
+          saturation[g] = (saturation[g] || 0) + 1;
+        }
       }
-    });
+    }
+
+    const rivals = state.entities.rivals;
+    for (const rivalId in rivals) {
+      if (Object.prototype.hasOwnProperty.call(rivals, rivalId)) {
+        const rivalProjects = rivals[rivalId].projects;
+        if (rivalProjects) {
+          for (const projectId in rivalProjects) {
+            if (Object.prototype.hasOwnProperty.call(rivalProjects, projectId)) {
+              const p = rivalProjects[projectId];
+              if (p.genre) {
+                const g = p.genre.toUpperCase();
+                saturation[g] = (saturation[g] || 0) + 1;
+              }
+            }
+          }
+        }
+      }
+    }
+
     return saturation;
   }, [state]);
 
