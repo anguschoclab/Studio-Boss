@@ -20,6 +20,7 @@ export class TalentSystem {
 
     const currentOpportunities = state.market.opportunities || [];
     const updatedOpportunities: Opportunity[] = [];
+    const oppTitles = new Set<string>();
 
     // 1. Opportunity Lifecycle (Expiry)
     for (const opp of currentOpportunities) {
@@ -28,10 +29,9 @@ export class TalentSystem {
           ...opp,
           weeksUntilExpiry: opp.weeksUntilExpiry - 1,
         });
+        oppTitles.add(opp.title);
       }
     }
-
-    const oppTitles = new Set(updatedOpportunities.map((o) => o.title));
 
     // 2. Market Generation Logic
     const tryAddOpp = (opp: Opportunity, message?: string) => {
