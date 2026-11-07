@@ -105,6 +105,17 @@ export const StudioSidebar = () => {
     }
   };
 
+  // ⚡ Bolt Optimization: Replace Object.values().filter() with a for...in loop to avoid array allocations
+  let activeSlateCount = 0;
+  if (gameState.entities?.projects) {
+    for (const key in gameState.entities.projects) {
+      const p = gameState.entities.projects[key];
+      if (p.state !== "released" && p.state !== "post_release" && p.state !== "archived") {
+        activeSlateCount++;
+      }
+    }
+  }
+
   return (
     <aside
       className={cn(
@@ -237,12 +248,7 @@ export const StudioSidebar = () => {
                 SLATE <Clapperboard aria-hidden="true" className="h-2.5 w-2.5" />
               </span>
               <span className="text-lg font-display font-black text-foreground italic leading-none">
-                {
-                  Object.values(gameState.entities?.projects || {}).filter(
-                    (p) =>
-                      p.state !== "released" && p.state !== "post_release" && p.state !== "archived"
-                  ).length
-                }
+                {activeSlateCount}
               </span>
             </div>
           </div>
