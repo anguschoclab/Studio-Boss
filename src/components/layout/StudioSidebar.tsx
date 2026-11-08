@@ -105,6 +105,16 @@ export const StudioSidebar = () => {
     }
   };
 
+  // ⚡ Bolt Optimization: Calculate active projects (slate) without creating temporary arrays
+  let activeProjectsCount = 0;
+  const projects = gameState.entities?.projects || {};
+  for (const id in projects) {
+    const p = projects[id];
+    if (p.state !== "released" && p.state !== "post_release" && p.state !== "archived") {
+      activeProjectsCount++;
+    }
+  }
+
   return (
     <aside
       className={cn(
@@ -237,12 +247,7 @@ export const StudioSidebar = () => {
                 SLATE <Clapperboard aria-hidden="true" className="h-2.5 w-2.5" />
               </span>
               <span className="text-lg font-display font-black text-foreground italic leading-none">
-                {
-                  Object.values(gameState.entities?.projects || {}).filter(
-                    (p) =>
-                      p.state !== "released" && p.state !== "post_release" && p.state !== "archived"
-                  ).length
-                }
+                {activeProjectsCount}
               </span>
             </div>
           </div>
