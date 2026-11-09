@@ -64,7 +64,7 @@
     "react-resizable-panels": "^2.1.9",
     "recharts": "^2.15.4",
     "reselect": "^5.3.0",
-    "sonner": "^1.7.4",
+    "sonner": "^2.0.8",
     "tailwind-merge": "^2.6.1",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.9",
