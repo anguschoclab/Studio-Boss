@@ -26,3 +26,6 @@
 ## 2026-11-01 - Prevent Array Allocation in TV Recommendations
 **Learning:** Using `Object.values().filter()` inside `getTVRecommendationsForTalent` creates unnecessary garbage collection overhead inside the game loop.
 **Action:** Replace `Object.values().filter()` with a single-pass `for...in` loop that populates a new array directly, preventing intermediate object array allocation.
+## 2024-11-06 - Avoid intermediate array allocations in static data lookups
+**Learning:** Using `Object.keys().filter()` on static data objects like `ACTOR_ARCHETYPES` inside high-frequency generation loops creates redundant intermediate array allocations and incurs callback overhead.
+**Action:** Replace `Object.keys(obj).filter(...)` chains with a single `for...in` loop, guarded by `Object.prototype.hasOwnProperty`, pushing matching keys directly into an array to minimize GC pressure.
