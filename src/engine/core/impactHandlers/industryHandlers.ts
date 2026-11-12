@@ -88,7 +88,9 @@ export function handleIndustryUpdate(state: GameState, impact: IndustryUpdateImp
   if (update && typeof update === "object" && !Array.isArray(update)) {
     const clonedRefs = new Set<unknown>([nextState]);
     const updateRecord = asRecord(update);
-    for (const path of Object.keys(updateRecord)) {
+    // ⚡ Bolt Optimization: Replaced Object.keys() iteration with a direct for...in loop to avoid intermediate array allocations
+    for (const path in updateRecord) {
+      if (!Object.prototype.hasOwnProperty.call(updateRecord, path)) continue;
       const value = updateRecord[path];
       const parts = path.split(".");
       const lastIdx = parts.length - 1;
