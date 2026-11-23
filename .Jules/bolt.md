@@ -26,3 +26,6 @@
 ## 2026-11-01 - Prevent Array Allocation in TV Recommendations
 **Learning:** Using `Object.values().filter()` inside `getTVRecommendationsForTalent` creates unnecessary garbage collection overhead inside the game loop.
 **Action:** Replace `Object.values().filter()` with a single-pass `for...in` loop that populates a new array directly, preventing intermediate object array allocation.
+## 2024-11-04 - Eliminate Array Mapping for Set Initialization in Opportunities
+**Learning:** Creating a Set by mapping over an array (e.g., `new Set(array.map(...))`) allocates an intermediate array and creates redundant iterations. In high-frequency ticks like opportunity lifecycle management, this adds garbage collection pressure.
+**Action:** Initialize an empty Set and populate it directly inside an existing `for` loop to avoid intermediate allocations and multiple iteration passes.
