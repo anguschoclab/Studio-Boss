@@ -26,3 +26,6 @@
 ## 2026-11-01 - Prevent Array Allocation in TV Recommendations
 **Learning:** Using `Object.values().filter()` inside `getTVRecommendationsForTalent` creates unnecessary garbage collection overhead inside the game loop.
 **Action:** Replace `Object.values().filter()` with a single-pass `for...in` loop that populates a new array directly, preventing intermediate object array allocation.
+## 2024-05-18 - Optimize Dynamic Event Impact Handlers
+**Learning:** Using `Object.keys(updateRecord)` inside high-frequency impact handler loops creates unnecessary intermediate array allocations and causes GC pressure during game ticks.
+**Action:** Replace `Object.keys()` iteration with a direct, prototype-guarded `for...in` loop to eliminate array allocation and reduce memory overhead.
