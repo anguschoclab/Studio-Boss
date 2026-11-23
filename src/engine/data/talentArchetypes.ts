@@ -964,52 +964,71 @@ export function generateArchetypeForRole(
   tier: TalentTier,
   rng: { next: () => number }
 ): string {
-  let archetypes: string[];
+  const archetypes: string[] = [];
 
+  // ⚡ Bolt Optimization: Replace Object.keys().filter() with a single-pass for...in loop
   switch (role) {
     case "actor":
-      archetypes = Object.keys(ACTOR_ARCHETYPES).filter((key) =>
-        ACTOR_ARCHETYPES[key as ActorArchetype].tierBias.includes(tier)
-      );
+      for (const key in ACTOR_ARCHETYPES) {
+        if (!Object.prototype.hasOwnProperty.call(ACTOR_ARCHETYPES, key)) continue;
+        if (ACTOR_ARCHETYPES[key as ActorArchetype].tierBias.includes(tier)) {
+          archetypes.push(key);
+        }
+      }
       break;
     case "writer":
     case "showrunner":
-      archetypes = Object.keys(WRITER_ARCHETYPES).filter((key) =>
-        WRITER_ARCHETYPES[key as WriterArchetype].tierBias.includes(tier)
-      );
+      for (const key in WRITER_ARCHETYPES) {
+        if (!Object.prototype.hasOwnProperty.call(WRITER_ARCHETYPES, key)) continue;
+        if (WRITER_ARCHETYPES[key as WriterArchetype].tierBias.includes(tier)) {
+          archetypes.push(key);
+        }
+      }
       break;
     case "producer":
-      archetypes = Object.keys(PRODUCER_ARCHETYPES).filter((key) =>
-        PRODUCER_ARCHETYPES[key as ProducerArchetype].tierBias.includes(tier)
-      );
+      for (const key in PRODUCER_ARCHETYPES) {
+        if (!Object.prototype.hasOwnProperty.call(PRODUCER_ARCHETYPES, key)) continue;
+        if (PRODUCER_ARCHETYPES[key as ProducerArchetype].tierBias.includes(tier)) {
+          archetypes.push(key);
+        }
+      }
       break;
     case "personality":
-      archetypes = Object.keys(PERSONALITY_ARCHETYPES).filter((key) =>
-        PERSONALITY_ARCHETYPES[key as PersonalityArchetype].tierBias.includes(tier)
-      );
+      for (const key in PERSONALITY_ARCHETYPES) {
+        if (!Object.prototype.hasOwnProperty.call(PERSONALITY_ARCHETYPES, key)) continue;
+        if (PERSONALITY_ARCHETYPES[key as PersonalityArchetype].tierBias.includes(tier)) {
+          archetypes.push(key);
+        }
+      }
       break;
-    default:
-      archetypes = [];
   }
 
   // Fallback to all archetypes if tier filter yields none
   if (archetypes.length === 0) {
     switch (role) {
       case "actor":
-        archetypes = Object.keys(ACTOR_ARCHETYPES);
+        for (const key in ACTOR_ARCHETYPES) {
+          if (Object.prototype.hasOwnProperty.call(ACTOR_ARCHETYPES, key)) archetypes.push(key);
+        }
         break;
       case "writer":
       case "showrunner":
-        archetypes = Object.keys(WRITER_ARCHETYPES);
+        for (const key in WRITER_ARCHETYPES) {
+          if (Object.prototype.hasOwnProperty.call(WRITER_ARCHETYPES, key)) archetypes.push(key);
+        }
         break;
       case "producer":
-        archetypes = Object.keys(PRODUCER_ARCHETYPES);
+        for (const key in PRODUCER_ARCHETYPES) {
+          if (Object.prototype.hasOwnProperty.call(PRODUCER_ARCHETYPES, key)) archetypes.push(key);
+        }
         break;
       case "personality":
-        archetypes = Object.keys(PERSONALITY_ARCHETYPES);
+        for (const key in PERSONALITY_ARCHETYPES) {
+          if (Object.prototype.hasOwnProperty.call(PERSONALITY_ARCHETYPES, key)) archetypes.push(key);
+        }
         break;
       default:
-        archetypes = ["everyman"]; // fallback for unknown roles
+        archetypes.push("everyman"); // fallback for unknown roles
         break;
     }
   }
