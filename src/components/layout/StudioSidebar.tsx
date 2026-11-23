@@ -98,6 +98,19 @@ export const StudioSidebar = () => {
 
   if (!gameState) return null;
 
+  // ⚡ Bolt Optimization: Replace inline Object.values().filter().length with an O(1) space for...in loop
+  let activeSlateCount = 0;
+  const projects = gameState.entities?.projects;
+  if (projects) {
+    for (const id in projects) {
+      if (!Object.prototype.hasOwnProperty.call(projects, id)) continue;
+      const state = projects[id].state;
+      if (state !== "released" && state !== "post_release" && state !== "archived") {
+        activeSlateCount++;
+      }
+    }
+  }
+
   const handleExit = () => {
     if (window.confirm("TERMINATE SESSION AND EXIT TO MENU?")) {
       clearGame();
@@ -237,12 +250,7 @@ export const StudioSidebar = () => {
                 SLATE <Clapperboard aria-hidden="true" className="h-2.5 w-2.5" />
               </span>
               <span className="text-lg font-display font-black text-foreground italic leading-none">
-                {
-                  Object.values(gameState.entities?.projects || {}).filter(
-                    (p) =>
-                      p.state !== "released" && p.state !== "post_release" && p.state !== "archived"
-                  ).length
-                }
+                {activeSlateCount}
               </span>
             </div>
           </div>
