@@ -26,3 +26,6 @@
 ## 2026-11-01 - Prevent Array Allocation in TV Recommendations
 **Learning:** Using `Object.values().filter()` inside `getTVRecommendationsForTalent` creates unnecessary garbage collection overhead inside the game loop.
 **Action:** Replace `Object.values().filter()` with a single-pass `for...in` loop that populates a new array directly, preventing intermediate object array allocation.
+## 2024-11-06 - Eliminate Array Allocation in High-Frequency Render Loop
+**Learning:** In React components that render frequently due to global state updates (like `StudioSidebar` during game ticks), counting entities by chaining `Object.values(...).filter(...)` causes unnecessary temporary array allocations, leading to increased Garbage Collection (GC) pauses and potential UI stuttering.
+**Action:** Replace inline chained array methods with a direct `for...in` loop to calculate metrics, achieving O(1) space complexity and eliminating intermediate allocations.
