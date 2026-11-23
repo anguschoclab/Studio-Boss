@@ -26,3 +26,7 @@
 ## 2026-11-01 - Prevent Array Allocation in TV Recommendations
 **Learning:** Using `Object.values().filter()` inside `getTVRecommendationsForTalent` creates unnecessary garbage collection overhead inside the game loop.
 **Action:** Replace `Object.values().filter()` with a single-pass `for...in` loop that populates a new array directly, preventing intermediate object array allocation.
+
+## 2024-11-04 - Prevent React useMemo intermediate array allocations
+**Learning:** Using array spreads combined with `Object.values()` and `.flatMap()` to merge nested entity objects into a single array for iteration inside a React `useMemo` creates massive temporary array allocations and garbage collection pressure, proportional to the size of all player and rival projects combined.
+**Action:** Replaced the array spreading and chained `Object.values()` with separate, prototype-guarded `for...in` loops to process the objects directly without allocating intermediate arrays.
