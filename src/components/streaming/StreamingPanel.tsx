@@ -25,17 +25,29 @@ export const StreamingPanel: React.FC = () => {
   const [selectedBuyerForHistory, setSelectedBuyerForHistory] = useState<Buyer | null>(null);
 
   const stats = useMemo(() => {
-    const active = buyers.filter((b) => !b.acquiredBy);
-    const streamers = active.filter((b) => b.archetype === "streamer") as StreamerPlatform[];
-    const totalSubs = streamers.reduce((sum, s) => sum + (s.subscribers || 0), 0);
-    const totalWeeklyGrowth = streamers.reduce((sum, s) => {
-      const lastCount = s.subscriberHistory?.length
-        ? s.subscriberHistory[s.subscriberHistory.length - 2]?.count || s.subscribers
-        : s.subscribers;
-      return sum + (s.subscribers - lastCount);
-    }, 0);
-    const mergers = buyers.filter((b) => !!b.acquiredBy).length;
-    return { activeCount: active.length, totalSubs, totalWeeklyGrowth, mergers };
+    // ⚡ Bolt Optimization: Replaced multiple .filter() and .reduce() passes with a single loop to eliminate intermediate array allocations
+    let activeCount = 0;
+    let totalSubs = 0;
+    let totalWeeklyGrowth = 0;
+    let mergers = 0;
+
+    for (const b of buyers) {
+      if (b.acquiredBy) {
+        mergers++;
+      } else {
+        activeCount++;
+        if (b.archetype === "streamer") {
+          const s = b as StreamerPlatform;
+          totalSubs += s.subscribers || 0;
+          const lastCount = s.subscriberHistory?.length
+            ? s.subscriberHistory[s.subscriberHistory.length - 2]?.count || s.subscribers
+            : s.subscribers;
+          totalWeeklyGrowth += s.subscribers - lastCount;
+        }
+      }
+    }
+
+    return { activeCount, totalSubs, totalWeeklyGrowth, mergers };
   }, [buyers]);
 
   const activeBuyers = useMemo(
