@@ -42,12 +42,24 @@ export const createBookmarkSlice: StateCreator<GameStore, [], [], BookmarkSlice>
   getBookmarkedProjects: () => {
     const state = get().gameState;
     if (!state) return [];
-    return (state.studio.bookmarks || []).filter((b) => b.type === "project").map((b) => b.id);
+    const bookmarks = state.studio.bookmarks || [];
+    const ids: string[] = [];
+    // ⚡ Bolt Optimization: Replaced chained .filter().map() with single-pass loop
+    for (let i = 0; i < bookmarks.length; i++) {
+      if (bookmarks[i].type === "project") ids.push(bookmarks[i].id);
+    }
+    return ids;
   },
 
   getBookmarkedTalent: () => {
     const state = get().gameState;
     if (!state) return [];
-    return (state.studio.bookmarks || []).filter((b) => b.type === "talent").map((b) => b.id);
+    const bookmarks = state.studio.bookmarks || [];
+    const ids: string[] = [];
+    // ⚡ Bolt Optimization: Replaced chained .filter().map() with single-pass loop
+    for (let i = 0; i < bookmarks.length; i++) {
+      if (bookmarks[i].type === "talent") ids.push(bookmarks[i].id);
+    }
+    return ids;
   },
 });

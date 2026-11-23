@@ -13,17 +13,29 @@ export const BookmarksBoard = () => {
   );
 
   const bookmarkedProjects = useMemo(() => {
-    const projectIds = bookmarkIds.filter((b) => b.type === "project").map((b) => b.id);
-    return projectIds
-      .map((id) => gameState?.entities.projects[id])
-      .filter((p): p is NonNullable<typeof p> => !!p);
+    const projects = [];
+    // ⚡ Bolt Optimization: Replaced chained .filter() and .map() with a single-pass loop
+    for (let i = 0; i < bookmarkIds.length; i++) {
+      const b = bookmarkIds[i];
+      if (b.type === "project") {
+        const p = gameState?.entities.projects[b.id];
+        if (p) projects.push(p);
+      }
+    }
+    return projects;
   }, [bookmarkIds, gameState?.entities.projects]);
 
   const bookmarkedTalent = useMemo(() => {
-    const talentIds = bookmarkIds.filter((b) => b.type === "talent").map((b) => b.id);
-    return talentIds
-      .map((id) => gameState?.entities.talents[id])
-      .filter((t): t is NonNullable<typeof t> => !!t);
+    const talents = [];
+    // ⚡ Bolt Optimization: Replaced chained .filter() and .map() with a single-pass loop
+    for (let i = 0; i < bookmarkIds.length; i++) {
+      const b = bookmarkIds[i];
+      if (b.type === "talent") {
+        const t = gameState?.entities.talents[b.id];
+        if (t) talents.push(t);
+      }
+    }
+    return talents;
   }, [bookmarkIds, gameState?.entities.talents]);
 
   const hasBookmarks = bookmarkedProjects.length > 0 || bookmarkedTalent.length > 0;

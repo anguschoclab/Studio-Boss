@@ -26,3 +26,6 @@
 ## 2026-11-01 - Prevent Array Allocation in TV Recommendations
 **Learning:** Using `Object.values().filter()` inside `getTVRecommendationsForTalent` creates unnecessary garbage collection overhead inside the game loop.
 **Action:** Replace `Object.values().filter()` with a single-pass `for...in` loop that populates a new array directly, preventing intermediate object array allocation.
+## 2024-11-13 - Bookmark filtering array allocation bottleneck
+**Learning:** Chaining `.filter().map()` inside `useMemo` hooks or store selectors for bookmarks creates intermediate arrays unnecessarily, which contributes to garbage collection pressure and O(2N) runtime during rapid re-renders.
+**Action:** Replaced sequential `.filter()` and `.map()` operations with a single-pass `for` loop to filter and accumulate the final values directly, improving performance with O(N) execution time.
